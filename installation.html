@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Getting started &#8212; village</title>
+    <title>Install MV Raspberry &#8212; village</title>
   
   
   
@@ -39,12 +39,12 @@
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'getting_started';</script>
-    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/getting_started.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'installation';</script>
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/installation.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Install MV Raspberry" href="installation.html" />
-    <link rel="prev" title="Welcome to village’s documentation!" href="index.html" />
+    <link rel="next" title="API" href="api_index.html" />
+    <link rel="prev" title="Getting started" href="getting_started.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -131,15 +131,15 @@
 <nav class="navbar-nav">
   <ul class="bd-navbar-elements navbar-nav">
     
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="#">
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="getting_started.html">
                         Getting started
                       </a>
                     </li>
                 
 
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="installation.html">
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
                         Install MV Raspberry
                       </a>
                     </li>
@@ -249,15 +249,15 @@ document.write(`
 <nav class="navbar-nav">
   <ul class="bd-navbar-elements navbar-nav">
     
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="#">
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="getting_started.html">
                         Getting started
                       </a>
                     </li>
                 
 
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="installation.html">
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
                         Install MV Raspberry
                       </a>
                     </li>
@@ -351,7 +351,7 @@ document.write(`
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Getting started</li>
+    <li class="breadcrumb-item active" aria-current="page">Install MV Raspberry</li>
   </ul>
 </nav>
 </div>
@@ -368,15 +368,149 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h1>
-<p>Here you may demonstrate the basic functionalities your package.</p>
-<p>You can include code snippets using the usual Markdown syntax:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">my_package</span> <span class="kn">import</span> <span class="n">my_function</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">my_function</span><span class="p">()</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="install-mv-raspberry">
+<h1>Install MV Raspberry<a class="headerlink" href="#install-mv-raspberry" title="Link to this heading">#</a></h1>
+<section id="what-you-need">
+<h2>What you need<a class="headerlink" href="#what-you-need" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Raspberry Pi 5 - 8GB</p></li>
+<li><p>Fan</p></li>
+<li><p>Micro SD 128GB</p></li>
+<li><p>Keyboard</p></li>
+<li><p>Mouse</p></li>
+<li><p>Screen</p></li>
+<li><p>Micro HDMI to HDMI cable</p></li>
+<li><p>Power supply for Raspberry Pi</p></li>
+<li><p>Ethernet cable (optional)</p></li>
+</ul>
+</section>
+<section id="launch-raspberry-pi-os-for-the-first-time">
+<h2>Launch Raspberry Pi OS for the first time<a class="headerlink" href="#launch-raspberry-pi-os-for-the-first-time" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Connect a keyboard, mouse, and screen to the Raspberry Pi.</p></li>
+<li><p>Connect the Ethernet cable if you are going to use an Ethernet connection.</p></li>
+<li><p>If your SD card has the OS preinstalled, jump to step 4.</p></li>
+</ol>
+<!-- 4. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi Software](https://www.raspberrypi.com/software/) -->
+<ol class="arabic simple" start="5">
+<li><p>Insert the SD card and start the Raspberry Pi.</p></li>
+<li><p>Select your country and keyboard language and choose English as the general language.</p></li>
+<li><p>Select the user (pi) and password (you know it).</p></li>
+<li><p>Select your Wi-Fi or Ethernet connection.</p></li>
+<li><p>Choose your preferred web browser (Chromium).</p></li>
+<li><p>Select “Yes” when asked to update software (if you have your internet connection ready).</p></li>
+</ol>
+</section>
+<section id="screen-settings">
+<h2>Screen settings<a class="headerlink" href="#screen-settings" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">raspi-config</span></code></p>
+<ul>
+<li><p>Go to <strong>Display Options</strong> and disable blanking.</p></li>
+<li><p>Go to <strong>Advanced Options</strong> and select X11 (instead of Wayland).</p></li>
+</ul>
+</li>
+</ul>
+<section id="if-you-are-using-one-screen-only">
+<h3>If you are using one screen only:<a class="headerlink" href="#if-you-are-using-one-screen-only" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">nano</span> <span class="pre">/boot/firmware/cmdline.txt</span></code></p>
+<ul>
+<li><p>Add the text: <code class="docutils literal notranslate"><span class="pre">vc4.fvc4.force_hotplug=1</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="if-you-are-using-2-screens">
+<h3>If you are using 2 screens:<a class="headerlink" href="#if-you-are-using-2-screens" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">nano</span> <span class="pre">/boot/firmware/cmdline.txt</span></code></p>
+<ul>
+<li><p>Add the text: <code class="docutils literal notranslate"><span class="pre">vc4.fvc4.force_hotplug=3</span></code> (1 for using the first HDMI, 2 for using the second one, and 3 to use both of them).</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="updating-the-system-and-installing-software">
+<h2>Updating the system and installing software<a class="headerlink" href="#updating-the-system-and-installing-software" title="Link to this heading">#</a></h2>
+<!-- Update software, instructions from [here](https://www.raspberrypi.com/documentation/computers/os.html): -->
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>full-upgrade
 </pre></div>
 </div>
+<p>Install OpenCV (library to manage video):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python3-opencv
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>opencv-data
+</pre></div>
+</div>
+<p>Install VS Code (optional):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>code
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Enable auto-login by clicking on <strong>Preferences</strong> -&gt; <strong>Raspberry Pi Configuration</strong> -&gt; <strong>Auto login</strong>.</p></li>
+<li><p>Add the temperature (CPU and GPU) to the toolbar.</p></li>
+<li><p>Right-click on the toolbar, select <strong>Add/Remove Plugins</strong>, and add <strong>CPU Temp</strong>, <strong>CPU</strong>, and <strong>GPU</strong>.</p></li>
+<li><p>Change the resolution of the screen (or screens) to 1280 x 720: <strong>Preferences</strong> -&gt; <strong>Screen Configuration</strong>.</p></li>
+</ul>
+</section>
+<section id="pyqt5-multimedia">
+<h2>PyQT5 multimedia<a class="headerlink" href="#pyqt5-multimedia" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-pyqt5.qtmultimedia
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libqt5multimedia5-plugins
+</pre></div>
+</div>
+</section>
+<section id="setting-env-environment">
+<h2>Setting .env environment<a class="headerlink" href="#setting-env-environment" title="Link to this heading">#</a></h2>
+<p>Create a .env environment with all the packages installed in the general Python:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>--system-site-packages<span class="w"> </span>~/.env
+</pre></div>
+</div>
+<p>Activate it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>~/.env/bin/activate
+</pre></div>
+</div>
+<p>Install needed libraries with pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>python-dateutil
+pip<span class="w"> </span>install<span class="w"> </span>setuptools_scm
+</pre></div>
+</div>
+</section>
+<section id="configure-remote-access-with-realvnc">
+<h2>Configure remote access with RealVNC<a class="headerlink" href="#configure-remote-access-with-realvnc" title="Link to this heading">#</a></h2>
+<p>From your Raspberry Pi:</p>
+<ol class="arabic simple">
+<li><p>Go to the website and create an account: <a class="reference external" href="https://www.realvnc.com/es/">RealVNC</a></p></li>
+<li><p>Subscribe to Lite access (free access): <a class="reference external" href="https://www.realvnc.com/es/connect/plan/lite/">Lite Access</a></p></li>
+<li><p>Open the RealVNC server on the Raspberry Pi (it is automatically installed when you install Raspberry Pi OS) and configure it for your team.</p></li>
+<li><p>Go to <strong>Device Access</strong> on the RealVNC webpage and add your current device.</p></li>
+<li><p>Back in the RealVNC window, you should see a code that allows remote connections from other networks and an IP number that allows connection from the same network.</p></li>
+</ol>
+<p>From your external computer or phone:</p>
+<ol class="arabic simple">
+<li><p>Log in to the RealVNC webpage using your credentials.</p></li>
+<li><p>Install and open RealVNC Viewer on your external computer or phone.</p></li>
+<li><p>Connect to the Raspberry Pi using the RealVNC server’s code if you are connecting from another network or the IP if you are connecting from the same network.</p></li>
+</ol>
+</section>
+<section id="udev-rules">
+<h2>Udev rules<a class="headerlink" href="#udev-rules" title="Link to this heading">#</a></h2>
+<p>Go to the rules folder:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/etc/udev/rules.d
+</pre></div>
+</div>
+<p>Create a new rule file named <code class="docutils literal notranslate"><span class="pre">99-usb.rules</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span><span class="m">99</span>-usb.rules
+</pre></div>
+</div>
+<p>Add the following line to create a symbolic link to the bpod, changing “1-1:1.0” with the real port. You can use <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> to check the ports:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">KERNEL</span><span class="o">==</span><span class="s2">&quot;ttyACM*&quot;</span><span class="p">,</span><span class="n">KERNELS</span><span class="o">==</span><span class="s2">&quot;1-1:1.0&quot;</span><span class="p">,</span><span class="n">SYMLINK</span><span class="o">+=</span><span class="s2">&quot;BPod&quot;</span>
+</pre></div>
+</div>
+<p>Feel free to adjust the formatting or content as needed!</p>
+</section>
 </section>
 
 
@@ -390,20 +524,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="index.html"
+       href="getting_started.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Welcome to village’s documentation!</p>
+        <p class="prev-next-title">Getting started</p>
       </div>
     </a>
     <a class="right-next"
-       href="installation.html"
+       href="api_index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Install MV Raspberry</p>
+        <p class="prev-next-title">API</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -418,9 +552,32 @@ document.write(`
 
 
   <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-need">What you need</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-raspberry-pi-os-for-the-first-time">Launch Raspberry Pi OS for the first time</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#screen-settings">Screen settings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-are-using-one-screen-only">If you are using one screen only:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-are-using-2-screens">If you are using 2 screens:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-the-system-and-installing-software">Updating the system and installing software</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyqt5-multimedia">PyQT5 multimedia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-env-environment">Setting .env environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-remote-access-with-realvnc">Configure remote access with RealVNC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#udev-rules">Udev rules</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="_sources/getting_started.md.txt">
+    <a href="_sources/installation.md.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>
