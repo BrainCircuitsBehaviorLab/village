@@ -1,2 +1,0 @@
-class BpodErrorException(Exception):
-    pass
