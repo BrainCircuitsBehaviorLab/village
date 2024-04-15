@@ -95,7 +95,7 @@ html_theme_options = {
             # Label for this link
             "name": "GitHub",
             # URL where the link will redirect
-            "url": "https://github.com/marinraf/village",  # required
+            "url": "https://github.com/BrainCircuitsBehaviorLab/village",  # required
             # Icon class (if "type": "fontawesome"),
             # or path to local image (if "type": "local")
             "icon": "fa-brands fa-github",
@@ -112,7 +112,7 @@ html_theme_options = {
 # Sphinx will create the appropriate CNAME file in the build directory
 # The default is the URL of the GitHub pages
 # https://www.sphinx-doc.org/en/master/usage/extensions/githubpages.html
-github_user = "marinraf"
+github_user = "BrainCircuitsBehaviorLab"
 html_baseurl = f"https://{github_user}.github.io/{project}"
 sitemap_url_scheme = "{link}"
 

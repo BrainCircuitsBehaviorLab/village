@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.9.0"
 dynamic = ["version"]
 
-dependencies = []
+dependencies = [
+    
+]
 
 license = {text = "MIT"}
 
@@ -22,12 +24,12 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/marinraf/village"
-"Bug Tracker" = "https://github.com/marinraf/village/issues"
-"Documentation" = "https://marinraf.github.io/village"
+"Homepage" = "https://github.com/BrainCircuitsBehaviorLab/village"
+"Bug Tracker" = "https://github.com/BrainCircuitsBehaviorLab/village/issues"
+"Documentation" = "https://BrainCircuitsBehaviorLab.github.io/village"
 
-"Source Code" = "https://github.com/marinraf/village"
-"User Support" = "https://github.com/marinraf/village/issues"
+"Source Code" = "https://github.com/BrainCircuitsBehaviorLab/village"
+"User Support" = "https://github.com/BrainCircuitsBehaviorLab/village/issues"
 
 [project.optional-dependencies]
 dev = [
