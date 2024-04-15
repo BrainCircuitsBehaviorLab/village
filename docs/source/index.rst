@@ -24,6 +24,8 @@ These files should start with a level-1 (H1) header,
 which will be used as the section title. Sub-sections can be created
 with lower-level headers (H2, H3, etc.) within the same file.
 
+
+
 To include a section in the rendered documentation,
 add it to the ``toctree`` directive in this (``docs/source/index.rst``) file.
 
