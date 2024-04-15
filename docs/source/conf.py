@@ -120,4 +120,7 @@ sitemap_url_scheme = "{link}"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
-user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:25.0) Gecko/20100101 Firefox/25.0'
+linkcheck_anchors_ignore_for_url = [
+    "https://www.raspberrypi.com/documentation/computers/os.html",
+    "https://www.raspberrypi.com/software/",
+]
