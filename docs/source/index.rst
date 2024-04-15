@@ -12,7 +12,6 @@ Welcome to village's documentation!
 
    getting_started
    api_index
-   install
 
 By default the documentation includes the following sections:
 
