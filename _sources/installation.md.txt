@@ -15,7 +15,7 @@
 1. Connect a keyboard, mouse, and screen to the Raspberry Pi.
 2. Connect the Ethernet cable if you are going to use an Ethernet connection.
 3. If your SD card has the OS preinstalled, jump to step 4.
-<!-- 4. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi Software](https://www.raspberrypi.com/software/) -->
+4. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi Software](https://www.raspberrypi.com/software/)
 5. Insert the SD card and start the Raspberry Pi.
 6. Select your country and keyboard language and choose English as the general language.
 7. Select the user (pi) and password (you know it).
@@ -37,7 +37,7 @@
   - Add the text: `vc4.fvc4.force_hotplug=3` (1 for using the first HDMI, 2 for using the second one, and 3 to use both of them).
 
 ## Updating the system and installing software
-<!-- Update software, instructions from [here](https://www.raspberrypi.com/documentation/computers/os.html): -->
+Update software, instructions from [here](https://www.raspberrypi.com/documentation/computers/os.html):
 
 ```bash
 sudo apt update
