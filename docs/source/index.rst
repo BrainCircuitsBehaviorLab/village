@@ -13,6 +13,7 @@ Welcome to village's documentation!
    getting_started
    installation
    api_index
+   for_developers
 
 By default the documentation includes the following sections:
 
