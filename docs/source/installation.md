@@ -1,4 +1,4 @@
-# Install MOUSE VILLAGE RASPBERRY
+# Install MV Raspberry
 
 ## What you need
 - Raspberry Pi 5 - 8GB  
