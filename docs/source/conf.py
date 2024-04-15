@@ -120,7 +120,11 @@ sitemap_url_scheme = "{link}"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
+
+# Ignore links and anchors
+linkcheck_ignore = [
+    "https://www.raspberrypi.com/*",
+]
 linkcheck_anchors_ignore_for_url = [
-    "https://www.raspberrypi.com/documentation/computers/os.html",
-    "https://www.raspberrypi.com/software/",
+    "https://github.com/neuroinformatics-unit/actions/tree/v2/build_sphinx_docs",
 ]
