@@ -1,15 +1,11 @@
 from PyQt5.QtWidgets import QApplication
-from village.log import log
-from village.settings import settings
-from village.utils import *
-from gui.gui import Gui
 
+from village.gui.gui import Gui
+from village.utils import create_directories
 
 create_directories()
 
 app = QApplication([])
-app.setStyle('Fusion')
+app.setStyle("Fusion")
 gui = Gui(app)
 app.exec()
-
-

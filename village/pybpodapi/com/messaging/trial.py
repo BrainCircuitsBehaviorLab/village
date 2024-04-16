@@ -1,12 +1,9 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import logging
 import pprint
 
+from pybpodapi.com.messaging.base_message import BaseMessage
 from pybpodapi.com.messaging.event_occurrence import EventOccurrence
 from pybpodapi.com.messaging.state_occurrence import StateOccurrence
-from pybpodapi.com.messaging.base_message import BaseMessage
 from pybpodapi.utils import date_parser
 
 logger = logging.getLogger(__name__)
@@ -26,9 +23,9 @@ class Trial(BaseMessage):
     def __init__(self, sma=None):
         super(Trial, self).__init__("New trial")
         self.trial_start_timestamp = None
-        self.sma = sma  # type: StateMachine
-        self.states_occurrences = []  # type: list(StateOccurrence)
-        self.events_occurrences = []  # type: list(EventOccurrence)
+        self.sma = sma
+        self.states_occurrences = []
+        self.events_occurrences = []
 
         self.states = [0]
         self.state_timestamps = [0]
@@ -56,7 +53,7 @@ class Trial(BaseMessage):
         :param event_name: name of the event to get timestamps
         :rtype: list(float)
         """
-        event_timestamps = []  # type: list(float)
+        event_timestamps = []
 
         for event in self.events_occurrences:
             name = self.sma.hardware.channels.get_event_name(event.event_id)
@@ -71,7 +68,7 @@ class Trial(BaseMessage):
 
         :rtype: list(str)
         """
-        events_names = []  # type: list(str)
+        events_names = []
 
         for event in self.events_occurrences:
             event_name = self.sma.hardware.channels.get_event_name(event.event_id)
@@ -82,7 +79,8 @@ class Trial(BaseMessage):
 
     def get_all_timestamps_by_event(self):
         """
-        Create a dictionary whose keys are events names and values are corresponding timestamps
+        Create a dictionary whose keys are events names and values
+        are corresponding timestamps
 
         Example:
 

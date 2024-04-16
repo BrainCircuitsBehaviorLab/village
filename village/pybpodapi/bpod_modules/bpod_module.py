@@ -1,5 +1,5 @@
-from pybpodapi.exceptions.bpod_error import BpodErrorException
 from pybpodapi.com.arcom import ArduinoTypes
+from pybpodapi.exceptions.bpod_error import BpodErrorException
 
 
 class BpodModule(object):
@@ -50,7 +50,8 @@ class BpodModule(object):
             self.relay_active = True
         else:
             raise BpodErrorException(
-                "Error: You must disable the active module relay before starting another one."
+                """Error: You must disable the active module relay before 
+                starting another one."""
             )
 
     def stop_module_relay(self):
@@ -60,7 +61,8 @@ class BpodModule(object):
     def __read(self, size=None, dtype=None):
         if not self.relay_active:
             raise BpodErrorException(
-                "Error: you must start the module relay with start_moule_relay() before you can read bytes from a module"
+                """Error: you must start the module relay with start_moule_relay() 
+                before you can read bytes from a module"""
             )
 
         if size is None:

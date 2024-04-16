@@ -1,5 +1,5 @@
-import time
 import importlib
+import time
 
 
 class BpodModules(object):
@@ -34,11 +34,14 @@ class BpodModules(object):
         n_serial_events,
         serial_port,
     ):
-        from pybpodapi.bpod_modules.bpod_module import (
-            BpodModule,
-        )  # solve issue related with circular imports
+        from pybpodapi.bpod_modules.bpod_module import BpodModule
 
-        if len(BpodModules.LOADED_MODULES) == 0 and len(BpodModules.BPOD_API_MODULES) > 0:
+        # solve issue related with circular imports
+
+        if (
+            len(BpodModules.LOADED_MODULES) == 0
+            and len(BpodModules.BPOD_API_MODULES) > 0
+        ):
 
             for module2import in BpodModules.BPOD_API_MODULES:
                 m = importlib.import_module(module2import)

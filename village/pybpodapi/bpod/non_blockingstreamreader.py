@@ -1,6 +1,6 @@
-from threading import Thread, Event
-from queue import Queue, Empty
+from queue import Empty, Queue
 from sys import platform
+from threading import Event, Thread
 
 if platform in ["linux", "linux2", "darwin"]:
     import fcntl
@@ -36,7 +36,6 @@ class NonBlockingStreamReader:
                     line = self.stream.readline()
                     if line:
                         self.queue.put(line)
-                        lines = None
                     self.event.wait(0.01)
 
         self._t = PopulateQueue(self._s, self._q)

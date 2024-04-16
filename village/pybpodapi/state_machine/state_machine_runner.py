@@ -1,6 +1,3 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import logging
 
 from pybpodapi.state_machine.state_machine_builder import StateMachineBuilder
@@ -29,19 +26,19 @@ class StateMachineRunner(StateMachineBuilder):
 
     @property
     def is_running(self):
-        return self._is_running  # type: bool
+        return self._is_running
 
     @is_running.setter
     def is_running(self, value):
-        self._is_running = value  # type: bool
+        self._is_running = value
 
     @property
     def current_state(self):
-        return self._current_state  # type: int
+        return self._current_state
 
     @current_state.setter
     def current_state(self, value):
-        self._current_state = value  # type: int
+        self._current_state = value
 
 
 class StateMachineRunnerError(Exception):

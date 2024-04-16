@@ -1,4 +1,4 @@
-def log(message, exception = None):
+def log(message, exception=None):
     if exception is None:
         print(message)
     else:

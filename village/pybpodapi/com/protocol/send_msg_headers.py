@@ -1,6 +1,3 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -22,7 +19,8 @@ class SendMessageHeader(object):
     #: Reset session clock
     RESET_CLOCK = "*"
 
-    #: Pause ongoing trial (We recommend using computer-side pauses between trials, to keep data uniform)
+    #: Pause ongoing trial (We recommend using computer-side pauses between trials,
+    # to keep data uniform)
     PAUSE_TRIAL = "$"
 
     #: Return timestamp transmission scheme

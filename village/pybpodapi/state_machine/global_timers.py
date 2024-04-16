@@ -1,6 +1,3 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -12,13 +9,16 @@ class GlobalTimers(object):
         self.start_matrix = [[] for i in range(max_states)]
         self.end_matrix = [[] for i in range(max_states)]
 
-        # for each state\position has an integer which the bits represents global timers to trigger
+        # for each state\position has an integer which the bits represents
+        # global timers to trigger
         self.triggers_matrix = [0 for i in range(max_states)]
 
-        # for each state\position has an integer which the bits represents global timers to cancel
+        # for each state\position has an integer which the bits represents
+        # global timers to cancel
         self.cancels_matrix = [0 for i in range(max_states)]
 
-        # for each state\position has an integer which the bits represents global timers to on set
+        # for each state\position has an integer which the bits represents
+        # global timers to on set
         # TODO count the number of timers used on the state machine
         self.onset_matrix = [0] * n_global_timers
 

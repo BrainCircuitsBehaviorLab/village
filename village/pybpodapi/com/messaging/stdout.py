@@ -1,6 +1,3 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 from pybpodapi.com.messaging.base_message import BaseMessage
 
 

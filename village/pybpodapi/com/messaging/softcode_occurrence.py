@@ -1,7 +1,6 @@
-# !/usr/bin/python3from pybpodapi.com.messaging.base_message import BaseMessage
-# -*- coding: utf-8 -*-
 from pybpodapi.com.messaging.base_message import BaseMessage
 from pybpodapi.utils import date_parser
+
 
 class SoftcodeOccurrence(BaseMessage):
     """
@@ -31,15 +30,10 @@ class SoftcodeOccurrence(BaseMessage):
 
     @property
     def softcode_name(self):
-        return 'SoftcodeOut' + str(self.content)
+        return "SoftcodeOut" + str(self.content)
 
     def tolist(self):
-        return [
-            self.host_timestamp,
-            None,
-            self.softcode_name,
-            None
-        ]
+        return [self.host_timestamp, None, self.softcode_name, None]
 
     @classmethod
     def fromlist(cls, row):

@@ -1,10 +1,10 @@
 import logging
 import sys
 from datetime import datetime as datetime_now
-from pybpodapi.com.messaging.trial import Trial
-from pybpodapi.com.messaging.state_occurrence import StateOccurrence
-from pybpodapi.utils import csv
 
+from pybpodapi.com.messaging.state_occurrence import StateOccurrence
+from pybpodapi.com.messaging.trial import Trial
+from pybpodapi.utils import csv
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class Session(object):
         self.trials = []  # type: list[Trial]
         self.firmware_version = None  # type: int
         self.bpod_version = None  # type: int
-        self.start_timestamp = datetime_now.now()  # type: datetime
+        self.start_timestamp = datetime_now.now()
 
         self.csvwriter = None
         self._path = path
@@ -54,7 +54,10 @@ class Session(object):
             streams += [open(path, "w")]
 
         self.csvstream = StreamsWrapper(streams)
-        self.csvwriter = csv.Writer(self.csvstream, columns_headers=["TRIAL", "START", "END", "MSG", "VALUE"])
+        self.csvwriter = csv.Writer(
+            self.csvstream,
+            columns_headers=["TRIAL", "START", "END", "MSG", "VALUE"],
+        )
 
     def __del__(self):
 
@@ -67,7 +70,8 @@ class Session(object):
         """
         Add new trial to this session and associate a state machine to it
 
-        :param pybpodapi.model.state_machine sma: state machine associated with this trial
+        :param pybpodapi.model.state_machine sma: state machine
+        associated with this trial
         """
 
         if isinstance(msg, Trial):
@@ -78,16 +82,27 @@ class Session(object):
         self.history.append(msg)
 
         if self.csvwriter:
-            if msg.MESSAGE_TYPE_ALIAS == 'VAL':
-                if msg.content == 'TRIAL':
+            if msg.MESSAGE_TYPE_ALIAS == "VAL":
+                if msg.content == "TRIAL":
                     time0 = self.current_trial.trial_start_timestamp
-                    time1 = self.current_trial.trial_end_timestamp - self.current_trial.difference
-                    self.csvwriter.writerow([len(self.trials)] + [time0, time1] + msg.tolist())
+                    time1 = (
+                        self.current_trial.trial_end_timestamp
+                        - self.current_trial.difference
+                    )
+                    self.csvwriter.writerow(
+                        [len(self.trials)] + [time0, time1] + msg.tolist()
+                    )
                     self.csvwriter.flush()
                 else:
                     self.csvwriter.writerow([len(self.trials)] + [None] + msg.tolist())
                     self.csvwriter.flush()
-            elif msg.MESSAGE_TYPE_ALIAS in {'INFO', 'TRIAL', 'END-TRIAL', 'stdout', 'stderr'}:
+            elif msg.MESSAGE_TYPE_ALIAS in {
+                "INFO",
+                "TRIAL",
+                "END-TRIAL",
+                "stdout",
+                "stderr",
+            }:
                 pass
             else:
                 self.csvwriter.writerow([len(self.trials)] + msg.tolist())
@@ -122,8 +137,10 @@ class Session(object):
             if len(current_trial.state_timestamps) > 1:
                 uniqueStateDataMatrices[uniqueStateIndexes[i]] += [
                     (
-                        current_trial.state_timestamps[i] + current_trial.trial_start_timestamp,
-                        current_trial.state_timestamps[i + 1] + current_trial.trial_start_timestamp,
+                        current_trial.state_timestamps[i]
+                        + current_trial.trial_start_timestamp,
+                        current_trial.state_timestamps[i + 1]
+                        + current_trial.trial_start_timestamp,
                     )
                 ]
 
@@ -146,7 +163,7 @@ class Session(object):
         )
 
         # save events occurrences on trial
-        # current_trial.events_occurrences = sma.raw_data.events_occurrences  # type: list
+        # current_trial.events_occurrences = sma.raw_data.events_occurrences
 
         logger.debug(
             "Trial events: %s",

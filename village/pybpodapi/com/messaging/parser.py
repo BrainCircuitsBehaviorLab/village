@@ -1,6 +1,7 @@
 import logging
-from pybpodapi.com.messaging.error import ErrorMessage
+
 from pybpodapi.com.messaging.debug import DebugMessage
+from pybpodapi.com.messaging.error import ErrorMessage
 from pybpodapi.com.messaging.stderr import StderrMessage
 from pybpodapi.com.messaging.stdout import StdoutMessage
 from pybpodapi.com.messaging.warning import WarningMessage
@@ -26,7 +27,8 @@ class MessageParser(object):
 
         .. seealso::
 
-            :py:meth:`pybpodgui_plugin.api.models.session.session_io.SessionIO.load_contents`
+            :py:meth:
+            `pybpodgui_plugin.api.models.session.session_io.SessionIO.load_contents`
 
 
         :param str txtline: file line entry
@@ -46,7 +48,8 @@ class MessageParser(object):
                     break
         except Exception:
             logger.warning(
-                "Could not parse bpod message: {0}".format(str(row)), exc_info=True
+                "Could not parse bpod message: {0}".format(str(row)),
+                exc_info=True,
             )
             return ErrorMessage(row)  # default case
 

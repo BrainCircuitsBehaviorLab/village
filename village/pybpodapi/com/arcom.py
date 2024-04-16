@@ -1,7 +1,8 @@
 import logging
-import serial
-import numpy as np
 import struct
+
+import numpy as np
+import serial
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ class ArduinoTypes(object):
 
     @staticmethod
     def get_uint8_array(array):
-        print('my_array ', array, str(ArduinoTypes.UINT8))
+        print("my_array ", array, str(ArduinoTypes.UINT8))
         return np.array(array, dtype=str(ArduinoTypes.UINT8)).tobytes()
 
     @staticmethod
@@ -92,7 +93,7 @@ class ArCOM(object):
         :return:
         """
         baudrate = 4000000
-        print('en open', baudrate, timeout)
+        print("en open", baudrate, timeout)
         self.serial_object = serial.Serial(
             serial_port, baudrate=baudrate, timeout=timeout
         )
@@ -113,8 +114,8 @@ class ArCOM(object):
         """
         try:
             return self.serial_object.inWaiting()
-        except:
-            print('Bpod connection ERROR. Check USB cable.')
+        except:  # noqa: E722
+            print("Bpod connection ERROR. Check USB cable.")
             # return self.serial_object.inWaiting()
 
     ##############################################################

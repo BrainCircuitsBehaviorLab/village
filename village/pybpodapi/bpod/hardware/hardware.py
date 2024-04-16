@@ -1,6 +1,3 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import logging
 
 from pybpodapi.bpod.hardware.channels import Channels
@@ -10,7 +7,8 @@ logger = logging.getLogger(__name__)
 
 class Hardware(object):
     """
-    Represents an hardware description based on information received from the current connected Bpod deviced.
+    Represents an hardware description based on information received
+    from the current connected Bpod deviced.
     """
 
     DEFAULT_FREQUENCY_DIVIDER = 1000000
@@ -49,7 +47,8 @@ class Hardware(object):
         """
         Set up hardware based on hardware description obtained from Bpod device
 
-        :param HardwareInfoContainer hw_info_container: hardware parameters received from Bpod
+        :param HardwareInfoContainer hw_info_container: hardware parameters
+        received from Bpod
         """
 
         self.outputs = self.outputs  # + ['G', 'G', 'G']

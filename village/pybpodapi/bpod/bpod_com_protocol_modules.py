@@ -1,17 +1,13 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import logging
 import time
+
 import numpy as np
-
-from pybpodapi.com.arcom import ArduinoTypes
-from pybpodapi.bpod_modules.bpod_modules import BpodModules
 from pybpodapi.bpod.bpod_com_protocol import BpodCOMProtocol
-from pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
+from pybpodapi.bpod_modules.bpod_modules import BpodModules
+from pybpodapi.com.arcom import ArduinoTypes
 from pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
+from pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
 from pybpodapi.exceptions.bpod_error import BpodErrorException
-
 
 logger = logging.getLogger(__name__)
 
@@ -171,7 +167,11 @@ class BpodCOMProtocolModules(BpodCOMProtocol):
                 "Error: module messages must be under 64 bytes per transmission"
             )
 
-        to_send = [ord(SendMessageHeader.WRITE_TO_MODULE), module_index + 1, len(msg)]
+        to_send = [
+            ord(SendMessageHeader.WRITE_TO_MODULE),
+            module_index + 1,
+            len(msg),
+        ]
         to_send = ArduinoTypes.get_uint8_array(to_send)
 
         self._arcom.write_array(to_send + msg)

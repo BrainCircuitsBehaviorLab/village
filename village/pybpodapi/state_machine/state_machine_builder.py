@@ -1,10 +1,7 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import logging
 import math
-from pybpodapi.com.arcom import ArduinoTypes
 
+from pybpodapi.com.arcom import ArduinoTypes
 from pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
 from pybpodapi.state_machine.state_machine_base import StateMachineBase
 
@@ -15,12 +12,16 @@ class StateMachineBuilder(StateMachineBase):
     """
     Extend state machine with builder logic
 
-    .. warning:: A lot of data structures are kept here for compatibility with original matlab library which are not so python-like. Anyone is welcome to enhance this class but keep in mind that it will affect the whole pybpodapi library.
+    .. warning:: A lot of data structures are kept here for compatibility
+    with original matlab library which are not so python-like.
+    Anyone is welcome to enhance this class but keep in mind that it
+    will affect the whole pybpodapi library.
     """
 
     def update_state_numbers(self):
         """
-        Replace undeclared states (at the time they were referenced) with actual state numbers
+        Replace undeclared states (at the time they were referenced)
+        with actual state numbers
         """
         for i in range(len(self.undeclared)):
             undeclaredStateNumber = i + 10000
@@ -34,7 +35,10 @@ class StateMachineBuilder(StateMachineBase):
                 for k in range(0, len(inputTransitions)):
                     thisTransition = inputTransitions[k]
                     if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (thisTransition[0], thisStateNumber)
+                        inputTransitions[k] = (
+                            thisTransition[0],
+                            thisStateNumber,
+                        )
                 self.input_matrix[j] = inputTransitions
 
                 # start matrix
@@ -42,7 +46,10 @@ class StateMachineBuilder(StateMachineBase):
                 for k in range(0, len(inputTransitions)):
                     thisTransition = inputTransitions[k]
                     if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (thisTransition[0], thisStateNumber)
+                        inputTransitions[k] = (
+                            thisTransition[0],
+                            thisStateNumber,
+                        )
                 self.global_timers.start_matrix[j] = inputTransitions
 
                 # end matrix
@@ -50,7 +57,10 @@ class StateMachineBuilder(StateMachineBase):
                 for k in range(0, len(inputTransitions)):
                     thisTransition = inputTransitions[k]
                     if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (thisTransition[0], thisStateNumber)
+                        inputTransitions[k] = (
+                            thisTransition[0],
+                            thisStateNumber,
+                        )
                 self.global_timers.end_matrix[j] = inputTransitions
 
                 # global counters
@@ -58,7 +68,10 @@ class StateMachineBuilder(StateMachineBase):
                 for k in range(0, len(inputTransitions)):
                     thisTransition = inputTransitions[k]
                     if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (thisTransition[0], thisStateNumber)
+                        inputTransitions[k] = (
+                            thisTransition[0],
+                            thisStateNumber,
+                        )
                 self.global_counters.matrix[j] = inputTransitions
 
                 # conditions
@@ -66,18 +79,21 @@ class StateMachineBuilder(StateMachineBase):
                 for k in range(0, len(inputTransitions)):
                     thisTransition = inputTransitions[k]
                     if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (thisTransition[0], thisStateNumber)
+                        inputTransitions[k] = (
+                            thisTransition[0],
+                            thisStateNumber,
+                        )
                 self.conditions.matrix[j] = inputTransitions
 
         # Check to make sure all states in manifest exist
         logger.debug(
-            "Total states added: %s | Manifested sates: %s",
+            "Total states added: %s | Manifested states: %s",
             self.total_states_added,
             len(self.manifest),
         )
         if len(self.manifest) > self.total_states_added:
             raise StateMachineBuilderError(
-                "Error: some states were referenced by name, but not subsequently declared."
+                "Error: some states were referenced by name, but not declared."
             )
 
     def build_header(self, run_asap=None, statemachine_body_size=0):
@@ -127,9 +143,11 @@ class StateMachineBuilder(StateMachineBase):
         tmp = []
         for i in range(self.total_states_added):
             tmp += [
-                self.total_states_added
-                if math.isnan(self.state_timer_matrix[i])
-                else self.state_timer_matrix[i]
+                (
+                    self.total_states_added
+                    if math.isnan(self.state_timer_matrix[i])
+                    else self.state_timer_matrix[i]
+                )
             ]
 
         message += tmp
@@ -147,7 +165,7 @@ class StateMachineBuilder(StateMachineBase):
                 tmp += [transition[0]]
                 dest_state = transition[1]
                 tmp += [
-                    self.total_states_added if math.isnan(dest_state) else dest_state
+                    (self.total_states_added if math.isnan(dest_state) else dest_state)
                 ]
         message += tmp
         logger.debug("INPUT MATRIX: %s", tmp)
@@ -170,7 +188,8 @@ class StateMachineBuilder(StateMachineBase):
         logger.debug("OUTPUT MATRIX: %s", tmp)
 
         # GLOBAL_TIMER_START_MATRIX
-        # Send global timer-start triggered transitions (where they are different from default)
+        # Send global timer-start triggered transitions
+        # (where they are different from default)
         tmp = []
         for i in range(self.total_states_added):
             state_transitions = self.global_timers.start_matrix[i]
@@ -183,13 +202,14 @@ class StateMachineBuilder(StateMachineBase):
                     - self.hardware.channels.events_positions.globalTimerStart
                 ]
                 tmp += [
-                    self.total_states_added if math.isnan(dest_state) else dest_state
+                    (self.total_states_added if math.isnan(dest_state) else dest_state)
                 ]
         message += tmp
         logger.debug("GLOBAL_TIMER_START_MATRIX: %s", tmp)
 
         # GLOBAL_TIMER_END_MATRIX
-        # Send global timer-end triggered transitions (where they are different from default)
+        # Send global timer-end triggered transitions
+        # (where they are different from default)
         tmp = []
         for i in range(self.total_states_added):
             state_transitions = self.global_timers.end_matrix[i]
@@ -202,13 +222,14 @@ class StateMachineBuilder(StateMachineBase):
                     - self.hardware.channels.events_positions.globalTimerEnd
                 ]
                 tmp += [
-                    self.total_states_added if math.isnan(dest_state) else dest_state
+                    (self.total_states_added if math.isnan(dest_state) else dest_state)
                 ]
         message += tmp
         logger.debug("GLOBAL_TIMER_END_MATRIX: %s", tmp)
 
         # GLOBAL_COUNTER_MATRIX
-        # Send global counter triggered transitions (where they are different from default)
+        # Send global counter triggered transitions
+        # (where they are different from default)
         tmp = []
         for i in range(self.total_states_added):
             state_transitions = self.global_counters.matrix[i]
@@ -221,13 +242,14 @@ class StateMachineBuilder(StateMachineBase):
                     - self.hardware.channels.events_positions.globalCounter
                 ]
                 tmp += [
-                    self.total_states_added if math.isnan(dest_state) else dest_state
+                    (self.total_states_added if math.isnan(dest_state) else dest_state)
                 ]
         message += tmp
         logger.debug("GLOBAL_COUNTER_MATRIX: %s", tmp)
 
         # CONDITION_MATRIX
-        # Send condition triggered transitions (where they are different from default)
+        # Send condition triggered transitions
+        # (where they are different from default)
         tmp = []
         for i in range(self.total_states_added):
             state_transitions = self.conditions.matrix[i]
@@ -239,7 +261,7 @@ class StateMachineBuilder(StateMachineBase):
                     transition[0] - self.hardware.channels.events_positions.condition
                 ]
                 tmp += [
-                    self.total_states_added if math.isnan(dest_state) else dest_state
+                    (self.total_states_added if math.isnan(dest_state) else dest_state)
                 ]
 
         message += tmp
@@ -341,13 +363,6 @@ class StateMachineBuilder(StateMachineBase):
         :rtype: list(float)
         """
         # TODO find how many global timers are used
-
-        """
-        thirty_two_bit_message = [i * self.hardware.cycle_frequency for i in self.state_timers] + \
-                                 [i * self.hardware.cycle_frequency for i in self.global_timers.timers] + \
-                                 [i * self.hardware.cycle_frequency for i in self.global_timers.on_set_delays] + \
-                                 [i * self.hardware.cycle_frequency for i in self.global_timers.loop_intervals] + \
-                                 self.global_counters.thresholds"""
 
         used_timers = range(self.highest_used_global_timer)
         used_counters = range(self.highest_used_global_counter)

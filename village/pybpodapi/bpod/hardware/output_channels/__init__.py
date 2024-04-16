@@ -1,6 +1,6 @@
 from village.settings import settings
 
-target = settings.get('BPOD_TARGET_FIRMWARE')
+target = settings.get("BPOD_TARGET_FIRMWARE")
 
 if target == "20":
     from pybpodapi.bpod.hardware.output_channels.bpod0_7_9_fw20 import OutputChannel

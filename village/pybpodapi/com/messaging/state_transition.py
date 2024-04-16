@@ -1,7 +1,5 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import logging
+
 from pybpodapi.com.messaging.base_message import BaseMessage
 from pybpodapi.utils import date_parser
 
@@ -13,7 +11,8 @@ class StateTransition(BaseMessage):
     Store timestamps for a specific state occurrence of the state machine
 
     :ivar str name: name of the state
-    :ivar list(StateDuration) timestamps: a list of timestamps (start and end) that corresponds to occurrences of this state
+    :ivar list(StateDuration) timestamps: a list of timestamps (start and end)
+    that corresponds to occurrences of this state
     """
 
     MESSAGE_TYPE_ALIAS = "TRANSITION"
@@ -47,4 +46,4 @@ class StateTransition(BaseMessage):
 
     @property
     def show_name(self):
-        return '_Transition_to_' + self.content
+        return "_Transition_to_" + self.content

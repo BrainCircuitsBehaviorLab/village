@@ -1,5 +1,3 @@
-# !/usr/bin/python3
-# -*- coding: utf-8 -*-
 from pybpodapi.com.messaging.base_message import BaseMessage
 from pybpodapi.utils import date_parser
 
@@ -35,12 +33,7 @@ class EventOccurrence(BaseMessage):
         return self._event_id
 
     def tolist(self):
-        return [
-            self.host_timestamp,
-            None,
-            self.event_name,
-            None
-        ]
+        return [self.host_timestamp, None, self.event_name, None]
 
     @classmethod
     def fromlist(cls, row):
