@@ -135,7 +135,7 @@ class BpodBase(object):
 
         if not self._bpodcom_handshake():
             raise BpodErrorException(
-                """Error: Bpod failed to confirm connectivity. 
+                """Error: Bpod failed to confirm connectivity.
                 Please reset Bpod and try again."""
             )
 
@@ -148,13 +148,13 @@ class BpodBase(object):
 
         if firmware_version < int(settings.get("BPOD_TARGET_FIRMWARE")):
             raise BpodErrorException(
-                """Error: Old firmware detected. 
+                """Error: Old firmware detected.
                 Please update Bpod 0.7 + firmware and try again."""
             )
 
         if firmware_version > int(settings.get("BPOD_TARGET_FIRMWARE")):
             raise BpodErrorException(
-                """Error: Future firmware detected. 
+                """Error: Future firmware detected.
                 Please update the Bpod python software."""
             )
 

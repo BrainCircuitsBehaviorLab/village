@@ -1,8 +1,8 @@
 # Install MV Raspberry
 
 ## What you need
-- Raspberry Pi 5 - 8GB  
-- Fan 
+- Raspberry Pi 5 - 8GB
+- Fan
 - Micro SD 128GB
 - Keyboard
 - Mouse
@@ -27,7 +27,7 @@
 - `sudo raspi-config`
   - Go to **Display Options** and disable blanking.
   - Go to **Advanced Options** and select X11 (instead of Wayland).
-  
+
 ### If you are using one screen only:
 - `sudo nano /boot/firmware/cmdline.txt`
   - Add the text: `vc4.fvc4.force_hotplug=1`

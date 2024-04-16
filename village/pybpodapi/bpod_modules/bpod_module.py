@@ -50,7 +50,7 @@ class BpodModule(object):
             self.relay_active = True
         else:
             raise BpodErrorException(
-                """Error: You must disable the active module relay before 
+                """Error: You must disable the active module relay before
                 starting another one."""
             )
 
@@ -61,7 +61,7 @@ class BpodModule(object):
     def __read(self, size=None, dtype=None):
         if not self.relay_active:
             raise BpodErrorException(
-                """Error: you must start the module relay with start_moule_relay() 
+                """Error: you must start the module relay with start_moule_relay()
                 before you can read bytes from a module"""
             )
 

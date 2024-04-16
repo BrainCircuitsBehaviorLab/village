@@ -14,4 +14,3 @@
 [![view - Documentation](https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge)](https://braincircuitsbehaviorlab.github.io/village/)
 
 </div>
-

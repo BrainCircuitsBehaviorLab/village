@@ -230,7 +230,7 @@ class StateMachineBase(object):
 
                 """
                 elif action_name == 'ValveState':
-                    output_code  = self.hardware.channels.output_channel_names.index( 
+                    output_code  = self.hardware.channels.output_channel_names.index(
                     OutputChannel.Valve+str(action_value)
                     )
                     output_value = math.pow(2, action_value - 1)

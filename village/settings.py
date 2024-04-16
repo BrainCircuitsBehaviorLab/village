@@ -132,21 +132,21 @@ duration_settings = [
         "DEFAULT_REFRACTARY_PERIOD",
         14400,
         int,
-        """Period of time in seconds that the animal is not allowed to enter after a 
+        """Period of time in seconds that the animal is not allowed to enter after a
         completed session from the same animal""",
     ),
     Setting(
         "DEFAULT_DURATION_MIN",
         1800,
         int,
-        """Default minimum duration of the session in seconds. 
+        """Default minimum duration of the session in seconds.
         Door2 is opened after this time.""",
     ),
     Setting(
         "DEFAULT_DURATION_MAX",
         3600,
         int,
-        """Default maximum duration of the session in seconds. 
+        """Default maximum duration of the session in seconds.
         The session is ended after this time.""",
     ),
 ]
@@ -168,7 +168,7 @@ directory_settings = [
         "BACKUP_TASKS_DIRECTORY",
         "/home/mousevillage/backup_tasks",
         str,
-        """Directory where a copy of the task with a particular code is saved 
+        """Directory where a copy of the task with a particular code is saved
         every time a task is run""",
     ),
 ]
@@ -178,28 +178,28 @@ alarm_settings = [
         "MINIMUM_WATER_24",
         400,
         int,
-        """Minimum water in ml for 24 hours. 
+        """Minimum water in ml for 24 hours.
         If the animal drinks less, an alarm is triggered""",
     ),
     Setting(
         "MINIMUM_WATER_48",
         1000,
         int,
-        """Minimum water in ml for 48 hours. 
+        """Minimum water in ml for 48 hours.
         If the animal drinks less, an alarm is triggered""",
     ),
     Setting(
         "MINIMUM_TEMPERATURE",
         19,
         int,
-        """Minimum temperature in celsius. 
+        """Minimum temperature in celsius.
         If the temperature is lower, an alarm is triggered""",
     ),
     Setting(
         "MAXIMUM_TEMPERATURE",
         27,
         int,
-        """Maximum temperature in celsius. 
+        """Maximum temperature in celsius.
         If the temperature is higher, an alarm is triggered""",
     ),
 ]
@@ -221,7 +221,7 @@ advanced_settings = [
         "DIFFERENT_TAG_SEPARATION",
         15.0,
         float,
-        """If a tag is detected but the previous one was less than this time ago, 
+        """If a tag is detected but the previous one was less than this time ago,
         animal is not allowed to enter""",
     ),
     Setting(
@@ -262,8 +262,8 @@ bpod_settings = [
         "BPOD_TARGET_FIRMWARE",
         22,
         int,
-        """This system only works with this firmware version of the Bpod. 
-        If you have another version, update it, 
+        """This system only works with this firmware version of the Bpod.
+        If you have another version, update it,
         following instructions in sanworks.com""",
     ),
     Setting(
