@@ -16,7 +16,7 @@ from village.settings import settings
 
 # configure the logging of libcamera (the C++ library picamera2 uses)
 os.environ["LIBCAMERA_LOG_LEVELS"] = "2"
-#'0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
+# '0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
 
 
 # use this function to get info

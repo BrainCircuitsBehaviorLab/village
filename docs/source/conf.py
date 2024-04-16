@@ -9,7 +9,7 @@
 import os
 import sys
 
-import setuptools_scm
+import setuptools_scm  # type: ignore
 
 # Used when building API docs, put the dependencies
 # of any class you are documenting here

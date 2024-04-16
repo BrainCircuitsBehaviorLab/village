@@ -116,5 +116,5 @@ skip = '.git'
 check-hidden = true
 
 
-[mypy]
+[tool.mypy]
 exclude = ["pybpodapi"]

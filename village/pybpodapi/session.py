@@ -40,10 +40,10 @@ class Session(object):
         # should be written.
         streams = []
 
-        self.history = []  # type: list[Trial]
-        self.trials = []  # type: list[Trial]
-        self.firmware_version = None  # type: int
-        self.bpod_version = None  # type: int
+        self.history = []
+        self.trials = []
+        self.firmware_version = None
+        self.bpod_version = None
         self.start_timestamp = datetime_now.now()
 
         self.csvwriter = None
