@@ -23,7 +23,7 @@ os.environ["LIBCAMERA_LOG_LEVELS"] = "2"
 def print_info_about_the_connected_cameras():
     print("INFO ABOUT THE CONNECTED CAMERAS:")
     pprint(Picamera2.global_camera_info())
-    print("")
+    print()
 
 
 class CameraProtocol(Protocol):
@@ -159,7 +159,7 @@ class Camera(CameraProtocol):
     def print_info_about_config(self):
         print("INFO ABOUT THE " + self.name + " CAM CONFIGURATION:")
         pprint(self.config)
-        print("")
+        print()
 
     def apply_timestamp(self, request):
         colour = (0, 255, 0)

@@ -104,8 +104,7 @@ class Settings:
             return int(self.saved_settings.value(key))
         elif type == float:
             return float(self.saved_settings.value(key))
-        else:
-            return self.saved_settings.value(key)
+        return self.saved_settings.value(key)
 
     def set(self, key, value):
         return self.saved_settings.setValue(key, value)

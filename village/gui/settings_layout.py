@@ -1,3 +1,5 @@
+from contextlib import suppress
+
 from PyQt5.QtWidgets import QComboBox, QLabel, QLineEdit, QMessageBox, QPushButton
 
 from village.gui.layout import Layout
@@ -13,7 +15,7 @@ class ComboBox(QComboBox):
         event.ignore()
 
     def set_color(self):
-        if self.currentText() in ["No", "No Screen"]:
+        if self.currentText() in ("No", "No Screen"):
             self.setStyleSheet("QComboBox {background-color: lightcoral}")
         else:
             self.setStyleSheet("QComboBox {background-color: lightgreen}")
@@ -262,18 +264,15 @@ class SettingsLayout(Layout):
                 settings.set(s.name, value)
                 row.setText(value)
             elif s.type == float:
-                try:
+                with suppress(BaseException):
                     value = float(row.text())
                     settings.set(s.name, value)
-                except:  # noqa: E722
-                    pass
 
             elif s.type == int:
-                try:
+                with suppress(BaseException):
                     value = round(float(row.text()))
                     settings.set(s.name, value)
-                except:  # noqa: E722
-                    pass
+
             elif s.type == list:
                 try:
                     values = [field.currentText() for field in row]
@@ -283,11 +282,10 @@ class SettingsLayout(Layout):
                     settings.set(s.name, values)
             elif s.type == tuple:
                 values = [field.text() for field in row]
-                try:
+                with suppress(BaseException):
                     values = (int(values[0]), int(values[1]))
                     settings.set(s.name, values)
-                except:  # noqa: E722
-                    pass
+
             else:
                 value = row.currentText()
                 settings.set(s.name, value)
@@ -343,7 +341,7 @@ class SettingsLayout(Layout):
                 self.large_widget_width,
             )
             self.labels_and_values.append((line_edit, s))
-        elif s.type in [str, int, float]:
+        elif s.type in (str, int, float):
             line_edit = QLineEdit()
             line_edit.setText(str(settings.get(s.name)))
             line_edit.textChanged.connect(self.settings_changed)
@@ -444,7 +442,7 @@ class SettingsLayout(Layout):
             if item[1].type == list and not item[1].name == "TELEGRAM_USERS":
                 for combo_box in item[0]:
                     combo_box.set_color()
-            if item[1].type not in [str, int, float, list, tuple]:
+            if item[1].type not in (str, int, float, list, tuple):
                 item[0].set_color()
         self.settings_changed()
 
@@ -454,7 +452,7 @@ class SettingsLayout(Layout):
             if item[1].type == list and not item[1].name == "TELEGRAM_USERS":
                 for combo_box in item[0]:
                     combo_box.set_color()
-            if item[1].type not in [str, int, float, list, tuple]:
+            if item[1].type not in (str, int, float, list, tuple):
                 item[0].set_color()
         if value == "No":
             self.delete_optional_widgets("Sound")
