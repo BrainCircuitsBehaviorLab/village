@@ -113,12 +113,8 @@ commands =
 skip = '.git'
 check-hidden = true
 
-#[tool.mypy]
-#exclude = ["pybpodapi"]
-
 [tool.refurb]
 enable_all = true
 
-[[tool.refurb.amend]]
-path = ["village/pybpodapi/", "village/pybpodapi/bpod/"]
-ignore = ["FURB126", "FURB109", "FURB108", "FURB184", "FURB147", "FURB115"]
+[tool.mypy]
+exclude = ["pybpodapi"]

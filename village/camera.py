@@ -1,5 +1,6 @@
 import os
 import time
+from pathlib import Path
 from pprint import pprint
 from typing import Protocol
 
@@ -114,9 +115,7 @@ class Camera(CameraProtocol):
         )
         self.cam.align_configuration(self.config)
         self.cam.configure(self.config)
-        self.path_video = os.path.join(
-            settings.get("DATA_DIRECTORY"), "videos", name + ".mp4"
-        )
+        self.path_video = Path(settings.get("DATA_DIRECTORY"), "videos", name + ".mp4")
         self.output = FfmpegOutput(self.path_video)
         self.cam.pre_callback = self.apply_timestamp
 

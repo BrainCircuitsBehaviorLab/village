@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
@@ -24,7 +24,7 @@ class MainLayout(Layout):
 
         self.label = QLabel()
         self.label.setAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        image_path = os.path.join(
+        image_path = Path(
             settings.get("APP_DIRECTORY"), "resources", "mouse_village.png"
         )
         pixmap = QPixmap(image_path)
