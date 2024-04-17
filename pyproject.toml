@@ -60,7 +60,6 @@ include-package-data = true
 include = ["village*"]
 exclude = ["tests", "docs*"]
 
-
 [tool.pytest.ini_options]
 addopts = "--cov=village"
 filterwarnings = [
@@ -84,7 +83,6 @@ ignore = [
   "docs/",
   "docs/source/",
 ]
-
 
 [tool.ruff]
 line-length = 88
@@ -111,11 +109,18 @@ commands =
     pytest -v --color=yes --cov=village --cov-report=xml
 """
 
-
 [tool.codespell]
 skip = '.git'
 check-hidden = true
 
-
 [tool.mypy]
 exclude = ["pybpodapi"]
+
+# these settings will be applied globally
+[tool.refurb]
+enable_all = true
+
+# these will only be applied to the "pybpodapi" folder
+[[tool.refurb.amend]]
+path = "village/pybpodapi"
+disable_all = true
