@@ -113,14 +113,12 @@ commands =
 skip = '.git'
 check-hidden = true
 
-[tool.mypy]
-exclude = ["pybpodapi"]
+#[tool.mypy]
+#exclude = ["pybpodapi"]
 
-# these settings will be applied globally
 [tool.refurb]
 enable_all = true
 
-# these will only be applied to the "pybpodapi" folder
 [[tool.refurb.amend]]
-path = "village/pybpodapi"
-disable_all = true
+path = ["village/pybpodapi/", "village/pybpodapi/bpod/"]
+ignore = ["FURB126", "FURB109", "FURB108", "FURB184", "FURB147", "FURB115"]
