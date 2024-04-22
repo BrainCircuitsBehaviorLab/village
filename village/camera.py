@@ -178,6 +178,8 @@ class Camera(CameraProtocol):
             cv2.putText(m.array, str(area), origin2, font, scale, colour, thickness)
 
 
+# TODO: this function creates a new camera?
+# it does not return a pointer to an existing one?
 def get_camera(index, name) -> CameraProtocol:
     try:
         cam = Camera(index, name)
