@@ -7,3 +7,10 @@ You can run this locally to check what the behavior will be:
 ```
 sphinx-build docs/source docs/build -b linkcheck
 ```
+
+### Running in WSL
+GUI not launching in WSL.
+Not optimal but found this to work:
+```
+export QT_QPA_PLATFORM=wayland
+```

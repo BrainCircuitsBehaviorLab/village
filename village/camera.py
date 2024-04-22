@@ -5,10 +5,14 @@ from pprint import pprint
 from typing import Protocol
 
 import cv2
-from libcamera import controls
-from picamera2 import MappedArray, Picamera2, Preview
-from picamera2.encoders import H264Encoder, Quality
-from picamera2.outputs import FfmpegOutput
+
+try:
+    from libcamera import controls
+    from picamera2 import MappedArray, Picamera2, Preview
+    from picamera2.encoders import H264Encoder, Quality
+    from picamera2.outputs import FfmpegOutput
+except Exception:
+    pass
 
 from village.log import log
 from village.settings import settings

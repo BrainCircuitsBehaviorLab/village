@@ -27,7 +27,7 @@ class MainLayout(Layout):
         image_path = Path(
             settings.get("APP_DIRECTORY"), "resources", "mouse_village.png"
         )
-        pixmap = QPixmap(image_path)
+        pixmap = QPixmap(str(image_path))
         self.label.setPixmap(pixmap)
         self.label.setFixedSize(
             self.image_columns * self.column_width, self.image_rows * self.row_height

@@ -1,4 +1,7 @@
-from picamera2.previews.qt import QGlPicamera2  # type: ignore
+try:
+    from picamera2.previews.qt import QGlPicamera2  # type: ignore
+except Exception:
+    pass
 from PyQt5.QtWidgets import QPushButton, QWidget
 
 from village.camera import cam_box, cam_corridor
