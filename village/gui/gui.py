@@ -6,6 +6,8 @@ from village.gui.gui_window import GuiWindow
 from village.settings import settings
 
 
+# TODO: need explanation of this class and how
+# it interacts with main.py, settings, and screens
 class Gui:
     def __init__(self, q_app: QApplication):
         self.q_app = q_app

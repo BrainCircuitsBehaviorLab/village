@@ -4,6 +4,8 @@ from PyQt5.QtCore import QSettings
 
 from village.log import log
 
+# TODO: should we separate class definition and scripting?
+
 
 class YesNo(Enum):
     YES = "Yes"
@@ -168,22 +170,27 @@ duration_settings = [
     ),
 ]
 
+# TODO: any way we can make this generalizable? e.g. __file__?
+# TODO: also, does the app need to live with the data? Or is this for the gui?
+# Does the GUI takes the last saved parameters?
+user = "hmv"
 directory_settings = [
     Setting(
         "APP_DIRECTORY",
-        "/home/mousevillage/village",
+        "/home/" + user + "/village",
         str,
         "The directory of the application",
     ),
     Setting(
-        "USER_DIRECTORY", "/home/mousevillage/user", str, "The directory of the user"
+        "USER_DIRECTORY", "/home/" + user + "/user", str, "The directory of the user"
     ),
     Setting(
-        "DATA_DIRECTORY", "/home/mousevillage/data", str, "The directory of the data"
+        "DATA_DIRECTORY", "/home/" + user + "/data", str, "The directory of the data"
     ),
+    # TODO: should the backup be saved together with the session data?
     Setting(
         "BACKUP_TASKS_DIRECTORY",
-        "/home/mousevillage/backup_tasks",
+        "/home/" + user + "/backup_tasks",
         str,
         """Directory where a copy of the task with a particular code is saved
         every time a task is run""",
@@ -233,6 +240,7 @@ telegram_settings = [
 ]
 
 advanced_settings = [
+    # TODO: what is a tag?
     Setting("TAG_DURATION", 0.5, float, "The duration of the tag in seconds"),
     Setting(
         "DIFFERENT_TAG_SEPARATION",
@@ -273,6 +281,7 @@ screen_settings = [
 ]
 
 sound_settings = [Setting("PARAMETER", 1, int, "The parameter of the sound")]
+# TODO: is there anywhere that checks that a setting is the right type?
 
 bpod_settings = [
     Setting(
@@ -330,6 +339,7 @@ harp_advanced_settings = [
 
 extra_settings = [
     Setting("FIRST_LAUNCH", "No", YesNo, "First launch of the system"),
+    # TODO: what is the saving structure like? why sessions dir in extra settings?
     Setting(
         "SESSIONS_DIRECTORY",
         "/home/mousevillage/data/sessions",
@@ -461,6 +471,6 @@ if settings.get("FIRST_LAUNCH") is None:
     settings.create_factory_settings()
 
 
-# settings.create_factory_settings()
+settings.create_factory_settings()
 
 settings.print()

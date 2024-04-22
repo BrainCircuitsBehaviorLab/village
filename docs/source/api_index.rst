@@ -1,7 +1,7 @@
 API
 ===
 
-math
+math_local
 ----
 
 .. currentmodule:: village.math

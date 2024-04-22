@@ -1,13 +1,18 @@
 import os
 import time
+from pathlib import Path
 from pprint import pprint
 from typing import Protocol
 
 import cv2
-from libcamera import controls
-from picamera2 import MappedArray, Picamera2, Preview
-from picamera2.encoders import H264Encoder, Quality
-from picamera2.outputs import FfmpegOutput
+
+try:
+    from libcamera import controls
+    from picamera2 import MappedArray, Picamera2, Preview
+    from picamera2.encoders import H264Encoder, Quality
+    from picamera2.outputs import FfmpegOutput
+except Exception:
+    pass
 
 from village.app_state import app
 from village.log import log
@@ -115,9 +120,7 @@ class Camera(CameraProtocol):
         )
         self.cam.align_configuration(self.config)
         self.cam.configure(self.config)
-        self.path_video = os.path.join(
-            settings.get("DATA_DIRECTORY"), "videos", name + ".mp4"
-        )
+        self.path_video = Path(settings.get("DATA_DIRECTORY"), "videos", name + ".mp4")
         self.output = FfmpegOutput(self.path_video)
         self.cam.pre_callback = self.pre_process
 
@@ -274,6 +277,8 @@ class Camera(CameraProtocol):
     #         # )
 
 
+# TODO: this function creates a new camera?
+# it does not return a pointer to an existing one?
 def get_camera(index, name) -> CameraProtocol:
     try:
         cam = Camera(index, name)

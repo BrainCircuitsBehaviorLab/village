@@ -45,7 +45,3 @@ repos:
       - id: codespell
         additional_dependencies:
         - tomli
-    - repo: https://github.com/dosisod/refurb
-      rev: v2.0.0
-      hooks:
-        - id: refurb

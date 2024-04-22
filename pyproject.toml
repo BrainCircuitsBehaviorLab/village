@@ -42,7 +42,6 @@ dev = [
   "pre-commit",
   "ruff",
   "setuptools_scm",
-  "refurb",
 ]
 
 [build-system]
@@ -59,7 +58,6 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["village*"]
 exclude = ["tests", "docs*"]
-
 
 [tool.pytest.ini_options]
 addopts = "--cov=village"
@@ -84,7 +82,6 @@ ignore = [
   "docs/",
   "docs/source/",
 ]
-
 
 [tool.ruff]
 line-length = 88
@@ -111,11 +108,12 @@ commands =
     pytest -v --color=yes --cov=village --cov-report=xml
 """
 
-
 [tool.codespell]
 skip = '.git'
 check-hidden = true
 
+[tool.refurb]
+enable_all = true
 
 [tool.mypy]
 exclude = ["pybpodapi"]
