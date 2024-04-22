@@ -9,6 +9,7 @@ from picamera2 import MappedArray, Picamera2, Preview
 from picamera2.encoders import H264Encoder, Quality
 from picamera2.outputs import FfmpegOutput
 
+from village.app_state import app
 from village.log import log
 from village.settings import settings
 
@@ -54,7 +55,7 @@ class CameraProtocol(Protocol):
     def print_info_about_config(self) -> None:
         return
 
-    def apply_timestamp(self, request) -> None:
+    def pre_process(self, request) -> None:
         return
 
 
@@ -86,7 +87,7 @@ class NullCamera(CameraProtocol):
     def print_info_about_config(self) -> None:
         pass
 
-    def apply_timestamp(self, request) -> None:
+    def pre_process(self, request) -> None:
         pass
 
 
@@ -118,7 +119,34 @@ class Camera(CameraProtocol):
             settings.get("DATA_DIRECTORY"), "videos", name + ".mp4"
         )
         self.output = FfmpegOutput(self.path_video)
-        self.cam.pre_callback = self.apply_timestamp
+        self.cam.pre_callback = self.pre_process
+
+        # labels settings
+        self.origin_frame_number = (0, 30)
+        self.origin_timestamps = (0, 60)
+        self.origin_area1 = (0, 90)
+        self.origin_area2 = (0, 120)
+        self.origin_area3 = (0, 150)
+        self.origin_area4 = (0, 180)
+
+        self.font = cv2.FONT_HERSHEY_SIMPLEX
+        self.scale = 0.5
+        self.thickness_line = 2
+        self.thickness_text = 1
+
+        # area and threshold settings
+        self.area1 = settings.get("AREA1_" + name)
+        self.area2 = settings.get("AREA2_" + name)
+        self.area3 = settings.get("AREA3_" + name)
+        self.area4 = settings.get("AREA4_" + name)
+
+        # detection settings
+        self.no_mouse = settings.get("NO_MOUSE_" + name)
+        self.one_mouse = settings.get("ONE_MOUSE_" + name)
+        self.two_mice = settings.get("TWO_MICE_" + name)
+
+        self.frame_number = 0
+        self.timestamp = 0
 
         self.cam.start()
 
@@ -161,22 +189,89 @@ class Camera(CameraProtocol):
         pprint(self.config)
         print()
 
-    def apply_timestamp(self, request):
-        colour = (0, 255, 0)
-        origin1 = (0, 30)
-        origin2 = (0, 60)
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        scale = 1
-        thickness = 2
-        threshold = 50
-        timestamp = time.strftime("%Y-%m-%d %X")
+    def pre_process(self, request):
+        self.frame_number += 1
+        self.timestamp = time.strftime("%Y-%m-%d %X")
         with MappedArray(request, "main") as m:
-            greyscale_frame = cv2.cvtColor(m.array, cv2.COLOR_BGR2GRAY)
-            gaussian_frame = cv2.GaussianBlur(greyscale_frame, (5, 5), 0)
-            th = cv2.threshold(gaussian_frame, threshold, 225, cv2.THRESH_BINARY_INV)[1]
-            area = cv2.countNonZero(th)
-            cv2.putText(m.array, timestamp, origin1, font, scale, colour, thickness)
-            cv2.putText(m.array, str(area), origin2, font, scale, colour, thickness)
+            self.write_frame_number_and_timestamp(m)
+
+            cv2.rectangle(
+                m.array,
+                (self.area1[0], self.area1[1]),
+                (self.area1[2], self.area1[3]),
+                app.color_area1,
+                self.thickness_line,
+            )
+
+            cv2.rectangle(
+                m.array,
+                (self.area2[0], self.area2[1]),
+                (self.area2[2], self.area2[3]),
+                app.color_area2,
+                self.thickness_line,
+            )
+
+            cv2.rectangle(
+                m.array,
+                (self.area3[0], self.area3[1]),
+                (self.area3[2], self.area3[3]),
+                app.color_area3,
+                self.thickness_line,
+            )
+
+    def write_frame_number_and_timestamp(self, m):
+        cv2.putText(
+            m.array,
+            str(self.frame_number),
+            self.origin_frame_number,
+            self.font,
+            self.scale,
+            app.color_frame_number,
+            self.thickness_text,
+        )
+
+        cv2.putText(
+            m.array,
+            self.timestamp,
+            self.origin_timestamps,
+            self.font,
+            self.scale,
+            app.color_timestamp,
+            self.thickness_text,
+        )
+
+    # def apply_timestamp(self, request):
+
+    #     # timestamp2 = request.get_metadata()["SensorTimestamp"]
+
+    #     # convert timestamp2 to a human readable format
+    #     # timestamp2 = time.strftime("%Y-%m-%d %X", time.localtime(timestamp2))
+
+    #     with MappedArray(request, "main") as m:
+    #         # greyscale_frame = cv2.cvtColor(m.array, cv2.COLOR_BGR2GRAY)
+    #         # gaussian_frame = cv2.GaussianBlur(greyscale_frame, (5, 5), 0)
+    #         # thresh = cv2.threshold(
+    #         #    gaussian_frame, self.threshold1, 255, cv2.THRESH_BINARY_INV
+    #         # )[1]
+    #         # area = cv2.countNonZero(thresh)
+    #         cv2.putText(
+    #             m.array,
+    #             timestamp,
+    #             self.origin_timestamps,
+    #             self.font,
+    #             self.scale,
+    #             self.color_timestamp,
+    #             self.thickness,
+    #         )
+    #         # cv2.putText(
+    #         #    m.array,
+    #         #    timestamp2,
+    #         #    self.origin_area1,
+    #         #    self.font,
+    #         #    self.scale,
+    #         #    self.color_area1,
+    #         #    self.thickness,
+    #         # )
 
 
 def get_camera(index, name) -> CameraProtocol:

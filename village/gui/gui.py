@@ -1,4 +1,5 @@
 from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtWidgets import QApplication
 
 from village.gui.behaviour_window import BehaviourWindow
 from village.gui.gui_window import GuiWindow
@@ -6,8 +7,8 @@ from village.settings import settings
 
 
 class Gui:
-    def __init__(self, app):
-        self.app = app
+    def __init__(self, q_app: QApplication):
+        self.q_app = q_app
         # get the resolution of the primary monitor
         screen = QGuiApplication.screens()[0]
         availableGeometry = screen.availableGeometry()
@@ -15,7 +16,7 @@ class Gui:
         # and the top menu bar
         self.primary_width = availableGeometry.width() - 8
         self.primary_height = availableGeometry.height() - 30
-        self.gui_window = GuiWindow(app, self.primary_width, self.primary_height)
+        self.gui_window = GuiWindow(q_app, self.primary_width, self.primary_height)
 
         if settings.get("USE_SCREEN") != "No Screen":
             # get the resolution of the secondary monitor
@@ -24,5 +25,5 @@ class Gui:
             self.secondary_width = availableGeometry.width()
             self.secondary_height = availableGeometry.height()
             self.behaviour_window = BehaviourWindow(
-                app, self.secondary_width, self.secondary_height
+                q_app, self.secondary_width, self.secondary_height
             )

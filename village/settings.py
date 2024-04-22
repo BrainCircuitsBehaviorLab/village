@@ -6,19 +6,19 @@ from village.log import log
 
 
 class YesNo(Enum):
-    Yes = "Yes"
-    No = "No"
+    YES = "Yes"
+    NO = "No"
 
 
 class ControlDevice(Enum):
-    Bpod = "Bpod"
-    Harp = "Harp"
+    BPOD = "Bpod"
+    HARP = "Harp"
 
 
 class UseScreen(Enum):
-    Screen = "Screen"
-    Touchscreen = "Touchscreen"
-    No_screen = "No Screen"
+    SCREEN = "Screen"
+    TOUCHSCREEN = "Touchscreen"
+    NO_SCREEN = "No Screen"
 
 
 class Setting:
@@ -46,6 +46,7 @@ class Settings:
         harp_settings,
         harp_advanced_settings,
         extra_settings,
+        camera_settings,
     ):
 
         self.main_settings = main_settings
@@ -62,6 +63,7 @@ class Settings:
         self.directory_settings = directory_settings
         self.advanced_settings = advanced_settings
         self.extra_settings = extra_settings
+        self.camera_settings = camera_settings
 
         self.saved_settings = QSettings("village", "village")
 
@@ -81,11 +83,21 @@ class Settings:
         )
 
         self.all_settings = (
-            self.restorable_settings + extra_settings + telegram_settings
+            self.restorable_settings
+            + extra_settings
+            + telegram_settings
+            + camera_settings
         )
 
     def restore_factory_settings(self):
         for s in self.restorable_settings:
+            self.saved_settings.setValue(s.name, s.value)
+
+        keys = self.saved_settings.allKeys()
+        log(keys)
+
+    def restore_camera_settings(self):
+        for s in self.camera_settings:
             self.saved_settings.setValue(s.name, s.value)
 
         keys = self.saved_settings.allKeys()
@@ -104,7 +116,13 @@ class Settings:
             return int(self.saved_settings.value(key))
         elif type == float:
             return float(self.saved_settings.value(key))
-        return self.saved_settings.value(key)
+        elif type == tuple:
+            try:
+                return tuple(map(int, self.saved_settings.value(key)))
+            except ValueError:
+                return tuple([0] * len(self.saved_settings.value(key)))
+        else:
+            return self.saved_settings.value(key)
 
     def set(self, key, value):
         return self.saved_settings.setValue(key, value)
@@ -320,6 +338,106 @@ extra_settings = [
     ),
 ]
 
+camera_settings = [
+    Setting(
+        "AREA1_CORRIDOR",
+        (50, 100, 150, 150, 100),
+        tuple,
+        """The first area of the corridor, between the homecage and the first door.
+        Values are left, top, right, bottom and threshold for detection""",
+    ),
+    Setting(
+        "AREA2_CORRIDOR",
+        (150, 100, 250, 150, 100),
+        tuple,
+        "The second area of the corridor, between first and second door",
+    ),
+    Setting(
+        "AREA3_CORRIDOR",
+        (250, 100, 350, 150, 100),
+        tuple,
+        """The third area of the corridor, between the second door
+        and the behavioral box""",
+    ),
+    Setting(
+        "AREA4_CORRIDOR",
+        (0, 0, 0, 0, 100),
+        tuple,
+        "Not in use for the moment",
+    ),
+    Setting(
+        "AREA1_BOX",
+        (0, 10, 20, 30, 100),
+        tuple,
+        "User defined area where the animals can be",
+    ),
+    Setting(
+        "AREA2_BOX",
+        (0, 10, 20, 30, 100),
+        tuple,
+        "User defined area where the animals can be",
+    ),
+    Setting(
+        "AREA3_BOX",
+        (0, 10, 20, 30, 100),
+        tuple,
+        "User defined area where the animals are not supposed to be",
+    ),
+    Setting(
+        "AREA4_BOX",
+        (0, 10, 20, 30, 100),
+        tuple,
+        "User defined area where the animals are not supposed to be",
+    ),
+    Setting(
+        "NOMOUSE_CORRIDOR",
+        25,
+        int,
+        """If the number of black pixels in any of the areas of the corridor
+        is larger than this number we consider there is a mouse in that area.""",
+    ),
+    Setting(
+        "ONEMOUSE_CORRIDOR",
+        2000,
+        int,
+        """If the number of black pixels in any of the areas of the corridor
+        is smaller than this number we consider there is not more than one mouse
+        in that area.""",
+    ),
+    Setting(
+        "TWOMICE_CORRIDOR",
+        2000,
+        int,
+        """If the number of black pixels in any of the areas of the corridor
+        is larger than this number we consider there is more than one mouse
+        in that area.""",
+    ),
+    Setting(
+        "NOMOUSE_BOX",
+        25,
+        int,
+        """If the number of black pixels in any of the areas of the behavioral box
+        is larger than this number we consider there is a mouse in that area.""",
+    ),
+    Setting(
+        "ONEMOUSE_BOX",
+        2000,
+        int,
+        """If the number of black pixels in any of the areas of the behavioral box
+        is smaller than this number we consider there is not more than one mouse
+        in that area.""",
+    ),
+    Setting(
+        "TWOMICE_BOX",
+        2000,
+        int,
+        """If the number of black pixels in any of the areas of the behavioral box
+        is larger than this number we consider there is more than one mouse
+        in that area.""",
+    ),
+]
+
+
 settings = Settings(
     main_settings,
     duration_settings,
@@ -335,6 +453,7 @@ settings = Settings(
     harp_settings,
     harp_advanced_settings,
     extra_settings,
+    camera_settings,
 )
 
 
@@ -344,4 +463,4 @@ if settings.get("FIRST_LAUNCH") is None:
 
 # settings.create_factory_settings()
 
-# settings.print()
+settings.print()

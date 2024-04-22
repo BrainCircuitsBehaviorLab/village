@@ -1,5 +1,3 @@
-from PyQt5.QtWidgets import QLabel
-
 from village.gui.layout import Layout
 
 
@@ -9,18 +7,8 @@ class DataLayout(Layout):
         self.draw()
 
     def draw(self):
-        self.first_row = 10
-        self.first_column = 10
+        self.disable(self.data_button)
 
-        self.data_button.setDisabled(True)
-        self.data_button.setStyleSheet("QPushButton {background-color: lightblue}")
-
-        label = QLabel("Data")
-        label.setStyleSheet("font-weight: bold")
-        self.addWidget(
-            label,
-            self.first_row,
-            self.first_column,
-            self.widget_height,
-            self.label_width,
+        self.label = self.create_and_add_label(
+            text="DATA", row=10, column=10, width=30, height=2, color="black"
         )

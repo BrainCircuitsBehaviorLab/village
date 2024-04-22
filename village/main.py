@@ -6,7 +6,7 @@ from village.utils import create_directories
 create_directories()
 
 
-app = QApplication([])
-app.setStyle("Fusion")
-gui = Gui(app)
-app.exec()
+q_app = QApplication([])
+q_app.setStyle("Fusion")
+gui = Gui(q_app)
+q_app.exec()
