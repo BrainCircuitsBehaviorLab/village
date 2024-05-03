@@ -170,25 +170,25 @@ duration_settings = [
 # TODO: any way we can make this generalizable? e.g. __file__?
 # TODO: also, does the app need to live with the data? Or is this for the gui?
 # Does the GUI takes the last saved parameters?
-# user = "hmv"
-user = "mousevillage"
+user = "hmv"
+# user = "mousevillage"
 directory_settings = [
     Setting(
         "APP_DIRECTORY",
-        "/home/mousevillage/village",
+        "/home/" + user + "/village",
         str,
         "The directory of the application",
     ),
     Setting(
-        "USER_DIRECTORY", "/home/mousevillage/user", str, "The directory of the user"
+        "USER_DIRECTORY", "/home/" + user + "/user", str, "The directory of the user"
     ),
     Setting(
-        "DATA_DIRECTORY", "/home/mousevillage/data", str, "The directory of the data"
+        "DATA_DIRECTORY", "/home/" + user + "/data", str, "The directory of the data"
     ),
     # TODO: should the backup be saved together with the session data?
     Setting(
         "BACKUP_TASKS_DIRECTORY",
-        "/home/mousevillage/backup_tasks",
+        "/home/" + user + "/backup_tasks",
         str,
         """Directory where a copy of the task with a particular code is saved
         every time a task is run""",
@@ -317,7 +317,7 @@ bpod_settings = [
 ]
 
 bpod_advanced_settings = [
-    Setting("BPOD_SERIAL_PORT", "/dev/Bpod", str, "The serial port of the Bpod"),
+    Setting("BPOD_SERIAL_PORT", "/dev/BPod", str, "The serial port of the Bpod"),
     Setting(
         "BPOD_NET_PORT",
         36000,
