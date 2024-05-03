@@ -342,7 +342,7 @@ extra_settings = [
     # TODO: what is the saving structure like? why sessions dir in extra settings?
     Setting(
         "SESSIONS_DIRECTORY",
-        "/home/mousevillage/data/sessions",
+        "/home/" + user + "/data/sessions",
         str,
         "The directory of the sessions",
     ),
