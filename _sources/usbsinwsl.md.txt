@@ -74,6 +74,3 @@
 - [OpenOCD udev rules](https://github.com/arduino/OpenOCD/blob/master/contrib/60-openocd.rules)
 - [PlatformIO udev rules](https://docs.platformio.org/en/stable/core/installation/udev-rules.html)
 - [Embedded Trainings](https://embedded-trainings.ferrous-systems.com/installation#linux-only-usb)
-```
-
-This markdown should accurately represent the provided information on connecting USB devices to WSL2.
