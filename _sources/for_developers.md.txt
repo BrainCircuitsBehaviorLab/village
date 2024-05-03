@@ -14,3 +14,7 @@ Not optimal but found this to work:
 ```
 export QT_QPA_PLATFORM=wayland
 ```
+
+### To have WSL2 recognize bpod, follow these guidelines:
+Extracted from [here](https://hackmd.io/@aeefs2Y8TMms-cjTDX4cfw/r1fqAa_Da?utm_source=preview-mode&utm_medium=rec).
+See [testpage](./testpage.md)
