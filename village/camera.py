@@ -1,8 +1,7 @@
 import os
 import time
-from pathlib import Path
 from pprint import pprint
-from typing import Protocol
+from typing import Any, Protocol
 
 import cv2
 
@@ -11,8 +10,11 @@ try:
     from picamera2 import MappedArray, Picamera2, Preview
     from picamera2.encoders import H264Encoder, Quality
     from picamera2.outputs import FfmpegOutput
+    from picamera2.previews.qt import QGlPicamera2  # type: ignore
 except Exception:
     pass
+
+from PyQt5.QtWidgets import QWidget
 
 from village.app_state import app
 from village.log import log
@@ -26,20 +28,25 @@ os.environ["LIBCAMERA_LOG_LEVELS"] = "2"
 
 
 # use this function to get info
-def print_info_about_the_connected_cameras():
+def print_info_about_the_connected_cameras() -> None:
     print("INFO ABOUT THE CONNECTED CAMERAS:")
     pprint(Picamera2.global_camera_info())
     print()
 
 
 class CameraProtocol(Protocol):
+    area1: tuple[int, int, int, int]
+    area2: tuple[int, int, int, int]
+    area3: tuple[int, int, int, int]
+    area4: tuple[int, int, int, int]
+
     def start_camera(self) -> None:
         return
 
     def stop_preview(self) -> None:
         return
 
-    def reset_preview(self) -> None:
+    def stop_window_preview(self) -> None:
         return
 
     def start_record(self) -> None:
@@ -62,16 +69,24 @@ class CameraProtocol(Protocol):
 
     def pre_process(self, request) -> None:
         return
+
+    def start_preview_window(self) -> QWidget:
+        return QWidget()
 
 
 class NullCamera(CameraProtocol):
+    area1: tuple[int, int, int, int]
+    area2: tuple[int, int, int, int]
+    area3: tuple[int, int, int, int]
+    area4: tuple[int, int, int, int]
+
     def start_camera(self) -> None:
         pass
 
     def stop_preview(self) -> None:
         pass
 
-    def reset_preview(self) -> None:
+    def stop_window_preview(self) -> None:
         pass
 
     def start_record(self) -> None:
@@ -94,11 +109,14 @@ class NullCamera(CameraProtocol):
 
     def pre_process(self, request) -> None:
         pass
+
+    def start_preview_window(self) -> QWidget:
+        return QWidget()
 
 
 # the camera class
 class Camera(CameraProtocol):
-    def __init__(self, index, name):
+    def __init__(self, index: int, name: str) -> None:
 
         # camera settings
         cam_raw = {"size": (2304, 1296)}
@@ -120,7 +138,7 @@ class Camera(CameraProtocol):
         )
         self.cam.align_configuration(self.config)
         self.cam.configure(self.config)
-        self.path_video = Path(settings.get("DATA_DIRECTORY"), "videos", name + ".mp4")
+        self.path_video = settings.get("DATA_DIRECTORY") + "/videos/" + name + ".mp4"
         self.output = FfmpegOutput(self.path_video)
         self.cam.pre_callback = self.pre_process
 
@@ -149,50 +167,46 @@ class Camera(CameraProtocol):
         self.two_mice = settings.get("TWO_MICE_" + name)
 
         self.frame_number = 0
-        self.timestamp = 0
+        self.timestamp = ""
 
         self.cam.start()
 
-    def start_camera(self):
+    def start_camera(self) -> None:
         self.cam.start()
 
-    def stop_preview(self):
+    def stop_preview(self) -> None:
         self.cam.stop_preview()
 
-    def reset_preview(self):
+    def stop_window_preview(self) -> None:
+        self.window.cleanup()
         self.cam.start_preview(Preview.NULL)
 
-    def start_record(self):
+    def start_record(self) -> None:
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
-    def stop_record(self):
+    def stop_record(self) -> None:
         self.cam.stop_encoder()
 
-    def stop(self):
+    def stop(self) -> None:
         self.cam.stop()
 
-    def change_focus(self, lensposition):
-        assert isinstance(
-            lensposition, (int, float)
-        ), "lensposition must be int or float"
+    def change_focus(self, lensposition: float) -> None:
         assert (
             lensposition <= 10 and lensposition >= 0
         ), "lensposition must be a value between 0 and 10"
         self.cam.set_controls({"LensPosition": lensposition})
 
-    def change_framerate(self, framerate):
-        assert isinstance(framerate, int), "framerate must be int"
-        limit = int(
-            1000000.0 / float(framerate)
-        )  # min and max number of microseconds for each frame
+    def change_framerate(self, framerate: int):
+        limit = int(1000000.0 / float(framerate))
+        # limit is both min and max number of microseconds for each frame
         self.cam.set_controls({"FrameDurationLimits": (limit, limit)})
 
-    def print_info_about_config(self):
+    def print_info_about_config(self) -> None:
         print("INFO ABOUT THE " + self.name + " CAM CONFIGURATION:")
         pprint(self.config)
         print()
 
-    def pre_process(self, request):
+    def pre_process(self, request: Any) -> None:
         self.frame_number += 1
         self.timestamp = time.strftime("%Y-%m-%d %X")
         with MappedArray(request, "main") as m:
@@ -222,7 +236,7 @@ class Camera(CameraProtocol):
                 self.thickness_line,
             )
 
-    def write_frame_number_and_timestamp(self, m):
+    def write_frame_number_and_timestamp(self, m: MappedArray) -> None:
         cv2.putText(
             m.array,
             str(self.frame_number),
@@ -243,38 +257,10 @@ class Camera(CameraProtocol):
             self.thickness_text,
         )
 
-    # def apply_timestamp(self, request):
-
-    #     # timestamp2 = request.get_metadata()["SensorTimestamp"]
-
-    #     # convert timestamp2 to a human readable format
-    #     # timestamp2 = time.strftime("%Y-%m-%d %X", time.localtime(timestamp2))
-
-    #     with MappedArray(request, "main") as m:
-    #         # greyscale_frame = cv2.cvtColor(m.array, cv2.COLOR_BGR2GRAY)
-    #         # gaussian_frame = cv2.GaussianBlur(greyscale_frame, (5, 5), 0)
-    #         # thresh = cv2.threshold(
-    #         #    gaussian_frame, self.threshold1, 255, cv2.THRESH_BINARY_INV
-    #         # )[1]
-    #         # area = cv2.countNonZero(thresh)
-    #         cv2.putText(
-    #             m.array,
-    #             timestamp,
-    #             self.origin_timestamps,
-    #             self.font,
-    #             self.scale,
-    #             self.color_timestamp,
-    #             self.thickness,
-    #         )
-    #         # cv2.putText(
-    #         #    m.array,
-    #         #    timestamp2,
-    #         #    self.origin_area1,
-    #         #    self.font,
-    #         #    self.scale,
-    #         #    self.color_area1,
-    #         #    self.thickness,
-    #         # )
+    def start_preview_window(self) -> QWidget:
+        self.stop_preview()
+        self.window = QGlPicamera2(self.cam)
+        return self.window
 
 
 # TODO: this function creates a new camera?

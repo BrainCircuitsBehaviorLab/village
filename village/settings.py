@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Any
 
 from PyQt5.QtCore import QSettings
 
@@ -24,7 +25,7 @@ class UseScreen(Enum):
 
 
 class Setting:
-    def __init__(self, name, value, type, description):
+    def __init__(self, name: str, value: Any, type: Any, description: str) -> None:
         self.name = name
         self.value = value
         self.type = type
@@ -34,22 +35,23 @@ class Setting:
 class Settings:
     def __init__(
         self,
-        main_settings,
-        duration_settings,
-        directory_settings,
-        alarm_settings,
-        telegram_settings,
-        advanced_settings,
-        touchscreen_settings,
-        screen_settings,
-        sound_settings,
-        bpod_settings,
-        bpod_advanced_settings,
-        harp_settings,
-        harp_advanced_settings,
-        extra_settings,
-        camera_settings,
-    ):
+        main_settings: list,
+        duration_settings: list,
+        directory_settings: list,
+        alarm_settings: list,
+        telegram_settings: list,
+        advanced_settings: list,
+        touchscreen_settings: list,
+        screen_settings: list,
+        sound_settings: list,
+        bpod_settings: list,
+        bpod_advanced_settings: list,
+        harp_settings: list,
+        harp_advanced_settings: list,
+        extra_settings: list,
+        camera_settings: list,
+        motor_settings: list,
+    ) -> None:
 
         self.main_settings = main_settings
         self.duration_settings = duration_settings
@@ -66,6 +68,7 @@ class Settings:
         self.advanced_settings = advanced_settings
         self.extra_settings = extra_settings
         self.camera_settings = camera_settings
+        self.motor_settings = motor_settings
 
         self.saved_settings = QSettings("village", "village")
 
@@ -89,30 +92,24 @@ class Settings:
             + extra_settings
             + telegram_settings
             + camera_settings
+            + motor_settings
         )
 
-    def restore_factory_settings(self):
+    def restore_factory_settings(self) -> None:
         for s in self.restorable_settings:
             self.saved_settings.setValue(s.name, s.value)
 
         keys = self.saved_settings.allKeys()
         log(keys)
 
-    def restore_camera_settings(self):
-        for s in self.camera_settings:
-            self.saved_settings.setValue(s.name, s.value)
-
-        keys = self.saved_settings.allKeys()
-        log(keys)
-
-    def create_factory_settings(self):
+    def create_factory_settings(self) -> None:
         for s in self.all_settings:
             self.saved_settings.setValue(s.name, s.value)
 
         keys = self.saved_settings.allKeys()
         log(keys)
 
-    def get(self, key):
+    def get(self, key: str) -> Any:
         type = next((s.type for s in self.all_settings if s.name == key), None)
         if type == int:
             return int(self.saved_settings.value(key))
@@ -126,10 +123,10 @@ class Settings:
         else:
             return self.saved_settings.value(key)
 
-    def set(self, key, value):
-        return self.saved_settings.setValue(key, value)
+    def set(self, key: str, value: Any) -> None:
+        self.saved_settings.setValue(key, value)
 
-    def print(self):
+    def print(self) -> None:
         for s in self.all_settings:
             print(s.name, s.value, s.type)
 
@@ -173,24 +170,25 @@ duration_settings = [
 # TODO: any way we can make this generalizable? e.g. __file__?
 # TODO: also, does the app need to live with the data? Or is this for the gui?
 # Does the GUI takes the last saved parameters?
-user = "hmv"
+# user = "hmv"
+user = "mousevillage"
 directory_settings = [
     Setting(
         "APP_DIRECTORY",
-        "/home/" + user + "/village",
+        "/home/mousevillage/village",
         str,
         "The directory of the application",
     ),
     Setting(
-        "USER_DIRECTORY", "/home/" + user + "/user", str, "The directory of the user"
+        "USER_DIRECTORY", "/home/mousevillage/user", str, "The directory of the user"
     ),
     Setting(
-        "DATA_DIRECTORY", "/home/" + user + "/data", str, "The directory of the data"
+        "DATA_DIRECTORY", "/home/mousevillage/data", str, "The directory of the data"
     ),
     # TODO: should the backup be saved together with the session data?
     Setting(
         "BACKUP_TASKS_DIRECTORY",
-        "/home/" + user + "/backup_tasks",
+        "/home/mousevillage/backup_tasks",
         str,
         """Directory where a copy of the task with a particular code is saved
         every time a task is run""",
@@ -400,50 +398,43 @@ camera_settings = [
         "User defined area where the animals are not supposed to be",
     ),
     Setting(
-        "NOMOUSE_CORRIDOR",
-        25,
-        int,
+        "DETECTION_OF_MOUSE_CORRIDOR",
+        (50, 2000),
+        tuple,
         """If the number of black pixels in any of the areas of the corridor
-        is larger than this number we consider there is a mouse in that area.""",
+        is smaller than the first number we consider that the area is empty.
+        If the number of black pixels is between first and second number we consider
+        that there is one mouse in that area, if the number of black pixels is
+        larger than the second number we consider that there is more than one
+        mouse.""",
     ),
     Setting(
-        "ONEMOUSE_CORRIDOR",
-        2000,
-        int,
+        "DETECTION_OF_MOUSE_BOX",
+        (50, 2000),
+        tuple,
         """If the number of black pixels in any of the areas of the corridor
-        is smaller than this number we consider there is not more than one mouse
-        in that area.""",
+        is smaller than the first number we consider that the area is empty.
+        If the number of black pixels is between first and second number we consider
+        that there is one mouse in that area, if the number of black pixels is
+        larger than the second number we consider that there is more than one
+        mouse.""",
+    ),
+]
+
+motor_settings = [
+    Setting(
+        "MOTOR1_VALUES",
+        (50, 80, 200, 200),
+        tuple,
+        """Opening angle, closing angle, opening time(ms), closing time(ms)
+        for the door 1""",
     ),
     Setting(
-        "TWOMICE_CORRIDOR",
-        2000,
-        int,
-        """If the number of black pixels in any of the areas of the corridor
-        is larger than this number we consider there is more than one mouse
-        in that area.""",
-    ),
-    Setting(
-        "NOMOUSE_BOX",
-        25,
-        int,
-        """If the number of black pixels in any of the areas of the behavioral box
-        is larger than this number we consider there is a mouse in that area.""",
-    ),
-    Setting(
-        "ONEMOUSE_BOX",
-        2000,
-        int,
-        """If the number of black pixels in any of the areas of the behavioral box
-        is smaller than this number we consider there is not more than one mouse
-        in that area.""",
-    ),
-    Setting(
-        "TWOMICE_BOX",
-        2000,
-        int,
-        """If the number of black pixels in any of the areas of the behavioral box
-        is larger than this number we consider there is more than one mouse
-        in that area.""",
+        "MOTOR2_VALUES",
+        (50, 80, 200, 200),
+        tuple,
+        """Opening angle, closing angle, opening time(ms), closing time(ms)
+        for the door 2""",
     ),
 ]
 
@@ -464,6 +455,7 @@ settings = Settings(
     harp_advanced_settings,
     extra_settings,
     camera_settings,
+    motor_settings,
 )
 
 
@@ -471,6 +463,6 @@ if settings.get("FIRST_LAUNCH") is None:
     settings.create_factory_settings()
 
 
-settings.create_factory_settings()
+# settings.create_factory_settings()
 
-settings.print()
+# settings.print()

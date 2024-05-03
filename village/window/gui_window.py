@@ -4,15 +4,16 @@ from PyQt5.QtCore import QObjectCleanupHandler, QRect, QSize
 from PyQt5.QtWidgets import QApplication, QWidget
 
 from village.camera import cam_box, cam_corridor
-from village.gui.data_layout import DataLayout
-from village.gui.main_layout import MainLayout
-from village.gui.monitor_layout import MonitorLayout
-from village.gui.settings_layout import SettingsLayout
-from village.gui.tasks_layout import TasksLayout
+from village.window.data_layout import DataLayout
+from village.window.layout import Layout
+from village.window.main_layout import MainLayout
+from village.window.monitor_layout import MonitorLayout
+from village.window.settings_layout import SettingsLayout
+from village.window.tasks_layout import TasksLayout
 
 
 class GuiWindow(QWidget):
-    def __init__(self, q_app: QApplication, width: int, height: int):
+    def __init__(self, q_app: QApplication, width: int, height: int) -> None:
         super().__init__()
         self.q_app = q_app
 
@@ -21,10 +22,9 @@ class GuiWindow(QWidget):
         rect = QRect(0, 0, width, height)
         self.setGeometry(rect)
         self.setFixedSize(QSize(width, height))
-        self.setStyleSheet("QToolTip {background-color: white; color: black}")
-        self.setStyleSheet("QPushButton {font-weight: bold}")
+        self.setWindowTitle("Village")
 
-        self.layout = MainLayout(self)
+        self.layout: Layout = MainLayout(self)
         self.setLayout(self.layout)
         self.show()
 

@@ -1,9 +1,10 @@
 from PyQt5.QtCore import QRect, QSize
+from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QApplication, QWidget
 
 
 class BehaviourWindow(QWidget):
-    def __init__(self, q_app: QApplication, width: int, height: int):
+    def __init__(self, q_app: QApplication, width: int, height: int) -> None:
         super().__init__()
         self.q_app = q_app
         self.setStyleSheet("background-color: black")
@@ -13,5 +14,5 @@ class BehaviourWindow(QWidget):
         self.setFixedSize(QSize(width, height))
         self.show()
 
-    def closeEvent(self, event) -> None:
+    def closeEvent(self, event: QCloseEvent) -> None:
         event.ignore()

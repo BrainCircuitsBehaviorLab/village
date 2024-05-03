@@ -1,15 +1,15 @@
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtWidgets import QApplication
 
-from village.gui.behaviour_window import BehaviourWindow
-from village.gui.gui_window import GuiWindow
 from village.settings import settings
+from village.window.behaviour_window import BehaviourWindow
+from village.window.gui_window import GuiWindow
 
 
 # TODO: need explanation of this class and how
 # it interacts with main.py, settings, and screens
-class Gui:
-    def __init__(self, q_app: QApplication):
+class Window:
+    def __init__(self, q_app: QApplication) -> None:
         self.q_app = q_app
         # get the resolution of the primary monitor
         screen = QGuiApplication.screens()[0]

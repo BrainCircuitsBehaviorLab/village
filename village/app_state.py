@@ -13,9 +13,11 @@ class State(Enum):
     OPEN = "task finished, opening the door"
     RUN_OPENED = "door opened, subject can leave the box"
     EXIT_UNSAVED = "subject leaving, task is not saved yet"
-    WRAP_OUTSIDE = "task saved, subject is already outside"
-    WRAP_INSIDE = "task saved, subject is still inside"
+    SAVE_OUTSIDE = "task saved, subject is already outside"
+    SAVE_INSIDE = "task saved, subject is still inside"
+    WAIT_EXIT = "waiting for the subject to leave the box"
     EXIT_SAVED = "subject leaving, task is already saved"
+    STOP = "automatic task, manually stopped"
     ERROR = "error occurred, disconnecting rfids and stopping the task"
     PREPARE = "manually preparing a task"
     MANUAL = "manually running a task"
@@ -25,29 +27,29 @@ class State(Enum):
 
 
 class Subject:
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         self.name = name
 
 
 class Task:
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         self.name = name
 
 
 class AppState:
-    def __init__(self):
+    def __init__(self) -> None:
         self.subject = Subject("None")
         self.task = Task("None")
         self.state = State.WAIT
 
         self.color_area1 = (128, 0, 128)
-        self.color_area1_label = "color:rgb(128,0,128)"
+        self.color_area1_str = "rgb" + str(self.color_area1)
         self.color_area2 = (165, 42, 42)
-        self.color_area2_label = "color:rgb(165,42,42)"
+        self.color_area2_str = "rgb" + str(self.color_area2)
         self.color_area3 = (0, 100, 0)
-        self.color_area3_label = "color:rgb(0,100,0)"
+        self.color_area3_str = "rgb" + str(self.color_area3)
         self.color_area4 = (122, 122, 122)
-        self.color_area4_label = "color:rgb(128,0,128)"
+        self.color_area4_str = "rgb" + str(self.color_area4)
 
         self.color_frame_number = (255, 0, 0)
         self.color_timestamp = (255, 0, 0)

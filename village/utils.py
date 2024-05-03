@@ -5,7 +5,7 @@ from village.settings import settings
 
 # TODO: should this function get settings as an input so it can be
 # independent of settings initiation?
-def create_directories():
+def create_directories() -> None:
     data_directory = Path(settings.get("DATA_DIRECTORY"))
     sessions_directory = data_directory / "sessions"
     videos_directory = data_directory / "videos"
