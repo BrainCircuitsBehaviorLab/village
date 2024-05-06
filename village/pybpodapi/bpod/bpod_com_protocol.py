@@ -36,15 +36,11 @@ class BpodCOMProtocol(BpodBase):
         # used to keep the list of msg ids sent using the load_serial_message function
         self.msg_id_list = [False for i in range(255)]
 
-        print("llego hasta aqui")
-
         if self.serial_port:
             self.open()
 
     def open(self):
-        print("llego hasta aqui")
         super(BpodCOMProtocol, self).open()
-        print("llego hasta aqui")
         self.bpod_com_ready = True
 
     def close(self):
@@ -109,7 +105,7 @@ class BpodCOMProtocol(BpodBase):
         logger.debug("Connecting on port: %s", serial_port)
         self._arcom = ArCOM().open(serial_port, baudrate, timeout)
 
-        print(self._arcom)
+        # print(self._arcom)
 
     def _bpodcom_disconnect(self):
         """
@@ -137,15 +133,15 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Requesting handshake (%s)", SendMessageHeader.HANDSHAKE)
 
-        print("a", SendMessageHeader.HANDSHAKE)
+        # print("a", SendMessageHeader.HANDSHAKE)
 
         self._arcom.write_char(SendMessageHeader.HANDSHAKE)
 
-        print("b")
+        # print("b")
 
         response = self._arcom.read_char()  # Receive response
 
-        print("c", response, ReceiveMessageHeader.HANDSHAKE_OK)
+        # print("c", response, ReceiveMessageHeader.HANDSHAKE_OK)
 
         logger.debug("Response command is: %s", response)
 
@@ -288,9 +284,9 @@ class BpodCOMProtocol(BpodBase):
         ###### set inputs enabled or disabled ######################
         hardware.inputs_enabled = [0] * len(hardware.inputs)
 
-        print("len ", len(hardware.inputs))
+        # print("len ", len(hardware.inputs))
 
-        print(settings.get("BPOD_WIRED_PORTS_ENABLED"))
+        # print(settings.get("BPOD_WIRED_PORTS_ENABLED"))
 
         for j, i in enumerate(hardware.bnc_inputports_indexes):
             hardware.inputs_enabled[i] = (
@@ -307,7 +303,7 @@ class BpodCOMProtocol(BpodBase):
                 settings.get("BPOD_BEHAVIOR_PORTS_ENABLED")[j] == "Yes"
             )
 
-        print("inputs enabled: ", hardware.inputs_enabled)
+        # print("inputs enabled: ", hardware.inputs_enabled)
         logger.debug("Requesting ports enabling (%s)", SendMessageHeader.ENABLE_PORTS)
         logger.debug(
             "Inputs enabled (%s): %s",

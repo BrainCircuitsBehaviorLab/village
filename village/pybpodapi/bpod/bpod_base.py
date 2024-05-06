@@ -126,11 +126,11 @@ class BpodBase(object):
 
         logger.info("Starting Bpod")
 
-        print("vamos ", self.serial_port, self.baudrate)
+        # print("vamos ", self.serial_port, self.baudrate)
 
         self._bpodcom_connect(self.serial_port, self.baudrate)
 
-        print("aqui no llego")
+        # print("aqui no llego")
 
         if not self._bpodcom_handshake():
             raise BpodErrorException(
@@ -138,12 +138,12 @@ class BpodBase(object):
                 Please reset Bpod and try again."""
             )
 
-        print("aqui no llego")
+        # print("aqui no llego")
 
         # check the firmware version
         firmware_version, machine_type = self._bpodcom_firmware_version()
 
-        print("firmware: ", firmware_version)
+        # print("firmware: ", firmware_version)
 
         if firmware_version < int(settings.get("BPOD_TARGET_FIRMWARE")):
             raise BpodErrorException(
