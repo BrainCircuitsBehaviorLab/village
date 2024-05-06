@@ -1,11 +1,11 @@
 import logging
 
-from pybpodapi.bpod.hardware.channels import ChannelName
-from pybpodapi.bpod.hardware.events import EventName
-from pybpodapi.bpod.hardware.output_channels import OutputChannel
-from pybpodapi.state_machine.conditions import Conditions
-from pybpodapi.state_machine.global_counters import GlobalCounters
-from pybpodapi.state_machine.global_timers import GlobalTimers
+from village.pybpodapi.bpod.hardware.channels import ChannelName
+from village.pybpodapi.bpod.hardware.events import EventName
+from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
+from village.pybpodapi.state_machine.conditions import Conditions
+from village.pybpodapi.state_machine.global_counters import GlobalCounters
+from village.pybpodapi.state_machine.global_timers import GlobalTimers
 
 logger = logging.getLogger(__name__)
 

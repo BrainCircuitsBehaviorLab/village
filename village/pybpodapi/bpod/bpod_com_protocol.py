@@ -1,13 +1,12 @@
 import logging
 
-from pybpodapi.bpod.bpod_base import BpodBase
-from pybpodapi.bpod.hardware.channels import ChannelType
-from pybpodapi.bpod_modules.bpod_module import BpodModule
-from pybpodapi.com.arcom import ArCOM, ArduinoTypes
-from pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
-from pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
-from pybpodapi.exceptions.bpod_error import BpodErrorException
-
+from village.pybpodapi.bpod.bpod_base import BpodBase
+from village.pybpodapi.bpod.hardware.channels import ChannelType
+from village.pybpodapi.bpod_modules.bpod_module import BpodModule
+from village.pybpodapi.com.arcom import ArCOM, ArduinoTypes
+from village.pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
+from village.pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
+from village.pybpodapi.exceptions.bpod_error import BpodErrorException
 from village.settings import settings
 
 logger = logging.getLogger(__name__)

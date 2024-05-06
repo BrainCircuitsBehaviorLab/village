@@ -1,4 +1,4 @@
-from pybpodapi.bpod.bpod_io import BpodIO
+from village.pybpodapi.bpod.bpod_io import BpodIO
 
 
 class Bpod(BpodIO):

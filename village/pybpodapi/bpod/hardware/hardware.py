@@ -1,6 +1,6 @@
 import logging
 
-from pybpodapi.bpod.hardware.channels import Channels
+from village.pybpodapi.bpod.hardware.channels import Channels
 
 logger = logging.getLogger(__name__)
 

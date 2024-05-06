@@ -1,6 +1,6 @@
 from datetime import datetime as datetime_now
 
-from pybpodapi.utils import date_parser
+from village.pybpodapi.utils import date_parser
 
 
 class BaseMessage(object):

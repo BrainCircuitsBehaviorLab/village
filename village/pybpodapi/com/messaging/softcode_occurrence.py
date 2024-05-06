@@ -1,5 +1,5 @@
-from pybpodapi.com.messaging.base_message import BaseMessage
-from pybpodapi.utils import date_parser
+from village.pybpodapi.com.messaging.base_message import BaseMessage
+from village.pybpodapi.utils import date_parser
 
 
 class SoftcodeOccurrence(BaseMessage):
