@@ -292,7 +292,7 @@ bpod_settings = [
     ),
     Setting(
         "BPOD_BNC_PORTS_ENABLED",
-        ["No", "No"],
+        ["Yes", "Yes"],
         list,
         "The enabled BNC ports of the Bpod",
     ),
@@ -304,13 +304,13 @@ bpod_settings = [
     ),
     Setting(
         "BPOD_BEHAVIOR_PORTS_ENABLED",
-        ["Yes", "No", "No", "No", "No", "No", "No", "No"],
+        ["Yes", "Yes", "Yes", "No", "No", "No", "No", "No"],
         list,
         "The enabled behavior ports of the Bpod",
     ),
     Setting(
         "BPOD_BEHAVIOR_PORTS_WATER",
-        ["No", "No", "No", "No", "No", "No", "No", "No"],
+        ["Yes", "No", "Yes", "No", "No", "No", "No", "No"],
         list,
         "The behavior ports that deliver water",
     ),
