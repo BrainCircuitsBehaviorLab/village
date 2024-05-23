@@ -61,5 +61,5 @@ class BpodIO(BpodCOMProtocolModules):
         return self._session_name
 
     @session_name.setter
-    def session_name(self, value):
+    def session_name(self, value) -> None:
         self._session_name = value  # type: str

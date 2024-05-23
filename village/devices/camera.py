@@ -96,7 +96,7 @@ class Camera(CameraProtocol, LogProtocol):
         self.frame_number = 0
         self.timestamp = ""
 
-        self.thresholdeds: list[int] = []
+        self.masks: list[Any] = []
         self.counts: list[int] = []
 
         self.cam.start()
@@ -269,36 +269,36 @@ class Camera(CameraProtocol, LogProtocol):
             self.cropped_frames.append(self.gray_frame[f[1] : f[3], f[0] : f[2]])
 
     def detect_black(self) -> None:
-        self.thresholdeds = []
+        self.masks = []
         self.counts = []
         for index, frame in enumerate(self.cropped_frames):
             if self.areas_active[index]:
                 threshold = self.thresholds[index]
                 _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY)
-                self.thresholdeds.append(thresh)
+                self.masks.append(thresh)
                 self.counts.append(cv2.countNonZero(thresh))
             else:
-                self.thresholdeds.append(-1)
+                self.masks.append(-1)
                 self.counts.append(-1)
 
     def detect_white(self) -> None:
-        self.thresholdeds = []
+        self.masks = []
         self.counts = []
         for index, frame in enumerate(self.cropped_frames):
             if self.areas_active[index]:
                 threshold = self.thresholds[index]
                 _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY_INV)
-                self.thresholdeds.append(thresh)
+                self.masks.append(thresh)
                 self.counts.append(cv2.countNonZero(thresh))
             else:
-                self.thresholdeds.append(-1)
+                self.masks.append(-1)
                 self.counts.append(-1)
 
     def draw_thresholded(self) -> None:
         for i, f in enumerate(self.areas):
             if self.areas_active[i]:
                 try:
-                    mask = cv2.cvtColor(self.thresholdeds[i], cv2.COLOR_GRAY2BGRA)
+                    mask = cv2.cvtColor(self.masks[i], cv2.COLOR_GRAY2BGRA)
                     self.frame[f[1] : f[3], f[0] : f[2]] = cv2.bitwise_and(
                         self.frame[f[1] : f[3], f[0] : f[2]], mask
                     )

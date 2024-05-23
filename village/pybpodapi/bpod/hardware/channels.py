@@ -41,8 +41,8 @@ class ChannelName(object):
 class EventsPositions(object):
     """ """
 
-    def __init__(self):
-        self.Event_USB = 0  # type: int
+    def __init__(self) -> None:
+        self.Event_USB = 0
         self.Event_Port = 0  # type: int
         self.Event_BNC = 0  # type: int
         self.EventWire = 0  # type: int

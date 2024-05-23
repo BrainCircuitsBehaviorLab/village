@@ -1,10 +1,10 @@
 import logging
 import pprint
 
-from pybpodapi.com.messaging.base_message import BaseMessage
-from pybpodapi.com.messaging.event_occurrence import EventOccurrence
-from pybpodapi.com.messaging.state_occurrence import StateOccurrence
-from pybpodapi.utils import date_parser
+from village.pybpodapi.com.messaging.base_message import BaseMessage
+from village.pybpodapi.com.messaging.event_occurrence import EventOccurrence
+from village.pybpodapi.com.messaging.state_occurrence import StateOccurrence
+from village.pybpodapi.utils import date_parser
 
 logger = logging.getLogger(__name__)
 

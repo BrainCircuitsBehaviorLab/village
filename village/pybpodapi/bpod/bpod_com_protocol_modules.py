@@ -2,12 +2,13 @@ import logging
 import time
 
 import numpy as np
-from pybpodapi.bpod.bpod_com_protocol import BpodCOMProtocol
-from pybpodapi.bpod_modules.bpod_modules import BpodModules
-from pybpodapi.com.arcom import ArduinoTypes
-from pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
-from pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
-from pybpodapi.exceptions.bpod_error import BpodErrorException
+
+from village.pybpodapi.bpod.bpod_com_protocol import BpodCOMProtocol
+from village.pybpodapi.bpod_modules.bpod_modules import BpodModules
+from village.pybpodapi.com.arcom import ArduinoTypes
+from village.pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
+from village.pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
+from village.pybpodapi.exceptions.bpod_error import BpodErrorException
 
 logger = logging.getLogger(__name__)
 

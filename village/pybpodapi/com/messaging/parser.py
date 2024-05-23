@@ -1,10 +1,10 @@
 import logging
 
-from pybpodapi.com.messaging.debug import DebugMessage
-from pybpodapi.com.messaging.error import ErrorMessage
-from pybpodapi.com.messaging.stderr import StderrMessage
-from pybpodapi.com.messaging.stdout import StdoutMessage
-from pybpodapi.com.messaging.warning import WarningMessage
+from village.pybpodapi.com.messaging.debug import DebugMessage
+from village.pybpodapi.com.messaging.error import ErrorMessage
+from village.pybpodapi.com.messaging.stderr import StderrMessage
+from village.pybpodapi.com.messaging.stdout import StdoutMessage
+from village.pybpodapi.com.messaging.warning import WarningMessage
 
 logger = logging.getLogger(__name__)
 

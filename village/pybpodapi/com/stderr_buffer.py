@@ -1,7 +1,7 @@
 import io
 import sys
 
-from pybpodapi.com.messaging.stderr import StderrMessage
+from village.pybpodapi.com.messaging.stderr import StderrMessage
 
 
 class StderrBuffer(io.StringIO):

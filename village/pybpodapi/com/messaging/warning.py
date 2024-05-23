@@ -1,4 +1,4 @@
-from pybpodapi.com.messaging.base_message import BaseMessage
+from village.pybpodapi.com.messaging.base_message import BaseMessage
 
 
 class WarningMessage(BaseMessage):

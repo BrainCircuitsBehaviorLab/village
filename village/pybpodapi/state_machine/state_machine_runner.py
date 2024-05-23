@@ -1,6 +1,6 @@
 import logging
 
-from pybpodapi.state_machine.state_machine_builder import StateMachineBuilder
+from village.pybpodapi.state_machine.state_machine_builder import StateMachineBuilder
 
 logger = logging.getLogger(__name__)
 

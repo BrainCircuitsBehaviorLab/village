@@ -12,12 +12,8 @@ sma.add_state(
 )
 
 
-# # sma.add_state(
-# #     state_name="State1",
-# #     state_timer=0,
-# #     state_change_conditions={"Port1In": "State2"},
-# #     output_actions=[(Bpod.OutputChannels.LED, 1)],
-# # )
+bpod.send_state_machine(sma)
+bpod.run_state_machine(sma)
 
 # # sma.add_state(
 # #     state_name="State2",

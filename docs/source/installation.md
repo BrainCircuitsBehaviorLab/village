@@ -122,4 +122,9 @@ Add the following line to create a symbolic link to the bpod, changing "1-1:1.0"
 KERNEL=="ttyACM*",KERNELS=="1-1:1.0",SYMLINK+="BPod"
 ```
 
+```
+sudo udevadm trigger
+```
+
+
 Feel free to adjust the formatting or content as needed!

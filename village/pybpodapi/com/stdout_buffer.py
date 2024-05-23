@@ -1,7 +1,7 @@
 import io
 import sys
 
-from pybpodapi.com.messaging.stdout import StdoutMessage
+from village.pybpodapi.com.messaging.stdout import StdoutMessage
 
 
 class StdoutBuffer(io.StringIO):
