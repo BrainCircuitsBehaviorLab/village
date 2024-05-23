@@ -1,7 +1,53 @@
 from enum import Enum
+from typing import Any
 
 
-class State(Enum):
+class SuperEnum(Enum):
+    @classmethod
+    def keys(cls) -> list[str]:
+        return [e.name for e in cls]
+
+    @classmethod
+    def values(cls) -> list[Any]:
+        return [e.value for e in cls]
+
+    @classmethod
+    def get_index_from_value(cls, value: Enum) -> int:
+        return cls.values().index(value.value)
+
+    @classmethod
+    def get_index_from_string(cls, string: str) -> int:
+        return cls.values().index(string)
+
+
+class Active(SuperEnum):
+    ON = "ON"
+    OFF = "OFF"
+
+
+class ControlDevice(SuperEnum):
+    BPOD = "BPOD"
+    HARP = "HARP"
+
+
+class Color(SuperEnum):
+    BLACK = "BLACK"
+    WHITE = "WHITE"
+
+
+class ScreenActive(SuperEnum):
+    SCREEN = "SCREEN"
+    TOUCHSCREEN = "TOUCHSCREEN"
+    OFF = "OFF"
+
+
+class AreaActive(SuperEnum):
+    MICE_ALLOWED = "MICE_ALLOWED"
+    MICE_NOT_ALLOWED = "MICE_NOT_ALLOWED"
+    OFF = "OFF"
+
+
+class State(SuperEnum):
     WAIT = "all subjects at home, waiting for rfid detection"
     DETECTION = "subject detected, checking if it is allowed to enter"
     ACCESS = "access granted, launching the task"
@@ -22,37 +68,12 @@ class State(Enum):
     PREPARE = "manually preparing a task"
     MANUAL = "manually running a task"
 
-    def __init__(self, description: str):
+    def __init__(self, description: str) -> None:
         self.description = description
 
 
-class Subject:
-    def __init__(self, name: str) -> None:
-        self.name = name
-
-
-class Task:
-    def __init__(self, name: str) -> None:
-        self.name = name
-
-
-class AppState:
-    def __init__(self) -> None:
-        self.subject = Subject("None")
-        self.task = Task("None")
-        self.state = State.WAIT
-
-        self.color_area1 = (128, 0, 128)
-        self.color_area1_str = "rgb" + str(self.color_area1)
-        self.color_area2 = (165, 42, 42)
-        self.color_area2_str = "rgb" + str(self.color_area2)
-        self.color_area3 = (0, 100, 0)
-        self.color_area3_str = "rgb" + str(self.color_area3)
-        self.color_area4 = (122, 122, 122)
-        self.color_area4_str = "rgb" + str(self.color_area4)
-
-        self.color_frame_number = (255, 0, 0)
-        self.color_timestamp = (255, 0, 0)
-
-
-app = AppState()
+class Cycle(SuperEnum):
+    AUTO = "AUTO"
+    DAY = "DAY"
+    NIGHT = "NIGHT"
+    OFF = "OFF"

@@ -8,7 +8,7 @@ from pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
 from pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
 from pybpodapi.exceptions.bpod_error import BpodErrorException
 
-from village.settings import settings
+from village.app.settings import Active, settings
 
 logger = logging.getLogger(__name__)
 
@@ -295,17 +295,17 @@ class BpodCOMProtocol(BpodBase):
 
         for j, i in enumerate(hardware.bnc_inputports_indexes):
             hardware.inputs_enabled[i] = (
-                settings.get("BPOD_BNC_PORTS_ENABLED")[j] == "Yes"
+                settings.get("BPOD_BNC_PORTS_ENABLED")[j] == Active.ON
             )
 
         for j, i in enumerate(hardware.wired_inputports_indexes):
             hardware.inputs_enabled[i] = (
-                settings.get("BPOD_WIRED_PORTS_ENABLED")[j] == "Yes"
+                settings.get("BPOD_WIRED_PORTS_ENABLED")[j] == Active.ON
             )
 
         for j, i in enumerate(hardware.behavior_inputports_indexes):
             hardware.inputs_enabled[i] = (
-                settings.get("BPOD_BEHAVIOR_PORTS_ENABLED")[j] == "Yes"
+                settings.get("BPOD_BEHAVIOR_PORTS_ENABLED")[j] == Active.ON
             )
 
         print("inputs enabled: ", hardware.inputs_enabled)

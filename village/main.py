@@ -1,12 +1,9 @@
-from PyQt5.QtWidgets import QApplication
+from village.app.data import data
+from village.app.utils import utils
+from village.gui.gui import Gui
 
-from village.utils import create_directories
-from village.window.window import Window
+# start the GUI
+gui = Gui()
 
-create_directories()
-
-
-q_app = QApplication([])
-q_app.setStyle("Fusion")
-gui = Window(q_app)
-q_app.exec()
+# write the start message
+utils.log("VILLAGE Started", destinations=[data.events])

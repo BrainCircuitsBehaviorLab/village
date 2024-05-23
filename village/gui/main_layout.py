@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from village.window.layout import Layout
+from village.gui.layout import Layout
 
 if TYPE_CHECKING:
-    from village.window.gui_window import GuiWindow
+    from village.gui.gui_window import GuiWindow
 
 
 class MainLayout(Layout):
@@ -14,6 +14,6 @@ class MainLayout(Layout):
         self.draw()
 
     def draw(self):
-        self.disable(self.main_button)
+        self.main_button.setDisabled(True)
 
         self.image = self.create_and_add_image(10, 10, 192, 30, "mouse_village.png")

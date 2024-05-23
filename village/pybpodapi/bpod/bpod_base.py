@@ -17,7 +17,7 @@ from pybpodapi.com.messaging.value import ValueMessage
 from pybpodapi.exceptions.bpod_error import BpodErrorException
 from pybpodapi.session import Session
 
-from village.settings import settings
+from village.app.settings import settings
 
 from .non_blockingsocketreceive import NonBlockingSocketReceive
 

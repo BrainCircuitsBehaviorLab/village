@@ -4,7 +4,7 @@ import os
 from pybpodapi.bpod.bpod_com_protocol_modules import BpodCOMProtocolModules
 from pybpodapi.session import Session
 
-from village.settings import settings
+from village.app.settings import settings
 
 logger = logging.getLogger(__name__)
 
