@@ -9,6 +9,7 @@ dynamic = ["version"]
 dependencies = [
     "python-dateutil",
     "pyserial",
+    "pandas",
 ]
 
 license = {text = "MIT"}
