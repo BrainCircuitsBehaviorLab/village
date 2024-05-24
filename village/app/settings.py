@@ -1,12 +1,9 @@
-from village.classes.settings_class import (
-    Active,
-    AreaActive,
-    Color,
-    ControlDevice,
-    ScreenActive,
-    Setting,
-    Settings,
-)
+import getpass
+
+from village.app.utils import utils
+from village.classes.settings_class import (Active, AreaActive, Color,
+                                            ControlDevice, ScreenActive,
+                                            Setting, Settings)
 
 main_settings = [
     Setting("SYSTEM_NAME", "village01", str, "The unique name of the system"),
@@ -85,38 +82,8 @@ alarm_settings = [
     ),
 ]
 
-directory_settings = [
-    Setting(
-        "PROJECT_DIRECTORY",
-        "/home/mousevillage/project",
-        str,
-        "The directory of the project",
-    ),
-    Setting(
-        "DATA_DIRECTORY",
-        "/home/mousevillage/project/data",
-        str,
-        "The directory of the data",
-    ),
-    Setting(
-        "SESSIONS_DIRECTORY",
-        "/home/mousevillage/project/data/sessions",
-        str,
-        "The directory of the sessions",
-    ),
-    Setting(
-        "VIDEOS_DIRECTORY",
-        "/home/mousevillage/project/data/videos",
-        str,
-        "The directory of the sessions",
-    ),
-    Setting(
-        "APP_DIRECTORY",
-        "/home/mousevillage/village",
-        str,
-        "The directory of the application",
-    ),
-]
+project_directory = "/home/" + getpass.getuser() + "/demo_project"
+directory_settings = utils.generate_directory_paths(project_directory)
 
 screen_settings = [
     Setting("SCREEN_SIZE_MM", [400, 200], list[int], "The size of the screen in mm")

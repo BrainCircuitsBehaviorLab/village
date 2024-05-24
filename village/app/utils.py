@@ -1,6 +1,7 @@
 import datetime
 
 from village.classes.protocols import LogProtocol
+from village.classes.settings_class import Setting
 
 
 class Utils:
@@ -30,6 +31,42 @@ class Utils:
 
         for d in destinations:
             d.log(description, subject, date)
+
+    def generate_directory_paths(self, project_directory):
+        directory_settings = [
+            Setting(
+                "PROJECT_DIRECTORY",
+                project_directory,
+                str,
+                "The directory of the project",
+            ),
+            Setting(
+                "DATA_DIRECTORY",
+                project_directory + "/data",
+                str,
+                "The directory of the data",
+            ),
+            Setting(
+                "SESSIONS_DIRECTORY",
+                project_directory + "/sessions",
+                str,
+                "The directory of the sessions",
+            ),
+            Setting(
+                "VIDEOS_DIRECTORY",
+                project_directory + "/videos",
+                str,
+                "The directory of the sessions",
+            ),
+            Setting(
+                "APP_DIRECTORY",
+                project_directory + "/village",
+                str,
+                "The directory of the application",
+            ),
+        ]
+            
+        return directory_settings
 
 
 utils = Utils()

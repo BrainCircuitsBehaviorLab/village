@@ -5,8 +5,10 @@ from typing import TYPE_CHECKING, Any
 
 from PyQt5.QtWidgets import QMessageBox
 
+from village.app.data import data
 from village.app.dev import dev
 from village.app.settings import Setting, settings
+from village.app.utils import utils
 from village.classes.enums import Active, ControlDevice, ScreenActive
 from village.gui.layout import Layout, LineEdit, PushButton, ToggleButton
 
@@ -83,7 +85,21 @@ class SettingsLayout(Layout):
             label.setProperty("type", name)
             row += 2
             for s in settings.directory_settings:
-                self.create_label_and_value(row, 50, s, name)
+                if s.key == "PROJECT_DIRECTORY":
+                    self.create_label_and_value(row, 50, s, name)
+                    # create a button to open the directory
+                    self.create_and_add_button(
+                        "Create new project",
+                        row,
+                        50 + 53,
+                        13,
+                        2,
+                        self.create_project_directory,
+                        "Open the project directory",
+                        "powderblue",
+                    )
+                else:
+                    self.create_label_and_value(row, 50, s, name)
                 row += 2
 
         if (
@@ -385,3 +401,30 @@ class SettingsLayout(Layout):
         self.settings_changed(value, key)
         if modify != "":
             self.draw(all=False, modify=modify)
+
+    def create_project_directory(self) -> None:
+        # TODO: log the event in the previous project ?
+
+        # define the rest of the directories
+        for s in self.line_edits_settings:
+            if s.key == "PROJECT_DIRECTORY":
+                new_project_directory = self.line_edits[self.line_edits_settings.index(s)].text()
+                print(new_project_directory)
+                break
+        
+        # generate the new directory settings
+        directory_settings = utils.generate_directory_paths(new_project_directory)
+        
+        # update the text in the gui
+        for i, s in enumerate(self.line_edits_settings):
+            if s.key.endswith("_DIRECTORY"):
+                # find this setting in the new directory settings
+                for new_s in directory_settings:
+                    if new_s.key == s.key:
+                        self.line_edits[i].setText(new_s.value)
+                        break        
+                
+        self.apply_button_clicked()
+        data.create_directories()
+        # TODO: make also a dummy repo for the tasks
+        # TODO: log the event in the new project

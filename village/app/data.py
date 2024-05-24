@@ -39,26 +39,30 @@ class Data:
         directory.mkdir(parents=True, exist_ok=True)
 
     def import_all_tasks(self, package_name: str) -> list[Task]:
-        package = importlib.import_module(package_name)
         tasks = []
 
-        for _, name, _ in pkgutil.walk_packages(package.__path__, package_name + "."):
-            try:
-                module = importlib.import_module(name)
+        try:
+            package = importlib.import_module(package_name)
+            for _, name, _ in pkgutil.walk_packages(package.__path__, package_name + "."):
+                try:
+                    module = importlib.import_module(name)
 
-                clsmembers = inspect.getmembers(module, inspect.isclass)
+                    clsmembers = inspect.getmembers(module, inspect.isclass)
 
-                for _, cls in clsmembers:
-                    if issubclass(cls, Task) and cls != Task:
-                        name = cls.__name__
-                        new_task = cls()
-                        new_task.name = name
-                        tasks.append(new_task)
-            except Exception as e:
-                utils.log(
-                    "Error importing " + name, exception=e, destinations=[self.events]
-                )
-                continue
+                    for _, cls in clsmembers:
+                        if issubclass(cls, Task) and cls != Task:
+                            name = cls.__name__
+                            new_task = cls()
+                            new_task.name = name
+                            tasks.append(new_task)
+                except Exception as e:
+                    utils.log(
+                        "Error importing " + name, exception=e, destinations=[self.events]
+                    )
+                    continue
+        except ModuleNotFoundError:
+            pass
+        
         return tasks
 
 
