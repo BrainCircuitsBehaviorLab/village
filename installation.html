@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="_static/documentation_options.js?v=5602d5d7"></script>
+    <script src="_static/documentation_options.js?v=336e4140"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -118,7 +118,7 @@
   
   
   
-    <p class="title logo__title">village v0.1.dev1+g0f3a4c6</p>
+    <p class="title logo__title">village v0.1.dev1+gef2682c</p>
   
 </a></div>
     
@@ -416,10 +416,13 @@ document.write(`
 </section>
 <section id="screen-settings">
 <h2>Screen settings<a class="headerlink" href="#screen-settings" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">raspi-config</span></code></p>
 <ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">raspi-config</span></code></p>
+<ul class="simple">
 <li><p>Go to <strong>Display Options</strong> and disable blanking.</p></li>
+</ul>
+<p>Optional if you have a touch screen: IS THIS TRUE?</p>
+<ul class="simple">
 <li><p>Go to <strong>Advanced Options</strong> and select X11 (instead of Wayland).</p></li>
 </ul>
 </li>
@@ -463,8 +466,7 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </div>
 <ul class="simple">
 <li><p>Enable auto-login by clicking on <strong>Preferences</strong> -&gt; <strong>Raspberry Pi Configuration</strong> -&gt; <strong>Auto login</strong>.</p></li>
-<li><p>Add the temperature (CPU and GPU) to the toolbar.</p></li>
-<li><p>Right-click on the toolbar, select <strong>Add/Remove Plugins</strong>, and add <strong>CPU Temp</strong>, <strong>CPU</strong>, and <strong>GPU</strong>.</p></li>
+<li><p>Add CPU monitors to the toolbar: Right-click on the toolbar, select <strong>Add/Remove Panel Items</strong>, and click <strong>Add</strong>. Select <strong>CPU Temperature Monitor</strong> and <strong>CPU Usage monitor</strong>.</p></li>
 <li><p>Change the resolution of the screen (or screens) to 1280 x 720: <strong>Preferences</strong> -&gt; <strong>Screen Configuration</strong>.</p></li>
 </ul>
 </section>
@@ -491,8 +493,10 @@ pip<span class="w"> </span>install<span class="w"> </span>setuptools_scm
 </pre></div>
 </div>
 </section>
-<section id="configure-remote-access-with-realvnc">
-<h2>Configure remote access with RealVNC<a class="headerlink" href="#configure-remote-access-with-realvnc" title="Link to this heading">#</a></h2>
+<section id="configure-remote-access">
+<h2>Configure remote access<a class="headerlink" href="#configure-remote-access" title="Link to this heading">#</a></h2>
+<section id="option-1-with-realvnc">
+<h3>Option 1: with RealVNC<a class="headerlink" href="#option-1-with-realvnc" title="Link to this heading">#</a></h3>
 <p>From your Raspberry Pi:</p>
 <ol class="arabic simple">
 <li><p>Go to the website and create an account: <a class="reference external" href="https://www.realvnc.com/es/">RealVNC</a></p></li>
@@ -507,6 +511,14 @@ pip<span class="w"> </span>install<span class="w"> </span>setuptools_scm
 <li><p>Install and open RealVNC Viewer on your external computer or phone.</p></li>
 <li><p>Connect to the Raspberry Pi using the RealVNC server’s code if you are connecting from another network or the IP if you are connecting from the same network.</p></li>
 </ol>
+</section>
+<section id="option-2-things-are-very-slow-with-this-with-raspi-connect">
+<h3>Option 2 (things are very slow with this): with raspi-connect<a class="headerlink" href="#option-2-things-are-very-slow-with-this-with-raspi-connect" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Follow these instructions:
+<a class="reference external" href="https://www.raspberrypi.com/news/raspberry-pi-connect/">https://www.raspberrypi.com/news/raspberry-pi-connect/</a></p></li>
+</ol>
+</section>
 </section>
 <section id="udev-rules">
 <h2>Udev rules<a class="headerlink" href="#udev-rules" title="Link to this heading">#</a></h2>
@@ -525,6 +537,17 @@ pip<span class="w"> </span>install<span class="w"> </span>setuptools_scm
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">udevadm</span> <span class="n">trigger</span>
 </pre></div>
 </div>
+</section>
+<section id="install-village">
+<h2>Install village<a class="headerlink" href="#install-village" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Make sure you are in .env environment (see above)</p></li>
+<li><p>Clone the repo anywhere you want. In the terminal, type:
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/BrainCircuitsBehaviorLab/village.git</span></code></p></li>
+<li><p>Navigate to folder <code class="docutils literal notranslate"><span class="pre">village</span></code> and type <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code></p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file with sudo to create the folders: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python</span> <span class="pre">/home/pi/village/village/main.py</span></code></p></li>
+<li><p>PROBLEMS WITH user package</p></li>
+</ul>
 <p>Feel free to adjust the formatting or content as needed!</p>
 </section>
 </section>
@@ -585,8 +608,13 @@ pip<span class="w"> </span>install<span class="w"> </span>setuptools_scm
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-the-system-and-installing-software">Updating the system and installing software</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyqt5-multimedia">PyQT5 multimedia</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-env-environment">Setting .env environment</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-remote-access-with-realvnc">Configure remote access with RealVNC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-remote-access">Configure remote access</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-with-realvnc">Option 1: with RealVNC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-things-are-very-slow-with-this-with-raspi-connect">Option 2 (things are very slow with this): with raspi-connect</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#udev-rules">Udev rules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-village">Install village</a></li>
 </ul>
   </nav></div>
 
