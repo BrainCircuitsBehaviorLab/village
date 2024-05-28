@@ -94,7 +94,7 @@ pip install setuptools_scm
 From your Raspberry Pi:
 
 1. Go to the website and create an account: [RealVNC](https://www.realvnc.com/es/)
-2. Subscribe to Lite access (free access): [Lite Access](https://www.realvnc.com/es/connect/plan/lite/)
+2. Subscribe to Lite access (free access): [Lite Access](https://www.realvnc.com/es/connect/plan/lite/). Follow instructions [here](https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription) if you go around in a loop.
 3. Open the RealVNC server on the Raspberry Pi (it is automatically installed when you install Raspberry Pi OS) and configure it for your team.
 4. Go to **Device Access** on the RealVNC webpage and add your current device.
 5. Back in the RealVNC window, you should see a code that allows remote connections from other networks and an IP number that allows connection from the same network.
@@ -139,7 +139,10 @@ sudo udevadm trigger
 - Clone the repo anywhere you want. In the terminal, type:
 ```git clone https://github.com/BrainCircuitsBehaviorLab/village.git```
 - Navigate to folder ```village``` and type ```pip install -e .```
-- Run the ```main.py``` file with sudo to create the folders: ```sudo python /home/pi/village/village/main.py```
-- PROBLEMS WITH user package
+
+
+PUT THIS IN USAGE.MD OR SOMETHING LIKE THAT
+- Run the ```main.py``` file: ```python village/main.py```
+
 
 Feel free to adjust the formatting or content as needed!

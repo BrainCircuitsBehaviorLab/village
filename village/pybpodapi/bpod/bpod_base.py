@@ -4,20 +4,20 @@ import socket
 import time
 from datetime import datetime as datetime_now
 
-from pybpodapi.bpod.hardware.channels import ChannelName, ChannelType
-from pybpodapi.bpod.hardware.events import EventName
-from pybpodapi.bpod.hardware.hardware import Hardware
-from pybpodapi.bpod.hardware.output_channels import OutputChannel
-from pybpodapi.com.messaging.event_occurrence import EventOccurrence
-from pybpodapi.com.messaging.event_resume import EventResume
-from pybpodapi.com.messaging.softcode_occurrence import SoftcodeOccurrence
-from pybpodapi.com.messaging.state_transition import StateTransition
-from pybpodapi.com.messaging.trial import Trial
-from pybpodapi.com.messaging.value import ValueMessage
-from pybpodapi.exceptions.bpod_error import BpodErrorException
-from pybpodapi.session import Session
-
 from village.app.settings import settings
+from village.pybpodapi.bpod.hardware.channels import ChannelName, ChannelType
+from village.pybpodapi.bpod.hardware.events import EventName
+from village.pybpodapi.bpod.hardware.hardware import Hardware
+from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
+from village.pybpodapi.com.messaging.event_occurrence import EventOccurrence
+from village.pybpodapi.com.messaging.event_resume import EventResume
+from village.pybpodapi.com.messaging.softcode_occurrence import \
+    SoftcodeOccurrence
+from village.pybpodapi.com.messaging.state_transition import StateTransition
+from village.pybpodapi.com.messaging.trial import Trial
+from village.pybpodapi.com.messaging.value import ValueMessage
+from village.pybpodapi.exceptions.bpod_error import BpodErrorException
+from village.pybpodapi.session import Session
 
 from .non_blockingsocketreceive import NonBlockingSocketReceive
 
