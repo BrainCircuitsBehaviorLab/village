@@ -1,6 +1,7 @@
 import sys
+from pathlib import Path
 
-from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
 from village.app.data import data
@@ -16,6 +17,10 @@ class Gui:
     def __init__(self) -> None:
         self.q_app = QApplication([])
         self.q_app.setStyle("Fusion")
+        # put a pretty icon
+        iconpath = Path(__file__).parent.parent.parent / "resources/favicon.ico"
+        self.q_app.setWindowIcon(QIcon(str(iconpath)))  # Set the icon
+
         # get the resolution of the primary monitor
         screen = QGuiApplication.screens()[0]
         availableGeometry = screen.availableGeometry()
