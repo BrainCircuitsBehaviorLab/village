@@ -26,6 +26,8 @@
 ## Screen settings
 - `sudo raspi-config`
   - Go to **Display Options** and disable blanking.
+
+  Optional if you have a touch screen: IS THIS TRUE?
   - Go to **Advanced Options** and select X11 (instead of Wayland).
 
 ### If you are using one screen only:
@@ -58,8 +60,7 @@ sudo apt install code
 ```
 
 - Enable auto-login by clicking on **Preferences** -> **Raspberry Pi Configuration** -> **Auto login**.
-- Add the temperature (CPU and GPU) to the toolbar.
-- Right-click on the toolbar, select **Add/Remove Plugins**, and add **CPU Temp**, **CPU**, and **GPU**.
+- Add CPU monitors to the toolbar: Right-click on the toolbar, select **Add/Remove Panel Items**, and click **Add**. Select **CPU Temperature Monitor** and **CPU Usage monitor**.
 - Change the resolution of the screen (or screens) to 1280 x 720: **Preferences** -> **Screen Configuration**.
 
 ## PyQT5 multimedia
@@ -88,7 +89,8 @@ pip install python-dateutil
 pip install setuptools_scm
 ```
 
-## Configure remote access with RealVNC
+## Configure remote access
+### Option 1: with RealVNC
 From your Raspberry Pi:
 
 1. Go to the website and create an account: [RealVNC](https://www.realvnc.com/es/)
@@ -102,6 +104,12 @@ From your external computer or phone:
 1. Log in to the RealVNC webpage using your credentials.
 2. Install and open RealVNC Viewer on your external computer or phone.
 3. Connect to the Raspberry Pi using the RealVNC server's code if you are connecting from another network or the IP if you are connecting from the same network.
+
+### Option 2 (things are very slow with this): with raspi-connect
+1. Follow these instructions:
+https://www.raspberrypi.com/news/raspberry-pi-connect/
+
+
 
 ## Udev rules
 Go to the rules folder:
@@ -126,5 +134,12 @@ KERNEL=="ttyACM*",KERNELS=="1-1:1.0",SYMLINK+="BPod"
 sudo udevadm trigger
 ```
 
+## Install village
+- Make sure you are in .env environment (see above)
+- Clone the repo anywhere you want. In the terminal, type:
+```git clone https://github.com/BrainCircuitsBehaviorLab/village.git```
+- Navigate to folder ```village``` and type ```pip install -e .```
+- Run the ```main.py``` file with sudo to create the folders: ```sudo python /home/pi/village/village/main.py```
+- PROBLEMS WITH user package
 
 Feel free to adjust the formatting or content as needed!

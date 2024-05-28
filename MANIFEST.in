@@ -8,3 +8,4 @@ recursive-exclude docs *
 recursive-exclude tests *
 
 recursive-include resources *.png
+recursive-include resources *.ico
