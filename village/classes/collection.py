@@ -35,7 +35,7 @@ class Collection(LogProtocol):
         if len(self.df) > 110000:
             first_100000: pd.DataFrame = self.df.head(100000)
             date_str: str = utils.now_string_for_filename()
-            new_filename: str = "subjects_" + date_str + ".csv"
+            new_filename: str = self.name + "_" + date_str + ".csv"
             directory: str = settings.get("DATA_DIRECTORY")
             new_path: str = os.path.join(directory, new_filename)
             first_100000.to_csv(new_path, index=False)

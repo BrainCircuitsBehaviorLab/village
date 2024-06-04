@@ -1,9 +1,15 @@
 import getpass
 
 from village.app.utils import utils
-from village.classes.settings_class import (Active, AreaActive, Color,
-                                            ControlDevice, ScreenActive,
-                                            Setting, Settings)
+from village.classes.settings_class import (
+    Active,
+    AreaActive,
+    Color,
+    ControlDevice,
+    ScreenActive,
+    Setting,
+    Settings,
+)
 
 main_settings = [
     Setting("SYSTEM_NAME", "village01", str, "The unique name of the system"),

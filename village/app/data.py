@@ -15,15 +15,13 @@ class Data:
         self.create_directories()
 
         # collections
-        self.events = Collection("events", ["date", "subject", "description"])
-        self.history = Collection(
-            "history",
-            ["date", "subject", "tag", "weight", "task", "duration", "weight"],
+        self.events = Collection("events", ["date", "type", "subject", "value"])
+        self.sessions = Collection(
+            "sessions",
+            ["date", "name", "subject", "tag", "weight", "task", "duration", "water"],
         )
-        self.events = Collection("events", ["date", "subject", "description"])
-        self.alarms = Collection("alarms", ["date", "subject", "description"])
-        self.temperatures = Collection(
-            "temperatures", ["date", "temperature", "humidity"]
+        self.calibration = Collection(
+            "calibration", ["date", "element", "target", "value"]
         )
 
         self.tasks = self.import_all_tasks("user")
@@ -43,7 +41,9 @@ class Data:
 
         try:
             package = importlib.import_module(package_name)
-            for _, name, _ in pkgutil.walk_packages(package.__path__, package_name + "."):
+            for _, name, _ in pkgutil.walk_packages(
+                package.__path__, package_name + "."
+            ):
                 try:
                     module = importlib.import_module(name)
 
@@ -57,12 +57,14 @@ class Data:
                             tasks.append(new_task)
                 except Exception as e:
                     utils.log(
-                        "Error importing " + name, exception=e, destinations=[self.events]
+                        "Error importing " + name,
+                        exception=e,
+                        destinations=[self.events],
                     )
                     continue
         except ModuleNotFoundError:
             pass
-        
+
         return tasks
 
 

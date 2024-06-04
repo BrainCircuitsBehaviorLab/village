@@ -1,4 +1,7 @@
 import datetime
+from pathlib import Path
+
+from PyQt5.QtWidgets import QLayout
 
 from village.classes.protocols import LogProtocol
 from village.classes.settings_class import Setting
@@ -32,7 +35,7 @@ class Utils:
         for d in destinations:
             d.log(description, subject, date)
 
-    def generate_directory_paths(self, project_directory):
+    def generate_directory_paths(self, project_directory) -> list[Setting]:
         directory_settings = [
             Setting(
                 "PROJECT_DIRECTORY",
@@ -60,13 +63,24 @@ class Utils:
             ),
             Setting(
                 "APP_DIRECTORY",
-                project_directory + "/village",
+                str(Path(__file__).parent.parent.parent),
                 str,
                 "The directory of the application",
             ),
         ]
-            
+
         return directory_settings
+
+    def delete_all_elements(self, layout: QLayout) -> None:
+        for i in reversed(range(layout.count())):
+            layoutItem = layout.itemAt(i)
+            if layoutItem is not None:
+                if layoutItem.widget() is not None:
+                    widgetToRemove = layoutItem.widget()
+                    widgetToRemove.deleteLater()
+                else:
+                    if layoutItem.layout() is not None:
+                        self.delete_all_elements(layoutItem.layout())
 
 
 utils = Utils()

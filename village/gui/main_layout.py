@@ -13,7 +13,7 @@ class MainLayout(Layout):
         super().__init__(window)
         self.draw()
 
-    def draw(self):
+    def draw(self) -> None:
         self.main_button.setDisabled(True)
 
         self.image = self.create_and_add_image(10, 10, 192, 30, "mouse_village.png")

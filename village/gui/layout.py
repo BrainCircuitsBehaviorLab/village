@@ -91,7 +91,7 @@ class ToggleButton(QPushButton):
         self.update_style()
         self.pressed.connect(self.on_pressed)
 
-    def update_style(self):
+    def update_style(self) -> None:
         if self.complete_name:
             self.setText(self.key + " " + self.value)
         else:
@@ -170,13 +170,27 @@ class Table(QAbstractTableModel):
 
 
 class Layout(QGridLayout):
-    def __init__(self, window: GuiWindow) -> None:
+    def __init__(
+        self,
+        window: GuiWindow,
+        stacked: bool = False,
+        rows: int = 50,
+        columns: int = 212,
+    ) -> None:
         super().__init__()
         self.window = window
-        self.width = window.window_with
-        self.height = window.window_height
-        self.num_of_columns = 212
-        self.num_of_rows = 50
+
+        if stacked:
+            self.width = int(window.window_width / 212 * columns)
+            self.height = int(window.window_height / 50 * rows)
+            self.num_of_columns = columns
+            self.num_of_rows = rows
+        else:
+            self.width = window.window_width
+            self.height = window.window_height
+            self.num_of_columns = columns
+            self.num_of_rows = rows
+
         self.column_width = int(self.width / self.num_of_columns)
         self.row_height = int(self.height / self.num_of_rows)
 
@@ -189,15 +203,16 @@ class Layout(QGridLayout):
         for i in range(self.num_of_rows):
             self.setRowMinimumHeight(i, self.row_height)
 
-        state_name = status.state.name
-        state_description = status.state.description
-        subject_name = status.subject.name
-        task_name = status.task.name
-        cycle_value = status.cycle.value
+        if not stacked:
+            state_name = status.state.name
+            state_description = status.state.description
+            subject_name = status.subject.name
+            task_name = status.task.name
+            cycle_value = status.cycle.value
 
-        self.create_common_elements(
-            state_name, state_description, subject_name, task_name, cycle_value
-        )
+            self.create_common_elements(
+                state_name, state_description, subject_name, task_name, cycle_value
+            )
 
     def create_common_elements(
         self,
@@ -335,6 +350,13 @@ class Layout(QGridLayout):
                 if layoutItem.widget() is not None:
                     widgetToRemove = layoutItem.widget()
                     widgetToRemove.deleteLater()
+                else:
+                    sub_layout = layoutItem.layout()
+                    print("si", sub_layout)
+                    print(type(sub_layout))
+                    if isinstance(sub_layout, Layout):
+                        print("siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+                        sub_layout.delete_all_elements()
 
     def create_and_add_label(
         self,
@@ -445,12 +467,18 @@ class Layout(QGridLayout):
         column: int,
         width: int,
         height: int,
+        widths: list[int] = [],
     ) -> Table:
 
         model = Table(df)
         model.table_view.setFixedSize(
             width * self.column_width, height * self.row_height
         )
+        for i in range(len(widths)):
+            model.table_view.setColumnWidth(i, widths[i] * self.column_width)
+
+        model.table_view.scrollToBottom()
+
         self.addWidget(model.table_view, row, column, height, width)
 
         return model

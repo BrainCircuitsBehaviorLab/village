@@ -77,3 +77,14 @@ class Cycle(SuperEnum):
     DAY = "DAY"
     NIGHT = "NIGHT"
     OFF = "OFF"
+
+
+class Actions(SuperEnum):
+    CORRIDOR = "CORRIDOR"
+    PORTS = "PORTS"
+    SOFTCODES = "SOFTCODES"
+
+
+class Info(SuperEnum):
+    SYSTEM_INFO = "SYSTEM_INFO"
+    CAMERA_SETTINGS = "CAMERA_SETTINGS"

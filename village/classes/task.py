@@ -30,6 +30,15 @@ class Task:
         self.after_trial()
         self.close()
 
+    def run(self, subject: Subject) -> None:
+        self.subject = subject.name
+        self.start()
+        for i in range(10):
+            self.create_trial()
+            self.after_trial()
+
+        self.close()
+
     # OVERWRITE THESE METHODS IN YOUR TASK
     def start(self) -> None:
         raise NotImplementedError("This method must be overridden")

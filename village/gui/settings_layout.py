@@ -408,13 +408,15 @@ class SettingsLayout(Layout):
         # define the rest of the directories
         for s in self.line_edits_settings:
             if s.key == "PROJECT_DIRECTORY":
-                new_project_directory = self.line_edits[self.line_edits_settings.index(s)].text()
+                new_project_directory = self.line_edits[
+                    self.line_edits_settings.index(s)
+                ].text()
                 print(new_project_directory)
                 break
-        
+
         # generate the new directory settings
         directory_settings = utils.generate_directory_paths(new_project_directory)
-        
+
         # update the text in the gui
         for i, s in enumerate(self.line_edits_settings):
             if s.key.endswith("_DIRECTORY"):
@@ -422,8 +424,8 @@ class SettingsLayout(Layout):
                 for new_s in directory_settings:
                     if new_s.key == s.key:
                         self.line_edits[i].setText(new_s.value)
-                        break        
-                
+                        break
+
         self.apply_button_clicked()
         data.create_directories()
         # TODO: make also a dummy repo for the tasks
