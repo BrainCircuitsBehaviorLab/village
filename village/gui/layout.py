@@ -6,15 +6,8 @@ from typing import TYPE_CHECKING, Any, Callable
 from pandas import DataFrame
 from PyQt5.QtCore import QAbstractTableModel, Qt
 from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
-from PyQt5.QtWidgets import (
-    QComboBox,
-    QGridLayout,
-    QLabel,
-    QLineEdit,
-    QMessageBox,
-    QPushButton,
-    QTableView,
-)
+from PyQt5.QtWidgets import (QComboBox, QGridLayout, QLabel, QLineEdit,
+                             QMessageBox, QPushButton, QTableView)
 
 from village.app.settings import settings
 from village.app.status import status
