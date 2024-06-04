@@ -88,7 +88,8 @@ alarm_settings = [
     ),
 ]
 
-project_directory = "/home/" + getpass.getuser() + "/demo_project"
+default_project_name = "demo_project"
+project_directory = "/home/" + getpass.getuser() + "/village_projects/" + default_project_name
 directory_settings = utils.generate_directory_paths(project_directory)
 
 screen_settings = [
