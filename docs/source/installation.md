@@ -127,7 +127,7 @@ sudo nano 99-usb.rules
 Add the following line to create a symbolic link to the bpod, changing "1-1:1.0" with the real port. You can use `dmesg` to check the ports:
 
 ```
-KERNEL=="ttyACM*",KERNELS=="1-1:1.0",SYMLINK+="BPod"
+KERNEL=="ttyACM*",KERNELS=="1-1:1.0",SYMLINK+="Bpod"
 ```
 
 ```
