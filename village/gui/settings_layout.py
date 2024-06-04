@@ -87,12 +87,13 @@ class SettingsLayout(Layout):
             for s in settings.directory_settings:
                 if s.key == "PROJECT_DIRECTORY":
                     self.create_label_and_value(row, 50, s, name)
+                    row += 2
                     # create a button to open the directory
                     self.create_and_add_button(
                         "Create new project",
                         row,
-                        50 + 53,
-                        13,
+                        50 + 35,
+                        25,
                         2,
                         self.create_project_directory,
                         "Open the project directory",
