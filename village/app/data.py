@@ -20,8 +20,8 @@ class Data:
             "sessions",
             ["date", "name", "subject", "tag", "weight", "task", "duration", "water"],
         )
-        self.calibration = Collection(
-            "calibration", ["date", "element", "target", "value"]
+        self.water_calibration = Collection(
+            "water_calibration", ["date", "port_number", "volume(ul)", "time(ms)"]
         )
 
         self.tasks = self.import_all_tasks("user")

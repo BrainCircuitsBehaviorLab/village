@@ -45,7 +45,7 @@ class Collection(LogProtocol):
 
             self.df = last
 
-    def get_latest_entry(self, column: str, value: str) -> pd.Series | None:
+    def get_last_entry(self, column: str, value: str) -> pd.Series | None:
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
         if not column_df.empty:
             return column_df.iloc[-1]
@@ -61,3 +61,7 @@ class Collection(LogProtocol):
         if self.columns == ["date", "subject", "description"]:
             entry = [date, subject, description]
             self.add_entry(entry)
+    
+    def get_valve_time(self, port: int, volume: str) -> float:
+        # TODO
+        return 0.01
