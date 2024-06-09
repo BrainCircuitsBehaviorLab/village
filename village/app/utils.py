@@ -1,10 +1,9 @@
 import datetime
-from pathlib import Path
 
+import sounddevice as sd
 from PyQt5.QtWidgets import QLayout
 
 from village.classes.protocols import LogProtocol
-from village.classes.settings_class import Setting
 
 
 class Utils:
@@ -22,54 +21,20 @@ class Utils:
     def log(
         self,
         description: str,
+        type: str = "INFO",
         subject: str = "",
         exception: Exception | None = None,
         destinations: list[LogProtocol] = [],
     ) -> None:
         date = self.now_string()
+        msg = date + "  " + type + "  " + subject + "  " + description
         if exception is None:
-            print(date + "  " + subject + "  " + description)
+            print(msg)
         else:
-            print(date + "  " + subject + "  " + description + " " + str(exception))
+            print(msg + str(exception))
 
         for d in destinations:
-            d.log(description, subject, date)
-
-    def generate_directory_paths(self, project_directory) -> list[Setting]:
-        directory_settings = [
-            Setting(
-                "PROJECT_DIRECTORY",
-                project_directory,
-                str,
-                "The directory of the project",
-            ),
-            Setting(
-                "DATA_DIRECTORY",
-                project_directory + "/data",
-                str,
-                "The directory of the data",
-            ),
-            Setting(
-                "SESSIONS_DIRECTORY",
-                project_directory + "/sessions",
-                str,
-                "The directory of the sessions",
-            ),
-            Setting(
-                "VIDEOS_DIRECTORY",
-                project_directory + "/videos",
-                str,
-                "The directory of the sessions",
-            ),
-            Setting(
-                "APP_DIRECTORY",
-                str(Path(__file__).parent.parent.parent),
-                str,
-                "The directory of the application",
-            ),
-        ]
-
-        return directory_settings
+            d.log(date, type, subject, description)
 
     def delete_all_elements(self, layout: QLayout) -> None:
         for i in reversed(range(layout.count())):
@@ -81,6 +46,11 @@ class Utils:
                 else:
                     if layoutItem.layout() is not None:
                         self.delete_all_elements(layoutItem.layout())
+
+    def get_sound_devices(self) -> list[str]:
+        devices = sd.query_devices()
+        devices_str = [d["name"] for d in devices]
+        return devices_str
 
 
 utils = Utils()

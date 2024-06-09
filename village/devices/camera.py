@@ -101,7 +101,7 @@ class Camera(CameraProtocol, LogProtocol):
 
         self.cam.start()
 
-    def log(self, description: str, subject: str, date: str) -> None:
+    def log(self, date: str, type: str, subject: str, description: str) -> None:
         if description == "":
             self.state = ""
         else:
@@ -332,3 +332,7 @@ def get_camera(index: int, name: str) -> CameraProtocol:
     except Exception as e:
         utils.log("Could not create cam " + name, exception=e)
         return CameraProtocol()
+
+
+cam_corridor = get_camera(0, "CORRIDOR")
+cam_box = get_camera(1, "BOX")

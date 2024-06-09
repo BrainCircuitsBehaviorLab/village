@@ -57,7 +57,7 @@ class Collection(LogProtocol):
             return column_df.iloc[0]
         return None
 
-    def log(self, description: str, subject: str, date: str) -> None:
-        if self.columns == ["date", "subject", "description"]:
-            entry = [date, subject, description]
+    def log(self, date: str, type: str, subject: str, description: str) -> None:
+        if self.columns == ["date", "type", "subject", "description"]:
+            entry = [date, type, subject, description]
             self.add_entry(entry)

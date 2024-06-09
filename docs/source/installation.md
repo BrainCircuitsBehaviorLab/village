@@ -23,6 +23,10 @@
 9. Choose your preferred web browser (Chromium).
 10. Select "Yes" when asked to update software (if you have your internet connection ready).
 
+## Sound settings
+- `sudo apt-get install pulseaudio`  I think this one is not necessary
+- `sudo apt-get install libportaudio2`
+
 ## Screen settings
 - `sudo raspi-config`
   - Go to **Display Options** and disable blanking.
@@ -87,6 +91,7 @@ Install needed libraries with pip:
 ```bash
 pip install python-dateutil
 pip install setuptools_scm
+pip install sounddevice
 ```
 
 ## Configure remote access

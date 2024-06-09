@@ -1,6 +1,6 @@
 import getpass
+from pathlib import Path
 
-from village.app.utils import utils
 from village.classes.settings_class import (
     Active,
     AreaActive,
@@ -55,7 +55,7 @@ corridor_settings = [
     Setting("CORRIDOR_VIDEOS_STORED", 100, int, "The number of corridor videos stored"),
 ]
 
-sound_settings = [Setting("PARAMETER", 1, int, "The parameter of the sound")]
+sound_settings = [Setting("SOUND_DEVICE", "default", str, "The sound device")]
 
 alarm_settings = [
     Setting(
@@ -89,7 +89,39 @@ alarm_settings = [
 ]
 
 project_directory = "/home/" + getpass.getuser() + "/demo_project"
-directory_settings = utils.generate_directory_paths(project_directory)
+
+directory_settings = [
+    Setting(
+        "PROJECT_DIRECTORY",
+        project_directory,
+        str,
+        "The directory of the project",
+    ),
+    Setting(
+        "DATA_DIRECTORY",
+        project_directory + "/data",
+        str,
+        "The directory of the data",
+    ),
+    Setting(
+        "SESSIONS_DIRECTORY",
+        project_directory + "/data/sessions",
+        str,
+        "The directory of the sessions",
+    ),
+    Setting(
+        "VIDEOS_DIRECTORY",
+        project_directory + "/data/videos",
+        str,
+        "The directory of the sessions",
+    ),
+    Setting(
+        "APP_DIRECTORY",
+        str(Path(__file__).parent.parent.parent),
+        str,
+        "The directory of the application",
+    ),
+]
 
 screen_settings = [
     Setting("SCREEN_SIZE_MM", [400, 200], list[int], "The size of the screen in mm")

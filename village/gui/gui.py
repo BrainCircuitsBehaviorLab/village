@@ -5,10 +5,10 @@ from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
 from village.app.data import data
-from village.app.dev import dev
 from village.app.settings import settings
 from village.app.utils import utils
 from village.classes.enums import ScreenActive
+from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
 from village.screen.behaviour_window import BehaviourWindow
 
@@ -42,7 +42,7 @@ class Gui:
 
     def exit_app(self) -> None:
         utils.log("VILLAGE Closed", destinations=[data.events])
-        dev.cam_corridor.stop_record()
-        dev.cam_box.stop_record()
+        cam_corridor.stop_record()
+        cam_box.stop_record()
         self.q_app.quit()
         sys.exit()

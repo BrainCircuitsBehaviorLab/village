@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, Any
 from PyQt5.QtWidgets import QMessageBox
 
 from village.app.data import data
-from village.app.dev import dev
 from village.app.settings import Setting, settings
 from village.app.utils import utils
 from village.classes.enums import Active, ControlDevice, ScreenActive
+from village.devices.camera import cam_box, cam_corridor
 from village.gui.layout import Layout, LineEdit, PushButton, ToggleButton
 
 if TYPE_CHECKING:
@@ -206,7 +206,7 @@ class SettingsLayout(Layout):
         else:
             return True
 
-    def settings_changed(self, value: str, key="") -> None:
+    def settings_changed(self, value: str = "", key: str = "") -> None:
         self.apply_button.setEnabled(True)
 
     def apply_button_clicked(self) -> None:
@@ -258,8 +258,8 @@ class SettingsLayout(Layout):
             values = [field.text() for field in list_toggle]
             settings.set(s.key, values)
 
-        dev.cam_corridor.change = True
-        dev.cam_box.change = True
+        cam_corridor.change = True
+        cam_box.change = True
 
     def restore_button_clicked(self) -> None:
         reply = QMessageBox.question(
@@ -290,15 +290,31 @@ class SettingsLayout(Layout):
             line_edit.setProperty("type", type)
             self.line_edits.append(line_edit)
             self.line_edits_settings.append(s)
+        elif s.key == "SOUND_DEVICE":
+            possible_values = utils.get_sound_devices()
+            value = settings.get(s.key)
+            index = possible_values.index(value) if value in possible_values else 0
+            self.sound_deivce_combobox = self.create_and_add_combo_box(
+                s.key,
+                row,
+                column + 15,
+                30,
+                2,
+                possible_values,
+                index,
+                self.change_sound_device,
+            )
+
         elif s.value_type in (str, int, float):
             value = str(settings.get(s.key))
             if s.key.endswith("DIRECTORY"):
-                width = 36
+                line_edit = self.create_and_add_line_edit(
+                    value, row, column + 20, 41, 2, self.settings_changed
+                )
             else:
-                width = 16
-            line_edit = self.create_and_add_line_edit(
-                value, row, column + 30, width, 2, self.settings_changed
-            )
+                line_edit = self.create_and_add_line_edit(
+                    value, row, column + 30, 16, 2, self.settings_changed
+                )
             if s.key in (
                 "BPOD_TARGET_FIRMWARE",
                 "APP_DIRECTORY",
@@ -360,7 +376,6 @@ class SettingsLayout(Layout):
         else:
             possible_values = settings.get_values(s.key)
             index = settings.get_index(s.key)
-
             toggle_button = self.create_and_add_toggle_button(
                 s.key,
                 row,
@@ -376,6 +391,10 @@ class SettingsLayout(Layout):
             toggle_button.setProperty("type", type)
             self.toggle_buttons.append(toggle_button)
             self.toggle_buttons_settings.append(s)
+
+    def change_sound_device(self, value: str, key: str) -> None:
+        settings.set(key, value)
+        self.settings_changed(value, key)
 
     def toggle_button_changed(self, value: str, key: str) -> None:
         modify = ""
@@ -412,11 +431,12 @@ class SettingsLayout(Layout):
                 new_project_directory = self.line_edits[
                     self.line_edits_settings.index(s)
                 ].text()
-                print(new_project_directory)
                 break
 
         # generate the new directory settings
-        directory_settings = utils.generate_directory_paths(new_project_directory)
+        # directory_settings = utils.generate_directory_paths(new_project_directory)
+        directory_settings: list[Setting] = []
+        print(new_project_directory)
 
         # update the text in the gui
         for i, s in enumerate(self.line_edits_settings):

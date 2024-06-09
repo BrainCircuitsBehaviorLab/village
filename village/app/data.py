@@ -14,16 +14,22 @@ class Data:
         # directories
         self.create_directories()
 
-        # collections
-        self.events = Collection("events", ["date", "type", "subject", "value"])
+        # creat collections
+        self.events = Collection(
+            "events_table", ["date", "type", "subject", "description"]
+        )
         self.sessions = Collection(
-            "sessions",
-            ["date", "name", "subject", "tag", "weight", "task", "duration", "water"],
+            "sessions_table",
+            ["date", "subject", "tag", "weight", "task", "duration", "water"],
         )
         self.calibration = Collection(
-            "calibration", ["date", "element", "target", "value"]
+            "calibration_table", ["date", "element", "target", "value"]
         )
 
+        # tart message
+        utils.log("VILLAGE Started", destinations=[self.events])
+
+        # create tasks
         self.tasks = self.import_all_tasks("user")
 
     def create_directories(self) -> None:

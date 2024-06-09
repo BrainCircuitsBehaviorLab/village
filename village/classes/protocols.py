@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget
 
 
 class LogProtocol:
-    def log(self, description: str, subject: str, date: str) -> None:
+    def log(self, date: str, type: str, subject: str, description: str) -> None:
         return
 
 

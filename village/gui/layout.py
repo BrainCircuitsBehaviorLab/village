@@ -34,7 +34,7 @@ class Label(QLabel):
         else:
             style += "}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
+            style += "QToolTip {background-color: white; color: black; font-size: 16px}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         if right_aligment:
@@ -64,7 +64,7 @@ class PushButton(QPushButton):
         super().__init__(text)
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
+            style += "QToolTip {background-color: white; color: black; font-size: 16px}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         self.pressed.connect(action)
@@ -99,7 +99,7 @@ class ToggleButton(QPushButton):
         color = "darkgray" if self.value == "OFF" else "lightgray"
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if self.description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
+            style += "QToolTip {background-color: white; color: black; font-size: 16px}"
             self.setToolTip(self.description)
         self.setStyleSheet(style)
 
@@ -352,10 +352,7 @@ class Layout(QGridLayout):
                     widgetToRemove.deleteLater()
                 else:
                     sub_layout = layoutItem.layout()
-                    print("si", sub_layout)
-                    print(type(sub_layout))
                     if isinstance(sub_layout, Layout):
-                        print("siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
                         sub_layout.delete_all_elements()
 
     def create_and_add_label(

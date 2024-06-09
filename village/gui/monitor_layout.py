@@ -15,11 +15,12 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from village.app.dev import dev
 from village.app.settings import settings
 from village.app.status import status
 from village.app.utils import utils
 from village.classes.enums import Actions, Cycle, Info
+from village.devices.camera import cam_box, cam_corridor
+from village.devices.motor import motor1, motor2
 from village.gui.layout import Label, Layout, PushButton
 
 if TYPE_CHECKING:
@@ -196,24 +197,24 @@ class LabelButtons:
             settings.set(self.name, coords)
 
             if self.name == "AREA1_CORRIDOR":
-                dev.cam_corridor.area1 = coords
+                cam_corridor.area1 = coords
             elif self.name == "AREA2_CORRIDOR":
-                dev.cam_corridor.area2 = coords
+                cam_corridor.area2 = coords
             elif self.name == "AREA3_CORRIDOR":
-                dev.cam_corridor.area3 = coords
+                cam_corridor.area3 = coords
             elif self.name == "AREA4_CORRIDOR":
-                dev.cam_corridor.area4 = coords
+                cam_corridor.area4 = coords
             elif self.name == "AREA1_BOX":
-                dev.cam_box.area1 = coords
+                cam_box.area1 = coords
             elif self.name == "AREA2_BOX":
-                dev.cam_box.area2 = coords
+                cam_box.area2 = coords
             elif self.name == "AREA3_BOX":
-                dev.cam_box.area3 = coords
+                cam_box.area3 = coords
             elif self.name == "AREA4_BOX":
-                dev.cam_box.area4 = coords
+                cam_box.area4 = coords
 
-            dev.cam_corridor.change = True
-            dev.cam_box.change = True
+            cam_corridor.change = True
+            cam_box.change = True
 
 
 class MonitorLayout(Layout):
@@ -227,8 +228,8 @@ class MonitorLayout(Layout):
 
         self.monitor_button.setDisabled(True)
 
-        self.qpicamera2_corridor = dev.cam_corridor.start_preview_window()
-        self.qpicamera2_box = dev.cam_box.start_preview_window()
+        self.qpicamera2_corridor = cam_corridor.start_preview_window()
+        self.qpicamera2_box = cam_box.start_preview_window()
 
         self.addWidget(self.qpicamera2_corridor, 4, 0, 30, 88)
         self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
@@ -352,11 +353,11 @@ class MonitorLayout(Layout):
 
     def toggle_corridor(self, value: str, key: str) -> None:
         settings.set(key, value)
-        dev.cam_corridor.change = True
+        cam_corridor.change = True
 
     def toggle_box(self, value: str, key: str) -> None:
         settings.set(key, value)
-        dev.cam_box.change = True
+        cam_box.change = True
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
         status.cycle = Cycle[value]
@@ -377,8 +378,8 @@ class MonitorLayout(Layout):
         self.bottom_layout.setCurrentIndex(index)
 
     def change_layout(self) -> bool:
-        dev.cam_corridor.stop_window_preview()
-        dev.cam_box.stop_window_preview()
+        cam_corridor.stop_window_preview()
+        cam_box.stop_window_preview()
         return True
 
 
@@ -390,8 +391,8 @@ class MotorLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        self.draw_motor_buttons("MOTOR1", 0, 0, dev.motor1)
-        self.draw_motor_buttons("MOTOR2", 2, 0, dev.motor2)
+        self.draw_motor_buttons("MOTOR1", 0, 0, motor1)
+        self.draw_motor_buttons("MOTOR2", 2, 0, motor2)
 
         self.change_angles: PushButton = self.create_and_add_button(
             "CHANGE MOTOR ANGLES",
@@ -769,19 +770,19 @@ class CorridorLayout(Layout):
 
     def toggle_area1_box(self, value: str, key: str) -> None:
         settings.set(key, value)
-        dev.cam_box.change = True
+        cam_box.change = True
 
     def toggle_area2_box(self, value: str, key: str) -> None:
         settings.set(key, value)
-        dev.cam_box.change = True
+        cam_box.change = True
 
     def toggle_area3_box(self, value: str, key: str) -> None:
         settings.set(key, value)
-        dev.cam_box.change = True
+        cam_box.change = True
 
     def toggle_area4_box(self, value: str, key: str) -> None:
         settings.set(key, value)
-        dev.cam_box.change = True
+        cam_box.change = True
 
 
 class InfoLayout(Layout):
