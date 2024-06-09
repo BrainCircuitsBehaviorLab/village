@@ -1,3 +1,4 @@
+# mypy: ignore-errors
 import logging
 
 from village.pybpodapi.state_machine.state_machine_builder import StateMachineBuilder

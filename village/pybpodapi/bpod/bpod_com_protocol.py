@@ -1,3 +1,4 @@
+# mypy: ignore-errors
 import logging
 
 from village.app.settings import Active, settings
@@ -5,8 +6,7 @@ from village.pybpodapi.bpod.bpod_base import BpodBase
 from village.pybpodapi.bpod.hardware.channels import ChannelType
 from village.pybpodapi.bpod_modules.bpod_module import BpodModule
 from village.pybpodapi.com.arcom import ArCOM, ArduinoTypes
-from village.pybpodapi.com.protocol.recv_msg_headers import \
-    ReceiveMessageHeader
+from village.pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
 from village.pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
 from village.pybpodapi.exceptions.bpod_error import BpodErrorException
 

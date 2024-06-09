@@ -22,8 +22,8 @@ class Data:
             "sessions_table",
             ["date", "subject", "tag", "weight", "task", "duration", "water"],
         )
-        self.calibration = Collection(
-            "calibration_table", ["date", "element", "target", "value"]
+        self.water_calibration = Collection(
+            "water_calibration", ["date", "port_number", "volume(ul)", "time(ms)"]
         )
 
         # tart message

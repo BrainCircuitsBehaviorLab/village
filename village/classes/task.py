@@ -1,7 +1,10 @@
+from threading import Thread
+
 import numpy as np
 
 from village.app.settings import settings
 from village.classes.subject import Subject
+from village.pybpodapi.protocol import Bpod, StateMachine
 
 
 class Task:
@@ -11,8 +14,8 @@ class Task:
         self.weight: float = np.nan
         self.system_name: str = settings.get("SYSTEM_NAME")
         self.process = None
-        self.bpod = None
-        self.sma = None
+        self.bpod = Bpod()
+        self.sma = StateMachine(self.bpod)
         self.current_trial: int = 0
         self.current_trial_states: list = []
         self.stop_task: bool = False
@@ -30,12 +33,17 @@ class Task:
         self.after_trial()
         self.close()
 
-    def run(self, subject: Subject) -> None:
+    def test_run(self, subject: Subject) -> None:
         self.subject = subject.name
         self.start()
-        for i in range(10):
+        while self.current_trial < self.number_of_trials:
+            self.sma = StateMachine(self.bpod)
             self.create_trial()
+            self.bpod.send_state_machine(self.sma)
+            self.bpod.run_state_machine(self.sma)
             self.after_trial()
+            self.register_values()
+            self.current_trial += 1
 
         self.close()
 
@@ -56,6 +64,9 @@ class Task:
     def send_and_run_state(self) -> None:
         # self.sma.send(self.state)
         return
+    
+    def register_values(self) -> None:
+        pass
 
     @classmethod
     def get_name(cls) -> str:

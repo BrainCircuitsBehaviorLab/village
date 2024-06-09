@@ -1,3 +1,4 @@
+# mypy: ignore-errors
 import logging
 
 from village.pybpodapi.bpod.hardware.channels import ChannelName
