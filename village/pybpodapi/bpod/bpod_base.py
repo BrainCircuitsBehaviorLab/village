@@ -1,3 +1,4 @@
+# mypy: ignore-errors
 import logging
 import math
 import socket
@@ -11,8 +12,7 @@ from village.pybpodapi.bpod.hardware.hardware import Hardware
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
 from village.pybpodapi.com.messaging.event_occurrence import EventOccurrence
 from village.pybpodapi.com.messaging.event_resume import EventResume
-from village.pybpodapi.com.messaging.softcode_occurrence import \
-    SoftcodeOccurrence
+from village.pybpodapi.com.messaging.softcode_occurrence import SoftcodeOccurrence
 from village.pybpodapi.com.messaging.state_transition import StateTransition
 from village.pybpodapi.com.messaging.trial import Trial
 from village.pybpodapi.com.messaging.value import ValueMessage

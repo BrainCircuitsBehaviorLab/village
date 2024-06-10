@@ -1,6 +1,14 @@
 from PyQt5.QtWidgets import QWidget
 
 
+class PyBpodProtocol:
+    def create_state_machine(self) -> None:
+        return
+
+    def send_and_run_state_machine(self) -> None:
+        return
+
+
 class LogProtocol:
     def log(self, date: str, type: str, subject: str, description: str) -> None:
         return

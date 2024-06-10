@@ -6,24 +6,32 @@ from pathlib import Path
 from village.app.settings import settings
 from village.app.utils import utils
 from village.classes.collection import Collection
+from village.classes.enums import Cycle, State
+from village.classes.subject import Subject
 from village.classes.task import Task
 
 
 class Data:
     def __init__(self) -> None:
+        self.subject = Subject()
+        self.task = Task()
+        self.state = State.WAIT
+        self.cycle = Cycle.AUTO
+
         # directories
         self.create_directories()
 
         # creat collections
-        self.events = Collection(
-            "events_table", ["date", "type", "subject", "description"]
-        )
+        self.events = Collection("events", ["date", "type", "subject", "description"])
         self.sessions = Collection(
-            "sessions_table",
+            "sessions_summary",
             ["date", "subject", "tag", "weight", "task", "duration", "water"],
         )
         self.water_calibration = Collection(
             "water_calibration", ["date", "port_number", "volume(ul)", "time(ms)"]
+        )
+        self.sound_calibration = Collection(
+            "water_calibration", ["date", "speaker", "volume(dB)", "amp"]
         )
 
         # tart message
