@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from village.data import data
 from village.gui.layout import Layout
 
 if TYPE_CHECKING:
@@ -17,3 +18,6 @@ class TasksLayout(Layout):
         self.tasks_button.setDisabled(True)
 
         self.label = self.create_and_add_label("TASKS", 10, 10, 30, 2, "black")
+
+        for index, task in enumerate(data.tasks):
+            self.create_and_add_label(task.name, 12 + 2 * index, 10, 30, 2, "black")

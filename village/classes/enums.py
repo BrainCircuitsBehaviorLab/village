@@ -25,11 +25,6 @@ class Active(SuperEnum):
     OFF = "OFF"
 
 
-class ControlDevice(SuperEnum):
-    BPOD = "BPOD"
-    HARP = "HARP"
-
-
 class Color(SuperEnum):
     BLACK = "BLACK"
     WHITE = "WHITE"
@@ -49,24 +44,27 @@ class AreaActive(SuperEnum):
 
 class State(SuperEnum):
     WAIT = "all subjects at home, waiting for rfid detection"
-    DETECTION = "subject detected, checking if it is allowed to enter"
-    ACCESS = "access granted, launching the task"
-    LAUNCH = (
-        "task launched, waiting for the subject to perform the first action in the box"
-    )
-    ACTION = "subject performed the first action in the box, closing the door"
-    CLOSE = "door closed, running the task, subject can not leave the box yet"
-    OPEN = "task finished, opening the door"
-    RUN_OPENED = "door opened, subject can leave the box"
-    EXIT_UNSAVED = "subject leaving, task is not saved yet"
-    SAVE_OUTSIDE = "task saved, subject is already outside"
-    SAVE_INSIDE = "task saved, subject is still inside"
-    WAIT_EXIT = "waiting for the subject to leave the box"
-    EXIT_SAVED = "subject leaving, task is already saved"
-    STOP = "automatic task, manually stopped"
-    ERROR = "error occurred, disconnecting rfids and stopping the task"
-    PREPARE = "manually preparing a task"
-    MANUAL = "manually running a task"
+    DETECTION = "getting subject name and task, checking areas and minimum time"
+
+    ACCESS = "closing door1, opening door2"
+    LAUNCH = "launching the task"
+    ACTION = "waiting for first action in behavioral box"
+    CLOSE = "closing door2"
+    RUN_CLOSED = "task running, subject can not leave"
+    OPEN = "opening door2"
+    RUN_OPENED = "task running, subject can leave"
+    EXIT_UNSAVED = "closing door2, opening door1"
+    SAVE_OUTSIDE = "stopping the task, saving the data"
+    SAVE_INSIDE = "stopping the task, saving the data"
+    WAIT_EXIT = "waiting for the subject to leave"
+    EXIT_SAVED = "closing door2, opening door1"
+    STOP = "opening door2, disconnecting rfid"
+    PREPARATION = "task being prepared manually"
+    MANUAL = "task running manually"
+    SETTINGS = "settings being changed manually"
+    SETTINGS_CHANGED = "settings changed manually"
+    EXIT_APP = "exiting the app"
+    END = "end"
 
     def __init__(self, description: str) -> None:
         self.description = description
@@ -76,7 +74,6 @@ class Cycle(SuperEnum):
     AUTO = "AUTO"
     DAY = "DAY"
     NIGHT = "NIGHT"
-    OFF = "OFF"
 
 
 class Actions(SuperEnum):
@@ -88,3 +85,12 @@ class Actions(SuperEnum):
 class Info(SuperEnum):
     SYSTEM_INFO = "SYSTEM_INFO"
     CAMERA_SETTINGS = "CAMERA_SETTINGS"
+
+
+class Table(SuperEnum):
+    EVENTS = "EVENTS"
+    SESSIONS_SUMMARY = "SESSIONS_SUMMARY"
+    SUBJECTS = "SUBJECTS"
+    WATER_CALIBRATION = "WATER_CALIBRATION"
+    SOUND_CALIBRATION = "SOUND_CALIBRATION"
+    SESSION = "SESSION"

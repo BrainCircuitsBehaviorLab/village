@@ -3,10 +3,10 @@ from typing import Any
 
 import numpy as np
 import sounddevice as sd
-from scipy.signal import firwin, lfilter  # filters
+from scipy.signal import firwin, lfilter
 
-from village.app.settings import settings
-from village.app.utils import utils
+from village.settings import settings
+from village.utils import utils
 
 
 class SoundDevice:
@@ -133,4 +133,4 @@ def whiteNoiseGen(
         raise ValueError("whiteNoiseGen needs (float, int, int, num,) as arguments")
 
 
-sound_device = SoundDevice()
+soundDevice = SoundDevice()

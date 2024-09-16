@@ -1,11 +1,12 @@
 import os
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-from village.app.settings import settings
-from village.app.utils import utils
 from village.classes.protocols import LogProtocol
+from village.settings import settings
+from village.utils import utils
 
 
 class Collection(LogProtocol):
@@ -15,10 +16,14 @@ class Collection(LogProtocol):
         self.path: Path = Path(settings.get("DATA_DIRECTORY")) / (name + ".csv")
 
         if not os.path.exists(self.path):
-            with open(self.path, "w") as file:
+            with open(self.path, "w", encoding="utf-8") as file:
                 columns_str: str = ",".join(self.columns) + "\n"
                 file.write(columns_str)
-        self.df = pd.read_csv(self.path)
+        try:
+            self.df = pd.read_csv(self.path)
+        except Exception as e:
+            utils.log("error reading from: " + str(self.path) + " error: " + str(e))
+            sys.exit()
 
     def add_entry(self, entry: list[str]) -> None:
         new_row = pd.DataFrame([entry], columns=self.columns)
@@ -26,7 +31,7 @@ class Collection(LogProtocol):
 
         columns_str: str = ",".join(entry) + "\n"
 
-        with open(self.path, "a") as file:
+        with open(self.path, "a", encoding="utf-8") as file:
             file.write(columns_str)
 
         self.check_split_csv()

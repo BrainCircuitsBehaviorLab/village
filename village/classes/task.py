@@ -1,16 +1,16 @@
 import numpy as np
 
-from village.app.settings import settings
+from village.classes.protocols import PyBpodProtocol
 from village.classes.subject import Subject
-from village.devices.bpod import bpod
+from village.settings import settings
 
 
 class Task:
     def __init__(self) -> None:
+        self.bpod = PyBpodProtocol()
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.weight: float = np.nan
-        self.system_name: str = settings.get("SYSTEM_NAME")
         self.process = None
         self.current_trial: int = 0
         self.current_trial_states: list = []
@@ -21,6 +21,7 @@ class Task:
         self.maximum_duration: float = 3600
         self.gui_input: list[str] = []
         self.gui_output: list[str] = []
+        self.system_name: str = settings.get("SYSTEM_NAME")
 
     def test(self, subject: Subject) -> None:
         self.subject = subject.name
@@ -33,9 +34,9 @@ class Task:
         self.subject = subject.name
         self.start()
         while self.current_trial < self.number_of_trials:
-            bpod.create_state_machine()
+            self.bpod.create_state_machine()
             self.create_trial()
-            bpod.send_and_run_state_machine()
+            self.bpod.send_and_run_state_machine()
             self.after_trial()
             self.register_values()
             self.current_trial += 1
@@ -65,4 +66,8 @@ class Task:
 
     @classmethod
     def get_name(cls) -> str:
-        return cls.__name__
+        name = cls.__name__
+        if name == "Task":
+            return "None"
+        else:
+            return name

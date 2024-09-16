@@ -1,9 +1,9 @@
 import os
-import time
 from pprint import pprint
 from typing import Any
 
 import cv2
+import pandas as pd
 
 from village.classes.enums import Active, AreaActive
 
@@ -18,9 +18,10 @@ except Exception:
 
 from PyQt5.QtWidgets import QWidget
 
-from village.app.settings import Color, settings
-from village.app.utils import utils
-from village.classes.protocols import CameraProtocol, LogProtocol
+from village.classes.protocols import CameraProtocol
+from village.data import data
+from village.settings import Color, settings
+from village.utils import utils
 
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
 # configure the logging of libcamera (the C++ library picamera2 uses)
@@ -36,7 +37,7 @@ def print_info_about_the_connected_cameras() -> None:
 
 
 # the camera class
-class Camera(CameraProtocol, LogProtocol):
+class Camera(CameraProtocol):
     def __init__(self, index: int, name: str) -> None:
 
         # camera settings
@@ -60,6 +61,7 @@ class Camera(CameraProtocol, LogProtocol):
         self.cam.align_configuration(self.config)
         self.cam.configure(self.config)
         self.path_video = settings.get("DATA_DIRECTORY") + "/videos/" + name + ".mp4"
+        self.path_csv = settings.get("DATA_DIRECTORY") + "/videos/" + name + ".csv"
         self.output = FfmpegOutput(self.path_video)
         self.cam.pre_callback = self.pre_process
 
@@ -68,44 +70,59 @@ class Camera(CameraProtocol, LogProtocol):
         color_area3 = settings.get("COLOR_AREA3")
         color_area4 = settings.get("COLOR_AREA4")
         self.color_areas = [color_area1, color_area2, color_area3, color_area4]
-        self.color_frame_number = (255, 0, 0)
-        self.color_state = (255, 0, 0)
-        self.color_timestamp = (255, 0, 0)
+        self.color_rectangle = (255, 255, 255)
+        self.color_text = (0, 0, 0)
+        self.color_state = (80, 80, 80)
         self.change = True
         self.state = ""
+        self.trial = -1
+        self.frames: list[int] = []
+        self.timings: list[int] = []
+        self.trials: list[int] = []
+        self.states: list[str] = []
 
         if self.change:
             self.set_properties()
             self.change = False
 
         # labels settings
-        self.origin_frame_number = (0, 30)
-        self.origin_timestamps = (0, 60)
-        self.origin_state = (0, 210)
-        origin_area1 = (0, 90)
-        origin_area2 = (0, 120)
-        origin_area3 = (0, 150)
-        origin_area4 = (0, 180)
-        self.origin_areas = [origin_area1, origin_area2, origin_area3, origin_area4]
+        self.origin_rectangle = (0, 0)
+        self.end_rectangle = (640, 40)
+
+        self.origin_timestamps = (20, 15)
+        self.orgigin_trial = (175, 15)
+        self.origin_state = (240, 15)
+
+        self.origin_frame_number = (3, 30)
+        self.origin_timings = (120, 30)
+        origin_area1 = (240, 30)
+        origin_area2 = (340, 30)
+        origin_area3 = (440, 30)
+        origin_area4 = (540, 30)
+
+        self.origin_areas = [
+            origin_area1,
+            origin_area2,
+            origin_area3,
+            origin_area4,
+        ]
 
         self.font = cv2.FONT_HERSHEY_SIMPLEX
-        self.scale = 0.5
+        self.scale = 0.4
         self.thickness_line = 2
         self.thickness_text = 1
 
         self.frame_number = 0
+        self.chrono = utils.Chrono()
         self.timestamp = ""
 
         self.masks: list[Any] = []
         self.counts: list[int] = []
 
-        self.cam.start()
+        if self.name == "CORRIDOR":
+            utils.cam_protocol = self
 
-    def log(self, date: str, type: str, subject: str, description: str) -> None:
-        if description == "":
-            self.state = ""
-        else:
-            self.state = subject + " " + description
+        self.cam.start()
 
     def set_properties(self) -> None:
         # black or white detection setting
@@ -115,9 +132,16 @@ class Camera(CameraProtocol, LogProtocol):
         self.areas: list[list[int]] = []
         self.thresholds: list[int] = []
         self.number_of_areas = 3 if self.name == "CORRIDOR" else 4
+
+        threshold_index = 4
+        if self.name == "CORRIDOR" and not data.day:
+            threshold_index = 5
+
         for i in range(1, self.number_of_areas + 1):
             self.areas.append(settings.get("AREA" + str(i) + "_" + self.name)[0:4])
-            self.thresholds.append(settings.get("AREA" + str(i) + "_" + self.name)[4])
+            self.thresholds.append(
+                settings.get("AREA" + str(i) + "_" + self.name)[threshold_index]
+            )
 
         # areas active and allowed settings
         self.areas_active: list[bool] = []
@@ -139,6 +163,9 @@ class Camera(CameraProtocol, LogProtocol):
                     self.areas_allowed.append(False)
 
         # detection settings
+        self.zero_or_one_mouse = settings.get("DETECTION_OF_MOUSE_" + self.name)[0]
+        self.one_or_two_mice = settings.get("DETECTION_OF_MOUSE_" + self.name)[1]
+
         self.no_mouse = settings.get("NO_MOUSE_" + self.name)
         self.one_mouse = settings.get("ONE_MOUSE_" + self.name)
         self.two_mice = settings.get("TWO_MICE_" + self.name)
@@ -159,6 +186,18 @@ class Camera(CameraProtocol, LogProtocol):
 
     def stop_record(self) -> None:
         self.cam.stop_encoder()
+        self.save_csv()
+
+    def save_csv(self) -> None:
+        df = pd.DataFrame(
+            {
+                "frame": self.frames,
+                "ms": self.timings,
+                "trial": self.trials,
+                "state": self.states,
+            }
+        )
+        df.to_csv(self.path_csv, index=False)
 
     def stop(self) -> None:
         self.cam.stop()
@@ -184,60 +223,77 @@ class Camera(CameraProtocol, LogProtocol):
             self.set_properties()
             self.change = False
         self.frame_number += 1
-        self.timestamp = time.strftime("%Y-%m-%d %X")
+        self.timing = self.chrono.get_milliseconds()
+        self.timestamp = utils.now_string()
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:
                 self.get_gray_frame()
                 self.crop_areas()
-                if self.color == Color.BLACK:
-                    self.detect_black()
-                else:
-                    self.detect_white()
-                if self.view_detection:
-                    self.draw_thresholded()
+                self.detect()
+                self.draw_detection()
                 self.draw_rectangles()
                 self.write_frame_number_and_timestamp()
+                self.write_state()
+                self.write_trial()
                 self.write_pixel_detection()
+                self.write_csv()
 
     def get_gray_frame(self) -> None:
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
-    def write_state(self) -> None:
-        if self.state == "":
-            return
-        cv2.putText(
-            self.frame,
-            self.state,
-            self.origin_state,
-            self.font,
-            self.scale,
-            self.color_state,
-            self.thickness_text,
-        )
+    def crop_areas(self) -> None:
+        self.cropped_frames: list = []
+        for f in self.areas:
+            self.cropped_frames.append(self.gray_frame[f[1] : f[3], f[0] : f[2]])
 
-    def write_frame_number_and_timestamp(self) -> None:
-        cv2.putText(
-            self.frame,
-            str(self.frame_number),
-            self.origin_frame_number,
-            self.font,
-            self.scale,
-            self.color_frame_number,
-            self.thickness_text,
-        )
+    def detect(self) -> None:
+        if self.color == Color.BLACK:
+            self.detect_black()
+        else:
+            self.detect_white()
 
-        cv2.putText(
-            self.frame,
-            self.timestamp,
-            self.origin_timestamps,
-            self.font,
-            self.scale,
-            self.color_timestamp,
-            self.thickness_text,
-        )
+    def detect_black(self) -> None:
+        self.masks = []
+        self.counts = []
+        for index, frame in enumerate(self.cropped_frames):
+            if self.areas_active[index]:
+                threshold = self.thresholds[index]
+                _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY_INV)
+                self.masks.append(thresh)
+                self.counts.append(cv2.countNonZero(thresh))
+            else:
+                self.masks.append(-1)
+                self.counts.append(-1)
+
+    def detect_white(self) -> None:
+        self.masks = []
+        self.counts = []
+        for index, frame in enumerate(self.cropped_frames):
+            if self.areas_active[index]:
+                threshold = self.thresholds[index]
+                _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY)
+                self.masks.append(thresh)
+                self.counts.append(cv2.countNonZero(thresh))
+            else:
+                self.masks.append(-1)
+                self.counts.append(-1)
+
+    def draw_detection(self) -> None:
+        if self.view_detection:
+            if self.color == Color.BLACK:
+                self.draw_thresholded_black()
+            else:
+                self.draw_thresholded_white()
 
     def draw_rectangles(self) -> None:
+        cv2.rectangle(
+            self.frame,
+            self.origin_rectangle,
+            self.end_rectangle,
+            self.color_rectangle,
+            -1,
+        )
         for i in range(self.number_of_areas):
             if self.areas_active[i]:
                 cv2.rectangle(
@@ -263,54 +319,71 @@ class Camera(CameraProtocol, LogProtocol):
                         self.thickness_line,
                     )
 
-    def crop_areas(self) -> None:
-        self.cropped_frames: list = []
-        for f in self.areas:
-            self.cropped_frames.append(self.gray_frame[f[1] : f[3], f[0] : f[2]])
+    def write_state(self) -> None:
+        if self.state == "":
+            return
 
-    def detect_black(self) -> None:
-        self.masks = []
-        self.counts = []
-        for index, frame in enumerate(self.cropped_frames):
-            if self.areas_active[index]:
-                threshold = self.thresholds[index]
-                _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY)
-                self.masks.append(thresh)
-                self.counts.append(cv2.countNonZero(thresh))
-            else:
-                self.masks.append(-1)
-                self.counts.append(-1)
+        cv2.putText(
+            self.frame,
+            self.state,
+            self.origin_state,
+            self.font,
+            self.scale,
+            self.color_state,
+            self.thickness_text,
+        )
 
-    def detect_white(self) -> None:
-        self.masks = []
-        self.counts = []
-        for index, frame in enumerate(self.cropped_frames):
-            if self.areas_active[index]:
-                threshold = self.thresholds[index]
-                _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY_INV)
-                self.masks.append(thresh)
-                self.counts.append(cv2.countNonZero(thresh))
-            else:
-                self.masks.append(-1)
-                self.counts.append(-1)
+    def write_trial(self) -> None:
+        if self.trial == -1:
+            return
 
-    def draw_thresholded(self) -> None:
-        for i, f in enumerate(self.areas):
-            if self.areas_active[i]:
-                try:
-                    mask = cv2.cvtColor(self.masks[i], cv2.COLOR_GRAY2BGRA)
-                    self.frame[f[1] : f[3], f[0] : f[2]] = cv2.bitwise_and(
-                        self.frame[f[1] : f[3], f[0] : f[2]], mask
-                    )
-                except Exception:
-                    pass
+        cv2.putText(
+            self.frame,
+            "trial: " + str(self.trial),
+            self.orgigin_trial,
+            self.font,
+            self.scale,
+            self.color_text,
+            self.thickness_text,
+        )
+
+    def write_frame_number_and_timestamp(self) -> None:
+        cv2.putText(
+            self.frame,
+            self.timestamp,
+            self.origin_timestamps,
+            self.font,
+            self.scale,
+            self.color_text,
+            self.thickness_text,
+        )
+
+        cv2.putText(
+            self.frame,
+            "frame: " + str(self.frame_number),
+            self.origin_frame_number,
+            self.font,
+            self.scale,
+            self.color_text,
+            self.thickness_text,
+        )
+
+        cv2.putText(
+            self.frame,
+            "ms: " + str(self.timing),
+            self.origin_timings,
+            self.font,
+            self.scale,
+            self.color_text,
+            self.thickness_text,
+        )
 
     def write_pixel_detection(self) -> None:
         for i in range(self.number_of_areas):
             if self.areas_active[i]:
                 cv2.putText(
                     self.frame,
-                    str(self.counts[i]),
+                    "area" + str(i + 1) + ": " + str(self.counts[i]),
                     self.origin_areas[i],
                     self.font,
                     self.scale,
@@ -318,19 +391,65 @@ class Camera(CameraProtocol, LogProtocol):
                     self.thickness_text,
                 )
 
+    def draw_thresholded_black(self) -> None:
+        for i, f in enumerate(self.areas):
+            if self.areas_active[i]:
+                try:
+                    mask = cv2.bitwise_not(
+                        cv2.cvtColor(self.masks[i], cv2.COLOR_GRAY2BGRA)
+                    )
+                    self.frame[f[1] : f[3], f[0] : f[2]] = cv2.bitwise_and(
+                        self.frame[f[1] : f[3], f[0] : f[2]], mask
+                    )
+                except Exception:
+                    pass
+
+    def draw_thresholded_white(self) -> None:
+        for i, f in enumerate(self.areas):
+            if self.areas_active[i]:
+                try:
+                    mask = cv2.cvtColor(self.masks[i], cv2.COLOR_GRAY2BGRA)
+                    self.frame[f[1] : f[3], f[0] : f[2]] = cv2.bitwise_or(
+                        self.frame[f[1] : f[3], f[0] : f[2]], mask
+                    )
+                except Exception:
+                    pass
+
+    def write_csv(self) -> None:
+        self.frames.append(self.frame_number)
+        self.timings.append(self.timing)
+        self.trials.append(self.trial)
+        self.states.append(self.state)
+
     def start_preview_window(self) -> QWidget:
         self.stop_preview()
         self.window = QGlPicamera2(self.cam)
         return self.window
 
+    def log(self, text: str) -> None:
+        self.state = text
+
+    def areas_corridor_ok(self) -> bool:
+        if self.counts[0] > self.zero_or_one_mouse:
+            utils.log("detection in area1: " + str(self.counts[0]))
+            return False
+        elif self.counts[1] > self.zero_or_one_mouse:
+            utils.log("detection in area2: " + str(self.counts[1]))
+            return False
+        elif self.counts[2] > self.one_or_two_mice:
+            utils.log("large detection in area3: " + str(self.counts[2]))
+            return False
+        else:
+            return True
+
 
 def get_camera(index: int, name: str) -> CameraProtocol:
     try:
         cam = Camera(index, name)
-        utils.log("Successfully imported cam " + name)
+        utils.log("Cam " + name + " successfully initialized")
         return cam
     except Exception as e:
-        utils.log("Could not create cam " + name, exception=e)
+        utils.log("Could not initialize cam " + name, exception=e)
         return CameraProtocol()
 
 

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
+from classes.enums import State
 from pandas import DataFrame
-from PyQt5.QtCore import QAbstractTableModel, Qt
+from PyQt5.QtCore import QAbstractTableModel, QEvent, Qt, QTime, QTimer
 from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
 from PyQt5.QtWidgets import (
     QComboBox,
@@ -14,10 +16,12 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QPushButton,
     QTableView,
+    QTimeEdit,
 )
 
-from village.app.settings import settings
-from village.app.status import status
+from village.data import data
+from village.devices.camera import cam_box, cam_corridor
+from village.settings import settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -34,7 +38,7 @@ class Label(QLabel):
         else:
             style += "}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 16px}"
+            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         if right_aligment:
@@ -57,6 +61,14 @@ class LineEdit(QLineEdit):
         self.textChanged.connect(action)
 
 
+class TimeEdit(QTimeEdit):
+    def __init__(self, text: str, action: Callable) -> None:
+        super().__init__()
+        self.setDisplayFormat("HH:mm")
+        self.setTime(QTime.fromString(text, "HH:mm"))
+        self.timeChanged.connect(action)
+
+
 class PushButton(QPushButton):
     def __init__(
         self, text: str, color: str, action: Callable, description: str
@@ -64,7 +76,7 @@ class PushButton(QPushButton):
         super().__init__(text)
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 16px}"
+            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         self.pressed.connect(action)
@@ -99,7 +111,7 @@ class ToggleButton(QPushButton):
         color = "darkgray" if self.value == "OFF" else "lightgray"
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if self.description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 16px}"
+            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
             self.setToolTip(self.description)
         self.setStyleSheet(style)
 
@@ -121,8 +133,8 @@ class ComboBox(QComboBox):
         self.index = index
         self.action = action
         self.value = self.possible_values[self.index]
-        self.currentTextChanged.connect(self.handleTextChanged)
         self.setCurrentText(self.value)
+        self.currentTextChanged.connect(self.handleTextChanged)
         self.update_style()
 
     def update_style(self) -> None:
@@ -204,28 +216,37 @@ class Layout(QGridLayout):
             self.setRowMinimumHeight(i, self.row_height)
 
         if not stacked:
-            state_name = status.state.name
-            state_description = status.state.description
-            subject_name = status.subject.name
-            task_name = status.task.name
-            cycle_value = status.cycle.value
+            self.create_common_elements()
 
-            self.create_common_elements(
-                state_name, state_description, subject_name, task_name, cycle_value
-            )
+            self.is_day_timer = QTimer(self)
+            self.is_day_timer.setInterval(settings.get("UPDATE_TIME_MS"))
+            self.is_day_timer.timeout.connect(self.update_status_label)
+            self.is_day_timer.start()
 
-    def create_common_elements(
-        self,
-        state_name: str,
-        state_description: str,
-        subject_name: str,
-        task_name: str,
-        cycle_value: str,
-    ) -> None:
-        self.status_label = self.create_and_add_label("", 2, 45, 150, 2, "black")
-        self.update_status_label(
-            state_name, state_description, subject_name, task_name, cycle_value
-        )
+            self.inactivity_timer = QTimer(self)
+            self.inactivity_timer.setInterval(settings.get("SCREENSAVE_TIME_MS"))
+            self.inactivity_timer.timeout.connect(self.switch_to_main_layout)
+            self.inactivity_timer.start()
+            self.installEventFilter(self)
+
+    def switch_to_main_layout(self) -> None:
+        if data.state in (
+            data.state.SETTINGS,
+            data.state.SETTINGS_CHANGED,
+            data.state.PREPARATION,
+        ):
+            data.state = State["WAIT"]
+            self.window.create_main_layout()
+
+    def eventFilter(self, source, event) -> bool:
+        if event.type() in [QEvent.MouseMove, QEvent.KeyPress, QEvent.MouseButtonPress]:
+            self.inactivity_timer.start()
+        return super().eventFilter(source, event)
+
+    def create_common_elements(self) -> None:
+        self.status_label = self.create_and_add_label("", 2, 0, 212, 2, "black")
+        self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        self.update_status_label(force=True)
         self.exit_button = self.create_and_add_button(
             "EXIT",
             0,
@@ -274,64 +295,115 @@ class Layout(QGridLayout):
             "Go to the setting menu",
         )
 
-    def update_status_label(
-        self,
-        state_name: str,
-        state_description: str,
-        subject_name: str,
-        task_name: str,
-        cycle_value: str,
-    ) -> None:
-        text = (
-            "SYSTEM STATE: "
-            + state_name
-            + " ("
-            + state_description
-            + ")     //////     "
-            + "SUBJECT: "
-            + subject_name
-            + "     //////     "
-            + "TASK: "
-            + task_name
-            + "     //////     "
-            + "CYCLE: "
-            + cycle_value
-        )
-        self.status_label.setText(text)
+    # @utils.measure_time
+    def update_status_label(self, force=False) -> None:
+        data.update_cycle()
+        if data.update_text() or force:
+            self.status_label.setText(data.text)
+            cam_box.change = True
+            cam_corridor.change = True
 
     def exit_button_clicked(self) -> None:
-        reply = QMessageBox.question(
-            self.window,
-            "EXIT",
-            "Are you sure you want to exit?",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No,
-        )
+        match data.state:
+            case (
+                data.state.WAIT
+                | data.state.PREPARATION
+                | data.state.SETTINGS
+                | data.state.SETTINGS_CHANGED
+            ):
+                old_state = data.state
+                data.state = State["EXIT_APP"]
+                self.update_status_label()
+                text = "Are you sure you want to exit?"
+                if old_state == data.state.SETTINGS_CHANGED:
+                    text += " Changes will not be saved."
+                reply = QMessageBox.question(
+                    self.window,
+                    "EXIT",
+                    text,
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.No,
+                )
+                if reply == QMessageBox.Yes:
+                    self.window.exit_app()
+                else:
+                    data.state = old_state
+                    self.update_status_label()
+            case data.state.DETECTION | data.state.ACCESS:
+                text = "Wait until the box is empty before exiting the application"
+                text = "Subject is being detected. " + text
+                QMessageBox.information(
+                    self.window,
+                    "EXIT",
+                    text,
+                )
+            case (
+                data.state.LAUNCH
+                | data.state.ACTION
+                | data.state.CLOSE
+                | data.state.OPEN
+                | data.state.RUN_OPENED
+                | data.state.EXIT_UNSAVED
+                | data.state.WAIT_EXIT
+                | data.state.EXIT_SAVED
+                | data.state.MANUAL
+            ):
+                QMessageBox.information(
+                    self.window,
+                    "EXIT",
+                    "Wait until the box is empty before exiting the application",
+                )
+            case data.state.EXIT_APP:
+                pass
 
-        if reply == QMessageBox.Yes:
-            self.window.exit_app()
+    SAVE_OUTSIDE = "task saved, subject is already outside"
+    SAVE_INSIDE = "task saved, subject is still inside"
+    STOP = "automatic task, manually stopped"
+    ERROR = "error occurred, disconnecting rfids and stopping the task"
 
     def change_layout(self) -> bool:
         return True
 
     def main_button_clicked(self) -> None:
         if self.change_layout():
+            if data.state in (
+                data.state.SETTINGS,
+                data.state.SETTINGS_CHANGED,
+                data.state.PREPARATION,
+            ):
+                data.state = State["WAIT"]
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
         if self.change_layout():
+            if data.state in (
+                data.state.SETTINGS,
+                data.state.SETTINGS_CHANGED,
+            ):
+                data.state = State["WAIT"]
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
         if self.change_layout():
+            if data.state in (
+                data.state.SETTINGS,
+                data.state.SETTINGS_CHANGED,
+            ):
+                data.state = State["WAIT"]
             self.window.create_tasks_layout()
 
     def data_button_clicked(self) -> None:
         if self.change_layout():
+            if data.state in (
+                data.state.SETTINGS,
+                data.state.SETTINGS_CHANGED,
+            ):
+                data.state = State["WAIT"]
             self.window.create_data_layout()
 
     def settings_button_clicked(self) -> None:
         if self.change_layout():
+            data.state = State["SETTINGS"]
             self.window.create_settings_layout()
 
     def closeEvent(self, event: QCloseEvent) -> None:
@@ -377,7 +449,9 @@ class Layout(QGridLayout):
         self, row: int, column: int, width: int, height: int, file: str
     ) -> LabelImage:
 
-        label = LabelImage(file)
+        path = Path(settings.get("APP_DIRECTORY")) / "resources" / file
+
+        label = LabelImage(path)
         label.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(label, row, column, height, width)
         return label
@@ -396,6 +470,21 @@ class Layout(QGridLayout):
         line_edit.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(line_edit, row, column, height, width)
         return line_edit
+
+    def create_and_add_time_edit(
+        self,
+        text: str,
+        row: int,
+        column: int,
+        width: int,
+        height: int,
+        action: Callable,
+    ) -> TimeEdit:
+
+        time_edit = TimeEdit(text, action)
+        time_edit.setFixedSize(width * self.column_width, height * self.row_height)
+        self.addWidget(time_edit, row, column, height, width)
+        return time_edit
 
     def create_and_add_button(
         self,

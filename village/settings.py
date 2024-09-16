@@ -2,10 +2,12 @@ import getpass
 from pathlib import Path
 
 from village.classes.settings_class import (
+    Actions,
     Active,
     AreaActive,
     Color,
-    ControlDevice,
+    Cycle,
+    Info,
     ScreenActive,
     Setting,
     Settings,
@@ -13,14 +15,8 @@ from village.classes.settings_class import (
 
 main_settings = [
     Setting("SYSTEM_NAME", "village01", str, "The unique name of the system"),
-    Setting("USE_SOUNDCARD", "OFF", Active, "Use of a soundcard"),
-    Setting("USE_SCREEN", "OFF", ScreenActive, "Use of a regular or touch screen"),
-    Setting(
-        "CONTROL_DEVICE",
-        "BPOD",
-        ControlDevice,
-        "The device that controls the tasks and behavioral ports",
-    ),
+    Setting("DAYTIME", "08:00", str, "The time when the day starts"),
+    Setting("NIGHTTIME", "20:00", str, "The time when the night starts"),
     Setting(
         "DETECTION_COLOR",
         "BLACK",
@@ -43,8 +39,8 @@ corridor_settings = [
         "TIME_BETWEEN_DETECTIONS",
         15.0,
         float,
-        """When a tag is detected, the previous tag detection must have happened
-        at least this number of seconds before to allow access""",
+        """When a tag is detected, the previous tag detection of another subject must
+        have happened at least this number of seconds before to allow access""",
     ),
     Setting(
         "CORRIDOR_VIDEOS_DURATION",
@@ -55,7 +51,10 @@ corridor_settings = [
     Setting("CORRIDOR_VIDEOS_STORED", 100, int, "The number of corridor videos stored"),
 ]
 
-sound_settings = [Setting("SOUND_DEVICE", "default", str, "The sound device")]
+sound_settings = [
+    Setting("USE_SOUNDCARD", "OFF", Active, "Use of a soundcard"),
+    Setting("SOUND_DEVICE", "default", str, "The sound device"),
+]
 
 alarm_settings = [
     Setting(
@@ -119,19 +118,25 @@ directory_settings = [
         "The directory of the sessions",
     ),
     Setting(
+        "CODE_DIRECTORY",
+        project_directory + "/code",
+        str,
+        "The directory of the user code",
+    ),
+    Setting(
         "APP_DIRECTORY",
-        str(Path(__file__).parent.parent.parent),
+        str(Path(__file__).parent.parent),
         str,
         "The directory of the application",
     ),
 ]
 
 screen_settings = [
-    Setting("SCREEN_SIZE_MM", [400, 200], list[int], "The size of the screen in mm")
+    Setting("USE_SCREEN", "OFF", ScreenActive, "Use of a regular or touch screen"),
+    Setting("SCREEN_SIZE_MM", [400, 200], list[int], "The size of the screen in mm"),
 ]
 
 touchscreen_settings = [
-    Setting("SCREEN_SIZE_MM", [400, 200], list[int], "The size of the screen in mm"),
     Setting(
         "TOUCH_RESOLUTION",
         [4096, 4096],
@@ -202,10 +207,6 @@ bpod_settings = [
     Setting("BPOD_SYNC_MODE", 1, int, "The sync mode of the Bpod"),
 ]
 
-harp_settings = [
-    Setting("PARAMETER", 1, int, "The parameter of the harp"),
-    Setting("HARP_SERIAL_PORT", "/dev/Harp", str, "The serial port of the Harp"),
-]
 
 camera_settings = [
     Setting(
@@ -262,7 +263,7 @@ camera_settings = [
     ),
     Setting(
         "AREA3_BOX",
-        [200, 150, 300, 250, 100],
+        [200, 250, 300, 350, 100],
         list[int],
         """The third area of the box.
         Values are left, top, right, bottom, threshold for detection.""",
@@ -329,28 +330,45 @@ motor_settings = [
         "MOTOR1_VALUES",
         [50, 80],
         list[int],
-        """Opening angle, closing angle for the door 1""",
+        """Opening angle, closing angle for the door 1.
+        Accepts values between 0 and 180""",
     ),
     Setting(
         "MOTOR2_VALUES",
         [50, 80],
         list[int],
-        """Opening angle, closing angle for the door 2""",
+        """Opening angle, closing angle for the door 2.
+        Accepts values between 0 and 180""",
     ),
 ]
 
 extra_settings = [
     Setting("FIRST_LAUNCH", "OFF", Active, "First launch of the system"),
     Setting(
+        "DEFAULT_PROJECT_NAME", default_project_name, str, "The default project name"
+    ),
+    Setting(
+        "GITHUB_REPOSITORY_EXAMPLE",
+        "git@github.com:BrainCircuitsBehaviorLab/follow-the-light-task.git",
+        str,
+        "The github repository to download",
+    ),
+    Setting(
         "SCALE_CALIBRATION_VALUE",
         20,
         int,
         "The weight in grams used to calibrate the scale",
     ),
-    Setting("COLOR_AREA1", (128, 0, 128), tuple, "The color of the first area"),
-    Setting("COLOR_AREA2", (165, 42, 42), tuple, "The color of the second area"),
-    Setting("COLOR_AREA3", (0, 100, 0), tuple, "The color of the third area"),
-    Setting("COLOR_AREA4", (122, 122, 122), tuple, "The color of the fourth area"),
+    Setting("COLOR_AREA1", (0, 136, 0), tuple, "The color of the first area"),
+    Setting("COLOR_AREA2", (204, 51, 170), tuple, "The color of the second area"),
+    Setting("COLOR_AREA3", (51, 119, 204), tuple, "The color of the third area"),
+    Setting("COLOR_AREA4", (221, 51, 0), tuple, "The color of the fourth area"),
+    Setting("TAG_READER", "ON", Active, "The tag reader status"),
+    Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)"),
+    Setting("INFO", "SYSTEM_INFO", Info, "The information status"),
+    Setting("ACTIONS", "CORRIDOR", Actions, "The actions status"),
+    Setting("UPDATE_TIME_MS", 1000, int, "The update time in ms for the gui tables"),
+    Setting("SCREENSAVE_TIME_MS", 300000, int, "The time in ms for the screensave"),
 ]
 
 
@@ -364,10 +382,10 @@ settings = Settings(
     touchscreen_settings,
     telegram_settings,
     bpod_settings,
-    harp_settings,
     camera_settings,
     motor_settings,
     extra_settings,
 )
+
 
 # settings.create_factory_settings()

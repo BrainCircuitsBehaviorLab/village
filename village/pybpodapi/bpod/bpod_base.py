@@ -5,7 +5,6 @@ import socket
 import time
 from datetime import datetime as datetime_now
 
-from village.app.settings import settings
 from village.pybpodapi.bpod.hardware.channels import ChannelName, ChannelType
 from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.hardware import Hardware
@@ -18,6 +17,7 @@ from village.pybpodapi.com.messaging.trial import Trial
 from village.pybpodapi.com.messaging.value import ValueMessage
 from village.pybpodapi.exceptions.bpod_error import BpodErrorException
 from village.pybpodapi.session import Session
+from village.settings import settings
 
 from .non_blockingsocketreceive import NonBlockingSocketReceive
 
@@ -127,11 +127,7 @@ class BpodBase(object):
 
         logger.info("Starting Bpod")
 
-        # print("vamos ", self.serial_port, self.baudrate)
-
         self._bpodcom_connect(self.serial_port, self.baudrate)
-
-        # print("aqui no llego")
 
         if not self._bpodcom_handshake():
             raise BpodErrorException(
@@ -139,12 +135,8 @@ class BpodBase(object):
                 Please reset Bpod and try again."""
             )
 
-        # print("aqui no llego")
-
         # check the firmware version
         firmware_version, machine_type = self._bpodcom_firmware_version()
-
-        # print("firmware: ", firmware_version)
 
         if firmware_version < int(settings.get("BPOD_TARGET_FIRMWARE")):
             raise BpodErrorException(

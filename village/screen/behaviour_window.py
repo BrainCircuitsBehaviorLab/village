@@ -14,11 +14,12 @@ class BehaviourWindow(QWidget):
     def __init__(self, gui: Gui) -> None:
         super().__init__()
         self.gui = gui
-        self.window_with: int = gui.secondary_width
+        self.x_displacement: int = gui.primary_width
+        self.window_width: int = gui.secondary_width
         self.window_height: int = gui.secondary_height
-        rect = QRect(self.window_with, 0, self.window_with, self.window_height)
+        rect = QRect(self.x_displacement, 0, self.window_width, self.window_height)
         self.setGeometry(rect)
-        self.setFixedSize(QSize(self.window_with, self.window_height))
+        self.setFixedSize(QSize(self.window_width, self.window_height))
         self.setWindowTitle("Village2")
         self.setStyleSheet("background-color: black")
         self.show()

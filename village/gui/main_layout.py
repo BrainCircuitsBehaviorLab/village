@@ -17,3 +17,6 @@ class MainLayout(Layout):
         self.main_button.setDisabled(True)
 
         self.image = self.create_and_add_image(10, 10, 192, 30, "mouse_village.png")
+
+    def switch_to_main_layout(self) -> None:
+        pass

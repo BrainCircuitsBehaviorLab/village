@@ -1,9 +1,10 @@
 class Scale:
     def __init__(self) -> None:
-        self.calibration = 4
+        self.calibration: float = 4.0
+        self.weight: float = 0.0
 
-    def measure(self) -> str:
-        return "45"
+    def get(self) -> float:
+        return self.weight
 
 
 scale = Scale()

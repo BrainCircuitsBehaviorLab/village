@@ -1,4 +1,4 @@
-from village.app.settings import settings
+from village.settings import settings
 
 target = settings.get("BPOD_TARGET_FIRMWARE")
 

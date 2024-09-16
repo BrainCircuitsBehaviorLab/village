@@ -1,7 +1,6 @@
 # mypy: ignore-errors
 import logging
 
-from village.app.settings import Active, settings
 from village.pybpodapi.bpod.bpod_base import BpodBase
 from village.pybpodapi.bpod.hardware.channels import ChannelType
 from village.pybpodapi.bpod_modules.bpod_module import BpodModule
@@ -9,6 +8,7 @@ from village.pybpodapi.com.arcom import ArCOM, ArduinoTypes
 from village.pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
 from village.pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
 from village.pybpodapi.exceptions.bpod_error import BpodErrorException
+from village.settings import Active, settings
 
 logger = logging.getLogger(__name__)
 
@@ -106,8 +106,6 @@ class BpodCOMProtocol(BpodBase):
         logger.debug("Connecting on port: %s", serial_port)
         self._arcom = ArCOM().open(serial_port, baudrate, timeout)
 
-        # print(self._arcom)
-
     def _bpodcom_disconnect(self):
         """
         Signal Bpod device to disconnect now
@@ -134,15 +132,9 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Requesting handshake (%s)", SendMessageHeader.HANDSHAKE)
 
-        # print("a", SendMessageHeader.HANDSHAKE)
-
         self._arcom.write_char(SendMessageHeader.HANDSHAKE)
 
-        # print("b")
-
         response = self._arcom.read_char()  # Receive response
-
-        # print("c", response, ReceiveMessageHeader.HANDSHAKE_OK)
 
         logger.debug("Response command is: %s", response)
 
@@ -285,10 +277,6 @@ class BpodCOMProtocol(BpodBase):
         ###### set inputs enabled or disabled ######################
         hardware.inputs_enabled = [0] * len(hardware.inputs)
 
-        # print("len ", len(hardware.inputs))
-
-        # print(settings.get("BPOD_WIRED_PORTS_ENABLED"))
-
         for j, i in enumerate(hardware.bnc_inputports_indexes):
             hardware.inputs_enabled[i] = (
                 settings.get("BPOD_BNC_PORTS_ENABLED")[j] == Active.ON
@@ -304,7 +292,6 @@ class BpodCOMProtocol(BpodBase):
                 settings.get("BPOD_BEHAVIOR_PORTS_ENABLED")[j] == Active.ON
             )
 
-        # print("inputs enabled: ", hardware.inputs_enabled)
         logger.debug("Requesting ports enabling (%s)", SendMessageHeader.ENABLE_PORTS)
         logger.debug(
             "Inputs enabled (%s): %s",
@@ -445,7 +432,6 @@ class BpodCOMProtocol(BpodBase):
         """
         response = self._arcom.read_uint32()  # type: int
 
-        # print('response', response)
         # logger.debug("Received start trial timestamp in milliseconds: %s", response)
 
         # trial_start_timestamp = response / 1000.0

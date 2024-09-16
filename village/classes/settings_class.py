@@ -3,10 +3,12 @@ from typing import Any, get_args
 from PyQt5.QtCore import QSettings
 
 from village.classes.enums import (
+    Actions,
     Active,
     AreaActive,
     Color,
-    ControlDevice,
+    Cycle,
+    Info,
     ScreenActive,
     SuperEnum,
 )
@@ -49,7 +51,6 @@ class Settings:
         touchscreen_settings: list[Setting],
         telegram_settings: list[Setting],
         bpod_settings: list[Setting],
-        harp_settings: list[Setting],
         camera_settings: list[Setting],
         motor_settings: list[Setting],
         extra_settings: list[Setting],
@@ -64,7 +65,6 @@ class Settings:
         self.touchscreen_settings = touchscreen_settings
         self.telegram_settings = telegram_settings
         self.bpod_settings = bpod_settings
-        self.harp_settings = harp_settings
         self.camera_settings = camera_settings
         self.motor_settings = motor_settings
         self.extra_settings = extra_settings
@@ -80,7 +80,6 @@ class Settings:
             + screen_settings
             + touchscreen_settings
             + bpod_settings
-            + harp_settings
         )
 
         self.all_settings = (
@@ -91,8 +90,7 @@ class Settings:
             + extra_settings
         )
 
-        if self.get("FIRST_LAUNCH") is None:
-            self.create_factory_settings()
+        self.create_factory_settings_if_first_launch()
 
     def restore_factory_settings(self) -> None:
         for s in self.restorable_settings:
@@ -101,6 +99,10 @@ class Settings:
     def create_factory_settings(self) -> None:
         for s in self.all_settings:
             self.saved_settings.setValue(s.key, s.value)
+
+    def create_factory_settings_if_first_launch(self) -> None:
+        if self.get("FIRST_LAUNCH") is None:
+            self.create_factory_settings()
 
     def get(self, key: str) -> Any:
         """Get the value of a setting."""
@@ -114,10 +116,14 @@ class Settings:
                 return float(self.saved_settings.value(key))
             elif type == Active:
                 return Active(self.saved_settings.value(key))
-            elif type == ControlDevice:
-                return ControlDevice(self.saved_settings.value(key))
             elif type == Color:
                 return Color(self.saved_settings.value(key))
+            elif type == Actions:
+                return Actions(self.saved_settings.value(key))
+            elif type == Info:
+                return Info(self.saved_settings.value(key))
+            elif type == Cycle:
+                return Cycle(self.saved_settings.value(key))
             elif type == ScreenActive:
                 return ScreenActive(self.saved_settings.value(key))
             elif type == AreaActive:
@@ -187,6 +193,11 @@ class Settings:
     def set(self, key: str, value: Any) -> None:
         self.saved_settings.setValue(key, value)
 
+    def sync(self) -> None:
+        # force to save the settings in disk,
+        # only necessary when the application is not closed but reloaded
+        self.saved_settings.sync()
+
     def print(self) -> None:
         for s in self.all_settings:
-            print(s.key, s.value, s.value_type)
+            print(s.key, self.get(s.key), s.value, s.value_type)

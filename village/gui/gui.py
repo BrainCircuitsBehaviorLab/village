@@ -1,16 +1,17 @@
+import os
 import sys
 from pathlib import Path
 
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
-from village.app.data import data
-from village.app.settings import settings
-from village.app.utils import utils
-from village.classes.enums import ScreenActive
+from village.classes.enums import ScreenActive, State
+from village.data import data
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
 from village.screen.behaviour_window import BehaviourWindow
+from village.settings import settings
+from village.utils import utils
 
 
 class Gui:
@@ -26,8 +27,9 @@ class Gui:
         availableGeometry = screen.availableGeometry()
         # use the available geometry but subtract some pixels for the border
         # and the top menu bar
-        self.primary_width = availableGeometry.width() - 8
+        self.primary_width = availableGeometry.width()
         self.primary_height = availableGeometry.height() - 30
+
         self.gui_window = GuiWindow(self)
 
         if settings.get("USE_SCREEN") != ScreenActive.OFF:
@@ -41,8 +43,22 @@ class Gui:
         self.q_app.exec()
 
     def exit_app(self) -> None:
-        utils.log("VILLAGE Closed", destinations=[data.events])
+        utils.log("VILLAGE Closed")
+        data.state = State["END"]
         cam_corridor.stop_record()
         cam_box.stop_record()
         self.q_app.quit()
         sys.exit()
+
+    def reload_app(self) -> None:
+        utils.log("VILLAGE Closed")
+        data.state = State["END"]
+        cam_corridor.stop_record()
+        cam_box.stop_record()
+        settings.sync()
+        self.q_app.quit()
+
+        # sys.exit()
+
+        python = sys.executable
+        os.execv(python, [python] + sys.argv)

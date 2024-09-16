@@ -1,6 +1,6 @@
-from village.app.utils import utils
 from village.classes.protocols import PyBpodProtocol
 from village.pybpodapi.protocol import Bpod, StateMachine
+from village.utils import utils
 
 
 class PyBpod(PyBpodProtocol):
@@ -19,10 +19,10 @@ class PyBpod(PyBpodProtocol):
 def get_bpod() -> PyBpodProtocol:
     try:
         bpod = PyBpod()
-        utils.log("Successfully imported bpod")
+        utils.log("Bpod successfully initialized")
         return bpod
     except Exception as e:
-        utils.log("Could not create bpod", exception=e)
+        utils.log("Could not initialize bpod", exception=e)
         return PyBpodProtocol()
 
 

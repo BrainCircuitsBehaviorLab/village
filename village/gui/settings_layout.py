@@ -1,16 +1,20 @@
-from __future__ import annotations
+from __future__ import annotations  # noqa: I001
 
 from contextlib import suppress
 from typing import TYPE_CHECKING, Any
 
-from PyQt5.QtWidgets import QMessageBox
+import os
 
-from village.app.data import data
-from village.app.settings import Setting, settings
-from village.app.utils import utils
-from village.classes.enums import Active, ControlDevice, ScreenActive
+from PyQt5.QtWidgets import QMessageBox, QInputDialog
+
 from village.devices.camera import cam_box, cam_corridor
-from village.gui.layout import Layout, LineEdit, PushButton, ToggleButton
+from village.settings import settings
+from village.utils import utils
+from village.data import data
+from village.classes.enums import Active, ScreenActive
+from village.gui.layout import Layout, LineEdit, PushButton, TimeEdit, ToggleButton
+from village.settings import Setting
+from village.classes.enums import State
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -21,6 +25,7 @@ class SettingsLayout(Layout):
         super().__init__(window)
         self.apply_button = PushButton("", "black", self.apply_button_clicked, "")
         self.restore_button = PushButton("", "black", self.restore_button_clicked, "")
+        data.state = State["SETTINGS"]
         self.draw(all=True, modify="")
 
     def draw(self, all: bool, modify) -> None:
@@ -29,6 +34,9 @@ class SettingsLayout(Layout):
         if all:
             self.line_edits: list[LineEdit] = []
             self.line_edits_settings: list[Setting] = []
+
+            self.time_edits: list[TimeEdit] = []
+            self.time_edits_settings: list[Setting] = []
 
             self.toggle_buttons: list[ToggleButton] = []
             self.toggle_buttons_settings: list[Setting] = []
@@ -45,7 +53,7 @@ class SettingsLayout(Layout):
             label.setProperty("type", name)
             row += 2
             for s in settings.main_settings:
-                self.create_label_and_value(row, 0, s, name)
+                self.create_label_and_value(row, 0, s, name, width=27)
                 row += 2
 
             row += 4
@@ -54,109 +62,89 @@ class SettingsLayout(Layout):
             label.setProperty("type", name)
             row += 2
             for s in settings.corridor_settings:
-                self.create_label_and_value(row, 0, s, name)
+                self.create_label_and_value(row, 0, s, name, width=27)
                 row += 2
 
-        if (
-            all and settings.get("USE_SOUNDCARD") == Active.ON
-        ) or modify == "SOUND SETTINGS":
-            row = 36
-            name = "SOUND SETTINGS"
+            row += 4
+            name = "ALARM SETTINGS"
             label = self.create_and_add_label(name, row, 0, 30, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.sound_settings:
-                self.create_label_and_value(row, 0, s, name)
+            for s in settings.alarm_settings:
+                self.create_label_and_value(row, 0, s, name, width=27)
+                row += 2
+
+        if all or modify == "DIRECTORY SETTINGS":
+            row = 6
+            name = "DIRECTORY SETTINGS"
+            label = self.create_and_add_label(name, row, 128, 30, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.directory_settings:
+                self.create_label_and_value(row, 128, s, name, width=20)
+                row += 2
+
+        if all:
+            row += 4
+            name = "TELEGRAM SETTINGS"
+            label = self.create_and_add_label(name, row, 128, 30, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.telegram_settings:
+                self.create_label_and_value(row, 128, s, name, width=20)
                 row += 2
 
         if all:
             row = 6
-            name = "ALARM SETTINGS"
-            label = self.create_and_add_label(name, row, 50, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.alarm_settings:
-                self.create_label_and_value(row, 50, s, name)
+            name = "SOUND SETTINGS"
+            label = self.create_and_add_label(name, row, 44, 30, 2, "black")
+            row = 8
+            s = settings.sound_settings[0]
+            self.create_label_and_value(row, 44, s, "")
+
+        if (
+            all and settings.get("USE_SOUNDCARD") == Active.ON
+        ) or modify == "SOUND SETTINGS":
+            row = 10
+            name = "SOUND SETTINGS"
+            for s in settings.sound_settings[1:]:
+                self.create_label_and_value(row, 44, s, name)
                 row += 2
 
-            row += 4
-            name = "DIRECTORY SETTINGS"
-            label = self.create_and_add_label(name, row, 50, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.directory_settings:
-                if s.key == "PROJECT_DIRECTORY":
-                    self.create_label_and_value(row, 50, s, name)
-                    row += 2
-                    # create a button to open the directory
-                    self.create_and_add_button(
-                        "Create new project",
-                        row,
-                        50 + 35,
-                        25,
-                        2,
-                        self.create_project_directory,
-                        "Open the project directory",
-                        "powderblue",
-                    )
-                else:
-                    self.create_label_and_value(row, 50, s, name)
+        if all:
+            row = 14
+            name = "SCREEN SETTINGS"
+            label = self.create_and_add_label(name, row, 44, 30, 2, "black")
+            row = 16
+            s = settings.screen_settings[0]
+            self.create_label_and_value(row, 44, s, "")
+
+        if (
+            all and settings.get("USE_SCREEN") != ScreenActive.OFF
+        ) or modify == "SCREEN SETTINGS":
+            row = 18
+            name = "SCREEN SETTINGS"
+            for s in settings.screen_settings[1:]:
+                self.create_label_and_value(row, 44, s, name)
                 row += 2
 
         if (
             all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
         ) or modify == "TOUCHSCREEN SETTINGS":
-            row = 34
+            row = 20
             name = "TOUCHSCREEN SETTINGS"
-            label = self.create_and_add_label(name, row, 50, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
             for s in settings.touchscreen_settings:
-                self.create_label_and_value(row, 50, s, name)
-                row += 2
-        elif (
-            all and settings.get("USE_SCREEN") == ScreenActive.SCREEN
-        ) or modify == "SCREEN SETTINGS":
-            row = 34
-            name = "SCREEN SETTINGS"
-            label = self.create_and_add_label(name, row, 50, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.screen_settings:
-                self.create_label_and_value(row, 50, s, name)
+                self.create_label_and_value(row, 44, s, name)
                 row += 2
 
-        if all:
-            row = 6
-            name = "TELEGRAM SETTINGS"
-            label = self.create_and_add_label(name, row, 118, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.telegram_settings:
-                self.create_label_and_value(row, 118, s, name)
-                row += 2
-
-        if (
-            all and settings.get("CONTROL_DEVICE") == ControlDevice.BPOD
-        ) or modify == "BPOD SETTINGS":
-            row = 18
+        if all or modify == "BPOD SETTINGS":
+            row = 26
             name = "BPOD SETTINGS"
-            label = self.create_and_add_label(name, row, 118, 30, 2, "black")
+            label = self.create_and_add_label(name, row, 44, 30, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.bpod_settings:
-                self.create_label_and_value(row, 118, s, name)
-                row += 2
-        elif (
-            all and settings.get("CONTROL_DEVICE") == ControlDevice.HARP
-        ) or modify == "HARP SETTINGS":
-            row = 18
-            name = "HARP SETTINGS"
-            label = self.create_and_add_label(name, row, 118, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.harp_settings:
-                self.create_label_and_value(row, 118, s, name)
+                self.create_label_and_value(row, 44, s, name, width=31)
                 row += 2
 
         if all:
@@ -207,10 +195,13 @@ class SettingsLayout(Layout):
             return True
 
     def settings_changed(self, value: str = "", key: str = "") -> None:
+        data.state = State["SETTINGS_CHANGED"]
+        self.update_status_label()
         self.apply_button.setEnabled(True)
 
     def apply_button_clicked(self) -> None:
         self.apply_button.setDisabled(True)
+        data.state = State["SETTINGS"]
 
         for i, line_edit in enumerate(self.line_edits):
             s = self.line_edits_settings[i]
@@ -233,6 +224,11 @@ class SettingsLayout(Layout):
                     line_edit.setText(str(value_int))
                 except ValueError:
                     line_edit.setText(str(settings.get(s.key)))
+
+        for i, time_edit in enumerate(self.time_edits):
+            s = self.time_edits_settings[i]
+            value = time_edit.time().toString("HH:mm")
+            settings.set(s.key, value)
 
         for i, toggle_button in enumerate(self.toggle_buttons):
             s = self.toggle_buttons_settings[i]
@@ -275,17 +271,45 @@ class SettingsLayout(Layout):
             self.window.create_settings_layout()
 
     def create_label_and_value(
-        self, row: int, column: int, s: Setting, type: Any
+        self, row: int, column: int, s: Setting, type: Any, width: int = 30
     ) -> None:
         label = self.create_and_add_label(
             s.key, row, column, 30, 2, "black", bold=False, description=s.description
         )
         label.setProperty("type", type)
 
-        if s.key == "TOKEN":
+        if s.key in ("DAYTIME", "NIGHTTIME"):
+            value = settings.get(s.key)
+            time_edit = self.create_and_add_time_edit(
+                value, row, column + width, 13, 2, self.settings_changed
+            )
+            self.time_edits.append(time_edit)
+            self.time_edits_settings.append(s)
+
+        elif s.key == "PROJECT_DIRECTORY":
+            value = settings.get(s.key)
+            print("value ", value)
+            path = os.path.dirname(value)
+            # check if path exists
+            if not os.path.exists(path):
+                data.create_directories_from_path(path)
+            possible_values = [os.path.join(path, name) for name in os.listdir(path)]
+            possible_values += ["NEW"]
+            index = possible_values.index(value) if value in possible_values else 0
+            self.project_directory_combobox = self.create_and_add_combo_box(
+                s.key,
+                row,
+                148,
+                64,
+                2,
+                possible_values,
+                index,
+                self.change_project_directory,
+            )
+        elif s.key == "TOKEN":
             value = str(settings.get(s.key))
             line_edit = self.create_and_add_line_edit(
-                value, row, column + 30, 64, 2, self.settings_changed
+                value, row, column + width, 64, 2, self.settings_changed
             )
             line_edit.setProperty("type", type)
             self.line_edits.append(line_edit)
@@ -294,26 +318,47 @@ class SettingsLayout(Layout):
             possible_values = utils.get_sound_devices()
             value = settings.get(s.key)
             index = possible_values.index(value) if value in possible_values else 0
-            self.sound_deivce_combobox = self.create_and_add_combo_box(
+            self.sound_device_combobox = self.create_and_add_combo_box(
                 s.key,
                 row,
-                column + 15,
-                30,
+                column + width,
+                48,
                 2,
                 possible_values,
                 index,
                 self.change_sound_device,
             )
+            self.sound_device_combobox.setProperty("type", type)
 
         elif s.value_type in (str, int, float):
             value = str(settings.get(s.key))
-            if s.key.endswith("DIRECTORY"):
+            if s.key == "DATA_DIRECTORY":
+                new_value = settings.get("PROJECT_DIRECTORY") + "/data"
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + 20, 41, 2, self.settings_changed
+                    new_value, row, column + width, 64, 2, self.settings_changed
+                )
+            elif s.key == "VIDEOS_DIRECTORY":
+                new_value = settings.get("PROJECT_DIRECTORY") + "/data/videos"
+                line_edit = self.create_and_add_line_edit(
+                    new_value, row, column + width, 64, 2, self.settings_changed
+                )
+            elif s.key == "SESSIONS_DIRECTORY":
+                new_value = settings.get("PROJECT_DIRECTORY") + "/data/sessions"
+                line_edit = self.create_and_add_line_edit(
+                    value, row, column + width, 64, 2, self.settings_changed
+                )
+            elif s.key == "CODE_DIRECTORY":
+                new_value = settings.get("PROJECT_DIRECTORY") + "/code"
+                line_edit = self.create_and_add_line_edit(
+                    new_value, row, column + width, 64, 2, self.settings_changed
+                )
+            elif s.key == "APP_DIRECTORY":
+                line_edit = self.create_and_add_line_edit(
+                    value, row, column + width, 64, 2, self.settings_changed
                 )
             else:
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + 30, 16, 2, self.settings_changed
+                    value, row, column + width, 13, 2, self.settings_changed
                 )
             if s.key in (
                 "BPOD_TARGET_FIRMWARE",
@@ -321,6 +366,7 @@ class SettingsLayout(Layout):
                 "DATA_DIRECTORY",
                 "VIDEOS_DIRECTORY",
                 "SESSIONS_DIRECTORY",
+                "CODE_DIRECTORY",
             ):
                 line_edit.setReadOnly(True)
                 line_edit.setDisabled(True)
@@ -333,7 +379,7 @@ class SettingsLayout(Layout):
             for i, v in enumerate(values):
                 value = str(v)
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + 30 + 13 * i, 13, 2, self.settings_changed
+                    value, row, column + width + 13 * i, 13, 2, self.settings_changed
                 )
                 line_edit.setProperty("type", type)
                 line_edits.append(line_edit)
@@ -345,7 +391,7 @@ class SettingsLayout(Layout):
             for i, v in enumerate(values):
                 value = str(v)
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + 30 + 8 * i, 8, 2, self.settings_changed
+                    value, row, column + width + 8 * i, 8, 2, self.settings_changed
                 )
                 line_edit.setProperty("type", type)
                 line_edits.append(line_edit)
@@ -361,8 +407,8 @@ class SettingsLayout(Layout):
                 toggle_button = self.create_and_add_toggle_button(
                     s.key,
                     row,
-                    column + 30 + 8 * i,
-                    8,
+                    column + width + 6 * i,
+                    6,
                     2,
                     possible_values,
                     index,
@@ -379,8 +425,8 @@ class SettingsLayout(Layout):
             toggle_button = self.create_and_add_toggle_button(
                 s.key,
                 row,
-                column + 30,
-                16,
+                column + width,
+                13,
                 2,
                 possible_values,
                 index,
@@ -393,61 +439,64 @@ class SettingsLayout(Layout):
             self.toggle_buttons_settings.append(s)
 
     def change_sound_device(self, value: str, key: str) -> None:
-        settings.set(key, value)
         self.settings_changed(value, key)
 
     def toggle_button_changed(self, value: str, key: str) -> None:
         modify = ""
         if value == "OFF" and key == "USE_SOUNDCARD":
             self.delete_optional_widgets("SOUND SETTINGS")
+        elif value == "ON":
+            modify = "SOUND SETTINGS"
         elif value == "OFF":
             self.delete_optional_widgets("SCREEN SETTINGS")
             self.delete_optional_widgets("TOUCHSCREEN SETTINGS")
-        elif value == "ON":
-            modify = "SOUND SETTINGS"
         elif value == "SCREEN":
-            self.delete_optional_widgets("TOUCHSCREEN SETTINGS")
             modify = "SCREEN SETTINGS"
         elif value == "TOUCHSCREEN":
-            self.delete_optional_widgets("SCREEN SETTINGS")
             modify = "TOUCHSCREEN SETTINGS"
-        elif value == "BPOD":
-            self.delete_optional_widgets("HARP SETTINGS")
-            modify = "BPOD SETTINGS"
-        elif value == "HARP":
-            self.delete_optional_widgets("BPOD SETTINGS")
-            modify = "HARP SETTINGS"
 
         self.settings_changed(value, key)
         if modify != "":
             self.draw(all=False, modify=modify)
 
-    def create_project_directory(self) -> None:
-        # TODO: log the event in the previous project ?
+    def change_project_directory(self, value: str, key: str) -> None:
 
-        # define the rest of the directories
-        for s in self.line_edits_settings:
-            if s.key == "PROJECT_DIRECTORY":
-                new_project_directory = self.line_edits[
-                    self.line_edits_settings.index(s)
-                ].text()
-                break
+        if value == "NEW":
+            text, ok = QInputDialog.getText(self.window, "NEW", "Name of the project:")
+            if ok and text:
+                old_project = settings.get("PROJECT_DIRECTORY")
+                project_dir = os.path.dirname(old_project)
+                path = os.path.join(project_dir, text)
+                if self.create_project_directory(path):
+                    data.change_directory_settings(path)
+                    self.window.reload_app()
+                    return
+            self.project_directory_combobox.blockSignals(True)
+            self.project_directory_combobox.setCurrentText(
+                settings.get("PROJECT_DIRECTORY")
+            )
+            self.project_directory_combobox.blockSignals(False)
+        else:
+            reply = QMessageBox.question(
+                self.window,
+                "Change project directory",
+                """
+                Are you sure you want to change the project directory?
+                Village will restart.
+                """,
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
 
-        # generate the new directory settings
-        # directory_settings = utils.generate_directory_paths(new_project_directory)
-        directory_settings: list[Setting] = []
-        print(new_project_directory)
+            if reply == QMessageBox.Yes:
+                data.change_directory_settings(value)
+                self.window.reload_app()
+            else:
+                self.project_directory_combobox.blockSignals(True)
+                self.project_directory_combobox.setCurrentText(
+                    settings.get("PROJECT_DIRECTORY")
+                )
+                self.project_directory_combobox.blockSignals(False)
 
-        # update the text in the gui
-        for i, s in enumerate(self.line_edits_settings):
-            if s.key.endswith("_DIRECTORY"):
-                # find this setting in the new directory settings
-                for new_s in directory_settings:
-                    if new_s.key == s.key:
-                        self.line_edits[i].setText(new_s.value)
-                        break
-
-        self.apply_button_clicked()
-        data.create_directories()
-        # TODO: make also a dummy repo for the tasks
-        # TODO: log the event in the new project
+    def create_project_directory(self, path) -> bool:
+        return data.create_directories_from_path(path)

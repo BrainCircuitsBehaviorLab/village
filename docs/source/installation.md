@@ -94,6 +94,17 @@ pip install setuptools_scm
 pip install sounddevice
 ```
 
+
+## Accessing the pins by hardware
+We need to change an option to be able to access the pins by hardware (faster and less jittery than accessing them by software):
+
+modify the **/boot/firmware/config.txt** file to include
+```
+[all]
+dtoverlay=pwm
+```
+
+
 ## Configure remote access
 ### Option 1: with RealVNC
 From your Raspberry Pi:

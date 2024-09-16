@@ -21,6 +21,7 @@ class CameraProtocol:
     area4: list[int]
     areas: list[list[int]]
     change: bool
+    state: str
 
     def start_camera(self) -> None:
         return
@@ -54,3 +55,9 @@ class CameraProtocol:
 
     def start_preview_window(self) -> QWidget:
         return QWidget()
+
+    def log(self, text: str) -> None:
+        return
+
+    def areas_corridor_ok(self) -> bool:
+        return True

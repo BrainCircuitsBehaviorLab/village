@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pandas import DataFrame
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import (
     QDialog,
@@ -15,13 +14,13 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from village.app.settings import settings
-from village.app.status import status
-from village.app.utils import utils
-from village.classes.enums import Actions, Cycle, Info
+from village.classes.enums import Actions, Active, Cycle, Info
+from village.data import data
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.gui.layout import Label, Layout, PushButton
+from village.settings import settings
+from village.utils import utils
 
 if TYPE_CHECKING:
     from village.devices.motor import Motor
@@ -51,7 +50,7 @@ class LabelButtons:
             "bottom": 3,
             "threshold": 4,
             "threshold_day": 4,
-            "threshold_night": 4,
+            "threshold_night": 5,
             "grams": -1,
         }
         self.mapping_dict_max = {
@@ -218,11 +217,12 @@ class LabelButtons:
 
 
 class MonitorLayout(Layout):
-    def __init__(self, window: GuiWindow, df: DataFrame) -> None:
+    def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
-        self.draw(df)
+        self.draw()
 
-    def draw(self, df: DataFrame) -> None:
+    def draw(self) -> None:
+
         self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
 
@@ -234,40 +234,8 @@ class MonitorLayout(Layout):
         self.addWidget(self.qpicamera2_corridor, 4, 0, 30, 88)
         self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
 
-        key = "VIEW_DETECTION_CORRIDOR"
-        possible_values = settings.get_values(key)
-        index = settings.get_index(key)
-        self.button_corridor = self.create_and_add_toggle_button(
-            key,
-            32,
-            0,
-            30,
-            2,
-            possible_values,
-            index,
-            self.toggle_corridor,
-            "View the detection in the corridor",
-            complete_name=True,
-        )
-
-        key = "VIEW_DETECTION_BOX"
-        possible_values = settings.get_values(key)
-        index = settings.get_index(key)
-        self.button_box = self.create_and_add_toggle_button(
-            key,
-            32,
-            124,
-            30,
-            2,
-            possible_values,
-            index,
-            self.toggle_box,
-            "View the detection in the box",
-            complete_name=True,
-        )
-
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 10, 88, 20, 36)
+        self.addLayout(self.central_layout, 12, 88, 18, 36)
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
         self.page1Layout = MotorLayout(self.window, 20, 36)
@@ -288,7 +256,7 @@ class MonitorLayout(Layout):
         self.addLayout(self.bottom_layout, 34, 0, 16, 212)
         self.page4 = QWidget()
         self.page4.setStyleSheet("background-color:white")
-        self.page4Layout = InfoLayout(self.window, 16, 212, df)
+        self.page4Layout = InfoLayout(self.window, 16, 212)
         self.page4.setLayout(self.page4Layout)
         self.page5 = QWidget()
         self.page5.setStyleSheet("background-color:white")
@@ -297,12 +265,12 @@ class MonitorLayout(Layout):
         self.bottom_layout.addWidget(self.page4)
         self.bottom_layout.addWidget(self.page5)
 
-        self.cycle_label: Label = self.create_and_add_label(
-            "Cycle: ", 4, 91, 12, 2, "black"
+        self.tag_reader_label: Label = self.create_and_add_label(
+            "Tag reader: ", 4, 90, 12, 2, "black"
         )
-        key = "Cycle"
-        possible_values = Cycle.values()
-        index = Cycle.get_index_from_value(status.cycle)
+        key = "TAG_READER"
+        possible_values = Active.values()
+        index = Active.get_index_from_value(data.tag_reader)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
             4,
@@ -311,19 +279,40 @@ class MonitorLayout(Layout):
             2,
             possible_values,
             index,
+            self.toggle_tag_reader_button,
+            "Activation of the tag reader: ON, OFF",
+        )
+
+        self.cycle_label: Label = self.create_and_add_label(
+            "Cycle: ", 6, 90, 12, 2, "black"
+        )
+        key = "CYCLE"
+        possible_values = Cycle.values()
+        index = Cycle.get_index_from_value(data.cycle)
+        self.cycle_button = self.create_and_add_toggle_button(
+            key,
+            6,
+            100,
+            20,
+            2,
+            possible_values,
+            index,
             self.toggle_cycle_button,
-            "Cycle of the corridor: AUTO, DAY, NIGHT, OFF",
+            "Cycle of the corridor: AUTO, DAY, NIGHT",
         )
 
         self.actions_label: Label = self.create_and_add_label(
-            "Actions: ", 8, 91, 12, 2, "black"
+            "Actions: ", 10, 89, 33, 2, "black"
         )
-        key = "Actions"
+        self.actions_label.setStyleSheet(
+            "background-color: white; font-weight: bold; padding: 5px"
+        )
+        key = "ACTIONS"
         possible_values = Actions.values()
-        index = 0
+        index = Actions.get_index_from_value(data.actions)
         self.actions_button = self.create_and_add_toggle_button(
             key,
-            8,
+            10,
             100,
             20,
             2,
@@ -334,11 +323,14 @@ class MonitorLayout(Layout):
         )
 
         self.info_label: Label = self.create_and_add_label(
-            "Info: ", 32, 91, 12, 2, "black"
+            "Info: ", 32, 89, 33, 2, "black"
         )
-        key = "Info"
+        self.info_label.setStyleSheet(
+            "background-color: white; font-weight: bold; padding: 5px"
+        )
+        key = "INFO"
         possible_values = Info.values()
-        index = 0
+        index = Info.get_index_from_value(data.info)
         self.info_button = self.create_and_add_toggle_button(
             key,
             32,
@@ -351,29 +343,31 @@ class MonitorLayout(Layout):
             "Info and values of the cameras or info about the system",
         )
 
-    def toggle_corridor(self, value: str, key: str) -> None:
-        settings.set(key, value)
-        cam_corridor.change = True
+        index = Actions.get_index_from_string(data.actions.value)
+        self.central_layout.setCurrentIndex(index)
 
-    def toggle_box(self, value: str, key: str) -> None:
-        settings.set(key, value)
-        cam_box.change = True
+        index = Info.get_index_from_string(data.info.value)
+        self.bottom_layout.setCurrentIndex(index)
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
-        status.cycle = Cycle[value]
-        self.update_status_label(
-            status.state.name,
-            status.state.description,
-            status.subject.name,
-            status.task.name,
-            status.cycle.value,
-        )
+        data.cycle = Cycle[value]
+        settings.set(key, value)
+        self.update_status_label()
+
+    def toggle_tag_reader_button(self, value: str, key: str) -> None:
+        data.tag_reader = Active[value]
+        settings.set(key, value)
+        self.update_status_label()
 
     def toggle_actions_button(self, value: str, key: str) -> None:
+        data.actions = Actions[value]
+        settings.set(key, value)
         index = Actions.get_index_from_string(value)
         self.central_layout.setCurrentIndex(index)
 
     def toggle_info_button(self, value: str, key: str) -> None:
+        data.info = Info[value]
+        settings.set(key, value)
         index = Info.get_index_from_string(value)
         self.bottom_layout.setCurrentIndex(index)
 
@@ -396,7 +390,7 @@ class MotorLayout(Layout):
 
         self.change_angles: PushButton = self.create_and_add_button(
             "CHANGE MOTOR ANGLES",
-            6,
+            5,
             6,
             22,
             2,
@@ -405,7 +399,7 @@ class MotorLayout(Layout):
         )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            10,
+            9,
             6,
             22,
             2,
@@ -414,7 +408,7 @@ class MotorLayout(Layout):
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            14,
+            11,
             6,
             22,
             2,
@@ -423,7 +417,7 @@ class MotorLayout(Layout):
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            16,
+            13,
             6,
             22,
             2,
@@ -432,7 +426,7 @@ class MotorLayout(Layout):
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            18,
+            17,
             6,
             22,
             2,
@@ -529,6 +523,10 @@ class MotorLayout(Layout):
                 val4 = motor2_close_val
             settings.set("MOTOR1_VALUES", (val1, val2))
             settings.set("MOTOR2_VALUES", (val3, val4))
+            motor1.open_angle = val1
+            motor1.close_angle = val2
+            motor2.open_angle = val3
+            motor2.close_angle = val4
 
     def calibrate_scale_clicked(self) -> None:
         val = settings.get("SCALE_CALIBRATION_VALUE")
@@ -652,8 +650,8 @@ class CorridorLayout(Layout):
         self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
 
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 10)
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 134)
+        self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 0)
+        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 124)
 
         self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 0, self.color_area1_str)
         self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 32, self.color_area2_str)
@@ -724,15 +722,47 @@ class CorridorLayout(Layout):
             "If animals are allowed to be in this area",
         )
 
+        key = "VIEW_DETECTION_CORRIDOR"
+        possible_values = settings.get_values(key)
+        index = settings.get_index(key)
+        self.button_corridor = self.create_and_add_toggle_button(
+            key,
+            0,
+            58,
+            30,
+            2,
+            possible_values,
+            index,
+            self.toggle_corridor,
+            "View the detection in the corridor",
+            complete_name=True,
+        )
+
+        key = "VIEW_DETECTION_BOX"
+        possible_values = settings.get_values(key)
+        index = settings.get_index(key)
+        self.button_box = self.create_and_add_toggle_button(
+            key,
+            0,
+            184,
+            30,
+            2,
+            possible_values,
+            index,
+            self.toggle_box,
+            "View the detection in the box",
+            complete_name=True,
+        )
+
     def close(self) -> None:
         print("hidiig")
 
     def draw_mice_buttons(self, name: str, row: int, column: int) -> None:
-        width = 15
+        width = 14
         for direction in ("Max area empty", "Max area one mouse"):
             lb = LabelButtons(name, direction, row, column, width, "black", self)
             self.lbs.append(lb)
-            column += 35
+            column += 26
             width += 5
 
     def draw_area_buttons_corridor(
@@ -784,13 +814,23 @@ class CorridorLayout(Layout):
         settings.set(key, value)
         cam_box.change = True
 
+    def toggle_corridor(self, value: str, key: str) -> None:
+        settings.set(key, value)
+        cam_corridor.change = True
+
+    def toggle_box(self, value: str, key: str) -> None:
+        settings.set(key, value)
+        cam_box.change = True
+
 
 class InfoLayout(Layout):
-    def __init__(
-        self, window: GuiWindow, rows: int, columns: int, df: DataFrame
-    ) -> None:
+    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self.draw(df)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.draw)
+        self.timer.start(settings.get("UPDATE_TIME_MS"))
+        self.draw()
 
-    def draw(self, df: DataFrame) -> None:
-        self.events_table = self.create_and_add_table(df, 0, 0, 100, 16, [20, 20, 50])
+    def draw(self) -> None:
+        text = data.events.df.tail(12).to_csv(sep=" ", index=False, header=False)
+        self.events_text = self.create_and_add_label(text, 0, 0, 210, 16, "black")
