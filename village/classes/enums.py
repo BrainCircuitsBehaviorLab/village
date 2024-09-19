@@ -43,9 +43,8 @@ class AreaActive(SuperEnum):
 
 
 class State(SuperEnum):
-    WAIT = "all subjects at home, waiting for rfid detection"
-    DETECTION = "getting subject name and task, checking areas and minimum time"
-
+    WAIT = "all subjects at home, waiting for a not empty rfid detection"
+    DETECTION = "getting subject data, checking areas and minimum time"
     ACCESS = "closing door1, opening door2"
     LAUNCH = "launching the task"
     ACTION = "waiting for first action in behavioral box"

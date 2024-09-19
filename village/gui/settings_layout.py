@@ -306,7 +306,7 @@ class SettingsLayout(Layout):
                 index,
                 self.change_project_directory,
             )
-        elif s.key == "TOKEN":
+        elif s.key == "TELEGRAM_TOKEN":
             value = str(settings.get(s.key))
             line_edit = self.create_and_add_line_edit(
                 value, row, column + width, 64, 2, self.settings_changed

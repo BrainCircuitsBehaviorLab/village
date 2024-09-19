@@ -152,7 +152,7 @@ touchscreen_settings = [
 ]
 
 telegram_settings = [
-    Setting("TOKEN", "", str, "The token of the telegram bot"),
+    Setting("TELEGRAM_TOKEN", "", str, "The token of the telegram bot"),
     Setting("TELEGRAM_CHAT", "", str, "The chat id of the telegram bot"),
     Setting(
         "TELEGRAM_USERS",

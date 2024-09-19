@@ -78,4 +78,4 @@ class Motor:
 
 
 motor1 = Motor(18, settings.get("MOTOR1_VALUES"))
-motor2 = Motor(19, settings.get("MOTOR2_VALUES"))
+motor2 = Motor(12, settings.get("MOTOR2_VALUES"))

@@ -31,3 +31,11 @@ class Subject:
         except Exception as e:
             utils.log("data incorrectly saved in subjects.csv", exception=e)
             return False
+
+    def minimum_time_ok(self) -> bool:
+        next_session = utils.date_from_string(self.next_session_time)
+        now = utils.now()
+        if now > next_session:
+            return True
+        else:
+            return False

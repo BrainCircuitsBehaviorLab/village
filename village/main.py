@@ -52,6 +52,8 @@ from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
+
+# from village.devices.telegram_bot import telegram_bot
 from village.gui.gui import Gui
 from village.utils import utils
 
@@ -67,49 +69,60 @@ def system_run() -> None:
     cam_box.start_record()
 
     i = 0
+    id = ""
+    multiple = False
+
     while True:
         i += 1
         time.sleep(1)
         if i % 10 == 0:
-            utils.log("counter: " + str(i) + " es un texto largo que yo quiero poner a")
+            utils.log("counter: " + str(i) + " es un texto largo que yo quiero poner")
 
         match data.state:
             case data.state.WAIT:
-                # all subjects at home, waiting for rfid detection
+                # all subjects at home, waiting for a not empty rfid detection
                 if data.tag_reader == data.tag_reader.ON:
-                    tag: str = rfid.get()
-                    if tag != "":
+                    id, multiple = rfid.get_id()
+                    if id != "":
                         data.state = State["DETECTION"]
-
             case data.state.DETECTION:
-                # getting subject name and task, checking areas and minimum time
+                # getting subject data, checking areas and minimum time
                 if (
-                    data.get_subject_from_tag(tag)
+                    data.get_subject_from_tag(id)
                     and data.subject.get_data_from_subject_series()
+                    and data.subject.minimum_time_ok()
                     and cam_corridor.areas_corridor_ok()
+                    and not multiple_detections(data.subject.name, multiple)
                 ):
-                    # data.security_chrono.reset()
-                    data.state = State["SECURITY_CHECK"]
-                else:
-                    data.state = State["SECURITY_WAIT"]
-
-            # case data.state.SECURITY_CHECK:
-            #     # corridor empty for some time after detection
+                    data.state = State["ACCESS"]
 
             case data.state.ACCESS:
                 # closing door1, opening door2
                 motor1.close()
                 motor2.open()
+                data.state = State["LAUNCH"]
 
             case data.state.LAUNCH:
                 # launching the task
                 pass
             case data.state.ACTION:
                 # waiting for first action in behavioral box
-                pass
+                id, multiple = rfid.get_id()
+                if id != "":
+                    utils.log(
+                        "Subject not allowed to leave. Task has not started yet",
+                        subject=data.subject.name,
+                    )
+                if data.first_action:
+                    data.state = State["CLOSE"]
             case data.state.CLOSE:
-                # closing door2
-                pass
+                if cam_corridor.area_3_empty():
+                    motor2.close()
+                    data.state = State["RUN_CLOSED"]
+                else:
+                    # telegram_bot.alarm_corridor()
+                    data.state = State["ERROR"]
+
             case data.state.RUN_CLOSED:
                 # task running, subject can not leave
                 pass
@@ -155,6 +168,16 @@ def system_run() -> None:
             case data.state.END:
                 # end
                 break
+
+
+def multiple_detections(subject: str, multiple: bool) -> bool:
+    if multiple:
+        utils.log(
+            "Multiple tags detected in the last seconds",
+            subject=subject,
+        )
+        return True
+    return False
 
 
 # start the secondary thread (control of the system)

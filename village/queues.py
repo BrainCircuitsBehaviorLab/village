@@ -1,4 +1,4 @@
 from queue import Queue
 
-rfid: Queue = Queue(maxsize=1)
-weight: Queue = Queue(maxsize=1)
+queue_tag: Queue = Queue(maxsize=1)
+weight_tag: Queue = Queue(maxsize=1)

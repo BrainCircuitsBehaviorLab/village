@@ -119,12 +119,13 @@ sitemap_url_scheme = "{link}"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-html_favicon = '_static/favicon.ico'
+html_static_path = ["_static"]
+html_favicon = "_static/favicon.ico"
 
 # Ignore links and anchors
 linkcheck_ignore = [
     "https://www.raspberrypi.com/*",
+    "https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription",
 ]
 linkcheck_anchors_ignore_for_url = [
     "https://github.com/neuroinformatics-unit/actions/tree/v2/build_sphinx_docs",

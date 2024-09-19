@@ -92,16 +92,18 @@ Install needed libraries with pip:
 pip install python-dateutil
 pip install setuptools_scm
 pip install sounddevice
+pip install python-telegram-bot
 ```
 
 
-## Accessing the pins by hardware
+## Accessing the pins by hardware (for servos) and using pin uart to communicate
 We need to change an option to be able to access the pins by hardware (faster and less jittery than accessing them by software):
 
 modify the **/boot/firmware/config.txt** file to include
 ```
 [all]
 dtoverlay=pwm
+enable_uart=1
 ```
 
 

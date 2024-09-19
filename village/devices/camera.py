@@ -442,6 +442,18 @@ class Camera(CameraProtocol):
         else:
             return True
 
+    def area_1_empty(self) -> bool:
+        return self.counts[0] <= self.zero_or_one_mouse
+
+    def area_2_empty(self) -> bool:
+        return self.counts[1] <= self.zero_or_one_mouse
+
+    def area_3_empty(self) -> bool:
+        return self.counts[2] <= self.zero_or_one_mouse
+
+    def area_4_empty(self) -> bool:
+        return self.counts[3] <= self.zero_or_one_mouse
+
 
 def get_camera(index: int, name: str) -> CameraProtocol:
     try:
