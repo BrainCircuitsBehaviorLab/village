@@ -23,6 +23,10 @@
 9. Choose your preferred web browser (Chromium).
 10. Select "Yes" when asked to update software (if you have your internet connection ready).
 
+## Sound settings
+- `sudo apt-get install pulseaudio`  I think this one is not necessary
+- `sudo apt-get install libportaudio2`
+
 ## Screen settings
 - `sudo raspi-config`
   - Go to **Display Options** and disable blanking.
@@ -87,14 +91,28 @@ Install needed libraries with pip:
 ```bash
 pip install python-dateutil
 pip install setuptools_scm
+pip install sounddevice
+pip install python-telegram-bot
 ```
+
+
+## Accessing the pins by hardware (for servos) and using pin uart to communicate
+We need to change an option to be able to access the pins by hardware (faster and less jittery than accessing them by software):
+
+modify the **/boot/firmware/config.txt** file to include
+```
+[all]
+dtoverlay=pwm
+enable_uart=1
+```
+
 
 ## Configure remote access
 ### Option 1: with RealVNC
 From your Raspberry Pi:
 
 1. Go to the website and create an account: [RealVNC](https://www.realvnc.com/es/)
-2. Subscribe to Lite access (free access): [Lite Access](https://www.realvnc.com/es/connect/plan/lite/)
+2. Subscribe to Lite access (free access): [Lite Access](https://www.realvnc.com/es/connect/plan/lite/). Follow instructions [here](https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription) if you go around in a loop.
 3. Open the RealVNC server on the Raspberry Pi (it is automatically installed when you install Raspberry Pi OS) and configure it for your team.
 4. Go to **Device Access** on the RealVNC webpage and add your current device.
 5. Back in the RealVNC window, you should see a code that allows remote connections from other networks and an IP number that allows connection from the same network.
@@ -127,7 +145,7 @@ sudo nano 99-usb.rules
 Add the following line to create a symbolic link to the bpod, changing "1-1:1.0" with the real port. You can use `dmesg` to check the ports:
 
 ```
-KERNEL=="ttyACM*",KERNELS=="1-1:1.0",SYMLINK+="BPod"
+KERNEL=="ttyACM*",KERNELS=="1-1:1.0",SYMLINK+="Bpod"
 ```
 
 ```
@@ -139,7 +157,10 @@ sudo udevadm trigger
 - Clone the repo anywhere you want. In the terminal, type:
 ```git clone https://github.com/BrainCircuitsBehaviorLab/village.git```
 - Navigate to folder ```village``` and type ```pip install -e .```
-- Run the ```main.py``` file with sudo to create the folders: ```sudo python /home/pi/village/village/main.py```
-- PROBLEMS WITH user package
+
+
+PUT THIS IN USAGE.MD OR SOMETHING LIKE THAT
+- Run the ```main.py``` file: ```python village/main.py```
+
 
 Feel free to adjust the formatting or content as needed!
