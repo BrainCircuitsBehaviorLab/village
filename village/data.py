@@ -3,6 +3,7 @@ import inspect
 import os
 import subprocess
 import sys
+import traceback
 from pathlib import Path
 
 from village.classes.collection import Collection
@@ -125,11 +126,13 @@ class Data:
             try:
                 subprocess.run(["git", "clone", repository, directory])
                 utils.log("Repository " + repository + " downloaded")
-            except Exception as e:
-                utils.log("Error downloading repository " + repository, exception=e)
+            except Exception:
+                utils.log(
+                    "Error downloading repository " + repository,
+                    exception=traceback.format_exc(),
+                )
 
     def import_all_tasks(self) -> None:
-
         directory = settings.get("CODE_DIRECTORY")
         sys.path.append(directory)
 
@@ -154,8 +157,10 @@ class Data:
                         new_task.name = name
                         if not any(item.name == name for item in tasks):
                             tasks.append(new_task)
-            except Exception as e:
-                utils.log("Error importing " + module_name, exception=e)
+            except Exception:
+                utils.log(
+                    "Error importing " + module_name, exception=traceback.format_exc()
+                )
                 continue
 
         self.tasks = tasks

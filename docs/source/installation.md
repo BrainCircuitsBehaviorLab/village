@@ -27,12 +27,16 @@
 - `sudo apt-get install pulseaudio`  I think this one is not necessary
 - `sudo apt-get install libportaudio2`
 
-## Screen settings
+## Screen settings and I2C communication
 - `sudo raspi-config`
   - Go to **Display Options** and disable blanking.
 
   Optional if you have a touch screen: IS THIS TRUE?
   - Go to **Advanced Options** and select X11 (instead of Wayland).
+
+  - Go to **Interface Options** and enable I2C.
+
+  Modifying options in raspi-config usually is the same that modifying or adding lines to **/boot/firmware/config.txt**
 
 ### If you are using one screen only:
 - `sudo nano /boot/firmware/cmdline.txt`
@@ -93,6 +97,7 @@ pip install python-dateutil
 pip install setuptools_scm
 pip install sounddevice
 pip install python-telegram-bot
+pip install scipy
 ```
 
 
@@ -102,7 +107,7 @@ We need to change an option to be able to access the pins by hardware (faster an
 modify the **/boot/firmware/config.txt** file to include
 ```
 [all]
-dtoverlay=pwm
+dtoverlay=pwm-2chan,pin=12,pin2=13,func=4,func2=4
 enable_uart=1
 ```
 
@@ -151,6 +156,35 @@ KERNEL=="ttyACM*",KERNELS=="1-1:1.0",SYMLINK+="Bpod"
 ```
 sudo udevadm trigger
 ```
+
+## I2C
+- We connect the temperature sensor and the scale to the I2C pins
+- We need to know the address of each of the sensors
+- For the temperature sensor is 0x45 (DFRobot HX711)
+- For the weight sensor is 0x64 (CQRobot SHT31)
+- The addresses can change to discover them:
+- 1 - connect the devices to the raspberry
+- 2 - install the tools for detection:
+`sudo apt-get install -y i2c-tools`
+- 3 - run the tools:
+`i2cdetect -y 1`
+
+
+## Create a telegram bot
+- Text **@BotFather** in the search tab and select this bot.
+- Text: **/newbot** and send.
+- Follow Botfather instructions. Write down the token. Never share the token in github.
+- Open a chat with your new bot and activate it by sending: **/start**.
+
+### Check the token of an existing bot
+- Go to the **@BotFather** chat and send **/token**.
+
+### Make the bot triggers the alarms
+- Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the alarms from the bot and will be able to send commands to it.
+- Start a conversation with **@username_to_id_bot** to obtain your ID, the chat ID and the ID of all the other users.
+- Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)
+
+
 
 ## Install village
 - Make sure you are in .env environment (see above)

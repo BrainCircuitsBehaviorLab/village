@@ -24,8 +24,10 @@ class Rfid:
 
     def read_serial(self) -> None:
         while self.running:
+            # print("reading")
             try:
                 line = self.s.readline().decode("utf-8").strip()
+                # print(line)
 
                 if line:
                     self.id_history.append((self.id, time.time()))

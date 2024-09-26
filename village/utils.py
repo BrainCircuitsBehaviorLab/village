@@ -51,12 +51,14 @@ class Utils:
         description: str,
         type: str = "INFO",
         subject: str = "system",
-        exception: Exception | None = None,
+        exception: str | None = None,
     ) -> None:
         date = self.now_string()
         if exception is not None:
             type = "ERROR"
-            description += " " + str(exception)
+            exception = exception.replace(",", " ")
+            exception = " || ".join(exception.splitlines())
+            description += " " + exception
         text = date + "  " + type + "  " + subject + "  " + description
         self.log_protocol.log(date, type, subject, description)
         self.cam_protocol.log(text)

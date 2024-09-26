@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 from pathlib import Path
 
 import pandas as pd
@@ -21,8 +22,11 @@ class Collection(LogProtocol):
                 file.write(columns_str)
         try:
             self.df = pd.read_csv(self.path)
-        except Exception as e:
-            utils.log("error reading from: " + str(self.path) + " error: " + str(e))
+        except Exception:
+            utils.log(
+                "error reading from: " + str(self.path),
+                exception=traceback.format_exc(),
+            )
             sys.exit()
 
     def add_entry(self, entry: list[str]) -> None:

@@ -134,3 +134,11 @@ def whiteNoiseGen(
 
 
 soundDevice = SoundDevice()
+
+sound = whiteNoiseGen(0.5, 1000, 2000, 1)
+soundDevice.load(sound)
+soundDevice.playSound()
+
+print("ok")
+
+input("hola")

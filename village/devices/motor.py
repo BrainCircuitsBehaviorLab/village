@@ -19,11 +19,14 @@ class Motor:
             # let's set pin ctrl
             os.system("/usr/bin/pinctrl set {} {}".format(self.pin, afunc[self.pinIdx]))
             # let export pin
-            os.system(
-                "echo {} > /sys/class/pwm/pwmchip2/export".format(
-                    self.pwmx[self.pinIdx]
+            if not os.path.exists(
+                "/sys/class/pwm/pwmchip2/pwm{}".format(self.pwmx[self.pinIdx])
+            ):
+                os.system(
+                    "echo {} > /sys/class/pwm/pwmchip2/export".format(
+                        self.pwmx[self.pinIdx]
+                    )
                 )
-            )
             # CLOCK AT 1gHZ  let put period to 20ms
             time.sleep(0.2)
             os.system(
@@ -65,6 +68,7 @@ class Motor:
                 self.onTime_ns, self.pwmx[self.pinIdx]
             )
         )
+        print("setting")
 
     def transform(self, value: int) -> int:
         # 0 to 180 degrees -> 500 to 2500 us
@@ -72,10 +76,12 @@ class Motor:
 
     def open(self) -> None:
         self.set(self.transform(self.open_angle))
+        print("opening")
 
     def close(self) -> None:
         self.set(self.transform(self.close_angle))
+        print("closing")
 
 
-motor1 = Motor(18, settings.get("MOTOR1_VALUES"))
-motor2 = Motor(12, settings.get("MOTOR2_VALUES"))
+motor1 = Motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
+motor2 = Motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))

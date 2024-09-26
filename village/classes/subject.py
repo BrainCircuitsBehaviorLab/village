@@ -1,3 +1,5 @@
+import traceback
+
 import pandas as pd
 
 from village.utils import utils
@@ -28,8 +30,11 @@ class Subject:
             self.next_session_time = self.subject_series["next_session_time"]
             self.conditions = self.subject_series["conditions"]
             return True
-        except Exception as e:
-            utils.log("data incorrectly saved in subjects.csv", exception=e)
+        except Exception:
+            utils.log(
+                "data incorrectly saved in subjects.csv",
+                exception=traceback.format_exc(),
+            )
             return False
 
     def minimum_time_ok(self) -> bool:

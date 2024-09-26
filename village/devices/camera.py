@@ -1,4 +1,5 @@
 import os
+import traceback
 from pprint import pprint
 from typing import Any
 
@@ -60,8 +61,13 @@ class Camera(CameraProtocol):
         )
         self.cam.align_configuration(self.config)
         self.cam.configure(self.config)
-        self.path_video = settings.get("DATA_DIRECTORY") + "/videos/" + name + ".mp4"
-        self.path_csv = settings.get("DATA_DIRECTORY") + "/videos/" + name + ".csv"
+        self.path_video = os.path.join(
+            settings.get("DATA_DIRECTORY"), "videos", name + ".mp4"
+        )
+        self.path_csv = os.path.join(
+            settings.get("DATA_DIRECTORY"), "videos", name + ".csv"
+        )
+        self.path_picture = os.path.join(settings.get("DATA_DIRECTORY"), name + ".jpg")
         self.output = FfmpegOutput(self.path_video)
         self.cam.pre_callback = self.pre_process
 
@@ -454,14 +460,17 @@ class Camera(CameraProtocol):
     def area_4_empty(self) -> bool:
         return self.counts[3] <= self.zero_or_one_mouse
 
+    def take_picture(self) -> None:
+        self.cam.capture_file(self.path_picture)
+
 
 def get_camera(index: int, name: str) -> CameraProtocol:
     try:
         cam = Camera(index, name)
         utils.log("Cam " + name + " successfully initialized")
         return cam
-    except Exception as e:
-        utils.log("Could not initialize cam " + name, exception=e)
+    except Exception:
+        utils.log("Could not initialize cam " + name, exception=traceback.format_exc())
         return CameraProtocol()
 
 

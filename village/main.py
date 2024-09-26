@@ -43,8 +43,8 @@
 # 12. import all tasks from the code directory and log the result
 
 
+import threading
 import time
-from threading import Thread
 
 from village.classes.enums import State
 from village.data import data
@@ -52,8 +52,7 @@ from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
-
-# from village.devices.telegram_bot import telegram_bot
+from village.devices.telegram_bot import telegram_bot
 from village.gui.gui import Gui
 from village.utils import utils
 
@@ -75,6 +74,8 @@ def system_run() -> None:
     while True:
         i += 1
         time.sleep(1)
+        if i == 200:
+            telegram_bot.alarm("RAFA", "Starterd system")
         if i % 10 == 0:
             utils.log("counter: " + str(i) + " es un texto largo que yo quiero poner")
 
@@ -181,7 +182,7 @@ def multiple_detections(subject: str, multiple: bool) -> bool:
 
 
 # start the secondary thread (control of the system)
-system_state = Thread(target=system_run)
+system_state = threading.Thread(target=system_run)
 system_state.start()
 
 # start the primary thread (GUI)

@@ -254,6 +254,9 @@ class SettingsLayout(Layout):
             values = [field.text() for field in list_toggle]
             settings.set(s.key, values)
 
+        val = self.sound_device_combobox.currentText()
+        settings.set("SOUND_DEVICE", val)
+
         cam_corridor.change = True
         cam_box.change = True
 

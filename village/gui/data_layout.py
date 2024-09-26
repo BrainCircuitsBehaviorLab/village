@@ -62,8 +62,9 @@ class DataLayout(Layout):
 
         self.change_table()
 
-    def search(self, value: str = "", key: str = "") -> None:
-        self.searching = value
+    def search(self, value: str | None = None, key: str = "") -> None:
+        if value is not None:
+            self.searching = value
         self.change_data_view(data.table.value, "")
 
     def change_table(self) -> None:
@@ -78,5 +79,4 @@ class DataLayout(Layout):
                     axis=1,
                 )
             ]
-            print(df)
         self.model = self.create_and_add_table(df, 8, 0, 210, 42, widths=self.widths)

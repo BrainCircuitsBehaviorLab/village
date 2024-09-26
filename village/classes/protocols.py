@@ -22,6 +22,7 @@ class CameraProtocol:
     areas: list[list[int]]
     change: bool
     state: str
+    path_picture: str
 
     def start_camera(self) -> None:
         return
@@ -61,3 +62,6 @@ class CameraProtocol:
 
     def areas_corridor_ok(self) -> bool:
         return True
+
+    def take_picture(self) -> None:
+        return

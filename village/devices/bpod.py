@@ -1,3 +1,5 @@
+import traceback
+
 from village.classes.protocols import PyBpodProtocol
 from village.pybpodapi.protocol import Bpod, StateMachine
 from village.utils import utils
@@ -21,8 +23,8 @@ def get_bpod() -> PyBpodProtocol:
         bpod = PyBpod()
         utils.log("Bpod successfully initialized")
         return bpod
-    except Exception as e:
-        utils.log("Could not initialize bpod", exception=e)
+    except Exception:
+        utils.log("Could not initialize bpod", exception=traceback.format_exc())
         return PyBpodProtocol()
 
 

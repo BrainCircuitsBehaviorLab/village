@@ -367,8 +367,12 @@ extra_settings = [
     Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)"),
     Setting("INFO", "SYSTEM_INFO", Info, "The information status"),
     Setting("ACTIONS", "CORRIDOR", Actions, "The actions status"),
-    Setting("UPDATE_TIME_MS", 1000, int, "The update time in ms for the gui tables"),
+    Setting(
+        "UPDATE_TIME_MS", 2000, int, "The update time in ms for the tables and plots"
+    ),
     Setting("SCREENSAVE_TIME_MS", 300000, int, "The time in ms for the screensave"),
+    Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1"),
+    Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2"),
 ]
 
 
@@ -388,4 +392,6 @@ settings = Settings(
 )
 
 
+# settings.print()
 # settings.create_factory_settings()
+# settings.replace_extra_settings()
