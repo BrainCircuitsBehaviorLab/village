@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=6e628730"></script>
+    <script src="_static/documentation_options.js?v=80ed1b29"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -121,7 +121,7 @@
   
   
   
-    <p class="title logo__title">village v0.1.dev1+g683f6aa</p>
+    <p class="title logo__title">village v0.1.dev1+gb03bd52</p>
   
 </a></div>
     
@@ -427,8 +427,8 @@ document.write(`
 <li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libportaudio2</span></code></p></li>
 </ul>
 </section>
-<section id="screen-settings">
-<h2>Screen settings<a class="headerlink" href="#screen-settings" title="Link to this heading">#</a></h2>
+<section id="screen-settings-and-i2c-communication">
+<h2>Screen settings and I2C communication<a class="headerlink" href="#screen-settings-and-i2c-communication" title="Link to this heading">#</a></h2>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">raspi-config</span></code></p>
 <ul class="simple">
@@ -437,7 +437,9 @@ document.write(`
 <p>Optional if you have a touch screen: IS THIS TRUE?</p>
 <ul class="simple">
 <li><p>Go to <strong>Advanced Options</strong> and select X11 (instead of Wayland).</p></li>
+<li><p>Go to <strong>Interface Options</strong> and enable I2C.</p></li>
 </ul>
+<p>Modifying options in raspi-config usually is the same that modifying or adding lines to <strong>/boot/firmware/config.txt</strong></p>
 </li>
 </ul>
 <section id="if-you-are-using-one-screen-only">
@@ -505,6 +507,7 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 pip<span class="w"> </span>install<span class="w"> </span>setuptools_scm
 pip<span class="w"> </span>install<span class="w"> </span>sounddevice
 pip<span class="w"> </span>install<span class="w"> </span>python-telegram-bot
+pip<span class="w"> </span>install<span class="w"> </span>scipy
 </pre></div>
 </div>
 </section>
@@ -513,7 +516,7 @@ pip<span class="w"> </span>install<span class="w"> </span>python-telegram-bot
 <p>We need to change an option to be able to access the pins by hardware (faster and less jittery than accessing them by software):</p>
 <p>modify the <strong>/boot/firmware/config.txt</strong> file to include</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="nb">all</span><span class="p">]</span>
-<span class="n">dtoverlay</span><span class="o">=</span><span class="n">pwm</span>
+<span class="n">dtoverlay</span><span class="o">=</span><span class="n">pwm</span><span class="o">-</span><span class="mi">2</span><span class="n">chan</span><span class="p">,</span><span class="n">pin</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span><span class="n">pin2</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span><span class="n">func</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">func2</span><span class="o">=</span><span class="mi">4</span>
 <span class="n">enable_uart</span><span class="o">=</span><span class="mi">1</span>
 </pre></div>
 </div>
@@ -562,6 +565,44 @@ pip<span class="w"> </span>install<span class="w"> </span>python-telegram-bot
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">udevadm</span> <span class="n">trigger</span>
 </pre></div>
 </div>
+</section>
+<section id="i2c">
+<h2>I2C<a class="headerlink" href="#i2c" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>We connect the temperature sensor and the scale to the I2C pins</p></li>
+<li><p>We need to know the address of each of the sensors</p></li>
+<li><p>For the temperature sensor is 0x45 (DFRobot HX711)</p></li>
+<li><p>For the weight sensor is 0x64 (CQRobot SHT31)</p></li>
+<li><p>The addresses can change to discover them:</p></li>
+<li><p>1 - connect the devices to the raspberry</p></li>
+<li><p>2 - install the tools for detection:
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">-y</span> <span class="pre">i2c-tools</span></code></p></li>
+<li><p>3 - run the tools:
+<code class="docutils literal notranslate"><span class="pre">i2cdetect</span> <span class="pre">-y</span> <span class="pre">1</span></code></p></li>
+</ul>
+</section>
+<section id="create-a-telegram-bot">
+<h2>Create a telegram bot<a class="headerlink" href="#create-a-telegram-bot" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Text <strong>&#64;BotFather</strong> in the search tab and select this bot.</p></li>
+<li><p>Text: <strong>/newbot</strong> and send.</p></li>
+<li><p>Follow Botfather instructions. Write down the token. Never share the token in github.</p></li>
+<li><p>Open a chat with your new bot and activate it by sending: <strong>/start</strong>.</p></li>
+</ul>
+<section id="check-the-token-of-an-existing-bot">
+<h3>Check the token of an existing bot<a class="headerlink" href="#check-the-token-of-an-existing-bot" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Go to the <strong>&#64;BotFather</strong> chat and send <strong>/token</strong>.</p></li>
+</ul>
+</section>
+<section id="make-the-bot-triggers-the-alarms">
+<h3>Make the bot triggers the alarms<a class="headerlink" href="#make-the-bot-triggers-the-alarms" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the alarms from the bot and will be able to send commands to it.</p></li>
+<li><p>Start a conversation with <strong>&#64;username_to_id_bot</strong> to obtain your ID, the chat ID and the ID of all the other users.</p></li>
+<li><p>Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)</p></li>
+</ul>
+</section>
 </section>
 <section id="install-village">
 <h2>Install village<a class="headerlink" href="#install-village" title="Link to this heading">#</a></h2>
@@ -628,7 +669,7 @@ pip<span class="w"> </span>install<span class="w"> </span>python-telegram-bot
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-need">What you need</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-raspberry-pi-os-for-the-first-time">Launch Raspberry Pi OS for the first time</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sound-settings">Sound settings</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#screen-settings">Screen settings</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#screen-settings-and-i2c-communication">Screen settings and I2C communication</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-are-using-one-screen-only">If you are using one screen only:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-are-using-2-screens">If you are using 2 screens:</a></li>
 </ul>
@@ -643,6 +684,12 @@ pip<span class="w"> </span>install<span class="w"> </span>python-telegram-bot
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#udev-rules">Udev rules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#i2c">I2C</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-telegram-bot">Create a telegram bot</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-token-of-an-existing-bot">Check the token of an existing bot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-the-bot-triggers-the-alarms">Make the bot triggers the alarms</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-village">Install village</a></li>
 </ul>
   </nav></div>
