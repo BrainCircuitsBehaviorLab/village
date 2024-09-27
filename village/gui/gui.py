@@ -9,9 +9,9 @@ from village.classes.enums import ScreenActive, State
 from village.data import data
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
+from village.log import log
 from village.screen.behaviour_window import BehaviourWindow
 from village.settings import settings
-from village.utils import utils
 
 
 class Gui:
@@ -43,7 +43,7 @@ class Gui:
         self.q_app.exec()
 
     def exit_app(self) -> None:
-        utils.log("VILLAGE Closed")
+        log.end("VILLAGE")
         data.state = State["END"]
         cam_corridor.stop_record()
         cam_box.stop_record()
@@ -51,7 +51,7 @@ class Gui:
         sys.exit()
 
     def reload_app(self) -> None:
-        utils.log("VILLAGE Closed")
+        log.end("VILLAGE")
         data.state = State["END"]
         cam_corridor.stop_record()
         cam_box.stop_record()

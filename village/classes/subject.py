@@ -2,7 +2,8 @@ import traceback
 
 import pandas as pd
 
-from village.utils import utils
+from village.log import log
+from village.time_utils import time_utils
 
 
 class Subject:
@@ -15,7 +16,8 @@ class Subject:
         self.last_session_ended: str = ""
         self.waiting_period: int = 0
         self.next_session_time: str = ""
-        self.conditions: str = ""
+        self.next_task: str = ""
+        self.next_variables: str = ""
         self.subject_series: pd.Series = pd.Series()
 
     def get_data_from_subject_series(self) -> bool:
@@ -28,18 +30,19 @@ class Subject:
             self.last_session_ended = self.subject_series["last_session_ended"]
             self.waiting_period = self.subject_series["waiting_period"]
             self.next_session_time = self.subject_series["next_session_time"]
-            self.conditions = self.subject_series["conditions"]
+            self.next_task = self.subject_series["next_task"]
+            self.next_variables = self.subject_series["next_variables"]
             return True
         except Exception:
-            utils.log(
+            log.error(
                 "data incorrectly saved in subjects.csv",
                 exception=traceback.format_exc(),
             )
             return False
 
     def minimum_time_ok(self) -> bool:
-        next_session = utils.date_from_string(self.next_session_time)
-        now = utils.now()
+        next_session = time_utils.date_from_string(self.next_session_time)
+        now = time_utils.now()
         if now > next_session:
             return True
         else:

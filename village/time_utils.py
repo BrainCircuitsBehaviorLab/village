@@ -2,17 +2,8 @@ import datetime
 import time
 from typing import Any
 
-import sounddevice as sd
-from PyQt5.QtWidgets import QLayout
 
-from village.classes.protocols import CameraProtocol, LogProtocol
-
-
-class Utils:
-    def __init__(self) -> None:
-        self.log_protocol = LogProtocol()
-        self.cam_protocol = CameraProtocol()
-
+class TimeUtils:
     @staticmethod
     def now() -> datetime.datetime:
         return datetime.datetime.now()
@@ -46,40 +37,6 @@ class Utils:
     def date_from_setting_string(string: str) -> datetime.datetime:
         return datetime.datetime.strptime(string, "%H:%M")
 
-    def log(
-        self,
-        description: str,
-        type: str = "INFO",
-        subject: str = "system",
-        exception: str | None = None,
-    ) -> None:
-        date = self.now_string()
-        if exception is not None:
-            type = "ERROR"
-            exception = exception.replace(",", " ")
-            exception = " || ".join(exception.splitlines())
-            description += " " + exception
-        text = date + "  " + type + "  " + subject + "  " + description
-        self.log_protocol.log(date, type, subject, description)
-        self.cam_protocol.log(text)
-        print(text)
-
-    def delete_all_elements(self, layout: QLayout) -> None:
-        for i in reversed(range(layout.count())):
-            layoutItem = layout.itemAt(i)
-            if layoutItem is not None:
-                if layoutItem.widget() is not None:
-                    widgetToRemove = layoutItem.widget()
-                    widgetToRemove.deleteLater()
-                else:
-                    if layoutItem.layout() is not None:
-                        self.delete_all_elements(layoutItem.layout())
-
-    def get_sound_devices(self) -> list[str]:
-        devices = sd.query_devices()
-        devices_str = [d["name"] for d in devices]
-        return devices_str
-
     @staticmethod
     def measure_time(func) -> Any:
         def wrapper(*args, **kwargs) -> Any:
@@ -109,4 +66,4 @@ class Utils:
             return int(self.get_time() / datetime.timedelta(milliseconds=1))
 
 
-utils = Utils()
+time_utils = TimeUtils()

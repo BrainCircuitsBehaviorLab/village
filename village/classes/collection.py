@@ -5,12 +5,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from village.classes.protocols import LogProtocol
+from village.classes.protocols import EventProtocol
+from village.log import log
 from village.settings import settings
-from village.utils import utils
+from village.time_utils import time_utils
 
 
-class Collection(LogProtocol):
+class Collection(EventProtocol):
     def __init__(self, name: str, columns: list[str]) -> None:
         self.name: str = name
         self.columns: list[str] = columns
@@ -23,7 +24,7 @@ class Collection(LogProtocol):
         try:
             self.df = pd.read_csv(self.path)
         except Exception:
-            utils.log(
+            log.error(
                 "error reading from: " + str(self.path),
                 exception=traceback.format_exc(),
             )
@@ -43,7 +44,7 @@ class Collection(LogProtocol):
     def check_split_csv(self) -> None:
         if len(self.df) > 110000:
             first_100000: pd.DataFrame = self.df.head(100000)
-            date_str: str = utils.now_string_for_filename()
+            date_str: str = time_utils.now_string_for_filename()
             new_filename: str = self.name + "_" + date_str + ".csv"
             directory: str = settings.get("DATA_DIRECTORY")
             new_path: str = os.path.join(directory, new_filename)

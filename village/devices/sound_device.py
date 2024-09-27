@@ -5,8 +5,8 @@ import numpy as np
 import sounddevice as sd
 from scipy.signal import firwin, lfilter
 
+from village.data import data
 from village.settings import settings
-from village.utils import utils
 
 
 class SoundDevice:
@@ -14,7 +14,7 @@ class SoundDevice:
         self.sampleRate = sampleRate
         self.channelsOut = channelsOut
         self.latency = latency
-        devices = utils.get_sound_devices()
+        devices = data.get_sound_devices()
         device = settings.get("SOUND_DEVICE")
         self.index = devices.index(device) if device in devices else 0
 

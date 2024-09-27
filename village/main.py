@@ -12,8 +12,10 @@
 # motor1
 # motor2
 # rfid
+# scale
 # sound_device
-# temp_scale
+# telegram_bot
+# temp_sensor
 
 
 # When launching the application the following processes are executed:
@@ -52,9 +54,8 @@ from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
-from village.devices.telegram_bot import telegram_bot
 from village.gui.gui import Gui
-from village.utils import utils
+from village.log import log
 
 # init
 data.task.bpod = bpod
@@ -73,11 +74,14 @@ def system_run() -> None:
 
     while True:
         i += 1
+
         time.sleep(1)
+
         if i == 200:
-            telegram_bot.alarm("RAFA", "Starterd system")
+            log.alarm("Started system", subject="RAFA")
+
         if i % 10 == 0:
-            utils.log("counter: " + str(i) + " es un texto largo que yo quiero poner")
+            log.info("counter: " + str(i) + " es un texto largo que yo quiero poner")
 
         match data.state:
             case data.state.WAIT:
@@ -93,9 +97,11 @@ def system_run() -> None:
                     and data.subject.get_data_from_subject_series()
                     and data.subject.minimum_time_ok()
                     and cam_corridor.areas_corridor_ok()
-                    and not multiple_detections(data.subject.name, multiple)
+                    and not data.multiple_detections(multiple)
                 ):
                     data.state = State["ACCESS"]
+                else:
+                    data.state = State["WAIT"]
 
             case data.state.ACCESS:
                 # closing door1, opening door2
@@ -105,12 +111,16 @@ def system_run() -> None:
 
             case data.state.LAUNCH:
                 # launching the task
-                pass
+                if data.launch_task():
+                    data.state = State["ACTION"]
+                else:
+                    data.state = State["STOP"]
+
             case data.state.ACTION:
                 # waiting for first action in behavioral box
                 id, multiple = rfid.get_id()
                 if id != "":
-                    utils.log(
+                    log.info(
                         "Subject not allowed to leave. Task has not started yet",
                         subject=data.subject.name,
                     )
@@ -169,16 +179,6 @@ def system_run() -> None:
             case data.state.END:
                 # end
                 break
-
-
-def multiple_detections(subject: str, multiple: bool) -> bool:
-    if multiple:
-        utils.log(
-            "Multiple tags detected in the last seconds",
-            subject=subject,
-        )
-        return True
-    return False
 
 
 # start the secondary thread (control of the system)

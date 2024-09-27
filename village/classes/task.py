@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 from village.classes.protocols import PyBpodProtocol
 from village.classes.subject import Subject
@@ -22,6 +23,8 @@ class Task:
         self.gui_input: list[str] = []
         self.gui_output: list[str] = []
         self.system_name: str = settings.get("SYSTEM_NAME")
+        self.df: pd.DataFrame | None = None
+        self.new_df: pd.DataFrame | None = None
 
     def test(self, subject: Subject) -> None:
         self.subject = subject.name
@@ -30,7 +33,7 @@ class Task:
         self.after_trial()
         self.close()
 
-    def test_run(self, subject: Subject) -> None:
+    def set_and_run(self, subject: Subject) -> None:
         self.subject = subject.name
         self.start()
         while self.current_trial < self.number_of_trials:
@@ -40,7 +43,6 @@ class Task:
             self.after_trial()
             self.register_values()
             self.current_trial += 1
-
         self.close()
 
     # OVERWRITE THESE METHODS IN YOUR TASK

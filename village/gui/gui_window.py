@@ -12,7 +12,6 @@ from village.gui.main_layout import MainLayout
 from village.gui.monitor_layout import MonitorLayout
 from village.gui.settings_layout import SettingsLayout
 from village.gui.tasks_layout import TasksLayout
-from village.utils import utils
 
 if TYPE_CHECKING:
     from village.gui.gui import Gui
@@ -34,31 +33,31 @@ class GuiWindow(QWidget):
 
     def create_main_layout(self) -> None:
         data.state = State["WAIT"]
-        utils.delete_all_elements(self.layout)
+        data.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MainLayout(self)
         self.setLayout(self.layout)
 
     def create_monitor_layout(self) -> None:
-        utils.delete_all_elements(self.layout)
+        data.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MonitorLayout(self)
         self.setLayout(self.layout)
 
     def create_tasks_layout(self) -> None:
-        utils.delete_all_elements(self.layout)
+        data.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = TasksLayout(self)
         self.setLayout(self.layout)
 
     def create_data_layout(self) -> None:
-        utils.delete_all_elements(self.layout)
+        data.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = DataLayout(self)
         self.setLayout(self.layout)
 
     def create_settings_layout(self) -> None:
-        utils.delete_all_elements(self.layout)
+        data.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = SettingsLayout(self)
         self.setLayout(self.layout)

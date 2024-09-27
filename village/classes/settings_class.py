@@ -91,6 +91,7 @@ class Settings:
         )
 
         self.create_factory_settings_if_first_launch()
+        self.replace_extra_settings()
 
     def restore_factory_settings(self) -> None:
         for s in self.restorable_settings:

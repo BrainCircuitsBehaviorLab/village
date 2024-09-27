@@ -19,8 +19,8 @@ from village.data import data
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.gui.layout import Label, Layout, PushButton
+from village.log import log
 from village.settings import settings
-from village.utils import utils
 
 if TYPE_CHECKING:
     from village.devices.motor import Motor
@@ -566,11 +566,11 @@ class MotorLayout(Layout):
 
     def get_weight_clicked(self) -> None:
         weight_result_value = "100g"
-        utils.log("weight: " + weight_result_value)
+        log.info("weight: " + weight_result_value)
 
     def get_temperature_clicked(self) -> None:
         temp_result_value = "23ºC / 30%"
-        utils.log("temp: " + temp_result_value)
+        log.info("temp: " + temp_result_value)
 
 
 class PortsLayout(Layout):

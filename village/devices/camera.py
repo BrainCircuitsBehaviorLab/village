@@ -21,8 +21,9 @@ from PyQt5.QtWidgets import QWidget
 
 from village.classes.protocols import CameraProtocol
 from village.data import data
+from village.log import log
 from village.settings import Color, settings
-from village.utils import utils
+from village.time_utils import time_utils
 
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
 # configure the logging of libcamera (the C++ library picamera2 uses)
@@ -119,14 +120,14 @@ class Camera(CameraProtocol):
         self.thickness_text = 1
 
         self.frame_number = 0
-        self.chrono = utils.Chrono()
+        self.chrono = time_utils.Chrono()
         self.timestamp = ""
 
         self.masks: list[Any] = []
         self.counts: list[int] = []
 
         if self.name == "CORRIDOR":
-            utils.cam_protocol = self
+            log.cam_protocol = self
 
         self.cam.start()
 
@@ -230,7 +231,7 @@ class Camera(CameraProtocol):
             self.change = False
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
-        self.timestamp = utils.now_string()
+        self.timestamp = time_utils.now_string()
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:
@@ -437,13 +438,13 @@ class Camera(CameraProtocol):
 
     def areas_corridor_ok(self) -> bool:
         if self.counts[0] > self.zero_or_one_mouse:
-            utils.log("detection in area1: " + str(self.counts[0]))
+            log.info("detection in area1: " + str(self.counts[0]))
             return False
         elif self.counts[1] > self.zero_or_one_mouse:
-            utils.log("detection in area2: " + str(self.counts[1]))
+            log.info("detection in area2: " + str(self.counts[1]))
             return False
         elif self.counts[2] > self.one_or_two_mice:
-            utils.log("large detection in area3: " + str(self.counts[2]))
+            log.info("large detection in area3: " + str(self.counts[2]))
             return False
         else:
             return True
@@ -467,10 +468,10 @@ class Camera(CameraProtocol):
 def get_camera(index: int, name: str) -> CameraProtocol:
     try:
         cam = Camera(index, name)
-        utils.log("Cam " + name + " successfully initialized")
+        log.info("Cam " + name + " successfully initialized")
         return cam
     except Exception:
-        utils.log("Could not initialize cam " + name, exception=traceback.format_exc())
+        log.error("Could not initialize cam " + name, exception=traceback.format_exc())
         return CameraProtocol()
 
 

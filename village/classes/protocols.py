@@ -9,7 +9,12 @@ class PyBpodProtocol:
         return
 
 
-class LogProtocol:
+class TelegramBotProtocol:
+    def alarm(self, message: str) -> None:
+        return
+
+
+class EventProtocol:
     def log(self, date: str, type: str, subject: str, description: str) -> None:
         return
 

@@ -6,12 +6,17 @@ import sys
 import traceback
 from pathlib import Path
 
+import sounddevice as sd
+from pandas import DataFrame
+from PyQt5.QtWidgets import QLayout
+
 from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, Info, State, Table
 from village.classes.subject import Subject
 from village.classes.task import Task
+from village.log import log
 from village.settings import settings
-from village.utils import utils
+from village.time_utils import time_utils
 
 
 class Data:
@@ -29,22 +34,26 @@ class Data:
         self.info: Info = settings.get("INFO")
         self.actions: Actions = settings.get("ACTIONS")
         self.tasks: list[Task] = []
+        self.filename: str = ""
+        self.df_all: DataFrame | None = None
 
         self.update_cycle()
         self.create_directories()
         self.create_collections()
         self.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
-        utils.log_protocol = self.events
-        utils.log("VILLAGE Started")
+        log.event_protocol = self.events
+        log.start("VILLAGE")
 
-    def change_directory_settings(self, new_path: str) -> None:
+    @staticmethod
+    def change_directory_settings(new_path: str) -> None:
         settings.set("PROJECT_DIRECTORY", new_path)
         settings.set("DATA_DIRECTORY", str(Path(new_path) / "data"))
         settings.set("SESSIONS_DIRECTORY", str(Path(new_path) / "data" / "sessions"))
         settings.set("VIDEOS_DIRECTORY", str(Path(new_path) / "data" / "videos"))
         settings.set("CODE_DIRECTORY", str(Path(new_path) / "code"))
 
-    def create_directories(self) -> None:
+    @staticmethod
+    def create_directories() -> None:
         directory = Path(settings.get("PROJECT_DIRECTORY"))
         directory.mkdir(parents=True, exist_ok=True)
         directory = Path(settings.get("DATA_DIRECTORY"))
@@ -56,7 +65,8 @@ class Data:
         directory = Path(settings.get("CODE_DIRECTORY"))
         directory.mkdir(parents=True, exist_ok=True)
 
-    def create_directories_from_path(self, path: str) -> bool:
+    @staticmethod
+    def create_directories_from_path(path: str) -> bool:
         try:
             Path(path).mkdir(parents=True, exist_ok=True)
             data = os.path.join(path, "data")
@@ -71,6 +81,22 @@ class Data:
         except Exception:
             return False
 
+    @staticmethod
+    def download_github_repository(repository: str) -> None:
+        directory = Path(settings.get("CODE_DIRECTORY"))
+        if not directory.exists() and directory == settings.get(
+            "DEFAULT_CODE_DIRECTORY"
+        ):
+            directory.mkdir(parents=True, exist_ok=True)
+            try:
+                subprocess.run(["git", "clone", repository, directory])
+                log.info("Repository " + repository + " downloaded")
+            except Exception:
+                log.error(
+                    "Error downloading repository " + repository,
+                    exception=traceback.format_exc(),
+                )
+
     def create_collections(self) -> None:
         self.events = Collection("events", ["date", "type", "subject", "description"])
         self.sessions_summary = Collection(
@@ -84,7 +110,7 @@ class Data:
                 "duration",
                 "trials",
                 "water",
-                "conditions",
+                "variables",
             ],
         )
         self.subjects = Collection(
@@ -98,7 +124,8 @@ class Data:
                 "last_session_ended",
                 "waiting_period",
                 "next_session_time",
-                "conditions",
+                "next_task",
+                "next_variables",
             ],
         )
         self.water_calibration = Collection(
@@ -116,21 +143,6 @@ class Data:
             "sound_calibration",
             ["date", "speaker", "target(dB)", "first_volume(dB)", "volume(dB)", "amp"],
         )
-
-    def download_github_repository(self, repository: str) -> None:
-        directory = Path(settings.get("CODE_DIRECTORY"))
-        if not directory.exists() and directory == settings.get(
-            "DEFAULT_CODE_DIRECTORY"
-        ):
-            directory.mkdir(parents=True, exist_ok=True)
-            try:
-                subprocess.run(["git", "clone", repository, directory])
-                utils.log("Repository " + repository + " downloaded")
-            except Exception:
-                utils.log(
-                    "Error downloading repository " + repository,
-                    exception=traceback.format_exc(),
-                )
 
     def import_all_tasks(self) -> None:
         directory = settings.get("CODE_DIRECTORY")
@@ -158,23 +170,23 @@ class Data:
                         if not any(item.name == name for item in tasks):
                             tasks.append(new_task)
             except Exception:
-                utils.log(
-                    "Error importing " + module_name, exception=traceback.format_exc()
+                log.error(
+                    "Couldn't import " + module_name, exception=traceback.format_exc()
                 )
                 continue
 
         self.tasks = tasks
         number_of_tasks = len(tasks)
         if number_of_tasks == 1:
-            utils.log("1 task successfully imported")
+            log.info("1 task successfully imported")
         else:
-            utils.log(str(number_of_tasks) + " tasks successfully imported")
+            log.info(str(number_of_tasks) + " tasks successfully imported")
 
     def get_subject_from_tag(self, tag: str) -> bool:
         subject_series = self.subjects.get_last_entry(column="tag", value=tag)
 
         if subject_series is None:
-            utils.log("subject with tag: " + tag + " not found", type="ERROR")
+            log.error("subject with tag: " + tag + " not found")
             return False
         else:
             self.subject.subject_series = subject_series
@@ -189,9 +201,13 @@ class Data:
                 self.cycle_text = "NIGHT"
                 self.day = False
             case self.cycle.AUTO:
-                day = utils.date_from_setting_string(settings.get("DAYTIME")).time()
-                night = utils.date_from_setting_string(settings.get("NIGHTTIME")).time()
-                now = utils.now().time()
+                day = time_utils.date_from_setting_string(
+                    settings.get("DAYTIME")
+                ).time()
+                night = time_utils.date_from_setting_string(
+                    settings.get("NIGHTTIME")
+                ).time()
+                now = time_utils.now().time()
 
                 if day < night:
                     if day < now < night:
@@ -238,6 +254,61 @@ class Data:
         value = self.text != self.old_text
         self.old_text = self.text
         return value
+
+    def multiple_detections(self, multiple: bool) -> bool:
+        if multiple:
+            log.info(
+                "Multiple tags detected in the last seconds",
+                subject=self.subject.name,
+            )
+            return True
+        return False
+
+    def delete_all_elements(self, layout: QLayout) -> None:
+        for i in reversed(range(layout.count())):
+            layoutItem = layout.itemAt(i)
+            if layoutItem is not None:
+                if layoutItem.widget() is not None:
+                    widgetToRemove = layoutItem.widget()
+                    widgetToRemove.deleteLater()
+                else:
+                    if layoutItem.layout() is not None:
+                        self.delete_all_elements(layoutItem.layout())
+
+    @staticmethod
+    def get_sound_devices() -> list[str]:
+        devices = sd.query_devices()
+        devices_str = [d["name"] for d in devices]
+        return devices_str
+
+    def launch_task(self) -> bool:
+        task_name = self.subject.next_task
+        task = next((item for item in self.tasks if item.name == task_name), None)
+        if task is None:
+            log.error("Task: " + task_name + " not found", subject=self.subject.name)
+            return False
+        else:
+            self.task = task
+            self.task.subject = self.subject.name
+            start_time = time_utils.now_string_for_filename()
+            self.task.df = None
+            self.task.new_df = None
+
+            filename = str(self.subject.name) + "_" + str(self.subject.next_task)
+            filename += "_" + start_time
+            self.filename = filename
+            self.df_all = None
+
+            try:
+                data.task.set_and_run(subject=self.subject)
+                return True
+            except Exception:
+                log.alarm(
+                    "Error launching task " + task_name,
+                    subject=self.subject.name,
+                    exception=traceback.format_exc(),
+                )
+                return False
 
 
 data = Data()

@@ -7,32 +7,36 @@ from urllib import parse, request
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
+from village.classes.protocols import TelegramBotProtocol
 from village.devices.camera import cam_box, cam_corridor
+from village.log import log
 from village.rt_plots import rt_plots
 from village.settings import settings
-from village.utils import utils
+from village.time_utils import time_utils
 
 
-class TelegramBot:
+class TelegramBot(TelegramBotProtocol):
     def __init__(self) -> None:
         self.token = settings.get("TELEGRAM_TOKEN")
+        self.token = "asasfdf"
         self.users = settings.get("TELEGRAM_USERS")
         self.chat = settings.get("TELEGRAM_CHAT")
         self.user = ""
         self.message = ""
 
+        self.thread = threading.Thread(target=self.botloop, daemon=True)
+        self.thread.start()
+
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text("Hi! Use /status <hours> to see the status.")
 
-    def alarm(self, subject: str, message: str) -> None:
+    def alarm(self, message: str) -> None:
         try:
             url = "https://api.telegram.org/bot%s/sendMessage" % self.token
-            utils.log(message, subject=subject, type="ALARM")
             data = parse.urlencode({"chat_id": self.chat, "text": message})
-
             request.urlopen(url, data.encode("utf-8"))
         except Exception:
-            utils.log("Telegram error", exception=traceback.format_exc())
+            log.error("Telegram error", exception=traceback.format_exc())
 
     async def status(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
@@ -47,18 +51,18 @@ class TelegramBot:
         try:
             user_id = str(update.effective_user.id)
             if user_id not in self.users:
-                utils.log("WARNING: New Telegram User ID: " + user_id)
+                log.error("Telegram User ID not included: " + user_id)
             else:
                 status = rt_plots.telegram_data(hours=hours)
                 await update.message.reply_text(status)
         except Exception:
-            utils.log("Telegram error", exception=traceback.format_exc())
+            log.error("Telegram error", exception=traceback.format_exc())
 
     async def cam(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
             user_id = str(update.effective_user.id)
             if user_id not in self.users:
-                utils.log("WARNING: New Telegram User ID: " + user_id)
+                log.error("Telegram User ID not included: " + user_id)
             else:
                 cam_corridor.take_picture()
                 cam_box.take_picture()
@@ -68,7 +72,7 @@ class TelegramBot:
                 with open(cam_box.path_picture, "rb") as picture_box:
                     await update.message.reply_photo(photo=picture_box)
         except Exception:
-            utils.log("Telegram error", exception=traceback.format_exc())
+            log.error("Telegram error", exception=traceback.format_exc())
 
     async def plot(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
@@ -82,31 +86,31 @@ class TelegramBot:
         try:
             user_id = str(update.effective_user.id)
             if user_id not in self.users:
-                utils.log("WARNING: New Telegram User ID: " + user_id)
+                log.error("Telegram User ID not included: " + user_id)
             else:
                 rt_plots.plot(days)
-                chrono = utils.Chrono()
+                chrono = time_utils.Chrono()
                 while rt_plots.running:
                     time.sleep(1)
                     if chrono.get_seconds() > 120:
-                        utils.log("Plotting time out", type="ERROR")
+                        log.error("Plotting time out")
                         break
                 with open(rt_plots.plot_path, "rb") as picture:
                     await update.message.reply_photo(photo=picture)
         except Exception:
-            utils.log("Telegram error", exception=traceback.format_exc())
+            log.error("Telegram error", exception=traceback.format_exc())
 
     async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
             user_id = str(update.effective_user.id)
             if user_id not in self.users:
-                utils.log("WARNING: New Telegram User ID: " + user_id)
+                log.error("Telegram User ID not included: " + user_id)
             else:
                 await self.status(update, context)
                 await self.cam(update, context)
                 await self.plot(update, context)
         except Exception:
-            utils.log("Telegram error", exception=traceback.format_exc())
+            log.error("Telegram error", exception=traceback.format_exc())
 
     async def main(self) -> None:
         self.application = ApplicationBuilder().token(self.token).build()
@@ -124,14 +128,26 @@ class TelegramBot:
             await asyncio.sleep(1)
 
     async def botloop_starttask(self) -> None:
+        log.telegram_protocol = self
         bot_routine = asyncio.create_task(self.main())
         await bot_routine
 
     def botloop(self) -> None:
-        asyncio.run(self.botloop_starttask())
+        try:
+            asyncio.run(self.botloop_starttask())
+        except Exception:
+            print("AQUI LA CAPTUROOOOOO")
+            # log.error("Telegram error", exception=traceback.format_exc())
 
 
-telegram_bot = TelegramBot()
+def get_telegram_bot() -> TelegramBotProtocol:
+    try:
+        telegram_bot = TelegramBot()
+        log.info("Telegram bot successfully initialized")
+        return telegram_bot
+    except Exception:
+        log.error("Could not initialize telegram bot", exception=traceback.format_exc())
+        return TelegramBotProtocol()
 
-thread = threading.Thread(target=telegram_bot.botloop, daemon=True)
-thread.start()
+
+telegram_bot = get_telegram_bot()

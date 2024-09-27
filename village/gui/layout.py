@@ -415,18 +415,6 @@ class Layout(QGridLayout):
             if widget.property("type") == type:
                 widget.hide()
 
-    def delete_all_elements(self) -> None:
-        for i in reversed(range(self.count())):
-            layoutItem = self.itemAt(i)
-            if layoutItem is not None:
-                if layoutItem.widget() is not None:
-                    widgetToRemove = layoutItem.widget()
-                    widgetToRemove.deleteLater()
-                else:
-                    sub_layout = layoutItem.layout()
-                    if isinstance(sub_layout, Layout):
-                        sub_layout.delete_all_elements()
-
     def create_and_add_label(
         self,
         text: str,

@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import QMessageBox, QInputDialog
 
 from village.devices.camera import cam_box, cam_corridor
 from village.settings import settings
-from village.utils import utils
 from village.data import data
 from village.classes.enums import Active, ScreenActive
 from village.gui.layout import Layout, LineEdit, PushButton, TimeEdit, ToggleButton
@@ -318,7 +317,7 @@ class SettingsLayout(Layout):
             self.line_edits.append(line_edit)
             self.line_edits_settings.append(s)
         elif s.key == "SOUND_DEVICE":
-            possible_values = utils.get_sound_devices()
+            possible_values = data.get_sound_devices()
             value = settings.get(s.key)
             index = possible_values.index(value) if value in possible_values else 0
             self.sound_device_combobox = self.create_and_add_combo_box(

@@ -1,20 +1,24 @@
 import threading
-import time
 from collections import deque
-from typing import Tuple
+from datetime import datetime
+from typing import Deque, Tuple
 
 import serial
 
+from village.settings import settings
+from village.time_utils import time_utils
+
 
 class Rfid:
-    def __init__(self, port="/dev/serial0", baudrate=9600) -> None:
+    def __init__(self, port="/dev/ttyAMA0", baudrate=9600) -> None:
         self.port = port
         self.baudrate = baudrate
         self.multiple = False
         self.running = False
+        self.time_detections = settings.get("TIME_BETWEEN_DETECTIONS")
 
         self.id = ""
-        self.id_history: deque = deque()
+        self.id_history: Deque[Tuple[str, datetime]] = deque()
 
         self.s = serial.Serial(self.port, self.baudrate, timeout=0.1)
 
@@ -24,24 +28,24 @@ class Rfid:
 
     def read_serial(self) -> None:
         while self.running:
-            # print("reading")
             try:
-                line = self.s.readline().decode("utf-8").strip()
-                # print(line)
-
-                if line:
-                    self.id_history.append((self.id, time.time()))
+                line = self.s.readline().decode("utf-8")
+                if line == "":
+                    self.id_history.append((self.id, time_utils.now()))
                     self.clean_old_ids()
                     self.update_multiple()
                     self.id = line
-
             except UnicodeDecodeError:
                 break
 
     def clean_old_ids(self) -> None:
-        current_time = time.time()
-        while self.id_history and current_time - self.id_history[0][1] > 15:
-            self.id_history.popleft()
+        current_time = time_utils.now()
+        while self.id_history:
+            diff = current_time - self.id_history[0][1]
+            if diff.total_seconds() > self.time_detections:
+                self.id_history.popleft()
+            else:
+                break
 
     def update_multiple(self) -> None:
         unique_ids = set(id for id, _ in self.id_history)
