@@ -18,6 +18,8 @@ from village.classes.enums import Actions, Active, Cycle, Info
 from village.data import data
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
+from village.devices.scale import scale
+from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
 from village.log import log
 from village.settings import settings
@@ -453,7 +455,7 @@ class MotorLayout(Layout):
         self.buttons.append(close_door)
 
     def tare_scale_clicked(self) -> None:
-        print("Taring the scale")
+        scale.tare()
 
     def change_angles_clicked(self) -> None:
         motor1_open_val = settings.get("MOTOR1_VALUES")[0]
@@ -556,21 +558,25 @@ class MotorLayout(Layout):
 
         if self.reply.exec_():
             try:
-                val = int(self.lineEdit.text())
-                settings.set("SCALE_CALIBRATION_VALUE", val)
+                val = float(self.lineEdit.text())
+                if val > 0.1:
+                    scale.calibrate(val)
+                    log.info("Scale calibrated")
+                else:
+                    log.error("Invalid value. Scale not calibrated")
             except ValueError:
-                pass
+                log.error("Invalid value. Scale not calibrated")
 
     def cancel_calibration(self) -> None:
         pass
 
     def get_weight_clicked(self) -> None:
-        weight_result_value = "100g"
-        log.info("weight: " + weight_result_value)
+        weight = scale.get_weight_string()
+        log.info("weight: " + weight)
 
     def get_temperature_clicked(self) -> None:
-        temp_result_value = "23ºC / 30%"
-        log.info("temp: " + temp_result_value)
+        temp = temp_sensor.get_temperature_string()
+        log.info("temperature and humidity: " + temp)
 
 
 class PortsLayout(Layout):

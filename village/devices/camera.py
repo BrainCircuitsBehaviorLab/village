@@ -126,9 +126,6 @@ class Camera(CameraProtocol):
         self.masks: list[Any] = []
         self.counts: list[int] = []
 
-        if self.name == "CORRIDOR":
-            log.cam_protocol = self
-
         self.cam.start()
 
     def set_properties(self) -> None:

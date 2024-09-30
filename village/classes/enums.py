@@ -57,6 +57,9 @@ class State(SuperEnum):
     SAVE_INSIDE = "stopping the task, saving the data"
     WAIT_EXIT = "waiting for the subject to leave"
     EXIT_SAVED = "closing door2, opening door1"
+    OPEN_TRAPPED = "opening door2, subject trapped"
+    CLOSE_TRAPPED = "closing door2, subject trapped"
+    RUN_TRAPPED = "task running, waiting for the trapped subject to go home"
     STOP = "opening door2, disconnecting rfid"
     PREPARATION = "task being prepared manually"
     MANUAL = "task running manually"
@@ -86,7 +89,7 @@ class Info(SuperEnum):
     CAMERA_SETTINGS = "CAMERA_SETTINGS"
 
 
-class Table(SuperEnum):
+class DataTable(SuperEnum):
     EVENTS = "EVENTS"
     SESSIONS_SUMMARY = "SESSIONS_SUMMARY"
     SUBJECTS = "SUBJECTS"

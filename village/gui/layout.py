@@ -6,7 +6,14 @@ from typing import TYPE_CHECKING, Any, Callable
 
 from classes.enums import State
 from pandas import DataFrame
-from PyQt5.QtCore import QAbstractTableModel, QEvent, Qt, QTime, QTimer
+from PyQt5.QtCore import (
+    QAbstractTableModel,
+    QEvent,
+    QModelIndex,
+    Qt,
+    QTime,
+    QTimer,
+)
 from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
 from PyQt5.QtWidgets import (
     QComboBox,
@@ -180,6 +187,18 @@ class Table(QAbstractTableModel):
                 return str(self.df.index[section])
         return None
 
+    def add_rows(self, new_df: DataFrame) -> None:
+        scroll_position = self.table_view.verticalScrollBar().value()
+        scroll_max = self.table_view.verticalScrollBar().maximum()
+        rows_before = self.rowCount()
+        move_to_bottom = True if scroll_position == scroll_max else False
+        self.df = new_df
+        self.beginInsertRows(QModelIndex(), rows_before, self.rowCount() - 1)
+        self.endInsertRows()
+
+        if move_to_bottom:
+            self.table_view.scrollToBottom()
+
 
 class Layout(QGridLayout):
     def __init__(
@@ -295,7 +314,7 @@ class Layout(QGridLayout):
             "Go to the setting menu",
         )
 
-    # @utils.measure_time
+    # @time_utils.measure_time
     def update_status_label(self, force=False) -> None:
         data.update_cycle()
         if data.update_text() or force:

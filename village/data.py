@@ -11,7 +11,7 @@ from pandas import DataFrame
 from PyQt5.QtWidgets import QLayout
 
 from village.classes.collection import Collection
-from village.classes.enums import Actions, Active, Cycle, Info, State, Table
+from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
 from village.classes.subject import Subject
 from village.classes.task import Task
 from village.log import log
@@ -24,7 +24,7 @@ class Data:
         self.subject = Subject()
         self.task = Task()
         self.state: State = State.WAIT
-        self.table: Table = Table.EVENTS
+        self.table: DataTable = DataTable.EVENTS
         self.tag_reader: Active = settings.get("TAG_READER")
         self.cycle: Cycle = settings.get("CYCLE")
         self.cycle_text: str = ""
@@ -40,9 +40,9 @@ class Data:
         self.update_cycle()
         self.create_directories()
         self.create_collections()
-        self.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
         log.event_protocol = self.events
         log.start("VILLAGE")
+        self.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
 
     @staticmethod
     def change_directory_settings(new_path: str) -> None:
@@ -84,9 +84,8 @@ class Data:
     @staticmethod
     def download_github_repository(repository: str) -> None:
         directory = Path(settings.get("CODE_DIRECTORY"))
-        if not directory.exists() and directory == settings.get(
-            "DEFAULT_CODE_DIRECTORY"
-        ):
+        default_directory = Path(settings.get("DEFAULT_CODE_DIRECTORY"))
+        if len(os.listdir(directory)) == 0 and directory == default_directory:
             directory.mkdir(parents=True, exist_ok=True)
             try:
                 subprocess.run(["git", "clone", repository, directory])

@@ -18,11 +18,12 @@ from village.time_utils import time_utils
 class TelegramBot(TelegramBotProtocol):
     def __init__(self) -> None:
         self.token = settings.get("TELEGRAM_TOKEN")
-        self.token = "asasfdf"
         self.users = settings.get("TELEGRAM_USERS")
         self.chat = settings.get("TELEGRAM_CHAT")
         self.user = ""
         self.message = ""
+        self.connected = False
+        self.error = False
 
         self.thread = threading.Thread(target=self.botloop, daemon=True)
         self.thread.start()
@@ -124,11 +125,11 @@ class TelegramBot(TelegramBotProtocol):
         await self.application.initialize()
         await self.application.updater.start_polling()
         await self.application.start()
+        self.connected = True
         while True:
             await asyncio.sleep(1)
 
     async def botloop_starttask(self) -> None:
-        log.telegram_protocol = self
         bot_routine = asyncio.create_task(self.main())
         await bot_routine
 
@@ -136,15 +137,28 @@ class TelegramBot(TelegramBotProtocol):
         try:
             asyncio.run(self.botloop_starttask())
         except Exception:
-            print("AQUI LA CAPTUROOOOOO")
-            # log.error("Telegram error", exception=traceback.format_exc())
+            self.error = True
+            log.error("Telegram error", exception=traceback.format_exc())
 
 
 def get_telegram_bot() -> TelegramBotProtocol:
     try:
         telegram_bot = TelegramBot()
-        log.info("Telegram bot successfully initialized")
-        return telegram_bot
+        chrono = time_utils.Chrono()
+        while (
+            not telegram_bot.connected
+            and not telegram_bot.error
+            and chrono.get_seconds() < 30
+        ):
+            time.sleep(0.1)
+        if telegram_bot.connected:
+            log.info("Telegram bot successfully initialized")
+            return telegram_bot
+        elif telegram_bot.error:
+            return TelegramBotProtocol()
+        else:
+            log.error("Could not initialize telegram bot, time expired")
+            return TelegramBotProtocol()
     except Exception:
         log.error("Could not initialize telegram bot", exception=traceback.format_exc())
         return TelegramBotProtocol()

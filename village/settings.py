@@ -88,40 +88,46 @@ alarm_settings = [
 ]
 
 default_project_name = "demo_project"
-project_directory = (
+default_project_directory = (
     "/home/" + getpass.getuser() + "/village_projects/" + default_project_name
 )
 
 directory_settings = [
     Setting(
         "PROJECT_DIRECTORY",
-        project_directory,
+        default_project_directory,
         str,
         "The directory of the project",
     ),
     Setting(
         "DATA_DIRECTORY",
-        project_directory + "/data",
+        default_project_directory + "/data",
         str,
         "The directory of the data",
     ),
     Setting(
         "SESSIONS_DIRECTORY",
-        project_directory + "/data/sessions",
+        default_project_directory + "/data/sessions",
         str,
         "The directory of the sessions",
     ),
     Setting(
         "VIDEOS_DIRECTORY",
-        project_directory + "/data/videos",
+        default_project_directory + "/data/videos",
         str,
         "The directory of the sessions",
     ),
     Setting(
         "CODE_DIRECTORY",
-        project_directory + "/code",
+        default_project_directory + "/code",
         str,
         "The directory of the user code",
+    ),
+    Setting(
+        "DEFAULT_CODE_DIRECTORY",
+        default_project_directory + "/code",
+        str,
+        "The default directory of the user code",
     ),
     Setting(
         "APP_DIRECTORY",
@@ -394,3 +400,4 @@ settings = Settings(
 
 # settings.print()
 # settings.create_factory_settings()
+# settings.restore_factory_settings()

@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from pandas import DataFrame
 from PyQt5.QtCore import QTimer
 
-from village.classes.enums import Table
+from village.classes.enums import DataTable
 from village.data import data
 from village.gui.layout import Layout
 from village.settings import settings
@@ -17,66 +18,84 @@ class DataLayout(Layout):
     def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
         self.timer = QTimer(self)
-        self.timer.timeout.connect(self.search)
+        self.timer.timeout.connect(self.add_rows_to_table)
         self.timer.start(settings.get("UPDATE_TIME_MS"))
+        self.df = DataFrame()
+        self.complete_df = DataFrame()
         self.draw()
 
     def draw(self) -> None:
         self.data_button.setDisabled(True)
 
         self.searching = ""
+        self.previous_searching = ""
 
-        possible_values = Table.values()
-        index = Table.get_index_from_value(data.table)
+        possible_values = DataTable.values()
+        index = DataTable.get_index_from_value(data.table)
 
         self.title = self.create_and_add_combo_box(
-            "title", 5, 10, 64, 2, possible_values, index, self.change_data_view
+            "title", 5, 10, 64, 2, possible_values, index, self.change_data_table
         )
 
         self.search_label = self.create_and_add_label("search", 5, 87, 8, 2, "Search")
         self.search_edit = self.create_and_add_line_edit("", 5, 95, 34, 2, self.search)
 
-        self.change_data_view(data.table.value, "")
+        self.update_data()
+        self.create_table()
 
-    def change_data_view(self, value: str, key: str) -> None:
-        data.table = Table(value)
+    def update_data(self) -> None:
         match data.table:
-            case Table.EVENTS:
-                self.df = data.events.df
+            case DataTable.EVENTS:
+                self.complete_df = data.events.df
                 self.widths = [20, 20, 20, 140]
-            case Table.SESSIONS_SUMMARY:
-                self.df = data.sessions_summary.df
+            case DataTable.SESSIONS_SUMMARY:
+                self.complete_df = data.sessions_summary.df
                 self.widths = [20, 20, 20, 20, 20, 20, 20, 20]
-            case Table.SUBJECTS:
-                self.df = data.subjects.df
+            case DataTable.SUBJECTS:
+                self.complete_df = data.subjects.df
                 self.widths = [20, 20, 20, 20, 20, 100]
-            case Table.WATER_CALIBRATION:
-                self.df = data.water_calibration.df
+            case DataTable.WATER_CALIBRATION:
+                self.complete_df = data.water_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
-            case Table.SOUND_CALIBRATION:
-                self.df = data.sound_calibration.df
+            case DataTable.SOUND_CALIBRATION:
+                self.complete_df = data.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
-            case Table.SESSION:
-                self.df = data.sound_calibration.df
+            case DataTable.SESSION:
+                self.complete_df = data.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
+        self.df = self.obtain_searched_df()
 
-        self.change_table()
+    def change_data_table(self, value: str, key: str) -> None:
+        if data.table != DataTable(value):
+            data.table = DataTable(value)
+            self.update_data()
+            self.create_table()
 
-    def search(self, value: str | None = None, key: str = "") -> None:
-        if value is not None:
-            self.searching = value
-        self.change_data_view(data.table.value, "")
-
-    def change_table(self) -> None:
+    def obtain_searched_df(self) -> DataFrame:
         if self.searching == "":
-            df = self.df
+            return self.complete_df
         else:
-            df = self.df.loc[
-                self.df.apply(
+            return self.complete_df.loc[
+                self.complete_df.apply(
                     lambda row: row.astype(str)
                     .str.contains(self.searching, case=False)
                     .any(),
                     axis=1,
                 )
             ]
-        self.model = self.create_and_add_table(df, 8, 0, 210, 42, widths=self.widths)
+
+    def create_table(self) -> None:
+        self.model = self.create_and_add_table(
+            self.df, 8, 0, 210, 42, widths=self.widths
+        )
+
+    def add_rows_to_table(self) -> None:
+        self.update_data()
+        if self.searching == self.previous_searching:
+            self.model.add_rows(self.df)
+        else:
+            self.previous_searching = self.searching
+            self.create_table()
+
+    def search(self, value: str) -> None:
+        self.searching = value
