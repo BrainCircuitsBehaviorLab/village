@@ -3,6 +3,10 @@ from typing import Any
 
 
 class SuperEnum(Enum):
+    def __eq__(self, other) -> bool:
+        assert hasattr(other, "value")
+        return self.value == other.value
+
     @classmethod
     def keys(cls) -> list[str]:
         return [e.name for e in cls]
@@ -43,30 +47,30 @@ class AreaActive(SuperEnum):
 
 
 class State(SuperEnum):
-    WAIT = "all subjects at home, waiting for a not empty rfid detection"
-    DETECTION = "getting subject data, checking areas and minimum time"
-    ACCESS = "closing door1, opening door2"
-    LAUNCH = "launching the task"
-    ACTION = "waiting for first action in behavioral box"
-    CLOSE = "closing door2"
-    RUN_CLOSED = "task running, subject can not leave"
-    OPEN = "opening door2"
-    RUN_OPENED = "task running, subject can leave"
-    EXIT_UNSAVED = "closing door2, opening door1"
-    SAVE_OUTSIDE = "stopping the task, saving the data"
-    SAVE_INSIDE = "stopping the task, saving the data"
-    WAIT_EXIT = "waiting for the subject to leave"
-    EXIT_SAVED = "closing door2, opening door1"
-    OPEN_TRAPPED = "opening door2, subject trapped"
-    CLOSE_TRAPPED = "closing door2, subject trapped"
-    RUN_TRAPPED = "task running, waiting for the trapped subject to go home"
-    STOP = "opening door2, disconnecting rfid"
-    PREPARATION = "task being prepared manually"
-    MANUAL = "task running manually"
-    SETTINGS = "settings being changed manually"
-    SETTINGS_CHANGED = "settings changed manually"
-    EXIT_APP = "exiting the app"
-    END = "end"
+    WAIT = "All subjects are at home, waiting for RFID detection"
+    DETECTION = "Gathering subject data, checking requirements to enter"
+    ACCESS = "Closing door1, opening door2"
+    LAUNCH = "Launching the task"
+    RUN_ACTION = "Waiting for the first action in the behavioral box"
+    CLOSE_DOOR2 = "Closing door2"
+    RUN_CLOSED = "Task running, the subject cannot leave yet"
+    OPEN_DOOR2 = "Opening door2"
+    RUN_OPENED = "Task running, the subject can leave"
+    EXIT_UNSAVED = "Closing door2, opening door1 (data still not saved)"
+    SAVE_OUTSIDE = "Stopping the task, saving the data; the subject is already outside"
+    SAVE_INSIDE = "Stopping the task, saving the data; the subject is still inside"
+    WAIT_EXIT = "Task finished, waiting for the subject to leave"
+    EXIT_SAVED = "Closing door2, opening door1 (data already saved)"
+    OPEN_DOOR1 = "Opening door1, a subject is trapped"
+    CLOSE_DOOR1 = "Closing door1, the subject is not trapped anymore"
+    RUN_TRAPPED = "Task running, waiting for the trapped subject to return home"
+    OPEN_DOOR2_STOP = "Opening door2, disconnecting RFID"
+    OPEN_DOORS_STOP = "Opening both doors, disconnecting RFID"
+    ERROR = "Manual intervention required"
+    MANUAL_RUN = "Task is running manually"
+    SETTINGS = "Settings are being changed or task is being manually prepared"
+    EXIT_GUI = "In the GUI window, ready to exit the app"
+    EXIT = "Exit"
 
     def __init__(self, description: str) -> None:
         self.description = description
@@ -95,4 +99,5 @@ class DataTable(SuperEnum):
     SUBJECTS = "SUBJECTS"
     WATER_CALIBRATION = "WATER_CALIBRATION"
     SOUND_CALIBRATION = "SOUND_CALIBRATION"
+    TEMPERATURES = "TEMPERATURES"
     SESSION = "SESSION"

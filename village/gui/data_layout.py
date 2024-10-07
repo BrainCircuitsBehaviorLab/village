@@ -3,12 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from pandas import DataFrame
-from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import QMessageBox
 
-from village.classes.enums import DataTable
+from village.classes.enums import DataTable, State
 from village.data import data
 from village.gui.layout import Layout
-from village.settings import settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -17,11 +16,9 @@ if TYPE_CHECKING:
 class DataLayout(Layout):
     def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.add_rows_to_table)
-        self.timer.start(settings.get("UPDATE_TIME_MS"))
         self.df = DataFrame()
         self.complete_df = DataFrame()
+        self.editing = False
         self.draw()
 
     def draw(self) -> None:
@@ -34,11 +31,27 @@ class DataLayout(Layout):
         index = DataTable.get_index_from_value(data.table)
 
         self.title = self.create_and_add_combo_box(
-            "title", 5, 10, 64, 2, possible_values, index, self.change_data_table
+            "title", 5, 5, 35, 2, possible_values, index, self.change_data_table
         )
 
-        self.search_label = self.create_and_add_label("search", 5, 87, 8, 2, "Search")
-        self.search_edit = self.create_and_add_line_edit("", 5, 95, 34, 2, self.search)
+        self.search_label = self.create_and_add_label("search", 5, 45, 10, 2, "Search")
+        self.search_edit = self.create_and_add_line_edit("", 5, 55, 25, 2, self.search)
+
+        self.edit_button = self.create_and_add_button(
+            "add/edit", 5, 85, 20, 2, self.edit, "Add or edit the table"
+        )
+        self.data_raw_button = self.create_and_add_button(
+            "data_raw", 5, 110, 20, 2, self.data_raw, "View the raw data as a table"
+        )
+        self.data_button = self.create_and_add_button(
+            "data", 5, 135, 20, 2, self.data, "View the data as a table"
+        )
+        self.video_button = self.create_and_add_button(
+            "video", 5, 160, 20, 2, self.video, "Watch the corresponding video"
+        )
+        self.plot_button = self.create_and_add_button(
+            "plot", 5, 185, 20, 2, self.plot, "Plot the corresponding data"
+        )
 
         self.update_data()
         self.create_table()
@@ -50,16 +63,19 @@ class DataLayout(Layout):
                 self.widths = [20, 20, 20, 140]
             case DataTable.SESSIONS_SUMMARY:
                 self.complete_df = data.sessions_summary.df
-                self.widths = [20, 20, 20, 20, 20, 20, 20, 20]
+                self.widths = [20, 20, 20, 20, 20, 20, 20, 20, 20]
             case DataTable.SUBJECTS:
                 self.complete_df = data.subjects.df
-                self.widths = [20, 20, 20, 20, 20, 100]
+                self.widths = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
             case DataTable.WATER_CALIBRATION:
                 self.complete_df = data.water_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.SOUND_CALIBRATION:
                 self.complete_df = data.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
+            case DataTable.TEMPERATURES:
+                self.complete_df = data.temperatures.df
+                self.widths = [20, 20, 20]
             case DataTable.SESSION:
                 self.complete_df = data.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
@@ -88,14 +104,169 @@ class DataLayout(Layout):
         self.model = self.create_and_add_table(
             self.df, 8, 0, 210, 42, widths=self.widths
         )
+        self.update_buttons()
+        self.model.table_view.selectionModel().selectionChanged.connect(
+            self.update_buttons
+        )
 
-    def add_rows_to_table(self) -> None:
-        self.update_data()
-        if self.searching == self.previous_searching:
-            self.model.add_rows(self.df)
+    def update_gui(self) -> None:
+        self.update_status_label()
+        if not self.editing:
+            self.update_data()
+            if self.searching == self.previous_searching:
+                self.model.add_rows(self.df)
+            else:
+                self.previous_searching = self.searching
+                self.create_table()
+
+    def update_buttons(self) -> None:
+        selected_indexes = self.model.table_view.selectionModel().selectedRows()
+        if self.editing:
+            # change the text for the edit button
+            self.edit_button.setText("save changes")
         else:
-            self.previous_searching = self.searching
-            self.create_table()
+            self.edit_button.setText("add/edit")
+        match data.table:
+            case DataTable.EVENTS:
+                self.data_raw_button.setEnabled(False)
+                self.data_button.setEnabled(False)
+                self.plot_button.setEnabled(False)
+                self.edit_button.setEnabled(False)
+                if selected_indexes:
+                    self.video_button.setEnabled(True)
+                else:
+                    self.video_button.setEnabled(False)
+            case DataTable.SESSIONS_SUMMARY:
+                self.edit_button.setEnabled(False)
+                if selected_indexes:
+                    self.data_raw_button.setEnabled(True)
+                    self.data_button.setEnabled(True)
+                    self.video_button.setEnabled(True)
+                    self.plot_button.setEnabled(True)
+                else:
+                    self.data_raw_button.setEnabled(False)
+                    self.data_button.setEnabled(False)
+                    self.video_button.setEnabled(False)
+                    self.plot_button.setEnabled(False)
+            case DataTable.SUBJECTS:
+                self.data_raw_button.setEnabled(False)
+                self.data_button.setEnabled(False)
+                self.video_button.setEnabled(False)
+                self.edit_button.setEnabled(True)
+                if self.editing:
+                    self.plot_button.setEnabled(False)
+                elif selected_indexes:
+                    self.plot_button.setEnabled(True)
+                else:
+                    self.plot_button.setEnabled(False)
+            case (
+                DataTable.WATER_CALIBRATION
+                | DataTable.SOUND_CALIBRATION
+                | DataTable.TEMPERATURES
+                | DataTable.SESSION
+            ):
+                self.data_raw_button.setEnabled(False)
+                self.data_button.setEnabled(False)
+                self.video_button.setEnabled(False)
+                self.plot_button.setEnabled(True)
+                self.edit_button.setEnabled(False)
 
     def search(self, value: str) -> None:
         self.searching = value
+
+    def data_raw(self) -> None:
+        pass
+
+    def data(self) -> None:
+        pass
+
+    def video(self) -> None:
+        pass
+
+    def plot(self) -> None:
+        pass
+
+    def edit(self) -> None:
+        self.searching = ""
+        self.update_gui()
+        if self.editing:
+            self.editing = False
+            self.model.editable = False
+            data.state = State.WAIT
+            data.changing_settings = False
+            self.update_status_label()
+            self.update_buttons()
+            if data.table == DataTable.SUBJECTS:
+                data.subjects.df = self.model.df
+                data.subjects.save_from_df()
+                self.create_table()
+        else:
+            match data.state:
+                case data.state.WAIT:
+                    # TODO disable plot
+                    self.searching = ""
+                    self.search_edit.setText("")
+                    self.editing = True
+                    self.model.editable = True
+                    data.state = State.SETTINGS
+                    data.changing_settings = True
+                    self.update_status_label()
+                    self.update_buttons()
+                    row_count = self.model.rowCount()
+                    self.model.insertRows(row_count, rows=50)
+
+                case data.state.DETECTION | data.state.ACCESS:
+                    text = "Wait until the box is empty before editing the subjects."
+                    text = "Subject is being detected. " + text
+                    QMessageBox.information(
+                        self.window,
+                        "EDIT",
+                        text,
+                    )
+                case (
+                    data.state.LAUNCH
+                    | data.state.RUN_ACTION
+                    | data.state.CLOSE_DOOR2
+                    | data.state.RUN_CLOSED
+                    | data.state.OPEN_DOOR2
+                    | data.state.RUN_OPENED
+                    | data.state.EXIT_UNSAVED
+                    | data.state.SAVE_OUTSIDE
+                    | data.state.SAVE_INSIDE
+                    | data.state.WAIT_EXIT
+                    | data.state.EXIT_SAVED
+                    | data.state.OPEN_DOOR1
+                    | data.state.CLOSE_DOOR1
+                    | data.state.RUN_TRAPPED
+                    | data.state.OPEN_DOOR2_STOP
+                    | data.state.OPEN_DOORS_STOP
+                    | data.state.MANUAL_RUN
+                ):
+                    QMessageBox.information(
+                        self.window,
+                        "EDIT",
+                        "Wait until the box is empty before editing the subjects.",
+                    )
+                case data.state.EXIT_GUI | data.state.ERROR | data.state.SETTINGS:
+                    pass
+
+    def change_layout(self) -> bool:
+        if self.edit_button.text() == "save changes":
+            reply = QMessageBox.question(
+                self.window,
+                "Save changes",
+                "Do you want to save the changes?",
+                QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                QMessageBox.Save,
+            )
+
+            if reply == QMessageBox.Save:
+                self.edit()
+                return True
+            elif reply == QMessageBox.Discard:
+                data.state = State.WAIT
+                return True
+            else:
+                return False
+        else:
+            return True

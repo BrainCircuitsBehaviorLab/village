@@ -832,11 +832,8 @@ class CorridorLayout(Layout):
 class InfoLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.draw)
-        self.timer.start(settings.get("UPDATE_TIME_MS"))
         self.draw()
 
     def draw(self) -> None:
-        text = data.events.df.tail(12).to_csv(sep=" ", index=False, header=False)
+        text = data.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
         self.events_text = self.create_and_add_label(text, 0, 0, 210, 16, "black")

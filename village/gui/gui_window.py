@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from PyQt5.QtCore import QObjectCleanupHandler, QRect, QSize
+from PyQt5.QtCore import QEvent, QObjectCleanupHandler, QRect, QSize, QTimer
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import State
@@ -12,9 +12,12 @@ from village.gui.main_layout import MainLayout
 from village.gui.monitor_layout import MonitorLayout
 from village.gui.settings_layout import SettingsLayout
 from village.gui.tasks_layout import TasksLayout
+from village.settings import settings
+from village.time_utils import time_utils
 
 if TYPE_CHECKING:
     from village.gui.gui import Gui
+    from village.gui.layout import Layout
 
 
 class GuiWindow(QWidget):
@@ -27,12 +30,23 @@ class GuiWindow(QWidget):
         self.setGeometry(rect)
         self.setFixedSize(QSize(self.window_width, self.window_height))
         self.setWindowTitle("Village")
-        self.layout = MainLayout(self)
+        self.layout: Layout = MainLayout(self)
         self.setLayout(self.layout)
+        self.update_chrono = time_utils.Chrono()
+        self.update_timer = QTimer()
+        self.update_timer.setInterval(settings.get("UPDATE_TIME_MS"))
+        self.update_timer.timeout.connect(self.update_gui)
+        self.update_timer.start()
+        self.gui.q_app.installEventFilter(self)
         self.show()
 
+    def eventFilter(self, source, event) -> bool:
+        if event.type() == QEvent.MouseButtonPress:
+            self.update_chrono.reset()
+        return super().eventFilter(source, event)
+
     def create_main_layout(self) -> None:
-        data.state = State["WAIT"]
+        data.state = State.WAIT
         data.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MainLayout(self)
@@ -67,3 +81,11 @@ class GuiWindow(QWidget):
 
     def reload_app(self) -> None:
         self.gui.reload_app()
+
+    def update_gui(self) -> None:
+        self.layout.update_gui()
+        self.check_update_chrono()
+
+    def check_update_chrono(self) -> None:
+        if self.update_chrono.get_milliseconds() > settings.get("SCREENSAVE_TIME_MS"):
+            self.layout.switch_to_main_layout()

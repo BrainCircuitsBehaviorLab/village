@@ -2,7 +2,9 @@ import os
 import sys
 import traceback
 from pathlib import Path
+from typing import Any, Type
 
+import numpy as np
 import pandas as pd
 
 from village.classes.protocols import EventProtocol
@@ -12,9 +14,11 @@ from village.time_utils import time_utils
 
 
 class Collection(EventProtocol):
-    def __init__(self, name: str, columns: list[str]) -> None:
+    def __init__(self, name: str, columns: list[str], types: list[Type]) -> None:
         self.name: str = name
         self.columns: list[str] = columns
+        self.types: list[Type] = types
+        self.dict = {col: t for col, t in zip(self.columns, self.types)}
         self.path: Path = Path(settings.get("DATA_DIRECTORY")) / (name + ".csv")
 
         if not os.path.exists(self.path):
@@ -22,7 +26,7 @@ class Collection(EventProtocol):
                 columns_str: str = ",".join(self.columns) + "\n"
                 file.write(columns_str)
         try:
-            self.df = pd.read_csv(self.path)
+            self.df = pd.read_csv(self.path, dtype=self.dict, na_filter=False)
         except Exception:
             log.error(
                 "error reading from: " + str(self.path),
@@ -30,16 +34,34 @@ class Collection(EventProtocol):
             )
             sys.exit()
 
-    def add_entry(self, entry: list[str]) -> None:
-        new_row = pd.DataFrame([entry], columns=self.columns)
+    def add_entry(self, entry: list) -> None:
+        entry_str = [str(e) for e in entry]
+        new_row = pd.DataFrame([entry_str], columns=self.columns)
+        new_row = self.convert_df_to_types(new_row)
         self.df = pd.concat([self.df, new_row], ignore_index=True)
-
-        columns_str: str = ",".join(entry) + "\n"
-
+        columns_str: str = ",".join(entry_str) + "\n"
         with open(self.path, "a", encoding="utf-8") as file:
             file.write(columns_str)
-
         self.check_split_csv()
+
+    @staticmethod
+    def convert_with_default(value, target_type) -> Any:
+        try:
+            return target_type(value)
+        except (ValueError, TypeError):
+            if target_type == int or target_type == float:
+                return 0
+            elif target_type == bool:
+                return False
+            elif target_type == str:
+                return ""
+            else:
+                return value
+
+    def convert_df_to_types(self, df: pd.DataFrame) -> pd.DataFrame:
+        for col, type in zip(df.columns, self.types):
+            df[col] = df[col].apply(lambda x: self.convert_with_default(x, type))
+        return df
 
     def check_split_csv(self) -> None:
         if len(self.df) > 110000:
@@ -75,3 +97,42 @@ class Collection(EventProtocol):
     def get_valve_time(self, port: int, volume: str) -> float:
         # TODO
         return 0.01
+
+    def save_from_df(self) -> None:
+        pd.set_option("future.no_silent_downcasting", True)
+        new_df = self.df.replace("", np.nan)
+        new_df = new_df.dropna(how="all")
+        new_df = new_df.replace(np.nan, "")
+        new_df = new_df.dropna()
+        new_df = self.convert_df_to_types(new_df)
+
+        if "next_session_time" in new_df.columns:
+            new_df["next_session_time"] = pd.to_datetime(
+                new_df["next_session_time"], format="%Y-%m-%d %H:%M:%S", errors="coerce"
+            )
+            new_df["next_session_time"] = new_df["next_session_time"].fillna(
+                time_utils.now()
+            )
+        for col in new_df.columns:
+            if new_df[col].dtype == "datetime64[ns]":
+                new_df[col] = new_df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
+
+        if "active" in new_df.columns:
+
+            weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+            def convertir_active(value) -> str:
+                value = value.strip()
+                if value in ("ON", "On", "on"):
+                    return "ON"
+                else:
+                    days = [day.strip() for day in value.split("-")]
+                    if all(day in weekdays for day in days):
+                        return "-".join(days)
+                    else:
+                        return "OFF"
+
+            new_df["active"] = new_df["active"].apply(convertir_active)
+
+        new_df.to_csv(self.path, index=False)
+        self.df = new_df

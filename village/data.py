@@ -31,17 +31,18 @@ class Data:
         self.text: str = ""
         self.old_text: str = ""
         self.day: bool = True
+        self.changing_settings: bool = False
         self.info: Info = settings.get("INFO")
         self.actions: Actions = settings.get("ACTIONS")
         self.tasks: list[Task] = []
         self.filename: str = ""
         self.df_all: DataFrame | None = None
+        self.errors: str = ""
 
         self.update_cycle()
         self.create_directories()
         self.create_collections()
         log.event_protocol = self.events
-        log.start("VILLAGE")
         self.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
 
     @staticmethod
@@ -97,7 +98,9 @@ class Data:
                 )
 
     def create_collections(self) -> None:
-        self.events = Collection("events", ["date", "type", "subject", "description"])
+        self.events = Collection(
+            "events", ["date", "type", "subject", "description"], [str, str, str, str]
+        )
         self.sessions_summary = Collection(
             "sessions_summary",
             [
@@ -109,23 +112,22 @@ class Data:
                 "duration",
                 "trials",
                 "water",
-                "variables",
+                "settings",
             ],
+            [str, str, str, float, str, float, int, float, str],
         )
         self.subjects = Collection(
             "subjects",
             [
-                "date",
                 "name",
                 "tag",
                 "basal_weight",
                 "active",
-                "last_session_ended",
-                "waiting_period",
                 "next_session_time",
                 "next_task",
-                "next_variables",
+                "next_settings",
             ],
+            [str, str, float, str, str, str, str],
         )
         self.water_calibration = Collection(
             "water_calibration",
@@ -137,10 +139,17 @@ class Data:
                 "volume(ul)",
                 "time(ms)",
             ],
+            [str, int, float, float, float, float],
         )
         self.sound_calibration = Collection(
             "sound_calibration",
             ["date", "speaker", "target(dB)", "first_volume(dB)", "volume(dB)", "amp"],
+            [str, str, float, float, float, float],
+        )
+        self.temperatures = Collection(
+            "temperatures",
+            ["date", "temperature", "humidity"],
+            [str, float, float],
         )
 
     def import_all_tasks(self) -> None:
@@ -299,7 +308,7 @@ class Data:
             self.df_all = None
 
             try:
-                data.task.set_and_run(subject=self.subject)
+                data.task.test_run(subject=self.subject.name)
                 return True
             except Exception:
                 log.alarm(

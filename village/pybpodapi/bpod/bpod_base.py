@@ -138,13 +138,13 @@ class BpodBase(object):
         # check the firmware version
         firmware_version, machine_type = self._bpodcom_firmware_version()
 
-        if firmware_version < int(settings.get("BPOD_TARGET_FIRMWARE")):
+        if firmware_version < settings.get("BPOD_TARGET_FIRMWARE"):
             raise BpodErrorException(
                 """Error: Old firmware detected.
                 Please update Bpod 0.7 + firmware and try again."""
             )
 
-        if firmware_version > int(settings.get("BPOD_TARGET_FIRMWARE")):
+        if firmware_version > settings.get("BPOD_TARGET_FIRMWARE"):
             raise BpodErrorException(
                 """Error: Future firmware detected.
                 Please update the Bpod python software."""
@@ -504,6 +504,9 @@ class BpodBase(object):
                     if not transition_event_found:
                         logger.debug("transition event not found")
                         logger.debug("Current state: %s", sma.current_state)
+                        print(sma.input_matrix)
+                        print("__________---------")
+                        print(sma.current_state)
                         for transition in sma.input_matrix[sma.current_state]:
                             logger.debug("Transition: %s", transition)
                             if transition[0] == event_id:

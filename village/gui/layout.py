@@ -4,15 +4,13 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
+import pandas as pd
 from classes.enums import State
-from pandas import DataFrame
 from PyQt5.QtCore import (
     QAbstractTableModel,
-    QEvent,
     QModelIndex,
     Qt,
     QTime,
-    QTimer,
 )
 from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
 from PyQt5.QtWidgets import (
@@ -161,9 +159,10 @@ class ComboBox(QComboBox):
 
 class Table(QAbstractTableModel):
 
-    def __init__(self, df: DataFrame) -> None:
+    def __init__(self, df: pd.DataFrame) -> None:
         super().__init__()
         self.df = df
+        self.editable = False
         self.table_view = QTableView()
         self.table_view.setModel(self)
 
@@ -175,7 +174,7 @@ class Table(QAbstractTableModel):
 
     def data(self, index, role=Qt.DisplayRole) -> str | None:
         if index.isValid():
-            if role == Qt.DisplayRole:
+            if role == Qt.DisplayRole or role == Qt.EditRole:
                 return str(self.df.iloc[index.row(), index.column()])
         return None
 
@@ -187,7 +186,28 @@ class Table(QAbstractTableModel):
                 return str(self.df.index[section])
         return None
 
-    def add_rows(self, new_df: DataFrame) -> None:
+    def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
+        if role == Qt.EditRole:
+            self.df.iloc[index.row(), index.column()] = value
+            self.dataChanged.emit(index, index, [Qt.DisplayRole])
+            return True
+        return False
+
+    def flags(self, index) -> Any:
+        if self.editable:
+            return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
+        else:
+            return Qt.ItemIsSelectable | Qt.ItemIsEnabled
+
+    def insertRows(self, position, rows=1, index=None) -> bool:
+        self.beginInsertRows(index or QModelIndex(), position, position + rows - 1)
+        for _ in range(rows):
+            new_row = pd.DataFrame([[""] * self.columnCount()], columns=self.df.columns)
+            self.df = pd.concat([self.df, new_row], ignore_index=True)
+        self.endInsertRows()
+        return True
+
+    def add_rows(self, new_df: pd.DataFrame) -> None:
         scroll_position = self.table_view.verticalScrollBar().value()
         scroll_max = self.table_view.verticalScrollBar().maximum()
         rows_before = self.rowCount()
@@ -237,30 +257,10 @@ class Layout(QGridLayout):
         if not stacked:
             self.create_common_elements()
 
-            self.is_day_timer = QTimer(self)
-            self.is_day_timer.setInterval(settings.get("UPDATE_TIME_MS"))
-            self.is_day_timer.timeout.connect(self.update_status_label)
-            self.is_day_timer.start()
-
-            self.inactivity_timer = QTimer(self)
-            self.inactivity_timer.setInterval(settings.get("SCREENSAVE_TIME_MS"))
-            self.inactivity_timer.timeout.connect(self.switch_to_main_layout)
-            self.inactivity_timer.start()
-            self.installEventFilter(self)
-
     def switch_to_main_layout(self) -> None:
-        if data.state in (
-            data.state.SETTINGS,
-            data.state.SETTINGS_CHANGED,
-            data.state.PREPARATION,
-        ):
-            data.state = State["WAIT"]
-            self.window.create_main_layout()
-
-    def eventFilter(self, source, event) -> bool:
-        if event.type() in [QEvent.MouseMove, QEvent.KeyPress, QEvent.MouseButtonPress]:
-            self.inactivity_timer.start()
-        return super().eventFilter(source, event)
+        if data.state == data.state.SETTINGS:
+            data.state = State.WAIT
+        self.window.create_main_layout()
 
     def create_common_elements(self) -> None:
         self.status_label = self.create_and_add_label("", 2, 0, 212, 2, "black")
@@ -314,7 +314,6 @@ class Layout(QGridLayout):
             "Go to the setting menu",
         )
 
-    # @time_utils.measure_time
     def update_status_label(self, force=False) -> None:
         data.update_cycle()
         if data.update_text() or force:
@@ -324,17 +323,12 @@ class Layout(QGridLayout):
 
     def exit_button_clicked(self) -> None:
         match data.state:
-            case (
-                data.state.WAIT
-                | data.state.PREPARATION
-                | data.state.SETTINGS
-                | data.state.SETTINGS_CHANGED
-            ):
+            case data.state.WAIT | data.state.SETTINGS | data.state.ERROR:
                 old_state = data.state
-                data.state = State["EXIT_APP"]
+                data.state = State.EXIT_GUI
                 self.update_status_label()
                 text = "Are you sure you want to exit?"
-                if old_state == data.state.SETTINGS_CHANGED:
+                if data.changing_settings:
                     text += " Changes will not be saved."
                 reply = QMessageBox.question(
                     self.window,
@@ -358,21 +352,29 @@ class Layout(QGridLayout):
                 )
             case (
                 data.state.LAUNCH
-                | data.state.ACTION
-                | data.state.CLOSE
-                | data.state.OPEN
+                | data.state.RUN_ACTION
+                | data.state.CLOSE_DOOR2
+                | data.state.RUN_CLOSED
+                | data.state.OPEN_DOOR2
                 | data.state.RUN_OPENED
                 | data.state.EXIT_UNSAVED
+                | data.state.SAVE_OUTSIDE
+                | data.state.SAVE_INSIDE
                 | data.state.WAIT_EXIT
                 | data.state.EXIT_SAVED
-                | data.state.MANUAL
+                | data.state.OPEN_DOOR1
+                | data.state.CLOSE_DOOR1
+                | data.state.RUN_TRAPPED
+                | data.state.OPEN_DOOR2_STOP
+                | data.state.OPEN_DOORS_STOP
+                | data.state.MANUAL_RUN
             ):
                 QMessageBox.information(
                     self.window,
                     "EXIT",
                     "Wait until the box is empty before exiting the application",
                 )
-            case data.state.EXIT_APP:
+            case data.state.EXIT_GUI:
                 pass
 
     SAVE_OUTSIDE = "task saved, subject is already outside"
@@ -385,45 +387,41 @@ class Layout(QGridLayout):
 
     def main_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state in (
-                data.state.SETTINGS,
-                data.state.SETTINGS_CHANGED,
-                data.state.PREPARATION,
-            ):
-                data.state = State["WAIT"]
+            if data.state == data.state.SETTINGS:
+                data.state = State.WAIT
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state in (
-                data.state.SETTINGS,
-                data.state.SETTINGS_CHANGED,
-            ):
-                data.state = State["WAIT"]
+            if data.state == data.state.SETTINGS:
+                data.state = State.WAIT
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state in (
-                data.state.SETTINGS,
-                data.state.SETTINGS_CHANGED,
-            ):
-                data.state = State["WAIT"]
+            if data.state == data.state.SETTINGS:
+                data.state = State.WAIT
             self.window.create_tasks_layout()
 
     def data_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state in (
-                data.state.SETTINGS,
-                data.state.SETTINGS_CHANGED,
-            ):
-                data.state = State["WAIT"]
+            if data.state == data.state.SETTINGS:
+                data.state = State.WAIT
             self.window.create_data_layout()
 
     def settings_button_clicked(self) -> None:
         if self.change_layout():
-            data.state = State["SETTINGS"]
-            self.window.create_settings_layout()
+            if data.state == State.WAIT:
+                data.state = State.SETTINGS
+                self.window.create_settings_layout()
+            else:
+                text = "Settings can not be changed if there is a detection in progress"
+                text += " or a subject in the box."
+                QMessageBox.information(
+                    self.window,
+                    "SETTINGS",
+                    text,
+                )
 
     def closeEvent(self, event: QCloseEvent) -> None:
         event.ignore()
@@ -555,7 +553,7 @@ class Layout(QGridLayout):
 
     def create_and_add_table(
         self,
-        df: DataFrame,
+        df: pd.DataFrame,
         row: int,
         column: int,
         width: int,
@@ -567,6 +565,8 @@ class Layout(QGridLayout):
         model.table_view.setFixedSize(
             width * self.column_width, height * self.row_height
         )
+        model.table_view.setSelectionBehavior(QTableView.SelectRows)
+        model.table_view.setSelectionMode(QTableView.SingleSelection)
         for i in range(len(widths)):
             model.table_view.setColumnWidth(i, widths[i] * self.column_width)
 
@@ -575,3 +575,6 @@ class Layout(QGridLayout):
         self.addWidget(model.table_view, row, column, height, width)
 
         return model
+
+    def update_gui(self) -> None:
+        self.update_status_label()

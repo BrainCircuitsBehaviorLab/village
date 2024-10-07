@@ -124,12 +124,6 @@ directory_settings = [
         "The directory of the user code",
     ),
     Setting(
-        "DEFAULT_CODE_DIRECTORY",
-        default_project_directory + "/code",
-        str,
-        "The default directory of the user code",
-    ),
-    Setting(
         "APP_DIRECTORY",
         str(Path(__file__).parent.parent),
         str,
@@ -379,6 +373,12 @@ extra_settings = [
     Setting("SCREENSAVE_TIME_MS", 300000, int, "The time in ms for the screensave"),
     Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1"),
     Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2"),
+    Setting(
+        "DEFAULT_CODE_DIRECTORY",
+        default_project_directory + "/code",
+        str,
+        "The default directory of the user code",
+    ),
 ]
 
 

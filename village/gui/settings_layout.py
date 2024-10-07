@@ -24,7 +24,8 @@ class SettingsLayout(Layout):
         super().__init__(window)
         self.apply_button = PushButton("", "black", self.apply_button_clicked, "")
         self.restore_button = PushButton("", "black", self.restore_button_clicked, "")
-        data.state = State["SETTINGS"]
+        data.state = State.SETTINGS
+        data.changing_settings = False
         self.draw(all=True, modify="")
 
     def draw(self, all: bool, modify) -> None:
@@ -194,13 +195,13 @@ class SettingsLayout(Layout):
             return True
 
     def settings_changed(self, value: str = "", key: str = "") -> None:
-        data.state = State["SETTINGS_CHANGED"]
+        data.changing_settings = True
         self.update_status_label()
         self.apply_button.setEnabled(True)
 
     def apply_button_clicked(self) -> None:
         self.apply_button.setDisabled(True)
-        data.state = State["SETTINGS"]
+        data.changing_settings = False
 
         for i, line_edit in enumerate(self.line_edits):
             s = self.line_edits_settings[i]
@@ -293,7 +294,6 @@ class SettingsLayout(Layout):
 
         elif s.key == "PROJECT_DIRECTORY":
             value = settings.get(s.key)
-            print("value ", value)
             path = os.path.dirname(value)
             # check if path exists
             if not os.path.exists(path):

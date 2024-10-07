@@ -1,7 +1,5 @@
 from village.settings import settings
 
-target = settings.get("BPOD_TARGET_FIRMWARE")
-
-from village.pybpodapi.bpod.hardware.output_channels.bpod0_7_5_fw9 import (
+from village.pybpodapi.bpod.hardware.output_channels.bpod_output_channels import (
     OutputChannel,
 )

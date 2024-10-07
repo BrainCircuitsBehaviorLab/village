@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication
 
 from village.classes.enums import ScreenActive, State
 from village.data import data
+from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
 from village.log import log
@@ -44,21 +45,20 @@ class Gui:
 
     def exit_app(self) -> None:
         log.end("VILLAGE")
-        data.state = State["END"]
+        data.state = State.EXIT
         cam_corridor.stop_record()
         cam_box.stop_record()
+        bpod.close()
         self.q_app.quit()
         sys.exit()
 
     def reload_app(self) -> None:
         log.end("VILLAGE")
-        data.state = State["END"]
+        data.state = State.EXIT
         cam_corridor.stop_record()
         cam_box.stop_record()
+        bpod.close()
         settings.sync()
         self.q_app.quit()
-
-        # sys.exit()
-
         python = sys.executable
         os.execv(python, [python] + sys.argv)

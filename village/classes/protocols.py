@@ -1,15 +1,61 @@
+from typing import Any
+
 from PyQt5.QtWidgets import QWidget
 
 
 class PyBpodProtocol:
+    error: str = "Error connecting to the bpod "
+
+    def add_state(
+        self,
+        state_name: Any,
+        state_timer: int = 0,
+        state_change_conditions: Any = {},
+        output_actions: Any = (),
+    ) -> None:
+        return
+
+    def set_global_timer(
+        self,
+        timer_id: Any,
+        timer_duration: Any,
+        on_set_delay: int = 0,
+        channel: Any | None = None,
+        on_message: int = 1,
+        off_message: int = 0,
+        loop_mode: int = 0,
+        loop_intervals: int = 0,
+        send_events: int = 1,
+        oneset_triggers: Any | None = None,
+    ) -> None:
+        return
+
+    def set_condition(
+        self, condition_number: Any, condition_channel: Any, channel_value: Any
+    ) -> None:
+        return
+
+    def set_global_counter(
+        self, condition_number: Any, condition_channel: Any, channel_value: Any
+    ) -> None:
+        return
+
     def create_state_machine(self) -> None:
         return
 
     def send_and_run_state_machine(self) -> None:
         return
 
+    def close(self) -> None:
+        return
+
+    def kill(self) -> None:
+        return
+
 
 class TelegramBotProtocol:
+    error: str = "Error connecting to the telegram bot "
+
     def alarm(self, message: str) -> None:
         return
 
@@ -28,6 +74,7 @@ class CameraProtocol:
     change: bool
     state: str
     path_picture: str
+    error: str = "Error connecting to the camera "
 
     def start_camera(self) -> None:
         return

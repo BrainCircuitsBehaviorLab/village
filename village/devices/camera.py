@@ -126,6 +126,8 @@ class Camera(CameraProtocol):
         self.masks: list[Any] = []
         self.counts: list[int] = []
 
+        self.error = ""
+
         self.cam.start()
 
     def set_properties(self) -> None:

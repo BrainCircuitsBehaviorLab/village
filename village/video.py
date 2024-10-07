@@ -28,7 +28,7 @@ class Example:
         MainWindow.setCentralWidget(self.centralwidget)
         self.startVideo()
 
-    def startVideo(self):
+    def startVideo(self) -> None:
         self.cap = cv2.VideoCapture(
             "/home/mousevillage/village_projects/demo_project/data/videos/CORRIDOR.mp4"
         )

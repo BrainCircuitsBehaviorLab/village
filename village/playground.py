@@ -1,273 +1,284 @@
-# from village.pybpodapi.protocol import Bpod, StateMachine
-
-# bpod = Bpod()
-
-# sma = StateMachine(bpod)
-
-# sma.add_state(
-#     state_name="State0",
-#     state_timer=3,
-#     state_change_conditions={Bpod.Events.Tup: "exit"},
-#     output_actions=[],
-# )
+# from village.classes.task import Event, Output, Task
 
 
-# bpod.send_state_machine(sma)
-# bpod.run_state_machine(sma)
+# class Testing(Task):
+#     def __init__(self) -> None:
+#         super().__init__()
 
-# # # sma.add_state(
-# # #     state_name="State2",
-# # #     state_timer=0,
-# # #     state_change_conditions={"Port1Out": "State1"},
-# # #     output_actions=[],
-# # # )
+#         self.maximum_number_of_trials = 0  # 0 means infinite (the task finishes)
+#         self.minimum_duration = 3  # in seconds (door2 opens, animal can leave)
+#         self.maximum_duration = 6  # in seconds (the task finishes)
 
+#     def start(self) -> None:
+#         return
 
-# bpod.send_state_machine(sma)
-# bpod.run_state_machine(sma)
-
-# bpod.close()
-
-
-# import importlib
-# import inspect
-# import os
-# import sys
-
-# from village.classes.task import Task
-# from village.settings import settings
-
-# directory = settings.get("CODE_DIRECTORY")
-# sys.path.append(directory)
-
-
-# import virtual_mouse
-
-# print("OK")
-
-# settings = Settings(
-#     main_settings,
-#     corridor_settings,
-#     sound_settings,
-#     alarm_settings,
-#     directory_settings,
-#     screen_settings,
-#     touchscreen_settings,
-#     telegram_settings,
-#     bpod_settings,
-#     camera_settings,
-#     motor_settings,
-#     extra_settings,
-# )
-
-# import trial_plotter
-
-# print("OK")
-
-# import follow_the_light
-
-# print("OK")
-
-# import task_runner
-
-# print("OK")
-
-# python_files = []
-# tasks = []
-
-# for root, dirs, files in os.walk(directory):
-#     for file in files:
-#         if file.endswith(".py"):
-#             python_files.append(os.path.join(root, file))
-
-# for python_file in python_files:
-#     relative_path = os.path.relpath(python_file, directory)
-#     module_name = os.path.splitext(relative_path.replace(os.path.sep, "."))[0]
-#     print(f"Importing {module_name} from {python_file}")
-#     try:
-#         module = importlib.import_module(module_name)
-#         print("done")
-#         clsmembers = inspect.getmembers(module, inspect.isclass)
-#         print("clsmembers: ", clsmembers)
-#         for _, cls in clsmembers:
-#             print("cls: ", cls)
-#             if issubclass(cls, Task) and cls != Task:
-#                 print("is subclass")
-#                 name = cls.__name__
-#                 print(name)
-#                 new_task = cls()
-#                 new_task.name = name
-#                 tasks.append(new_task)
-#     except Exception:
-#         print("Error importing " + module_name)
-#         continue
-
-# import time
-
-# from gpiozero import Servo
-
-
-# servo = Servo(
-#     12,
-#     min_pulse_width=0.5 / 1000,
-#     max_pulse_width=2.5 / 1000,
-# )
-
-# servo.max()
-# time.sleep(2)
-# servo.mid()
-# time.sleep(2)
-# servo.min()
-# time.sleep(2)
-
-
-# import smbus
-# import time
-#
-#
-## temperature sensor
-# i2c = smbus.SMBus(1)
-# addr = 0x64
-# i2c.write_byte(addr, 0x69)
-# i2c.write_byte_data(addr, 0x23, 0x34)
-# time.sleep(5)
-# while 1:
-#    i2c.write_byte_data(addr, 0xE0, 0x0)
-#    data = i2c.read_i2c_block_data(addr, 0x0, 6)
-#    rawT = ((data[0]) << 8) | (data[1])
-#    rawR = ((data[3]) << 8) | (data[4])
-#    temp = -45 + rawT * 175 / 65535
-#    print(str(temp) + "C")
-#    RH = 100 * rawR / 65535
-#    print(str(RH) + "%")
-#    time.sleep(1)
-#    print("*************")
-
-
-# import struct
-# import time
-
-# from adafruit_bus_device.i2c_device import I2CDevice
-# from micropython import const
-
-# I2C_ADDR = const(0x64)  # Get sensor raw data
-# REG_CLEAR_REG_STATE = const(0x65)  # Get sensor raw data
-# REG_DATA_GET_RAM_DATA = const(0x66)  # Get sensor raw data
-# REG_DATA_GET_CALIBRATION = const(0x67)  # Gets the automatic calibration value
-# REG_DATA_GET_PEEL_FLAG = const(0x69)  # Obtain peeling position
-# REG_DATA_INIT_SENSOR = const(0x70)  # Module initialization
-# REG_SET_CAL_THRESHOLD = const(0x71)  # Set the calibration trigger threshold
-# REG_SET_TRIGGER_WEIGHT = const(0x72)  # Set calibration weight
-
-# REG_CLICK_RST = const(0x73)  # Simulation of RST
-# REG_CLICK_CAL = const(0x74)  # Simulation of CAL
-
-
-# class DFRobot_HX711_I2C:
-#     def __init__(self, i2c, addr=I2C_ADDR):
-#         self._addr = addr
-#         self.i2c_device = I2CDevice(i2c, self._addr)
-#         self.buffer = bytearray(3)
-#         self.rxbuf = bytearray(16)
-
-#     def begin(self):
-#         time.sleep(0.03)
-#         self.buffer[0] = REG_DATA_INIT_SENSOR
-#         self._write_register()
-#         time.sleep(0.03)
-#         self.buffer[0] = REG_CLEAR_REG_STATE
-#         self._write_register()
-#         time.sleep(0.03)
-#         self._offset = self.average(1)
-#         self._calibration = 1752.60
-#         self.setCalibration(self._calibration)
-
-#     def average(self, times=1):
-#         sum = 0
-#         for i in range(times):
-#             sum += self.raw_weight()
-#         return sum / times
-
-#     def weight(self, times=1):
-#         weight = self.average(times)
-
-#         time.sleep(0.05)
-#         peel_flag = self.peelFlag()
-#         if peel_flag == 1:
-#             self._offset = self.average(times)
-#         elif peel_flag == 2:
-#             self._calibration = self.calibration()
-
-#         return (weight - self._offset) / self._calibration
-
-#     def raw_weight(self):
-#         self.buffer[0] = REG_DATA_GET_RAM_DATA
-#         self._write_register()
-#         time.sleep(0.03)
-#         self._read_register(4)
-#         return (
-#             (self.rxbuf[0] << 24)
-#             | (self.rxbuf[1] << 16)
-#             | (self.rxbuf[2] << 8)
-#             | self.rxbuf[3]
+#     def create_trial(self) -> None:
+#         self.bpod.add_state(
+#             state_name="light_off",
+#             state_timer=1,
+#             state_change_conditions={
+#                 Event.Port2In: "light_on",
+#                 Event.Tup: "exit",
+#             },
+#             output_actions=[],
 #         )
 
-#     def peel(self):
-#         self._offset = self.average(1)
-#         self.buffer[0] = REG_CLICK_RST
-#         self._write_register()
-#         time.sleep(0.03)
+#         self.bpod.add_state(
+#             state_name="light_on",
+#             state_timer=1,
+#             state_change_conditions={
+#                 Event.Port2Out: "light_off",
+#                 Event.Tup: "exit",
+#             },
+#             output_actions=[(Output.PWM2, 5), Output.BNC1High],
+#         )
 
-#     def peelFlag(self):
-#         self.buffer[0] = REG_DATA_GET_PEEL_FLAG
-#         self._write_register()
-#         time.sleep(0.03)
-#         self._read_register(1)
-#         if self.rxbuf[0] == 1:
-#             return 1
-#         elif self.rxbuf[0] == 2:
-#             return 2
+#     def after_trial(self) -> None:
+#         return
 
-#         return 0
+#     def close(self) -> None:
+#         return
 
-#     def calibration(self):
-#         self.buffer[0] = REG_DATA_GET_CALIBRATION
-#         self._write_register()
-#         time.sleep(0.03)
-#         self._read_register(4)
 
-#         data = bytearray(self.rxbuf)
-#         value = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]
-#         return struct.unpack(">f", struct.pack(">I", value))[0]
+# testing = Testing()
+# testing.test_run()
 
-#     def enableCalibration(self):
-#         self.buffer[0] = REG_CLICK_CAL
-#         self._write_register()
-#         time.sleep(0.03)
 
-#     def setCalibration(self, cal):
-#         self._calibration = cal
+# import re
 
-#     def setCalThreshold(self, cal):
-#         self.buffer[0] = REG_SET_CAL_THRESHOLD
-#         tx_data = struct.pack(">H", cal)
-#         self.buffer[1] = tx_data[0]
-#         self.buffer[2] = tx_data[1]
-#         self._write_register()
-#         time.sleep(0.03)
 
-#     def setTriggerWeight(self, weight):
-#         self.buffer[0] = REG_SET_TRIGGER_WEIGHT
-#         tx_data = struct.pack(">H", weight)
-#         self.buffer[1] = tx_data[0]
-#         self.buffer[2] = tx_data[1]
-#         self._write_register()
-#         time.sleep(0.03)
+# def parse_message_input(message: str | tuple[str, int]) -> tuple[str, int, int]:
+#     # Convert the message to string if it's a tuple
+#     msg = str(message)
 
-#     def _write_register(self):
-#         with self.i2c_device as i2c:
-#             i2c.write(self.buffer)
+#     # Pattern for "Port#In" and "Port#Out" (where # is 1-9)
+#     port_pattern = re.compile(r"Port([1-9])(In|Out)")
 
-#     def _read_register(self, length):
-#         with self.i2c_device as i2c:
-#             i2c.readinto(self.rxbuf)
+#     # Pattern for "PA1_Port#In" and "PA1_Port#Out" (where # is 1-9)
+#     pa1_port_pattern = re.compile(r"PA1_Port([1-9])(In|Out)")
+
+#     # Pattern for "BNC#High" and "BNC#Low" (where # is 1-9)
+#     bnc_pattern = re.compile(r"BNC([1-9])(High|Low)")
+
+#     # Pattern for "Wire#High" and "Wire#Low" (where # is 1-9)
+#     wire_pattern = re.compile(r"Wire([1-9])(High|Low)")
+
+#     # Pattern for "SerialX_Y" messages (where X is 1-9 and Y is 1-99)
+#     serial_pattern = re.compile(r"Serial([1-9])_([1-9][0-9]?)")
+
+#     # Pattern for "SoftCodeX" messages (where X is 1-99)
+#     softcode_pattern = re.compile(r"SoftCode([1-9][0-9]?)")
+
+#     # Pattern for GlobalTimer#_End
+#     global_timer_end_pattern = re.compile(r"_GlobalTimer([1-9])_(End)")
+
+#     # Pattern for GlobalTimer#_Start
+#     global_timer_start_pattern = re.compile(r"_GlobalTimer([1-9])_(Start)")
+
+#     # Pattern for GlobalCounter# with _End and _Reset suffixes
+#     global_counter_pattern = re.compile(r"_GlobalCounter([1-9])_(End)")
+
+#     # Pattern for "Condition#"
+#     condition_pattern = re.compile(r"_Condition([1-9])")
+
+#     if msg == "_Tup":
+#         return ("_Tup", 1, 1)
+
+#     elif port_match := port_pattern.match(msg):
+#         channel, state = port_match.groups()
+#         value = 1 if state == "In" else 0
+#         return ("Port", int(channel), value)
+
+#     elif pa1_port_match := pa1_port_pattern.match(msg):
+#         channel, state = pa1_port_match.groups()
+#         value = 1 if state == "In" else 0
+#         return ("PA1_Port", int(channel), value)
+
+#     elif bnc_match := bnc_pattern.match(msg):
+#         channel, state = bnc_match.groups()
+#         value = 3 if state == "High" else 0
+#         return ("BNC", int(channel), value)
+
+#     elif wire_match := wire_pattern.match(msg):
+#         channel, state = wire_match.groups()
+#         value = 3 if state == "High" else 0
+#         return ("Wire", int(channel), value)
+
+#     elif serial_match := serial_pattern.match(msg):
+#         channel, value = serial_match.groups()
+#         return ("Serial", int(channel), int(value))
+
+#     elif softcode_match := softcode_pattern.match(msg):
+#         channel = softcode_match.group(1)
+#         return ("USB", int(channel), 1)  # The value is always 1
+
+#     elif global_timer_start_match := global_timer_start_pattern.match(msg):
+#         channel, _ = global_timer_start_match.groups()
+#         return ("_GlobalTimer_Start", int(channel), 1)
+
+#     elif global_timer_end_match := global_timer_end_pattern.match(msg):
+#         channel, _ = global_timer_end_match.groups()
+#         return ("_GlobalTimer_End", int(channel), 1)
+
+#     elif global_counter_end_match := global_counter_pattern.match(msg):
+#         channel, _ = global_counter_end_match.groups()
+#         return ("_GlobalCounter_End", int(channel), 1)
+
+#     elif condition_match := condition_pattern.match(msg):
+#         channel = condition_match.group(1)
+#         return ("_Condition", int(channel), 1)
+
+#     else:
+#         raise ValueError(f"Unrecognized message format: {msg}")
+
+
+# def parse_message_output(message: str | tuple[str, int]) -> tuple[str, int, int]:
+#     # Convert the message to string if it's a tuple
+#     msg = str(message)
+
+#     # Pattern for ("PWMX", Y) messages (where X is 1-9 and Y is 0-255)
+#     pwm_pattern = re.compile(r"\('PWM([1-9])',\s*([0-9]|[1-9][0-9]{1,2})\)")
+
+#     # Pattern for "Valve#"
+#     valve_pattern = re.compile(r"Valve([1-9])")
+
+#     # Pattern for "BNC#High" and "BNC#Low" (where # is 1-9)
+#     bnc_pattern = re.compile(r"BNC([1-9])(High|Low)")
+
+#     # Pattern for "Wire#High" and "Wire#Low" (where # is 1-9)
+#     wire_pattern = re.compile(r"Wire([1-9])(High|Low)")
+
+#     # Pattern for ("SerialX", Y) messages (where X is 1-9 and Y is 0-99)
+#     serial_pattern = re.compile(r"\('Serial([1-9])',\s*([1-9][0-9]?)")
+
+#     # Pattern for ("SoftCode", Y) messages (where Y is 1-99)
+#     softcode_pattern = re.compile(r"\('SoftCode',\s*([1-9][0-9]?)")
+
+#     # Pattern for ("_GlobalTimerTrig", Y) messages (where Y is 1-9)
+#     global_timer_trig_pattern = re.compile(r"\('_GlobalTimerTrig',\s*([1-9])")
+
+#     # Pattern for ("_GlobalTimerCancel", Y) messages (where Y is 1-9)
+#     global_timer_cancel_pattern = re.compile(r"\('_GlobalTimerCancel',\s*([1-9])")
+
+#     # Pattern for ("_GlobalCounterReset", Y) messages (where Y is 1-9)
+#     global_counter_reset_pattern = re.compile(r"\('_GlobalCounterReset',\s*([1-9])")
+
+#     if pwm_match := pwm_pattern.match(msg):
+#         channel, value = pwm_match.groups()
+#         return ("PWM", int(channel), int(value))
+
+#     elif valve_match := valve_pattern.match(msg):
+#         channel = valve_match.group(1)
+#         return ("Valve", int(channel), 1)  # The value is always 1
+
+#     elif bnc_match := bnc_pattern.match(msg):
+#         channel, state = bnc_match.groups()
+#         value = 3 if state == "High" else 0
+#         return ("BNC", int(channel), value)
+
+#     elif wire_match := wire_pattern.match(msg):
+#         channel, state = wire_match.groups()
+#         value = 3 if state == "High" else 0
+#         return ("Wire", int(channel), value)
+
+#     elif serial_match := serial_pattern.match(msg):
+#         channel, value = serial_match.groups()
+#         return ("Serial", int(channel), int(value))
+
+#     elif softcode_match := softcode_pattern.match(msg):
+#         channel = softcode_match.group(1)
+#         return ("SoftCode", int(channel), 1)  # The value is always 1
+
+#     elif global_timer_trig_match := global_timer_trig_pattern.match(msg):
+#         channel = global_timer_trig_match.group(1)
+#         return ("_GlobalTimerTrig", int(channel), 1)
+
+#     elif global_timer_cancel_match := global_timer_cancel_pattern.match(msg):
+#         channel = global_timer_cancel_match.group(1)
+#         return ("_GlobalTimerCancel", int(channel), 1)
+
+#     elif global_counter_reset_match := global_counter_reset_pattern.match(msg):
+#         channel = global_counter_reset_match.group(1)
+#         return ("_GlobalCounterReset", int(channel), 1)
+
+#     else:
+#         raise ValueError(f"Unrecognized message format: {msg}")
+
+
+# # Ejemplos de uso input:
+# print(parse_message_input("_Tup"))
+# print(parse_message_input("Port1In"))
+# print(parse_message_input("Port2Out"))
+# print(parse_message_input("PA1_Port1In"))
+# print(parse_message_input("PA1_Port3Out"))
+# print(parse_message_input("BNC1High"))
+# print(parse_message_input("BNC2Low"))
+# print(parse_message_input("Wire1High"))
+# print(parse_message_input("Wire2Low"))
+# print(parse_message_input("Serial1_4"))
+# print(parse_message_input("Serial3_12"))
+# print(parse_message_input("SoftCode1"))
+# print(parse_message_input("SoftCode34"))
+# print(parse_message_input("_GlobalTimer1_Start"))
+# print(parse_message_input("_GlobalTimer2_End"))
+# print(parse_message_input("_GlobalCounter3_End"))
+# print(parse_message_input("_Condition1"))
+
+
+# # output
+# print(parse_message_output(("PWM1", 255)))
+# print(parse_message_output(("PWM2", 0)))
+# print(parse_message_output(("PWM2", 3)))
+# print(parse_message_output(("PWM2", 103)))
+# print(parse_message_output(("PWM1", 26)))
+# print(parse_message_output("Valve1"))
+# print(parse_message_output("BNC1High"))
+# print(parse_message_output("BNC2Low"))
+# print(parse_message_output("Wire1High"))
+# print(parse_message_output("Wire2Low"))
+# print(parse_message_output(("Serial4", 3)))
+# print(parse_message_output(("Serial2", 31)))
+# print(parse_message_output(("SoftCode", 23)))
+# print(parse_message_output(("SoftCode", 5)))
+# print(parse_message_output(("_GlobalTimerTrig", 1)))
+# print(parse_message_output(("_GlobalTimerCancel", 2)))
+# print(parse_message_output(("_GlobalCounterReset", 3)))
+
+
+import pandas as pd
+
+data = {
+    "active": [
+        "ON",
+        "on",
+        "On",
+        "OFF",
+        "Mon-Tue-Wed",
+        "Fri-Mon",
+        "Mon-TU",
+        "Thu-Fri",
+        "Sat",
+        "Sun-Mon",
+        "Invalid",
+    ]
+}
+df = pd.DataFrame(data)
+
+dias_semana = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+
+def convertir_active(value) -> str:
+    value = value.strip()
+    if value in ("ON", "On", "on"):
+        return "ON"
+    else:
+        dias = [dia.strip() for dia in value.split("-")]
+        if all(dia in dias_semana for dia in dias):
+            return "-".join(dias)
+        else:
+            return "OFF"
+
+
+df["active"] = df["active"].apply(convertir_active)
+
+print(df)

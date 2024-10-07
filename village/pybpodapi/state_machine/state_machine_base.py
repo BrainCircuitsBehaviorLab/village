@@ -1,7 +1,6 @@
 # mypy: ignore-errors
 import logging
 
-from village.pybpodapi.bpod.hardware.channels import ChannelName
 from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
 from village.pybpodapi.state_machine.conditions import Conditions
@@ -221,7 +220,6 @@ class StateMachineBase(object):
                 self.input_matrix[state_name_idx].append(
                     (event_code, destination_state_number)
                 )
-
         for action_name, action_value in output_actions:
             if action_name == "Valve":
                 output_code = self.hardware.channels.output_channel_names.index(
@@ -236,11 +234,6 @@ class StateMachineBase(object):
                     )
                     output_value = math.pow(2, action_value - 1)
                 """
-            elif action_name == OutputChannel.LED:
-                output_code = self.hardware.channels.output_channel_names.index(
-                    ChannelName.PWM + str(action_value)
-                )
-                output_value = 255
 
             else:
                 try:

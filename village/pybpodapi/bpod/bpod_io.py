@@ -28,6 +28,8 @@ class BpodIO(BpodCOMProtocolModules):
         )
         self.session_name = session_name if session_name is not None else "session"
 
+        print(self.workspace_path)
+
         super(BpodIO, self).__init__(serial_port, sync_channel, sync_mode)
 
     def create_session(self):

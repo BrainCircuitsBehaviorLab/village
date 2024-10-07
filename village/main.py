@@ -67,6 +67,12 @@ log.cam_protocol = cam_corridor
 data.import_all_tasks()
 cam_corridor.start_record()
 cam_box.start_record()
+data.errors = bpod.error + cam_corridor.error + cam_box.error + telegram_bot.error
+if data.errors == "":
+    log.start("VILLAGE")
+else:
+    log.error(data.errors)
+    log.start("VILLAGE_DEBUG")
 
 
 # create a secondary thread to run some function
@@ -88,13 +94,13 @@ def system_run() -> None:
 
         match data.state:
             case data.state.WAIT:
-                # all subjects at home, waiting for a not empty rfid detection
+                # All subjects are at home, waiting for RFID detection
                 if data.tag_reader == data.tag_reader.ON:
                     id, multiple = rfid.get_id()
                     if id != "":
-                        data.state = State["DETECTION"]
+                        data.state = State.DETECTION
             case data.state.DETECTION:
-                # getting subject data, checking areas and minimum time
+                # Gathering subject data, checking requirements to enter
                 if (
                     data.get_subject_from_tag(id)
                     and data.subject.get_data_from_subject_series()
@@ -102,25 +108,25 @@ def system_run() -> None:
                     and cam_corridor.areas_corridor_ok()
                     and not data.multiple_detections(multiple)
                 ):
-                    data.state = State["ACCESS"]
+                    data.state = State.ACCESS
                 else:
-                    data.state = State["WAIT"]
+                    data.state = State.WAIT
 
             case data.state.ACCESS:
-                # closing door1, opening door2
+                # Closing door1, opening door2
                 motor1.close()
                 motor2.open()
-                data.state = State["LAUNCH"]
+                data.state = State.LAUNCH
 
             case data.state.LAUNCH:
-                # launching the task
+                # Launching the task
                 if data.launch_task():
-                    data.state = State["ACTION"]
+                    data.state = State.RUN_ACTION
                 else:
-                    data.state = State["STOP"]
+                    data.state = State.STOP
 
-            case data.state.ACTION:
-                # waiting for first action in behavioral box
+            case data.state.RUN_ACTION:
+                # Waiting for the first action in the behavioral box
                 id, multiple = rfid.get_id()
                 if id == data.subject.tag:
                     log.info(
@@ -133,75 +139,90 @@ def system_run() -> None:
                         Disconnecting RFID""",
                         subject=data.subject.name,
                     )
-                    data.state = State["STOP"]
+                    data.state = State.STOP
                 if data.first_action:
-                    data.state = State["CLOSE"]
-            case data.state.CLOSE:
+                    data.state = State.CLOSE_DOOR2
+
+            case data.state.CLOSE_DOOR2:
+                # Closing door2
                 if cam_corridor.area_3_empty():
                     motor2.close()
-                    data.state = State["RUN_CLOSED"]
+                    data.state = State.RUN_CLOSED
                 else:
                     # telegram_bot.alarm_corridor()
-                    data.state = State["ERROR"]
+                    data.state = State.ERROR
 
             case data.state.RUN_CLOSED:
-                # task running, subject can not leave
+                # Task running, the subject cannot leave yet
                 pass
-            case data.state.OPEN:
-                # opening door2
+
+            case data.state.OPEN_DOOR2:
+                # Opening door2
                 pass
+
             case data.state.RUN_OPENED:
-                # task running, subject can leave
+                # task running, the subject can leave
                 pass
+
             case data.state.EXIT_UNSAVED:
-                # closing door2, opening door1
+                # Closing door2, opening door1 (data still not saved)
                 pass
+
             case data.state.SAVE_OUTSIDE:
-                # stopping the task, saving the data
+                # Stopping the task, saving the data; the subject is already outside
                 pass
+
             case data.state.SAVE_INSIDE:
-                # stopping the task, saving the data
+                # Stopping the task, saving the data; the subject is still inside
                 pass
+
             case data.state.WAIT_EXIT:
-                # waiting for the subject to leave
+                # Task finished, waiting for the subject to leave
                 pass
+
             case data.state.EXIT_SAVED:
-                # closing door2, opening door1
+                # Closing door2, opening door1 (data already saved)
                 pass
-            case data.state.OPEN_TRAPPED:
-                # opening door2, subject trapped
+
+            case data.state.OPEN_DOOR1:
+                # Opening door1, a subject is trapped
                 pass
-            case data.state.CLOSE_TRAPPED:
-                # closing door2, subject trapped
+
+            case data.state.CLOSE_DOOR1:
+                # Closing door1, the subject is not trapped anymore
                 pass
+
             case data.state.RUN_TRAPPED:
-                # task running, waiting for the trapped subject to go home
+                # Task running, waiting for the trapped subject to return home
                 pass
-            case data.state.STOP:
-                # opening door2, disconnecting rfid
+
+            case data.state.OPEN_DOOR2_STOP:
+                # Opening door2, disconnecting RFID
                 pass
-            case data.state.PREPARATION:
-                # task being prepared manually
+
+            case data.state.OPEN_DOORS_STOP:
+                # Opening both doors, disconnecting RFID
                 pass
-            case data.state.MANUAL:
-                # task running manually
+
+            case data.state.ERROR:
+                # Manual intervention required
                 pass
+
+            case data.state.MANUAL_RUN:
+                # Task is running manuallyy
+                pass
+
             case data.state.SETTINGS:
-                # settings being changed manually
+                # Settings are being changed or task is being manually prepared
                 pass
-            case data.state.SETTINGS_CHANGED:
-                # settings changed manually
+
+            case data.state.EXIT_GUI:
+                # In the GUI window, ready to exit the app
                 pass
-            case data.state.EXIT_APP:
-                # exiting the app
-                pass
-            case data.state.END:
-                # end
-                break
 
 
 # start the secondary thread (control of the system)
-system_state = threading.Thread(target=system_run)
+system_state = threading.Thread(target=system_run, daemon=True)
 system_state.start()
 
 # start the primary thread (GUI)

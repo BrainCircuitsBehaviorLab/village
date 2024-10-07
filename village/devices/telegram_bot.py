@@ -23,7 +23,8 @@ class TelegramBot(TelegramBotProtocol):
         self.user = ""
         self.message = ""
         self.connected = False
-        self.error = False
+        self.error_running = False
+        self.error = ""
 
         self.thread = threading.Thread(target=self.botloop, daemon=True)
         self.thread.start()
@@ -137,7 +138,7 @@ class TelegramBot(TelegramBotProtocol):
         try:
             asyncio.run(self.botloop_starttask())
         except Exception:
-            self.error = True
+            self.error_running = True
             log.error("Telegram error", exception=traceback.format_exc())
 
 
@@ -147,14 +148,14 @@ def get_telegram_bot() -> TelegramBotProtocol:
         chrono = time_utils.Chrono()
         while (
             not telegram_bot.connected
-            and not telegram_bot.error
+            and not telegram_bot.error_running
             and chrono.get_seconds() < 30
         ):
             time.sleep(0.1)
         if telegram_bot.connected:
             log.info("Telegram bot successfully initialized")
             return telegram_bot
-        elif telegram_bot.error:
+        elif telegram_bot.error_running:
             return TelegramBotProtocol()
         else:
             log.error("Could not initialize telegram bot, time expired")
