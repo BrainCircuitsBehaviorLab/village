@@ -66,6 +66,7 @@ class State(SuperEnum):
     RUN_TRAPPED = "Task running, waiting for the trapped subject to return home"
     OPEN_DOOR2_STOP = "Opening door2, disconnecting RFID"
     OPEN_DOORS_STOP = "Opening both doors, disconnecting RFID"
+    SAVE_TRAPPED = "Stopping the task, saving the data; a subject is trapped"
     ERROR = "Manual intervention required"
     MANUAL_RUN = "Task is running manually"
     SETTINGS = "Settings are being changed or task is being manually prepared"
@@ -90,7 +91,7 @@ class Actions(SuperEnum):
 
 class Info(SuperEnum):
     SYSTEM_INFO = "SYSTEM_INFO"
-    CAMERA_SETTINGS = "CAMERA_SETTINGS"
+    CORRIDOR_SETTINGS = "CORRIDOR_SETTINGS"
 
 
 class DataTable(SuperEnum):

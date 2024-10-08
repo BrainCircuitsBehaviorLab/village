@@ -378,6 +378,14 @@ class MonitorLayout(Layout):
         cam_box.stop_window_preview()
         return True
 
+    def update_gui(self) -> None:
+        self.update_status_label()
+        match data.info:
+            case Info.SYSTEM_INFO:
+                self.page4Layout.update_gui()
+            case Info.CORRIDOR_SETTINGS:
+                self.page5Layout.update_gui()
+
 
 class MotorLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
@@ -435,9 +443,6 @@ class MotorLayout(Layout):
             self.get_temperature_clicked,
             "Get the temperature and humidity",
         )
-
-        self.get_temperature_clicked()
-        self.get_weight_clicked()
 
     def draw_motor_buttons(
         self, name: str, row: int, column: int, motor: Motor
@@ -837,3 +842,7 @@ class InfoLayout(Layout):
     def draw(self) -> None:
         text = data.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
         self.events_text = self.create_and_add_label(text, 0, 0, 210, 16, "black")
+
+    def update_gui(self) -> None:
+        text = data.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
+        self.events_text.setText(text)

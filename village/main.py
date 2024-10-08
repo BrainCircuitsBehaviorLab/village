@@ -196,6 +196,10 @@ def system_run() -> None:
                 # Task running, waiting for the trapped subject to return home
                 pass
 
+            case data.state.SAVE_TRAPPED:
+                # Stopping the task, saving the data; a subject is trapped
+                pass
+
             case data.state.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
                 pass

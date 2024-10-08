@@ -230,6 +230,7 @@ class Layout(QGridLayout):
     ) -> None:
         super().__init__()
         self.window = window
+        self.stacked = stacked
 
         if stacked:
             self.width = int(window.window_width / 212 * columns)
@@ -365,6 +366,7 @@ class Layout(QGridLayout):
                 | data.state.OPEN_DOOR1
                 | data.state.CLOSE_DOOR1
                 | data.state.RUN_TRAPPED
+                | data.state.SAVE_TRAPPED
                 | data.state.OPEN_DOOR2_STOP
                 | data.state.OPEN_DOORS_STOP
                 | data.state.MANUAL_RUN
@@ -577,4 +579,5 @@ class Layout(QGridLayout):
         return model
 
     def update_gui(self) -> None:
-        self.update_status_label()
+        if not self.stacked:
+            self.update_status_label()

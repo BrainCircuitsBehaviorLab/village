@@ -428,9 +428,11 @@ class Camera(CameraProtocol):
         self.states.append(self.state)
 
     def start_preview_window(self) -> QWidget:
-        self.stop_preview()
-        self.window = QGlPicamera2(self.cam)
-        return self.window
+        try:
+            self.stop_preview()
+        finally:
+            self.window = QGlPicamera2(self.cam)
+            return self.window
 
     def log(self, text: str) -> None:
         self.state = text
