@@ -78,6 +78,24 @@ class Task:
         self.subject = subject
         self.check_variables()
         self.start()
+        self.chrono = time_utils.Chrono()
+        while (
+            self.current_trial < self.maximum_number_of_trials
+            and self.chrono.get_seconds() < self.maximum_duration
+        ):
+            self.bpod.create_state_machine()
+            self.create_trial()
+            self.bpod.send_and_run_state_machine()
+            self.after_trial()
+            self.register_values()
+            self.current_trial += 1
+        self.close()
+        self.stop_and_save_task()
+
+    def run(self, subject: str = "None") -> None:
+        self.subject = subject
+        self.check_variables()
+        self.start()
         self.process.start()
         self.chrono = time_utils.Chrono()
         while (
@@ -85,6 +103,7 @@ class Task:
             and self.process.is_alive()
         ):
             time.sleep(0.1)
+        self.close()
         self.stop_and_save_task()
 
     def run_thread(self) -> None:
@@ -95,19 +114,6 @@ class Task:
             self.after_trial()
             self.register_values()
             self.current_trial += 1
-
-    def run(self, subject: str = "None") -> None:
-        self.check_variables()
-        self.subject = subject
-        self.start()
-        while self.current_trial < self.maximum_number_of_trials:
-            self.bpod.create_state_machine()
-            self.create_trial()
-            self.bpod.send_and_run_state_machine()
-            self.after_trial()
-            self.register_values()
-            self.current_trial += 1
-        self.close()
 
     # OVERWRITE THESE METHODS IN YOUR TASK
     def start(self) -> None:
@@ -131,7 +137,7 @@ class Task:
         pass
 
     def stop_and_save_task(self) -> None:
-        self.bpod.kill()
+        self.bpod.stop()
         self.bpod.close()
         # kill the screen
         self.process.join()

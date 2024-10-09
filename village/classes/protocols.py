@@ -1,10 +1,16 @@
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from PyQt5.QtWidgets import QWidget
+
+from village.pybpodapi.session import Session
+
+if TYPE_CHECKING:
+    from village.pybpodapi.session import Session
 
 
 class PyBpodProtocol:
     error: str = "Error connecting to the bpod "
+    session: Session | Any
 
     def add_state(
         self,
@@ -49,7 +55,13 @@ class PyBpodProtocol:
     def close(self) -> None:
         return
 
-    def kill(self) -> None:
+    def stop(self) -> None:
+        return
+
+    def manual_override_input(self, message: str | tuple) -> None:
+        return
+
+    def manual_override_output(self, message: str | tuple) -> None:
         return
 
 
@@ -58,6 +70,35 @@ class TelegramBotProtocol:
 
     def alarm(self, message: str) -> None:
         return
+
+
+class ScaleProtocol:
+    error: str = "Error connecting to the scale "
+
+    def tare(self) -> None:
+        return
+
+    def calibrate(self, weight: float) -> None:
+        return
+
+    def get_weight(self) -> Any | float:
+        return 0.0
+
+    def get_weight_string(self) -> str:
+        return ""
+
+
+class TempSensorProtocol:
+    error: str = "Error connecting to the temp sensor "
+
+    def start(self) -> None:
+        return
+
+    def get_temperature(self) -> tuple[float, float]:
+        return 0.0, 0.0
+
+    def get_temperature_string(self) -> str:
+        return ""
 
 
 class EventProtocol:

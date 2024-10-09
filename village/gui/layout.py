@@ -259,7 +259,7 @@ class Layout(QGridLayout):
             self.create_common_elements()
 
     def switch_to_main_layout(self) -> None:
-        if data.state == data.state.SETTINGS:
+        if data.state == State.SETTINGS:
             data.state = State.WAIT
         self.window.create_main_layout()
 
@@ -324,7 +324,7 @@ class Layout(QGridLayout):
 
     def exit_button_clicked(self) -> None:
         match data.state:
-            case data.state.WAIT | data.state.SETTINGS | data.state.ERROR:
+            case State.WAIT | State.SETTINGS | State.ERROR:
                 old_state = data.state
                 data.state = State.EXIT_GUI
                 self.update_status_label()
@@ -343,7 +343,7 @@ class Layout(QGridLayout):
                 else:
                     data.state = old_state
                     self.update_status_label()
-            case data.state.DETECTION | data.state.ACCESS:
+            case State.DETECTION | State.ACCESS | State.LAUNCH:
                 text = "Wait until the box is empty before exiting the application"
                 text = "Subject is being detected. " + text
                 QMessageBox.information(
@@ -352,31 +352,30 @@ class Layout(QGridLayout):
                     text,
                 )
             case (
-                data.state.LAUNCH
-                | data.state.RUN_ACTION
-                | data.state.CLOSE_DOOR2
-                | data.state.RUN_CLOSED
-                | data.state.OPEN_DOOR2
-                | data.state.RUN_OPENED
-                | data.state.EXIT_UNSAVED
-                | data.state.SAVE_OUTSIDE
-                | data.state.SAVE_INSIDE
-                | data.state.WAIT_EXIT
-                | data.state.EXIT_SAVED
-                | data.state.OPEN_DOOR1
-                | data.state.CLOSE_DOOR1
-                | data.state.RUN_TRAPPED
-                | data.state.SAVE_TRAPPED
-                | data.state.OPEN_DOOR2_STOP
-                | data.state.OPEN_DOORS_STOP
-                | data.state.MANUAL_RUN
+                State.RUN_ACTION
+                | State.CLOSE_DOOR2
+                | State.RUN_CLOSED
+                | State.OPEN_DOOR2
+                | State.RUN_OPENED
+                | State.EXIT_UNSAVED
+                | State.SAVE_OUTSIDE
+                | State.SAVE_INSIDE
+                | State.WAIT_EXIT
+                | State.EXIT_SAVED
+                | State.OPEN_DOOR1
+                | State.CLOSE_DOOR1
+                | State.RUN_TRAPPED
+                | State.SAVE_TRAPPED
+                | State.OPEN_DOOR2_STOP
+                | State.OPEN_DOORS_STOP
+                | State.MANUAL_RUN
             ):
                 QMessageBox.information(
                     self.window,
                     "EXIT",
                     "Wait until the box is empty before exiting the application",
                 )
-            case data.state.EXIT_GUI:
+            case State.EXIT_GUI:
                 pass
 
     SAVE_OUTSIDE = "task saved, subject is already outside"
@@ -389,25 +388,25 @@ class Layout(QGridLayout):
 
     def main_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == data.state.SETTINGS:
+            if data.state == State.SETTINGS:
                 data.state = State.WAIT
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == data.state.SETTINGS:
+            if data.state == State.SETTINGS:
                 data.state = State.WAIT
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == data.state.SETTINGS:
+            if data.state == State.SETTINGS:
                 data.state = State.WAIT
             self.window.create_tasks_layout()
 
     def data_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == data.state.SETTINGS:
+            if data.state == State.SETTINGS:
                 data.state = State.WAIT
             self.window.create_data_layout()
 

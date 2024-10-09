@@ -44,6 +44,7 @@ class PyBpod(PyBpodProtocol):
         self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
         self.softcode = Softcode()
+        self.session = self.bpod.session
         self.error = ""
 
     def add_state(
@@ -111,8 +112,12 @@ class PyBpod(PyBpodProtocol):
         self.bpod.send_state_machine(self.sma)
         self.bpod.run_state_machine(self.sma)
 
-    def kill(self) -> None:
+    def stop(self) -> None:
+        self.bpod.stop_trial()
         self.softcode.kill()
+
+    def close(self) -> None:
+        self.bpod.close()
 
     @staticmethod
     def parse_message_input(message: str | tuple[str, int]) -> tuple[str, int, int]:
@@ -120,34 +125,34 @@ class PyBpod(PyBpodProtocol):
         msg = str(message)
 
         # Pattern for "Port#In" and "Port#Out" (where # is 1-9)
-        port_pattern = re.compile(r"Port([1-9])(In|Out)")
+        port_pattern = re.compile(r"Port([0-9])(In|Out)")
 
         # Pattern for "PA1_Port#In" and "PA1_Port#Out" (where # is 1-9)
-        pa1_port_pattern = re.compile(r"PA1_Port([1-9])(In|Out)")
+        pa1_port_pattern = re.compile(r"PA1_Port([0-9])(In|Out)")
 
         # Pattern for "BNC#High" and "BNC#Low" (where # is 1-9)
-        bnc_pattern = re.compile(r"BNC([1-9])(High|Low)")
+        bnc_pattern = re.compile(r"BNC([0-9])(High|Low)")
 
         # Pattern for "Wire#High" and "Wire#Low" (where # is 1-9)
-        wire_pattern = re.compile(r"Wire([1-9])(High|Low)")
+        wire_pattern = re.compile(r"Wire([0-9])(High|Low)")
 
         # Pattern for "SerialX_Y" messages (where X is 1-9 and Y is 1-99)
-        serial_pattern = re.compile(r"Serial([1-9])_([1-9][0-9]?)")
+        serial_pattern = re.compile(r"Serial([0-9])_([0-9][0-9]?)")
 
         # Pattern for "SoftCodeX" messages (where X is 1-99)
-        softcode_pattern = re.compile(r"SoftCode([1-9][0-9]?)")
+        softcode_pattern = re.compile(r"SoftCode([0-9][0-9]?)")
 
         # Pattern for GlobalTimer#_End
-        global_timer_end_pattern = re.compile(r"_GlobalTimer([1-9])_(End)")
+        global_timer_end_pattern = re.compile(r"_GlobalTimer([0-9])_(End)")
 
         # Pattern for GlobalTimer#_Start
-        global_timer_start_pattern = re.compile(r"_GlobalTimer([1-9])_(Start)")
+        global_timer_start_pattern = re.compile(r"_GlobalTimer([0-9])_(Start)")
 
         # Pattern for GlobalCounter# with _End and _Reset suffixes
-        global_counter_pattern = re.compile(r"_GlobalCounter([1-9])_(End)")
+        global_counter_pattern = re.compile(r"_GlobalCounter([0-9])_(End)")
 
         # Pattern for "Condition#"
-        condition_pattern = re.compile(r"_Condition([1-9])")
+        condition_pattern = re.compile(r"_Condition([0-9])")
 
         if msg == "_Tup":
             return ("_Tup", 1, 1)
@@ -182,7 +187,7 @@ class PyBpod(PyBpodProtocol):
 
         elif global_timer_start_match := global_timer_start_pattern.match(msg):
             channel, _ = global_timer_start_match.groups()
-            return ("_GlobalTimer_Start", int(channel), 1)
+            return ("_GlobalTimer", int(channel), 1)
 
         elif global_timer_end_match := global_timer_end_pattern.match(msg):
             channel, _ = global_timer_end_match.groups()
@@ -200,74 +205,72 @@ class PyBpod(PyBpodProtocol):
             raise ValueError(f"Unrecognized message format: {msg}")
 
     @staticmethod
-    def parse_message_output(message: str | tuple[str, int]) -> tuple[str, int, int]:
+    def parse_message_output(message: str | tuple[str, int]) -> tuple[str, Any, int]:
         # Convert the message to string if it's a tuple
         msg = str(message)
 
         # Pattern for ("PWMX", Y) messages (where X is 1-9 and Y is 0-255)
-        pwm_pattern = re.compile(r"\('PWM([1-9])',\s*([0-9]|[1-9][0-9]{1,2})\)")
+        pwm_pattern = re.compile(r"\('PWM([0-9])',\s*([0-9]|[0-9][0-9]{1,2})\)")
 
-        # Pattern for "Valve#"
-        valve_pattern = re.compile(r"Valve([1-9])")
+        # Pattern for ("Valve", X) messages (where X is 1-8)
+        valve_pattern = re.compile(r"\('Valve',\s*([0-9])")
 
-        # Pattern for "BNC#High" and "BNC#Low" (where # is 1-9)
-        bnc_pattern = re.compile(r"BNC([1-9])(High|Low)")
+        # Pattern for ("BNCX", Y) messages (where X is 1-2 and Y is 0-3)
+        bnc_pattern = re.compile(r"\('BNC([0-9])',\s*([0-9])")
 
-        # Pattern for "Wire#High" and "Wire#Low" (where # is 1-9)
-        wire_pattern = re.compile(r"Wire([1-9])(High|Low)")
+        # Pattern for ("WireX", Y) messages (where X is 1-4 and Y is 0-3)
+        wire_pattern = re.compile(r"\('Wire([0-9])',\s*([0-9])")
 
         # Pattern for ("SerialX", Y) messages (where X is 1-9 and Y is 0-99)
-        serial_pattern = re.compile(r"\('Serial([1-9])',\s*([1-9][0-9]?)")
+        serial_pattern = re.compile(r"\('Serial([0-9])',\s*([0-9][0-9]?)")
 
         # Pattern for ("SoftCode", Y) messages (where Y is 1-99)
-        softcode_pattern = re.compile(r"\('SoftCode',\s*([1-9][0-9]?)")
+        softcode_pattern = re.compile(r"\('SoftCode',\s*([0-9][0-9]?)")
 
         # Pattern for ("_GlobalTimerTrig", Y) messages (where Y is 1-9)
-        global_timer_trig_pattern = re.compile(r"\('_GlobalTimerTrig',\s*([1-9])")
+        global_timer_trig_pattern = re.compile(r"\('_GlobalTimerTrig',\s*([0-9])")
 
         # Pattern for ("_GlobalTimerCancel", Y) messages (where Y is 1-9)
-        global_timer_cancel_pattern = re.compile(r"\('_GlobalTimerCancel',\s*([1-9])")
+        global_timer_cancel_pattern = re.compile(r"\('_GlobalTimerCancel',\s*([0-9])")
 
         # Pattern for ("_GlobalCounterReset", Y) messages (where Y is 1-9)
-        global_counter_reset_pattern = re.compile(r"\('_GlobalCounterReset',\s*([1-9])")
+        global_counter_reset_pattern = re.compile(r"\('_GlobalCounterReset',\s*([0-9])")
 
         if pwm_match := pwm_pattern.match(msg):
-            channel, value = pwm_match.groups()
-            return ("PWM", int(channel), int(value))
+            channel, val = pwm_match.groups()
+            return ("PWM", int(channel), int(val))
 
         elif valve_match := valve_pattern.match(msg):
             channel = valve_match.group(1)
             return ("Valve", int(channel), 1)  # The value is always 1
 
         elif bnc_match := bnc_pattern.match(msg):
-            channel, state = bnc_match.groups()
-            value = 3 if state == "High" else 0
-            return ("BNC", int(channel), value)
+            channel, val = bnc_match.groups()
+            return ("BNC", int(channel), int(val))
 
         elif wire_match := wire_pattern.match(msg):
-            channel, state = wire_match.groups()
-            value = 3 if state == "High" else 0
-            return ("Wire", int(channel), value)
+            channel, val = wire_match.groups()
+            return ("Wire", int(channel), int(val))
 
         elif serial_match := serial_pattern.match(msg):
-            channel, value = serial_match.groups()
-            return ("Serial", int(channel), int(value))
+            channel, val = serial_match.groups()
+            return ("Serial", int(channel), int(val))
 
         elif softcode_match := softcode_pattern.match(msg):
-            channel = softcode_match.group(1)
-            return ("SoftCode", int(channel), 1)  # The value is always 1
+            val = softcode_match.group(1)
+            return ("SoftCode", "", int(val))  # The value is always 1
 
         elif global_timer_trig_match := global_timer_trig_pattern.match(msg):
-            channel = global_timer_trig_match.group(1)
-            return ("_GlobalTimerTrig", int(channel), 1)
+            val = global_timer_trig_match.group(1)
+            return ("_GlobalTimerTrig", "", int(val))
 
         elif global_timer_cancel_match := global_timer_cancel_pattern.match(msg):
-            channel = global_timer_cancel_match.group(1)
-            return ("_GlobalTimerCancel", int(channel), 1)
+            val = global_timer_cancel_match.group(1)
+            return ("_GlobalTimerCancel", "", int(val))
 
         elif global_counter_reset_match := global_counter_reset_pattern.match(msg):
-            channel = global_counter_reset_match.group(1)
-            return ("_GlobalCounterReset", int(channel), 1)
+            val = global_counter_reset_match.group(1)
+            return ("_GlobalCounterReset", "", int(val))
 
         else:
             raise ValueError(f"Unrecognized message format: {msg}")

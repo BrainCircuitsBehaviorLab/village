@@ -20,4 +20,12 @@ class TasksLayout(Layout):
         self.label = self.create_and_add_label("TASKS", 10, 10, 30, 2, "black")
 
         for index, task in enumerate(data.tasks):
-            self.create_and_add_label(task.name, 12 + 2 * index, 10, 30, 2, "black")
+            self.create_and_add_button(
+                task.name,
+                12 + 2 * index,
+                40,
+                30,
+                2,
+                (lambda _, t=task: t.test_run()),
+                "Running the task",
+            )

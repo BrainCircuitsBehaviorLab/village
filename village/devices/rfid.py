@@ -1,7 +1,7 @@
 import threading
 from collections import deque
 from datetime import datetime
-from typing import Deque, Tuple
+from typing import Deque
 
 import serial
 
@@ -18,7 +18,7 @@ class Rfid:
         self.time_detections = settings.get("TIME_BETWEEN_DETECTIONS")
 
         self.id = ""
-        self.id_history: Deque[Tuple[str, datetime]] = deque()
+        self.id_history: Deque[tuple[str, datetime]] = deque()
 
         self.s = serial.Serial(self.port, self.baudrate, timeout=0.1)
 
@@ -56,7 +56,7 @@ class Rfid:
         self.s.close()
         self.thread.join()
 
-    def get_id(self) -> Tuple[str, bool]:
+    def get_id(self) -> tuple[str, bool]:
         return (self.id, self.multiple)
 
 

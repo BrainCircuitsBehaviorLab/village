@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from village.classes.enums import Actions, Active, Cycle, Info
+from village.classes.enums import Actions, Active, Cycle, Info, State
 from village.data import data
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
@@ -237,7 +237,7 @@ class MonitorLayout(Layout):
         self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
 
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 12, 88, 18, 36)
+        self.addLayout(self.central_layout, 16, 88, 18, 36)
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
         self.page1Layout = MotorLayout(self.window, 20, 36)
@@ -267,15 +267,38 @@ class MonitorLayout(Layout):
         self.bottom_layout.addWidget(self.page4)
         self.bottom_layout.addWidget(self.page5)
 
+        self.stop_task_button: PushButton = self.create_and_add_button(
+            "STOP TASK",
+            4,
+            89,
+            16,
+            2,
+            self.stop_task,
+            "Stop a running task",
+        )
+
+        self.go_to_wait_button: PushButton = self.create_and_add_button(
+            "GO TO WAIT STATE",
+            4,
+            106,
+            17,
+            2,
+            self.go_to_wait,
+            """
+            If the systems thinks there is a subject in the corridor or the box,
+            but there isn't, you can force going to the WAIT state.
+            """,
+        )
+
         self.tag_reader_label: Label = self.create_and_add_label(
-            "Tag reader: ", 4, 90, 12, 2, "black"
+            "Tag reader: ", 7, 90, 12, 2, "black"
         )
         key = "TAG_READER"
         possible_values = Active.values()
         index = Active.get_index_from_value(data.tag_reader)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
-            4,
+            7,
             100,
             20,
             2,
@@ -286,14 +309,14 @@ class MonitorLayout(Layout):
         )
 
         self.cycle_label: Label = self.create_and_add_label(
-            "Cycle: ", 6, 90, 12, 2, "black"
+            "Cycle: ", 9, 90, 12, 2, "black"
         )
         key = "CYCLE"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(data.cycle)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
-            6,
+            9,
             100,
             20,
             2,
@@ -303,39 +326,16 @@ class MonitorLayout(Layout):
             "Cycle of the corridor: AUTO, DAY, NIGHT",
         )
 
-        self.actions_label: Label = self.create_and_add_label(
-            "Actions: ", 10, 89, 33, 2, "black"
-        )
-        self.actions_label.setStyleSheet(
-            "background-color: white; font-weight: bold; padding: 5px"
-        )
-        key = "ACTIONS"
-        possible_values = Actions.values()
-        index = Actions.get_index_from_value(data.actions)
-        self.actions_button = self.create_and_add_toggle_button(
-            key,
-            10,
-            100,
-            20,
-            2,
-            possible_values,
-            index,
-            self.toggle_actions_button,
-            "Perform actions on the corridor, behavioral ports or softcodes",
+        self.info_label: Label = self.create_and_add_label(
+            "Info: ", 11, 90, 33, 2, "black"
         )
 
-        self.info_label: Label = self.create_and_add_label(
-            "Info: ", 32, 89, 33, 2, "black"
-        )
-        self.info_label.setStyleSheet(
-            "background-color: white; font-weight: bold; padding: 5px"
-        )
         key = "INFO"
         possible_values = Info.values()
         index = Info.get_index_from_value(data.info)
         self.info_button = self.create_and_add_toggle_button(
             key,
-            32,
+            11,
             100,
             20,
             2,
@@ -345,11 +345,36 @@ class MonitorLayout(Layout):
             "Info and values of the cameras or info about the system",
         )
 
-        index = Actions.get_index_from_string(data.actions.value)
-        self.central_layout.setCurrentIndex(index)
+        self.actions_label: Label = self.create_and_add_label(
+            "Actions: ", 13, 90, 33, 2, "black"
+        )
+        key = "ACTIONS"
+        possible_values = Actions.values()
+        index = Actions.get_index_from_value(data.actions)
+        self.actions_button = self.create_and_add_toggle_button(
+            key,
+            13,
+            100,
+            20,
+            2,
+            possible_values,
+            index,
+            self.toggle_actions_button,
+            "Perform actions on the corridor, behavioral ports or softcodes",
+        )
 
         index = Info.get_index_from_string(data.info.value)
         self.bottom_layout.setCurrentIndex(index)
+
+        index = Actions.get_index_from_string(data.actions.value)
+        self.central_layout.setCurrentIndex(index)
+
+    def stop_task(self) -> None:
+        # TODO stop task here
+        pass
+
+    def go_to_wait(self) -> None:
+        data.state = State.WAIT
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
         data.cycle = Cycle[value]
@@ -380,10 +405,46 @@ class MonitorLayout(Layout):
 
     def update_gui(self) -> None:
         self.update_status_label()
+
+        match data.state:
+            case (
+                State.WAIT
+                | State.DETECTION
+                | State.ACCESS
+                | State.LAUNCH
+                | State.EXIT_GUI
+                | State.SETTINGS
+            ):
+                self.stop_task_button.setDisabled(True)
+                self.go_to_wait_button.setDisabled(True)
+            case State.ERROR:
+                self.stop_task_button.setDisabled(True)
+                self.go_to_wait_button.setDisabled(False)
+            case (
+                State.RUN_ACTION
+                | State.CLOSE_DOOR2
+                | State.RUN_CLOSED
+                | State.OPEN_DOOR2
+                | State.RUN_OPENED
+                | State.EXIT_UNSAVED
+                | State.SAVE_OUTSIDE
+                | State.SAVE_INSIDE
+                | State.WAIT_EXIT
+                | State.EXIT_SAVED
+                | State.OPEN_DOOR1
+                | State.CLOSE_DOOR1
+                | State.RUN_TRAPPED
+                | State.OPEN_DOOR2_STOP
+                | State.OPEN_DOORS_STOP
+                | State.MANUAL_RUN
+            ):
+                self.stop_task_button.setDisabled(False)
+                self.go_to_wait_button.setDisabled(True)
+
         match data.info:
-            case Info.SYSTEM_INFO:
+            case data.info.SYSTEM_INFO:
                 self.page4Layout.update_gui()
-            case Info.CORRIDOR_SETTINGS:
+            case data.info.CORRIDOR_SETTINGS:
                 self.page5Layout.update_gui()
 
 
@@ -409,7 +470,7 @@ class MotorLayout(Layout):
         )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            9,
+            10,
             6,
             22,
             2,
@@ -418,7 +479,7 @@ class MotorLayout(Layout):
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            11,
+            12,
             6,
             22,
             2,
@@ -427,7 +488,7 @@ class MotorLayout(Layout):
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            13,
+            14,
             6,
             22,
             2,
@@ -436,7 +497,7 @@ class MotorLayout(Layout):
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            17,
+            20,
             6,
             22,
             2,
@@ -595,7 +656,7 @@ class PortsLayout(Layout):
         for i in range(8):
             button1 = self.create_and_add_button(
                 "LED" + str(i + 1),
-                i * 2,
+                i * 2 + 1,
                 0,
                 16,
                 2,
@@ -606,7 +667,7 @@ class PortsLayout(Layout):
 
             button2 = self.create_and_add_button(
                 "WATER" + str(i + 1),
-                i * 2,
+                i * 2 + 1,
                 18,
                 16,
                 2,

@@ -4,14 +4,17 @@ https://github.com/DFRobot/DFRobot_HX711_I2C
 """
 
 import time
+import traceback
 from typing import Any
 
 import smbus2
 
+from village.classes.protocols import ScaleProtocol
+from village.log import log
 from village.settings import settings
 
 
-class Scale(object):
+class Scale(ScaleProtocol):
 
     def __init__(self) -> None:
         self.I2C_ADDR = 0x64  # I2C device address
@@ -21,6 +24,7 @@ class Scale(object):
         self.calibration = settings.get("SCALE_CALIBRATION_VALUE")
         self.offset = 0.0
         self.i2cbus = smbus2.SMBus(self.bus)
+        self.error = ""
         self.tare()
 
     # @time_utils.measure_time
@@ -74,4 +78,14 @@ class Scale(object):
         return self.rxbuf
 
 
-scale = Scale()
+def get_scale() -> ScaleProtocol:
+    try:
+        scale = Scale()
+        log.info("Scale successfully initialized")
+        return scale
+    except Exception:
+        log.error("Could not initialize bpod", exception=traceback.format_exc())
+        return ScaleProtocol()
+
+
+scale = get_scale()

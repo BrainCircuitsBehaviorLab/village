@@ -504,9 +504,6 @@ class BpodBase(object):
                     if not transition_event_found:
                         logger.debug("transition event not found")
                         logger.debug("Current state: %s", sma.current_state)
-                        print(sma.input_matrix)
-                        print("__________---------")
-                        print(sma.current_state)
                         for transition in sma.input_matrix[sma.current_state]:
                             logger.debug("Transition: %s", transition)
                             if transition[0] == event_id:

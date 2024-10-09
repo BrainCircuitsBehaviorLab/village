@@ -17,7 +17,7 @@
 #             state_name="light_off",
 #             state_timer=1,
 #             state_change_conditions={
-#                 Event.Port2In: "light_on",
+#                 Event.Port1In: "light_on",
 #                 Event.Tup: "exit",
 #             },
 #             output_actions=[],
@@ -27,10 +27,10 @@
 #             state_name="light_on",
 #             state_timer=1,
 #             state_change_conditions={
-#                 Event.Port2Out: "light_off",
+#                 Event.Port1Out: "light_off",
 #                 Event.Tup: "exit",
 #             },
-#             output_actions=[(Output.PWM2, 5), Output.BNC1High],
+#             output_actions=[(Output.PWM2, 255), Output.BNC1High],
 #         )
 
 #     def after_trial(self) -> None:
@@ -205,80 +205,84 @@
 #         raise ValueError(f"Unrecognized message format: {msg}")
 
 
+# from village.devices.bpod import bpod
+
 # # Ejemplos de uso input:
-# print(parse_message_input("_Tup"))
-# print(parse_message_input("Port1In"))
-# print(parse_message_input("Port2Out"))
-# print(parse_message_input("PA1_Port1In"))
-# print(parse_message_input("PA1_Port3Out"))
-# print(parse_message_input("BNC1High"))
-# print(parse_message_input("BNC2Low"))
-# print(parse_message_input("Wire1High"))
-# print(parse_message_input("Wire2Low"))
-# print(parse_message_input("Serial1_4"))
-# print(parse_message_input("Serial3_12"))
-# print(parse_message_input("SoftCode1"))
-# print(parse_message_input("SoftCode34"))
-# print(parse_message_input("_GlobalTimer1_Start"))
-# print(parse_message_input("_GlobalTimer2_End"))
-# print(parse_message_input("_GlobalCounter3_End"))
-# print(parse_message_input("_Condition1"))
+# print(bpod.parse_message_input("_Tup"))
+# print(bpod.parse_message_input("Port1In"))
+# print(bpod.parse_message_input("Port2Out"))
+# print(bpod.parse_message_input("PA1_Port1In"))
+# print(bpod.parse_message_input("PA1_Port3Out"))
+# print(bpod.parse_message_input("BNC1High"))
+# print(bpod.parse_message_input("BNC2Low"))
+# print(bpod.parse_message_input("Wire1High"))
+# print(bpod.parse_message_input("Wire2Low"))
+# print(bpod.parse_message_input("Serial1_4"))
+# print(bpod.parse_message_input("Serial3_12"))
+# print(bpod.parse_message_input("SoftCode1"))
+# print(bpod.parse_message_input("SoftCode34"))
+# print(bpod.parse_message_input("_GlobalTimer1_Start"))
+# print(bpod.parse_message_input("_GlobalTimer2_End"))
+# print(bpod.parse_message_input("_GlobalCounter3_End"))
+# print(bpod.parse_message_input("_Condition1"))
 
 
 # # output
-# print(parse_message_output(("PWM1", 255)))
-# print(parse_message_output(("PWM2", 0)))
-# print(parse_message_output(("PWM2", 3)))
-# print(parse_message_output(("PWM2", 103)))
-# print(parse_message_output(("PWM1", 26)))
-# print(parse_message_output("Valve1"))
-# print(parse_message_output("BNC1High"))
-# print(parse_message_output("BNC2Low"))
-# print(parse_message_output("Wire1High"))
-# print(parse_message_output("Wire2Low"))
-# print(parse_message_output(("Serial4", 3)))
-# print(parse_message_output(("Serial2", 31)))
-# print(parse_message_output(("SoftCode", 23)))
-# print(parse_message_output(("SoftCode", 5)))
-# print(parse_message_output(("_GlobalTimerTrig", 1)))
-# print(parse_message_output(("_GlobalTimerCancel", 2)))
-# print(parse_message_output(("_GlobalCounterReset", 3)))
+# print(bpod.parse_message_output(("PWM1", 255)))
+# print(bpod.parse_message_output(("PWM2", 0)))
+# print(bpod.parse_message_output(("PWM2", 3)))
+# print(bpod.parse_message_output(("PWM2", 103)))
+# print(bpod.parse_message_output(("PWM1", 26)))
+# print(bpod.parse_message_output(("Valve", 4)))
+# print(bpod.parse_message_output(("BNC1", 3)))
+# print(bpod.parse_message_output(("BNC2", 0)))
+# print(bpod.parse_message_output(("Wire1", 3)))
+# print(bpod.parse_message_output(("Wire2", 0)))
+# print(bpod.parse_message_output(("Serial4", 3)))
+# print(bpod.parse_message_output(("Serial2", 31)))
+# print(bpod.parse_message_output(("SoftCode", 23)))
+# print(bpod.parse_message_output(("SoftCode", 5)))
+# print(bpod.parse_message_output(("_GlobalTimerTrig", 1)))
+# print(bpod.parse_message_output(("_GlobalTimerCancel", 2)))
+# print(bpod.parse_message_output(("_GlobalCounterReset", 3)))
 
 
-import pandas as pd
+# import time
 
-data = {
-    "active": [
-        "ON",
-        "on",
-        "On",
-        "OFF",
-        "Mon-Tue-Wed",
-        "Fri-Mon",
-        "Mon-TU",
-        "Thu-Fri",
-        "Sat",
-        "Sun-Mon",
-        "Invalid",
-    ]
-}
-df = pd.DataFrame(data)
+# from village.classes.task import Event, Output
+# from village.devices.bpod import bpod
 
-dias_semana = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+# # bpod.add_state(
+# #     state_name="light_off",
+# #     state_timer=5,
+# #     state_change_conditions={
+# #         Event.Port1In: "light_on",
+# #         Event.Tup: "exit",
+# #     },
+# #     output_actions=[],
+# # )
 
+# # bpod.add_state(
+# #     state_name="light_on",
+# #     state_timer=5,
+# #     state_change_conditions={
+# #         Event.Port1Out: "light_off",
+# #         Event.Tup: "exit",
+# #     },
+# #     output_actions=[(Output.PWM2, 255), Output.BNC1High],
+# # )
 
-def convertir_active(value) -> str:
-    value = value.strip()
-    if value in ("ON", "On", "on"):
-        return "ON"
-    else:
-        dias = [dia.strip() for dia in value.split("-")]
-        if all(dia in dias_semana for dia in dias):
-            return "-".join(dias)
-        else:
-            return "OFF"
+# # bpod.send_and_run_state_machine()
+
+# # bpod.close()
 
 
-df["active"] = df["active"].apply(convertir_active)
+# bpod.manual_override_output((Output.PWM2, 255))
+# bpod.manual_override_output(Output.Valve1)
+# bpod.manual_override_output(Output.SoftCode14)
 
-print(df)
+
+# bpod.manual_override_input(Event.Port1In)
+# time.sleep(1)
+# bpod.stop()
+# time.sleep(1)
