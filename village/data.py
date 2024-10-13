@@ -5,9 +5,10 @@ import subprocess
 import sys
 import traceback
 from pathlib import Path
+from threading import Thread
+from typing import Dict, Type
 
 import sounddevice as sd
-from pandas import DataFrame
 from PyQt5.QtWidgets import QLayout
 
 from village.classes.collection import Collection
@@ -27,16 +28,14 @@ class Data:
         self.table: DataTable = DataTable.EVENTS
         self.tag_reader: Active = settings.get("TAG_READER")
         self.cycle: Cycle = settings.get("CYCLE")
+        self.info: Info = settings.get("INFO")
+        self.actions: Actions = settings.get("ACTIONS")
         self.cycle_text: str = ""
         self.text: str = ""
         self.old_text: str = ""
         self.day: bool = True
         self.changing_settings: bool = False
-        self.info: Info = settings.get("INFO")
-        self.actions: Actions = settings.get("ACTIONS")
-        self.tasks: list[Task] = []
-        self.filename: str = ""
-        self.df_all: DataFrame | None = None
+        self.tasks: Dict[str, Type] = dict()
         self.errors: str = ""
 
         self.update_cycle()
@@ -48,10 +47,10 @@ class Data:
     @staticmethod
     def change_directory_settings(new_path: str) -> None:
         settings.set("PROJECT_DIRECTORY", new_path)
-        settings.set("DATA_DIRECTORY", str(Path(new_path) / "data"))
-        settings.set("SESSIONS_DIRECTORY", str(Path(new_path) / "data" / "sessions"))
-        settings.set("VIDEOS_DIRECTORY", str(Path(new_path) / "data" / "videos"))
-        settings.set("CODE_DIRECTORY", str(Path(new_path) / "code"))
+        settings.set("DATA_DIRECTORY", str(Path(new_path, "data")))
+        settings.set("SESSIONS_DIRECTORY", str(Path(new_path, "data", "sessions")))
+        settings.set("VIDEOS_DIRECTORY", str(Path(new_path, "data", "videos")))
+        settings.set("CODE_DIRECTORY", str(Path(new_path, "code")))
 
     @staticmethod
     def create_directories() -> None:
@@ -67,17 +66,18 @@ class Data:
         directory.mkdir(parents=True, exist_ok=True)
 
     @staticmethod
-    def create_directories_from_path(path: str) -> bool:
+    def create_directories_from_path(p: str) -> bool:
         try:
-            Path(path).mkdir(parents=True, exist_ok=True)
-            data = os.path.join(path, "data")
-            Path(data).mkdir(parents=True, exist_ok=True)
-            sessions = os.path.join(data, "sessions")
-            Path(sessions).mkdir(parents=True, exist_ok=True)
-            videos = os.path.join(data, "videos")
-            Path(videos).mkdir(parents=True, exist_ok=True)
-            code = os.path.join(path, "code")
-            Path(code).mkdir(parents=True, exist_ok=True)
+            path = Path(p)
+            path.mkdir(parents=True, exist_ok=True)
+            data = Path(path, "data")
+            data.mkdir(parents=True, exist_ok=True)
+            sessions = Path(data, "sessions")
+            sessions.mkdir(parents=True, exist_ok=True)
+            videos = Path(data, "videos")
+            videos.mkdir(parents=True, exist_ok=True)
+            code = Path(path, "code")
+            code.mkdir(parents=True, exist_ok=True)
             return True
         except Exception:
             return False
@@ -157,7 +157,7 @@ class Data:
         sys.path.append(directory)
 
         python_files: list[str] = []
-        tasks: list[Task] = []
+        tasks = dict()
 
         for root, dirs, files in os.walk(directory):
             for file in files:
@@ -174,9 +174,9 @@ class Data:
                     if issubclass(cls, Task) and cls != Task:
                         name = cls.__name__
                         new_task = cls()
-                        new_task.name = name
-                        if not any(item.name == name for item in tasks):
-                            tasks.append(new_task)
+                        new_task.check_variables()
+                        if name not in tasks:
+                            tasks[name] = cls
             except Exception:
                 log.error(
                     "Couldn't import " + module_name, exception=traceback.format_exc()
@@ -233,12 +233,12 @@ class Data:
                         self.day = False
 
     def update_text(self) -> bool:
-        state_name = data.state.name
-        state_description = data.state.description
-        subject_name = data.subject.name
-        task_name = data.task.name
-        tag_reader_name = data.tag_reader.name
-        cycle_text = data.cycle_text
+        state_name = self.state.name
+        state_description = self.state.description
+        subject_name = self.subject.name
+        task_name = self.task.name
+        tag_reader_name = self.tag_reader.name
+        cycle_text = self.cycle_text
 
         self.text = (
             "SYSTEM STATE: "
@@ -289,34 +289,146 @@ class Data:
         devices_str = [d["name"] for d in devices]
         return devices_str
 
-    def launch_task(self) -> bool:
-        task_name = self.subject.next_task
-        task = next((item for item in self.tasks if item.name == task_name), None)
-        if task is None:
-            log.error("Task: " + task_name + " not found", subject=self.subject.name)
-            return False
-        else:
-            self.task = task
+    def launch_task_manual(self) -> bool:
+        try:
             self.task.subject = self.subject.name
-            start_time = time_utils.now_string_for_filename()
-            self.task.df = None
-            self.task.new_df = None
+            used_names = [
+                "bpod",
+                "current_trial",
+                "current_trial_states",
+                "df",
+                "filename",
+                "force_stop",
+                "info",
+                "maximum_duration",
+                "maximum_number_of_trials",
+                "minimum_duration",
+                "name",
+                "new_df",
+                "process",
+                "raw_session_path",
+                "session_path",
+                "settings_path",
+                "subject",
+                "subject_settings_path",
+                "system_name",
+                "touch_response",
+                "video_data_path",
+                "video_path",
+                "weight",
+            ]
+            properties = [
+                prop
+                for prop in dir(data.task)
+                if not callable(getattr(data.task, prop))
+                and not prop.startswith("__")
+                and prop not in used_names
+            ]
+            print(properties)
+            self.run_task_in_thread()
+            return True
+        except Exception:
+            log.alarm(
+                "Error launching task " + self.task.name,
+                subject=self.subject.name,
+                exception=traceback.format_exc(),
+            )
+            return False
 
-            filename = str(self.subject.name) + "_" + str(self.subject.next_task)
-            filename += "_" + start_time
-            self.filename = filename
-            self.df_all = None
-
-            try:
-                data.task.test_run(subject=self.subject.name)
+    def launch_task_auto(self) -> bool:
+        try:
+            task_name = self.subject.next_task
+            cls = self.tasks.get(task_name)
+            if cls is None:
+                log.error(
+                    "Task: " + task_name + " not found", subject=self.subject.name
+                )
+                return False
+            elif issubclass(cls, Task):
+                self.task = cls()
+                self.task.subject = self.subject.name
+                self.run_task_in_thread()
                 return True
-            except Exception:
+            else:
                 log.alarm(
-                    "Error launching task " + task_name,
+                    "Task: " + task_name + " is not a subclass of Task",
+                    subject=self.subject.name,
+                )
+                return False
+        except Exception:
+            log.alarm(
+                "Error launching task " + task_name,
+                subject=self.subject.name,
+                exception=traceback.format_exc(),
+            )
+            return False
+
+    def run_task_in_thread(self) -> None:
+        self.process = Thread(target=self.run_task, daemon=True)
+        self.process.start()
+
+    def run_task(self) -> None:
+        try:
+            self.task.run()
+        except Exception:
+            if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:
+                log.alarm(
+                    "Error running task " + self.task.name,
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
-                return False
+                data.state = State.SAVE_MANUAL
+            elif data.state in [
+                State.LAUNCH_AUTO,
+                State.RUN_ACTION,
+                State.RUN_OPENED,
+                State.RUN_CLOSED,
+                State.OPEN_DOOR2,
+                State.CLOSE_DOOR2,
+            ]:
+                log.alarm(
+                    "Error running task " + self.task.name,
+                    subject=self.subject.name,
+                    exception=traceback.format_exc(),
+                )
+                data.state = State.OPEN_DOOR2_STOP
+            elif data.state in [
+                State.OPEN_DOOR1,
+                State.CLOSE_DOOR1,
+                State.RUN_TRAPPED,
+            ]:
+                log.alarm(
+                    "Error running task " + self.task.name,
+                    subject=self.subject.name,
+                    exception=traceback.format_exc(),
+                )
+                data.state = State.SAVE_TRAPPED
+
+        finally:
+            self.task.close()
+
+    def create_paths(self, start_time) -> None:
+        self.task.filename = (
+            str(self.subject.name) + "_" + str(self.task.name) + "_" + start_time
+        )
+        task_directory = str(
+            Path(settings.get("SESSIONS_DIRECTORY"), self.subject.name)
+        )
+        self.task.raw_session_path = str(
+            Path(task_directory, self.task.filename + "_RAW.csv")
+        )
+        self.task.session_path = str(Path(task_directory, self.task.filename + ".csv"))
+        self.task.settings_path = str(
+            Path(task_directory, self.task.filename + ".json")
+        )
+        video_directory = str(Path(settings.get("VIDEOS_DIRECTORY"), self.subject.name))
+        self.task.video_path = str(Path(video_directory, self.task.filename + ".avi"))
+        self.task.video_data_path = str(
+            Path(video_directory, self.task.filename + ".csv")
+        )
+        self.task.subject_settings_path = str(
+            Path(settings.get("DATA_DIRECTORY"), self.subject.name + ".json")
+        )
 
 
 data = Data()

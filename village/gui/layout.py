@@ -323,60 +323,31 @@ class Layout(QGridLayout):
             cam_corridor.change = True
 
     def exit_button_clicked(self) -> None:
-        match data.state:
-            case State.WAIT | State.SETTINGS | State.ERROR:
-                old_state = data.state
-                data.state = State.EXIT_GUI
+        if data.state.can_exit():
+            old_state = data.state
+            data.state = State.EXIT_GUI
+            self.update_status_label()
+            text = "Are you sure you want to exit?"
+            if data.changing_settings:
+                text += " Changes will not be saved."
+            reply = QMessageBox.question(
+                self.window,
+                "EXIT",
+                text,
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
+            if reply == QMessageBox.Yes:
+                self.window.exit_app()
+            else:
+                data.state = old_state
                 self.update_status_label()
-                text = "Are you sure you want to exit?"
-                if data.changing_settings:
-                    text += " Changes will not be saved."
-                reply = QMessageBox.question(
-                    self.window,
-                    "EXIT",
-                    text,
-                    QMessageBox.Yes | QMessageBox.No,
-                    QMessageBox.No,
-                )
-                if reply == QMessageBox.Yes:
-                    self.window.exit_app()
-                else:
-                    data.state = old_state
-                    self.update_status_label()
-            case State.DETECTION | State.ACCESS | State.LAUNCH:
-                text = "Wait until the box is empty before exiting the application"
-                text = "Subject is being detected. " + text
-                QMessageBox.information(
-                    self.window,
-                    "EXIT",
-                    text,
-                )
-            case (
-                State.RUN_ACTION
-                | State.CLOSE_DOOR2
-                | State.RUN_CLOSED
-                | State.OPEN_DOOR2
-                | State.RUN_OPENED
-                | State.EXIT_UNSAVED
-                | State.SAVE_OUTSIDE
-                | State.SAVE_INSIDE
-                | State.WAIT_EXIT
-                | State.EXIT_SAVED
-                | State.OPEN_DOOR1
-                | State.CLOSE_DOOR1
-                | State.RUN_TRAPPED
-                | State.SAVE_TRAPPED
-                | State.OPEN_DOOR2_STOP
-                | State.OPEN_DOORS_STOP
-                | State.MANUAL_RUN
-            ):
-                QMessageBox.information(
-                    self.window,
-                    "EXIT",
-                    "Wait until the box is empty before exiting the application",
-                )
-            case State.EXIT_GUI:
-                pass
+        else:
+            QMessageBox.information(
+                self.window,
+                "EXIT",
+                "Wait until the box is empty before exiting the application",
+            )
 
     SAVE_OUTSIDE = "task saved, subject is already outside"
     SAVE_INSIDE = "task saved, subject is still inside"

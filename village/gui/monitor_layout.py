@@ -369,6 +369,8 @@ class MonitorLayout(Layout):
         index = Actions.get_index_from_string(data.actions.value)
         self.central_layout.setCurrentIndex(index)
 
+        self.update_buttons()
+
     def stop_task(self) -> None:
         # TODO stop task here
         pass
@@ -405,47 +407,16 @@ class MonitorLayout(Layout):
 
     def update_gui(self) -> None:
         self.update_status_label()
-
-        match data.state:
-            case (
-                State.WAIT
-                | State.DETECTION
-                | State.ACCESS
-                | State.LAUNCH
-                | State.EXIT_GUI
-                | State.SETTINGS
-            ):
-                self.stop_task_button.setDisabled(True)
-                self.go_to_wait_button.setDisabled(True)
-            case State.ERROR:
-                self.stop_task_button.setDisabled(True)
-                self.go_to_wait_button.setDisabled(False)
-            case (
-                State.RUN_ACTION
-                | State.CLOSE_DOOR2
-                | State.RUN_CLOSED
-                | State.OPEN_DOOR2
-                | State.RUN_OPENED
-                | State.EXIT_UNSAVED
-                | State.SAVE_OUTSIDE
-                | State.SAVE_INSIDE
-                | State.WAIT_EXIT
-                | State.EXIT_SAVED
-                | State.OPEN_DOOR1
-                | State.CLOSE_DOOR1
-                | State.RUN_TRAPPED
-                | State.OPEN_DOOR2_STOP
-                | State.OPEN_DOORS_STOP
-                | State.MANUAL_RUN
-            ):
-                self.stop_task_button.setDisabled(False)
-                self.go_to_wait_button.setDisabled(True)
-
+        self.update_buttons()
         match data.info:
             case data.info.SYSTEM_INFO:
                 self.page4Layout.update_gui()
             case data.info.CORRIDOR_SETTINGS:
                 self.page5Layout.update_gui()
+
+    def update_buttons(self) -> None:
+        self.stop_task_button.setEnabled(data.state.can_stop_task())
+        self.go_to_wait_button.setEnabled(data.state.can_go_to_wait())
 
 
 class MotorLayout(Layout):

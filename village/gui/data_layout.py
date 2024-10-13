@@ -200,55 +200,21 @@ class DataLayout(Layout):
                 data.subjects.df = self.model.df
                 data.subjects.save_from_df()
                 self.create_table()
+        elif data.state.can_edit_subjects():
+            # TODO disable plot
+            self.searching = ""
+            self.search_edit.setText("")
+            self.editing = True
+            self.model.editable = True
+            data.state = State.SETTINGS
+            data.changing_settings = True
+            self.update_status_label()
+            self.update_buttons()
+            row_count = self.model.rowCount()
+            self.model.insertRows(row_count, rows=50)
         else:
-            match data.state:
-                case State.WAIT:
-                    # TODO disable plot
-                    self.searching = ""
-                    self.search_edit.setText("")
-                    self.editing = True
-                    self.model.editable = True
-                    data.state = State.SETTINGS
-                    data.changing_settings = True
-                    self.update_status_label()
-                    self.update_buttons()
-                    row_count = self.model.rowCount()
-                    self.model.insertRows(row_count, rows=50)
-
-                case State.DETECTION | State.ACCESS:
-                    text = "Wait until the box is empty before editing the subjects."
-                    text = "Subject is being detected. " + text
-                    QMessageBox.information(
-                        self.window,
-                        "EDIT",
-                        text,
-                    )
-                case (
-                    State.LAUNCH
-                    | State.RUN_ACTION
-                    | State.CLOSE_DOOR2
-                    | State.RUN_CLOSED
-                    | State.OPEN_DOOR2
-                    | State.RUN_OPENED
-                    | State.EXIT_UNSAVED
-                    | State.SAVE_OUTSIDE
-                    | State.SAVE_INSIDE
-                    | State.WAIT_EXIT
-                    | State.EXIT_SAVED
-                    | State.OPEN_DOOR1
-                    | State.CLOSE_DOOR1
-                    | State.RUN_TRAPPED
-                    | State.OPEN_DOOR2_STOP
-                    | State.OPEN_DOORS_STOP
-                    | State.MANUAL_RUN
-                ):
-                    QMessageBox.information(
-                        self.window,
-                        "EDIT",
-                        "Wait until the box is empty before editing the subjects.",
-                    )
-                case State.EXIT_GUI | State.ERROR | State.SETTINGS:
-                    pass
+            text = "Wait until the box is empty before editing the subjects."
+            QMessageBox.information(self.window, "EDIT", text)
 
     def change_layout(self) -> bool:
         if self.edit_button.text() == "save changes":

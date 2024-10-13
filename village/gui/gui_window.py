@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import QEvent, QObjectCleanupHandler, QRect, QSize, QTimer
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.enums import State
 from village.data import data
 from village.gui.data_layout import DataLayout
 from village.gui.main_layout import MainLayout
@@ -46,7 +45,6 @@ class GuiWindow(QWidget):
         return super().eventFilter(source, event)
 
     def create_main_layout(self) -> None:
-        data.state = State.WAIT
         data.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MainLayout(self)

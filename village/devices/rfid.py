@@ -5,6 +5,8 @@ from typing import Deque
 
 import serial
 
+from village.classes.enums import Active
+from village.data import data
 from village.settings import settings
 from village.time_utils import time_utils
 
@@ -14,7 +16,6 @@ class Rfid:
         self.port = port
         self.baudrate = baudrate
         self.multiple = False
-        self.running = False
         self.time_detections = settings.get("TIME_BETWEEN_DETECTIONS")
 
         self.id = ""
@@ -57,7 +58,10 @@ class Rfid:
         self.thread.join()
 
     def get_id(self) -> tuple[str, bool]:
-        return (self.id, self.multiple)
+        if data.tag_reader == Active.ON:
+            return (self.id, self.multiple)
+        else:
+            return ("", False)
 
 
 rfid = Rfid()

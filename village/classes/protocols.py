@@ -11,6 +11,10 @@ if TYPE_CHECKING:
 class PyBpodProtocol:
     error: str = "Error connecting to the bpod "
     session: Session | Any
+    connected: bool = False
+
+    def reconnect(self) -> None:
+        return
 
     def add_state(
         self,

@@ -1,4 +1,3 @@
-import time
 from threading import Thread
 
 import numpy as np
@@ -33,87 +32,27 @@ class Task:
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.weight: float = np.nan
-        self.process = Thread(target=self.run_thread, daemon=True)
+        self.process = Thread()
         self.current_trial: int = 0
         self.current_trial_states: list = []
-        self.stop_task: bool = False
         self.touch_response: list = []
         self.maximum_number_of_trials: int = -999
         self.minimum_duration: float = -999
         self.maximum_duration: float = -999
-        self.gui_input: list[str] = []
-        self.gui_output: list[str] = []
         self.system_name: str = settings.get("SYSTEM_NAME")
         self.df: pd.DataFrame | None = None
         self.new_df: pd.DataFrame | None = None
+        self.force_stop: bool = False
 
-    def check_variables(self) -> None:
-        self.maximum_number_of_trials = int(self.maximum_number_of_trials)
-        if self.maximum_number_of_trials == 0:
-            self.maximum_number_of_trials = 1000000
-        self.minimum_duration = float(self.minimum_duration)
-        self.maximum_duration = float(self.maximum_duration)
-        if self.maximum_number_of_trials == -999:
-            raise TaskError(
-                "The variable maximum_number_of_trials is required (must be an integer)"
-            )
-        if self.minimum_duration == -999:
-            raise TaskError(
-                "The variable minimum_duration is required (must be a float)"
-            )
-        if self.maximum_duration == -999:
-            raise TaskError(
-                "The variable maximum_duration is required (must be a float)"
-            )
+        self.filename: str = ""
+        self.raw_session_path: str = ""
+        self.session_path: str = ""
+        self.settings_path: str = ""
+        self.video_path: str = ""
+        self.video_data_path: str = ""
+        self.subject_settings_path: str = ""
 
-    def test(self, subject: str = "None") -> None:
-        self.subject = subject
-        self.check_variables()
-        self.start()
-        self.create_trial()
-        self.after_trial()
-        self.close()
-
-    def test_run(self, subject: str = "None") -> None:
-        self.subject = subject
-        self.check_variables()
-        self.start()
         self.chrono = time_utils.Chrono()
-        while (
-            self.current_trial < self.maximum_number_of_trials
-            and self.chrono.get_seconds() < self.maximum_duration
-        ):
-            self.bpod.create_state_machine()
-            self.create_trial()
-            self.bpod.send_and_run_state_machine()
-            self.after_trial()
-            self.register_values()
-            self.current_trial += 1
-        self.close()
-        self.stop_and_save_task()
-
-    def run(self, subject: str = "None") -> None:
-        self.subject = subject
-        self.check_variables()
-        self.start()
-        self.process.start()
-        self.chrono = time_utils.Chrono()
-        while (
-            self.chrono.get_seconds() < self.maximum_duration
-            and self.process.is_alive()
-        ):
-            time.sleep(0.1)
-        self.close()
-        self.stop_and_save_task()
-
-    def run_thread(self) -> None:
-        while self.current_trial < self.maximum_number_of_trials:
-            self.bpod.create_state_machine()
-            self.create_trial()
-            self.bpod.send_and_run_state_machine()
-            self.after_trial()
-            self.register_values()
-            self.current_trial += 1
 
     # OVERWRITE THESE METHODS IN YOUR TASK
     def start(self) -> None:
@@ -129,19 +68,60 @@ class Task:
         raise TaskError("The method close(self) is required")
 
     # DO NOT OVERWRITE THESE METHODS
-    def send_and_run_state(self) -> None:
-        # self.sma.send(self.state)
-        return
+    def check_variables(self) -> None:
+        self.maximum_number_of_trials = int(self.maximum_number_of_trials)
+        if self.maximum_number_of_trials == 0:
+            self.maximum_number_of_trials = 1000000
+        self.minimum_duration = float(self.minimum_duration)
+        self.maximum_duration = float(self.maximum_duration)
+        if self.maximum_number_of_trials < 0:
+            raise TaskError(
+                """The variable maximum_number_of_trials is required
+                (must be a positive integer or zero for infinite trials)"""
+            )
+        if self.minimum_duration < 0:
+            raise TaskError(
+                "The variable minimum_duration is required (must be a positive float)"
+            )
+        if self.maximum_duration < 0:
+            raise TaskError(
+                "The variable maximum_duration is required (must be a positive float)"
+            )
+
+    def test(self, subject: str = "None") -> None:
+        self.subject = subject
+        self.check_variables()
+        self.start()
+        self.create_trial()
+        self.after_trial()
+        self.close()
+
+    def run(self) -> None:
+        self.bpod.reconnect()
+        self.start()
+        while (
+            self.current_trial < self.maximum_number_of_trials
+            and self.chrono.get_seconds() < self.maximum_duration
+            and not self.force_stop
+        ):
+            self.bpod.create_state_machine()
+            self.create_trial()
+            self.bpod.send_and_run_state_machine()
+            self.after_trial()
+            self.register_values()
+            self.current_trial += 1
 
     def register_values(self) -> None:
         pass
 
-    def stop_and_save_task(self) -> None:
+    def disconnect_and_save(self) -> None:
+        print("disconnect_and_save")
         self.bpod.stop()
-        self.bpod.close()
         # kill the screen
-        self.process.join()
+        # self.process.join()
         # save the csv
+        print("save the csv")
+        self.bpod.close()
 
     @classmethod
     def get_name(cls) -> str:

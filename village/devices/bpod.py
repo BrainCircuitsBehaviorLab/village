@@ -1,5 +1,6 @@
 import re
 import socket
+import time
 import traceback
 from typing import Any
 
@@ -45,6 +46,7 @@ class PyBpod(PyBpodProtocol):
         self.sma = StateMachine(self.bpod)
         self.softcode = Softcode()
         self.session = self.bpod.session
+        self.connected = True
         self.error = ""
 
     def add_state(
@@ -111,13 +113,6 @@ class PyBpod(PyBpodProtocol):
     def send_and_run_state_machine(self) -> None:
         self.bpod.send_state_machine(self.sma)
         self.bpod.run_state_machine(self.sma)
-
-    def stop(self) -> None:
-        self.bpod.stop_trial()
-        self.softcode.kill()
-
-    def close(self) -> None:
-        self.bpod.close()
 
     @staticmethod
     def parse_message_input(message: str | tuple[str, int]) -> tuple[str, int, int]:
@@ -292,6 +287,37 @@ class PyBpod(PyBpodProtocol):
             channel_number=channel_number,
             value=value,
         )
+
+    def reconnect(self) -> None:
+        if not self.connected:
+            print("reconnecting")
+            self.bpod = Bpod()
+        self.sma = StateMachine(self.bpod)
+        self.softcode = Softcode()
+        self.session = self.bpod.session
+        self.connected = True
+
+    def clean(self) -> None:
+        self.add_state(
+            state_name="End",
+            state_timer=0,
+            state_change_conditions={"_Tup": "exit"},
+            output_actions=[],
+        )
+        self.send_and_run_state_machine()
+
+    def stop(self) -> None:
+        self.softcode.kill()
+        time.sleep(1)
+        self.close()
+
+    def close(self) -> None:
+        self.connected = False
+        try:
+            self.bpod.close()
+        except AttributeError:
+            print("no me hizo bpod close")
+            pass
 
 
 def get_bpod() -> PyBpodProtocol:

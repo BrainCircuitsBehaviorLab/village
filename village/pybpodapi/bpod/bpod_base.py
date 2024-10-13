@@ -298,7 +298,7 @@ class BpodBase(object):
                     )
             except:  # noqa: E722
                 self._session += ValueMessage("BPODCRASH", "waiting 100 ms")
-                time.sleep(0.1)
+                time.sleep(0.001)
                 self.send_state_machine(sma)
                 self._bpodcom_run_state_machine()
                 self._new_sma_sent = False
@@ -327,6 +327,8 @@ class BpodBase(object):
 
         sma.is_running = True
         while sma.is_running:
+
+            time.sleep(0.1)
 
             # read commands from a net socket
             if self.socketin is not None:

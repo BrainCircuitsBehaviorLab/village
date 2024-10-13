@@ -36,7 +36,7 @@
 # 6. continue importing data
 #       if the project directory is the demo directory and the code is empty,
 #       download the code from the github repository
-# 7. continue importing data
+# 7. continue importing datadata.tag_reader
 #       set the logprotocol to the events collection
 # 8. continue importing data
 #       log that the village has started
@@ -50,7 +50,7 @@
 import threading
 import time
 
-from village.classes.enums import State
+from village.classes.enums import Active, State
 from village.data import data
 from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
@@ -104,10 +104,9 @@ def system_run() -> None:
         match data.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
-                if data.tag_reader == data.tag_reader.ON:
-                    id, multiple = rfid.get_id()
-                    if id != "":
-                        data.state = State.DETECTION
+                id, multiple = rfid.get_id()
+                if id != "":
+                    data.state = State.DETECTION
             case State.DETECTION:
                 # Gathering subject data, checking requirements to enter
                 if (
@@ -125,17 +124,15 @@ def system_run() -> None:
                 # Closing door1, opening door2
                 motor1.close()
                 motor2.open()
-                data.state = State.LAUNCH
 
-            case State.LAUNCH:
-                # Launching the task
-                if data.launch_task():
+            case State.LAUNCH_AUTO:
+                if data.launch_task_auto():
                     data.state = State.RUN_ACTION
                 else:
                     data.state = State.OPEN_DOOR2_STOP
 
             case State.RUN_ACTION:
-                # Waiting for the first action in the behavioral box
+                # Task running, waiting for the first action in the behavioral box
                 id, multiple = rfid.get_id()
                 if id == data.subject.tag:
                     log.info(
@@ -212,7 +209,9 @@ def system_run() -> None:
 
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
-                pass
+                motor2.open()
+                data.tag_reader = Active.OFF
+                data.state = State.SAVE_INSIDE
 
             case State.OPEN_DOORS_STOP:
                 # Opening both doors, disconnecting RFID
@@ -222,9 +221,26 @@ def system_run() -> None:
                 # Manual intervention required
                 pass
 
-            case State.MANUAL_RUN:
-                # Task is running manuallyy
-                pass
+            case State.LAUNCH_MANUAL:
+                # Launching the task manually
+                if data.launch_task_manual():
+                    data.state = State.RUN_MANUAL
+                else:
+                    data.state = State.ERROR
+
+            case State.RUN_MANUAL:
+                # Task is running manually
+                if (
+                    data.task.current_trial >= data.task.maximum_number_of_trials
+                    or data.task.chrono.get_seconds() >= data.task.maximum_duration
+                    or data.task.force_stop
+                ):
+                    data.state = State.SAVE_MANUAL
+
+            case State.SAVE_MANUAL:
+                # Stopping the task, saving the data; the task was manually stopped
+                data.task.disconnect_and_save()
+                data.state = State.WAIT
 
             case State.SETTINGS:
                 # Settings are being changed or task is being manually prepared

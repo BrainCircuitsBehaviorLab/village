@@ -247,42 +247,100 @@
 # print(bpod.parse_message_output(("_GlobalCounterReset", 3)))
 
 
-# import time
+import time
+from threading import Thread
 
-# from village.classes.task import Event, Output
-# from village.devices.bpod import bpod
+from village.classes.task import Event
+from village.devices.bpod import bpod
 
-# # bpod.add_state(
-# #     state_name="light_off",
-# #     state_timer=5,
-# #     state_change_conditions={
-# #         Event.Port1In: "light_on",
-# #         Event.Tup: "exit",
-# #     },
-# #     output_actions=[],
-# # )
+# bpod.add_state(
+#     state_name="light_off",
+#     state_timer=5,
+#     state_change_conditions={
+#         Event.Port1In: "light_on",
+#         Event.Tup: "exit",
+#     },
+#     output_actions=[],
+# )
 
-# # bpod.add_state(
-# #     state_name="light_on",
-# #     state_timer=5,
-# #     state_change_conditions={
-# #         Event.Port1Out: "light_off",
-# #         Event.Tup: "exit",
-# #     },
-# #     output_actions=[(Output.PWM2, 255), Output.BNC1High],
-# # )
+# bpod.add_state(
+#     state_name="light_on",
+#     state_timer=5,
+#     state_change_conditions={
+#         Event.Port1Out: "light_off",
+#         Event.Tup: "exit",
+#     },
+#     output_actions=[(Output.PWM2, 255), Output.BNC1High],
+# )
 
-# # bpod.send_and_run_state_machine()
+# bpod.send_and_run_state_machine()
 
-# # bpod.close()
-
-
-# bpod.manual_override_output((Output.PWM2, 255))
-# bpod.manual_override_output(Output.Valve1)
-# bpod.manual_override_output(Output.SoftCode14)
+# bpod.close()
 
 
+def override():
+    time.sleep(3)
+    print("override")
+    bpod.manual_override_input("Port1In")
+
+
+thread = Thread(target=override)
+thread.start()
+
+
+# bpod.manual_override_output((Output.PWM1, 255))
+# time.sleep(1)
 # bpod.manual_override_input(Event.Port1In)
 # time.sleep(1)
-# bpod.stop()
-# time.sleep(1)
+
+
+bpod.add_state(
+    state_name="End",
+    state_timer=0,
+    state_change_conditions={Event.Tup: "exit"},
+    output_actions=[],
+)
+
+
+# bpod.add_state(
+#     state_name="light_on",
+#     state_timer=5,
+#     state_change_conditions={
+#         Event.Port1Out: "light_off",
+#         Event.Tup: "exit",
+#     },
+#     output_actions=[(Output.PWM2, 255), Output.BNC1High],
+# )
+
+bpod.send_and_run_state_machine()
+
+
+# import time
+# from threading import Thread
+
+# val = 1
+
+
+# def run() -> None:
+#     try:
+#         a = 1
+#         while True:
+#             a += 1
+#             time.sleep(1)
+#             print("Hello, World!")
+#             if a == 5:
+#                 raise ValueError("Error")
+#     except Exception:
+#         print("pero que pasa")
+
+
+# while val < 10:
+#     if val == 1:
+#         process = Thread(target=run, daemon=True)
+#         process.start()
+#         print(val)
+#         val += 1
+#     else:
+#         val += 1
+#         time.sleep(2)
+#         print("val ", val)

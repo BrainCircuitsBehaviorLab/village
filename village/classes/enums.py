@@ -50,8 +50,8 @@ class State(SuperEnum):
     WAIT = "All subjects are at home, waiting for RFID detection"
     DETECTION = "Gathering subject data, checking requirements to enter"
     ACCESS = "Closing door1, opening door2"
-    LAUNCH = "Launching the task"
-    RUN_ACTION = "Waiting for the first action in the behavioral box"
+    LAUNCH_AUTO = "Launching the task automatically"
+    RUN_ACTION = "Task running, waiting for the first action in the behavioral box"
     CLOSE_DOOR2 = "Closing door2"
     RUN_CLOSED = "Task running, the subject cannot leave yet"
     OPEN_DOOR2 = "Opening door2"
@@ -64,17 +64,50 @@ class State(SuperEnum):
     OPEN_DOOR1 = "Opening door1, a subject is trapped"
     CLOSE_DOOR1 = "Closing door1, the subject is not trapped anymore"
     RUN_TRAPPED = "Task running, waiting for the trapped subject to return home"
+    SAVE_TRAPPED = "Stopping the task, saving the data; a subject is trapped"
     OPEN_DOOR2_STOP = "Opening door2, disconnecting RFID"
     OPEN_DOORS_STOP = "Opening both doors, disconnecting RFID"
-    SAVE_TRAPPED = "Stopping the task, saving the data; a subject is trapped"
     ERROR = "Manual intervention required"
-    MANUAL_RUN = "Task is running manually"
+    LAUNCH_MANUAL = "Launching the task manually"
+    RUN_MANUAL = "Task is running manually"
+    SAVE_MANUAL = "Stopping the task, saving the data; task is running manually"
     SETTINGS = "Settings are being changed or task is being manually prepared"
     EXIT_GUI = "In the GUI window, ready to exit the app"
-    EXIT = "Exit"
 
     def __init__(self, description: str) -> None:
         self.description = description
+
+    def can_exit(self) -> bool:
+        if self in (State.WAIT, State.SETTINGS, State.ERROR):
+            return True
+        else:
+            return False
+
+    def can_edit_subjects(self) -> bool:
+        if self == State.WAIT:
+            return True
+        else:
+            return False
+
+    def can_stop_task(self) -> bool:
+        if self in (
+            State.LAUNCH_AUTO,
+            State.RUN_ACTION,
+            State.RUN_CLOSED,
+            State.RUN_OPENED,
+            State.RUN_TRAPPED,
+            State.LAUNCH_MANUAL,
+            State.RUN_MANUAL,
+        ):
+            return True
+        else:
+            return False
+
+    def can_go_to_wait(self) -> bool:
+        if self in (State.ERROR, State.WAIT_EXIT):
+            return True
+        else:
+            return False
 
 
 class Cycle(SuperEnum):
