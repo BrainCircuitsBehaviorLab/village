@@ -349,7 +349,7 @@ extra_settings = [
     ),
     Setting(
         "GITHUB_REPOSITORY_EXAMPLE",
-        "git@github.com:BrainCircuitsBehaviorLab/follow-the-light-task.git",
+        "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task.git",
         str,
         "The github repository to download",
     ),
