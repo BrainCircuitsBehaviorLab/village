@@ -1,9 +1,17 @@
 import getpass
 from pathlib import Path
 
-from village.classes.settings_class import (Actions, Active, AreaActive, Color,
-                                            Cycle, Info, ScreenActive, Setting,
-                                            Settings)
+from village.classes.settings_class import (
+    Actions,
+    Active,
+    AreaActive,
+    Color,
+    Cycle,
+    Info,
+    ScreenActive,
+    Setting,
+    Settings,
+)
 
 main_settings = [
     Setting("SYSTEM_NAME", "village01", str, "The unique name of the system"),
