@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from village.classes.protocols import EventProtocol
+from village.classes.training import Training
 from village.log import log
 from village.settings import settings
 from village.time_utils import time_utils
@@ -45,7 +46,7 @@ class Collection(EventProtocol):
         self.check_split_csv()
 
     @staticmethod
-    def convert_with_default(value, target_type) -> Any:
+    def convert_with_default(value, target_type: Any) -> Any:
         try:
             return target_type(value)
         except (ValueError, TypeError):
@@ -98,7 +99,7 @@ class Collection(EventProtocol):
         # TODO
         return 0.01
 
-    def save_from_df(self) -> None:
+    def save_from_df(self, training: Training) -> None:
         pd.set_option("future.no_silent_downcasting", True)
         new_df = self.df.replace("", np.nan)
         new_df = new_df.dropna(how="all")
@@ -113,12 +114,12 @@ class Collection(EventProtocol):
             new_df["next_session_time"] = new_df["next_session_time"].fillna(
                 time_utils.now()
             )
+
         for col in new_df.columns:
             if new_df[col].dtype == "datetime64[ns]":
                 new_df[col] = new_df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
 
         if "active" in new_df.columns:
-
             weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
             def convertir_active(value) -> str:
@@ -133,6 +134,11 @@ class Collection(EventProtocol):
                         return "OFF"
 
             new_df["active"] = new_df["active"].apply(convertir_active)
+
+        if "next_settings" in new_df.columns:
+            new_df["next_settings"] = new_df["next_settings"].apply(
+                training.get_jsonstring_from_jsonstring
+            )
 
         new_df.to_csv(self.path, index=False)
         self.df = new_df

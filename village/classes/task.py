@@ -1,4 +1,6 @@
+from pathlib import Path
 from threading import Thread
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -32,29 +34,30 @@ class Task:
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.weight: float = np.nan
-        self.process = Thread()
         self.current_trial: int = 0
         self.current_trial_states: list = []
         self.touch_response: list = []
-        self.maximum_number_of_trials: int = -999
-        self.minimum_duration: float = -999
-        self.maximum_duration: float = -999
         self.system_name: str = settings.get("SYSTEM_NAME")
-        self.df: pd.DataFrame | None = None
-        self.new_df: pd.DataFrame | None = None
-        self.force_stop: bool = False
+
+        self.info: str = ""
 
         self.filename: str = ""
+        self.sessions_directory: str = ""
         self.raw_session_path: str = ""
         self.session_path: str = ""
-        self.settings_path: str = ""
+        self.session_settings_path: str = ""
+        self.video_directory: str = ""
         self.video_path: str = ""
         self.video_data_path: str = ""
-        self.subject_settings_path: str = ""
+        self.settings: dict[str, Any] = {}
 
-        self.chrono = time_utils.Chrono()
+        self._process = Thread()
+        self._df: pd.DataFrame | None = None
+        self._new_df: pd.DataFrame | None = None
+        self._force_stop: bool = False
+        self._chrono = time_utils.Chrono()
 
-    # OVERWRITE THESE METHODS IN YOUR TASK
+    # OVERWRITE THESE METHODS IN YOUR TASKS
     def start(self) -> None:
         raise TaskError("The method start(self) is required")
 
@@ -68,29 +71,8 @@ class Task:
         raise TaskError("The method close(self) is required")
 
     # DO NOT OVERWRITE THESE METHODS
-    def check_variables(self) -> None:
-        self.maximum_number_of_trials = int(self.maximum_number_of_trials)
-        if self.maximum_number_of_trials == 0:
-            self.maximum_number_of_trials = 1000000
-        self.minimum_duration = float(self.minimum_duration)
-        self.maximum_duration = float(self.maximum_duration)
-        if self.maximum_number_of_trials < 0:
-            raise TaskError(
-                """The variable maximum_number_of_trials is required
-                (must be a positive integer or zero for infinite trials)"""
-            )
-        if self.minimum_duration < 0:
-            raise TaskError(
-                "The variable minimum_duration is required (must be a positive float)"
-            )
-        if self.maximum_duration < 0:
-            raise TaskError(
-                "The variable maximum_duration is required (must be a positive float)"
-            )
-
     def test(self, subject: str = "None") -> None:
         self.subject = subject
-        self.check_variables()
         self.start()
         self.create_trial()
         self.after_trial()
@@ -100,9 +82,9 @@ class Task:
         self.bpod.reconnect()
         self.start()
         while (
-            self.current_trial < self.maximum_number_of_trials
-            and self.chrono.get_seconds() < self.maximum_duration
-            and not self.force_stop
+            self.current_trial < self.settings["maximum_number_of_trials"]
+            and self._chrono.get_seconds() < self.settings["maximum_duration"]
+            and not self._force_stop
         ):
             self.bpod.create_state_machine()
             self.create_trial()
@@ -130,6 +112,75 @@ class Task:
             return "None"
         else:
             return name
+
+    def create_paths(self, start_time) -> None:
+        self.filename = str(self.subject) + "_" + str(self.name) + "_" + start_time
+
+        self.sessions_directory = str(
+            Path(settings.get("SESSIONS_DIRECTORY"), self.subject)
+        )
+        self.video_directory = str(Path(settings.get("VIDEOS_DIRECTORY"), self.subject))
+
+        self.raw_session_path = str(
+            Path(self.sessions_directory, self.filename + "_RAW.csv")
+        )
+        self.session_path = str(Path(self.sessions_directory, self.filename + ".csv"))
+        self.session_settings_path = str(
+            Path(self.sessions_directory, self.filename + ".json")
+        )
+
+        self.video_path = str(Path(self.video_directory, self.filename + ".avi"))
+        self.video_data_path = str(Path(self.video_directory, self.filename + ".csv"))
+
+    # def get_properties(self) -> list[str]:
+    #     used_names = [
+    #         "bpod",
+    #         "name",
+    #         "weight",
+    #         "current_trial",
+    #         "current_trial_states",
+    #         "touch_response",
+    #         "system_name",
+    #         "info",
+    #         "subject",
+    #         "minimum_duration",
+    #         "maximum_duration",
+    #         "maximum_number_of_trials",
+    #         "filename",
+    #         "sessions_directory",
+    #         "raw_session_path",
+    #         "session_path",
+    #         "session_settings_path",
+    #         "video_directory",
+    #         "video_path",
+    #         "video_data_path",
+    #         "settings_path",
+    #     ]
+    #     properties = [
+    #         prop
+    #         for prop in dir(self)
+    #         if not callable(getattr(self, prop))
+    #         and not prop.startswith("_")
+    #         and prop not in used_names
+    #     ]
+    #     properties = [
+    #         "subject",
+    #         "minimum_duration",
+    #         "maximum_duration",
+    #         "maximum_number_of_trials",
+    #     ] + properties
+    #     return properties
+
+    # def create_json_settings_file(self) -> None:
+    #     if not Path(self.subject_settings_path).exists():
+    #         config = {}
+    #         for name in self.get_properties():
+    #             if hasattr(self, name):
+    #                 value = getattr(self, name)
+    #                 config[name] = value
+
+    #         with open(self.session_settings_path, "w") as f:
+    #             json.dump(settings, f)
 
     # def set_and_run(self, subject, subject_name, subject_weight, task_manager):
 

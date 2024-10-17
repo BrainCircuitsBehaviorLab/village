@@ -2,13 +2,10 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Callable
 
-import pandas as pd
 from classes.enums import State
 from PyQt5.QtCore import (
-    QAbstractTableModel,
-    QModelIndex,
     Qt,
     QTime,
 )
@@ -20,7 +17,6 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QPushButton,
-    QTableView,
     QTimeEdit,
 )
 
@@ -157,69 +153,6 @@ class ComboBox(QComboBox):
         event.ignore()
 
 
-class Table(QAbstractTableModel):
-
-    def __init__(self, df: pd.DataFrame) -> None:
-        super().__init__()
-        self.df = df
-        self.editable = False
-        self.table_view = QTableView()
-        self.table_view.setModel(self)
-
-    def rowCount(self, parent=None) -> int:
-        return self.df.shape[0]
-
-    def columnCount(self, parent=None) -> int:
-        return self.df.shape[1]
-
-    def data(self, index, role=Qt.DisplayRole) -> str | None:
-        if index.isValid():
-            if role == Qt.DisplayRole or role == Qt.EditRole:
-                return str(self.df.iloc[index.row(), index.column()])
-        return None
-
-    def headerData(self, section: int, orientation: Any, role: int) -> Any:
-        if role == Qt.DisplayRole:
-            if orientation == Qt.Horizontal:
-                return str(self.df.columns[section])
-            elif orientation == Qt.Vertical:
-                return str(self.df.index[section])
-        return None
-
-    def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
-        if role == Qt.EditRole:
-            self.df.iloc[index.row(), index.column()] = value
-            self.dataChanged.emit(index, index, [Qt.DisplayRole])
-            return True
-        return False
-
-    def flags(self, index) -> Any:
-        if self.editable:
-            return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
-        else:
-            return Qt.ItemIsSelectable | Qt.ItemIsEnabled
-
-    def insertRows(self, position, rows=1, index=None) -> bool:
-        self.beginInsertRows(index or QModelIndex(), position, position + rows - 1)
-        for _ in range(rows):
-            new_row = pd.DataFrame([[""] * self.columnCount()], columns=self.df.columns)
-            self.df = pd.concat([self.df, new_row], ignore_index=True)
-        self.endInsertRows()
-        return True
-
-    def add_rows(self, new_df: pd.DataFrame) -> None:
-        scroll_position = self.table_view.verticalScrollBar().value()
-        scroll_max = self.table_view.verticalScrollBar().maximum()
-        rows_before = self.rowCount()
-        move_to_bottom = True if scroll_position == scroll_max else False
-        self.df = new_df
-        self.beginInsertRows(QModelIndex(), rows_before, self.rowCount() - 1)
-        self.endInsertRows()
-
-        if move_to_bottom:
-            self.table_view.scrollToBottom()
-
-
 class Layout(QGridLayout):
     def __init__(
         self,
@@ -349,46 +282,62 @@ class Layout(QGridLayout):
                 "Wait until the box is empty before exiting the application",
             )
 
-    SAVE_OUTSIDE = "task saved, subject is already outside"
-    SAVE_INSIDE = "task saved, subject is still inside"
-    STOP = "automatic task, manually stopped"
-    ERROR = "error occurred, disconnecting rfids and stopping the task"
-
     def change_layout(self) -> bool:
         return True
+
+    def close(self) -> None:
+        return
 
     def main_button_clicked(self) -> None:
         if self.change_layout():
             if data.state == State.SETTINGS:
                 data.state = State.WAIT
+                data.reset_subject_and_task()
+            self.close()
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
         if self.change_layout():
             if data.state == State.SETTINGS:
                 data.state = State.WAIT
+                data.reset_subject_and_task()
+            self.close()
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == State.SETTINGS:
-                data.state = State.WAIT
-            self.window.create_tasks_layout()
+            if data.state in [State.WAIT, State.SETTINGS]:
+                data.state = State.SETTINGS
+                data.reset_subject_and_task()
+                self.close()
+                self.window.create_tasks_layout()
+            else:
+                text = """Task can not be launched if there is a subject in the box
+                or a detection in progress"""
+                QMessageBox.information(
+                    self.window,
+                    "SETTINGS",
+                    text,
+                )
 
     def data_button_clicked(self) -> None:
         if self.change_layout():
             if data.state == State.SETTINGS:
                 data.state = State.WAIT
+                data.reset_subject_and_task()
+            self.close()
             self.window.create_data_layout()
 
     def settings_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == State.WAIT:
+            if data.state in [State.WAIT, State.SETTINGS]:
                 data.state = State.SETTINGS
+                data.reset_subject_and_task()
+                self.close()
                 self.window.create_settings_layout()
             else:
-                text = "Settings can not be changed if there is a detection in progress"
-                text += " or a subject in the box."
+                text = """Settings can not be changed if there is a subject in the box
+                or a detection in progress"""
                 QMessageBox.information(
                     self.window,
                     "SETTINGS",
@@ -522,31 +471,6 @@ class Layout(QGridLayout):
         combo_box.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(combo_box, row, column, height, width)
         return combo_box
-
-    def create_and_add_table(
-        self,
-        df: pd.DataFrame,
-        row: int,
-        column: int,
-        width: int,
-        height: int,
-        widths: list[int] = [],
-    ) -> Table:
-
-        model = Table(df)
-        model.table_view.setFixedSize(
-            width * self.column_width, height * self.row_height
-        )
-        model.table_view.setSelectionBehavior(QTableView.SelectRows)
-        model.table_view.setSelectionMode(QTableView.SingleSelection)
-        for i in range(len(widths)):
-            model.table_view.setColumnWidth(i, widths[i] * self.column_width)
-
-        model.table_view.scrollToBottom()
-
-        self.addWidget(model.table_view, row, column, height, width)
-
-        return model
 
     def update_gui(self) -> None:
         if not self.stacked:

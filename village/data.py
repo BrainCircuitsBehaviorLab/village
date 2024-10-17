@@ -15,6 +15,7 @@ from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
 from village.classes.subject import Subject
 from village.classes.task import Task
+from village.classes.training import Training
 from village.log import log
 from village.settings import settings
 from village.time_utils import time_utils
@@ -24,6 +25,7 @@ class Data:
     def __init__(self) -> None:
         self.subject = Subject()
         self.task = Task()
+        self.training = Training()
         self.state: State = State.WAIT
         self.table: DataTable = DataTable.EVENTS
         self.tag_reader: Active = settings.get("TAG_READER")
@@ -124,10 +126,9 @@ class Data:
                 "basal_weight",
                 "active",
                 "next_session_time",
-                "next_task",
                 "next_settings",
             ],
-            [str, str, float, str, str, str, str],
+            [str, str, float, str, str, str],
         )
         self.water_calibration = Collection(
             "water_calibration",
@@ -158,6 +159,7 @@ class Data:
 
         python_files: list[str] = []
         tasks = dict()
+        training_found = 0
 
         for root, dirs, files in os.walk(directory):
             for file in files:
@@ -173,17 +175,28 @@ class Data:
                 for _, cls in clsmembers:
                     if issubclass(cls, Task) and cls != Task:
                         name = cls.__name__
-                        new_task = cls()
-                        new_task.check_variables()
+                        _ = cls()
                         if name not in tasks:
                             tasks[name] = cls
+                    elif issubclass(cls, Training) and cls != Training:
+                        if training_found == 0:
+                            training_found += 1
+                            t = cls()
+                            t.check_variables()
+                            self.training = t
             except Exception:
                 log.error(
                     "Couldn't import " + module_name, exception=traceback.format_exc()
                 )
                 continue
-
-        self.tasks = tasks
+        if training_found == 0:
+            log.error("Training protocol not found")
+        elif training_found == 1:
+            log.info("Training protocol successfully imported")
+        else:
+            log.error("Multiple training protocols found")
+        # self.tasks = tasks
+        self.tasks = dict(sorted(tasks.items()))
         number_of_tasks = len(tasks)
         if number_of_tasks == 1:
             log.info("1 task successfully imported")
@@ -292,39 +305,6 @@ class Data:
     def launch_task_manual(self) -> bool:
         try:
             self.task.subject = self.subject.name
-            used_names = [
-                "bpod",
-                "current_trial",
-                "current_trial_states",
-                "df",
-                "filename",
-                "force_stop",
-                "info",
-                "maximum_duration",
-                "maximum_number_of_trials",
-                "minimum_duration",
-                "name",
-                "new_df",
-                "process",
-                "raw_session_path",
-                "session_path",
-                "settings_path",
-                "subject",
-                "subject_settings_path",
-                "system_name",
-                "touch_response",
-                "video_data_path",
-                "video_path",
-                "weight",
-            ]
-            properties = [
-                prop
-                for prop in dir(data.task)
-                if not callable(getattr(data.task, prop))
-                and not prop.startswith("__")
-                and prop not in used_names
-            ]
-            print(properties)
             self.run_task_in_thread()
             return True
         except Exception:
@@ -337,7 +317,10 @@ class Data:
 
     def launch_task_auto(self) -> bool:
         try:
-            task_name = self.subject.next_task
+            settings = data.training.get_dict_from_jsonstring(
+                self.subject.next_settings
+            )
+            task_name = settings["next_task"]
             cls = self.tasks.get(task_name)
             if cls is None:
                 log.error(
@@ -347,6 +330,7 @@ class Data:
             elif issubclass(cls, Task):
                 self.task = cls()
                 self.task.subject = self.subject.name
+                self.task.settings = settings
                 self.run_task_in_thread()
                 return True
             else:
@@ -407,28 +391,9 @@ class Data:
         finally:
             self.task.close()
 
-    def create_paths(self, start_time) -> None:
-        self.task.filename = (
-            str(self.subject.name) + "_" + str(self.task.name) + "_" + start_time
-        )
-        task_directory = str(
-            Path(settings.get("SESSIONS_DIRECTORY"), self.subject.name)
-        )
-        self.task.raw_session_path = str(
-            Path(task_directory, self.task.filename + "_RAW.csv")
-        )
-        self.task.session_path = str(Path(task_directory, self.task.filename + ".csv"))
-        self.task.settings_path = str(
-            Path(task_directory, self.task.filename + ".json")
-        )
-        video_directory = str(Path(settings.get("VIDEOS_DIRECTORY"), self.subject.name))
-        self.task.video_path = str(Path(video_directory, self.task.filename + ".avi"))
-        self.task.video_data_path = str(
-            Path(video_directory, self.task.filename + ".csv")
-        )
-        self.task.subject_settings_path = str(
-            Path(settings.get("DATA_DIRECTORY"), self.subject.name + ".json")
-        )
+    def reset_subject_and_task(self) -> None:
+        self.task = Task()
+        self.subject = Subject()
 
 
 data = Data()

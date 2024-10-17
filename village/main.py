@@ -231,15 +231,18 @@ def system_run() -> None:
             case State.RUN_MANUAL:
                 # Task is running manually
                 if (
-                    data.task.current_trial >= data.task.maximum_number_of_trials
-                    or data.task.chrono.get_seconds() >= data.task.maximum_duration
-                    or data.task.force_stop
+                    data.task.current_trial
+                    >= data.task.settings["maximum_number_of_trials"]
+                    or data.task._chrono.get_seconds()
+                    >= data.task.settings["maximum_duration"]
+                    or data.task._force_stop
                 ):
                     data.state = State.SAVE_MANUAL
 
             case State.SAVE_MANUAL:
                 # Stopping the task, saving the data; the task was manually stopped
                 data.task.disconnect_and_save()
+                data.reset_subject_and_task()
                 data.state = State.WAIT
 
             case State.SETTINGS:

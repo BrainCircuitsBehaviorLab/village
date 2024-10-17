@@ -203,6 +203,18 @@ class Camera(CameraProtocol):
                 "state": self.states,
             }
         )
+
+        # if we stop when the last frame is being stored one of this lists
+        # may be one unit longer than the others, we remove the last element
+        min_length = min(
+            len(self.frames), len(self.timings), len(self.trials), len(self.states)
+        )
+
+        self.frames = self.frames[:min_length]
+        self.timings = self.timings[:min_length]
+        self.trials = self.trials[:min_length]
+        self.states = self.states[:min_length]
+
         df.to_csv(self.path_csv, index=False)
 
     def stop(self) -> None:

@@ -467,7 +467,11 @@ class SettingsLayout(Layout):
     def change_project_directory(self, value: str, key: str) -> None:
 
         if value == "NEW":
-            text, ok = QInputDialog.getText(self.window, "NEW", "Name of the project:")
+            text, ok = QInputDialog.getText(
+                self.window,
+                "NEW",
+                "Enter the name of the new project. The system will restart.",
+            )
             if ok and text:
                 old_project = settings.get("PROJECT_DIRECTORY")
                 project_dir = os.path.dirname(old_project)
@@ -487,7 +491,7 @@ class SettingsLayout(Layout):
                 "Change project directory",
                 """
                 Are you sure you want to change the project directory?
-                Village will restart.
+                The system will restart.
                 """,
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No,

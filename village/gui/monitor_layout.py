@@ -372,8 +372,8 @@ class MonitorLayout(Layout):
         self.update_buttons()
 
     def stop_task(self) -> None:
-        # TODO stop task here
-        pass
+        data.state = State.SAVE_MANUAL
+        self.update_gui()
 
     def go_to_wait(self) -> None:
         data.state = State.WAIT
@@ -401,9 +401,11 @@ class MonitorLayout(Layout):
         self.bottom_layout.setCurrentIndex(index)
 
     def change_layout(self) -> bool:
+        return True
+
+    def close(self):
         cam_corridor.stop_window_preview()
         cam_box.stop_window_preview()
-        return True
 
     def update_gui(self) -> None:
         self.update_status_label()

@@ -247,12 +247,6 @@
 # print(bpod.parse_message_output(("_GlobalCounterReset", 3)))
 
 
-import time
-from threading import Thread
-
-from village.classes.task import Event
-from village.devices.bpod import bpod
-
 # bpod.add_state(
 #     state_name="light_off",
 #     state_timer=5,
@@ -278,14 +272,14 @@ from village.devices.bpod import bpod
 # bpod.close()
 
 
-def override():
-    time.sleep(3)
-    print("override")
-    bpod.manual_override_input("Port1In")
+# def override():
+#    time.sleep(3)
+#    print("override")
+#    bpod.manual_override_input("Port1In")
 
 
-thread = Thread(target=override)
-thread.start()
+# thread = Thread(target=override)
+# thread.start()
 
 
 # bpod.manual_override_output((Output.PWM1, 255))
@@ -294,12 +288,12 @@ thread.start()
 # time.sleep(1)
 
 
-bpod.add_state(
-    state_name="End",
-    state_timer=0,
-    state_change_conditions={Event.Tup: "exit"},
-    output_actions=[],
-)
+# bpod.add_state(
+#    state_name="End",
+#    state_timer=0,
+#    state_change_conditions={Event.Tup: "exit"},
+#    output_actions=[],
+# )
 
 
 # bpod.add_state(
@@ -312,7 +306,7 @@ bpod.add_state(
 #     output_actions=[(Output.PWM2, 255), Output.BNC1High],
 # )
 
-bpod.send_and_run_state_machine()
+# bpod.send_and_run_state_machine()
 
 
 # import time
@@ -344,3 +338,10 @@ bpod.send_and_run_state_machine()
 #         val += 1
 #         time.sleep(2)
 #         print("val ", val)
+
+
+# import json
+
+# a = {}
+
+# print(a["hola"])
