@@ -12,8 +12,11 @@ Welcome to village's documentation!
 
    getting_started
    installation
+   assembly_of_mv/index.md
+   operation_of_mv/index.md
+   usage/index.md
+   results.md
    api_index
-   for_developers
 
 By default the documentation includes the following sections:
 

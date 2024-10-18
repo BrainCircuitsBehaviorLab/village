@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      data-content_root="./"
+      data-content_root="../"
       x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }"
       x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
       class="scroll-smooth"
@@ -13,16 +13,17 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API | Mouse village</title>
-    <meta property="og:title" content="API | Mouse village" />
-    <meta name="twitter:title" content="API | Mouse village" />
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8d216cef" />
-      <link rel="stylesheet" type="text/css" href="_static/theme.css?v=edd7d3d2" />
-    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_index.html" />
-      <link rel="icon" href="_static/favicon.svg" />
-        <link rel="search" title="Search" href="search.html" />
-        <link rel="index" title="Index" href="genindex.html" />
-          <link rel="prev" title="Results" href="results.html" />
+    <title>Software overview | Mouse village</title>
+    <meta property="og:title" content="Software overview | Mouse village" />
+    <meta name="twitter:title" content="Software overview | Mouse village" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8d216cef" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme.css?v=edd7d3d2" />
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/operation_of_mv/software_overview.html" />
+      <link rel="icon" href="../_static/favicon.svg" />
+        <link rel="search" title="Search" href="../search.html" />
+        <link rel="index" title="Index" href="../genindex.html" />
+          <link rel="next" title="Usage" href="../usage/index.html" />
+          <link rel="prev" title="Hardware Technical Details" href="hardware_technical_details.html" />
 
     <script>
     <!-- Prevent Flash of wrong theme -->
@@ -43,9 +44,9 @@
     </a><header
   class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
     <div class="hidden mr-4 md:flex">
-      <a href="index.html" class="flex items-center mr-6">
-          <img width="24" height="24" class="mr-2 hidden dark:block" src="_static/favicon-white.svg" alt="Logo" />
-        <img width="24" height="24" class="mr-2 dark:hidden" src="_static/favicon.svg" alt="Logo" /><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">Mouse village</span>
+      <a href="../index.html" class="flex items-center mr-6">
+          <img width="24" height="24" class="mr-2 hidden dark:block" src="../_static/favicon-white.svg" alt="Logo" />
+        <img width="24" height="24" class="mr-2 dark:hidden" src="../_static/favicon.svg" alt="Logo" /><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">Mouse village</span>
       </a></div><button
       class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden"
       type="button" @click="showSidebar = true">
@@ -58,7 +59,7 @@
     </button>
     <div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
       <div class="flex-1 w-full md:w-auto md:flex-none"><form id="searchbox"
-      action="search.html"
+      action="../search.html"
       method="get"
       class="relative flex items-center group"
       @keydown.k.window.meta="$refs.search.focus()">
@@ -107,37 +108,37 @@
   class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky"
   :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }">
 
-    <a href="index.html" class="!justify-start text-sm md:!hidden bg-background">
-        <img width="16" height="16" class="mr-2 hidden dark:block" src="_static/favicon-white.svg" alt="Logo" />
-        <img width="16" height="16" class="mr-2 dark:hidden" src="_static/favicon.svg" alt="Logo" /><span class="font-bold text-clip whitespace-nowrap">Mouse village</span>
+    <a href="../index.html" class="!justify-start text-sm md:!hidden bg-background">
+        <img width="16" height="16" class="mr-2 hidden dark:block" src="../_static/favicon-white.svg" alt="Logo" />
+        <img width="16" height="16" class="mr-2 dark:hidden" src="../_static/favicon.svg" alt="Logo" /><span class="font-bold text-clip whitespace-nowrap">Mouse village</span>
     </a>
 
     <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">What is the Mouse Village</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Install MV Raspberry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="assembly_of_mv/index.html">Assembly of the Mouse Village</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="assembly_of_mv/assembly_instructions.html">Assembly instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="assembly_of_mv/electronics_instructions.html">Electronic Instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="assembly_of_mv/list_of_parts.html">List of parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="assembly_of_mv/software_installation.html">Software installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">What is the Mouse Village</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Install MV Raspberry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assembly_of_mv/index.html">Assembly of the Mouse Village</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../assembly_of_mv/assembly_instructions.html">Assembly instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../assembly_of_mv/electronics_instructions.html">Electronic Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../assembly_of_mv/list_of_parts.html">List of parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../assembly_of_mv/software_installation.html">Software installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="operation_of_mv/index.html">Operation of the Mouse Village</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="operation_of_mv/hardware_technical_details.html">Hardware Technical Details</a></li>
-<li class="toctree-l2"><a class="reference internal" href="operation_of_mv/software_overview.html">Software overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Operation of the Mouse Village</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hardware_technical_details.html">Hardware Technical Details</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Software overview</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage/index.html">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage/setup_experiment.html">Experimental setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/maintenance.html">Maintenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/alarms.html">Alarms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/index.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage/setup_experiment.html">Experimental setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/alarms.html">Alarms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a></li>
 </ul>
 
 </nav>
@@ -157,7 +158,7 @@
 <nav aria-label="breadcrumbs"
      class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
   <a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground"
-     href="index.html">
+     href="../index.html">
     <span class="hidden md:inline">Mouse village</span>
     <svg xmlns="http://www.w3.org/2000/svg"
          height="18"
@@ -171,13 +172,16 @@
     </svg>
   </a>
   
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
+       href="index.html">Operation of the Mouse Village</a>
+    
 <div class="mr-1">/</div><span aria-current="page"
-        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">API</span>
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Software overview</span>
 </nav>
 
     <div id="content" role="main">
-      <section id="api">
-<h1>API</h1>
+      <section class="tex2jax_ignore mathjax_ignore" id="software-overview">
+<h1>Software overview</h1>
 </section>
 
     </div></div>
@@ -194,10 +198,10 @@
 </footer>
   </div>
   
-    <script src="_static/documentation_options.js?v=89a7ab70"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script defer="defer" src="_static/theme.js?v=1808ab49"></script>
+    <script src="../_static/documentation_options.js?v=89a7ab70"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
   
 </body>
