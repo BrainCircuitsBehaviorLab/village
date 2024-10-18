@@ -1,0 +1,53 @@
+CameraProtocol
+==============
+
+.. currentmodule:: village.classes.protocols
+
+.. autoclass:: CameraProtocol
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CameraProtocol.__init__
+      ~CameraProtocol.areas_corridor_ok
+      ~CameraProtocol.change_focus
+      ~CameraProtocol.change_framerate
+      ~CameraProtocol.log
+      ~CameraProtocol.pre_process
+      ~CameraProtocol.print_info_about_config
+      ~CameraProtocol.start_camera
+      ~CameraProtocol.start_preview_window
+      ~CameraProtocol.start_record
+      ~CameraProtocol.stop
+      ~CameraProtocol.stop_preview
+      ~CameraProtocol.stop_record
+      ~CameraProtocol.stop_window_preview
+      ~CameraProtocol.take_picture
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CameraProtocol.error
+      ~CameraProtocol.area1
+      ~CameraProtocol.area2
+      ~CameraProtocol.area3
+      ~CameraProtocol.area4
+      ~CameraProtocol.areas
+      ~CameraProtocol.change
+      ~CameraProtocol.state
+      ~CameraProtocol.path_picture
+   
+   

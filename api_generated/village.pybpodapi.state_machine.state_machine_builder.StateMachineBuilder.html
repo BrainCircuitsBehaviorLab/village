@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en"
+      data-content_root="../"
+      x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }"
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
+      class="scroll-smooth"
+      :class="{'dark': darkMode === 'dark' || (darkMode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)}"
+>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="white" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>StateMachineBuilder | Mouse village</title>
+    <meta property="og:title" content="StateMachineBuilder | Mouse village" />
+    <meta name="twitter:title" content="StateMachineBuilder | Mouse village" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8d216cef" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme.css?v=edd7d3d2" />
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.html" />
+      <link rel="icon" href="../_static/favicon.svg" />
+        <link rel="search" title="Search" href="../search.html" />
+        <link rel="index" title="Index" href="../genindex.html" />
+          <link rel="next" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilderError" href="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilderError.html" />
+          <link rel="prev" title="state_machine_builder" href="village.pybpodapi.state_machine.state_machine_builder.html" />
+
+    <script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+  <body x-data="{ showSidebar: false, showScrollTop: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
+    <div x-cloak x-show="showSidebar" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content" class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
+      Skip to content
+    </a><header
+  class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+    <div class="hidden mr-4 md:flex">
+      <a href="../index.html" class="flex items-center mr-6">
+          <img width="24" height="24" class="mr-2 hidden dark:block" src="../_static/favicon-white.svg" alt="Logo" />
+        <img width="24" height="24" class="mr-2 dark:hidden" src="../_static/favicon.svg" alt="Logo" /><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">Mouse village</span>
+      </a></div><button
+      class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden"
+      type="button" @click="showSidebar = true">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" aria-hidden="true"
+        fill="currentColor">
+        <path
+          d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z" />
+      </svg>
+      <span class="sr-only">Toggle navigation menu</span>
+    </button>
+    <div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+      <div class="flex-1 w-full md:w-auto md:flex-none"><form id="searchbox"
+      action="../search.html"
+      method="get"
+      class="relative flex items-center group"
+      @keydown.k.window.meta="$refs.search.focus()">
+  <input x-ref="search"
+          name="q"
+          id="search-input"
+          type="search"
+          aria-label="Search the docs"
+          placeholder="Search ..."
+          class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" />
+  <kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+    <span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+      </div>
+      <nav class="flex items-center space-x-1">
+        <a href="https://github.com/BrainCircuitsBehaviorLab/village" title="Visit repository on GitHub" rel="noopener nofollow">
+          <div
+            class="inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md disabled:opacity-50 disabled:pointer-events-none hover:bg-accent hover:text-accent-foreground h-9 w-9">
+            <svg height="26px" style="margin-top:-2px;display:inline" viewBox="0 0 45 44" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.477.927C10.485.927.76 10.65.76 22.647c0 9.596 6.223 17.736 14.853 20.608 1.087.2 1.483-.47 1.483-1.047 0-.516-.019-1.881-.03-3.693-6.04 1.312-7.315-2.912-7.315-2.912-.988-2.51-2.412-3.178-2.412-3.178-1.972-1.346.149-1.32.149-1.32 2.18.154 3.327 2.24 3.327 2.24 1.937 3.318 5.084 2.36 6.321 1.803.197-1.403.759-2.36 1.379-2.903-4.823-.548-9.894-2.412-9.894-10.734 0-2.37.847-4.31 2.236-5.828-.224-.55-.969-2.759.214-5.748 0 0 1.822-.584 5.972 2.226 1.732-.482 3.59-.722 5.437-.732 1.845.01 3.703.25 5.437.732 4.147-2.81 5.967-2.226 5.967-2.226 1.185 2.99.44 5.198.217 5.748 1.392 1.517 2.232 3.457 2.232 5.828 0 8.344-5.078 10.18-9.916 10.717.779.67 1.474 1.996 1.474 4.021 0 2.904-.027 5.247-.027 5.96 0 .58.392 1.256 1.493 1.044C37.981 40.375 44.2 32.24 44.2 22.647c0-11.996-9.726-21.72-21.722-21.72" fill="currentColor"/></svg>
+          </div>
+        </a>
+        
+        <button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'"
+          class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9"
+          type="button"
+          aria-label="Color theme switcher">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+            class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0">
+            <path
+              d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+            class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100">
+            <path
+              d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+    <div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside id="left-sidebar"
+  class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky"
+  :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }">
+
+    <a href="../index.html" class="!justify-start text-sm md:!hidden bg-background">
+        <img width="16" height="16" class="mr-2 hidden dark:block" src="../_static/favicon-white.svg" alt="Logo" />
+        <img width="16" height="16" class="mr-2 dark:hidden" src="../_static/favicon.svg" alt="Logo" /><span class="font-bold text-clip whitespace-nowrap">Mouse village</span>
+    </a>
+
+    <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+      <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">What is the Mouse Village</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Install MV Raspberry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assembly_of_mv/index.html">Assembly of the Mouse Village</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../assembly_of_mv/assembly_instructions.html">Assembly instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../assembly_of_mv/electronics_instructions.html">Electronic Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../assembly_of_mv/list_of_parts.html">List of parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../assembly_of_mv/software_installation.html">Software installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operation_of_mv/index.html">Operation of the Mouse Village</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../operation_of_mv/hardware_technical_details.html">Hardware Technical Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../operation_of_mv/software_overview.html">Software overview</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/index.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage/setup_experiment.html">Experimental setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/alarms.html">Alarms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="village.classes.html">classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.devices.html">devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="village.pybpodapi.html">pybpodapi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.screen.html">screen</a></li>
+</ul>
+</li>
+</ul>
+
+</nav>
+      </div>
+    </div>
+    <button type="button" @click="showSidebar = false"
+      class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+        stroke="none" class="h-4 w-4">
+        <path
+          d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z" />
+      </svg>
+    </button>
+  </aside>
+        <main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs"
+     class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+  <a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground"
+     href="../index.html">
+    <span class="hidden md:inline">Mouse village</span>
+    <svg xmlns="http://www.w3.org/2000/svg"
+         height="18"
+         width="18"
+         viewBox="0 96 960 960"
+         aria-label="Home"
+         fill="currentColor"
+         stroke="none"
+         class="md:hidden">
+      <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z" />
+    </svg>
+  </a>
+  
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
+       href="../api_index.html">API</a>
+    
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
+       href="village.pybpodapi.html">pybpodapi</a>
+    
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
+       href="village.pybpodapi.state_machine.html">state_machine</a>
+    
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
+       href="village.pybpodapi.state_machine.state_machine_builder.html">state_machine_builder</a>
+    
+<div class="mr-1">/</div><span aria-current="page"
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">StateMachineBuilder</span>
+</nav>
+
+    <div id="content" role="main">
+      <section id="statemachinebuilder">
+<h1>StateMachineBuilder</h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StateMachineBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpod</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/pybpodapi/state_machine/state_machine_builder.html#StateMachineBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.pybpodapi.state_machine.state_machine_base.StateMachineBase.html#village.pybpodapi.state_machine.state_machine_base.StateMachineBase" title="village.pybpodapi.state_machine.state_machine_base.StateMachineBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">StateMachineBase</span></code></a></p>
+<p>Extend state machine with builder logic</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>A lot of data structures are kept here for compatibility</p>
+</div>
+<p>with original matlab library which are not so python-like.
+Anyone is welcome to enhance this class but keep in mind that it
+will affect the whole pybpodapi library.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpod</span></span></em><span class="sig-paren">)</span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hardware</strong> (<a class="reference internal" href="village.pybpodapi.bpod.hardware.hardware.Hardware.html#village.pybpodapi.bpod.hardware.hardware.Hardware" title="village.pybpodapi.bpod.hardware.hardware.Hardware"><em>Hardware</em></a>) – hardware description associated with this</p>
+</dd>
+</dl>
+<p>state machine</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.__init__" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(bpod)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.add_state" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.add_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_state</span></code></a>(state_name[, state_timer, ...])</p></td>
+<td><p>Adds a state to an existing state matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_header</span></code>([run_asap, statemachine_body_size])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.build_message" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.build_message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_message</span></code></a>()</p></td>
+<td><p>Builds state machine to send to Bpod box</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.build_message_32_bits" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.build_message_32_bits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_message_32_bits</span></code></a>()</p></td>
+<td><p>Builds a 32 bit message to send to Bpod box</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_message_global_timer</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_condition" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_condition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_condition</span></code></a>(condition_number, ...)</p></td>
+<td><p>Set condition</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_counter" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_counter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_global_counter</span></code></a>([counter_number, ...])</p></td>
+<td><p>Sets the threshold and monitored event for one of the 5 global counters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_timer" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_timer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_global_timer</span></code></a>(timer_id, timer_duration[, ...])</p></td>
+<td><p>Sets the duration of a global timer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_timer_legacy" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_timer_legacy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_global_timer_legacy</span></code></a>([timer_id, ...])</p></td>
+<td><p>Set global timer (legacy version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.update_state_numbers" title="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.update_state_numbers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_state_numbers</span></code></a>()</p></td>
+<td><p>Replace undeclared states (at the time they were referenced) with actual state numbers</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.add_state">
+<span class="sig-name descname"><span class="pre">add_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_timer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_change_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Adds a state to an existing state matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – A character string containing the unique name of the state.</p>
+</dd>
+</dl>
+<p>The state will automatically be assigned a number for internal use and state
+synchronization via the sync port
+:param float timer: The state timer value, given in seconds.
+This value must be zero or positive, and can range between 0-3600s.
+If set to 0s and linked to a state transition, the state will still take ~100us
+to execute the state’s output actions before the transition completes
+:param dict state_change_conditions: Dictionary whose keys are names of a valid
+input event (state change) and values are names of states to enter if the
+previously listed event occurs
+(or ‘exit’ to exit the matrix and return all captured data)
+:param list(tuple) output_actions: a list of binary tuples where first value
+should contain the name of a valid output action and the second value should
+contain the value of the previously listed output action
+(see output actions for valid values).</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sma</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span id="line-2">    <span class="n">state_name</span><span class="o">=</span><span class="s1">&#39;Port1Lit&#39;</span><span class="p">,</span>
+</span><span id="line-3">    <span class="n">state_timer</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
+</span><span id="line-4">    <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;_Tup&#39;</span><span class="p">:</span> <span class="s1">&#39;Port3Lit&#39;</span><span class="p">},</span>
+</span><span id="line-5">    <span class="n">output_actions</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;PWM1&#39;</span><span class="p">,</span> <span class="mi">255</span><span class="p">)])</span>
+</span></code></pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.build_message">
+<span class="sig-name descname"><span class="pre">build_message</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/pybpodapi/state_machine/state_machine_builder.html#StateMachineBuilder.build_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Builds state machine to send to Bpod box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.build_message_32_bits">
+<span class="sig-name descname"><span class="pre">build_message_32_bits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/pybpodapi/state_machine/state_machine_builder.html#StateMachineBuilder.build_message_32_bits"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Builds a 32 bit message to send to Bpod box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_condition">
+<span class="sig-name descname"><span class="pre">set_condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_value</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Set condition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>condition_number</strong> (<em>int</em>)</p></li>
+<li><p><strong>condition_channel</strong> (<em>str</em>)</p></li>
+<li><p><strong>channel_value</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_counter">
+<span class="sig-name descname"><span class="pre">set_global_counter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counter_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Sets the threshold and monitored event for one of the 5 global counters.
+Global counters can count instances of
+events, and handle when the count exceeds a threshold from any state
+(by triggering a state change).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>counter_number</strong> (<em>int</em>) – the number of the counter you are setting</p>
+</dd>
+</dl>
+<p>(an integer, 1-5).
+:param str target_event: port where to listen for event to count
+:param int threshold: number of times that should be count until trigger timer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_timer">
+<span class="sig-name descname"><span class="pre">set_global_timer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timer_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timer_duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_set_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">off_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_intervals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">send_events</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oneset_triggers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Sets the duration of a global timer. Unlike state timers, global timers
+can be triggered from any state (as an
+output action), and handled from any state (by causing a state change).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timer_ID</strong> (<em>int</em>) – the number of the timer you are setting (an integer, 1-5).</p></li>
+<li><p><strong>timer_duration</strong> (<em>float</em>) – the duration of the timer,</p></li>
+</ul>
+</dd>
+</dl>
+<p>following timer start (0-3600 seconds)
+:param float on_set_delay:
+:param str channel: channel/port name Ex: ‘PWM2’
+:param int on_message:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_timer_legacy">
+<span class="sig-name descname"><span class="pre">set_global_timer_legacy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timer_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timer_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Set global timer (legacy version)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timer_ID</strong> (<em>int</em>)</p></li>
+<li><p><strong>timer_duration</strong> (<em>float</em>) – timer duration in seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.update_state_numbers">
+<span class="sig-name descname"><span class="pre">update_state_numbers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/pybpodapi/state_machine/state_machine_builder.html#StateMachineBuilder.update_state_numbers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Replace undeclared states (at the time they were referenced)
+with actual state numbers</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+    </div></div><aside id="right-sidebar" class="hidden text-sm xl:block">
+  <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+    <ul>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder</span></code></a><ul>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.__init__"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.add_state"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.add_state()</span></code></a></li>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.build_message"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.build_message()</span></code></a></li>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.build_message_32_bits"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.build_message_32_bits()</span></code></a></li>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_condition"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.set_condition()</span></code></a></li>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_counter"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.set_global_counter()</span></code></a></li>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_timer"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.set_global_timer()</span></code></a></li>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.set_global_timer_legacy"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.set_global_timer_legacy()</span></code></a></li>
+<li><a class="reference internal" href="#village.pybpodapi.state_machine.state_machine_builder.StateMachineBuilder.update_state_numbers"><code class="docutils literal notranslate"><span class="pre">StateMachineBuilder.update_state_numbers()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</aside>
+        </main>
+      </div>
+    </div><footer class="py-6 border-t border-border md:py-0">
+    <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+      <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+        <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2022, Rafael Marin&nbsp;Built with <a class="font-medium underline underline-offset-4"
+    href="https://www.sphinx-doc.org"
+    rel="noreferrer">Sphinx 8.1.3</a></p>
+</div>
+</div>
+</footer>
+  </div>
+  
+    <script src="../_static/documentation_options.js?v=8e401a54"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+  
+</body>
+</html>
