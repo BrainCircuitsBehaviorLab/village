@@ -13,7 +13,7 @@ import setuptools_scm  # type: ignore
 
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
-autodoc_mock_imports: list = []
+autodoc_mock_imports: list = ['', 'PyQt5', '__future__', 'asyncio', 'classes', 'collections', 'contextlib', 'csv', 'cv2', 'datetime', 'dateutil', 'enum', 'functools', 'getpass', 'importlib', 'inspect', 'io', 'json', 'logging', 'math', 'multiprocessing', 'numpy', 'os', 'pandas', 'pathlib', 'pprint', 'queue', 're', 'scipy', 'serial', 'setuptools_scm', 'smbus2', 'socket', 'sounddevice', 'struct', 'subprocess', 'sys', 'telegram', 'threading', 'time', 'traceback', 'typing', 'urllib', 'village']
 
 # Add the module path to sys.path here.
 # If the directory is relative to the documentation root,
