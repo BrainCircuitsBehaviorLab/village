@@ -11,7 +11,7 @@ Classes
    :recursive:
    :nosignatures:
 
-   village.classes
+   classes
 
 
 Devices
@@ -22,7 +22,7 @@ Devices
    :recursive:
    :nosignatures:
 
-    village.devices
+    devices
 
 
 Gui
@@ -33,7 +33,7 @@ Gui
    :recursive:
    :nosignatures:
 
-    village.gui
+    gui
 
 
 Pybpodapi
@@ -44,7 +44,7 @@ Pybpodapi
    :recursive:
    :nosignatures:
 
-    village.pybpodapi
+    pybpodapi
 
 
 Screen
@@ -55,4 +55,4 @@ Screen
    :recursive:
    :nosignatures:
 
-    village.screen
+    screen
