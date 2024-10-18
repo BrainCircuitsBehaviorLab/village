@@ -13,7 +13,7 @@ import setuptools_scm  # type: ignore
 
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
-autodoc_mock_imports: list = ["numpy", "pandas"]
+autodoc_mock_imports: list = ["numpy", "pandas", "PyQt5", "cv2", "serial", "smbus2", "sounddevice", "telegram"]
 
 # Add the module path to sys.path here.
 # If the directory is relative to the documentation root,
