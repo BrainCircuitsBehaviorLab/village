@@ -7,7 +7,7 @@
 
 
 # Mouse Village
-![Alt text](./resources/mouse_village.png)
+![Alt text](./resources/village.png)
 
 <div align="center">
 
