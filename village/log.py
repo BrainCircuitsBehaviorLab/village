@@ -1,4 +1,5 @@
-from village.classes.protocols import CameraProtocol, EventProtocol, TelegramBotProtocol
+from village.classes.protocols import (CameraProtocol, EventProtocol,
+                                       TelegramBotProtocol)
 from village.time_utils import time_utils
 
 
@@ -42,10 +43,7 @@ class Log:
     ) -> None:
         type = "ERROR"
         date = time_utils.now_string()
-        if exception is not None:
-            exception = exception.replace(",", " ")
-            exception = " || ".join(exception.splitlines())
-            description += " " + exception
+        description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
         self.event_protocol.log(date, type, subject, description)
         self.cam_protocol.log(text)
@@ -61,14 +59,18 @@ class Log:
         date = time_utils.now_string()
         message = description if subject == "system" else description + " " + subject
         self.telegram_protocol.alarm(message)
-        if exception is not None:
-            exception = exception.replace(",", " ")
-            exception = " || ".join(exception.splitlines())
-            description += " " + exception
+        description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
         self.event_protocol.log(date, type, subject, description)
         self.cam_protocol.log(text)
         print(text)
 
+    def clean_text(self, exception: str | None, description: str) -> str:
+        if exception is not None:
+            exception = exception.replace(";", " ")
+            exception = " || ".join(exception.splitlines())
+            description += " " + exception
+        return description
 
+log = Log()
 log = Log()
