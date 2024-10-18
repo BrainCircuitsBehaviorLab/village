@@ -1,0 +1,36 @@
+AreaActive
+==========
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: AreaActive
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AreaActive.keys
+      ~AreaActive.values
+      ~AreaActive.get_index_from_value
+      ~AreaActive.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AreaActive.MICE_ALLOWED
+      ~AreaActive.MICE_NOT_ALLOWED
+      ~AreaActive.OFF
+   
+   

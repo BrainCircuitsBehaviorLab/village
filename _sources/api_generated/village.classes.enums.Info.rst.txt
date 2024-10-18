@@ -1,0 +1,35 @@
+Info
+====
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: Info
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Info.keys
+      ~Info.values
+      ~Info.get_index_from_value
+      ~Info.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Info.SYSTEM_INFO
+      ~Info.CORRIDOR_SETTINGS
+   
+   

@@ -1,0 +1,40 @@
+enums
+=====
+
+.. automodule:: village.classes.enums
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      Actions
+      Active
+      AreaActive
+      Color
+      Cycle
+      DataTable
+      Info
+      ScreenActive
+      State
+      SuperEnum
+   
+   
+
+   
+   
+   
+
+
+

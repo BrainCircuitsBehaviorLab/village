@@ -1,0 +1,36 @@
+Actions
+=======
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: Actions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Actions.keys
+      ~Actions.values
+      ~Actions.get_index_from_value
+      ~Actions.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Actions.CORRIDOR
+      ~Actions.PORTS
+      ~Actions.SOFTCODES
+   
+   

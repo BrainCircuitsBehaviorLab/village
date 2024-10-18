@@ -1,0 +1,39 @@
+﻿devices
+=======
+
+.. automodule:: village.devices
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom_module_template.rst
+   :recursive:
+
+   bpod
+   camera
+   motor
+   rfid
+   scale
+   sound_device
+   telegram_bot
+   temp_sensor
+
