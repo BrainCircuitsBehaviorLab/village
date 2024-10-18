@@ -73,6 +73,9 @@ templates_path = ["_templates"]
 autosummary_generate = True
 autodoc_default_flags = ["members", "inherited-members"]
 
+# Remove module names from class documentation
+add_module_names = False
+
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
