@@ -292,7 +292,7 @@ class Layout(QGridLayout):
         if self.change_layout():
             if data.state == State.SETTINGS:
                 data.state = State.WAIT
-                data.reset_subject_and_task()
+                data.reset_subject_task_training()
             self.close()
             self.window.create_main_layout()
 
@@ -300,7 +300,7 @@ class Layout(QGridLayout):
         if self.change_layout():
             if data.state == State.SETTINGS:
                 data.state = State.WAIT
-                data.reset_subject_and_task()
+                data.reset_subject_task_training()
             self.close()
             self.window.create_monitor_layout()
 
@@ -308,7 +308,7 @@ class Layout(QGridLayout):
         if self.change_layout():
             if data.state in [State.WAIT, State.SETTINGS]:
                 data.state = State.SETTINGS
-                data.reset_subject_and_task()
+                data.reset_subject_task_training()
                 self.close()
                 self.window.create_tasks_layout()
             else:
@@ -324,7 +324,7 @@ class Layout(QGridLayout):
         if self.change_layout():
             if data.state == State.SETTINGS:
                 data.state = State.WAIT
-                data.reset_subject_and_task()
+                data.reset_subject_task_training()
             self.close()
             self.window.create_data_layout()
 
@@ -332,7 +332,7 @@ class Layout(QGridLayout):
         if self.change_layout():
             if data.state in [State.WAIT, State.SETTINGS]:
                 data.state = State.SETTINGS
-                data.reset_subject_and_task()
+                data.reset_subject_task_training()
                 self.close()
                 self.window.create_settings_layout()
             else:

@@ -6,7 +6,6 @@ import sys
 import traceback
 from pathlib import Path
 from threading import Thread
-from typing import Dict, Type
 
 import sounddevice as sd
 from PyQt5.QtWidgets import QLayout
@@ -25,7 +24,7 @@ class Data:
     def __init__(self) -> None:
         self.subject = Subject()
         self.task = Task()
-        self.training = Training()
+        self.training: Training = Training()
         self.state: State = State.WAIT
         self.table: DataTable = DataTable.EVENTS
         self.tag_reader: Active = settings.get("TAG_READER")
@@ -37,7 +36,7 @@ class Data:
         self.old_text: str = ""
         self.day: bool = True
         self.changing_settings: bool = False
-        self.tasks: Dict[str, Type] = dict()
+        self.tasks: dict[str, type] = dict()
         self.errors: str = ""
 
         self.update_cycle()
@@ -182,7 +181,7 @@ class Data:
                         if training_found == 0:
                             training_found += 1
                             t = cls()
-                            t.check_variables()
+                            t.copy_settings()
                             self.training = t
             except Exception:
                 log.error(
@@ -304,7 +303,6 @@ class Data:
 
     def launch_task_manual(self) -> bool:
         try:
-            self.task.subject = self.subject.name
             self.run_task_in_thread()
             return True
         except Exception:
@@ -317,10 +315,8 @@ class Data:
 
     def launch_task_auto(self) -> bool:
         try:
-            settings = data.training.get_dict_from_jsonstring(
-                self.subject.next_settings
-            )
-            task_name = settings["next_task"]
+            data.training.load_settings_from_jsonstring(self.subject.next_settings)
+            task_name = data.training.settings.next_task
             cls = self.tasks.get(task_name)
             if cls is None:
                 log.error(
@@ -330,7 +326,7 @@ class Data:
             elif issubclass(cls, Task):
                 self.task = cls()
                 self.task.subject = self.subject.name
-                self.task.settings = settings
+                self.task.settings = data.training.settings
                 self.run_task_in_thread()
                 return True
             else:
@@ -391,9 +387,10 @@ class Data:
         finally:
             self.task.close()
 
-    def reset_subject_and_task(self) -> None:
+    def reset_subject_task_training(self) -> None:
         self.task = Task()
         self.subject = Subject()
+        self.training.restore()
 
 
 data = Data()

@@ -114,6 +114,9 @@ class PyBpod(PyBpodProtocol):
         self.bpod.send_state_machine(self.sma)
         self.bpod.run_state_machine(self.sma)
 
+    def register_value(self, name: str, value: Any) -> None:
+        self.bpod.register_value(name, value)
+
     @staticmethod
     def parse_message_input(message: str | tuple[str, int]) -> tuple[str, int, int]:
         # Convert the message to string if it's a tuple

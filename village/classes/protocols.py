@@ -68,6 +68,9 @@ class PyBpodProtocol:
     def manual_override_output(self, message: str | tuple) -> None:
         return
 
+    def register_value(self, name: str, value: Any) -> None:
+        return
+
 
 class TelegramBotProtocol:
     error: str = "Error connecting to the telegram bot "

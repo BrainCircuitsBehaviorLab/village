@@ -24,10 +24,10 @@ class Collection(EventProtocol):
 
         if not os.path.exists(self.path):
             with open(self.path, "w", encoding="utf-8") as file:
-                columns_str: str = ",".join(self.columns) + "\n"
+                columns_str: str = ";".join(self.columns) + "\n"
                 file.write(columns_str)
         try:
-            self.df = pd.read_csv(self.path, dtype=self.dict, na_filter=False)
+            self.df = pd.read_csv(self.path, dtype=self.dict, na_filter=False, sep=";")
         except Exception:
             log.error(
                 "error reading from: " + str(self.path),
@@ -40,7 +40,7 @@ class Collection(EventProtocol):
         new_row = pd.DataFrame([entry_str], columns=self.columns)
         new_row = self.convert_df_to_types(new_row)
         self.df = pd.concat([self.df, new_row], ignore_index=True)
-        columns_str: str = ",".join(entry_str) + "\n"
+        columns_str: str = ";".join(entry_str) + "\n"
         with open(self.path, "a", encoding="utf-8") as file:
             file.write(columns_str)
         self.check_split_csv()
@@ -71,10 +71,10 @@ class Collection(EventProtocol):
             new_filename: str = self.name + "_" + date_str + ".csv"
             directory: str = settings.get("DATA_DIRECTORY")
             new_path: str = os.path.join(directory, new_filename)
-            first_100000.to_csv(new_path, index=False)
+            first_100000.to_csv(new_path, index=False, sep=";")
 
             last: pd.DataFrame = self.df.tail(len(self.df) - 100000)
-            last.to_csv(self.path, index=False)
+            last.to_csv(self.path, index=False, sep=";")
 
             self.df = last
 
@@ -140,5 +140,5 @@ class Collection(EventProtocol):
                 training.get_jsonstring_from_jsonstring
             )
 
-        new_df.to_csv(self.path, index=False)
+        new_df.to_csv(self.path, index=False, sep=";")
         self.df = new_df

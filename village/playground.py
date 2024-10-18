@@ -345,3 +345,27 @@
 # a = {}
 
 # print(a["hola"])
+
+import pandas as pd
+
+df4 = pd.DataFrame({"hola": [], "_Transition3": []})
+
+
+print(df4.columns)
+print(type(df4.columns))
+print(type(df4.columns[1]))
+
+columns_to_drop = [
+    item
+    for item in df4.columns
+    if isinstance(item, str)
+    and (
+        item.startswith("_Tup")
+        or item.startswith("_Transition")
+        or item.startswith("_Global")
+        or item.startswith("_Condition")
+    )
+]
+
+
+print(columns_to_drop)

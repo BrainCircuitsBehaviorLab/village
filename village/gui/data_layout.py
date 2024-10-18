@@ -577,6 +577,7 @@ class DataLayout(Layout):
                 for index in selected_indexes:
                     self.model.beginRemoveRows(QModelIndex(), index.row(), index.row())
                     self.model.df.drop(index.row(), inplace=True)
+                    self.model.df.reset_index(drop=True, inplace=True)
                     self.model.endRemoveRows()
                 data.subjects.df = self.model.df
                 data.subjects.save_from_df(data.training)
@@ -636,7 +637,8 @@ class DataLayout(Layout):
             return True
 
     def edit_next_settings(self, current_value: str) -> str:
-        dict_values = data.training.get_dict_from_jsonstring(current_value)
+        data.training.load_settings_from_jsonstring(current_value)
+        dict_values = data.training.get_dict()
 
         self.reply = QDialog()
         self.reply.setWindowTitle("Next settings")
@@ -707,7 +709,8 @@ class DataLayout(Layout):
             return ""
 
     def show_next_settings(self, current_value: str) -> None:
-        dict_values = data.training.get_dict_from_jsonstring(current_value)
+        data.training.load_settings_from_jsonstring(current_value)
+        dict_values = data.training.get_dict()
 
         self.reply = QDialog()
         self.reply.setWindowTitle("Next settings")

@@ -16,7 +16,7 @@ class Subject:
         self.next_settings: str = ""
         self.subject_series: pd.Series | None = None
 
-    def get_data_from_subject_series(self) -> bool:
+    def create_from_subject_series(self) -> bool:
         if self.subject_series is not None:
             try:
                 self.name = self.subject_series["name"]

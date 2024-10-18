@@ -215,7 +215,7 @@ class Camera(CameraProtocol):
         self.trials = self.trials[:min_length]
         self.states = self.states[:min_length]
 
-        df.to_csv(self.path_csv, index=False)
+        df.to_csv(self.path_csv, index=False, sep=";")
 
     def stop(self) -> None:
         self.cam.stop()
