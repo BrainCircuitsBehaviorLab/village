@@ -8,6 +8,7 @@ from PyQt5.QtCore import Qt
 from village.classes.enums import State
 from village.classes.task import Task
 from village.data import data
+from village.devices.camera import cam_box
 from village.gui.layout import Layout
 
 if TYPE_CHECKING:
@@ -160,6 +161,7 @@ class TasksLayout(Layout):
 
     def run_task(self) -> None:
         data.task.settings = data.training.settings
+        data.task.cam_box = cam_box
         data.state = State.LAUNCH_MANUAL
         self.monitor_button_clicked()
         self.update_gui()

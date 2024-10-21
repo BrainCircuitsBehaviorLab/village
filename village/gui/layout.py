@@ -312,7 +312,7 @@ class Layout(QGridLayout):
                 self.close()
                 self.window.create_tasks_layout()
             else:
-                text = """Task can not be launched if there is a subject in the box
+                text = """Tasks can not be launched if there is a subject in the box
                 or a detection in progress"""
                 QMessageBox.information(
                     self.window,

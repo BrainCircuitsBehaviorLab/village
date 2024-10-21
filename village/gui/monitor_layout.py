@@ -403,7 +403,7 @@ class MonitorLayout(Layout):
     def change_layout(self) -> bool:
         return True
 
-    def close(self):
+    def close(self) -> None:
         cam_corridor.stop_window_preview()
         cam_box.stop_window_preview()
 

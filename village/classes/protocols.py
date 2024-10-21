@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any
 from PyQt5.QtWidgets import QWidget
 
 from village.pybpodapi.session import Session
+from village.time_utils import time_utils
 
 if TYPE_CHECKING:
     from village.pybpodapi.session import Session
@@ -114,15 +115,18 @@ class EventProtocol:
 
 
 class CameraProtocol:
-    area1: list[int]
-    area2: list[int]
-    area3: list[int]
-    area4: list[int]
-    areas: list[list[int]]
-    change: bool
-    state: str
-    path_picture: str
+    area1: list[int] = []
+    area2: list[int] = []
+    area3: list[int] = []
+    area4: list[int] = []
+    areas: list[list[int]] = []
+    change: bool = False
+    state: str = ""
+    path_picture: str = ""
     error: str = "Error connecting to the camera "
+    trial: int = -1
+    is_recording: bool = False
+    chrono = time_utils.Chrono()
 
     def start_camera(self) -> None:
         return
@@ -133,7 +137,7 @@ class CameraProtocol:
     def stop_window_preview(self) -> None:
         return
 
-    def start_record(self) -> None:
+    def start_record(self, path_video: str = "", path_csv: str = "") -> None:
         return
 
     def stop_record(self) -> None:
@@ -161,6 +165,18 @@ class CameraProtocol:
         return
 
     def areas_corridor_ok(self) -> bool:
+        return True
+
+    def area_1_empty(self) -> bool:
+        return True
+
+    def area_2_empty(self) -> bool:
+        return True
+
+    def area_3_empty(self) -> bool:
+        return True
+
+    def area_4_empty(self) -> bool:
         return True
 
     def take_picture(self) -> None:

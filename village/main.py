@@ -67,8 +67,6 @@ data.task.bpod = bpod
 log.telegram_protocol = telegram_bot
 log.cam_protocol = cam_corridor
 data.import_all_tasks()
-cam_corridor.start_record()
-cam_box.start_record()
 data.errors = (
     bpod.error
     + cam_corridor.error
@@ -91,15 +89,21 @@ def system_run() -> None:
     id = ""
     multiple = False
 
+    cam_corridor.start_record()
+
     while True:
         i += 1
-        time.sleep(1)
+        time.sleep(0.1)
 
         if i == 2000:
             log.alarm("Alarma de prueba", subject="RAFA")
 
         if i % 100 == 0:
             log.info("counter: " + str(i) + " textos de prueba")
+
+        if cam_corridor.chrono.get_seconds() > 1800:
+            cam_corridor.stop_record()
+            cam_corridor.start_record()
 
         match data.state:
             case State.WAIT:
@@ -127,6 +131,7 @@ def system_run() -> None:
 
             case State.LAUNCH_AUTO:
                 if data.launch_task_auto():
+                    data.task.cam_box = cam_box
                     data.state = State.RUN_ACTION
                 else:
                     data.state = State.OPEN_DOOR2_STOP
@@ -146,22 +151,51 @@ def system_run() -> None:
                         subject=data.subject.name,
                     )
                     data.state = State.OPEN_DOOR2_STOP
-                # if data.first_action:
-                #     data.state = State.CLOSE_DOOR2
+                if (
+                    data.task.current_trial
+                    >= data.task.settings.maximum_number_of_trials
+                    or data.task.chrono.get_seconds()
+                    >= data.task.settings.maximum_duration
+                    or data.task.force_stop
+                ):
+                    data.state = State.OPEN_DOOR2_STOP
 
             case State.CLOSE_DOOR2:
-                pass
                 # Closing door2
-                # if cam_corridor.area_3_empty():
-                #     motor2.close()
-                #     data.state = State.RUN_CLOSED
-                # else:
-                #     # telegram_bot.alarm_corridor()
-                #     data.state = State.ERROR
+                if cam_corridor.area_3_empty():
+                    motor2.close()
+                    data.state = State.RUN_CLOSED
+                else:
+                    log.alarm(
+                        "Subject trapped in the corridor", subject=data.subject.name
+                    )
+                    data.state = State.OPEN_DOORS_STOP
 
             case State.RUN_CLOSED:
                 # Task running, the subject cannot leave yet
-                pass
+                id, multiple = rfid.get_id()
+                if id == data.subject.tag:
+                    log.info(
+                        "Subject not allowed to leave. Task has not started yet",
+                        subject=data.subject.name,
+                    )
+                    data.state = State.OPEN_DOORS_STOP
+                elif id != "":
+                    log.alarm(
+                        """Another subject detected in the corridor while
+                        main subject is in the box.
+                        """,
+                        subject=data.subject.name,
+                    )
+                    data.state = State.OPEN_DOOR1
+                if (
+                    data.task.current_trial
+                    >= data.task.settings.maximum_number_of_trials
+                    or data.task.chrono.get_seconds()
+                    >= data.task.settings.maximum_duration
+                    or data.task.force_stop
+                ):
+                    data.state = State.OPEN_DOOR2_STOP
 
             case State.OPEN_DOOR2:
                 # Opening door2
@@ -177,11 +211,15 @@ def system_run() -> None:
 
             case State.SAVE_OUTSIDE:
                 # Stopping the task, saving the data; the subject is already outside
-                pass
+                data.task.disconnect_and_save()
+                data.reset_subject_task_training()
+                data.state = State.WAIT
 
             case State.SAVE_INSIDE:
                 # Stopping the task, saving the data; the subject is still inside
-                pass
+                data.task.disconnect_and_save()
+                data.reset_subject_task_training()
+                data.state = State.WAIT_EXIT
 
             case State.WAIT_EXIT:
                 # Task finished, waiting for the subject to leave

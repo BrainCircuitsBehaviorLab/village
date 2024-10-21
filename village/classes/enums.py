@@ -84,7 +84,7 @@ class State(SuperEnum):
             return False
 
     def can_edit_subjects(self) -> bool:
-        if self == State.WAIT:
+        if self in (State.WAIT, State.SETTINGS):
             return True
         else:
             return False
@@ -135,3 +135,4 @@ class DataTable(SuperEnum):
     SOUND_CALIBRATION = "SOUND_CALIBRATION"
     TEMPERATURES = "TEMPERATURES"
     SESSION = "SESSION"
+    OLD_SESSION = "OLD_SESSION"

@@ -1,5 +1,4 @@
-from village.classes.protocols import (CameraProtocol, EventProtocol,
-                                       TelegramBotProtocol)
+from village.classes.protocols import CameraProtocol, EventProtocol, TelegramBotProtocol
 from village.time_utils import time_utils
 
 
@@ -71,6 +70,7 @@ class Log:
             exception = " || ".join(exception.splitlines())
             description += " " + exception
         return description
+
 
 log = Log()
 log = Log()

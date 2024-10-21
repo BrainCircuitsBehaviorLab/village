@@ -4,7 +4,6 @@ import traceback
 from pathlib import Path
 from typing import Any, Type
 
-import numpy as np
 import pandas as pd
 
 from village.classes.protocols import EventProtocol
@@ -100,12 +99,12 @@ class Collection(EventProtocol):
         return 0.01
 
     def save_from_df(self, training: Training) -> None:
-        pd.set_option("future.no_silent_downcasting", True)
-        new_df = self.df.replace("", np.nan)
-        new_df = new_df.dropna(how="all")
-        new_df = new_df.replace(np.nan, "")
-        new_df = new_df.dropna()
-        new_df = self.convert_df_to_types(new_df)
+        new_df = self.df_from_df(self.df, training)
+        new_df.to_csv(self.path, index=False, sep=";")
+        self.df = new_df
+
+    def df_from_df(self, df: pd.DataFrame, training: Training) -> pd.DataFrame:
+        new_df = self.convert_df_to_types(df)
 
         if "next_session_time" in new_df.columns:
             new_df["next_session_time"] = pd.to_datetime(
@@ -140,5 +139,4 @@ class Collection(EventProtocol):
                 training.get_jsonstring_from_jsonstring
             )
 
-        new_df.to_csv(self.path, index=False, sep=";")
-        self.df = new_df
+        return new_df

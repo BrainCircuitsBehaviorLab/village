@@ -46,33 +46,57 @@ class TableView(QTableView):
             column = index.column()
             column_name = self.model().headerData(column, Qt.Horizontal, Qt.DisplayRole)
             if flags & Qt.ItemIsEditable:
-                if column_name == "next_settings":
+                self.searching = ""
+                self.model_parent.layout_parent.search_edit.setText("")
+                self.model_parent.layout_parent.update_gui()
+                if column_name == "next_settings" and data.state.can_edit_subjects():
+                    data.state = State.SETTINGS
                     current_value = self.model().data(index, Qt.DisplayRole)
                     new_value = self.model_parent.layout_parent.edit_next_settings(
                         current_value
                     )
                     self.model().setData(index, new_value, Qt.EditRole)
-                elif column_name == "next_session_time":
+                    self.save_changes_in_df()
+                elif (
+                    column_name == "next_session_time"
+                    and data.state.can_edit_subjects()
+                ):
+                    data.state = State.SETTINGS
                     current_value = self.model().data(index, Qt.DisplayRole)
                     new_value = self.model_parent.layout_parent.edit_next_session_time(
                         current_value
                     )
                     self.model().setData(index, new_value, Qt.EditRole)
-
-                elif column_name == "active":
+                    self.save_changes_in_df()
+                elif column_name == "active" and data.state.can_edit_subjects():
+                    data.state = State.SETTINGS
                     current_value = self.model().data(index, Qt.DisplayRole)
                     self.openDaysSelectionDialog(index, current_value)
-
-                else:
+                elif data.state.can_edit_subjects():
+                    data.state = State.SETTINGS
                     super().mouseDoubleClickEvent(event)
+                else:
+                    text = "Wait until the box is empty before editing the tables."
+                    QMessageBox.information(self, "EDIT", text)
             else:
-                if column_name == "next_settings":
-                    current_value = self.model().data(index, Qt.DisplayRole)
-                    self.model_parent.layout_parent.show_next_settings(current_value)
-                else:
-                    super().mouseDoubleClickEvent(event)
+                super().mouseDoubleClickEvent(event)
         else:
             super().mouseDoubleClickEvent(event)
+
+    def save_changes_in_df(self) -> None:
+        if data.table == DataTable.SUBJECTS:
+            data.subjects.df = self.model_parent.df
+            data.subjects.save_from_df(data.training)
+        elif data.table == DataTable.TEMPERATURES:
+            data.temperatures.df = self.model_parent.df
+            data.temperatures.save_from_df(data.training)
+        elif data.table == DataTable.WATER_CALIBRATION:
+            data.water_calibration.df = self.model_parent.df
+            data.water_calibration.save_from_df(data.training)
+        elif data.table == DataTable.SOUND_CALIBRATION:
+            data.sound_calibration.df = self.model_parent.df
+            data.sound_calibration.save_from_df(data.training)
+        data.state = State.WAIT
 
     def openDaysSelectionDialog(self, index, current_value) -> None:
         dialog = DaysSelectionDialog(self, current_value)
@@ -80,6 +104,8 @@ class TableView(QTableView):
             selected_days = dialog.getSelection()
             if selected_days:
                 self.model().setData(index, selected_days, Qt.EditRole)
+                self.save_changes_in_df()
+                data.state = State.WAIT
 
 
 class DaysSelectionDialog(QDialog):
@@ -118,12 +144,15 @@ class DaysSelectionDialog(QDialog):
         else:
             self.off_checkbox.setChecked(True)
 
-        self.okButton = QPushButton("OK", self)
-        self.okButton.clicked.connect(self.accept)
+        btns_layout = QHBoxLayout()
+        self.btn_ok = QPushButton("SAVE")
+        self.btn_cancel = QPushButton("CANCEL")
+        btns_layout.addWidget(self.btn_ok)
+        btns_layout.addWidget(self.btn_cancel)
+        self.layout.addLayout(btns_layout)
 
-        self.buttonLayout = QHBoxLayout()
-        self.buttonLayout.addWidget(self.okButton)
-        self.layout.addLayout(self.buttonLayout)
+        self.btn_ok.clicked.connect(self.accept)
+        self.btn_cancel.clicked.connect(self.reject)
 
     def set_initial_values(self, value) -> None:
         if value == "ON":
@@ -214,10 +243,12 @@ class DaysSelectionDialog(QDialog):
 
 class Table(QAbstractTableModel):
 
-    def __init__(self, df: pd.DataFrame, layout_parent: DataLayout) -> None:
+    def __init__(
+        self, df: pd.DataFrame, layout_parent: DataLayout, editable: bool = False
+    ) -> None:
         super().__init__()
         self.df = df
-        self.editable = False
+        self.editable = editable
         self.layout_parent = layout_parent
         self.table_view = TableView(self)
 
@@ -233,19 +264,40 @@ class Table(QAbstractTableModel):
                 return str(self.df.iloc[index.row(), index.column()])
         return None
 
-    def headerData(self, section: int, orientation: Any, role: int) -> Any:
-        if role == Qt.DisplayRole:
-            if orientation == Qt.Horizontal:
-                return str(self.df.columns[section])
-            elif orientation == Qt.Vertical:
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role != Qt.DisplayRole:
+            return None
+
+        if orientation == Qt.Horizontal:
+            return str(self.df.columns[section])
+        elif orientation == Qt.Vertical:
+            if section < len(self.df.index):
                 return str(self.df.index[section])
-        return None
+            else:
+                return None
 
     def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
         if role == Qt.EditRole:
-            self.df.iloc[index.row(), index.column()] = value
-            self.dataChanged.emit(index, index, [Qt.DisplayRole])
-            return True
+            column_dtype = self.df.dtypes.iloc[index.column()]
+            try:
+                if column_dtype == "int64" or column_dtype == "Int64":
+                    value = int(value)
+                elif column_dtype == "float64" or column_dtype == "float32":
+                    value = float(value)
+                elif column_dtype == "bool":
+                    value = bool(value)
+                elif column_dtype == "object" or column_dtype == "string":
+                    value = str(value)
+                elif column_dtype == "datetime64[ns]":
+                    value = pd.to_datetime(value)
+                elif column_dtype == "timedelta64[ns]":
+                    value = pd.to_timedelta(value)
+
+                self.df.iloc[index.row(), index.column()] = value
+                self.dataChanged.emit(index, index, [Qt.DisplayRole])
+                return True
+            except (ValueError, TypeError):
+                return False
         return False
 
     def flags(self, index) -> Any:
@@ -254,11 +306,12 @@ class Table(QAbstractTableModel):
         else:
             return Qt.ItemIsSelectable | Qt.ItemIsEnabled
 
-    def insertRows(self, position, rows=1, index=None) -> bool:
-        self.beginInsertRows(index or QModelIndex(), position, position + rows - 1)
-        for _ in range(rows):
-            new_row = pd.DataFrame([[""] * self.columnCount()], columns=self.df.columns)
-            self.df = pd.concat([self.df, new_row], ignore_index=True)
+    def insertRow(self, position, index=None) -> bool:
+        self.beginInsertRows(index or QModelIndex(), position, position)
+        new_row = pd.DataFrame([[""] * self.columnCount()], columns=self.df.columns)
+        new_row = data.subjects.df_from_df(new_row, data.training)
+        self.df = pd.concat([self.df, new_row], ignore_index=True)
+        self.df.reset_index(drop=True, inplace=True)
         self.endInsertRows()
         return True
 
@@ -280,7 +333,6 @@ class DataLayout(Layout):
         super().__init__(window)
         self.df = DataFrame()
         self.complete_df = DataFrame()
-        self.editing = False
         self.draw()
 
     def draw(self) -> None:
@@ -290,6 +342,8 @@ class DataLayout(Layout):
         self.previous_searching = ""
 
         possible_values = DataTable.values()
+        possible_values.pop()
+
         index = DataTable.get_index_from_value(data.table)
 
         self.title = self.create_and_add_combo_box(
@@ -299,44 +353,20 @@ class DataLayout(Layout):
         self.search_label = self.create_and_add_label("search", 5, 45, 10, 2, "Search")
         self.search_edit = self.create_and_add_line_edit("", 5, 55, 25, 2, self.search)
 
-        self.delete_button = self.create_and_add_button(
-            "DELETE",
-            5,
-            85,
-            20,
-            2,
-            self.delete_button_clicked,
-            "Delete the selected row",
+        self.first_button = self.create_and_add_button(
+            "FIRST", 5, 85, 20, 2, self.button_clicked, "first"
         )
-        self.data_button = self.create_and_add_button(
-            "DATA", 5, 110, 20, 2, self.data_button_clicked, "View the data as a table"
+        self.second_button = self.create_and_add_button(
+            "SECOND", 5, 110, 20, 2, self.button_clicked, "second"
         )
-        self.data_raw_button = self.create_and_add_button(
-            "DATA_RAW",
-            5,
-            135,
-            20,
-            2,
-            self.data_raw_button_clicked,
-            "View the raw data as a table",
+        self.third_button = self.create_and_add_button(
+            "THIRD", 5, 135, 20, 2, self.button_clicked, "third"
         )
-        self.video_button = self.create_and_add_button(
-            "VIDEO",
-            5,
-            160,
-            20,
-            2,
-            self.video_button_clicked,
-            "Watch the corresponding video",
+        self.fourth_button = self.create_and_add_button(
+            "FOURTH", 5, 160, 20, 2, self.button_clicked, "fourth"
         )
-        self.plot_button = self.create_and_add_button(
-            "PLOT",
-            5,
-            185,
-            20,
-            2,
-            self.plot_button_clicked,
-            "Plot the corresponding data",
+        self.fifth_button = self.create_and_add_button(
+            "FIFTH", 5, 185, 20, 2, self.button_clicked, "fifth"
         )
 
         self.update_data()
@@ -365,6 +395,9 @@ class DataLayout(Layout):
             case DataTable.SESSION:
                 self.complete_df = data.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
+            case DataTable.OLD_SESSION:
+                self.complete_df = data.sound_calibration.df
+                self.widths = [20, 20, 20, 20, 20, 20]
         self.df = self.obtain_searched_df()
 
     def create_and_add_table(
@@ -374,10 +407,11 @@ class DataLayout(Layout):
         column: int,
         width: int,
         height: int,
-        widths: list[int] = [],
+        widths: list[int],
+        editable: bool,
     ) -> Table:
 
-        model = Table(df, self)
+        model = Table(df, self, editable)
         model.table_view.setFixedSize(
             width * self.column_width, height * self.row_height
         )
@@ -412,9 +446,12 @@ class DataLayout(Layout):
             ]
 
     def create_table(self) -> None:
+        editable = True if data.table == DataTable.SUBJECTS else False
         self.model = self.create_and_add_table(
-            self.df, 8, 0, 210, 42, widths=self.widths
+            self.df, 8, 0, 210, 42, widths=self.widths, editable=editable
         )
+        self.model.dataChanged.connect(self.on_data_changed)
+
         self.update_buttons()
         self.model.table_view.selectionModel().selectionChanged.connect(
             self.update_buttons
@@ -422,108 +459,156 @@ class DataLayout(Layout):
 
     def update_gui(self) -> None:
         self.update_status_label()
-        if not self.editing:
-            self.update_data()
-            if self.searching == self.previous_searching:
-                self.model.add_rows(self.df)
-            else:
-                self.previous_searching = self.searching
-                self.create_table()
+        self.update_data()
+        if self.searching == self.previous_searching:
+            self.model.add_rows(self.df)
+        else:
+            self.previous_searching = self.searching
+            self.create_table()
+
+    def connect_button_to_delete(self, button: QPushButton) -> None:
+        try:
+            button.clicked.disconnect()
+        except TypeError:
+            pass
+        button.clicked.connect(self.delete_button_clicked)
+        button.setText("DELETE")
+        button.setToolTip("Delete the selected row")
+        button.show()
+
+    def connect_button_to_data_raw(self, button: QPushButton) -> None:
+        try:
+            button.clicked.disconnect()
+        except TypeError:
+            pass
+        button.clicked.connect(self.data_raw_button_clicked)
+        button.setText("DATA RAW")
+        button.setToolTip("Show the raw data")
+        button.show()
+
+    def connect_button_to_data(self, button: QPushButton) -> None:
+        try:
+            button.clicked.disconnect()
+        except TypeError:
+            pass
+        button.clicked.connect(self.data_button_clicked)
+        button.setText("DATA")
+        button.setToolTip("Show the data")
+        button.show()
+
+    def connect_button_to_video(self, button: QPushButton) -> None:
+        try:
+            button.clicked.disconnect()
+        except TypeError:
+            pass
+        button.clicked.connect(self.video_button_clicked)
+        button.setText("VIDEO")
+        button.setToolTip("Watch the video")
+        button.show()
+
+    def connect_button_to_plot(self, button: QPushButton) -> None:
+        try:
+            button.clicked.disconnect()
+        except TypeError:
+            pass
+        button.clicked.connect(self.plot_button_clicked)
+        button.setText("PLOT")
+        button.setToolTip("Plot the data")
+        button.show()
+
+    def connect_button_to_add(self, button: QPushButton) -> None:
+        try:
+            button.clicked.disconnect()
+        except TypeError:
+            pass
+        button.clicked.connect(self.add_button_clicked)
+        button.setText("ADD")
+        button.setToolTip("Add a new subject")
+        button.show()
 
     def update_buttons(self) -> None:
         selected_indexes = self.model.table_view.selectionModel().selectedRows()
-        self.data_button.setText("DATA")
-        self.data_button.setToolTip("View the data as a table")
-        self.delete_button.setText("DELETE")
-        self.delete_button.setToolTip("Delete the selected row")
         match data.table:
             case DataTable.EVENTS:
-                self.delete_button.setEnabled(False)
-                self.data_button.setEnabled(False)
-                self.data_raw_button.setEnabled(False)
-                self.plot_button.setEnabled(False)
+                self.first_button.hide()
+                self.second_button.hide()
+                self.third_button.hide()
+                self.fourth_button.hide()
+                self.connect_button_to_video(self.fifth_button)
                 if selected_indexes:
-                    self.video_button.setEnabled(True)
+                    self.fifth_button.setEnabled(True)
                 else:
-                    self.video_button.setEnabled(False)
+                    self.fifth_button.setEnabled(False)
             case DataTable.SESSIONS_SUMMARY:
+                self.connect_button_to_delete(self.first_button)
+                self.connect_button_to_data_raw(self.second_button)
+                self.connect_button_to_data(self.third_button)
+                self.connect_button_to_video(self.fourth_button)
+                self.connect_button_to_plot(self.fifth_button)
                 if selected_indexes:
-                    self.delete_button.setEnabled(True)
-                    self.data_button.setEnabled(True)
-                    self.data_raw_button.setEnabled(True)
-                    self.video_button.setEnabled(True)
-                    self.plot_button.setEnabled(True)
+                    self.first_button.setEnabled(True)
+                    self.second_button.setEnabled(True)
+                    self.third_button.setEnabled(True)
+                    self.fourth_button.setEnabled(True)
+                    self.fifth_button.setEnabled(True)
                 else:
-                    self.delete_button.setEnabled(False)
-                    self.data_button.setEnabled(False)
-                    self.data_raw_button.setEnabled(False)
-                    self.video_button.setEnabled(False)
-                    self.plot_button.setEnabled(False)
+                    self.first_button.setEnabled(False)
+                    self.second_button.setEnabled(False)
+                    self.third_button.setEnabled(False)
+                    self.fourth_button.setEnabled(False)
+                    self.fifth_button.setEnabled(False)
             case DataTable.SUBJECTS:
-                self.data_button.setEnabled(True)
-                self.data_raw_button.setEnabled(False)
-                self.video_button.setEnabled(False)
-
-                if self.editing:
-                    self.data_button.setText("SAVE CHANGES")
-                    self.data_button.setToolTip("Save the current changes")
-                    self.delete_button.setText("CANCEL")
-                    self.delete_button.setToolTip("Cancel the current changes")
-                    self.delete_button.setEnabled(True)
-                    self.plot_button.setEnabled(False)
-                elif selected_indexes:
-                    self.data_button.setText("ADD/EDIT")
-                    self.data_button.setToolTip("Add or edit a subject")
-                    self.delete_button.setEnabled(True)
-                    self.plot_button.setEnabled(True)
+                self.first_button.hide()
+                self.second_button.hide()
+                self.connect_button_to_add(self.third_button)
+                self.connect_button_to_delete(self.fourth_button)
+                self.connect_button_to_plot(self.fifth_button)
+                self.second_button.setEnabled(True)
+                if selected_indexes:
+                    self.fourth_button.setEnabled(True)
+                    self.fifth_button.setEnabled(True)
                 else:
-                    self.data_button.setText("ADD/EDIT")
-                    self.data_button.setToolTip("Add or edit a subject")
-                    self.delete_button.setEnabled(False)
-                    self.plot_button.setEnabled(False)
+                    self.fourth_button.setEnabled(False)
+                    self.fifth_button.setEnabled(False)
             case (
                 DataTable.WATER_CALIBRATION
                 | DataTable.SOUND_CALIBRATION
                 | DataTable.TEMPERATURES
             ):
-                self.data_button.setEnabled(False)
-                self.data_raw_button.setEnabled(False)
-                self.video_button.setEnabled(False)
-                self.plot_button.setEnabled(True)
+                self.first_button.hide()
+                self.second_button.hide()
+                self.third_button.hide()
+                self.connect_button_to_delete(self.fourth_button)
+                self.connect_button_to_plot(self.fifth_button)
+                self.fifth_button.setEnabled(True)
                 if selected_indexes:
-                    self.delete_button.setEnabled(True)
+                    self.fourth_button.setEnabled(True)
                 else:
-                    self.delete_button.setEnabled(False)
+                    self.fourth_button.setEnabled(False)
             case DataTable.SESSION:
-                self.delete_button.setEnabled(False)
-                self.data_button.setEnabled(False)
-                self.data_raw_button.setEnabled(False)
-                self.video_button.setEnabled(True)
-                self.plot_button.setEnabled(True)
+                self.first_button.hide()
+                self.second_button.hide()
+                self.third_button.hide()
+                self.fourth_button.hide()
+                self.connect_button_to_plot(self.fifth_button)
+                self.fifth_button.setEnabled(True)
+            case DataTable.OLD_SESSION:
+                self.first_button.hide()
+                self.second_button.hide()
+                self.third_button.hide()
+                self.connect_button_to_video(self.fourth_button)
+                self.connect_button_to_plot(self.fifth_button)
+                self.fourth_button.setEnabled(True)
+                self.fifth_button.setEnabled(True)
 
     def search(self, value: str) -> None:
         self.searching = value
 
-    def data_raw_button_clicked(self) -> None:
+    def button_clicked(self) -> None:
         pass
 
-    def delete_button_clicked(self) -> None:
-        match data.table:
-            case DataTable.EVENTS | DataTable.SESSION:
-                pass
-            case DataTable.WATER_CALIBRATION:
-                pass
-            case DataTable.SOUND_CALIBRATION:
-                pass
-            case DataTable.TEMPERATURES:
-                pass
-            case DataTable.SESSIONS_SUMMARY:
-                pass
-            case DataTable.SUBJECTS:
-                if self.editing:
-                    self.cancel()
-                else:
-                    self.delete()
+    def data_raw_button_clicked(self) -> None:
+        pass
 
     def video_button_clicked(self) -> None:
         pass
@@ -532,28 +617,57 @@ class DataLayout(Layout):
         pass
 
     def data_button_clicked(self) -> None:
-        match data.table:
-            case (
-                DataTable.EVENTS
-                | DataTable.WATER_CALIBRATION
-                | DataTable.SOUND_CALIBRATION
-                | DataTable.TEMPERATURES
-                | DataTable.SESSION
-            ):
-                pass
-            case DataTable.SESSIONS_SUMMARY:
-                self.show_data()
-            case DataTable.SUBJECTS:
-                self.edit()
-
-    def show_data(self) -> None:
         pass
 
+    def add_button_clicked(self) -> None:
+        if data.state.can_edit_subjects():
+            self.searching = ""
+            self.search_edit.setText("")
+            self.update_gui()
+            self.changes_made = True
+            self.update_status_label()
+            self.update_buttons()
+            row_count = self.model.rowCount()
+            self.model.insertRow(row_count)
+            self.model.table_view.save_changes_in_df()
+            self.update_buttons()
+        else:
+            text = "Wait until the box is empty before editing the subjects."
+            QMessageBox.information(self.window, "EDIT", text)
+
+    def delete_button_clicked(self) -> None:
+        self.searching = ""
+        self.search_edit.setText("")
+        self.update_gui()
+        selected_indexes = self.model.table_view.selectionModel().selectedRows()
+        if selected_indexes:
+            if data.state.can_edit_subjects():
+                reply = QMessageBox.question(
+                    self.window,
+                    "Delete",
+                    """Do you want to delete the selected row?
+                    This action cannot be undone.""",
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.No,
+                )
+                if reply == QMessageBox.Yes:
+                    for index in selected_indexes:
+                        self.model.beginRemoveRows(
+                            QModelIndex(), index.row(), index.row()
+                        )
+                        self.model.df.drop(index.row(), inplace=True)
+                        self.model.df.reset_index(drop=True, inplace=True)
+                        self.model.endRemoveRows()
+
+                self.model.table_view.save_changes_in_df()
+                self.model.table_view.selectionModel().clearSelection()
+                self.update_buttons()
+            else:
+                text = "Wait until the box is empty before editing the subjects."
+                QMessageBox.information(self.window, "EDIT", text)
+
     def cancel(self) -> None:
-        self.editing = False
-        self.model.editable = False
         data.state = State.WAIT
-        data.changing_settings = False
         self.update_status_label()
         self.update_buttons()
         if data.table == DataTable.SUBJECTS:
@@ -563,78 +677,10 @@ class DataLayout(Layout):
             self.update_data()
             self.create_table()
 
-    def delete(self) -> None:
-        selected_indexes = self.model.table_view.selectionModel().selectedRows()
-        if selected_indexes:
-            reply = QMessageBox.question(
-                self.window,
-                "Delete",
-                "Do you want to delete the selected row? This action cannot be undone.",
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No,
-            )
-            if reply == QMessageBox.Yes:
-                for index in selected_indexes:
-                    self.model.beginRemoveRows(QModelIndex(), index.row(), index.row())
-                    self.model.df.drop(index.row(), inplace=True)
-                    self.model.df.reset_index(drop=True, inplace=True)
-                    self.model.endRemoveRows()
-                data.subjects.df = self.model.df
-                data.subjects.save_from_df(data.training)
-
-            self.model.table_view.selectionModel().clearSelection()
-            self.update_buttons
-
-    def edit(self) -> None:
-        self.searching = ""
-        self.update_gui()
-        if self.editing:
-            self.editing = False
-            self.model.editable = False
-            data.state = State.WAIT
-            data.changing_settings = False
-            self.update_status_label()
-            self.update_buttons()
-            if data.table == DataTable.SUBJECTS:
-                data.subjects.df = self.model.df
-                data.subjects.save_from_df(data.training)
-                self.update_data()
-                self.create_table()
-        elif data.state.can_edit_subjects():
-            self.searching = ""
-            self.search_edit.setText("")
-            self.editing = True
-            self.model.editable = True
-            data.state = State.SETTINGS
-            data.changing_settings = True
-            self.update_status_label()
-            self.update_buttons()
-            row_count = self.model.rowCount()
-            self.model.insertRows(row_count, rows=50)
-        else:
-            text = "Wait until the box is empty before editing the subjects."
-            QMessageBox.information(self.window, "EDIT", text)
-
     def change_layout(self) -> bool:
-        if self.data_button.text() == "SAVE CHANGES":
-            reply = QMessageBox.question(
-                self.window,
-                "Save changes",
-                "Do you want to save the changes?",
-                QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
-                QMessageBox.Save,
-            )
-
-            if reply == QMessageBox.Save:
-                self.edit()
-                return True
-            elif reply == QMessageBox.Discard:
-                data.state = State.WAIT
-                return True
-            else:
-                return False
-        else:
-            return True
+        if data.state == State.SETTINGS:
+            data.state = State.WAIT
+        return True
 
     def edit_next_settings(self, current_value: str) -> str:
         data.training.load_settings_from_jsonstring(current_value)
@@ -708,35 +754,5 @@ class DataLayout(Layout):
         else:
             return ""
 
-    def show_next_settings(self, current_value: str) -> None:
-        data.training.load_settings_from_jsonstring(current_value)
-        dict_values = data.training.get_dict()
-
-        self.reply = QDialog()
-        self.reply.setWindowTitle("Next settings")
-        self.reply.setFixedWidth(600)
-        layout = QVBoxLayout()
-        self.line_edits = []
-
-        properties = data.training.get_settings_names()
-        for name in properties:
-            value = dict_values.get(name)
-            value = value if value is not None else ""
-            label = QLabel(name + ":")
-            line_edit = QLineEdit()
-            line_edit.setPlaceholderText(str(value))
-            line_edit.setReadOnly(True)
-            h_layout = QHBoxLayout()
-            h_layout.addWidget(label)
-            h_layout.addWidget(line_edit)
-            layout.addLayout(h_layout)
-            self.line_edits.append(line_edit)
-
-        self.btn_ok = QPushButton("CLOSE")
-        layout.addWidget(self.btn_ok)
-        self.reply.setLayout(layout)
-
-        self.btn_ok.clicked.connect(self.reply.accept)
-
-        if self.reply.exec_():
-            return
+    def on_data_changed(self) -> None:
+        self.model.table_view.save_changes_in_df()

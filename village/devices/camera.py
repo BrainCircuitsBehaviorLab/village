@@ -62,12 +62,8 @@ class Camera(CameraProtocol):
         )
         self.cam.align_configuration(self.config)
         self.cam.configure(self.config)
-        self.path_video = os.path.join(
-            settings.get("DATA_DIRECTORY"), "videos", name + ".mp4"
-        )
-        self.path_csv = os.path.join(
-            settings.get("DATA_DIRECTORY"), "videos", name + ".csv"
-        )
+        self.path_video = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".mp4")
+        self.path_csv = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".csv")
         self.path_picture = os.path.join(settings.get("DATA_DIRECTORY"), name + ".jpg")
         self.output = FfmpegOutput(self.path_video)
         self.cam.pre_callback = self.pre_process
@@ -82,7 +78,7 @@ class Camera(CameraProtocol):
         self.color_state = (80, 80, 80)
         self.change = True
         self.state = ""
-        self.trial = -1
+        self.trial = 0
         self.frames: list[int] = []
         self.timings: list[int] = []
         self.trials: list[int] = []
@@ -97,7 +93,7 @@ class Camera(CameraProtocol):
         self.end_rectangle = (640, 40)
 
         self.origin_timestamps = (20, 15)
-        self.orgigin_trial = (175, 15)
+        self.origin_trial = (175, 15)
         self.origin_state = (240, 15)
 
         self.origin_frame_number = (3, 30)
@@ -125,8 +121,11 @@ class Camera(CameraProtocol):
 
         self.masks: list[Any] = []
         self.counts: list[int] = []
+        self.cropped_frames: list[Any] = []
 
         self.error = ""
+
+        self.is_recording = False
 
         self.cam.start()
 
@@ -187,22 +186,46 @@ class Camera(CameraProtocol):
         self.window.cleanup()
         self.cam.start_preview(Preview.NULL)
 
-    def start_record(self) -> None:
+    def start_record(self, path_video: str = "", path_csv: str = "") -> None:
+        time_start = time_utils.now_string_for_filename()
+        self.chrono.reset()
+        if path_video != "":
+            self.path_video = path_video
+            self.path_csv = path_csv
+        else:
+            self.path_video = os.path.join(
+                settings.get("VIDEOS_DIRECTORY"),
+                self.name + "_" + time_start + ".mp4",
+            )
+            self.path_csv = os.path.join(
+                settings.get("VIDEOS_DIRECTORY"),
+                self.name + "_" + time_start + ".csv",
+            )
+        self.output = FfmpegOutput(self.path_video)
+        self.is_recording = True
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_record(self) -> None:
         self.cam.stop_encoder()
+        self.is_recording = False
         self.save_csv()
+        self.reset_values()
+
+    def reset_values(self) -> None:
+        self.state = ""
+        self.trial = 0
+        self.frames = []
+        self.timings = []
+        self.trials = []
+        self.states = []
+        self.frame_number = 0
+        self.timestamp = ""
+        self.error = ""
+        self.chrono.reset()
 
     def save_csv(self) -> None:
-        df = pd.DataFrame(
-            {
-                "frame": self.frames,
-                "ms": self.timings,
-                "trial": self.trials,
-                "state": self.states,
-            }
-        )
+        if self.path_csv == os.path.join(settings.get("VIDEOS_DIRECTORY"), "BOX.csv"):
+            return
 
         # if we stop when the last frame is being stored one of this lists
         # may be one unit longer than the others, we remove the last element
@@ -214,6 +237,15 @@ class Camera(CameraProtocol):
         self.timings = self.timings[:min_length]
         self.trials = self.trials[:min_length]
         self.states = self.states[:min_length]
+
+        df = pd.DataFrame(
+            {
+                "frame": self.frames,
+                "ms": self.timings,
+                "trial": self.trials,
+                "state": self.states,
+            }
+        )
 
         df.to_csv(self.path_csv, index=False, sep=";")
 
@@ -261,7 +293,7 @@ class Camera(CameraProtocol):
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
     def crop_areas(self) -> None:
-        self.cropped_frames: list = []
+        self.cropped_frames = []
         for f in self.areas:
             self.cropped_frames.append(self.gray_frame[f[1] : f[3], f[0] : f[2]])
 
@@ -352,13 +384,13 @@ class Camera(CameraProtocol):
         )
 
     def write_trial(self) -> None:
-        if self.trial == -1:
+        if self.trial == 0:
             return
 
         cv2.putText(
             self.frame,
             "trial: " + str(self.trial),
-            self.orgigin_trial,
+            self.origin_trial,
             self.font,
             self.scale,
             self.color_text,
@@ -434,10 +466,11 @@ class Camera(CameraProtocol):
                     pass
 
     def write_csv(self) -> None:
-        self.frames.append(self.frame_number)
-        self.timings.append(self.timing)
-        self.trials.append(self.trial)
-        self.states.append(self.state)
+        if self.is_recording:
+            self.frames.append(self.frame_number)
+            self.timings.append(self.timing)
+            self.trials.append(self.trial)
+            self.states.append(self.state)
 
     def start_preview_window(self) -> QWidget:
         try:
