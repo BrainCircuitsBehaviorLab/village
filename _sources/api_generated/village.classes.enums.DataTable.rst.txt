@@ -36,5 +36,6 @@ DataTable
       ~DataTable.SOUND_CALIBRATION
       ~DataTable.TEMPERATURES
       ~DataTable.SESSION
+      ~DataTable.OLD_SESSION
    
    

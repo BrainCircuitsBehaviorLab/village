@@ -194,55 +194,55 @@
 </span><span id="line-7"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </span><span id="line-8"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 </span><span id="line-9">
-</span><span id="line-10"><span class="kn">from</span> <span class="nn">village.classes.protocols</span> <span class="kn">import</span> <span class="n">PyBpodProtocol</span>
+</span><span id="line-10"><span class="kn">from</span> <span class="nn">village.classes.protocols</span> <span class="kn">import</span> <span class="n">CameraProtocol</span><span class="p">,</span> <span class="n">PyBpodProtocol</span>
 </span><span id="line-11"><span class="kn">from</span> <span class="nn">village.classes.training</span> <span class="kn">import</span> <span class="n">Settings</span>
 </span><span id="line-12"><span class="kn">from</span> <span class="nn">village.devices.bpod</span> <span class="kn">import</span> <span class="n">bpod</span>
 </span><span id="line-13"><span class="kn">from</span> <span class="nn">village.log</span> <span class="kn">import</span> <span class="n">log</span>
 </span><span id="line-14"><span class="kn">from</span> <span class="nn">village.pybpodapi.bpod.hardware.events</span> <span class="kn">import</span> <span class="n">EventName</span>
 </span><span id="line-15"><span class="kn">from</span> <span class="nn">village.pybpodapi.bpod.hardware.output_channels</span> <span class="kn">import</span> <span class="n">OutputChannel</span>
-</span><span id="line-16">
-</span><span id="line-17"><span class="c1"># from village.devices.camera import cam_box</span>
-</span><span id="line-18"><span class="kn">from</span> <span class="nn">village.settings</span> <span class="kn">import</span> <span class="n">settings</span>
-</span><span id="line-19"><span class="kn">from</span> <span class="nn">village.time_utils</span> <span class="kn">import</span> <span class="n">time_utils</span>
-</span><span id="line-20">
-</span><span id="line-21">
+</span><span id="line-16"><span class="kn">from</span> <span class="nn">village.settings</span> <span class="kn">import</span> <span class="n">settings</span>
+</span><span id="line-17"><span class="kn">from</span> <span class="nn">village.time_utils</span> <span class="kn">import</span> <span class="n">time_utils</span>
+</span><span id="line-18">
+</span><span id="line-19">
 <div class="viewcode-block" id="TaskError">
 <a class="viewcode-back" href="../../../api_generated/village.classes.task.TaskError.html#village.classes.task.TaskError">[docs]</a>
-</span><span id="line-22"><span class="k">class</span> <span class="nc">TaskError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-</span><span id="line-23">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-24">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+</span><span id="line-20"><span class="k">class</span> <span class="nc">TaskError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="line-21">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-22">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
-</span><span id="line-25">
-</span><span id="line-26">
+</span><span id="line-23">
+</span><span id="line-24">
 <div class="viewcode-block" id="Event">
 <a class="viewcode-back" href="../../../api_generated/village.classes.task.Event.html#village.classes.task.Event">[docs]</a>
-</span><span id="line-27"><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">EventName</span><span class="p">):</span>
-</span><span id="line-28">    <span class="k">pass</span></div>
+</span><span id="line-25"><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">EventName</span><span class="p">):</span>
+</span><span id="line-26">    <span class="k">pass</span></div>
 
-</span><span id="line-29">
-</span><span id="line-30">
+</span><span id="line-27">
+</span><span id="line-28">
 <div class="viewcode-block" id="Output">
 <a class="viewcode-back" href="../../../api_generated/village.classes.task.Output.html#village.classes.task.Output">[docs]</a>
-</span><span id="line-31"><span class="k">class</span> <span class="nc">Output</span><span class="p">(</span><span class="n">OutputChannel</span><span class="p">):</span>
-</span><span id="line-32">    <span class="k">pass</span></div>
+</span><span id="line-29"><span class="k">class</span> <span class="nc">Output</span><span class="p">(</span><span class="n">OutputChannel</span><span class="p">):</span>
+</span><span id="line-30">    <span class="k">pass</span></div>
 
-</span><span id="line-33">
-</span><span id="line-34">
+</span><span id="line-31">
+</span><span id="line-32">
 <div class="viewcode-block" id="Task">
 <a class="viewcode-back" href="../../../api_generated/village.classes.task.Task.html#village.classes.task.Task">[docs]</a>
-</span><span id="line-35"><span class="k">class</span> <span class="nc">Task</span><span class="p">:</span>
+</span><span id="line-33"><span class="k">class</span> <span class="nc">Task</span><span class="p">:</span>
 <div class="viewcode-block" id="Task.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.classes.task.Task.html#village.classes.task.Task.__init__">[docs]</a>
-</span><span id="line-36">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-37">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="p">:</span> <span class="n">PyBpodProtocol</span> <span class="o">=</span> <span class="n">bpod</span>
-</span><span id="line-38">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
-</span><span id="line-39">        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
-</span><span id="line-40">        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-</span><span id="line-41">        <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="line-42">        <span class="bp">self</span><span class="o">.</span><span class="n">current_trial_states</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-43">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_response</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-44">        <span class="bp">self</span><span class="o">.</span><span class="n">system_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYSTEM_NAME&quot;</span><span class="p">)</span>
-</span><span id="line-45">        <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_string</span><span class="p">()</span>
+</span><span id="line-34">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-35">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="p">:</span> <span class="n">PyBpodProtocol</span> <span class="o">=</span> <span class="n">bpod</span>
+</span><span id="line-36">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+</span><span id="line-37">        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+</span><span id="line-38">        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+</span><span id="line-39">        <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="line-40">        <span class="bp">self</span><span class="o">.</span><span class="n">current_trial_states</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-41">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_response</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-42">        <span class="bp">self</span><span class="o">.</span><span class="n">system_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYSTEM_NAME&quot;</span><span class="p">)</span>
+</span><span id="line-43">        <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_string</span><span class="p">()</span>
+</span><span id="line-44">
+</span><span id="line-45">        <span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span> <span class="o">=</span> <span class="n">CameraProtocol</span><span class="p">()</span>
 </span><span id="line-46">
 </span><span id="line-47">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 </span><span id="line-48">
@@ -289,447 +289,266 @@
 </span><span id="line-88">
 </span><span id="line-89">    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-90">        <span class="bp">self</span><span class="o">.</span><span class="n">create_paths</span><span class="p">()</span>
-</span><span id="line-91">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">reconnect</span><span class="p">()</span>
-</span><span id="line-92">        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="line-93">        <span class="k">while</span> <span class="p">(</span>
-</span><span id="line-94">            <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_number_of_trials</span>
-</span><span id="line-95">            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">chrono</span><span class="o">.</span><span class="n">get_seconds</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span>
-</span><span id="line-96">            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_stop</span>
-</span><span id="line-97">        <span class="p">):</span>
-</span><span id="line-98">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">create_state_machine</span><span class="p">()</span>
-</span><span id="line-99">            <span class="bp">self</span><span class="o">.</span><span class="n">create_trial</span><span class="p">()</span>
-</span><span id="line-100">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_and_run_state_machine</span><span class="p">()</span>
-</span><span id="line-101">            <span class="bp">self</span><span class="o">.</span><span class="n">after_trial</span><span class="p">()</span>
-</span><span id="line-102">            <span class="bp">self</span><span class="o">.</span><span class="n">register_values</span><span class="p">()</span>
-</span><span id="line-103">            <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="line-104">
-</span><span id="line-105">    <span class="k">def</span> <span class="nf">register_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-106">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;task&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-</span><span id="line-107">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span>
-</span><span id="line-108">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;system_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_name</span><span class="p">)</span>
-</span><span id="line-109">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
-</span><span id="line-110">
-</span><span id="line-111">        <span class="c1"># get all the attributes in self.settings and register them</span>
-</span><span id="line-112">        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">):</span>
-</span><span id="line-113">            <span class="n">attribute</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-</span><span id="line-114">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
-</span><span id="line-115">
-</span><span id="line-116">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;TRIAL&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span id="line-117">
-</span><span id="line-118">    <span class="k">def</span> <span class="nf">disconnect_and_save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-119">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</span><span id="line-120">        <span class="c1"># TODO kill the screen</span>
-</span><span id="line-121">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
-</span><span id="line-122">            <span class="k">try</span><span class="p">:</span>
-</span><span id="line-123">                <span class="bp">self</span><span class="o">.</span><span class="n">save_csv</span><span class="p">()</span>
-</span><span id="line-124">                <span class="bp">self</span><span class="o">.</span><span class="n">save_json</span><span class="p">()</span>
-</span><span id="line-125">                <span class="c1"># TODO self.save_video()</span>
-</span><span id="line-126">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span id="line-127">                <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span id="line-128">                    <span class="s2">&quot;Error saving the task: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span id="line-129">                    <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
-</span><span id="line-130">                    <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
-</span><span id="line-131">                <span class="p">)</span>
-</span><span id="line-132">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span id="line-133">
-</span><span id="line-134">    <span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-135">
-</span><span id="line-136">        <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="line-137">
-</span><span id="line-138">        <span class="n">default_properties_to_save</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-139">            <span class="s2">&quot;minimum_duration&quot;</span><span class="p">,</span>
-</span><span id="line-140">            <span class="s2">&quot;maximum_duration&quot;</span><span class="p">,</span>
-</span><span id="line-141">            <span class="s2">&quot;maximum_number_of_trials&quot;</span><span class="p">,</span>
-</span><span id="line-142">        <span class="p">]</span>
-</span><span id="line-143">        <span class="n">default_properties_to_not_save</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-144">            <span class="s2">&quot;next_task&quot;</span><span class="p">,</span>
-</span><span id="line-145">            <span class="s2">&quot;refractary_period&quot;</span><span class="p">,</span>
-</span><span id="line-146">        <span class="p">]</span>
-</span><span id="line-147">        <span class="n">default_properties</span> <span class="o">=</span> <span class="n">default_properties_to_save</span> <span class="o">+</span> <span class="n">default_properties_to_not_save</span>
-</span><span id="line-148">        <span class="n">extra_properties</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-149">            <span class="n">prop</span> <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">)</span> <span class="k">if</span> <span class="n">prop</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">default_properties</span>
-</span><span id="line-150">        <span class="p">]</span>
-</span><span id="line-151">        <span class="n">properties</span> <span class="o">=</span> <span class="n">default_properties_to_save</span> <span class="o">+</span> <span class="n">extra_properties</span>
-</span><span id="line-152">
-</span><span id="line-153">        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-</span><span id="line-154">            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-</span><span id="line-155">                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-</span><span id="line-156">                <span class="n">dictionary</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-</span><span id="line-157">
-</span><span id="line-158">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_settings_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span><span id="line-159">            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</span><span id="line-91">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+</span><span id="line-92">            <span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">start_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_data_path</span><span class="p">)</span>
+</span><span id="line-93">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">reconnect</span><span class="p">()</span>
+</span><span id="line-94">        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="line-95">        <span class="k">while</span> <span class="p">(</span>
+</span><span id="line-96">            <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_number_of_trials</span>
+</span><span id="line-97">            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">chrono</span><span class="o">.</span><span class="n">get_seconds</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span>
+</span><span id="line-98">            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_stop</span>
+</span><span id="line-99">        <span class="p">):</span>
+</span><span id="line-100">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">create_state_machine</span><span class="p">()</span>
+</span><span id="line-101">            <span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">trial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span>
+</span><span id="line-102">            <span class="bp">self</span><span class="o">.</span><span class="n">create_trial</span><span class="p">()</span>
+</span><span id="line-103">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_and_run_state_machine</span><span class="p">()</span>
+</span><span id="line-104">            <span class="bp">self</span><span class="o">.</span><span class="n">after_trial</span><span class="p">()</span>
+</span><span id="line-105">            <span class="bp">self</span><span class="o">.</span><span class="n">register_values</span><span class="p">()</span>
+</span><span id="line-106">            <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="line-107">
+</span><span id="line-108">    <span class="k">def</span> <span class="nf">register_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-109">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;task&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span id="line-110">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span>
+</span><span id="line-111">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;system_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_name</span><span class="p">)</span>
+</span><span id="line-112">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+</span><span id="line-113">
+</span><span id="line-114">        <span class="c1"># get all the attributes in self.settings and register them</span>
+</span><span id="line-115">        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">):</span>
+</span><span id="line-116">            <span class="n">attribute</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</span><span id="line-117">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
+</span><span id="line-118">
+</span><span id="line-119">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;TRIAL&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span id="line-120">
+</span><span id="line-121">    <span class="k">def</span> <span class="nf">disconnect_and_save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-122">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span><span id="line-123">        <span class="c1"># TODO kill the screen</span>
+</span><span id="line-124">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+</span><span id="line-125">            <span class="k">try</span><span class="p">:</span>
+</span><span id="line-126">                <span class="bp">self</span><span class="o">.</span><span class="n">save_csv</span><span class="p">()</span>
+</span><span id="line-127">                <span class="bp">self</span><span class="o">.</span><span class="n">save_json</span><span class="p">()</span>
+</span><span id="line-128">                <span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">stop_record</span><span class="p">()</span>
+</span><span id="line-129">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span id="line-130">                <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span id="line-131">                    <span class="s2">&quot;Error saving the task: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span id="line-132">                    <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
+</span><span id="line-133">                    <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
+</span><span id="line-134">                <span class="p">)</span>
+</span><span id="line-135">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span id="line-136">
+</span><span id="line-137">    <span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-138">
+</span><span id="line-139">        <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="line-140">
+</span><span id="line-141">        <span class="n">default_properties_to_save</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-142">            <span class="s2">&quot;minimum_duration&quot;</span><span class="p">,</span>
+</span><span id="line-143">            <span class="s2">&quot;maximum_duration&quot;</span><span class="p">,</span>
+</span><span id="line-144">            <span class="s2">&quot;maximum_number_of_trials&quot;</span><span class="p">,</span>
+</span><span id="line-145">        <span class="p">]</span>
+</span><span id="line-146">        <span class="n">default_properties_to_not_save</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-147">            <span class="s2">&quot;next_task&quot;</span><span class="p">,</span>
+</span><span id="line-148">            <span class="s2">&quot;refractary_period&quot;</span><span class="p">,</span>
+</span><span id="line-149">        <span class="p">]</span>
+</span><span id="line-150">        <span class="n">default_properties</span> <span class="o">=</span> <span class="n">default_properties_to_save</span> <span class="o">+</span> <span class="n">default_properties_to_not_save</span>
+</span><span id="line-151">        <span class="n">extra_properties</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-152">            <span class="n">prop</span> <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">)</span> <span class="k">if</span> <span class="n">prop</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">default_properties</span>
+</span><span id="line-153">        <span class="p">]</span>
+</span><span id="line-154">        <span class="n">properties</span> <span class="o">=</span> <span class="n">default_properties_to_save</span> <span class="o">+</span> <span class="n">extra_properties</span>
+</span><span id="line-155">
+</span><span id="line-156">        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
+</span><span id="line-157">            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+</span><span id="line-158">                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</span><span id="line-159">                <span class="n">dictionary</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 </span><span id="line-160">
-</span><span id="line-161">    <span class="k">def</span> <span class="nf">save_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-162">
-</span><span id="line-163">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rt_session_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-</span><span id="line-164">
-</span><span id="line-165">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100000</span><span class="p">:</span>
-</span><span id="line-166">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span id="line-167"><span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-168"><span class="sd">                      The session file is too big, probably due to</span>
-</span><span id="line-169"><span class="sd">                      overdetections in some of the ports&quot;&quot;&quot;</span><span class="p">,</span>
-</span><span id="line-170">                <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
-</span><span id="line-171">            <span class="p">)</span>
-</span><span id="line-172">
-</span><span id="line-173">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;TRIAL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="line-174">            <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_session_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span id="line-161">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_settings_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="line-162">            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</span><span id="line-163">
+</span><span id="line-164">    <span class="k">def</span> <span class="nf">save_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-165">
+</span><span id="line-166">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rt_session_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span id="line-167">
+</span><span id="line-168">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100000</span><span class="p">:</span>
+</span><span id="line-169">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span id="line-170"><span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-171"><span class="sd">                      The session file is too big, probably due to</span>
+</span><span id="line-172"><span class="sd">                      overdetections in some of the ports&quot;&quot;&quot;</span><span class="p">,</span>
+</span><span id="line-173">                <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
+</span><span id="line-174">            <span class="p">)</span>
 </span><span id="line-175">
-</span><span id="line-176">            <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_df</span><span class="p">()</span>
-</span><span id="line-177">
-</span><span id="line-178">            <span class="k">try</span><span class="p">:</span>
-</span><span id="line-179">                <span class="n">water</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;water&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-</span><span id="line-180">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span id="line-181">                <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="line-182">
-</span><span id="line-183">            <span class="k">if</span> <span class="n">water</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="line-184">                <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span id="line-185">                    <span class="s2">&quot;No water was drunk in task: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span>
-</span><span id="line-186">                <span class="p">)</span>
-</span><span id="line-187">
-</span><span id="line-188">            <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-</span><span id="line-189">
-</span><span id="line-190">            <span class="k">try</span><span class="p">:</span>
-</span><span id="line-191">                <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span id="line-176">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;TRIAL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="line-177">            <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_session_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span id="line-178">
+</span><span id="line-179">            <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_df</span><span class="p">()</span>
+</span><span id="line-180">
+</span><span id="line-181">            <span class="k">try</span><span class="p">:</span>
+</span><span id="line-182">                <span class="n">water</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;water&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</span><span id="line-183">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span id="line-184">                <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-185">
+</span><span id="line-186">            <span class="k">if</span> <span class="n">water</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="line-187">                <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span id="line-188">                    <span class="s2">&quot;No water was drunk in task: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span>
+</span><span id="line-189">                <span class="p">)</span>
+</span><span id="line-190">
+</span><span id="line-191">            <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
 </span><span id="line-192">
-</span><span id="line-193">                <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;session&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-194">                    <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;session&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-</span><span id="line-195">                <span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="line-196">                <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df_all</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-197">            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-</span><span id="line-198">                <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span id="line-199">                <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span>
-</span><span id="line-200">
-</span><span id="line-201">            <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-</span><span id="line-202">
-</span><span id="line-203">            <span class="k">def</span> <span class="nf">safe_to_numeric</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="line-204">                <span class="k">try</span><span class="p">:</span>
-</span><span id="line-205">                    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
-</span><span id="line-206">                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span id="line-207">                    <span class="k">return</span> <span class="n">series</span>
-</span><span id="line-208">
-</span><span id="line-209">            <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">safe_to_numeric</span><span class="p">)</span>
-</span><span id="line-210">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-211">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span id="line-212">                <span class="s2">&quot;No trials were recorded in task: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span>
-</span><span id="line-213">            <span class="p">)</span>
-</span><span id="line-214">
-</span><span id="line-215">    <span class="k">def</span> <span class="nf">transform_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="line-216">
-</span><span id="line-217">        <span class="k">def</span> <span class="nf">make_list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="line-218">            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="line-219">                <span class="k">return</span> <span class="n">x</span>
-</span><span id="line-220">            <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-</span><span id="line-221">                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-</span><span id="line-222">            <span class="k">else</span><span class="p">:</span>
-</span><span id="line-223">                <span class="k">return</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))])</span>
-</span><span id="line-224">
-</span><span id="line-225">        <span class="n">df0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span>
-</span><span id="line-226">        <span class="n">df0</span><span class="p">[</span><span class="s2">&quot;idx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-</span><span id="line-227">        <span class="n">df1</span> <span class="o">=</span> <span class="n">df0</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;idx&quot;</span><span class="p">)</span>
-</span><span id="line-228">        <span class="n">df2</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
-</span><span id="line-229">            <span class="n">index</span><span class="o">=</span><span class="s2">&quot;TRIAL&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;MSG&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="s2">&quot;END&quot;</span><span class="p">],</span> <span class="n">aggfunc</span><span class="o">=</span><span class="n">make_list</span>
-</span><span id="line-230">        <span class="p">)</span>
-</span><span id="line-231">
-</span><span id="line-232">        <span class="n">df3</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
-</span><span id="line-233">            <span class="n">index</span><span class="o">=</span><span class="s2">&quot;TRIAL&quot;</span><span class="p">,</span>
-</span><span id="line-234">            <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;MSG&quot;</span><span class="p">,</span>
-</span><span id="line-235">            <span class="n">values</span><span class="o">=</span><span class="s2">&quot;VALUE&quot;</span><span class="p">,</span>
-</span><span id="line-236">            <span class="n">aggfunc</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-</span><span id="line-237">        <span class="p">)</span>
-</span><span id="line-238">        <span class="n">df4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df2</span><span class="p">,</span> <span class="n">df3</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="line-239">
-</span><span id="line-240">        <span class="n">columns_to_drop</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-241">            <span class="n">item</span>
-</span><span id="line-242">            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">df4</span><span class="o">.</span><span class="n">columns</span>
-</span><span id="line-243">            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span>
-</span><span id="line-244">            <span class="ow">and</span> <span class="p">(</span>
-</span><span id="line-245">                <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Tup&quot;</span><span class="p">)</span>
-</span><span id="line-246">                <span class="ow">or</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Transition&quot;</span><span class="p">)</span>
-</span><span id="line-247">                <span class="ow">or</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Global&quot;</span><span class="p">)</span>
-</span><span id="line-248">                <span class="ow">or</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Condition&quot;</span><span class="p">)</span>
-</span><span id="line-249">            <span class="p">)</span>
-</span><span id="line-250">        <span class="p">]</span>
-</span><span id="line-251">        <span class="n">df4</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns_to_drop</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-252">
-</span><span id="line-253">        <span class="n">columns_to_drop2</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-254">            <span class="n">col</span>
-</span><span id="line-255">            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df4</span><span class="o">.</span><span class="n">columns</span>
-</span><span id="line-256">            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-</span><span id="line-257">            <span class="ow">and</span> <span class="p">(</span>
-</span><span id="line-258">                <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Tup&quot;</span><span class="p">)</span>
-</span><span id="line-259">                <span class="ow">or</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Transition&quot;</span><span class="p">)</span>
-</span><span id="line-260">                <span class="ow">or</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Global&quot;</span><span class="p">)</span>
-</span><span id="line-261">                <span class="ow">or</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Condition&quot;</span><span class="p">)</span>
-</span><span id="line-262">            <span class="p">)</span>
-</span><span id="line-263">        <span class="p">]</span>
-</span><span id="line-264">        <span class="n">df4</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns_to_drop2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-265">
-</span><span id="line-266">        <span class="n">df4</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-267">            <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span> <span class="k">else</span> <span class="n">item</span>
-</span><span id="line-268">            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">df4</span><span class="o">.</span><span class="n">columns</span>
-</span><span id="line-269">        <span class="p">]</span>
-</span><span id="line-270">
-</span><span id="line-271">        <span class="n">df4</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-272">        <span class="n">df4</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;TRIAL_END&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-273">        <span class="n">df4</span><span class="p">[</span><span class="s2">&quot;trial&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df4</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-</span><span id="line-274">
-</span><span id="line-275">        <span class="n">list_of_columns</span> <span class="o">=</span> <span class="n">df4</span><span class="o">.</span><span class="n">columns</span>
-</span><span id="line-276">
-</span><span id="line-277">        <span class="n">start_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_of_columns</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_START&quot;</span><span class="p">)]</span>
-</span><span id="line-278">        <span class="n">end_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_of_columns</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_END&quot;</span><span class="p">)]</span>
-</span><span id="line-279">        <span class="n">other_list</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-280">            <span class="n">item</span>
-</span><span id="line-281">            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_of_columns</span>
-</span><span id="line-282">            <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">start_list</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">end_list</span>
-</span><span id="line-283">        <span class="p">]</span>
-</span><span id="line-284">
-</span><span id="line-285">        <span class="n">states_list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-286">        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">start_list</span><span class="p">:</span>
-</span><span id="line-287">            <span class="n">states_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</span><span id="line-288">            <span class="k">for</span> <span class="n">item2</span> <span class="ow">in</span> <span class="n">end_list</span><span class="p">:</span>
-</span><span id="line-289">                <span class="k">if</span> <span class="n">item2</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">item</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]):</span>
-</span><span id="line-290">                    <span class="n">states_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item2</span><span class="p">)</span>
-</span><span id="line-291">
-</span><span id="line-292">        <span class="n">new_list</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-293">            <span class="s2">&quot;date&quot;</span><span class="p">,</span>
-</span><span id="line-294">            <span class="s2">&quot;trial&quot;</span><span class="p">,</span>
-</span><span id="line-295">            <span class="s2">&quot;subject&quot;</span><span class="p">,</span>
-</span><span id="line-296">            <span class="s2">&quot;task&quot;</span><span class="p">,</span>
-</span><span id="line-297">            <span class="s2">&quot;system_name&quot;</span><span class="p">,</span>
-</span><span id="line-298">            <span class="s2">&quot;TRIAL_START&quot;</span><span class="p">,</span>
-</span><span id="line-299">            <span class="s2">&quot;TRIAL_END&quot;</span><span class="p">,</span>
-</span><span id="line-300">        <span class="p">]</span>
-</span><span id="line-301">        <span class="n">new_list</span> <span class="o">+=</span> <span class="n">states_list</span> <span class="o">+</span> <span class="n">other_list</span>
-</span><span id="line-302">        <span class="n">new_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">new_list</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-</span><span id="line-303">
-</span><span id="line-304">        <span class="n">df4</span> <span class="o">=</span> <span class="n">df4</span><span class="p">[</span><span class="n">new_list</span><span class="p">]</span>
-</span><span id="line-305">
-</span><span id="line-306">        <span class="k">return</span> <span class="n">df4</span>
-</span><span id="line-307">
-</span><span id="line-308">    <span class="nd">@classmethod</span>
-</span><span id="line-309">    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="line-310">        <span class="n">name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
-</span><span id="line-311">        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Task&quot;</span><span class="p">:</span>
-</span><span id="line-312">            <span class="k">return</span> <span class="s2">&quot;None&quot;</span>
-</span><span id="line-313">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-314">            <span class="k">return</span> <span class="n">name</span>
-</span><span id="line-315">
-</span><span id="line-316">    <span class="k">def</span> <span class="nf">create_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-317">        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_string</span><span class="p">()</span>
-</span><span id="line-318">        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_string_for_filename</span><span class="p">()</span>
-</span><span id="line-319">        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">start_time</span>
-</span><span id="line-320">        <span class="bp">self</span><span class="o">.</span><span class="n">rt_session_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
-</span><span id="line-321">            <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SESSIONS_DIRECTORY&quot;</span><span class="p">),</span> <span class="s2">&quot;session.csv&quot;</span><span class="p">)</span>
-</span><span id="line-322">        <span class="p">)</span>
+</span><span id="line-193">            <span class="k">try</span><span class="p">:</span>
+</span><span id="line-194">                <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span id="line-195">
+</span><span id="line-196">                <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;session&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-197">                    <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;session&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="line-198">                <span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="line-199">                <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df_all</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-200">            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+</span><span id="line-201">                <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="line-202">                <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_df</span>
+</span><span id="line-203">
+</span><span id="line-204">            <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span id="line-205">
+</span><span id="line-206">            <span class="k">def</span> <span class="nf">safe_to_numeric</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="line-207">                <span class="k">try</span><span class="p">:</span>
+</span><span id="line-208">                    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
+</span><span id="line-209">                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span id="line-210">                    <span class="k">return</span> <span class="n">series</span>
+</span><span id="line-211">
+</span><span id="line-212">            <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_all</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">safe_to_numeric</span><span class="p">)</span>
+</span><span id="line-213">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-214">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span id="line-215">                <span class="s2">&quot;No trials were recorded in task: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span>
+</span><span id="line-216">            <span class="p">)</span>
+</span><span id="line-217">
+</span><span id="line-218">    <span class="k">def</span> <span class="nf">transform_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="line-219">
+</span><span id="line-220">        <span class="k">def</span> <span class="nf">make_list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-221">            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="line-222">                <span class="k">return</span> <span class="n">x</span>
+</span><span id="line-223">            <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+</span><span id="line-224">                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+</span><span id="line-225">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-226">                <span class="k">return</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))])</span>
+</span><span id="line-227">
+</span><span id="line-228">        <span class="n">df0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span>
+</span><span id="line-229">        <span class="n">df0</span><span class="p">[</span><span class="s2">&quot;idx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="line-230">        <span class="n">df1</span> <span class="o">=</span> <span class="n">df0</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;idx&quot;</span><span class="p">)</span>
+</span><span id="line-231">        <span class="n">df2</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+</span><span id="line-232">            <span class="n">index</span><span class="o">=</span><span class="s2">&quot;TRIAL&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;MSG&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="s2">&quot;END&quot;</span><span class="p">],</span> <span class="n">aggfunc</span><span class="o">=</span><span class="n">make_list</span>
+</span><span id="line-233">        <span class="p">)</span>
+</span><span id="line-234">
+</span><span id="line-235">        <span class="n">df3</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+</span><span id="line-236">            <span class="n">index</span><span class="o">=</span><span class="s2">&quot;TRIAL&quot;</span><span class="p">,</span>
+</span><span id="line-237">            <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;MSG&quot;</span><span class="p">,</span>
+</span><span id="line-238">            <span class="n">values</span><span class="o">=</span><span class="s2">&quot;VALUE&quot;</span><span class="p">,</span>
+</span><span id="line-239">            <span class="n">aggfunc</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+</span><span id="line-240">        <span class="p">)</span>
+</span><span id="line-241">        <span class="n">df4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df2</span><span class="p">,</span> <span class="n">df3</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="line-242">
+</span><span id="line-243">        <span class="n">columns_to_drop</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-244">            <span class="n">item</span>
+</span><span id="line-245">            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">df4</span><span class="o">.</span><span class="n">columns</span>
+</span><span id="line-246">            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span>
+</span><span id="line-247">            <span class="ow">and</span> <span class="p">(</span>
+</span><span id="line-248">                <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Tup&quot;</span><span class="p">)</span>
+</span><span id="line-249">                <span class="ow">or</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Transition&quot;</span><span class="p">)</span>
+</span><span id="line-250">                <span class="ow">or</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Global&quot;</span><span class="p">)</span>
+</span><span id="line-251">                <span class="ow">or</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Condition&quot;</span><span class="p">)</span>
+</span><span id="line-252">            <span class="p">)</span>
+</span><span id="line-253">        <span class="p">]</span>
+</span><span id="line-254">        <span class="n">df4</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns_to_drop</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-255">
+</span><span id="line-256">        <span class="n">columns_to_drop2</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-257">            <span class="n">col</span>
+</span><span id="line-258">            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df4</span><span class="o">.</span><span class="n">columns</span>
+</span><span id="line-259">            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+</span><span id="line-260">            <span class="ow">and</span> <span class="p">(</span>
+</span><span id="line-261">                <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Tup&quot;</span><span class="p">)</span>
+</span><span id="line-262">                <span class="ow">or</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Transition&quot;</span><span class="p">)</span>
+</span><span id="line-263">                <span class="ow">or</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Global&quot;</span><span class="p">)</span>
+</span><span id="line-264">                <span class="ow">or</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_Condition&quot;</span><span class="p">)</span>
+</span><span id="line-265">            <span class="p">)</span>
+</span><span id="line-266">        <span class="p">]</span>
+</span><span id="line-267">        <span class="n">df4</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns_to_drop2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-268">
+</span><span id="line-269">        <span class="n">df4</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-270">            <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span> <span class="k">else</span> <span class="n">item</span>
+</span><span id="line-271">            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">df4</span><span class="o">.</span><span class="n">columns</span>
+</span><span id="line-272">        <span class="p">]</span>
+</span><span id="line-273">
+</span><span id="line-274">        <span class="n">df4</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-275">        <span class="n">df4</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;TRIAL_END&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-276">        <span class="n">df4</span><span class="p">[</span><span class="s2">&quot;trial&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df4</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="line-277">
+</span><span id="line-278">        <span class="n">list_of_columns</span> <span class="o">=</span> <span class="n">df4</span><span class="o">.</span><span class="n">columns</span>
+</span><span id="line-279">
+</span><span id="line-280">        <span class="n">start_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_of_columns</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_START&quot;</span><span class="p">)]</span>
+</span><span id="line-281">        <span class="n">end_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_of_columns</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_END&quot;</span><span class="p">)]</span>
+</span><span id="line-282">        <span class="n">other_list</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-283">            <span class="n">item</span>
+</span><span id="line-284">            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_of_columns</span>
+</span><span id="line-285">            <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">start_list</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">end_list</span>
+</span><span id="line-286">        <span class="p">]</span>
+</span><span id="line-287">
+</span><span id="line-288">        <span class="n">states_list</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-289">        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">start_list</span><span class="p">:</span>
+</span><span id="line-290">            <span class="n">states_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="line-291">            <span class="k">for</span> <span class="n">item2</span> <span class="ow">in</span> <span class="n">end_list</span><span class="p">:</span>
+</span><span id="line-292">                <span class="k">if</span> <span class="n">item2</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">item</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]):</span>
+</span><span id="line-293">                    <span class="n">states_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item2</span><span class="p">)</span>
+</span><span id="line-294">
+</span><span id="line-295">        <span class="n">new_list</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-296">            <span class="s2">&quot;date&quot;</span><span class="p">,</span>
+</span><span id="line-297">            <span class="s2">&quot;trial&quot;</span><span class="p">,</span>
+</span><span id="line-298">            <span class="s2">&quot;subject&quot;</span><span class="p">,</span>
+</span><span id="line-299">            <span class="s2">&quot;task&quot;</span><span class="p">,</span>
+</span><span id="line-300">            <span class="s2">&quot;system_name&quot;</span><span class="p">,</span>
+</span><span id="line-301">            <span class="s2">&quot;TRIAL_START&quot;</span><span class="p">,</span>
+</span><span id="line-302">            <span class="s2">&quot;TRIAL_END&quot;</span><span class="p">,</span>
+</span><span id="line-303">        <span class="p">]</span>
+</span><span id="line-304">        <span class="n">new_list</span> <span class="o">+=</span> <span class="n">states_list</span> <span class="o">+</span> <span class="n">other_list</span>
+</span><span id="line-305">        <span class="n">new_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">new_list</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</span><span id="line-306">
+</span><span id="line-307">        <span class="n">df4</span> <span class="o">=</span> <span class="n">df4</span><span class="p">[</span><span class="n">new_list</span><span class="p">]</span>
+</span><span id="line-308">
+</span><span id="line-309">        <span class="k">return</span> <span class="n">df4</span>
+</span><span id="line-310">
+</span><span id="line-311">    <span class="nd">@classmethod</span>
+</span><span id="line-312">    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-313">        <span class="n">name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+</span><span id="line-314">        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Task&quot;</span><span class="p">:</span>
+</span><span id="line-315">            <span class="k">return</span> <span class="s2">&quot;None&quot;</span>
+</span><span id="line-316">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-317">            <span class="k">return</span> <span class="n">name</span>
+</span><span id="line-318">
+</span><span id="line-319">    <span class="k">def</span> <span class="nf">create_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-320">        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span id="line-321">        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">string_from_date</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span>
+</span><span id="line-322">        <span class="n">start_time_str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">filename_string_from_date</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span>
 </span><span id="line-323">
-</span><span id="line-324">        <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SESSIONS_DIRECTORY&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span>
-</span><span id="line-325">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
-</span><span id="line-326">            <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-327">        <span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+</span><span id="line-324">        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">start_time_str</span>
+</span><span id="line-325">        <span class="bp">self</span><span class="o">.</span><span class="n">rt_session_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+</span><span id="line-326">            <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SESSIONS_DIRECTORY&quot;</span><span class="p">),</span> <span class="s2">&quot;session.csv&quot;</span><span class="p">)</span>
+</span><span id="line-327">        <span class="p">)</span>
 </span><span id="line-328">
-</span><span id="line-329">        <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VIDEOS_DIRECTORY&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span>
+</span><span id="line-329">        <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SESSIONS_DIRECTORY&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span>
 </span><span id="line-330">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
 </span><span id="line-331">            <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-332">        <span class="bp">self</span><span class="o">.</span><span class="n">video_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+</span><span id="line-332">        <span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
 </span><span id="line-333">
-</span><span id="line-334">        <span class="bp">self</span><span class="o">.</span><span class="n">raw_session_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
-</span><span id="line-335">            <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;_RAW.csv&quot;</span><span class="p">)</span>
-</span><span id="line-336">        <span class="p">)</span>
-</span><span id="line-337">        <span class="bp">self</span><span class="o">.</span><span class="n">session_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">))</span>
-</span><span id="line-338">        <span class="bp">self</span><span class="o">.</span><span class="n">session_settings_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
-</span><span id="line-339">            <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
-</span><span id="line-340">        <span class="p">)</span>
-</span><span id="line-341">
-</span><span id="line-342">        <span class="bp">self</span><span class="o">.</span><span class="n">video_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.avi&quot;</span><span class="p">))</span>
-</span><span id="line-343">        <span class="bp">self</span><span class="o">.</span><span class="n">video_data_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">))</span>
-</span><span id="line-344">        <span class="bp">self</span><span class="o">.</span><span class="n">subject_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">))</span></div>
+</span><span id="line-334">        <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VIDEOS_DIRECTORY&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span>
+</span><span id="line-335">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+</span><span id="line-336">            <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-337">        <span class="bp">self</span><span class="o">.</span><span class="n">video_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+</span><span id="line-338">
+</span><span id="line-339">        <span class="bp">self</span><span class="o">.</span><span class="n">raw_session_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+</span><span id="line-340">            <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;_RAW.csv&quot;</span><span class="p">)</span>
+</span><span id="line-341">        <span class="p">)</span>
+</span><span id="line-342">        <span class="bp">self</span><span class="o">.</span><span class="n">session_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">))</span>
+</span><span id="line-343">        <span class="bp">self</span><span class="o">.</span><span class="n">session_settings_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+</span><span id="line-344">            <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
+</span><span id="line-345">        <span class="p">)</span>
+</span><span id="line-346">
+</span><span id="line-347">        <span class="bp">self</span><span class="o">.</span><span class="n">video_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.avi&quot;</span><span class="p">))</span>
+</span><span id="line-348">        <span class="bp">self</span><span class="o">.</span><span class="n">video_data_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">))</span>
+</span><span id="line-349">        <span class="bp">self</span><span class="o">.</span><span class="n">subject_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">))</span></div>
 
-</span><span id="line-345">
-</span><span id="line-346">    <span class="c1"># def get_properties(self) -&gt; list[str]:</span>
-</span><span id="line-347">    <span class="c1">#     used_names = [</span>
-</span><span id="line-348">    <span class="c1">#         &quot;bpod&quot;,</span>
-</span><span id="line-349">    <span class="c1">#         &quot;name&quot;,</span>
-</span><span id="line-350">    <span class="c1">#         &quot;weight&quot;,</span>
-</span><span id="line-351">    <span class="c1">#         &quot;current_trial&quot;,</span>
-</span><span id="line-352">    <span class="c1">#         &quot;current_trial_states&quot;,</span>
-</span><span id="line-353">    <span class="c1">#         &quot;touch_response&quot;,</span>
-</span><span id="line-354">    <span class="c1">#         &quot;system_name&quot;,</span>
-</span><span id="line-355">    <span class="c1">#         &quot;info&quot;,</span>
-</span><span id="line-356">    <span class="c1">#         &quot;subject&quot;,</span>
-</span><span id="line-357">    <span class="c1">#         &quot;minimum_duration&quot;,</span>
-</span><span id="line-358">    <span class="c1">#         &quot;maximum_duration&quot;,</span>
-</span><span id="line-359">    <span class="c1">#         &quot;maximum_number_of_trials&quot;,</span>
-</span><span id="line-360">    <span class="c1">#         &quot;filename&quot;,</span>
-</span><span id="line-361">    <span class="c1">#         &quot;sessions_directory&quot;,</span>
-</span><span id="line-362">    <span class="c1">#         &quot;raw_session_path&quot;,</span>
-</span><span id="line-363">    <span class="c1">#         &quot;session_path&quot;,</span>
-</span><span id="line-364">    <span class="c1">#         &quot;session_settings_path&quot;,</span>
-</span><span id="line-365">    <span class="c1">#         &quot;video_directory&quot;,</span>
-</span><span id="line-366">    <span class="c1">#         &quot;video_path&quot;,</span>
-</span><span id="line-367">    <span class="c1">#         &quot;video_data_path&quot;,</span>
-</span><span id="line-368">    <span class="c1">#         &quot;settings_path&quot;,</span>
-</span><span id="line-369">    <span class="c1">#     ]</span>
-</span><span id="line-370">    <span class="c1">#     properties = [</span>
-</span><span id="line-371">    <span class="c1">#         prop</span>
-</span><span id="line-372">    <span class="c1">#         for prop in dir(self)</span>
-</span><span id="line-373">    <span class="c1">#         if not callable(getattr(self, prop))</span>
-</span><span id="line-374">    <span class="c1">#         and not prop.startswith(&quot;_&quot;)</span>
-</span><span id="line-375">    <span class="c1">#         and prop not in used_names</span>
-</span><span id="line-376">    <span class="c1">#     ]</span>
-</span><span id="line-377">    <span class="c1">#     properties = [</span>
-</span><span id="line-378">    <span class="c1">#         &quot;subject&quot;,</span>
-</span><span id="line-379">    <span class="c1">#         &quot;minimum_duration&quot;,</span>
-</span><span id="line-380">    <span class="c1">#         &quot;maximum_duration&quot;,</span>
-</span><span id="line-381">    <span class="c1">#         &quot;maximum_number_of_trials&quot;,</span>
-</span><span id="line-382">    <span class="c1">#     ] + properties</span>
-</span><span id="line-383">    <span class="c1">#     return properties</span>
-</span><span id="line-384">
-</span><span id="line-385">    <span class="c1"># def create_json_settings_file(self) -&gt; None:</span>
-</span><span id="line-386">    <span class="c1">#     if not Path(self.subject_settings_path).exists():</span>
-</span><span id="line-387">    <span class="c1">#         config = {}</span>
-</span><span id="line-388">    <span class="c1">#         for name in self.get_properties():</span>
-</span><span id="line-389">    <span class="c1">#             if hasattr(self, name):</span>
-</span><span id="line-390">    <span class="c1">#                 value = getattr(self, name)</span>
-</span><span id="line-391">    <span class="c1">#                 config[name] = value</span>
-</span><span id="line-392">
-</span><span id="line-393">    <span class="c1">#         with open(self.session_settings_path, &quot;w&quot;) as f:</span>
-</span><span id="line-394">    <span class="c1">#             json.dump(settings, f)</span>
-</span><span id="line-395">
-</span><span id="line-396">    <span class="c1"># def set_and_run(self, subject, subject_name, subject_weight, task_manager):</span>
-</span><span id="line-397">
-</span><span id="line-398">    <span class="c1">#     self.current_trial = 0</span>
-</span><span id="line-399">    <span class="c1">#     self.date = time_utils.now_string()[:10]</span>
-</span><span id="line-400">    <span class="c1">#     cam_box.start_record()</span>
-</span><span id="line-401">
-</span><span id="line-402">    <span class="c1">#     if task_manager is not None:</span>
-</span><span id="line-403">
-</span><span id="line-404">    <span class="c1">#         self.date = task_manager.start[:10]</span>
-</span><span id="line-405">    <span class="c1">#         video_directory = os.path.join(settings.VIDEOS_DIRECTORY, subject_name)</span>
-</span><span id="line-406">
-</span><span id="line-407">    <span class="c1">#         if not os.path.exists(video_directory):</span>
-</span><span id="line-408">    <span class="c1">#             os.mkdir(video_directory)</span>
-</span><span id="line-409">
-</span><span id="line-410">    <span class="c1">#         # cam2.put_state(&#39;File&#39; + task_manager.filename)</span>
-</span><span id="line-411">    <span class="c1">#         cam3.put_state(&quot;File&quot; + task_manager.filename)</span>
-</span><span id="line-412">    <span class="c1">#         cam4.put_state(&quot;File&quot; + task_manager.filename)</span>
-</span><span id="line-413">
-</span><span id="line-414">    <span class="c1">#     else:</span>
-</span><span id="line-415">    <span class="c1">#         # cam2.put_state(&#39;active&#39;)</span>
-</span><span id="line-416">    <span class="c1">#         cam3.put_state(&quot;active&quot;)</span>
-</span><span id="line-417">    <span class="c1">#         cam4.put_state(&quot;active&quot;)</span>
-</span><span id="line-418">    <span class="c1">#         self.date = time_utils.now_string()[:10]</span>
-</span><span id="line-419">
-</span><span id="line-420">    <span class="c1">#     self.process = Thread(target=self.run_thread, args=(trials,), daemon=True)</span>
-</span><span id="line-421">    <span class="c1">#     self.process.start()</span>
-</span><span id="line-422">
-</span><span id="line-423">    <span class="c1"># def run_thread(self, trials):</span>
-</span><span id="line-424">    <span class="c1">#     utils.chrono.reset()</span>
-</span><span id="line-425">    <span class="c1">#     if self.my_bpod is None:</span>
-</span><span id="line-426">
-</span><span id="line-427">    <span class="c1">#         self.my_bpod = bpod.create_Bpod()</span>
-</span><span id="line-428">
-</span><span id="line-429">    <span class="c1">#         if self.my_bpod is None:</span>
-</span><span id="line-430">    <span class="c1">#             telegram_bot.alarm_bpod(&quot;error starting task&quot;)</span>
-</span><span id="line-431">
-</span><span id="line-432">    <span class="c1">#         self.my_bpod.softcode_handler_function = softcode_handler</span>
-</span><span id="line-433">
-</span><span id="line-434">    <span class="c1">#         while True:</span>
-</span><span id="line-435">
-</span><span id="line-436">    <span class="c1">#             if settings.BOX_NAME == 4:</span>
-</span><span id="line-437">    <span class="c1">#                 if utils.current_trials == utils.control_serials + 5:</span>
-</span><span id="line-438">    <span class="c1">#                     print(&quot;alarm serial&quot;)</span>
-</span><span id="line-439">    <span class="c1">#                     # telegram_bot.alarm_serials()</span>
-</span><span id="line-440">    <span class="c1">#                     # utils.force_relaunch = True</span>
-</span><span id="line-441">
-</span><span id="line-442">    <span class="c1">#                 if utils.current_trials == utils.control_softcodes + 5:</span>
-</span><span id="line-443">    <span class="c1">#                     print(&quot;alarm softcode&quot;)</span>
-</span><span id="line-444">    <span class="c1">#                     # telegram_bot.alarm_softcodes()</span>
-</span><span id="line-445">    <span class="c1">#                     # utils.force_relaunch = True</span>
-</span><span id="line-446">
-</span><span id="line-447">    <span class="c1">#             queues.trials.put(self.current_trial)</span>
-</span><span id="line-448">    <span class="c1">#             utils.current_trials = self.current_trial</span>
-</span><span id="line-449">    <span class="c1">#             self.sma = StateMachine(self.my_bpod)</span>
-</span><span id="line-450">    <span class="c1">#             if self.current_trial &gt; 0:</span>
-</span><span id="line-451">    <span class="c1">#                 cam3.put_state(str(self.current_trial))</span>
-</span><span id="line-452">    <span class="c1">#                 cam4.put_state(str(self.current_trial))</span>
-</span><span id="line-453">
-</span><span id="line-454">    <span class="c1">#             self.my_bpod.manual_override(</span>
-</span><span id="line-455">    <span class="c1">#                 Bpod.ChannelTypes.OUTPUT,</span>
-</span><span id="line-456">    <span class="c1">#                 Bpod.ChannelNames.SERIAL,</span>
-</span><span id="line-457">    <span class="c1">#                 channel_number=1,</span>
-</span><span id="line-458">    <span class="c1">#                 value=16,</span>
-</span><span id="line-459">    <span class="c1">#             )</span>
-</span><span id="line-460">
-</span><span id="line-461">    <span class="c1">#             if self.current_trial &lt; trials:</span>
-</span><span id="line-462">    <span class="c1">#                 self.main_loop()</span>
-</span><span id="line-463">    <span class="c1">#             else:</span>
-</span><span id="line-464">    <span class="c1">#                 self.sma.add_state(</span>
-</span><span id="line-465">    <span class="c1">#                     state_name=&quot;End&quot;,</span>
-</span><span id="line-466">    <span class="c1">#                     state_timer=100,</span>
-</span><span id="line-467">    <span class="c1">#                     state_change_conditions={Bpod.Events.Tup: &quot;exit&quot;},</span>
-</span><span id="line-468">    <span class="c1">#                     output_actions=[],</span>
-</span><span id="line-469">    <span class="c1">#                 )</span>
-</span><span id="line-470">    <span class="c1">#             if len(self.sma.state_names) == 0:</span>
-</span><span id="line-471">    <span class="c1">#                 self.sma.add_state(</span>
-</span><span id="line-472">    <span class="c1">#                     state_name=&quot;End&quot;,</span>
-</span><span id="line-473">    <span class="c1">#                     state_timer=0,</span>
-</span><span id="line-474">    <span class="c1">#                     state_change_conditions={Bpod.Events.Tup: &quot;exit&quot;},</span>
-</span><span id="line-475">    <span class="c1">#                     output_actions=[],</span>
-</span><span id="line-476">    <span class="c1">#                 )</span>
-</span><span id="line-477">    <span class="c1">#             self.my_bpod.send_state_machine(self.sma)</span>
-</span><span id="line-478">    <span class="c1">#             self.my_bpod.run_state_machine(self.sma)</span>
-</span><span id="line-479">    <span class="c1">#             self.current_trial_states = (</span>
-</span><span id="line-480">    <span class="c1">#                 self.my_bpod.session.current_trial.states_durations</span>
-</span><span id="line-481">    <span class="c1">#             )</span>
-</span><span id="line-482">    <span class="c1">#             self.update_response()</span>
-</span><span id="line-483">    <span class="c1">#             self.after_trial()</span>
-</span><span id="line-484">    <span class="c1">#             self.register_values()</span>
-</span><span id="line-485">    <span class="c1">#             self.current_trial += 1</span>
-</span><span id="line-486">
-</span><span id="line-487">    <span class="c1"># def main_loop(self):</span>
-</span><span id="line-488">    <span class="c1">#     raise NotImplementedError</span>
-</span><span id="line-489">
-</span><span id="line-490">    <span class="c1"># def after_trial(self):</span>
-</span><span id="line-491">    <span class="c1">#     pass</span>
-</span><span id="line-492">
-</span><span id="line-493">    <span class="c1"># def configure_gui(self):</span>
-</span><span id="line-494">    <span class="c1">#     pass</span>
-</span><span id="line-495">
-</span><span id="line-496">    <span class="c1"># def update_response(self):</span>
-</span><span id="line-497">    <span class="c1">#     self.response_x = []</span>
-</span><span id="line-498">    <span class="c1">#     self.response_y = []</span>
-</span><span id="line-499">    <span class="c1">#     response_list = []</span>
-</span><span id="line-500">    <span class="c1">#     while True:</span>
-</span><span id="line-501">    <span class="c1">#         try:</span>
-</span><span id="line-502">    <span class="c1">#             response_list.append(queues.responses.get_nowait())</span>
-</span><span id="line-503">    <span class="c1">#         except:</span>
-</span><span id="line-504">    <span class="c1">#             break</span>
-</span><span id="line-505">    <span class="c1">#     for item in response_list:</span>
-</span><span id="line-506">    <span class="c1">#         try:</span>
-</span><span id="line-507">    <span class="c1">#             self.response_x.append(item[0])</span>
-</span><span id="line-508">    <span class="c1">#             self.response_y.append(item[1])</span>
-</span><span id="line-509">    <span class="c1">#         except IndexError:</span>
-</span><span id="line-510">    <span class="c1">#             pass</span>
-</span><span id="line-511">
-</span><span id="line-512">    <span class="c1">#     self.response_x = &quot;,&quot;.join(str(e) for e in self.response_x)</span>
-</span><span id="line-513">    <span class="c1">#     self.response_y = &quot;,&quot;.join(str(e) for e in self.response_y)</span>
-</span><span id="line-514">
-</span><span id="line-515">    <span class="c1"># def register_value(self, key, value):</span>
-</span><span id="line-516">    <span class="c1">#     self.my_bpod.register_value(key, value)</span>
-</span><span id="line-517">
-</span><span id="line-518">    <span class="c1"># def register_values(self):</span>
-</span><span id="line-519">    <span class="c1">#     self.my_bpod.register_value(&quot;task&quot;, self.name)</span>
-</span><span id="line-520">    <span class="c1">#     self.my_bpod.register_value(&quot;subject&quot;, self.subject)</span>
-</span><span id="line-521">    <span class="c1">#     self.my_bpod.register_value(&quot;subject_weight&quot;, self.subject_weight)</span>
-</span><span id="line-522">    <span class="c1">#     self.my_bpod.register_value(&quot;box&quot;, self.box)</span>
-</span><span id="line-523">    <span class="c1">#     self.my_bpod.register_value(&quot;date&quot;, self.date)</span>
-</span><span id="line-524">
-</span><span id="line-525">    <span class="c1">#     for i in range(len(utils.task.gui_input)):</span>
-</span><span id="line-526">    <span class="c1">#         name = utils.task.gui_input[i]</span>
-</span><span id="line-527">    <span class="c1">#         attribute = getattr(utils.task, name)</span>
-</span><span id="line-528">    <span class="c1">#         self.my_bpod.register_value(name, attribute)</span>
-</span><span id="line-529">
-</span><span id="line-530">    <span class="c1">#     self.my_bpod.register_value(&quot;TRIAL&quot;, None)</span>
 </span></code></pre></div>
     </div></div>
         </main>
@@ -745,7 +564,7 @@
 </footer>
   </div>
   
-    <script src="../../../_static/documentation_options.js?v=8e401a54"></script>
+    <script src="../../../_static/documentation_options.js?v=5fd35321"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script defer="defer" src="../../../_static/theme.js?v=1808ab49"></script>

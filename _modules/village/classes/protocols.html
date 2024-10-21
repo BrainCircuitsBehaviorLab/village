@@ -190,185 +190,201 @@
 </span><span id="line-3"><span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span>
 </span><span id="line-4">
 </span><span id="line-5"><span class="kn">from</span> <span class="nn">village.pybpodapi.session</span> <span class="kn">import</span> <span class="n">Session</span>
-</span><span id="line-6">
-</span><span id="line-7"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-</span><span id="line-8">    <span class="kn">from</span> <span class="nn">village.pybpodapi.session</span> <span class="kn">import</span> <span class="n">Session</span>
-</span><span id="line-9">
+</span><span id="line-6"><span class="kn">from</span> <span class="nn">village.time_utils</span> <span class="kn">import</span> <span class="n">time_utils</span>
+</span><span id="line-7">
+</span><span id="line-8"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+</span><span id="line-9">    <span class="kn">from</span> <span class="nn">village.pybpodapi.session</span> <span class="kn">import</span> <span class="n">Session</span>
 </span><span id="line-10">
+</span><span id="line-11">
 <div class="viewcode-block" id="PyBpodProtocol">
 <a class="viewcode-back" href="../../../api_generated/village.classes.protocols.PyBpodProtocol.html#village.classes.protocols.PyBpodProtocol">[docs]</a>
-</span><span id="line-11"><span class="k">class</span> <span class="nc">PyBpodProtocol</span><span class="p">:</span>
-</span><span id="line-12">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the bpod &quot;</span>
-</span><span id="line-13">    <span class="n">session</span><span class="p">:</span> <span class="n">Session</span> <span class="o">|</span> <span class="n">Any</span>
-</span><span id="line-14">    <span class="n">connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="line-15">
-</span><span id="line-16">    <span class="k">def</span> <span class="nf">reconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-17">        <span class="k">return</span>
-</span><span id="line-18">
-</span><span id="line-19">    <span class="k">def</span> <span class="nf">add_state</span><span class="p">(</span>
-</span><span id="line-20">        <span class="bp">self</span><span class="p">,</span>
-</span><span id="line-21">        <span class="n">state_name</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="line-22">        <span class="n">state_timer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="line-23">        <span class="n">state_change_conditions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">{},</span>
-</span><span id="line-24">        <span class="n">output_actions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">(),</span>
-</span><span id="line-25">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-26">        <span class="k">return</span>
-</span><span id="line-27">
-</span><span id="line-28">    <span class="k">def</span> <span class="nf">set_global_timer</span><span class="p">(</span>
-</span><span id="line-29">        <span class="bp">self</span><span class="p">,</span>
-</span><span id="line-30">        <span class="n">timer_id</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="line-31">        <span class="n">timer_duration</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="line-32">        <span class="n">on_set_delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="line-33">        <span class="n">channel</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-34">        <span class="n">on_message</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-</span><span id="line-35">        <span class="n">off_message</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="line-36">        <span class="n">loop_mode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="line-37">        <span class="n">loop_intervals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="line-38">        <span class="n">send_events</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-</span><span id="line-39">        <span class="n">oneset_triggers</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-40">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-41">        <span class="k">return</span>
-</span><span id="line-42">
-</span><span id="line-43">    <span class="k">def</span> <span class="nf">set_condition</span><span class="p">(</span>
-</span><span id="line-44">        <span class="bp">self</span><span class="p">,</span> <span class="n">condition_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">condition_channel</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">channel_value</span><span class="p">:</span> <span class="n">Any</span>
-</span><span id="line-45">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-46">        <span class="k">return</span>
-</span><span id="line-47">
-</span><span id="line-48">    <span class="k">def</span> <span class="nf">set_global_counter</span><span class="p">(</span>
-</span><span id="line-49">        <span class="bp">self</span><span class="p">,</span> <span class="n">condition_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">condition_channel</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">channel_value</span><span class="p">:</span> <span class="n">Any</span>
-</span><span id="line-50">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-51">        <span class="k">return</span>
-</span><span id="line-52">
-</span><span id="line-53">    <span class="k">def</span> <span class="nf">create_state_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-54">        <span class="k">return</span>
-</span><span id="line-55">
-</span><span id="line-56">    <span class="k">def</span> <span class="nf">send_and_run_state_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-57">        <span class="k">return</span>
-</span><span id="line-58">
-</span><span id="line-59">    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-60">        <span class="k">return</span>
-</span><span id="line-61">
-</span><span id="line-62">    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-63">        <span class="k">return</span>
-</span><span id="line-64">
-</span><span id="line-65">    <span class="k">def</span> <span class="nf">manual_override_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-66">        <span class="k">return</span>
-</span><span id="line-67">
-</span><span id="line-68">    <span class="k">def</span> <span class="nf">manual_override_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-69">        <span class="k">return</span>
-</span><span id="line-70">
-</span><span id="line-71">    <span class="k">def</span> <span class="nf">register_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-72">        <span class="k">return</span></div>
+</span><span id="line-12"><span class="k">class</span> <span class="nc">PyBpodProtocol</span><span class="p">:</span>
+</span><span id="line-13">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the bpod &quot;</span>
+</span><span id="line-14">    <span class="n">session</span><span class="p">:</span> <span class="n">Session</span> <span class="o">|</span> <span class="n">Any</span>
+</span><span id="line-15">    <span class="n">connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="line-16">
+</span><span id="line-17">    <span class="k">def</span> <span class="nf">reconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-18">        <span class="k">return</span>
+</span><span id="line-19">
+</span><span id="line-20">    <span class="k">def</span> <span class="nf">add_state</span><span class="p">(</span>
+</span><span id="line-21">        <span class="bp">self</span><span class="p">,</span>
+</span><span id="line-22">        <span class="n">state_name</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="line-23">        <span class="n">state_timer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="line-24">        <span class="n">state_change_conditions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">{},</span>
+</span><span id="line-25">        <span class="n">output_actions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">(),</span>
+</span><span id="line-26">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-27">        <span class="k">return</span>
+</span><span id="line-28">
+</span><span id="line-29">    <span class="k">def</span> <span class="nf">set_global_timer</span><span class="p">(</span>
+</span><span id="line-30">        <span class="bp">self</span><span class="p">,</span>
+</span><span id="line-31">        <span class="n">timer_id</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="line-32">        <span class="n">timer_duration</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="line-33">        <span class="n">on_set_delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="line-34">        <span class="n">channel</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-35">        <span class="n">on_message</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="line-36">        <span class="n">off_message</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="line-37">        <span class="n">loop_mode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="line-38">        <span class="n">loop_intervals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="line-39">        <span class="n">send_events</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="line-40">        <span class="n">oneset_triggers</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-41">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-42">        <span class="k">return</span>
+</span><span id="line-43">
+</span><span id="line-44">    <span class="k">def</span> <span class="nf">set_condition</span><span class="p">(</span>
+</span><span id="line-45">        <span class="bp">self</span><span class="p">,</span> <span class="n">condition_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">condition_channel</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">channel_value</span><span class="p">:</span> <span class="n">Any</span>
+</span><span id="line-46">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-47">        <span class="k">return</span>
+</span><span id="line-48">
+</span><span id="line-49">    <span class="k">def</span> <span class="nf">set_global_counter</span><span class="p">(</span>
+</span><span id="line-50">        <span class="bp">self</span><span class="p">,</span> <span class="n">condition_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">condition_channel</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">channel_value</span><span class="p">:</span> <span class="n">Any</span>
+</span><span id="line-51">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-52">        <span class="k">return</span>
+</span><span id="line-53">
+</span><span id="line-54">    <span class="k">def</span> <span class="nf">create_state_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-55">        <span class="k">return</span>
+</span><span id="line-56">
+</span><span id="line-57">    <span class="k">def</span> <span class="nf">send_and_run_state_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-58">        <span class="k">return</span>
+</span><span id="line-59">
+</span><span id="line-60">    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-61">        <span class="k">return</span>
+</span><span id="line-62">
+</span><span id="line-63">    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-64">        <span class="k">return</span>
+</span><span id="line-65">
+</span><span id="line-66">    <span class="k">def</span> <span class="nf">manual_override_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-67">        <span class="k">return</span>
+</span><span id="line-68">
+</span><span id="line-69">    <span class="k">def</span> <span class="nf">manual_override_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-70">        <span class="k">return</span>
+</span><span id="line-71">
+</span><span id="line-72">    <span class="k">def</span> <span class="nf">register_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-73">        <span class="k">return</span></div>
 
-</span><span id="line-73">
 </span><span id="line-74">
+</span><span id="line-75">
 <div class="viewcode-block" id="TelegramBotProtocol">
 <a class="viewcode-back" href="../../../api_generated/village.classes.protocols.TelegramBotProtocol.html#village.classes.protocols.TelegramBotProtocol">[docs]</a>
-</span><span id="line-75"><span class="k">class</span> <span class="nc">TelegramBotProtocol</span><span class="p">:</span>
-</span><span id="line-76">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the telegram bot &quot;</span>
-</span><span id="line-77">
-</span><span id="line-78">    <span class="k">def</span> <span class="nf">alarm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-79">        <span class="k">return</span></div>
+</span><span id="line-76"><span class="k">class</span> <span class="nc">TelegramBotProtocol</span><span class="p">:</span>
+</span><span id="line-77">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the telegram bot &quot;</span>
+</span><span id="line-78">
+</span><span id="line-79">    <span class="k">def</span> <span class="nf">alarm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-80">        <span class="k">return</span></div>
 
-</span><span id="line-80">
 </span><span id="line-81">
+</span><span id="line-82">
 <div class="viewcode-block" id="ScaleProtocol">
 <a class="viewcode-back" href="../../../api_generated/village.classes.protocols.ScaleProtocol.html#village.classes.protocols.ScaleProtocol">[docs]</a>
-</span><span id="line-82"><span class="k">class</span> <span class="nc">ScaleProtocol</span><span class="p">:</span>
-</span><span id="line-83">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the scale &quot;</span>
-</span><span id="line-84">
-</span><span id="line-85">    <span class="k">def</span> <span class="nf">tare</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-86">        <span class="k">return</span>
-</span><span id="line-87">
-</span><span id="line-88">    <span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-89">        <span class="k">return</span>
-</span><span id="line-90">
-</span><span id="line-91">    <span class="k">def</span> <span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-92">        <span class="k">return</span> <span class="mf">0.0</span>
-</span><span id="line-93">
-</span><span id="line-94">    <span class="k">def</span> <span class="nf">get_weight_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="line-95">        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+</span><span id="line-83"><span class="k">class</span> <span class="nc">ScaleProtocol</span><span class="p">:</span>
+</span><span id="line-84">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the scale &quot;</span>
+</span><span id="line-85">
+</span><span id="line-86">    <span class="k">def</span> <span class="nf">tare</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-87">        <span class="k">return</span>
+</span><span id="line-88">
+</span><span id="line-89">    <span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-90">        <span class="k">return</span>
+</span><span id="line-91">
+</span><span id="line-92">    <span class="k">def</span> <span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-93">        <span class="k">return</span> <span class="mf">0.0</span>
+</span><span id="line-94">
+</span><span id="line-95">    <span class="k">def</span> <span class="nf">get_weight_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-96">        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
-</span><span id="line-96">
 </span><span id="line-97">
+</span><span id="line-98">
 <div class="viewcode-block" id="TempSensorProtocol">
 <a class="viewcode-back" href="../../../api_generated/village.classes.protocols.TempSensorProtocol.html#village.classes.protocols.TempSensorProtocol">[docs]</a>
-</span><span id="line-98"><span class="k">class</span> <span class="nc">TempSensorProtocol</span><span class="p">:</span>
-</span><span id="line-99">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the temp sensor &quot;</span>
-</span><span id="line-100">
-</span><span id="line-101">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-102">        <span class="k">return</span>
-</span><span id="line-103">
-</span><span id="line-104">    <span class="k">def</span> <span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-</span><span id="line-105">        <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
-</span><span id="line-106">
-</span><span id="line-107">    <span class="k">def</span> <span class="nf">get_temperature_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="line-108">        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+</span><span id="line-99"><span class="k">class</span> <span class="nc">TempSensorProtocol</span><span class="p">:</span>
+</span><span id="line-100">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the temp sensor &quot;</span>
+</span><span id="line-101">
+</span><span id="line-102">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-103">        <span class="k">return</span>
+</span><span id="line-104">
+</span><span id="line-105">    <span class="k">def</span> <span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+</span><span id="line-106">        <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+</span><span id="line-107">
+</span><span id="line-108">    <span class="k">def</span> <span class="nf">get_temperature_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-109">        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
-</span><span id="line-109">
 </span><span id="line-110">
+</span><span id="line-111">
 <div class="viewcode-block" id="EventProtocol">
 <a class="viewcode-back" href="../../../api_generated/village.classes.protocols.EventProtocol.html#village.classes.protocols.EventProtocol">[docs]</a>
-</span><span id="line-111"><span class="k">class</span> <span class="nc">EventProtocol</span><span class="p">:</span>
-</span><span id="line-112">    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-113">        <span class="k">return</span></div>
+</span><span id="line-112"><span class="k">class</span> <span class="nc">EventProtocol</span><span class="p">:</span>
+</span><span id="line-113">    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-114">        <span class="k">return</span></div>
 
-</span><span id="line-114">
 </span><span id="line-115">
+</span><span id="line-116">
 <div class="viewcode-block" id="CameraProtocol">
 <a class="viewcode-back" href="../../../api_generated/village.classes.protocols.CameraProtocol.html#village.classes.protocols.CameraProtocol">[docs]</a>
-</span><span id="line-116"><span class="k">class</span> <span class="nc">CameraProtocol</span><span class="p">:</span>
-</span><span id="line-117">    <span class="n">area1</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-</span><span id="line-118">    <span class="n">area2</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-</span><span id="line-119">    <span class="n">area3</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-</span><span id="line-120">    <span class="n">area4</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-</span><span id="line-121">    <span class="n">areas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
-</span><span id="line-122">    <span class="n">change</span><span class="p">:</span> <span class="nb">bool</span>
-</span><span id="line-123">    <span class="n">state</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="line-124">    <span class="n">path_picture</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="line-125">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the camera &quot;</span>
-</span><span id="line-126">
-</span><span id="line-127">    <span class="k">def</span> <span class="nf">start_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-128">        <span class="k">return</span>
-</span><span id="line-129">
-</span><span id="line-130">    <span class="k">def</span> <span class="nf">stop_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-131">        <span class="k">return</span>
-</span><span id="line-132">
-</span><span id="line-133">    <span class="k">def</span> <span class="nf">stop_window_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-134">        <span class="k">return</span>
-</span><span id="line-135">
-</span><span id="line-136">    <span class="k">def</span> <span class="nf">start_record</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-137">        <span class="k">return</span>
-</span><span id="line-138">
-</span><span id="line-139">    <span class="k">def</span> <span class="nf">stop_record</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-140">        <span class="k">return</span>
-</span><span id="line-141">
-</span><span id="line-142">    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-143">        <span class="k">return</span>
-</span><span id="line-144">
-</span><span id="line-145">    <span class="k">def</span> <span class="nf">change_focus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lensposition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-146">        <span class="k">return</span>
-</span><span id="line-147">
-</span><span id="line-148">    <span class="k">def</span> <span class="nf">change_framerate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">framerate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-149">        <span class="k">return</span>
-</span><span id="line-150">
-</span><span id="line-151">    <span class="k">def</span> <span class="nf">print_info_about_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-152">        <span class="k">return</span>
-</span><span id="line-153">
-</span><span id="line-154">    <span class="k">def</span> <span class="nf">pre_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-155">        <span class="k">return</span>
-</span><span id="line-156">
-</span><span id="line-157">    <span class="k">def</span> <span class="nf">start_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QWidget</span><span class="p">:</span>
-</span><span id="line-158">        <span class="k">return</span> <span class="n">QWidget</span><span class="p">()</span>
-</span><span id="line-159">
-</span><span id="line-160">    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-161">        <span class="k">return</span>
-</span><span id="line-162">
-</span><span id="line-163">    <span class="k">def</span> <span class="nf">areas_corridor_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="line-164">        <span class="k">return</span> <span class="kc">True</span>
-</span><span id="line-165">
-</span><span id="line-166">    <span class="k">def</span> <span class="nf">take_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-167">        <span class="k">return</span></div>
+</span><span id="line-117"><span class="k">class</span> <span class="nc">CameraProtocol</span><span class="p">:</span>
+</span><span id="line-118">    <span class="n">area1</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-119">    <span class="n">area2</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-120">    <span class="n">area3</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-121">    <span class="n">area4</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-122">    <span class="n">areas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-123">    <span class="n">change</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="line-124">    <span class="n">state</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span id="line-125">    <span class="n">path_picture</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span id="line-126">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the camera &quot;</span>
+</span><span id="line-127">    <span class="n">trial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span id="line-128">    <span class="n">is_recording</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="line-129">    <span class="n">chrono</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">Chrono</span><span class="p">()</span>
+</span><span id="line-130">
+</span><span id="line-131">    <span class="k">def</span> <span class="nf">start_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-132">        <span class="k">return</span>
+</span><span id="line-133">
+</span><span id="line-134">    <span class="k">def</span> <span class="nf">stop_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-135">        <span class="k">return</span>
+</span><span id="line-136">
+</span><span id="line-137">    <span class="k">def</span> <span class="nf">stop_window_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-138">        <span class="k">return</span>
+</span><span id="line-139">
+</span><span id="line-140">    <span class="k">def</span> <span class="nf">start_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">path_csv</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-141">        <span class="k">return</span>
+</span><span id="line-142">
+</span><span id="line-143">    <span class="k">def</span> <span class="nf">stop_record</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-144">        <span class="k">return</span>
+</span><span id="line-145">
+</span><span id="line-146">    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-147">        <span class="k">return</span>
+</span><span id="line-148">
+</span><span id="line-149">    <span class="k">def</span> <span class="nf">change_focus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lensposition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-150">        <span class="k">return</span>
+</span><span id="line-151">
+</span><span id="line-152">    <span class="k">def</span> <span class="nf">change_framerate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">framerate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-153">        <span class="k">return</span>
+</span><span id="line-154">
+</span><span id="line-155">    <span class="k">def</span> <span class="nf">print_info_about_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-156">        <span class="k">return</span>
+</span><span id="line-157">
+</span><span id="line-158">    <span class="k">def</span> <span class="nf">pre_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-159">        <span class="k">return</span>
+</span><span id="line-160">
+</span><span id="line-161">    <span class="k">def</span> <span class="nf">start_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QWidget</span><span class="p">:</span>
+</span><span id="line-162">        <span class="k">return</span> <span class="n">QWidget</span><span class="p">()</span>
+</span><span id="line-163">
+</span><span id="line-164">    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-165">        <span class="k">return</span>
+</span><span id="line-166">
+</span><span id="line-167">    <span class="k">def</span> <span class="nf">areas_corridor_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="line-168">        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="line-169">
+</span><span id="line-170">    <span class="k">def</span> <span class="nf">area_1_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="line-171">        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="line-172">
+</span><span id="line-173">    <span class="k">def</span> <span class="nf">area_2_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="line-174">        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="line-175">
+</span><span id="line-176">    <span class="k">def</span> <span class="nf">area_3_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="line-177">        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="line-178">
+</span><span id="line-179">    <span class="k">def</span> <span class="nf">area_4_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="line-180">        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="line-181">
+</span><span id="line-182">    <span class="k">def</span> <span class="nf">take_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-183">        <span class="k">return</span></div>
 
 </span></code></pre></div>
     </div></div>
@@ -385,7 +401,7 @@
 </footer>
   </div>
   
-    <script src="../../../_static/documentation_options.js?v=8e401a54"></script>
+    <script src="../../../_static/documentation_options.js?v=5fd35321"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script defer="defer" src="../../../_static/theme.js?v=1808ab49"></script>

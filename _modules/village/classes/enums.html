@@ -291,7 +291,7 @@
 </span><span id="line-84">            <span class="k">return</span> <span class="kc">False</span>
 </span><span id="line-85">
 </span><span id="line-86">    <span class="k">def</span> <span class="nf">can_edit_subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="line-87">        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">:</span>
+</span><span id="line-87">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">SETTINGS</span><span class="p">):</span>
 </span><span id="line-88">            <span class="k">return</span> <span class="kc">True</span>
 </span><span id="line-89">        <span class="k">else</span><span class="p">:</span>
 </span><span id="line-90">            <span class="k">return</span> <span class="kc">False</span>
@@ -353,7 +353,8 @@
 </span><span id="line-134">    <span class="n">WATER_CALIBRATION</span> <span class="o">=</span> <span class="s2">&quot;WATER_CALIBRATION&quot;</span>
 </span><span id="line-135">    <span class="n">SOUND_CALIBRATION</span> <span class="o">=</span> <span class="s2">&quot;SOUND_CALIBRATION&quot;</span>
 </span><span id="line-136">    <span class="n">TEMPERATURES</span> <span class="o">=</span> <span class="s2">&quot;TEMPERATURES&quot;</span>
-</span><span id="line-137">    <span class="n">SESSION</span> <span class="o">=</span> <span class="s2">&quot;SESSION&quot;</span></div>
+</span><span id="line-137">    <span class="n">SESSION</span> <span class="o">=</span> <span class="s2">&quot;SESSION&quot;</span>
+</span><span id="line-138">    <span class="n">OLD_SESSION</span> <span class="o">=</span> <span class="s2">&quot;OLD_SESSION&quot;</span></div>
 
 </span></code></pre></div>
     </div></div>
@@ -370,7 +371,7 @@
 </footer>
   </div>
   
-    <script src="../../../_static/documentation_options.js?v=8e401a54"></script>
+    <script src="../../../_static/documentation_options.js?v=5fd35321"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script defer="defer" src="../../../_static/theme.js?v=1808ab49"></script>

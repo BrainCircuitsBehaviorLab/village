@@ -17,6 +17,10 @@ CameraProtocol
    .. autosummary::
    
       ~CameraProtocol.__init__
+      ~CameraProtocol.area_1_empty
+      ~CameraProtocol.area_2_empty
+      ~CameraProtocol.area_3_empty
+      ~CameraProtocol.area_4_empty
       ~CameraProtocol.areas_corridor_ok
       ~CameraProtocol.change_focus
       ~CameraProtocol.change_framerate
@@ -40,14 +44,17 @@ CameraProtocol
 
    .. autosummary::
    
-      ~CameraProtocol.error
       ~CameraProtocol.area1
       ~CameraProtocol.area2
       ~CameraProtocol.area3
       ~CameraProtocol.area4
       ~CameraProtocol.areas
       ~CameraProtocol.change
-      ~CameraProtocol.state
+      ~CameraProtocol.chrono
+      ~CameraProtocol.error
+      ~CameraProtocol.is_recording
       ~CameraProtocol.path_picture
+      ~CameraProtocol.state
+      ~CameraProtocol.trial
    
    
