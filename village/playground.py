@@ -351,6 +351,9 @@ import pandas as pd
 df4 = pd.DataFrame({"hola": [], "_Transition3": []})
 
 
+# a = 4
+# a = "hola"
+
 print(df4.columns)
 print(type(df4.columns))
 print(type(df4.columns[1]))
