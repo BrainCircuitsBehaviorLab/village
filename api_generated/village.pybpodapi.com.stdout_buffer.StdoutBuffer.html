@@ -216,11 +216,11 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#village.pybpodapi.com.stdout_buffer.StdoutBuffer.close" title="village.pybpodapi.com.stdout_buffer.StdoutBuffer.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></a>()</p></td>
 <td><p>Close the IO object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.pybpodapi.com.stdout_buffer.StdoutBuffer.detach" title="village.pybpodapi.com.stdout_buffer.StdoutBuffer.detach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detach</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.pybpodapi.com.stdout_buffer.StdoutBuffer.detach" title="village.pybpodapi.com.stdout_buffer.StdoutBuffer.detach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detach</span></code></a></p></td>
 <td><p>Separate the underlying buffer from the TextIOBase and return it.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#village.pybpodapi.com.stdout_buffer.StdoutBuffer.fileno" title="village.pybpodapi.com.stdout_buffer.StdoutBuffer.fileno"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fileno</span></code></a>()</p></td>
-<td><p>Return underlying file descriptor if one exists.</p></td>
+<td><p>Returns underlying file descriptor if one exists.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#village.pybpodapi.com.stdout_buffer.StdoutBuffer.flush" title="village.pybpodapi.com.stdout_buffer.StdoutBuffer.flush"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush</span></code></a>()</p></td>
 <td><p>Flush write buffers, if applicable.</p></td>
@@ -299,7 +299,8 @@ will raise a ValueError.</p>
 <dt class="sig sig-object py" id="village.pybpodapi.com.stdout_buffer.StdoutBuffer.detach">
 <span class="sig-name descname"><span class="pre">detach</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
 <dd><p>Separate the underlying buffer from the TextIOBase and return it.</p>
-<p>After the underlying buffer has been detached, the TextIO is in an unusable state.</p>
+<p>After the underlying buffer has been detached, the TextIO is in an
+unusable state.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -319,8 +320,8 @@ will raise a ValueError.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="village.pybpodapi.com.stdout_buffer.StdoutBuffer.fileno">
 <span class="sig-name descname"><span class="pre">fileno</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>Return underlying file descriptor if one exists.</p>
-<p>Raise OSError if the IO object does not use a file descriptor.</p>
+<dd><p>Returns underlying file descriptor if one exists.</p>
+<p>OSError is raised if the IO object does not use a file descriptor.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -481,7 +482,7 @@ lines provided to have a line separator at the end.</p>
 </footer>
   </div>
   
-    <script src="../_static/documentation_options.js?v=97742669"></script>
+    <script src="../_static/documentation_options.js?v=d91b8f7d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>
