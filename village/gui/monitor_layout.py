@@ -549,19 +549,19 @@ class MotorLayout(Layout):
             try:
                 val1 = int(self.lineEdit1.text())
             except ValueError:
-                val1 = motor1_open_val
+                val1 = int(motor1_open_val)
             try:
                 val2 = int(self.lineEdit2.text())
             except ValueError:
-                val2 = motor1_close_val
+                val2 = int(motor1_close_val)
             try:
                 val3 = int(self.lineEdit3.text())
             except ValueError:
-                val3 = motor2_open_val
+                val3 = int(motor2_open_val)
             try:
                 val4 = int(self.lineEdit4.text())
             except ValueError:
-                val4 = motor2_close_val
+                val4 = int(motor2_close_val)
             settings.set("MOTOR1_VALUES", (val1, val2))
             settings.set("MOTOR2_VALUES", (val3, val4))
             motor1.open_angle = val1
