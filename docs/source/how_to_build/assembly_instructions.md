@@ -8,9 +8,9 @@ Alternatively, you can view it inline below:
 
 <details markdown="block">
 <summary>View the PDF instructions</summary>
-<object data="https://braincircuitsbehaviorlab.github.io/mouse-village-web/assets/mouse-village-instructions.pdf" width="100%" height="1000" type="application/pdf">
+<object data="https://braincircuitsbehaviorlab.github.io/village/docs/source/_static/training-village-instructions.pdf" width="100%" height="1000" type="application/pdf">
   Your browser does not support viewing PDFs. Please download the PDF to view it.
 </object>
 </details>
 
-[PDF instructions]: https://braincircuitsbehaviorlab.github.io/mouse-village-web/assets/mouse-village-instructions.pdf
+[PDF instructions]: ../_static/training-village-instructions.pdf

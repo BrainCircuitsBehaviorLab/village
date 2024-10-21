@@ -1,7 +1,7 @@
-Operation of the Mouse Village
+How does it Work?
 ==============================
 .. toctree::
-    :caption: Operation of MV
+    :hidden: 
     :maxdepth: 2
 
     hardware_technical_details.md

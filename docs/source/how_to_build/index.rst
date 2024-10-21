@@ -1,12 +1,13 @@
 
-Assembly of the Mouse Village
+How to Build the Training Village
 =============================
 
 .. toctree::
-    :caption: Assembly of MV
+    :hidden: 
     :maxdepth: 2
 
     assembly_instructions.md
     electronics_instructions.md
     list_of_parts.md
     software_installation.md
+    software_launch.md

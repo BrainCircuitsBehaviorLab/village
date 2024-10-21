@@ -1,10 +1,10 @@
-Usage
+User Guide
 =====
 
 .. toctree::
-    :caption: Usage
+    :hidden: 
     :maxdepth: 1
 
-    setup_experiment.md
+    animal_procedures.md
     maintenance.md
     alarms.md

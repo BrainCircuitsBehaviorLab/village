@@ -11,7 +11,7 @@ This is a routine to maintain proper functioning and hygiene in the MV system. T
 
 ## Daily
 
-- Check [Telegram alarms](../usage/alarms.md) and fix problems if required.
+- Check [Telegram alarms](../user_guide/alarms.md) and fix problems if required.
 - Review [daily reports] to assess mice progression in the training.
 
 ## Weekly
