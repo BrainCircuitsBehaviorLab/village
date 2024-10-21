@@ -3,17 +3,6 @@ API
 
 .. currentmodule:: village
 
-Classes
-------------------
-.. autosummary::
-   :toctree: api_generated
-   :template: custom_module_template.rst
-   :recursive:
-   :nosignatures:
-
-   village.classes
-
-
 Devices
 ---------
 .. autosummary::
@@ -23,6 +12,17 @@ Devices
    :nosignatures:
 
     village.devices
+
+
+Classes
+------------------
+.. autosummary::
+   :toctree: api_generated
+   :template: custom_module_template.rst
+   :recursive:
+   :nosignatures:
+
+   village.classes
 
 
 Gui
@@ -47,7 +47,7 @@ Pybpodapi
     village.pybpodapi
 
 
-Screen
+Other
 ---------
 .. autosummary::
    :toctree: api_generated
@@ -56,3 +56,9 @@ Screen
    :nosignatures:
 
     village.screen
+    village.data
+    village.log
+    village.main
+    village.rt_plots
+    village.time_utils
+    village.video

@@ -109,7 +109,7 @@ class Settings:
         if self.get("FIRST_LAUNCH") is None:
             self.create_factory_settings()
 
-    def get(self, key: str) -> Any:
+    def get(self, key: str) -> Any:  # type: ignore
         """Get the value of a setting."""
         type = next((s.value_type for s in self.all_settings if s.key == key), None)
         try:
