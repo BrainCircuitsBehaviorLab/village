@@ -2,7 +2,7 @@ import os
 import sys
 import traceback
 from pathlib import Path
-from typing import Any, Type
+from typing import Any, Type, Union
 
 import pandas as pd
 
@@ -77,13 +77,13 @@ class Collection(EventProtocol):
 
             self.df = last
 
-    def get_last_entry(self, column: str, value: str) -> pd.Series | None:
+    def get_last_entry(self, column: str, value: str) -> Union[pd.Series, None]:
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
         if not column_df.empty:
             return column_df.iloc[-1]
         return None
 
-    def get_first_entry(self, column: str, value: str) -> pd.Series | None:
+    def get_first_entry(self, column: str, value: str) -> Union[pd.Series, None]:
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
         if not column_df.empty:
             return column_df.iloc[0]
