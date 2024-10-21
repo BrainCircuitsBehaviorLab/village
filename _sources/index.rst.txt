@@ -7,15 +7,15 @@ Welcome to village's documentation!
 =========================================================
 
 .. toctree::
+   :hidden:
    :maxdepth: 2
    :caption: Contents:
 
-   getting_started
-   installation
-   assembly_of_mv/index.md
+   what_is_village
+   how_to_build/index.md
    operation_of_mv/index.md
-   usage/index.md
-   results.md
+   user_guide/index.md
+   data_collection.md
    api_index
 
 By default the documentation includes the following sections:

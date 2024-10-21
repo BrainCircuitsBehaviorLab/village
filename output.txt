@@ -1,1 +1,1 @@
-installation.md:196: [redirected permanently] http://USAGE.MD to https://usage.md/
+how_to_build/software_installation.md:208: [redirected permanently] http://USAGE.MD to https://usage.md/
