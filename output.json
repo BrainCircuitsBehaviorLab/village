@@ -15,6 +15,7 @@
 {"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.devices.scale", "info": ""}
 {"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.devices.temp_sensor", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.gui", "info": ""}
+{"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.log", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.pybpodapi", "info": ""}
 {"filename": "api_generated/village.pybpodapi.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.pybpodapi.bpod", "info": ""}
 {"filename": "api_generated/village.pybpodapi.bpod.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.pybpodapi.bpod.bpod_base", "info": ""}
@@ -78,6 +79,8 @@
 {"filename": "api_generated/village.pybpodapi.utils.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.pybpodapi.utils.date_parser", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.screen", "info": ""}
 {"filename": "api_generated/village.screen.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.screen.behaviour_window", "info": ""}
+{"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.time_utils", "info": ""}
+{"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.video", "info": ""}
 {"filename": "api_generated/village.classes.collection.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.collection.Collection", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.Actions", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.Active", "info": ""}
@@ -112,6 +115,7 @@
 {"filename": "api_generated/village.devices.scale.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.devices.scale.get_scale", "info": ""}
 {"filename": "api_generated/village.devices.temp_sensor.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.devices.temp_sensor.TempSensor", "info": ""}
 {"filename": "api_generated/village.devices.temp_sensor.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.devices.temp_sensor.get_temp_sensor", "info": ""}
+{"filename": "api_generated/village.log.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.log.Log", "info": ""}
 {"filename": "api_generated/village.pybpodapi.bpod.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.pybpodapi.bpod.Bpod", "info": ""}
 {"filename": "api_generated/village.pybpodapi.bpod.bpod_base.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.pybpodapi.bpod.bpod_base.BpodBase", "info": ""}
 {"filename": "api_generated/village.pybpodapi.bpod.bpod_com_protocol.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.pybpodapi.bpod.bpod_com_protocol.BpodCOMProtocol", "info": ""}
@@ -173,8 +177,10 @@
 {"filename": "api_generated/village.pybpodapi.utils.csv.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.pybpodapi.utils.csv.Writer", "info": ""}
 {"filename": "api_generated/village.pybpodapi.utils.date_parser.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.pybpodapi.utils.date_parser.parse", "info": ""}
 {"filename": "api_generated/village.screen.behaviour_window.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.screen.behaviour_window.BehaviourWindow", "info": ""}
+{"filename": "api_generated/village.time_utils.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.time_utils.TimeUtils", "info": ""}
+{"filename": "api_generated/village.video.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.video.Example", "info": ""}
 {"filename": "assembly_of_mv/assembly_instructions.md", "lineno": 5, "status": "working", "code": 0, "uri": "https://braincircuitsbehaviorlab.github.io/mouse-village-web/assets/mouse-village-instructions.pdf", "info": ""}
-{"filename": "installation.md", "lineno": 196, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
-{"filename": "installation.md", "lineno": 119, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/", "info": ""}
 {"filename": "installation.md", "lineno": 120, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/connect/plan/lite/", "info": ""}
+{"filename": "installation.md", "lineno": 119, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/", "info": ""}
+{"filename": "installation.md", "lineno": 196, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
 {"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "working", "code": 0, "uri": "https://github.com/DFRobot/DFRobot_HX711_I2C", "info": ""}

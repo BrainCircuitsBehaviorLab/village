@@ -136,11 +136,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../results.html">Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_index.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.devices.html">devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.pybpodapi.html">pybpodapi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.screen.html">screen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.log.html">log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.time_utils.html">time_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.video.html">video</a></li>
 </ul>
 </li>
 </ul>
@@ -309,7 +312,7 @@
 </span><span id="line-111">
 <div class="viewcode-block" id="Settings.get">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.get">[docs]</a>
-</span><span id="line-112">    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="line-112">    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
 </span><span id="line-113"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of a setting.&quot;&quot;&quot;</span>
 </span><span id="line-114">        <span class="nb">type</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">value_type</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
 </span><span id="line-115">        <span class="k">try</span><span class="p">:</span>
@@ -441,7 +444,7 @@
 </footer>
   </div>
   
-    <script src="../../../_static/documentation_options.js?v=68852fe6"></script>
+    <script src="../../../_static/documentation_options.js?v=66efac99"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script defer="defer" src="../../../_static/theme.js?v=1808ab49"></script>
