@@ -180,7 +180,7 @@
 {"filename": "api_generated/village.time_utils.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.time_utils.TimeUtils", "info": ""}
 {"filename": "api_generated/village.video.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.video.Example", "info": ""}
 {"filename": "how_to_build/list_of_parts.md", "lineno": 68, "status": "working", "code": 0, "uri": "https://braincircuitsbehaviorlab.github.io/mouse-village-web/assets/mouse-village-instructions.pdf", "info": ""}
+{"filename": "how_to_build/software_installation.md", "lineno": 208, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
+{"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "working", "code": 0, "uri": "https://github.com/DFRobot/DFRobot_HX711_I2C", "info": ""}
 {"filename": "how_to_build/software_installation.md", "lineno": 131, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/connect/plan/lite/", "info": ""}
 {"filename": "how_to_build/software_installation.md", "lineno": 130, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/", "info": ""}
-{"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "working", "code": 0, "uri": "https://github.com/DFRobot/DFRobot_HX711_I2C", "info": ""}
-{"filename": "how_to_build/software_installation.md", "lineno": 208, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
