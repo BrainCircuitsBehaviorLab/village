@@ -3,6 +3,7 @@
 {"filename": "installation.md", "lineno": 120, "status": "ignored", "code": 0, "uri": "https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription", "info": ""}
 {"filename": "installation.md", "lineno": 132, "status": "ignored", "code": 0, "uri": "https://www.raspberrypi.com/news/raspberry-pi-connect/", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.classes", "info": ""}
+{"filename": "api_generated/village.classes.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.classes.collection", "info": ""}
 {"filename": "api_generated/village.classes.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.classes.enums", "info": ""}
 {"filename": "api_generated/village.classes.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.classes.protocols", "info": ""}
 {"filename": "api_generated/village.classes.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.classes.settings_class", "info": ""}
@@ -77,6 +78,7 @@
 {"filename": "api_generated/village.pybpodapi.utils.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.pybpodapi.utils.date_parser", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.screen", "info": ""}
 {"filename": "api_generated/village.screen.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.screen.behaviour_window", "info": ""}
+{"filename": "api_generated/village.classes.collection.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.collection.Collection", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.Actions", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.Active", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.AreaActive", "info": ""}
@@ -88,7 +90,7 @@
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.State", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.SuperEnum", "info": ""}
 {"filename": "api_generated/village.classes.protocols.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.protocols.CameraProtocol", "info": ""}
-{"filename": "api_generated/village.classes.protocols.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.protocols.EventProtocol", "info": ""}
+{"filename": "api_generated/village.classes.collection.Collection.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.protocols.EventProtocol", "info": ""}
 {"filename": "api_generated/village.classes.protocols.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.protocols.PyBpodProtocol", "info": ""}
 {"filename": "api_generated/village.classes.protocols.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.protocols.ScaleProtocol", "info": ""}
 {"filename": "api_generated/village.classes.protocols.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.protocols.TelegramBotProtocol", "info": ""}
@@ -172,7 +174,7 @@
 {"filename": "api_generated/village.pybpodapi.utils.date_parser.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.pybpodapi.utils.date_parser.parse", "info": ""}
 {"filename": "api_generated/village.screen.behaviour_window.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.screen.behaviour_window.BehaviourWindow", "info": ""}
 {"filename": "assembly_of_mv/assembly_instructions.md", "lineno": 5, "status": "working", "code": 0, "uri": "https://braincircuitsbehaviorlab.github.io/mouse-village-web/assets/mouse-village-instructions.pdf", "info": ""}
-{"filename": "installation.md", "lineno": 119, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/", "info": ""}
-{"filename": "installation.md", "lineno": 196, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
-{"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "working", "code": 0, "uri": "https://github.com/DFRobot/DFRobot_HX711_I2C", "info": ""}
 {"filename": "installation.md", "lineno": 120, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/connect/plan/lite/", "info": ""}
+{"filename": "installation.md", "lineno": 119, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/", "info": ""}
+{"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "working", "code": 0, "uri": "https://github.com/DFRobot/DFRobot_HX711_I2C", "info": ""}
+{"filename": "installation.md", "lineno": 196, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
