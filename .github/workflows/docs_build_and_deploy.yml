@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: neuroinformatics-unit/actions/build_sphinx_docs@v2
+        with:
+          python-version: 3.11
 
   deploy_sphinx_docs:
     name: Deploy Sphinx Docs
