@@ -1,19 +1,16 @@
 from __future__ import annotations  # noqa: I001
 
+import os
 from contextlib import suppress
 from typing import TYPE_CHECKING, Any
 
-import os
+from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
-from PyQt5.QtWidgets import QMessageBox, QInputDialog
-
+from village.classes.enums import Active, ScreenActive, State
 from village.devices.camera import cam_box, cam_corridor
-from village.settings import settings
-from village.data import data
-from village.classes.enums import Active, ScreenActive
 from village.gui.layout import Layout, LineEdit, PushButton, TimeEdit, ToggleButton
-from village.settings import Setting
-from village.classes.enums import State
+from village.manager import manager
+from village.settings import Setting, settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -24,8 +21,8 @@ class SettingsLayout(Layout):
         super().__init__(window)
         self.apply_button = PushButton("", "black", self.apply_button_clicked, "")
         self.restore_button = PushButton("", "black", self.restore_button_clicked, "")
-        data.state = State.SETTINGS
-        data.changing_settings = False
+        manager.state = State.SETTINGS
+        manager.changing_settings = False
         self.draw(all=True, modify="")
 
     def draw(self, all: bool, modify) -> None:
@@ -195,13 +192,13 @@ class SettingsLayout(Layout):
             return True
 
     def settings_changed(self, value: str = "", key: str = "") -> None:
-        data.changing_settings = True
+        manager.changing_settings = True
         self.update_status_label()
         self.apply_button.setEnabled(True)
 
     def apply_button_clicked(self) -> None:
         self.apply_button.setDisabled(True)
-        data.changing_settings = False
+        manager.changing_settings = False
 
         for i, line_edit in enumerate(self.line_edits):
             s = self.line_edits_settings[i]
@@ -297,7 +294,7 @@ class SettingsLayout(Layout):
             path = os.path.dirname(value)
             # check if path exists
             if not os.path.exists(path):
-                data.create_directories_from_path(path)
+                manager.create_directories_from_path(path)
             possible_values = [os.path.join(path, name) for name in os.listdir(path)]
             possible_values += ["NEW"]
             index = possible_values.index(value) if value in possible_values else 0
@@ -320,7 +317,7 @@ class SettingsLayout(Layout):
             self.line_edits.append(line_edit)
             self.line_edits_settings.append(s)
         elif s.key == "SOUND_DEVICE":
-            possible_values = data.get_sound_devices()
+            possible_values = manager.get_sound_devices()
             value = settings.get(s.key)
             index = possible_values.index(value) if value in possible_values else 0
             self.sound_device_combobox = self.create_and_add_combo_box(
@@ -477,7 +474,7 @@ class SettingsLayout(Layout):
                 project_dir = os.path.dirname(old_project)
                 path = os.path.join(project_dir, text)
                 if self.create_project_directory(path):
-                    data.change_directory_settings(path)
+                    manager.change_directory_settings(path)
                     self.window.reload_app()
                     return
             self.project_directory_combobox.blockSignals(True)
@@ -498,7 +495,7 @@ class SettingsLayout(Layout):
             )
 
             if reply == QMessageBox.Yes:
-                data.change_directory_settings(value)
+                manager.change_directory_settings(value)
                 self.window.reload_app()
             else:
                 self.project_directory_combobox.blockSignals(True)
@@ -508,4 +505,4 @@ class SettingsLayout(Layout):
                 self.project_directory_combobox.blockSignals(False)
 
     def create_project_directory(self, path) -> bool:
-        return data.create_directories_from_path(path)
+        return manager.create_directories_from_path(path)

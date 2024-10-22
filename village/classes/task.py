@@ -126,6 +126,7 @@ class Task:
                 self.save_csv()
                 self.save_json()
                 self.cam_box.stop_record()
+                # TODO update training
             except Exception:
                 log.alarm(
                     "Error saving the task: " + self.name,

@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 
 from PyQt5.QtWidgets import QMessageBox
 
-from village.data import data
 from village.gui.layout import Layout
+from village.manager import manager
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -23,8 +23,8 @@ class MainLayout(Layout):
 
         text = "Error initializing the system, please check the logs. "
         text += "System running in debug mode. "
-        text += data.errors
-        if data.errors != "":
+        text += manager.errors
+        if manager.errors != "":
             QMessageBox.information(
                 self.window,
                 "DEBUG",

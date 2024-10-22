@@ -20,8 +20,8 @@ except Exception:
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.protocols import CameraProtocol
-from village.data import data
 from village.log import log
+from village.manager import manager
 from village.settings import Color, settings
 from village.time_utils import time_utils
 
@@ -139,7 +139,7 @@ class Camera(CameraProtocol):
         self.number_of_areas = 3 if self.name == "CORRIDOR" else 4
 
         threshold_index = 4
-        if self.name == "CORRIDOR" and not data.day:
+        if self.name == "CORRIDOR" and not manager.day:
             threshold_index = 5
 
         for i in range(1, self.number_of_areas + 1):

@@ -15,13 +15,13 @@ from PyQt5.QtWidgets import (
 )
 
 from village.classes.enums import Actions, Active, Cycle, Info, State
-from village.data import data
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
 from village.log import log
+from village.manager import manager
 from village.settings import settings
 
 if TYPE_CHECKING:
@@ -295,7 +295,7 @@ class MonitorLayout(Layout):
         )
         key = "TAG_READER"
         possible_values = Active.values()
-        index = Active.get_index_from_value(data.tag_reader)
+        index = Active.get_index_from_value(manager.tag_reader)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
             7,
@@ -313,7 +313,7 @@ class MonitorLayout(Layout):
         )
         key = "CYCLE"
         possible_values = Cycle.values()
-        index = Cycle.get_index_from_value(data.cycle)
+        index = Cycle.get_index_from_value(manager.cycle)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
             9,
@@ -332,7 +332,7 @@ class MonitorLayout(Layout):
 
         key = "INFO"
         possible_values = Info.values()
-        index = Info.get_index_from_value(data.info)
+        index = Info.get_index_from_value(manager.info)
         self.info_button = self.create_and_add_toggle_button(
             key,
             11,
@@ -350,7 +350,7 @@ class MonitorLayout(Layout):
         )
         key = "ACTIONS"
         possible_values = Actions.values()
-        index = Actions.get_index_from_value(data.actions)
+        index = Actions.get_index_from_value(manager.actions)
         self.actions_button = self.create_and_add_toggle_button(
             key,
             13,
@@ -363,39 +363,39 @@ class MonitorLayout(Layout):
             "Perform actions on the corridor, behavioral ports or softcodes",
         )
 
-        index = Info.get_index_from_string(data.info.value)
+        index = Info.get_index_from_string(manager.info.value)
         self.bottom_layout.setCurrentIndex(index)
 
-        index = Actions.get_index_from_string(data.actions.value)
+        index = Actions.get_index_from_string(manager.actions.value)
         self.central_layout.setCurrentIndex(index)
 
         self.update_buttons()
 
     def stop_task(self) -> None:
-        data.state = State.SAVE_MANUAL
+        manager.state = State.SAVE_MANUAL
         self.update_gui()
 
     def go_to_wait(self) -> None:
-        data.state = State.WAIT
+        manager.state = State.WAIT
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
-        data.cycle = Cycle[value]
+        manager.cycle = Cycle[value]
         settings.set(key, value)
         self.update_status_label()
 
     def toggle_tag_reader_button(self, value: str, key: str) -> None:
-        data.tag_reader = Active[value]
+        manager.tag_reader = Active[value]
         settings.set(key, value)
         self.update_status_label()
 
     def toggle_actions_button(self, value: str, key: str) -> None:
-        data.actions = Actions[value]
+        manager.actions = Actions[value]
         settings.set(key, value)
         index = Actions.get_index_from_string(value)
         self.central_layout.setCurrentIndex(index)
 
     def toggle_info_button(self, value: str, key: str) -> None:
-        data.info = Info[value]
+        manager.info = Info[value]
         settings.set(key, value)
         index = Info.get_index_from_string(value)
         self.bottom_layout.setCurrentIndex(index)
@@ -410,15 +410,15 @@ class MonitorLayout(Layout):
     def update_gui(self) -> None:
         self.update_status_label()
         self.update_buttons()
-        match data.info:
-            case data.info.SYSTEM_INFO:
+        match manager.info:
+            case manager.info.SYSTEM_INFO:
                 self.page4Layout.update_gui()
-            case data.info.CORRIDOR_SETTINGS:
+            case manager.info.CORRIDOR_SETTINGS:
                 self.page5Layout.update_gui()
 
     def update_buttons(self) -> None:
-        self.stop_task_button.setEnabled(data.state.can_stop_task())
-        self.go_to_wait_button.setEnabled(data.state.can_go_to_wait())
+        self.stop_task_button.setEnabled(manager.state.can_stop_task())
+        self.go_to_wait_button.setEnabled(manager.state.can_go_to_wait())
 
 
 class MotorLayout(Layout):
@@ -874,9 +874,9 @@ class InfoLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        text = data.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
+        text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
         self.events_text = self.create_and_add_label(text, 0, 0, 210, 16, "black")
 
     def update_gui(self) -> None:
-        text = data.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
+        text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
         self.events_text.setText(text)

@@ -20,7 +20,36 @@ from village.settings import settings
 from village.time_utils import time_utils
 
 
-class Data:
+class Manager:
+    """
+    Data class manages the state and operations related to the village data.
+
+    Attributes:
+        subject (Subject): Instance of Subject class.
+        task (Task): Instance of Task class.
+        training (Training): Instance of Training class.
+        state (State): Current state of the system.
+        table (DataTable): Data table type.
+        tag_reader (Active): Tag reader settings.
+        cycle (Cycle): Current cycle settings.
+        info (Info): Information settings.
+        actions (Actions): Actions settings.
+        cycle_text (str): Text representation of the current cycle.
+        text (str): Current system text.
+        old_text (str): Previous system text.
+        day (bool): Indicates if it's day.
+        changing_settings (bool): Indicates if settings are being changed.
+        tasks (dict[str, type]): Dictionary of tasks.
+        errors (str): Error messages.
+        events (Collection): Collection of events.
+        sessions_summary (Collection): Collection of session summaries.
+        subjects (Collection): Collection of subjects.
+        water_calibration (Collection): Collection of water calibration data.
+        sound_calibration (Collection): Collection of sound calibration data.
+        temperatures (Collection): Collection of temperature data.
+        process (Thread): Thread for running tasks.
+    """
+
     def __init__(self) -> None:
         self.subject = Subject()
         self.task = Task()
@@ -315,8 +344,8 @@ class Data:
 
     def launch_task_auto(self) -> bool:
         try:
-            data.training.load_settings_from_jsonstring(self.subject.next_settings)
-            task_name = data.training.settings.next_task
+            manager.training.load_settings_from_jsonstring(self.subject.next_settings)
+            task_name = manager.training.settings.next_task
             cls = self.tasks.get(task_name)
             if cls is None:
                 log.error(
@@ -326,7 +355,7 @@ class Data:
             elif issubclass(cls, Task):
                 self.task = cls()
                 self.task.subject = self.subject.name
-                self.task.settings = data.training.settings
+                self.task.settings = manager.training.settings
                 self.run_task_in_thread()
                 return True
             else:
@@ -357,8 +386,8 @@ class Data:
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
-                data.state = State.SAVE_MANUAL
-            elif data.state in [
+                manager.state = State.SAVE_MANUAL
+            elif manager.state in [
                 State.LAUNCH_AUTO,
                 State.RUN_ACTION,
                 State.RUN_OPENED,
@@ -371,8 +400,8 @@ class Data:
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
-                data.state = State.OPEN_DOOR2_STOP
-            elif data.state in [
+                manager.state = State.OPEN_DOOR2_STOP
+            elif manager.state in [
                 State.OPEN_DOOR1,
                 State.CLOSE_DOOR1,
                 State.RUN_TRAPPED,
@@ -382,7 +411,7 @@ class Data:
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
-                data.state = State.SAVE_TRAPPED
+                manager.state = State.SAVE_TRAPPED
 
         finally:
             self.task.close()
@@ -393,4 +422,4 @@ class Data:
         self.training.restore()
 
 
-data = Data()
+manager = Manager()

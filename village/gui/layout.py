@@ -5,10 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
 from classes.enums import State
-from PyQt5.QtCore import (
-    Qt,
-    QTime,
-)
+from PyQt5.QtCore import Qt, QTime
 from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
 from PyQt5.QtWidgets import (
     QComboBox,
@@ -20,8 +17,8 @@ from PyQt5.QtWidgets import (
     QTimeEdit,
 )
 
-from village.data import data
 from village.devices.camera import cam_box, cam_corridor
+from village.manager import manager
 from village.settings import settings
 
 if TYPE_CHECKING:
@@ -192,8 +189,8 @@ class Layout(QGridLayout):
             self.create_common_elements()
 
     def switch_to_main_layout(self) -> None:
-        if data.state == State.SETTINGS:
-            data.state = State.WAIT
+        if manager.state == State.SETTINGS:
+            manager.state = State.WAIT
         self.window.create_main_layout()
 
     def create_common_elements(self) -> None:
@@ -249,19 +246,19 @@ class Layout(QGridLayout):
         )
 
     def update_status_label(self, force=False) -> None:
-        data.update_cycle()
-        if data.update_text() or force:
-            self.status_label.setText(data.text)
+        manager.update_cycle()
+        if manager.update_text() or force:
+            self.status_label.setText(manager.text)
             cam_box.change = True
             cam_corridor.change = True
 
     def exit_button_clicked(self) -> None:
-        if data.state.can_exit():
-            old_state = data.state
-            data.state = State.EXIT_GUI
+        if manager.state.can_exit():
+            old_state = manager.state
+            manager.state = State.EXIT_GUI
             self.update_status_label()
             text = "Are you sure you want to exit?"
-            if data.changing_settings:
+            if manager.changing_settings:
                 text += " Changes will not be saved."
             reply = QMessageBox.question(
                 self.window,
@@ -273,7 +270,7 @@ class Layout(QGridLayout):
             if reply == QMessageBox.Yes:
                 self.window.exit_app()
             else:
-                data.state = old_state
+                manager.state = old_state
                 self.update_status_label()
         else:
             QMessageBox.information(
@@ -290,25 +287,25 @@ class Layout(QGridLayout):
 
     def main_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == State.SETTINGS:
-                data.state = State.WAIT
-                data.reset_subject_task_training()
+            if manager.state == State.SETTINGS:
+                manager.state = State.WAIT
+                manager.reset_subject_task_training()
             self.close()
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == State.SETTINGS:
-                data.state = State.WAIT
-                data.reset_subject_task_training()
+            if manager.state == State.SETTINGS:
+                manager.state = State.WAIT
+                manager.reset_subject_task_training()
             self.close()
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state in [State.WAIT, State.SETTINGS]:
-                data.state = State.SETTINGS
-                data.reset_subject_task_training()
+            if manager.state in [State.WAIT, State.SETTINGS]:
+                manager.state = State.SETTINGS
+                manager.reset_subject_task_training()
                 self.close()
                 self.window.create_tasks_layout()
             else:
@@ -322,17 +319,17 @@ class Layout(QGridLayout):
 
     def data_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state == State.SETTINGS:
-                data.state = State.WAIT
-                data.reset_subject_task_training()
+            if manager.state == State.SETTINGS:
+                manager.state = State.WAIT
+                manager.reset_subject_task_training()
             self.close()
             self.window.create_data_layout()
 
     def settings_button_clicked(self) -> None:
         if self.change_layout():
-            if data.state in [State.WAIT, State.SETTINGS]:
-                data.state = State.SETTINGS
-                data.reset_subject_task_training()
+            if manager.state in [State.WAIT, State.SETTINGS]:
+                manager.state = State.SETTINGS
+                manager.reset_subject_task_training()
                 self.close()
                 self.window.create_settings_layout()
             else:

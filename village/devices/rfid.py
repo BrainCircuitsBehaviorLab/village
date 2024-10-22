@@ -6,7 +6,7 @@ from typing import Deque
 import serial
 
 from village.classes.enums import Active
-from village.data import data
+from village.manager import manager
 from village.settings import settings
 from village.time_utils import time_utils
 
@@ -58,7 +58,7 @@ class Rfid:
         self.thread.join()
 
     def get_id(self) -> tuple[str, bool]:
-        if data.tag_reader == Active.ON:
+        if manager.tag_reader == Active.ON:
             return (self.id, self.multiple)
         else:
             return ("", False)

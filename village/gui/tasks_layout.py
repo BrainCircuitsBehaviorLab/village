@@ -7,9 +7,9 @@ from PyQt5.QtCore import Qt
 
 from village.classes.enums import State
 from village.classes.task import Task
-from village.data import data
 from village.devices.camera import cam_box
 from village.gui.layout import Layout
+from village.manager import manager
 
 if TYPE_CHECKING:
     from village.classes.task import Task
@@ -41,7 +41,7 @@ class TasksLayout(Layout):
 
         self.create_and_add_label("Tasks", 8, 2, 20, 2, "black")
         row = 10
-        for key, value in data.tasks.items():
+        for key, value in manager.tasks.items():
             button = self.create_and_add_button(
                 key,
                 row,
@@ -70,7 +70,7 @@ class TasksLayout(Layout):
         self.check_buttons()
 
     def check_buttons(self) -> None:
-        if data.state.can_stop_task():
+        if manager.state.can_stop_task():
             self.run_task_button.setEnabled(False)
             for button in self.task_buttons:
                 button.setEnabled(False)
@@ -98,14 +98,14 @@ class TasksLayout(Layout):
             self.delete_optional_widgets("optional")
             self.delete_optional_widgets("optional2")
             self.check_buttons()
-            data.reset_subject_task_training()
-            data.task = cls()
+            manager.reset_subject_task_training()
+            manager.task = cls()
             self.name_label = self.create_and_add_label(
-                data.task.name, 10, 37, 75, 2, "black"
+                manager.task.name, 10, 37, 75, 2, "black"
             )
             self.name_label.setProperty("type", "optional")
             self.info_label = self.create_and_add_label(
-                data.task.info, 12, 37, 65, 40, "black"
+                manager.task.info, 12, 37, 65, 40, "black"
             )
             self.info_label.setWordWrap(True)
             self.info_label.setProperty("type", "optional")
@@ -116,7 +116,7 @@ class TasksLayout(Layout):
             )
             self.subject_label.setProperty("type", "optional")
 
-            self.possible_subjects = ["None"] + data.subjects.df["name"].tolist()
+            self.possible_subjects = ["None"] + manager.subjects.df["name"].tolist()
             self.subject_combo = self.create_and_add_combo_box(
                 "subject",
                 10,
@@ -133,7 +133,7 @@ class TasksLayout(Layout):
     def create_gui_properties(self) -> None:
         self.delete_optional_widgets("optional2")
         row = 14
-        properties = data.training.get_dict()
+        properties = manager.training.get_dict()
         remove_names = ["next_task", "minimum_duration", "refractary_period"]
         properties = {k: v for k, v in properties.items() if k not in remove_names}
 
@@ -148,21 +148,23 @@ class TasksLayout(Layout):
     def subject_selected(self, value: str, key: str) -> None:
         current_value = ""
         if value != "None":
-            data.subject.subject_series = data.subjects.get_last_entry("name", value)
-            if data.subject.create_from_subject_series():
-                data.task.subject = value
-            if data.subject.subject_series is not None:
+            manager.subject.subject_series = manager.subjects.get_last_entry(
+                "name", value
+            )
+            if manager.subject.create_from_subject_series():
+                manager.task.subject = value
+            if manager.subject.subject_series is not None:
                 try:
-                    current_value = data.subject.subject_series["next_settings"]
+                    current_value = manager.subject.subject_series["next_settings"]
                 except Exception:
                     pass
-        data.training.load_settings_from_jsonstring(current_value)
+        manager.training.load_settings_from_jsonstring(current_value)
         self.create_gui_properties()
 
     def run_task(self) -> None:
-        data.task.settings = data.training.settings
-        data.task.cam_box = cam_box
-        data.state = State.LAUNCH_MANUAL
+        manager.task.settings = manager.training.settings
+        manager.task.cam_box = cam_box
+        manager.state = State.LAUNCH_MANUAL
         self.monitor_button_clicked()
         self.update_gui()
 

@@ -51,7 +51,6 @@ import threading
 import time
 
 from village.classes.enums import Active, State
-from village.data import data
 from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
@@ -61,13 +60,14 @@ from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
 from village.log import log
+from village.manager import manager
 
 # init
-data.task.bpod = bpod
+manager.task.bpod = bpod
 log.telegram_protocol = telegram_bot
 log.cam_protocol = cam_corridor
-data.import_all_tasks()
-data.errors = (
+manager.import_all_tasks()
+manager.errors = (
     bpod.error
     + cam_corridor.error
     + cam_box.error
@@ -75,10 +75,10 @@ data.errors = (
     + temp_sensor.error
     + telegram_bot.error
 )
-if data.errors == "":
+if manager.errors == "":
     log.start("VILLAGE")
 else:
-    log.error(data.errors)
+    log.error(manager.errors)
     log.start("VILLAGE_DEBUG")
 
 
@@ -105,24 +105,24 @@ def system_run() -> None:
             cam_corridor.stop_record()
             cam_corridor.start_record()
 
-        match data.state:
+        match manager.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
                 id, multiple = rfid.get_id()
                 if id != "":
-                    data.state = State.DETECTION
+                    manager.state = State.DETECTION
             case State.DETECTION:
                 # Gathering subject data, checking requirements to enter
                 if (
-                    data.get_subject_from_tag(id)
-                    and data.subject.create_from_subject_series()
-                    and data.subject.minimum_time_ok()
+                    manager.get_subject_from_tag(id)
+                    and manager.subject.create_from_subject_series()
+                    and manager.subject.minimum_time_ok()
                     and cam_corridor.areas_corridor_ok()
-                    and not data.multiple_detections(multiple)
+                    and not manager.multiple_detections(multiple)
                 ):
-                    data.state = State.ACCESS
+                    manager.state = State.ACCESS
                 else:
-                    data.state = State.WAIT
+                    manager.state = State.WAIT
 
             case State.ACCESS:
                 # Closing door1, opening door2
@@ -130,72 +130,72 @@ def system_run() -> None:
                 motor2.open()
 
             case State.LAUNCH_AUTO:
-                if data.launch_task_auto():
-                    data.task.cam_box = cam_box
-                    data.state = State.RUN_ACTION
+                if manager.launch_task_auto():
+                    manager.task.cam_box = cam_box
+                    manager.state = State.RUN_ACTION
                 else:
-                    data.state = State.OPEN_DOOR2_STOP
+                    manager.state = State.OPEN_DOOR2_STOP
 
             case State.RUN_ACTION:
                 # Task running, waiting for the first action in the behavioral box
                 id, multiple = rfid.get_id()
-                if id == data.subject.tag:
+                if id == manager.subject.tag:
                     log.info(
                         "Subject not allowed to leave. Task has not started yet",
-                        subject=data.subject.name,
+                        subject=manager.subject.name,
                     )
                 elif id != "":
                     log.alarm(
                         """Another subject detected while main subject is in the box.
                         Disconnecting RFID""",
-                        subject=data.subject.name,
+                        subject=manager.subject.name,
                     )
-                    data.state = State.OPEN_DOOR2_STOP
+                    manager.state = State.OPEN_DOOR2_STOP
                 if (
-                    data.task.current_trial
-                    >= data.task.settings.maximum_number_of_trials
-                    or data.task.chrono.get_seconds()
-                    >= data.task.settings.maximum_duration
-                    or data.task.force_stop
+                    manager.task.current_trial
+                    >= manager.task.settings.maximum_number_of_trials
+                    or manager.task.chrono.get_seconds()
+                    >= manager.task.settings.maximum_duration
+                    or manager.task.force_stop
                 ):
-                    data.state = State.OPEN_DOOR2_STOP
+                    manager.state = State.OPEN_DOOR2_STOP
 
             case State.CLOSE_DOOR2:
                 # Closing door2
                 if cam_corridor.area_3_empty():
                     motor2.close()
-                    data.state = State.RUN_CLOSED
+                    manager.state = State.RUN_CLOSED
                 else:
                     log.alarm(
-                        "Subject trapped in the corridor", subject=data.subject.name
+                        "Subject trapped in the corridor", subject=manager.subject.name
                     )
-                    data.state = State.OPEN_DOORS_STOP
+                    manager.state = State.OPEN_DOORS_STOP
 
             case State.RUN_CLOSED:
                 # Task running, the subject cannot leave yet
                 id, multiple = rfid.get_id()
-                if id == data.subject.tag:
+                if id == manager.subject.tag:
                     log.info(
                         "Subject not allowed to leave. Task has not started yet",
-                        subject=data.subject.name,
+                        subject=manager.subject.name,
                     )
-                    data.state = State.OPEN_DOORS_STOP
+                    manager.state = State.OPEN_DOORS_STOP
                 elif id != "":
                     log.alarm(
                         """Another subject detected in the corridor while
                         main subject is in the box.
                         """,
-                        subject=data.subject.name,
+                        subject=manager.subject.name,
                     )
-                    data.state = State.OPEN_DOOR1
+                    manager.state = State.OPEN_DOOR1
                 if (
-                    data.task.current_trial
-                    >= data.task.settings.maximum_number_of_trials
-                    or data.task.chrono.get_seconds()
-                    >= data.task.settings.maximum_duration
-                    or data.task.force_stop
+                    manager.task.current_trial
+                    >= manager.task.settings.maximum_number_of_trials
+                    or manager.task.chrono.get_seconds()
+                    >= manager.task.settings.maximum_duration
+                    or manager.task.force_stop
                 ):
-                    data.state = State.OPEN_DOOR2_STOP
+                    manager.state = State.OPEN_DOOR2_STOP
 
             case State.OPEN_DOOR2:
                 # Opening door2
@@ -211,15 +211,15 @@ def system_run() -> None:
 
             case State.SAVE_OUTSIDE:
                 # Stopping the task, saving the data; the subject is already outside
-                data.task.disconnect_and_save()
-                data.reset_subject_task_training()
-                data.state = State.WAIT
+                manager.task.disconnect_and_save()
+                manager.reset_subject_task_training()
+                manager.state = State.WAIT
 
             case State.SAVE_INSIDE:
                 # Stopping the task, saving the data; the subject is still inside
-                data.task.disconnect_and_save()
-                data.reset_subject_task_training()
-                data.state = State.WAIT_EXIT
+                manager.task.disconnect_and_save()
+                manager.reset_subject_task_training()
+                manager.state = State.WAIT_EXIT
 
             case State.WAIT_EXIT:
                 # Task finished, waiting for the subject to leave
@@ -248,8 +248,8 @@ def system_run() -> None:
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
                 motor2.open()
-                data.tag_reader = Active.OFF
-                data.state = State.SAVE_INSIDE
+                manager.tag_reader = Active.OFF
+                manager.state = State.SAVE_INSIDE
 
             case State.OPEN_DOORS_STOP:
                 # Opening both doors, disconnecting RFID
@@ -261,27 +261,27 @@ def system_run() -> None:
 
             case State.LAUNCH_MANUAL:
                 # Launching the task manually
-                if data.launch_task_manual():
-                    data.state = State.RUN_MANUAL
+                if manager.launch_task_manual():
+                    manager.state = State.RUN_MANUAL
                 else:
-                    data.state = State.ERROR
+                    manager.state = State.ERROR
 
             case State.RUN_MANUAL:
                 # Task is running manually
                 if (
-                    data.task.current_trial
-                    >= data.task.settings.maximum_number_of_trials
-                    or data.task.chrono.get_seconds()
-                    >= data.task.settings.maximum_duration
-                    or data.task.force_stop
+                    manager.task.current_trial
+                    >= manager.task.settings.maximum_number_of_trials
+                    or manager.task.chrono.get_seconds()
+                    >= manager.task.settings.maximum_duration
+                    or manager.task.force_stop
                 ):
-                    data.state = State.SAVE_MANUAL
+                    manager.state = State.SAVE_MANUAL
 
             case State.SAVE_MANUAL:
                 # Stopping the task, saving the data; the task was manually stopped
-                data.task.disconnect_and_save()
-                data.reset_subject_task_training()
-                data.state = State.WAIT
+                manager.task.disconnect_and_save()
+                manager.reset_subject_task_training()
+                manager.state = State.WAIT
 
             case State.SETTINGS:
                 # Settings are being changed or task is being manually prepared

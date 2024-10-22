@@ -5,12 +5,12 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import QEvent, QObjectCleanupHandler, QRect, QSize, QTimer
 from PyQt5.QtWidgets import QWidget
 
-from village.data import data
 from village.gui.data_layout import DataLayout
 from village.gui.main_layout import MainLayout
 from village.gui.monitor_layout import MonitorLayout
 from village.gui.settings_layout import SettingsLayout
 from village.gui.tasks_layout import TasksLayout
+from village.manager import manager
 from village.settings import settings
 from village.time_utils import time_utils
 
@@ -45,31 +45,31 @@ class GuiWindow(QWidget):
         return super().eventFilter(source, event)
 
     def create_main_layout(self) -> None:
-        data.delete_all_elements(self.layout)
+        manager.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MainLayout(self)
         self.setLayout(self.layout)
 
     def create_monitor_layout(self) -> None:
-        data.delete_all_elements(self.layout)
+        manager.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MonitorLayout(self)
         self.setLayout(self.layout)
 
     def create_tasks_layout(self) -> None:
-        data.delete_all_elements(self.layout)
+        manager.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = TasksLayout(self)
         self.setLayout(self.layout)
 
     def create_data_layout(self) -> None:
-        data.delete_all_elements(self.layout)
+        manager.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = DataLayout(self)
         self.setLayout(self.layout)
 
     def create_settings_layout(self) -> None:
-        data.delete_all_elements(self.layout)
+        manager.delete_all_elements(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = SettingsLayout(self)
         self.setLayout(self.layout)

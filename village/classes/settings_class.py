@@ -109,14 +109,14 @@ class Settings:
         if self.get("FIRST_LAUNCH") is None:
             self.create_factory_settings()
 
-    def get(self, key: str) -> Any:  # type: ignore
+    def get(self, key: str) -> Any:
         """Get the value of a setting."""
         type = next((s.value_type for s in self.all_settings if s.key == key), None)
         try:
             if type == str:
                 return self.saved_settings.value(key)
             elif type == int:
-                return int(self.saved_settings.value(key))
+                return int(str(self.saved_settings.value(key)))
             elif type == float:
                 return float(self.saved_settings.value(key))
             elif type == Active:

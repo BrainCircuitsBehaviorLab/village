@@ -6,11 +6,7 @@ from typing import TYPE_CHECKING, Any
 import pandas as pd
 from classes.enums import State
 from pandas import DataFrame
-from PyQt5.QtCore import (
-    QAbstractTableModel,
-    QModelIndex,
-    Qt,
-)
+from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PyQt5.QtWidgets import (
     QCheckBox,
     QDateTimeEdit,
@@ -25,8 +21,8 @@ from PyQt5.QtWidgets import (
 )
 
 from village.classes.enums import DataTable
-from village.data import data
 from village.gui.layout import Layout
+from village.manager import manager
 from village.time_utils import time_utils
 
 if TYPE_CHECKING:
@@ -49,8 +45,8 @@ class TableView(QTableView):
                 self.searching = ""
                 self.model_parent.layout_parent.search_edit.setText("")
                 self.model_parent.layout_parent.update_gui()
-                if column_name == "next_settings" and data.state.can_edit_subjects():
-                    data.state = State.SETTINGS
+                if column_name == "next_settings" and manager.state.can_edit_subjects():
+                    manager.state = State.SETTINGS
                     current_value = self.model().data(index, Qt.DisplayRole)
                     new_value = self.model_parent.layout_parent.edit_next_settings(
                         current_value
@@ -59,21 +55,21 @@ class TableView(QTableView):
                     self.save_changes_in_df()
                 elif (
                     column_name == "next_session_time"
-                    and data.state.can_edit_subjects()
+                    and manager.state.can_edit_subjects()
                 ):
-                    data.state = State.SETTINGS
+                    manager.state = State.SETTINGS
                     current_value = self.model().data(index, Qt.DisplayRole)
                     new_value = self.model_parent.layout_parent.edit_next_session_time(
                         current_value
                     )
                     self.model().setData(index, new_value, Qt.EditRole)
                     self.save_changes_in_df()
-                elif column_name == "active" and data.state.can_edit_subjects():
-                    data.state = State.SETTINGS
+                elif column_name == "active" and manager.state.can_edit_subjects():
+                    manager.state = State.SETTINGS
                     current_value = self.model().data(index, Qt.DisplayRole)
                     self.openDaysSelectionDialog(index, current_value)
-                elif data.state.can_edit_subjects():
-                    data.state = State.SETTINGS
+                elif manager.state.can_edit_subjects():
+                    manager.state = State.SETTINGS
                     super().mouseDoubleClickEvent(event)
                 else:
                     text = "Wait until the box is empty before editing the tables."
@@ -84,19 +80,19 @@ class TableView(QTableView):
             super().mouseDoubleClickEvent(event)
 
     def save_changes_in_df(self) -> None:
-        if data.table == DataTable.SUBJECTS:
-            data.subjects.df = self.model_parent.df
-            data.subjects.save_from_df(data.training)
-        elif data.table == DataTable.TEMPERATURES:
-            data.temperatures.df = self.model_parent.df
-            data.temperatures.save_from_df(data.training)
-        elif data.table == DataTable.WATER_CALIBRATION:
-            data.water_calibration.df = self.model_parent.df
-            data.water_calibration.save_from_df(data.training)
-        elif data.table == DataTable.SOUND_CALIBRATION:
-            data.sound_calibration.df = self.model_parent.df
-            data.sound_calibration.save_from_df(data.training)
-        data.state = State.WAIT
+        if manager.table == DataTable.SUBJECTS:
+            manager.subjects.df = self.model_parent.df
+            manager.subjects.save_from_df(manager.training)
+        elif manager.table == DataTable.TEMPERATURES:
+            manager.temperatures.df = self.model_parent.df
+            manager.temperatures.save_from_df(manager.training)
+        elif manager.table == DataTable.WATER_CALIBRATION:
+            manager.water_calibration.df = self.model_parent.df
+            manager.water_calibration.save_from_df(manager.training)
+        elif manager.table == DataTable.SOUND_CALIBRATION:
+            manager.sound_calibration.df = self.model_parent.df
+            manager.sound_calibration.save_from_df(manager.training)
+        manager.state = State.WAIT
 
     def openDaysSelectionDialog(self, index, current_value) -> None:
         dialog = DaysSelectionDialog(self, current_value)
@@ -105,7 +101,7 @@ class TableView(QTableView):
             if selected_days:
                 self.model().setData(index, selected_days, Qt.EditRole)
                 self.save_changes_in_df()
-                data.state = State.WAIT
+                manager.state = State.WAIT
 
 
 class DaysSelectionDialog(QDialog):
@@ -309,7 +305,7 @@ class Table(QAbstractTableModel):
     def insertRow(self, position, index=None) -> bool:
         self.beginInsertRows(index or QModelIndex(), position, position)
         new_row = pd.DataFrame([[""] * self.columnCount()], columns=self.df.columns)
-        new_row = data.subjects.df_from_df(new_row, data.training)
+        new_row = manager.subjects.df_from_df(new_row, manager.training)
         self.df = pd.concat([self.df, new_row], ignore_index=True)
         self.df.reset_index(drop=True, inplace=True)
         self.endInsertRows()
@@ -344,7 +340,7 @@ class DataLayout(Layout):
         possible_values = DataTable.values()
         possible_values.pop()
 
-        index = DataTable.get_index_from_value(data.table)
+        index = DataTable.get_index_from_value(manager.table)
 
         self.title = self.create_and_add_combo_box(
             "title", 5, 5, 35, 2, possible_values, index, self.change_data_table
@@ -373,30 +369,30 @@ class DataLayout(Layout):
         self.create_table()
 
     def update_data(self) -> None:
-        match data.table:
+        match manager.table:
             case DataTable.EVENTS:
-                self.complete_df = data.events.df
+                self.complete_df = manager.events.df
                 self.widths = [20, 20, 20, 140]
             case DataTable.SESSIONS_SUMMARY:
-                self.complete_df = data.sessions_summary.df
+                self.complete_df = manager.sessions_summary.df
                 self.widths = [20, 20, 20, 20, 20, 20, 20, 20, 20]
             case DataTable.SUBJECTS:
-                self.complete_df = data.subjects.df
+                self.complete_df = manager.subjects.df
                 self.widths = [20, 20, 20, 20, 20, 100]
             case DataTable.WATER_CALIBRATION:
-                self.complete_df = data.water_calibration.df
+                self.complete_df = manager.water_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.SOUND_CALIBRATION:
-                self.complete_df = data.sound_calibration.df
+                self.complete_df = manager.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.TEMPERATURES:
-                self.complete_df = data.temperatures.df
+                self.complete_df = manager.temperatures.df
                 self.widths = [20, 20, 20]
             case DataTable.SESSION:
-                self.complete_df = data.sound_calibration.df
+                self.complete_df = manager.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.OLD_SESSION:
-                self.complete_df = data.sound_calibration.df
+                self.complete_df = manager.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
         self.df = self.obtain_searched_df()
 
@@ -427,8 +423,8 @@ class DataLayout(Layout):
         return model
 
     def change_data_table(self, value: str, key: str) -> None:
-        if data.table != DataTable(value):
-            data.table = DataTable(value)
+        if manager.table != DataTable(value):
+            manager.table = DataTable(value)
             self.update_data()
             self.create_table()
 
@@ -446,7 +442,7 @@ class DataLayout(Layout):
             ]
 
     def create_table(self) -> None:
-        editable = True if data.table == DataTable.SUBJECTS else False
+        editable = True if manager.table == DataTable.SUBJECTS else False
         self.model = self.create_and_add_table(
             self.df, 8, 0, 210, 42, widths=self.widths, editable=editable
         )
@@ -528,7 +524,7 @@ class DataLayout(Layout):
 
     def update_buttons(self) -> None:
         selected_indexes = self.model.table_view.selectionModel().selectedRows()
-        match data.table:
+        match manager.table:
             case DataTable.EVENTS:
                 self.first_button.hide()
                 self.second_button.hide()
@@ -620,7 +616,7 @@ class DataLayout(Layout):
         pass
 
     def add_button_clicked(self) -> None:
-        if data.state.can_edit_subjects():
+        if manager.state.can_edit_subjects():
             self.searching = ""
             self.search_edit.setText("")
             self.update_gui()
@@ -641,7 +637,7 @@ class DataLayout(Layout):
         self.update_gui()
         selected_indexes = self.model.table_view.selectionModel().selectedRows()
         if selected_indexes:
-            if data.state.can_edit_subjects():
+            if manager.state.can_edit_subjects():
                 reply = QMessageBox.question(
                     self.window,
                     "Delete",
@@ -667,24 +663,24 @@ class DataLayout(Layout):
                 QMessageBox.information(self.window, "EDIT", text)
 
     def cancel(self) -> None:
-        data.state = State.WAIT
+        manager.state = State.WAIT
         self.update_status_label()
         self.update_buttons()
-        if data.table == DataTable.SUBJECTS:
+        if manager.table == DataTable.SUBJECTS:
             self.model.beginResetModel()
-            self.model.df = data.subjects.df
+            self.model.df = manager.subjects.df
             self.model.endResetModel()
             self.update_data()
             self.create_table()
 
     def change_layout(self) -> bool:
-        if data.state == State.SETTINGS:
-            data.state = State.WAIT
+        if manager.state == State.SETTINGS:
+            manager.state = State.WAIT
         return True
 
     def edit_next_settings(self, current_value: str) -> str:
-        data.training.load_settings_from_jsonstring(current_value)
-        dict_values = data.training.get_dict()
+        manager.training.load_settings_from_jsonstring(current_value)
+        dict_values = manager.training.get_dict()
 
         self.reply = QDialog()
         self.reply.setWindowTitle("Next settings")
@@ -692,7 +688,7 @@ class DataLayout(Layout):
         layout = QVBoxLayout()
         self.line_edits: list[QLineEdit] = []
 
-        properties = data.training.get_settings_names()
+        properties = manager.training.get_settings_names()
         for name in properties:
             value = dict_values.get(name)
             value = value if value is not None else ""
