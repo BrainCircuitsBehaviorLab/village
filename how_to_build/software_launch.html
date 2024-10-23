@@ -238,27 +238,33 @@ Let’s first explore how the code is organized:</p>
 <h4>Tasks</h4>
 <p>To create a task, a Python file is created, and within it, a class with the task’s name is defined, inheriting functionality from the generic Task class. This process is straightforward. Let’s look at an example:</p>
 <p>Within the folder: village/village_projects/demo_project/code/, we create the file simple_task.py with the following code:</p>
-<p>class SimpleTask(Task):
-def <strong>init</strong>(self):
-super().<strong>init</strong>()</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+</span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></code></pre></div>
+</div>
 <p>The task is named SimpleTask. It is initialized with <strong>init</strong>, and we acquire all the properties of the generic Task class using super().<strong>init</strong>(). The naming conventions follow Python standards: CamelCase for class names and lower_case for filenames and function names.
-If you try to run this task as-is, you will encounter an error indicating that certain methods must be implemented in your class. These methods are:
-start
-create_trial
-after_trial
-close</p>
+If you try to run this task as-is, you will encounter an error indicating that certain methods must be implemented in your class. These methods are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">create_trial</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">after_trial</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">close</span></code></p></li>
+</ul>
 <p>We can implement these methods for now, even if they don’t perform any actions:</p>
-<p>class SimpleTask(Task):
-def <strong>init</strong>(self):
-super().<strong>init</strong>()
-def start(self):
-return
-def create_trial(self):
-return
-def after_trial(self):
-return
-def close(self):
-return</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+</span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="line-4">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-5">        <span class="k">return</span>
+</span><span id="line-6">    <span class="k">def</span> <span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-7">        <span class="k">return</span>
+</span><span id="line-8">    <span class="k">def</span> <span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-9">        <span class="k">return</span>
+</span><span id="line-10">    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-11">        <span class="k">return</span>
+</span></code></pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -291,7 +297,7 @@ return</p>
 </footer>
   </div>
   
-    <script src="../_static/documentation_options.js?v=b1153dbf"></script>
+    <script src="../_static/documentation_options.js?v=adbfa41a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>

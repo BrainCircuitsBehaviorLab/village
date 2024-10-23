@@ -61,19 +61,22 @@ To create a task, a Python file is created, and within it, a class with the task
 
 Within the folder: village/village_projects/demo_project/code/, we create the file simple_task.py with the following code:
 
+```python
 class SimpleTask(Task):
     def __init__(self):
         super().__init__()
+```
 
 The task is named SimpleTask. It is initialized with __init__, and we acquire all the properties of the generic Task class using super().__init__(). The naming conventions follow Python standards: CamelCase for class names and lower_case for filenames and function names.
 If you try to run this task as-is, you will encounter an error indicating that certain methods must be implemented in your class. These methods are:
-start
-create_trial
-after_trial
-close
+- `start`
+- `create_trial`
+- `after_trial`
+- `close`
 
 We can implement these methods for now, even if they don’t perform any actions:
 
+```python
 class SimpleTask(Task):
     def __init__(self):
         super().__init__()
@@ -85,3 +88,4 @@ class SimpleTask(Task):
         return
     def close(self):
         return
+```
