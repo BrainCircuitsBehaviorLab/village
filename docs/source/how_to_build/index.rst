@@ -3,7 +3,7 @@ How to Build the Training Village
 =============================
 
 .. toctree::
-    :hidden: 
+    :hidden:
     :maxdepth: 2
 
     assembly_instructions.md

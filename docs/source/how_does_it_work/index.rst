@@ -1,7 +1,7 @@
 How does it Work?
 ==============================
 .. toctree::
-    :hidden: 
+    :hidden:
     :maxdepth: 2
 
     hardware_technical_details.md

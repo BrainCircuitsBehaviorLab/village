@@ -2,7 +2,7 @@ User Guide
 =====
 
 .. toctree::
-    :hidden: 
+    :hidden:
     :maxdepth: 1
 
     animal_procedures.md
