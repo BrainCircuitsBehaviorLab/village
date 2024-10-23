@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 What is the Training Village?
-=========================================================
+=============================
 
 .. toctree::
    :hidden:
@@ -12,7 +12,7 @@ What is the Training Village?
    :caption: Contents:
 
    how_to_build/index.md
-   operation_of_mv/index.md
+   how_does_it_work/index.md
    user_guide/index.md
    data_collection.md
    api_index

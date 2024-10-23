@@ -1,5 +1,5 @@
 How does it Work?
-==============================
+=================
 .. toctree::
     :hidden:
     :maxdepth: 2
