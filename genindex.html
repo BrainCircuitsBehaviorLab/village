@@ -122,10 +122,16 @@
 <li class="toctree-l2"><a class="reference internal" href="how_to_build/software_launch.html">Software Launch and Configuration</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="how_does_it_work/index.html">How does it Work?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="how_does_it_work/hardware_technical_details.html">Hardware Technical Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_does_it_work/software_overview.html">Software overview</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide/index.html">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/animal_procedures.html">Animal procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/alarms.html">Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/GUI.html">GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="data_collection.html">Data Collection Examples</a></li>
@@ -136,6 +142,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api_generated/village.pybpodapi.html">pybpodapi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_generated/village.screen.html">screen</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_generated/village.log.html">log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.rt_plots.html">rt_plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_generated/village.time_utils.html">time_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_generated/village.video.html">video</a></li>
 </ul>
@@ -283,6 +290,8 @@
         <li><a href="api_generated/village.pybpodapi.utils.csv.Reader.html#village.pybpodapi.utils.csv.Reader.__init__">(Reader method)</a>
 </li>
         <li><a href="api_generated/village.pybpodapi.com.protocol.recv_msg_headers.ReceiveMessageHeader.html#village.pybpodapi.com.protocol.recv_msg_headers.ReceiveMessageHeader.__init__">(ReceiveMessageHeader method)</a>
+</li>
+        <li><a href="api_generated/village.rt_plots.RTPlots.html#village.rt_plots.RTPlots.__init__">(RTPlots method)</a>
 </li>
         <li><a href="api_generated/village.devices.scale.Scale.html#village.devices.scale.Scale.__init__">(Scale method)</a>
 </li>
@@ -1315,6 +1324,8 @@
 </li>
         <li><a href="api_generated/village.pybpodapi.utils.date_parser.html#module-village.pybpodapi.utils.date_parser">village.pybpodapi.utils.date_parser</a>
 </li>
+        <li><a href="api_generated/village.rt_plots.html#module-village.rt_plots">village.rt_plots</a>
+</li>
         <li><a href="api_generated/village.screen.html#module-village.screen">village.screen</a>
 </li>
         <li><a href="api_generated/village.screen.behaviour_window.html#module-village.screen.behaviour_window">village.screen.behaviour_window</a>
@@ -1528,6 +1539,8 @@
         <li><a href="api_generated/village.pybpodapi.bpod.bpod_io.BpodIO.html#village.pybpodapi.bpod.bpod_io.BpodIO.reset_serial_messages">(BpodIO method)</a>
 </li>
       </ul></li>
+      <li><a href="api_generated/village.rt_plots.RTPlots.html#village.rt_plots.RTPlots">RTPlots (class in village.rt_plots)</a>
+</li>
       <li><a href="api_generated/village.pybpodapi.com.protocol.send_msg_headers.SendMessageHeader.html#village.pybpodapi.com.protocol.send_msg_headers.SendMessageHeader.RUN_STATE_MACHINE">RUN_STATE_MACHINE (SendMessageHeader attribute)</a>
 </li>
       <li><a href="api_generated/village.pybpodapi.bpod.Bpod.html#village.pybpodapi.bpod.Bpod.run_state_machine">run_state_machine() (Bpod method)</a>
@@ -2124,8 +2137,6 @@
         <li><a href="api_generated/village.pybpodapi.bpod_modules.bpod_modules.html#module-village.pybpodapi.bpod_modules.bpod_modules">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li>
     village.pybpodapi.com
 
@@ -2133,6 +2144,8 @@
         <li><a href="api_generated/village.pybpodapi.com.html#module-village.pybpodapi.com">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li>
     village.pybpodapi.com.arcom
 
@@ -2400,6 +2413,13 @@
 </li>
       </ul></li>
       <li>
+    village.rt_plots
+
+      <ul style="list-style-type:none">
+        <li><a href="api_generated/village.rt_plots.html#module-village.rt_plots">module</a>
+</li>
+      </ul></li>
+      <li>
     village.screen
 
       <ul style="list-style-type:none">
@@ -2532,7 +2552,7 @@
 </footer>
   </div>
   
-    <script src="_static/documentation_options.js?v=d1cee554"></script>
+    <script src="_static/documentation_options.js?v=1169797f"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script defer="defer" src="_static/theme.js?v=1808ab49"></script>

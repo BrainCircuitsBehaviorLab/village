@@ -1,5 +1,5 @@
 User Guide
-=====
+==========
 
 .. toctree::
     :hidden:
@@ -8,3 +8,4 @@ User Guide
     animal_procedures.md
     maintenance.md
     alarms.md
+    GUI.md
