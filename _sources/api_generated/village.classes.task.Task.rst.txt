@@ -23,8 +23,10 @@ Task
       ~Task.create_trial
       ~Task.disconnect_and_save
       ~Task.get_name
+      ~Task.get_trial_data
       ~Task.register_values
       ~Task.run
+      ~Task.run_one_trial_in_thread
       ~Task.save_csv
       ~Task.save_json
       ~Task.start
