@@ -31,7 +31,7 @@ autodoc_mock_imports: list = [
 sys.path.insert(0, os.path.abspath("../.."))
 
 project = "village"
-copyright = "2022, Rafael Marin"
+copyright = "2024, Rafael Marin, Balma Serrano, Hernando Vergara"
 author = "Rafael Marin"
 try:
     release = setuptools_scm.get_version(root="../..", relative_to=__file__)
@@ -51,6 +51,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
+    "sphinxcontrib.video",
     "sphinx_sitemap",
     "myst_parser",
     "nbsphinx",
@@ -98,7 +99,10 @@ exclude_patterns = [
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
 html_theme = "sphinxawesome_theme"
+# html_theme = "connestack"
+
 html_title = "Training village"
 
 # Customize the theme

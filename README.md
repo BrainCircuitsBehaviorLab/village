@@ -6,7 +6,7 @@
 [![doc builder](https://github.com/BrainCircuitsBehaviorLab/village/actions/workflows/docs_build_and_deploy.yml/badge.svg)](https://github.com/BrainCircuitsBehaviorLab/village/actions/workflows/docs_build_and_deploy.yml)
 
 
-# Mouse Village
+# Training Village
 ![Alt text](./resources/village.png)
 
 <div align="center">

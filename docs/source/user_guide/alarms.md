@@ -1,4 +1,4 @@
-# Alarms
+# Receiving and responding to Telegram Alarms
 
 ## Interrogate the system
 
