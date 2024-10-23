@@ -1,6 +1,6 @@
 
 How to Build the Training Village
-=============================
+=================================
 
 .. toctree::
     :hidden:

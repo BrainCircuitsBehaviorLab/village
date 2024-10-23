@@ -112,27 +112,28 @@ class Settings:
     def get(self, key: str) -> Any:
         """Get the value of a setting."""
         type = next((s.value_type for s in self.all_settings if s.key == key), None)
+        str_value = str(self.saved_settings.value(key))
         try:
             if type == str:
-                return self.saved_settings.value(key)
+                return str_value
             elif type == int:
-                return int(str(self.saved_settings.value(key)))
+                return int(str_value)
             elif type == float:
-                return float(self.saved_settings.value(key))
+                return float(str_value)
             elif type == Active:
-                return Active(self.saved_settings.value(key))
+                return Active(str_value)
             elif type == Color:
-                return Color(self.saved_settings.value(key))
+                return Color(str_value)
             elif type == Actions:
-                return Actions(self.saved_settings.value(key))
+                return Actions(str)
             elif type == Info:
-                return Info(self.saved_settings.value(key))
+                return Info(str_value)
             elif type == Cycle:
-                return Cycle(self.saved_settings.value(key))
+                return Cycle(str_value)
             elif type == ScreenActive:
-                return ScreenActive(self.saved_settings.value(key))
+                return ScreenActive(str_value)
             elif type == AreaActive:
-                return AreaActive(self.saved_settings.value(key))
+                return AreaActive(str_value)
             elif type == list[str]:
                 return self.saved_settings.value(key)
             elif type == list[int]:

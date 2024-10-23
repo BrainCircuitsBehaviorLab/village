@@ -124,6 +124,9 @@ class Task:
 
     def get_trial_data(self) -> None:
         self.trial_data = self.bpod.session.current_trial.export()
+        self.trial_data["ordered_list_of_events"] = [
+            msg.content for msg in self.bpod.session.current_trial.events_occurrences
+        ]
         # TODO: parse this data and add more things
         return None
 
