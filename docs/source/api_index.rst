@@ -56,7 +56,7 @@ Other
    :nosignatures:
 
     village.screen
-    village.data
+    village.manager
     village.log
     village.main
     village.rt_plots
