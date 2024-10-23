@@ -57,6 +57,7 @@ class Task:
         self.subject_path: str = ""
         self.rt_session_path: str = ""
         self.settings: Settings = Settings()
+        self.trial_data: dict = {}
 
         self.process = Thread()
         self.df: pd.DataFrame = pd.DataFrame()
@@ -86,6 +87,21 @@ class Task:
         self.after_trial()
         self.close()
 
+    def run_one_trial_in_thread(self) -> None:
+        def test_run():
+            self.start()
+            self.bpod.create_state_machine()
+            self.create_trial()
+            self.bpod.send_and_run_state_machine()
+            self.get_trial_data()
+            self.after_trial()
+            self.bpod.stop()
+            self.bpod.close()
+
+        self.process = Thread(target=test_run, daemon=True)
+        self.process.start()
+        return
+
     def run(self) -> None:
         self.create_paths()
         if self.subject != "None":
@@ -101,9 +117,15 @@ class Task:
             self.cam_box.trial = self.current_trial
             self.create_trial()
             self.bpod.send_and_run_state_machine()
+            self.get_trial_data()
             self.after_trial()
             self.register_values()
             self.current_trial += 1
+
+    def get_trial_data(self) -> None:
+        self.trial_data = self.bpod.session.current_trial.export()
+        # TODO: parse this data and add more things
+        return None
 
     def register_values(self) -> None:
         self.bpod.register_value("task", self.name)
