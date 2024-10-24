@@ -75,7 +75,7 @@ components due to its larger size and the increased strength required.
 
 .. image:: _static/corridor.png
    :alt: Diagram
-   :width: 640px
+   :width: 800px
    :align: center
 |
 
@@ -107,7 +107,7 @@ Animal Entry and Exit Logic
 
 .. image:: _static/entrances.png
    :alt: Entrance/exit
-   :width: 640px
+   :width: 800px
    :align: center
 |
 
@@ -127,5 +127,5 @@ Open Source Project Develop by
 Contact: `marinraf@gmail.com <mailto:marinraf@gmail.com>`_
 
 Training Village is an open-source project. You can find all the code in our
-(`GitHub repository <https://github.com/BrainCircuitsBehaviorLab/village/>`_)
+`GitHub repository <https://github.com/BrainCircuitsBehaviorLab/village/>`_
 and all the necessary resources in the :ref:`resources section<resources>`.
