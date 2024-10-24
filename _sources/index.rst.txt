@@ -4,28 +4,21 @@
    contain the root `toctree` directive.
 
 
-
-.. image:: _static/logo.png
-   :alt: Logo
-   :width: 200px
-   :align: center
-
-
-|
-
-
-What is the Training Village?
-=============================
-
 .. toctree::
    :hidden:
    :maxdepth: 2
    :caption: Contents:
 
+   index
    user_guide/index.md
    how_to_build/index.md
    data_collection.md
    api_index
+
+
+
+What is Training Village?
+=============================
 
 The Training Village is a system designed for the automated training of rodents.
 It allows animals to live in the system 24/7 and access a behavioral box to perform
@@ -112,7 +105,7 @@ plug-and-play experience.
 
 
 
-Entrance / exit protocol
+Animal Entry and Exit Logic
 =========================================================
 
 .. image:: _static/entrances.png

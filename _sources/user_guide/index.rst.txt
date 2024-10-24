@@ -9,5 +9,6 @@ User Guide
     getting_started.md
     animal_procedures.md
     GUI.md
+    creating_a_protocol.md
     maintenance.md
-    receiving_and_responding_to_alarms.md
+    alarms.md

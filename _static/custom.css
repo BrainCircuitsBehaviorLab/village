@@ -1,0 +1,10 @@
+/* Hide "On this page" */
+.localtoc {
+    display: none !important;
+}
+
+/* Central column text width */
+.wy-nav-content {
+    max-width: 200px !important;
+    margin: 0 auto !important;
+}
