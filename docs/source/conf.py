@@ -101,7 +101,7 @@ exclude_patterns = [
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "sphinxawesome_theme"
-# html_theme = "connestack"
+# html_theme = "pydata_sphinx_theme"
 
 html_title = "Training village"
 
@@ -124,6 +124,7 @@ html_title = "Training village"
 #         "text": f"{project} v{release}",
 #     },
 # }
+
 
 github_icon = (
     '<svg height="26px" style="margin-top:-2px;display:inline" '
@@ -154,6 +155,8 @@ github_icon = (
 html_theme_options = {
     "logo_light": "_static/favicon.svg",
     "logo_dark": "_static/favicon-white.svg",
+    "html_sidebars": {"**": []},
+    "globaltoc_includehidden": True,
     "awesome_external_links": True,
     "extra_header_link_icons": {
         "repository on GitHub": {
@@ -163,6 +166,14 @@ html_theme_options = {
     },
 }
 html_permalinks = False
+
+# html_theme_options = {
+#     "collapse_navigation": False,
+#     "sticky_navigation": False,
+#     "navigation_depth": 4,
+#     "titles_only": False,
+# }
+
 
 # Redirect the webpage to another URL
 # Sphinx will create the appropriate CNAME file in the build directory
@@ -177,6 +188,7 @@ sitemap_url_scheme = "{link}"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.svg"
+html_css_files = ["custom.css"]
 
 # Ignore links and anchors
 linkcheck_ignore = [
