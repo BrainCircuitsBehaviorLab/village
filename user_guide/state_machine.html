@@ -15,20 +15,24 @@
             content="black" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Hardware Technical Details | Training village</title>
+        <title>System State Machine | Training village</title>
         <meta property="og:title"
-            content="Hardware Technical Details | Training village" />
+            content="System State Machine | Training village" />
         <meta name="twitter:title"
-            content="Hardware Technical Details | Training village" />
+            content="System State Machine | Training village" />
         <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8d216cef" />
         <link rel="stylesheet" type="text/css" href="../_static/theme.css?v=edd7d3d2" />
         <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=04772280" />
-        <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/how_does_it_work/hardware_technical_details.html" />
+        <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/state_machine.html" />
         <link rel="icon" href="../_static/favicon.svg" />
         <link rel="search" title="Search"
             href="../search.html" />
         <link rel="index" title="Index"
             href="../genindex.html" />
+        <link rel="next" title="Maintenance"
+            href="maintenance.html" />
+        <link rel="prev" title="Project Structure"
+            href="project_structure.html" />
 
         <script>
     <!-- Prevent Flash of wrong theme -->
@@ -127,19 +131,22 @@
     <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/index.html">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/project_structure.html">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure Remote Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../how_to_build/index.html">How to Build the Training Village</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
@@ -156,6 +163,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.video.html">video</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Resources</a></li>
 </ul>
 
 </nav>
@@ -190,13 +198,16 @@
     </svg>
   </a>
   
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
+       href="index.html">User Guide</a>
+    
 <div class="mr-1">/</div><span aria-current="page"
-        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Hardware Technical Details</span>
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">System State Machine</span>
 </nav>
 
     <div id="content" role="main">
-      <section class="tex2jax_ignore mathjax_ignore" id="hardware-technical-details">
-<h1>Hardware Technical Details</h1>
+      <section class="tex2jax_ignore mathjax_ignore" id="system-state-machine">
+<h1>System State Machine</h1>
 </section>
 
     </div></div>
@@ -213,7 +224,7 @@
 </footer>
             </div>
             
-            <script src="../_static/documentation_options.js?v=7ca55efd"></script>
+            <script src="../_static/documentation_options.js?v=09ac67af"></script>
             <script src="../_static/doctools.js?v=9bcbadda"></script>
             <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
             <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>

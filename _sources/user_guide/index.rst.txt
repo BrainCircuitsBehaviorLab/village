@@ -8,7 +8,10 @@ User Guide
     getting_started.md
     animal_procedures.md
     GUI.md
+    remote.md
+    telegram.md
     project_structure.md
+    state_machine.md
     maintenance.md
     alarms.md
 
@@ -19,7 +22,13 @@ User Guide
    :parser: myst_parser.sphinx_
 .. include:: GUI.md
    :parser: myst_parser.sphinx_
+.. include:: remote.md
+   :parser: myst_parser.sphinx_
+.. include:: telegram.md
+   :parser: myst_parser.sphinx_
 .. include:: project_structure.md
+   :parser: myst_parser.sphinx_
+.. include:: state_machine.md
    :parser: myst_parser.sphinx_
 .. include:: maintenance.md
    :parser: myst_parser.sphinx_

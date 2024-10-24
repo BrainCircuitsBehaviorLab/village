@@ -18,7 +18,7 @@
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
 <link href="getting_started.html" rel="next" title="Getting Started"/>
-<link href="../index.html" rel="prev" title="What is Training Village?"/>
+<link href="../index.html" rel="prev" title="What is the Training Village?"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
       const userPreference = localStorage.getItem('darkMode');
@@ -86,14 +86,17 @@
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure Remote Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../how_to_build/index.html">How to Build the Training Village<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
@@ -110,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.video.html">video</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Resources</a></li>
 </ul>
 </nav>
 </div>
@@ -162,6 +166,12 @@ After that, open a terminal and run:</p>
 <img alt="Main Training village screen" src="_static/images/main_screen.png"/></p>
 <p>There is a menu in the top, lets start by configuring the settings.</p>
 </section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="configure-remote-access">
+<h2>Configure Remote Access</h2>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="create-a-telegram-bot">
+<h2>Create a Telegram Bot</h2>
 </section>
 <section id="project-structure">
 <h2>Project Structure</h2>
@@ -228,6 +238,9 @@ If you try to run this task as-is, you will encounter an error indicating that c
 </span></code></pre></div>
 </div>
 </section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="system-state-machine">
+<h2>System State Machine</h2>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="maintenance">
 <h2>Maintenance</h2>
@@ -377,11 +390,14 @@ If you try to run this task as-is, you will encounter an error indicating that c
 <li><a :data-current="activeSection === '#first-boot-configuration'" class="reference internal" href="#first-boot-configuration">First Boot Configuration</a></li>
 </ul>
 </li>
+<li><a :data-current="activeSection === '#configure-remote-access'" class="reference internal" href="#configure-remote-access">Configure Remote Access</a></li>
+<li><a :data-current="activeSection === '#create-a-telegram-bot'" class="reference internal" href="#create-a-telegram-bot">Create a Telegram Bot</a></li>
 <li><a :data-current="activeSection === '#project-structure'" class="reference internal" href="#project-structure">Project Structure</a><ul>
 <li><a :data-current="activeSection === '#code'" class="reference internal" href="#code">Code</a></li>
 <li><a :data-current="activeSection === '#tasks'" class="reference internal" href="#tasks">Tasks</a></li>
 </ul>
 </li>
+<li><a :data-current="activeSection === '#system-state-machine'" class="reference internal" href="#system-state-machine">System State Machine</a></li>
 <li><a :data-current="activeSection === '#maintenance'" class="reference internal" href="#maintenance">Maintenance</a><ul>
 <li><a :data-current="activeSection === '#daily'" class="reference internal" href="#daily">Daily</a></li>
 <li><a :data-current="activeSection === '#weekly'" class="reference internal" href="#weekly">Weekly</a></li>
@@ -408,7 +424,7 @@ If you try to run this task as-is, you will encounter an error indicating that c
 </div>
 </footer>
 </div>
-<script src="../_static/documentation_options.js?v=7ca55efd"></script>
+<script src="../_static/documentation_options.js?v=09ac67af"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>

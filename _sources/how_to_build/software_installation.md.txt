@@ -1,5 +1,8 @@
 # Software Installation
 
+You can download a working ISO image containing the operating system (Raspberry Pi OS) and a pre-installed version of all the necessary libraries and Python code here (link).
+Follow the instructions in this page in case you prefer to install everything manually.
+
 ## What you need
 
 - Raspberry Pi 5 - 8GB

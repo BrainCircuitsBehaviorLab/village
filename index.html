@@ -7,9 +7,9 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>What is Training Village? | Training village</title>
-<meta content="What is Training Village? | Training village" property="og:title"/>
-<meta content="What is Training Village? | Training village" name="twitter:title"/>
+<title>What is the Training Village? | Training village</title>
+<meta content="What is the Training Village? | Training village" property="og:title"/>
+<meta content="What is the Training Village? | Training village" name="twitter:title"/>
 <link href="_static/pygments.css?v=8d216cef" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=edd7d3d2" rel="stylesheet" type="text/css"/>
 <link href="_static/custom.css?v=04772280" rel="stylesheet" type="text/css"/>
@@ -85,14 +85,17 @@
 <li class="toctree-l2"><a class="reference internal" href="user_guide/getting_started.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/remote.html">Configure Remote Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/project_structure.html">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/state_machine.html">System State Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="how_to_build/index.html">How to Build the Training Village<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="how_to_build/list_of_parts.html">List of parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_build/assembly_instructions.html">Assembly instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
@@ -109,6 +112,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api_generated/village.video.html">video</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources</a></li>
 </ul>
 </nav>
 </div>
@@ -123,16 +127,10 @@
 <div class="w-full min-w-0 mx-auto">
 <div id="content" role="main">
 
-<section id="what-is-training-village">
-<h1>What is Training Village?</h1>
-<p>The Training Village is a system designed for the automated training of rodents.
-It allows animals to live in the system 24/7 and access a behavioral box to perform
-tasks at any time, day or night. Users can either design their own training protocols
-or use one of the available ones (e.g., 2AFC).
-The system monitors the animals through two cameras—one in the entry corridor and
-another inside the behavioral box. Remote access is available at any time to check
-on the system’s status. Additionally, a configurable alert system integrated with
-Telegram allows users to receive real-time notifications regarding system conditions.</p>
+<section id="what-is-the-training-village">
+<h1>What is the Training Village?</h1>
+<p>The Training Village is a system designed for the automated training of rodents. It allows animals to live in the system 24/7 and access a behavioral box to perform tasks at any time, day or night. Users can either design their own training protocols or use one of the available ones (e.g., 2AFC).
+The system monitors the animals through two cameras—one in the entry corridor and another inside the behavioral box. Remote access is available at any time to check on the system’s status. Additionally, a configurable alert system integrated with Telegram allows users to receive real-time notifications regarding system conditions.</p>
 <div class="line-block">
 <div class="line"><br/></div>
 </div>
@@ -144,45 +142,31 @@ Telegram allows users to receive real-time notifications regarding system condit
 <h1>How Does It Work?</h1>
 <a class="reference internal image-reference" href="_images/training_village.png"><img alt="Diagram" class="align-center" src="_images/training_village.png" style="width: 640px;"/>
 </a>
-<p>The system is composed of several key components: the housing where the animals live,
-the behavioral box where tasks are performed, and the corridor that regulates access
-to the behavioral box.</p>
-<p>The Housing: The animals live together in one or more cages, which promotes better
-welfare. Any type of cage can be used, as long as it is connected to the corridor
-via a tube. We offer a solution with 2 or 4 cages connected by transparent acrylic
-tubes, which can serve different purposes (e.g., one cage with food, another
-for resting). Optionally, RFID sensors can be installed in the corridors connecting the
-cages (ECOHAB(link))) to gather more data on the animals’ social behavior.</p>
-<p>The Corridor: This is the central part of the system, consisting of a plastic corridor
-equipped with an RFID sensor, a weight scale, and a camera. Using a mechanism with two
-doors, animals can enter the behavioral box under certain conditions. The entire system
-is controlled by a Raspberry Pi, which handles sending and receiving signals from
-electronic devices, controls the cameras, and runs the software that controls the whole
-system.</p>
-<p>The Behavioral Box: Any type of behavioral box can be used. We provide two design
-options: one with auditory stimuli and three behavioral ports, and another with a
-touchscreen and one port. The system is designed to interact with behavioral boxes
-controlled by Bpod (using Python). Integration with other controllers, such as Bcontrol
-or Bonsai, is currently under development.</p>
+<p>The system is composed of several key components: the housing where the animals live, the behavioral box where tasks are performed, and the corridor that regulates access to the behavioral box.</p>
+<p><strong>The Housing:</strong> The animals live together in one or more cages, which promotes better welfare. Any type of cage can be used, as long as it is connected to the corridor via a tube. We offer a solution with 2 or 4 cages connected by transparent acrylic tubes, which can serve different purposes (e.g., one cage with food, another for resting). Optionally, RFID sensors can be installed in the corridors connecting the cages (ECOHAB(link))) to gather more data on the animals’ social behavior.</p>
+<p><strong>The Behavioral Box:</strong> Any type of behavioral box can be used. We provide two design options: one with auditory stimuli and three behavioral ports, and another with a touchscreen and one port. The system is designed to interact with behavioral boxes
+controlled by Bpod (using Python). Integration with other controllers, such as Bcontrol or Bonsai, is currently under development.</p>
 <div class="line-block">
 <div class="line"><br/></div>
 <div class="line"><br/></div>
 </div>
 </section>
+<section id="the-corridor">
+<h1>The Corridor</h1>
+<p>This is the central part of the system, consisting of a plastic corridor equipped with an RFID sensor, a weight scale, and a camera. Using a mechanism with two doors, animals can enter the behavioral box under certain conditions. The entire system
+is controlled by a Raspberry Pi, which handles sending and receiving signals from electronic devices, controls the cameras, and runs the software that controls the whole system.
+Most of the elements in the mouse version of the corridor are 3D-printed, except for the doors and the corridor lid, which are made of white laser-cut acrylic. The design files are shared in the How to build the training village (link) section. We also share the rat version, which includes more laser-cut parts and fewer printed components due to its larger size and the increased strength required.</p>
+<a class="reference internal image-reference" href="_images/corridor.png"><img alt="Diagram" class="align-center" src="_images/corridor.png" style="width: 800px;"/>
+</a>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
 <section id="the-controller">
 <h1>The Controller</h1>
-<p>The software that controls the system must run reliably 24/7 while monitoring the
-animals, regulating their access to the behavioral box, initiating tasks, and
-updating data.</p>
-<p>We determined that the best option for running this system is the Raspberry Pi, due to
-its reliability, low power consumption, and cost-effectiveness. These mini-computers
-are designed to excel in tasks like these, come equipped with specialized video cameras,
-and can interact with a wide range of electronic devices.</p>
-<p>To simplify interaction with the hardware components, we have designed a custom
-Raspberry Pi HAT (Hardware Attached on Top). This HAT provides the necessary
-connectors to control two servo motors, an RFID reader, a weight sensor, and a
-temperature sensor. This setup ensures seamless device connectivity, delivering a
-plug-and-play experience.</p>
+<p>The software that controls the system must run reliably 24/7 while monitoring the animals, regulating their access to the behavioral box, initiating tasks, and updating data.</p>
+<p>We determined that the best option for running this system is the Raspberry Pi, due to its reliability, low power consumption, and cost-effectiveness. These mini-computers are designed to excel in tasks like these, come equipped with specialized video cameras, and can interact with a wide range of electronic devices.</p>
+<p>To simplify interaction with the hardware components, we have designed a custom Raspberry Pi HAT (Hardware Attached on Top). This HAT provides the necessary connectors to control two servo motors, an RFID reader, a weight sensor, and a temperature sensor. This setup ensures seamless device connectivity, delivering a plug-and-play experience.</p>
 <a class="reference internal image-reference" href="_images/raspberry_hat.png"><img alt="Diagram" class="align-center" src="_images/raspberry_hat.png" style="width: 640px;"/>
 </a>
 <div class="line-block">
@@ -191,19 +175,35 @@ plug-and-play experience.</p>
 </section>
 <section id="animal-entry-and-exit-logic">
 <h1>Animal Entry and Exit Logic</h1>
-<a class="reference internal image-reference" href="_images/entrances.png"><img alt="Entrance/exit" class="align-center" src="_images/entrances.png" style="width: 640px;"/>
+<a class="reference internal image-reference" href="_images/entrances.png"><img alt="Entrance/exit" class="align-center" src="_images/entrances.png" style="width: 800px;"/>
 </a>
 <div class="line-block">
 <div class="line"><br/></div>
 </div>
+</section>
+<section id="open-source-project-develop-by">
+<h1>Open Source Project Develop by</h1>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<a href="https://braincircuitsbehavior.org" style="color:#00008B; font-size:20px; font-weight:normal;
+font-family:'Futura', sans-serif; text-decoration:none;">
+BRAIN CIRCUITS AND BEHAVIOR LAB
+</a><div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p>Contact: <a class="reference external" href="mailto:marinraf%40gmail.com" rel="nofollow noopener">marinraf<span>@</span>gmail<span>.</span>com<svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></p>
+<p>Training Village is an open-source project. You can find all the code in our <a class="reference external" href="https://github.com/BrainCircuitsBehaviorLab/village/" rel="nofollow noopener">GitHub repository<svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a> and all the necessary resources in the <a class="reference internal" href="resources.html#resources"><span class="std std-ref">resources section</span></a>.</p>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
 <li></li>
 <li><a :data-current="activeSection === '#how-does-it-work'" class="reference internal" href="#how-does-it-work">How Does It Work?</a></li>
+<li><a :data-current="activeSection === '#the-corridor'" class="reference internal" href="#the-corridor">The Corridor</a></li>
 <li><a :data-current="activeSection === '#the-controller'" class="reference internal" href="#the-controller">The Controller</a></li>
 <li><a :data-current="activeSection === '#animal-entry-and-exit-logic'" class="reference internal" href="#animal-entry-and-exit-logic">Animal Entry and Exit Logic</a></li>
+<li><a :data-current="activeSection === '#open-source-project-develop-by'" class="reference internal" href="#open-source-project-develop-by">Open Source Project Develop by</a></li>
 </ul>
 </div>
 </aside>
@@ -217,7 +217,7 @@ plug-and-play experience.</p>
 </div>
 </footer>
 </div>
-<script src="_static/documentation_options.js?v=7ca55efd"></script>
+<script src="_static/documentation_options.js?v=09ac67af"></script>
 <script src="_static/doctools.js?v=9bcbadda"></script>
 <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 <script defer="defer" src="_static/theme.js?v=1808ab49"></script>
