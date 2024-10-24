@@ -8,7 +8,10 @@ User Guide
     getting_started.md
     animal_procedures.md
     GUI.md
+    remote.md
+    telegram.md
     project_structure.md
+    state_machine.md
     maintenance.md
     alarms.md
 

@@ -14,7 +14,7 @@
    data_collection.md
    api_index
 
-What is Training Village?
+What is the Training Village?
 =========================================================
 
 The Training Village is a system designed for the automated training of rodents.
@@ -42,27 +42,40 @@ The system is composed of several key components: the housing where the animals 
 the behavioral box where tasks are performed, and the corridor that regulates access
 to the behavioral box.
 
-The Housing: The animals live together in one or more cages, which promotes better
+**The Housing:** The animals live together in one or more cages, which promotes better
 welfare. Any type of cage can be used, as long as it is connected to the corridor
 via a tube. We offer a solution with 2 or 4 cages connected by transparent acrylic
 tubes, which can serve different purposes (e.g., one cage with food, another
 for resting). Optionally, RFID sensors can be installed in the corridors connecting the
 cages (ECOHAB(link))) to gather more data on the animals’ social behavior.
 
-The Corridor: This is the central part of the system, consisting of a plastic corridor
-equipped with an RFID sensor, a weight scale, and a camera. Using a mechanism with two
-doors, animals can enter the behavioral box under certain conditions. The entire system
-is controlled by a Raspberry Pi, which handles sending and receiving signals from
-electronic devices, controls the cameras, and runs the software that controls the whole
-system.
-
-The Behavioral Box: Any type of behavioral box can be used. We provide two design
+**The Behavioral Box:** Any type of behavioral box can be used. We provide two design
 options: one with auditory stimuli and three behavioral ports, and another with a
 touchscreen and one port. The system is designed to interact with behavioral boxes
 controlled by Bpod (using Python). Integration with other controllers, such as Bcontrol
 or Bonsai, is currently under development.
 
 |
+|
+
+The Corridor
+=========================================================
+This is the central part of the system, consisting of a plastic corridor
+equipped with an RFID sensor, a weight scale, and a camera. Using a mechanism with two
+doors, animals can enter the behavioral box under certain conditions. The entire system
+is controlled by a Raspberry Pi, which handles sending and receiving signals from
+electronic devices, controls the cameras, and runs the software that controls the whole
+system.
+Most of the elements in the mouse version of the corridor are 3D-printed, except for
+the doors and the corridor lid, which are made of white laser-cut acrylic. The design
+files are shared in the How to build the training village (link) section.
+We also share the rat version, which includes more laser-cut parts and fewer printed
+components due to its larger size and the increased strength required.
+
+.. image:: _static/corridor.png
+   :alt: Diagram
+   :width: 640px
+   :align: center
 |
 
 The Controller
@@ -88,11 +101,29 @@ plug-and-play experience.
    :align: center
 |
 
-Animal Entry and Exit Logic
-=========================================================
+
 
 .. image:: _static/entrances.png
    :alt: Entrance/exit
    :width: 640px
    :align: center
 |
+
+Open Source Project Develop by
+=========================================================
+
+|
+.. raw:: html
+
+   <a href="https://braincircuitsbehavior.org"
+   style="color:#00008B; font-size:20px; font-weight:normal;
+   font-family:'Futura', sans-serif; text-decoration:none;">
+   BRAIN CIRCUITS AND BEHAVIOR LAB
+   </a>
+|
+
+Contact: `marinraf@gmail.com <mailto:marinraf@gmail.com>`_
+
+Training Village is an open-source project. You can find all the code in our
+(`GitHub repository <https://braincircuitsbehaviorlab.github.io/village/>`_)
+and all the necessary resources in the (`resources section </resources.md>`_).
