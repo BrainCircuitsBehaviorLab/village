@@ -4,10 +4,17 @@ How to Build the Training Village
 
 .. toctree::
     :hidden:
-    :maxdepth: 2
+    :maxdepth: 1
 
-    assembly_instructions.md
-    electronics_instructions.md
     list_of_parts.md
+    assembly_instructions.md
     software_installation.md
-    software_launch.md
+
+
+
+.. include:: list_of_parts.md
+   :parser: myst_parser.sphinx_
+.. include:: assembly_instructions.md
+   :parser: myst_parser.sphinx_
+.. include:: software_installation.md
+   :parser: myst_parser.sphinx_

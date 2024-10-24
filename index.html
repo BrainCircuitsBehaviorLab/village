@@ -83,17 +83,16 @@
 <ul>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="user_guide/index.html">User Guide<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="user_guide/getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/animal_procedures.html">Animal procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/creating_a_protocol.html">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="how_to_build/index.html">How to Build the Training Village<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="how_to_build/assembly_instructions.html">Assembly instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_build/electronics_instructions.html">Electronic Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="how_to_build/list_of_parts.html">List of parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_to_build/assembly_instructions.html">Assembly instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
@@ -142,12 +141,9 @@ Telegram allows users to receive real-time notifications regarding system condit
 </div>
 </section>
 <section id="how-does-it-work">
-<h1>How does it work?</h1>
+<h1>How Does It Work?</h1>
 <a class="reference internal image-reference" href="_images/training_village.png"><img alt="Diagram" class="align-center" src="_images/training_village.png" style="width: 640px;"/>
 </a>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
 <p>The system is composed of several key components: the housing where the animals live,
 the behavioral box where tasks are performed, and the corridor that regulates access
 to the behavioral box.</p>
@@ -168,9 +164,13 @@ options: one with auditory stimuli and three behavioral ports, and another with 
 touchscreen and one port. The system is designed to interact with behavioral boxes
 controlled by Bpod (using Python). Integration with other controllers, such as Bcontrol
 or Bonsai, is currently under development.</p>
+<div class="line-block">
+<div class="line"><br/></div>
+<div class="line"><br/></div>
+</div>
 </section>
 <section id="the-controller">
-<h1>The controller</h1>
+<h1>The Controller</h1>
 <p>The software that controls the system must run reliably 24/7 while monitoring the
 animals, regulating their access to the behavioral box, initiating tasks, and
 updating data.</p>
@@ -203,8 +203,8 @@ plug-and-play experience.</p>
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
 <li></li>
-<li><a :data-current="activeSection === '#how-does-it-work'" class="reference internal" href="#how-does-it-work">How does it work?</a></li>
-<li><a :data-current="activeSection === '#the-controller'" class="reference internal" href="#the-controller">The controller</a></li>
+<li><a :data-current="activeSection === '#how-does-it-work'" class="reference internal" href="#how-does-it-work">How Does It Work?</a></li>
+<li><a :data-current="activeSection === '#the-controller'" class="reference internal" href="#the-controller">The Controller</a></li>
 <li><a :data-current="activeSection === '#animal-entry-and-exit-logic'" class="reference internal" href="#animal-entry-and-exit-logic">Animal Entry and Exit Logic</a></li>
 </ul>
 </div>
@@ -219,7 +219,7 @@ plug-and-play experience.</p>
 </div>
 </footer>
 </div>
-<script src="_static/documentation_options.js?v=228e43b5"></script>
+<script src="_static/documentation_options.js?v=6ff23841"></script>
 <script src="_static/doctools.js?v=9bcbadda"></script>
 <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 <script defer="defer" src="_static/theme.js?v=1808ab49"></script>

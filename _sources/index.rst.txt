@@ -3,7 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-
 .. toctree::
    :hidden:
    :maxdepth: 2
@@ -15,10 +14,8 @@
    data_collection.md
    api_index
 
-
-
 What is Training Village?
-=============================
+=========================================================
 
 The Training Village is a system designed for the automated training of rodents.
 It allows animals to live in the system 24/7 and access a behavioral box to perform
@@ -29,24 +26,17 @@ another inside the behavioral box. Remote access is available at any time to che
 on the system's status. Additionally, a configurable alert system integrated with
 Telegram allows users to receive real-time notifications regarding system conditions.
 
-
 |
-
 .. video:: _static/video.m4v
-
-
 |
 
-
-How does it work?
+How Does It Work?
 =========================================================
 
 .. image:: _static/training_village.png
    :alt: Diagram
    :width: 640px
    :align: center
-
-|
 
 The system is composed of several key components: the housing where the animals live,
 the behavioral box where tasks are performed, and the corridor that regulates access
@@ -72,9 +62,10 @@ touchscreen and one port. The system is designed to interact with behavioral box
 controlled by Bpod (using Python). Integration with other controllers, such as Bcontrol
 or Bonsai, is currently under development.
 
+|
+|
 
-
-The controller
+The Controller
 =========================================================
 The software that controls the system must run reliably 24/7 while monitoring the
 animals, regulating their access to the behavioral box, initiating tasks, and
@@ -91,19 +82,11 @@ connectors to control two servo motors, an RFID reader, a weight sensor, and a
 temperature sensor. This setup ensures seamless device connectivity, delivering a
 plug-and-play experience.
 
-
 .. image:: _static/raspberry_hat.png
    :alt: Diagram
    :width: 640px
    :align: center
-
 |
-
-
-
-
-
-
 
 Animal Entry and Exit Logic
 =========================================================
@@ -112,5 +95,4 @@ Animal Entry and Exit Logic
    :alt: Entrance/exit
    :width: 640px
    :align: center
-
 |

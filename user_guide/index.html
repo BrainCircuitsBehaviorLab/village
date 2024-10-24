@@ -84,17 +84,16 @@
 <ul class="current">
 <li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="current reference internal expandable" href="#">User Guide<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="creating_a_protocol.html">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../how_to_build/index.html">How to Build the Training Village<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../how_to_build/electronics_instructions.html">Electronic Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
@@ -136,8 +135,269 @@
 <section id="user-guide">
 <h1>User Guide</h1>
 
+<section class="tex2jax_ignore mathjax_ignore" id="getting-started">
+<h2>Getting Started</h2>
 </section>
-</div></div>
+<section class="tex2jax_ignore mathjax_ignore" id="animal-procedures">
+<h2>Animal Procedures</h2>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="using-the-gui">
+<h2>Using the GUI</h2>
+<section id="software-launch-and-configuration">
+<h3>Software Launch and Configuration</h3>
+<p>Now that you have your Training Village installed, let’s run it for first time and configure some settings.</p>
+</section>
+<section id="first-boot-configuration">
+<h3>First Boot Configuration</h3>
+<p>For the first time, connect the Raspberry Pi to a keyboard, mouse, and screen. For performance reasons, the screen resolution is set to 1280x720.
+Once the operating system boots, you should simply configure the internet connection.
+After that, open a terminal and run:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Run on terminal</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">run_village</span>
+</span></code></pre></div>
+</div>
+</div>
+<p>The following screen should appear:
+<img alt="Main Training village screen" src="_static/images/main_screen.png"/></p>
+<p>There is a menu in the top, lets start by configuring the settings.</p>
+</section>
+</section>
+<section id="project-structure">
+<h2>Project Structure</h2>
+<p>For training animals, the code and data are organized into projects. A project’s structure is automatically created when a new project is started.</p>
+<p>A folder is created for the project:
+/village/village_projects/name_of_the_project/</p>
+<p>Within this folder, there are two subfolders: /data and /code
+Let’s first explore how the code is organized:</p>
+<section id="code">
+<h3>Code</h3>
+<p>The training protocol consists of one or more Python scripts, each representing a task that the animals can perform. In addition to these scripts, a training script is required. The training script is run every time a subject finishes a task and contains the logic to either advance or regress the subject in their training based on their performance. This could involve changing the task or modifying its parameters.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Example 1</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">code/
+</span><span id="line-2">├── habituation.py
+</span><span id="line-3">├── lick_teaching.py
+</span><span id="line-4">├── task_simple.py
+</span><span id="line-5">├── final_task.py
+</span><span id="line-6">├── training_protocol.py
+</span></code></pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Example 2</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">code/
+</span><span id="line-2">├── follow_the_light.py
+</span><span id="line-3">├── training_protocol.py
+</span></code></pre></div>
+</div>
+</div>
+<p>In Example 1, there are several tasks corresponding to different training stages. Animals start with habituation, a simple task that helps them get used to the behavioral box. After one or two sessions, they move on to lick_teaching, where they learn to lick the behavioral ports. Once they have completed a sufficient number of trials, they progress to simple_task, a simplified version of the final task. When performance reaches an adequate level, they transition to final_task. The logic governing task progression is written in training_protocol.</p>
+<p>In Example 2, there is only one task, follow_the_light, but each time a subject finishes a session, training_protocol adjusts variables to increase the task’s difficulty.</p>
+<p>The user can choose either approach—or a combination of both—to organize the training as needed.</p>
+</section>
+<section id="tasks">
+<h3>Tasks</h3>
+<p>To create a task, a Python file is created, and within it, a class with the task’s name is defined, inheriting functionality from the generic Task class. This process is straightforward. Let’s look at an example:</p>
+<p>Within the folder: village/village_projects/demo_project/code/, we create the file simple_task.py with the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+</span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></code></pre></div>
+</div>
+<p>The task is named SimpleTask. It is initialized with <strong>init</strong>, and we acquire all the properties of the generic Task class using super().<strong>init</strong>(). The naming conventions follow Python standards: CamelCase for class names and lower_case for filenames and function names.
+If you try to run this task as-is, you will encounter an error indicating that certain methods must be implemented in your class. These methods are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">create_trial</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">after_trial</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">close</span></code></p></li>
+</ul>
+<p>We can implement these methods for now, even if they don’t perform any actions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+</span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="line-4">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-5">        <span class="k">return</span>
+</span><span id="line-6">    <span class="k">def</span> <span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-7">        <span class="k">return</span>
+</span><span id="line-8">    <span class="k">def</span> <span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-9">        <span class="k">return</span>
+</span><span id="line-10">    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-11">        <span class="k">return</span>
+</span></code></pre></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="maintenance">
+<h2>Maintenance</h2>
+<p class="lead">This section provides all the necessary information for maintaining and managing the system.</p>
+<p>This is a routine to maintain proper functioning and hygiene in the MV system. The main duties include:</p>
+<section id="daily">
+<h3>Daily</h3>
+<ul class="simple">
+<li><p>Check <a class="reference internal" href="alarms.html"><span class="std std-doc">Telegram alarms</span></a> and fix problems if required.</p></li>
+<li><p>Review [daily reports] to assess mice progression in the training.</p></li>
+</ul>
+</section>
+<section id="weekly">
+<h3>Weekly</h3>
+<ul class="simple">
+<li><p>Clean the behavioral box and corridor.</p></li>
+<li><p>Clean and change sucrose water inside the behavioral box.</p></li>
+</ul>
+</section>
+<section id="biweekly">
+<h3>Biweekly</h3>
+<ul class="simple">
+<li><p>Change citric acid bottles.</p></li>
+<li><p>Change cages and enrichment (check if there is enough food).<br/>
+<em>This can be done every 3 weeks if needed.</em></p></li>
+</ul>
+</section>
+<section id="monthly">
+<h3>Monthly</h3>
+<ul class="simple">
+<li><p>Clean the mask and remove droppings below it.</p></li>
+</ul>
+</section>
+<section id="occasionally">
+<h3>Occasionally</h3>
+<ul class="simple">
+<li><p>Manual water delivery to specific mice (when required).</p></li>
+<li><p>Water calibration (once every two months or if you suspect something is not working properly).</p></li>
+</ul>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="receiving-and-responding-to-telegram-alarms">
+<h2>Receiving and responding to Telegram Alarms</h2>
+<section id="interrogate-the-system">
+<h3>Interrogate the system</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/status</span> <span class="pre">‘hours’</span></code> → Summary of what happened in the behavioral box the last hours.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code> → Screenshot of the cameras’ recording.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/plot</span> <span class="pre">‘days’</span></code> → Gui plots.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/report</span> <span class="pre">‘hours</span> <span class="pre">days’</span></code> → status+cam+plot.</p></li>
+</ul>
+</section>
+<section id="alarms">
+<h3>Alarms</h3>
+
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
+<th class="head"><p><strong>Frequency</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Recommended Actions</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Check weight and water</strong></p></td>
+<td><p>Very frequent</p></td>
+<td><p>Triggered when a mouse weighs less than 50% basal weight or has drunk less than the threshold.</p></td>
+<td><p>- For weight: Check for intersession issues, manually weigh, assess health score, and review performance.  - For water: If below 600 µl for 2-3 days, supplement with 500-1000 µl manually.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mouse in box for ‘x’ seconds</strong></p></td>
+<td><p>Very frequent</p></td>
+<td><p>Mouse has been in the box for a long time.</p></td>
+<td><p>Connect remotely, play buzzer, open/close door. If no response &gt;5 hours, go in person. Check temperature.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mouse trapped in corridor</strong></p></td>
+<td><p>Frequent</p></td>
+<td><p>Two mice overlap in the doors’ zone, allowing task to start, or mouse escaped to corridor.</p></td>
+<td><p>Open door 1 remotely. If suspected escape, check corridor videos.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2 mice in box</strong></p></td>
+<td><p>Frequent</p></td>
+<td><p>System detects two mice inside the box.</p></td>
+<td><p>Verify via inner camera. If true, make them exit, delete session, and review videos. If false, check camera settings for overlap.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Animal on the floor</strong></p></td>
+<td><p>Very frequent</p></td>
+<td><p>Mouse has learned to go down to the floor of the box.</p></td>
+<td><p>If a regular explorer, ignore. If a new animal, check if it knows how to return. Manually help if needed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Few trials</strong></p></td>
+<td><p>Very frequent</p></td>
+<td><p>Indicates fewer trials than expected, common in new or poorly trained mice.</p></td>
+<td><p>- Well-trained mice: Check the behavioral box and task manually.  - New mice: Consider moving to an easier stage if not improving.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Last session ended</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>Session ended unexpectedly.</p></td>
+<td><p>- Check doors, RFID, and scale for issues.  - Ensure camera and script are running.  - Verify animal movement and room status.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Overdetections in ‘Session’</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>Abnormal number of photogate beam crosses detected.</p></td>
+<td><p>Check buzzer or photogate alignment. Adjust or replace components as needed.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Touchscreen not working for ‘Subject’</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>Touchscreen failure during session.</p></td>
+<td><p>Disconnect and reconnect the device. Restart PC if the issue persists.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Last heartbeat</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>PC is off or has lost internet connection.</p></td>
+<td><p>Go in person to check for power or network issues.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Bpod communication error</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>Communication error between the Bpod and the system.</p></td>
+<td><p>Usually can be ignored unless it becomes frequent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bpod not sending softcodes</strong></p></td>
+<td><p>Never happens</p></td>
+<td><p>Issue with Bpod softcode transmission.</p></td>
+<td><p>Ignore unless it starts happening frequently.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Bpod not sending serials</strong></p></td>
+<td><p>Never happens</p></td>
+<td><p>Issue with Bpod serial transmission.</p></td>
+<td><p>Ignore unless it starts happening frequently.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Ecohab not detecting</strong></p></td>
+<td><p>Not detected by alarm</p></td>
+<td><p>Antennas not detected by Ecohab.</p></td>
+<td><p>Restart Ecohab script, reconnect USB and power supply. Check antenna status.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#getting-started'" class="reference internal" href="#getting-started">Getting Started</a></li>
+<li><a :data-current="activeSection === '#animal-procedures'" class="reference internal" href="#animal-procedures">Animal Procedures</a></li>
+<li><a :data-current="activeSection === '#using-the-gui'" class="reference internal" href="#using-the-gui">Using the GUI</a><ul>
+<li><a :data-current="activeSection === '#software-launch-and-configuration'" class="reference internal" href="#software-launch-and-configuration">Software Launch and Configuration</a></li>
+<li><a :data-current="activeSection === '#first-boot-configuration'" class="reference internal" href="#first-boot-configuration">First Boot Configuration</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#project-structure'" class="reference internal" href="#project-structure">Project Structure</a><ul>
+<li><a :data-current="activeSection === '#code'" class="reference internal" href="#code">Code</a></li>
+<li><a :data-current="activeSection === '#tasks'" class="reference internal" href="#tasks">Tasks</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#maintenance'" class="reference internal" href="#maintenance">Maintenance</a><ul>
+<li><a :data-current="activeSection === '#daily'" class="reference internal" href="#daily">Daily</a></li>
+<li><a :data-current="activeSection === '#weekly'" class="reference internal" href="#weekly">Weekly</a></li>
+<li><a :data-current="activeSection === '#biweekly'" class="reference internal" href="#biweekly">Biweekly</a></li>
+<li><a :data-current="activeSection === '#monthly'" class="reference internal" href="#monthly">Monthly</a></li>
+<li><a :data-current="activeSection === '#occasionally'" class="reference internal" href="#occasionally">Occasionally</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#receiving-and-responding-to-telegram-alarms'" class="reference internal" href="#receiving-and-responding-to-telegram-alarms">Receiving and responding to Telegram Alarms</a><ul>
+<li><a :data-current="activeSection === '#interrogate-the-system'" class="reference internal" href="#interrogate-the-system">Interrogate the system</a></li>
+<li><a :data-current="activeSection === '#alarms'" class="reference internal" href="#alarms">Alarms</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</aside>
 </main>
 </div>
 </div><footer class="py-6 border-t border-border md:py-0">
@@ -148,7 +408,7 @@
 </div>
 </footer>
 </div>
-<script src="../_static/documentation_options.js?v=228e43b5"></script>
+<script src="../_static/documentation_options.js?v=6ff23841"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>

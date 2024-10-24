@@ -13,18 +13,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; | Training village</title>
-    <meta property="og:title" content="&lt;no title&gt; | Training village" />
-    <meta name="twitter:title" content="&lt;no title&gt; | Training village" />
+    <title>Project Structure | Training village</title>
+    <meta property="og:title" content="Project Structure | Training village" />
+    <meta name="twitter:title" content="Project Structure | Training village" />
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8d216cef" />
       <link rel="stylesheet" type="text/css" href="../_static/theme.css?v=edd7d3d2" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=04772280" />
-    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/how_to_build/software_launch.html" />
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/project_structure.html" />
       <link rel="icon" href="../_static/favicon.svg" />
         <link rel="search" title="Search" href="../search.html" />
         <link rel="index" title="Index" href="../genindex.html" />
-          <link rel="next" title="Data Collection Examples" href="../data_collection.html" />
-          <link rel="prev" title="Software Installation" href="software_installation.html" />
+          <link rel="next" title="Maintenance" href="maintenance.html" />
+          <link rel="prev" title="Using the GUI" href="GUI.html" />
 
     <script>
     <!-- Prevent Flash of wrong theme -->
@@ -117,21 +117,20 @@
     <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/index.html">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal procedures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/creating_a_protocol.html">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">How to Build the Training Village</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="assembly_instructions.html">Assembly instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="electronics_instructions.html">Electronic Instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="list_of_parts.html">List of parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="software_installation.html">Software Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_build/index.html">How to Build the Training Village</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../data_collection.html">Data Collection Examples</a></li>
@@ -181,15 +180,88 @@
   </a>
   
 <div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="index.html">How to Build the Training Village</a>
+       href="index.html">User Guide</a>
     
 <div class="mr-1">/</div><span aria-current="page"
-        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">&lt;no title&gt;</span>
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Project Structure</span>
 </nav>
 
     <div id="content" role="main">
-      
-    </div></div>
+      <section id="project-structure">
+<h1>Project Structure</h1>
+<p>For training animals, the code and data are organized into projects. A project’s structure is automatically created when a new project is started.</p>
+<p>A folder is created for the project:
+/village/village_projects/name_of_the_project/</p>
+<p>Within this folder, there are two subfolders: /data and /code
+Let’s first explore how the code is organized:</p>
+<section id="code">
+<h2>Code</h2>
+<p>The training protocol consists of one or more Python scripts, each representing a task that the animals can perform. In addition to these scripts, a training script is required. The training script is run every time a subject finishes a task and contains the logic to either advance or regress the subject in their training based on their performance. This could involve changing the task or modifying its parameters.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Example 1</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">code/
+</span><span id="line-2">├── habituation.py
+</span><span id="line-3">├── lick_teaching.py
+</span><span id="line-4">├── task_simple.py
+</span><span id="line-5">├── final_task.py
+</span><span id="line-6">├── training_protocol.py
+</span></code></pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Example 2</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">code/
+</span><span id="line-2">├── follow_the_light.py
+</span><span id="line-3">├── training_protocol.py
+</span></code></pre></div>
+</div>
+</div>
+<p>In Example 1, there are several tasks corresponding to different training stages. Animals start with habituation, a simple task that helps them get used to the behavioral box. After one or two sessions, they move on to lick_teaching, where they learn to lick the behavioral ports. Once they have completed a sufficient number of trials, they progress to simple_task, a simplified version of the final task. When performance reaches an adequate level, they transition to final_task. The logic governing task progression is written in training_protocol.</p>
+<p>In Example 2, there is only one task, follow_the_light, but each time a subject finishes a session, training_protocol adjusts variables to increase the task’s difficulty.</p>
+<p>The user can choose either approach—or a combination of both—to organize the training as needed.</p>
+</section>
+<section id="tasks">
+<h2>Tasks</h2>
+<p>To create a task, a Python file is created, and within it, a class with the task’s name is defined, inheriting functionality from the generic Task class. This process is straightforward. Let’s look at an example:</p>
+<p>Within the folder: village/village_projects/demo_project/code/, we create the file simple_task.py with the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+</span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></code></pre></div>
+</div>
+<p>The task is named SimpleTask. It is initialized with <strong>init</strong>, and we acquire all the properties of the generic Task class using super().<strong>init</strong>(). The naming conventions follow Python standards: CamelCase for class names and lower_case for filenames and function names.
+If you try to run this task as-is, you will encounter an error indicating that certain methods must be implemented in your class. These methods are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">create_trial</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">after_trial</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">close</span></code></p></li>
+</ul>
+<p>We can implement these methods for now, even if they don’t perform any actions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+</span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="line-4">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-5">        <span class="k">return</span>
+</span><span id="line-6">    <span class="k">def</span> <span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-7">        <span class="k">return</span>
+</span><span id="line-8">    <span class="k">def</span> <span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-9">        <span class="k">return</span>
+</span><span id="line-10">    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-11">        <span class="k">return</span>
+</span></code></pre></div>
+</div>
+</section>
+</section>
+
+    </div></div><aside id="right-sidebar" class="hidden text-sm xl:block">
+  <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+    <ul>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#tasks">Tasks</a></li>
+</ul>
+</div>
+</aside>
         </main>
       </div>
     </div><footer class="py-6 border-t border-border md:py-0">
@@ -203,7 +275,7 @@
 </footer>
   </div>
   
-    <script src="../_static/documentation_options.js?v=228e43b5"></script>
+    <script src="../_static/documentation_options.js?v=6ff23841"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>
