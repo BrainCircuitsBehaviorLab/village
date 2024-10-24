@@ -51,6 +51,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.autosectionlabel",
     "sphinxcontrib.video",
     "sphinx_sitemap",
     "myst_parser",

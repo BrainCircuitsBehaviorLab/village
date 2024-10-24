@@ -13,6 +13,7 @@
    how_to_build/index.md
    data_collection.md
    api_index
+   resources.md
 
 What is the Training Village?
 =========================================================
@@ -101,7 +102,8 @@ plug-and-play experience.
    :align: center
 |
 
-
+Animal Entry and Exit Logic
+=========================================================
 
 .. image:: _static/entrances.png
    :alt: Entrance/exit
@@ -125,5 +127,5 @@ Open Source Project Develop by
 Contact: `marinraf@gmail.com <mailto:marinraf@gmail.com>`_
 
 Training Village is an open-source project. You can find all the code in our
-(`GitHub repository <https://braincircuitsbehaviorlab.github.io/village/>`_)
-and all the necessary resources in the (`resources section </resources.md>`_).
+(`GitHub repository <https://github.com/BrainCircuitsBehaviorLab/village/>`_)
+and all the necessary resources in the :ref:`resources section<resources>`.

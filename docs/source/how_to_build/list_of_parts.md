@@ -1,4 +1,4 @@
-# List of parts
+# List of Parts
 
 Below are the detailed lists of what you'll need to print, purchase, and assemble.
 

@@ -22,7 +22,13 @@ User Guide
    :parser: myst_parser.sphinx_
 .. include:: GUI.md
    :parser: myst_parser.sphinx_
+.. include:: remote.md
+   :parser: myst_parser.sphinx_
+.. include:: telegram.md
+   :parser: myst_parser.sphinx_
 .. include:: project_structure.md
+   :parser: myst_parser.sphinx_
+.. include:: state_machine.md
    :parser: myst_parser.sphinx_
 .. include:: maintenance.md
    :parser: myst_parser.sphinx_
