@@ -211,11 +211,13 @@
 <p>For training animals, the code and data are organized into projects. A project’s structure is automatically created when a new project is started.</p>
 <p>A folder is created for the project:
 /village/village_projects/name_of_the_project/</p>
-<p>Within this folder, there are two subfolders: /data and /code
-Let’s first explore how the code is organized:</p>
+<p>Within this folder, there are two subfolders: /data and /code</p>
+<p>The first time you run training village, it will automatically create a project called ‘demo_project’. It will also clone the
+<a class="reference external" href="https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task">follow-the-light-task</a> repository, which contains a working example for a simple project. You can use it as a base to start creating your own tasks. (If you are code-savvy, you can dive right into it to explore the logic).</p>
+<p>Let’s first explore how the code is organized:</p>
 <section id="code">
 <h2>Code</h2>
-<p>The training protocol consists of one or more Python scripts, each representing a task that the animals can perform. In addition to these scripts, a training script is required. The training script is run every time a subject finishes a task and contains the logic to either advance or regress the subject in their training based on their performance. This could involve changing the task or modifying its parameters.</p>
+<p>The training protocol consists of one or more Python scripts, each representing a task that the animals can perform. In addition to these scripts, a training script is required (called ‘training_protocol.py’). The training script is run every time a subject finishes a task and contains the logic to either advance or regress the subject in their training based on their performance. This could involve changing the animal to a different task and/or modifying the parameters used in the task.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">Example 1</span></div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">code/
@@ -235,14 +237,14 @@ Let’s first explore how the code is organized:</p>
 </span></code></pre></div>
 </div>
 </div>
-<p>In Example 1, there are several tasks corresponding to different training stages. Animals start with habituation, a simple task that helps them get used to the behavioral box. After one or two sessions, they move on to lick_teaching, where they learn to lick the behavioral ports. Once they have completed a sufficient number of trials, they progress to simple_task, a simplified version of the final task. When performance reaches an adequate level, they transition to final_task. The logic governing task progression is written in training_protocol.</p>
-<p>In Example 2, there is only one task, follow_the_light, but each time a subject finishes a session, training_protocol adjusts variables to increase the task’s difficulty.</p>
+<p>In Example 1, there are several tasks corresponding to different training stages. For examples, animals start with ‘habituation’, a simple task that helps them get used to the behavioral box. After one or two sessions, they move on to ‘lick_teaching’, where they learn to lick the behavioral ports. Once they have completed a sufficient number of trials, they progress to ‘simple_task’, a simplified version of the final task. When performance reaches an adequate level, they transition to ‘final_task’. The logic governing task progression is written in ‘training_protocol.py’.</p>
+<p>In Example 2, there is only one task, follow_the_light, but each time a subject finishes a session, ‘training_protocol.py’ adjusts variables to increase the task’s difficulty.</p>
 <p>The user can choose either approach—or a combination of both—to organize the training as needed.</p>
 </section>
 <section id="tasks">
 <h2>Tasks</h2>
-<p>To create a task, a Python file is created, and within it, a class with the task’s name is defined, inheriting functionality from the generic Task class. This process is straightforward. Let’s look at an example:</p>
-<p>Within the folder: village/village_projects/demo_project/code/, we create the file simple_task.py with the following code:</p>
+<p>To create a task, create a Python file, and within it, a class with the task’s name, inheriting functionality from the generic <strong>Task</strong> class. This process is straightforward. Let’s look at an example:</p>
+<p>Within the folder: village/village_projects/demo_project/code/, we have created the file simple_task.py with the following code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
 </span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -294,7 +296,7 @@ If you try to run this task as-is, you will encounter an error indicating that c
 </footer>
             </div>
             
-            <script src="../_static/documentation_options.js?v=09ac67af"></script>
+            <script src="../_static/documentation_options.js?v=038450a7"></script>
             <script src="../_static/doctools.js?v=9bcbadda"></script>
             <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
             <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>
