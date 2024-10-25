@@ -423,3 +423,4 @@ class Manager:
 
 
 manager = Manager()
+print(manager.actions)

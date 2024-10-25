@@ -125,7 +125,7 @@ class Settings:
             elif type == Color:
                 return Color(str_value)
             elif type == Actions:
-                return Actions(str)
+                return Actions(str_value)
             elif type == Info:
                 return Info(str_value)
             elif type == Cycle:

@@ -1,18 +1,21 @@
 import os
 import time
 
+from village.log import log
 from village.settings import settings
 
 
 class Motor:
 
     def __init__(self, pin: int, angles: list[int]) -> None:
+        self.pin = 0
+        self.pinIdx = 0
+        self.pwmx = [0, 1, 2, 3, 2, 3]
+        self.enableFlag = False
         self.open_angle = angles[0]
         self.close_angle = angles[1]
         pins = [12, 13, 14, 15, 18, 19]
         afunc = ["a0", "a0", "a0", "a0", "a3", "a3"]
-        self.pwmx = [0, 1, 2, 3, 2, 3]
-        self.enableFlag = False
         if pin in pins:
             self.pin = pin
             self.pinIdx = pins.index(pin)
@@ -38,7 +41,7 @@ class Motor:
             self.enable(False)
         else:
             self.pin = 0
-            print("Error Invalid Pin")
+            log.error("Error Invalid Pin")
 
     def enable(self, flag) -> None:
         self.enableFlag = flag
@@ -68,7 +71,6 @@ class Motor:
                 self.onTime_ns, self.pwmx[self.pinIdx]
             )
         )
-        print("setting")
 
     def transform(self, value: int) -> int:
         # 0 to 180 degrees -> 500 to 2500 us
@@ -76,11 +78,9 @@ class Motor:
 
     def open(self) -> None:
         self.set(self.transform(self.open_angle))
-        print("opening")
 
     def close(self) -> None:
         self.set(self.transform(self.close_angle))
-        print("closing")
 
 
 motor1 = Motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
