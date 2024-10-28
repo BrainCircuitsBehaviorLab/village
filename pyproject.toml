@@ -13,9 +13,9 @@ dependencies = [
     "python-dateutil",
     "setuptools_scm",
     "sounddevice",
+    "furo",
     "python-telegram-bot",
     "scipy",
-    "furo",
 ]
 
 license = {text = "MIT"}
