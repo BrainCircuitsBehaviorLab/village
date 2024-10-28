@@ -5,8 +5,8 @@
 - [Code][CODE]
 
 
-[CORRIDOR]: https://example.com/corridor-files-link-TODO
-[TOUCHSCREEN]: https://example.com/touchscreen-files-link-TODO
-[CONNECTORS]: https://example.com/connectors-files-link-TODO
-[ISO]: https://example.com/iso-link-TODO
+[CORRIDOR]: /TODO-LINK.md
+[TOUCHSCREEN]: /TODO-LINK.md
+[CONNECTORS]: /TODO-LINK.md
+[ISO]: /TODO-LINK.md
 [CODE]: https://github.com/BrainCircuitsBehaviorLab/village

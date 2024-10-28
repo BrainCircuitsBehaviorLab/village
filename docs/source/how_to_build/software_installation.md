@@ -209,5 +209,5 @@ Now, whenever the Bpod device is connected to the specified USB port, it will co
 
 
 [Pi OS]: https://www.raspberrypi.com/software/
-[ISO]: https://example.com/ISO-link-TODO
+[ISO]: /TODO-LINK.md
 [UPDATE]: https://www.raspberrypi.com/documentation/computers/os.html

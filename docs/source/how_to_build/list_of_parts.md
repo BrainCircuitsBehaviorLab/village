@@ -21,7 +21,7 @@ parts **don't need supports** unless mentioned):
   - Door mechanisms
   - Enclosures for the electronics
 
-<!-- [Download all the 3D printing files here][3D files] -->
+[Download all the 3D printing files here][3D]
 
 
 
@@ -57,7 +57,7 @@ setup. Below is a basic list of what you'll need:
 Make sure to source these parts from reliable suppliers to ensure quality and fit.
 
 Feel free to follow the instructions in the
-[Assembly Instructions Section][Assembly Instructions]
+[Assembly Instructions Section][ASSEMBLY]
 for detailed guidance on how to assemble the Training Village system.
 
 
@@ -79,9 +79,9 @@ Here’s the list of all the electronic components you will need to purchase:
   - IR camera for monitoring
   - Power supply and cables
 
-[View the electronic components list here][Electronic components]
+[View the electronic components list here][ELECTRONIC]
 
 
-[3D files]: https://example.com/3d-files-link-TODO
-[Electronic components]: https://example.com/electronic-components-link-TODO
-[Assembly Instructions]: /how_to_build/assembly_instructions.md
+[3D]: /TODO-LINK.md
+[ELECTRONIC]: /TODO-LINK.md
+[ASSEMBLY]: /how_to_build/assembly_instructions.md

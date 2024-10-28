@@ -20,6 +20,6 @@ From your external computer or phone:
 There is also an alternative option for remote connection using **raspi-connect**; however, we currently do not recommend it due to some issues we encountered during testing, and suboptimal performance.
 
 [HELP]: https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3
-[REAL]: https://www.realvnc.com/es/
-[LITE]: https://www.realvnc.com/es/connect/plan/lite/
+[REAL]: https://www.realvnc.com/en/
+[LITE]: https://www.realvnc.com/en/connect/plan/lite/
 [INSTRUCTIONS]: https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription
