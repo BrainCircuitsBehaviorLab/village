@@ -84,4 +84,4 @@ Here’s the list of all the electronic components you will need to purchase:
 
 [3D files]: https://example.com/3d-files-link-TODO
 [Electronic components]: https://example.com/electronic-components-link-TODO
-[Assembly Instructions]: assembly_instructions.md
+[Assembly Instructions]: /how_to_build/assembly_instructions.md

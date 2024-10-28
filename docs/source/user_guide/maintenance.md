@@ -11,7 +11,7 @@ This is a routine to maintain proper functioning and hygiene in the MV system. T
 
 ### Daily
 
-- Check [Telegram alarms](../user_guide/alarms.md) and fix problems if required.
+- Check [Telegram alarms][ALARMS] and fix problems if required.
 - Review [daily reports] to assess mice progression in the training.
 
 ### Weekly
@@ -33,3 +33,5 @@ _This can be done every 3 weeks if needed._
 
 - Manual water delivery to specific mice (when required).
 - Water calibration (once every two months or if you suspect something is not working properly).
+
+[ALARMS]: /user_guide/alarms.md
