@@ -87,18 +87,21 @@ class Task:
         self.after_trial()
         self.close()
 
-    def run_one_trial_in_thread(self) -> None:
+    def run_in_thread(self, daemon=True) -> None:
         def test_run():
+            self.create_paths()
             self.start()
-            self.bpod.create_state_machine()
-            self.create_trial()
-            self.bpod.send_and_run_state_machine()
-            self.get_trial_data()
-            self.after_trial()
-            self.bpod.stop()
-            self.bpod.close()
+            while self.current_trial < self.settings.maximum_number_of_trials:
+                self.bpod.create_state_machine()
+                self.create_trial()
+                self.bpod.send_and_run_state_machine()
+                self.get_trial_data()
+                self.after_trial()
+                self.register_values()
+                self.current_trial += 1
+            self.disconnect_and_save()
 
-        self.process = Thread(target=test_run, daemon=True)
+        self.process = Thread(target=test_run, daemon=daemon)
         self.process.start()
         return
 
