@@ -15,6 +15,7 @@ dependencies = [
     "sounddevice",
     "python-telegram-bot",
     "scipy",
+    "furo",
 ]
 
 license = {text = "MIT"}
