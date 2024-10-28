@@ -1,0 +1,40 @@
+Task
+====
+
+.. currentmodule:: village.classes.task
+
+.. autoclass:: Task
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Task.__init__
+      ~Task.after_trial
+      ~Task.close
+      ~Task.create_paths
+      ~Task.create_trial
+      ~Task.disconnect_and_save
+      ~Task.get_name
+      ~Task.get_trial_data
+      ~Task.register_values
+      ~Task.run
+      ~Task.run_in_thread
+      ~Task.save_csv
+      ~Task.save_json
+      ~Task.start
+      ~Task.test
+      ~Task.transform_df
+   
+   
+
+   
+   
+   

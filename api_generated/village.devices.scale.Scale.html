@@ -1,138 +1,155 @@
+
 <!DOCTYPE html>
-<html lang="en"
-    data-content_root="../"
-    x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }"
-    x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
-    class="scroll-smooth"
-    :class="{'dark': darkMode === 'dark' || (darkMode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)}"
-    >
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta charset="utf-8" />
-        <meta name="theme-color" media="(prefers-color-scheme: light)"
-            content="white" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)"
-            content="black" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Scale | Training village</title>
-        <meta property="og:title"
-            content="Scale | Training village" />
-        <meta name="twitter:title"
-            content="Scale | Training village" />
-        <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8d216cef" />
-        <link rel="stylesheet" type="text/css" href="../_static/theme.css?v=edd7d3d2" />
-        <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=04772280" />
-        <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.devices.scale.Scale.html" />
-        <link rel="icon" href="../_static/favicon.svg" />
-        <link rel="search" title="Search"
-            href="../search.html" />
-        <link rel="index" title="Index"
-            href="../genindex.html" />
-        <link rel="next" title="temp_sensor"
-            href="village.devices.temp_sensor.html" />
-        <link rel="prev" title="get_scale"
-            href="village.devices.scale.get_scale.html" />
 
-        <script>
-    <!-- Prevent Flash of wrong theme -->
-      const userPreference = localStorage.getItem('darkMode');
-      let mode;
-      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        mode = 'dark';
-        document.documentElement.classList.add('dark');
-      } else {
-        mode = 'light';
-      }
-      if (!userPreference) {localStorage.setItem('darkMode', mode)}
-    </script>
-    </head>
-    <body x-data="{ showSidebar: false, showScrollTop: false }"
-        class="min-h-screen font-sans antialiased bg-background text-foreground"
-        :class="{ 'overflow-hidden': showSidebar }">
-        <div x-cloak x-show="showSidebar"
-            class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden"
-            @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content"
-                class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
-                Skip to content
-            </a><header
-  class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
-    <div class="hidden mr-4 md:flex">
-      <a href="../index.html" class="flex items-center mr-6">
-          <img width="24" height="24" class="mr-2 hidden dark:block" src="../_static/favicon-white.svg" alt="Logo" />
-        <img width="24" height="24" class="mr-2 dark:hidden" src="../_static/favicon.svg" alt="Logo" /><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">Training village</span>
-      </a></div><button
-      class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden"
-      type="button" @click="showSidebar = true">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" aria-hidden="true"
-        fill="currentColor">
-        <path
-          d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z" />
-      </svg>
-      <span class="sr-only">Toggle navigation menu</span>
-    </button>
-    <div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
-      <div class="flex-1 w-full md:w-auto md:flex-none"><form id="searchbox"
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Scale &#8212; Training village</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=04772280" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=d60d4c85"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_generated/village.devices.scale.Scale';</script>
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.devices.scale.Scale.html" />
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="temp_sensor" href="village.devices.temp_sensor.html" />
+    <link rel="prev" title="get_scale" href="village.devices.scale.get_scale.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
       action="../search.html"
-      method="get"
-      class="relative flex items-center group"
-      @keydown.k.window.meta="$refs.search.focus()">
-  <input x-ref="search"
-          name="q"
-          id="search-input"
-          type="search"
-          aria-label="Search the docs"
-          placeholder="Search ..."
-          class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" />
-  <kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
-    <span class="text-xs">⌘</span>
-    K
-  </kbd>
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form>
-      </div>
-      <nav class="flex items-center space-x-1">
-        <a href="https://github.com/BrainCircuitsBehaviorLab/village" title="Visit repository on GitHub" rel="noopener nofollow">
-          <div
-            class="inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md disabled:opacity-50 disabled:pointer-events-none hover:bg-accent hover:text-accent-foreground h-9 w-9">
-            <svg height="26px" style="margin-top:-2px;display:inline" viewBox="0 0 45 44" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.477.927C10.485.927.76 10.65.76 22.647c0 9.596 6.223 17.736 14.853 20.608 1.087.2 1.483-.47 1.483-1.047 0-.516-.019-1.881-.03-3.693-6.04 1.312-7.315-2.912-7.315-2.912-.988-2.51-2.412-3.178-2.412-3.178-1.972-1.346.149-1.32.149-1.32 2.18.154 3.327 2.24 3.327 2.24 1.937 3.318 5.084 2.36 6.321 1.803.197-1.403.759-2.36 1.379-2.903-4.823-.548-9.894-2.412-9.894-10.734 0-2.37.847-4.31 2.236-5.828-.224-.55-.969-2.759.214-5.748 0 0 1.822-.584 5.972 2.226 1.732-.482 3.59-.722 5.437-.732 1.845.01 3.703.25 5.437.732 4.147-2.81 5.967-2.226 5.967-2.226 1.185 2.99.44 5.198.217 5.748 1.392 1.517 2.232 3.457 2.232 5.828 0 8.344-5.078 10.18-9.916 10.717.779.67 1.474 1.996 1.474 4.021 0 2.904-.027 5.247-.027 5.96 0 .58.392 1.256 1.493 1.044C37.981 40.375 44.2 32.24 44.2 22.647c0-11.996-9.726-21.72-21.722-21.72" fill="currentColor"/></svg>
-          </div>
-        </a>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
-        <button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'"
-          class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9"
-          type="button"
-          aria-label="Color theme switcher">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
-            class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0">
-            <path
-              d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z" />
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
-            class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100">
-            <path
-              d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z" />
-          </svg>
-        </button>
-      </nav>
-    </div>
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
   </div>
-</header>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
 
-            <div class="flex-1"><div
-                    class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside id="left-sidebar"
-  class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky"
-  :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }">
+  
+    
+  
 
-    <a href="../index.html" class="!justify-start text-sm md:!hidden bg-background">
-        <img width="16" height="16" class="mr-2 hidden dark:block" src="../_static/favicon-white.svg" alt="Logo" />
-        <img width="16" height="16" class="mr-2 dark:hidden" src="../_static/favicon.svg" alt="Logo" /><span class="font-bold text-clip whitespace-nowrap">Training village</span>
-    </a>
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Training village - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Training village - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
 
-    <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
-      <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../user_guide_index.html">User Guide</a><ul>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/getting_started.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
@@ -143,73 +160,321 @@
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><ul class="simple">
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">Resources</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="village.devices.html">devices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.classes.html">classes</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../api_index.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="village.devices.html">devices</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.bpod.html">bpod</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.bpod.get_bpod.html">get_bpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.bpod.PyBpod.html">PyBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.bpod.Softcode.html">Softcode</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="village.devices.scale.html">scale</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="village.devices.scale.get_scale.html">get_scale</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">Scale</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.temp_sensor.html">temp_sensor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.classes.html">classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.collection.html">collection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.collection.Collection.html">Collection</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.enums.html">enums</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.protocols.html">protocols</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.protocols.CameraProtocol.html">CameraProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.protocols.EventProtocol.html">EventProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.protocols.PyBpodProtocol.html">PyBpodProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.protocols.ScaleProtocol.html">ScaleProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.protocols.TelegramBotProtocol.html">TelegramBotProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.protocols.TempSensorProtocol.html">TempSensorProtocol</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.settings_class.html">settings_class</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.subject.html">subject</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.subject.Subject.html">Subject</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.task.html">task</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.task.Event.html">Event</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.task.Output.html">Output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.task.Task.html">Task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.task.TaskError.html">village.classes.task.TaskError</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.training.html">training</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.training.Settings.html">Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.training.Training.html">Training</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.training.TrainingError.html">village.classes.training.TrainingError</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.pybpodapi.html">pybpodapi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.screen.html">screen</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.log.html">log</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.rt_plots.html">rt_plots</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.time_utils.html">time_utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.video.html">video</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.pybpodapi.html">pybpodapi</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.bpod.html">bpod</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.Bpod.html">Bpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.bpod_base.html">bpod_base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.bpod_com_protocol.html">bpod_com_protocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.bpod_com_protocol_modules.html">bpod_com_protocol_modules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.bpod_io.html">bpod_io</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.hardware.html">hardware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.non_blockingsocketreceive.html">non_blockingsocketreceive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.non_blockingstreamreader.html">non_blockingstreamreader</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod.settings.html">settings</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.bpod_modules.html">bpod_modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod_modules.bpod_module.html">bpod_module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.bpod_modules.bpod_modules.html">bpod_modules</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.com.html">com</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.com.arcom.html">arcom</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.com.messaging.html">messaging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.com.protocol.html">protocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.com.stderr_buffer.html">stderr_buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.com.stdout_buffer.html">stdout_buffer</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.exceptions.html">exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.exceptions.bpod_error.html">bpod_error</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="village.pybpodapi.protocol.html">protocol</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.session.html">session</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.session.Session.html">Session</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.session.StreamsWrapper.html">StreamsWrapper</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.state_machine.html">state_machine</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.state_machine.StateMachine.html">StateMachine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.state_machine.conditions.html">conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.state_machine.global_counters.html">global_counters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.state_machine.global_timers.html">global_timers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.state_machine.state_machine_base.html">state_machine_base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.state_machine.state_machine_builder.html">state_machine_builder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.state_machine.state_machine_runner.html">state_machine_runner</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.utils.html">utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.utils.csv.html">csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.utils.date_parser.html">date_parser</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.screen.html">screen</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.screen.behaviour_window.html">behaviour_window</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.screen.behaviour_window.BehaviourWindow.html">BehaviourWindow</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.log.html">log</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.log.Log.html">Log</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.rt_plots.html">rt_plots</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.rt_plots.RTPlots.html">RTPlots</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.time_utils.html">time_utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.video.html">video</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.video.Example.html">Example</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/api_generated/village.devices.scale.Scale.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Scale</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#village.devices.scale.Scale"><code class="docutils literal notranslate"><span class="pre">Scale</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#village.devices.scale.Scale.__init__"><code class="docutils literal notranslate"><span class="pre">Scale.__init__()</span></code></a></li>
 </ul>
 </li>
 </ul>
-
-</nav>
-      </div>
+            </nav>
+        </div>
     </div>
-    <button type="button" @click="showSidebar = false"
-      class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
-        stroke="none" class="h-4 w-4">
-        <path
-          d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z" />
-      </svg>
-    </button>
-  </aside>
-                        <main
-                            class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_500px]">
-<div class="w-full min-w-0 mx-auto">
-<nav aria-label="breadcrumbs"
-     class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
-  <a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground"
-     href="../index.html">
-    <span class="hidden md:inline">Training village</span>
-    <svg xmlns="http://www.w3.org/2000/svg"
-         height="18"
-         width="18"
-         viewBox="0 96 960 960"
-         aria-label="Home"
-         fill="currentColor"
-         stroke="none"
-         class="md:hidden">
-      <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z" />
-    </svg>
-  </a>
-  
-<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="../api_index.html">API</a>
-    
-<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="village.devices.html">devices</a>
-    
-<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="village.devices.scale.html">scale</a>
-    
-<div class="mr-1">/</div><span aria-current="page"
-        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Scale</span>
-</nav>
+</div>
 
-    <div id="content" role="main">
-      <section id="scale">
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="scale">
 <h1>Scale</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="village.devices.scale.Scale">
@@ -221,7 +486,7 @@
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
-<table class="autosummary longtable docutils align-default">
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#village.devices.scale.Scale.__init__" title="village.devices.scale.Scale.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(address)</p></td>
 <td><p></p></td>
@@ -249,46 +514,122 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p class="rubric">Attributes</p>
-<table class="autosummary longtable docutils align-default">
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
+</div>
 </dd></dl>
 
 </section>
 
-    </div></div><aside id="right-sidebar" class="hidden text-sm xl:block">
-  <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
-    <ul>
-<li><a class="reference internal" href="#village.devices.scale.Scale"><code class="docutils literal notranslate"><span class="pre">Scale</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.scale.Scale.__init__"><code class="docutils literal notranslate"><span class="pre">Scale.__init__()</span></code></a></li>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="village.devices.scale.get_scale.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">get_scale</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="village.devices.temp_sensor.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">temp_sensor</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#village.devices.scale.Scale"><code class="docutils literal notranslate"><span class="pre">Scale</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#village.devices.scale.Scale.__init__"><code class="docutils literal notranslate"><span class="pre">Scale.__init__()</span></code></a></li>
 </ul>
 </li>
 </ul>
-</div>
-</aside>
-                        </main>
-                    </div>
-                </div><footer class="py-6 border-t border-border md:py-0">
-    <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-      <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-        <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Rafael Marin, Balma Serrano, Hernando Vergara&nbsp;Built with <a class="font-medium underline underline-offset-4"
-    href="https://www.sphinx-doc.org"
-    rel="noreferrer">Sphinx 8.1.3</a></p>
-</div>
-</div>
-</footer>
-            </div>
+  </nav></div>
+
+</div></div>
+              
             
-            <script src="../_static/documentation_options.js?v=5f8e0446"></script>
-            <script src="../_static/doctools.js?v=9bcbadda"></script>
-            <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-            <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>
-            <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+          </div>
+          <footer class="bd-footer-content">
             
-        </body>
-    </html>
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Rafael Marin
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Rafael Marin, Balma Serrano, Hernando Vergara.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
