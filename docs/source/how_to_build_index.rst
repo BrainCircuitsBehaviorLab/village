@@ -5,9 +5,6 @@ How to Build the Training Village
     :hidden:
     :maxdepth: 1
 
-    how_to_build/list_of_parts.md
-    how_to_build/assembly_instructions.md
-    how_to_build/software_installation.md
 
 
 
