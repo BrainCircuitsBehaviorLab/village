@@ -135,20 +135,18 @@ github_icon = (
 html_logo = "_static/logo.png"
 
 html_theme_options = {
-    "sidebar_hide_name": True,
+    "secondary_sidebar_items": {
+        # Para quitar en todas las páginas el toc: "**": [],
+        # Para quitarlo en alguna página en concreto: nombre_de_la_pagina: []
+        "**": ["page-toc"],
+        "index": [],
+    },
+    "use_download_button": False, # True si quieres que aparezca el botón de descarga 
     # "logo_light": "_static/favicon.svg",
     # "logo_dark": "_static/favicon-white.svg",
     # "light_logo": "logo.png",
     # "dark_logo": "logo.png",
-    "html_sidebars": {"**": []},
     "globaltoc_includehidden": True,
-    "awesome_external_links": True,
-    "extra_header_link_icons": {
-        "repository on GitHub": {
-            "link": "https://github.com/BrainCircuitsBehaviorLab/village",
-            "icon": github_icon,
-        },
-    },
 }
 html_permalinks = False
 
