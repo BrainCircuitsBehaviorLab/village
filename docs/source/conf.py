@@ -101,8 +101,8 @@ exclude_patterns = [
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "sphinxawesome_theme"
-# html_theme = "pydata_sphinx_theme"
+# html_theme = "sphinxawesome_theme"
+html_theme = "furo"
 
 html_title = "Training village"
 
@@ -154,8 +154,11 @@ github_icon = (
 
 
 html_theme_options = {
+    "sidebar_hide_name": True,
     "logo_light": "_static/favicon.svg",
     "logo_dark": "_static/favicon-white.svg",
+    "light_logo": "logo.png",
+    "dark_logo": "logo.png",
     "html_sidebars": {"**": []},
     "globaltoc_includehidden": True,
     "awesome_external_links": True,

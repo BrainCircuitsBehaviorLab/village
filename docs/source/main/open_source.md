@@ -6,7 +6,7 @@ Training Village is an open-source project. You can find the code in our [GitHub
 Developed by:
 
 <a href="https://braincircuitsbehavior.org"
-style="color:#00008B; font-size:24px; font-weight:normal;
+style="color:#8B00FF; font-size:24px; font-weight:normal;
 font-family:'Futura', sans-serif; text-decoration:none;">
 BRAIN CIRCUITS AND BEHAVIOR LAB
 </a>
