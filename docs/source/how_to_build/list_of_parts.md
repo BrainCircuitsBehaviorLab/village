@@ -85,3 +85,5 @@ Here’s the list of all the electronic components you will need to purchase:
 [3D]: /TODO-LINK.md
 [ELECTRONIC]: /TODO-LINK.md
 [ASSEMBLY]: /how_to_build/assembly_instructions.md
+
+<br>

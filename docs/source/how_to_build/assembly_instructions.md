@@ -20,3 +20,5 @@ Your browser does not support viewing PDFs. Please download the PDF to view it.
 </details>
 
 [PDF instructions]: /_static/training-village-instructions.pdf
+
+<br>

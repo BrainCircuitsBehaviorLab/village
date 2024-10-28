@@ -19,3 +19,5 @@ The following screen should appear:
 ![Main Training village screen](../_static/main_screen.png)
 
 There is a menu in the top, lets start by configuring the settings.
+
+<br>

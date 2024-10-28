@@ -204,10 +204,8 @@ Now, whenever the Bpod device is connected to the specified USB port, it will co
 3. Navigate to folder `village` and type `pip install -e .`
 4. You’re ready to start the system by simply running the `main.py` file. Just execute: `python /home/raspberry/village/village/main.py`
 
-
-
-
-
 [Pi OS]: https://www.raspberrypi.com/software/
 [ISO]: /TODO-LINK.md
 [UPDATE]: https://www.raspberrypi.com/documentation/computers/os.html
+
+<br>

@@ -16,3 +16,5 @@ alarms from the bot and will be able to send commands to it.
 7. Start a conversation with `@username_to_id_bot` to obtain your ID, the chat ID and
 the ID of all the other users.
 8. Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)
+
+<br>

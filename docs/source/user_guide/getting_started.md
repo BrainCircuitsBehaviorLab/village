@@ -10,3 +10,5 @@ If you are using your own Raspberry Pi, click [here][SOFTWARE] for the software 
 [INSTRUCTIONS]: /how_to_build/assembly_instructions.md
 [PLANS]: /how_to_build/list_of_parts.md
 [SOFTWARE]: /how_to_build/software_installation.md
+
+<br>

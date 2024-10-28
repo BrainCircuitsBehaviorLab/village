@@ -5,3 +5,5 @@ Most of the elements in the mouse version of the corridor are 3D-printed, except
 
 
 ![Corridor](_static/corridor.png)
+
+<br>

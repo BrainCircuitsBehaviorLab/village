@@ -7,3 +7,5 @@ We determined that the best option for running this system is the Raspberry Pi, 
 To simplify interaction with the hardware components, we have designed a custom Raspberry Pi HAT (Hardware Attached on Top). This HAT provides the necessary connectors to control two servo motors, an RFID reader, a weight sensor, and a temperature sensor. This setup ensures seamless device connectivity, delivering a plug-and-play experience.
 
 ![controller](_static/raspberry_hat.png)
+
+<br>

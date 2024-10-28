@@ -23,3 +23,5 @@ There is also an alternative option for remote connection using **raspi-connect*
 [REAL]: https://www.realvnc.com/en/
 [LITE]: https://www.realvnc.com/en/connect/plan/lite/
 [INSTRUCTIONS]: https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription
+
+<br>

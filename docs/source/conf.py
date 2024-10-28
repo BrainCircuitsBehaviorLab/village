@@ -102,29 +102,9 @@ exclude_patterns = [
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 # html_theme = "sphinxawesome_theme"
-html_theme = "furo"
+html_theme = "sphinx_book_theme"
 
 html_title = "Training village"
-
-# Customize the theme
-# html_theme_options = {
-#     "icon_links": [
-#         {
-#             # Label for this link
-#             "name": "GitHub",
-#             # URL where the link will redirect
-#             "url": "https://github.com/BrainCircuitsBehaviorLab/village",  # required
-#             # Icon class (if "type": "fontawesome"),
-#             # or path to local image (if "type": "local")
-#             "icon": "fa-brands fa-github",
-#             # The type of image to be used (see below for details)
-#             "type": "fontawesome",
-#         }
-#     ],
-#     "logo": {
-#         "text": f"{project} v{release}",
-#     },
-# }
 
 
 github_icon = (
@@ -152,13 +132,14 @@ github_icon = (
     'fill="currentColor"/></svg>'
 )
 
+html_logo = "_static/logo.png"
 
 html_theme_options = {
     "sidebar_hide_name": True,
-    "logo_light": "_static/favicon.svg",
-    "logo_dark": "_static/favicon-white.svg",
-    "light_logo": "logo.png",
-    "dark_logo": "logo.png",
+    # "logo_light": "_static/favicon.svg",
+    # "logo_dark": "_static/favicon-white.svg",
+    # "light_logo": "logo.png",
+    # "dark_logo": "logo.png",
     "html_sidebars": {"**": []},
     "globaltoc_includehidden": True,
     "awesome_external_links": True,
