@@ -180,11 +180,11 @@
 {"filename": "api_generated/village.screen.behaviour_window.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.screen.behaviour_window.BehaviourWindow", "info": ""}
 {"filename": "api_generated/village.time_utils.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.time_utils.TimeUtils", "info": ""}
 {"filename": "api_generated/village.video.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.video.Example", "info": ""}
+{"filename": "resources/resources.md", "lineno": 5, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/village", "info": ""}
 {"filename": "user_guide/remote.md", "lineno": 5, "status": "working", "code": 0, "uri": "https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3", "info": ""}
 {"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "working", "code": 0, "uri": "https://github.com/DFRobot/DFRobot_HX711_I2C", "info": ""}
-{"filename": "user_guide/project_structure.md", "lineno": 10, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task", "info": ""}
 {"filename": "index.rst", "lineno": 14, "status": "unchecked", "code": 0, "uri": "mailto:marinraf@gmail.com", "info": ""}
+{"filename": "user_guide/project_structure.md", "lineno": 10, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task", "info": ""}
 {"filename": "index.rst", "lineno": 3, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/village/", "info": ""}
-{"filename": "resources/resources.md", "lineno": 5, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/village", "info": ""}
 {"filename": "user_guide/remote.md", "lineno": 7, "status": "working", "code": 0, "uri": "https://www.realvnc.com/en/", "info": ""}
 {"filename": "user_guide/remote.md", "lineno": 10, "status": "working", "code": 0, "uri": "https://www.realvnc.com/en/connect/plan/lite/", "info": ""}
