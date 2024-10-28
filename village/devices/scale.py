@@ -16,8 +16,8 @@ from village.settings import settings
 
 class Scale(ScaleProtocol):
 
-    def __init__(self) -> None:
-        self.I2C_ADDR = 0x64  # I2C device address
+    def __init__(self, address: str) -> None:
+        self.I2C_ADDR = int(address, 16)
         self.REG_DATA_GET_RAM_DATA = 0x66  # Get sensor raw data
         self.rxbuf = [0, 0, 0, 0]
         self.bus = 1
@@ -78,9 +78,9 @@ class Scale(ScaleProtocol):
         return self.rxbuf
 
 
-def get_scale() -> ScaleProtocol:
+def get_scale(address: str) -> ScaleProtocol:
     try:
-        scale = Scale()
+        scale = Scale(address=address)
         log.info("Scale successfully initialized")
         return scale
     except Exception:
@@ -88,4 +88,4 @@ def get_scale() -> ScaleProtocol:
         return ScaleProtocol()
 
 
-scale = get_scale()
+scale = get_scale(settings.get("SCALE_ADDRESS"))

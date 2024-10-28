@@ -1,8 +1,8 @@
-# List of Parts
+## List of Parts
 
 Below are the detailed lists of what you'll need to print, purchase, and assemble.
 
-## 3D-Printed Parts
+### 3D-Printed Parts
 
 You'll need to 3D print the following parts to build the Mouse Village system. Make sure
 to use the provided STL files in the **original orientation** for accuracy (the
@@ -23,7 +23,9 @@ parts **don't need supports** unless mentioned):
 
 <!-- [Download all the 3D printing files here][3D files] -->
 
-## CNC Machined Parts
+
+
+### CNC Machined Parts
 
 Below are the CAD files for the parts that need to be CNC machined:
 
@@ -39,26 +41,8 @@ Below are the CAD files for the parts that need to be CNC machined:
   system without needing to handle them. They fit into a slot on each cage connector,
   preventing the mice from exiting when the tubes are disconnected.
 
-## Electronic Components
 
-Here’s the list of all the electronic components you will need to purchase:
-
-- **Sensors**:
-  - RFID reader
-  - Infrared beams for position detection
-- **Motors**:
-  - Motorized doors (for mouse sorting and chamber access)
-- **Microcontrollers**:
-  - Arduino (for controlling sorting and automation)
-- **Other Components**:
-  - Water reward pump
-  - Piezoelectric buzzer
-  - IR camera for monitoring
-  - Power supply and cables
-
-<!-- [View the electronic components list here][Electronic components] -->
-
-## Aluminium Extrusions and Tubes
+### Aluminium Extrusions and Tubes
 
 For the structural support and frame of the Mouse Village system, you will need
 aluminium extrusions and tubes. These provide durability and stability to the entire
@@ -76,6 +60,28 @@ Feel free to follow the instructions in the
 [Assembly Instructions Section][Assembly Instructions]
 for detailed guidance on how to assemble the Training Village system.
 
-<!-- [3D files]: https://example.com/3d-files-link -->
-<!-- [Electronic components]: https://example.com/electronic-components-link -->
-[Assembly Instructions]: ../_static/training-village-instructions.pdf
+
+
+### Electronic Components
+
+Here’s the list of all the electronic components you will need to purchase:
+
+- **Sensors**:
+  - RFID reader
+  - Infrared beams for position detection
+- **Motors**:
+  - Motorized doors (for mouse sorting and chamber access)
+- **Microcontrollers**:
+  - Arduino (for controlling sorting and automation)
+- **Other Components**:
+  - Water reward pump
+  - Piezoelectric buzzer
+  - IR camera for monitoring
+  - Power supply and cables
+
+[View the electronic components list here][Electronic components]
+
+
+[3D files]: https://example.com/3d-files-link-TODO
+[Electronic components]: https://example.com/electronic-components-link-TODO
+[Assembly Instructions]: assembly_instructions.md

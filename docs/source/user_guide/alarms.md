@@ -1,13 +1,13 @@
-# Receiving and responding to Telegram Alarms
+## Receiving and responding to Telegram Alarms
 
-## Interrogate the system
+### Interrogate the system
 
 - `/status ‘hours’` → Summary of what happened in the behavioral box the last hours.
 - `/cam` → Screenshot of the cameras’ recording.
 - `/plot ‘days’` → Gui plots.
 - `/report ‘hours days’` → status+cam+plot.
 
-## Alarms
+### Alarms
 <!--
 ### ALARM: check weight and water
 

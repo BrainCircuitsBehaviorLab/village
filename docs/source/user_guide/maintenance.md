@@ -1,4 +1,4 @@
-# Maintenance
+## Maintenance
 
 ```{eval-rst}
 .. rst-class:: lead
@@ -9,27 +9,27 @@
 
 This is a routine to maintain proper functioning and hygiene in the MV system. The main duties include:
 
-## Daily
+### Daily
 
 - Check [Telegram alarms](../user_guide/alarms.md) and fix problems if required.
 - Review [daily reports] to assess mice progression in the training.
 
-## Weekly
+### Weekly
 
 - Clean the behavioral box and corridor.
 - Clean and change sucrose water inside the behavioral box.
 
-## Biweekly
+### Biweekly
 
 - Change citric acid bottles.
 - Change cages and enrichment (check if there is enough food).\
 _This can be done every 3 weeks if needed._
 
-## Monthly
+### Monthly
 
 - Clean the mask and remove droppings below it.
 
-## Occasionally
+### Occasionally
 
 - Manual water delivery to specific mice (when required).
 - Water calibration (once every two months or if you suspect something is not working properly).

@@ -1,9 +1,11 @@
-# Software Installation
+## Software Installation
 
-You can download a working ISO image containing the operating system (Raspberry Pi OS) and a pre-installed version of all the necessary libraries and Python code here (link).
-Follow the instructions in this page in case you prefer to install everything manually.
+You can download a ready-to-use ISO image containing the operating system (Raspberry Pi OS) along with all necessary libraries and Python code pre-installed [here][ISO].
 
-## What you need
+Follow the instructions on this page if you prefer a manual installation. The process can be challenging, so proceed only if you have a basic understanding of Linux distributions and are comfortable using the terminal.
+
+
+### What You Need
 
 - Raspberry Pi 5 - 8GB
 - Fan
@@ -13,98 +15,83 @@ Follow the instructions in this page in case you prefer to install everything ma
 - Screen
 - Micro HDMI to HDMI cable
 - Power supply for Raspberry Pi
+- 2 Raspberry Pi Camera Module 3 Wide Noir
 - Ethernet cable (optional)
+- Raspberry Pi Dac Pro (optional)
+- 2 servo motors
+- RFID sensor
+- Weight sensor
+- Temperature sensor
 
-## Launch Raspberry Pi OS for the first time
+### Launch Raspberry Pi OS for the First Time
 
 1. Connect a keyboard, mouse, and screen to the Raspberry Pi.
 2. Connect the Ethernet cable if you are going to use an Ethernet connection.
 3. If your SD card has the OS preinstalled, jump to step 4.
-4. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi Software](https://www.raspberrypi.com/software/)
+4. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi OS][Pi OS]
 5. Insert the SD card and start the Raspberry Pi.
 6. Select your country and keyboard language and choose English as the general language.
-7. Select the user (pi) and password (you know it).
+7. Type `raspberry` as the username and choose the password you want.
 8. Select your Wi-Fi or Ethernet connection.
 9. Choose your preferred web browser (Chromium).
 10. Select "Yes" when asked to update software (if you have your internet connection ready).
 
-## Sound settings
 
-- `sudo apt-get install pulseaudio`  I think this one is not necessary
-- `sudo apt-get install libportaudio2`
+### Updating the System
 
-## Screen settings and I2C communication
+1. Make sure you have internet connection and then update the software. [Detailed instructions][UPDATE].
 
-- `sudo raspi-config`
-  - Go to **Display Options** and disable blanking.
-
-  Optional if you have a touch screen: IS THIS TRUE?
-  - Go to **Advanced Options** and select X11 (instead of Wayland).
-
-  - Go to **Interface Options** and enable I2C.
-
-  Modifying options in raspi-config usually is the same that modifying or adding lines to **/boot/firmware/config.txt**
-
-### If you are using one screen only
-
-- `sudo nano /boot/firmware/cmdline.txt`
-  - Add the text: `vc4.fvc4.force_hotplug=1`
-
-### If you are using 2 screens
-
-- `sudo nano /boot/firmware/cmdline.txt`
-  - Add the text: `vc4.fvc4.force_hotplug=3` (1 for using the first HDMI, 2 for using the second one, and 3 to use both of them).
-
-## Updating the system and installing software
-
-Update software, instructions from [here](https://www.raspberrypi.com/documentation/computers/os.html):
-
-```bash
+```
 sudo apt update
 sudo apt full-upgrade
 ```
 
-Install OpenCV (library to manage video):
 
-```bash
+### Installing Needed Libraries
+1. Install OpenCV (library to manage video):
+
+```
 sudo apt install -y python3-opencv
 sudo apt install -y opencv-data
 ```
 
-Install VS Code (optional):
+2. Install sound libraries: TODO check if pulseaudio is really needed.
 
-```bash
-sudo apt install code
+```
+sudo apt-get install pulseaudio
+sudo apt-get install libportaudio2
 ```
 
-- Enable auto-login by clicking on **Preferences** -> **Raspberry Pi Configuration** -> **Auto login**.
-- Add CPU monitors to the toolbar: Right-click on the toolbar, select **Add/Remove Panel Items**, and click **Add**. Select **CPU Temperature Monitor** and **CPU Usage monitor**.
-- Change the resolution of the screen (or screens) to 1280 x 720: **Preferences** -> **Screen Configuration**.
+3. Install PyQT5 multimedia
 
-## PyQT5 multimedia
-
-```bash
+```
 sudo apt install python3-pyqt5.qtmultimedia
 sudo apt install libqt5multimedia5-plugins
 ```
 
-## Setting .env environment
+4. Install VS Code (optional):
 
-Create a .env environment with all the packages installed in the general Python:
+```
+sudo apt install code
+```
 
-```bash
+### Creating a Python Environment and Installing pip Libraries
+1. Create a `.env` environment that includes all the packages installed in the global
+Python environment:
+
+```
 python -m venv --system-site-packages ~/.env
 ```
 
-Activate it:
+2. Activate it:
 
-```bash
+```
 source ~/.env/bin/activate
 ```
 
-Install needed libraries with pip:
+3. Install needed libraries with pip:
 
-```bash
+```
 pip install python-dateutil
 pip install setuptools_scm
 pip install sounddevice
@@ -112,11 +99,66 @@ pip install python-telegram-bot
 pip install scipy
 ```
 
-## Accessing the pins by hardware (for servos) and using pin uart to communicate
+### Changing Preferences
+1. Enable auto-login by clicking on **Preferences** -> **Raspberry Pi Configuration** -> **Auto login**.
+2. Add CPU monitors to the toolbar: Right-click on the toolbar, select **Add/Remove Panel Items**, and click **Add**. Select **CPU Temperature Monitor** and **CPU Usage monitor**.
 
-We need to change an option to be able to access the pins by hardware (faster and less jittery than accessing them by software):
+### Screen Settings
+1. Run the raspi-config.
 
-modify the **/boot/firmware/config.txt** file to include
+```
+sudo raspi-config
+```
+2. Go to **Display Options** and disable blanking.
+3. Go to **Advanced Options** and select X11 (instead of Wayland).
+
+Then, you need to configure the system to recognize a screen even if none is physically connected, so the software renders properly when accessed remotely. If you want to use an additional screen to present stimuli in the behavioral box, you need to set the system to work with two screens.
+
+4. Modify the file: `/boot/firmware/cmdline.txt`
+
+```
+sudo nano /boot/firmware/cmdline.txt
+```
+5. Add the following text: `vc4.fvc4.force_hotplug=1` if you are using only one screen,
+ or `vc4.fvc4.force_hotplug=3` if you are using two screens.
+
+Explanation of values: (1 makes the system operate as if a screen is connected to HDMI 1). (2 makes the system operate as if a screen is connected to HDMI 2). (3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2).
+
+6. Change the resolution of the screen (or screens) to 1280 x 720: **Preferences** ->
+ **Screen Configuration**.
+
+
+### I2C Communication
+
+The temperature sensor and the weight sensor are connected to the I2C pins of the Raspberry.
+1. First, activate the I2C communication:
+
+```
+sudo raspi-config
+```
+2. Go to **Interface Options** and enable I2C.
+
+The system is configured to work with address = 0x45 for the temperature sensor (DFRobot HX711) and address = 0x64 for the weight sensor (CQRobot SHT31). If you are using different models or if the devices are not recognized, follow these steps to verify that the addresses are correct:
+
+3. Connect the devices to the raspberry.
+4. Install the detection tools:
+```
+sudo apt-get install -y i2c-tools
+```
+5. Run the tools:
+```
+i2cdetect -y 1
+```
+6. Change the addresses in the python code by modifying the corresponding settings in
+`village/settings.py` (extra_settings).
+
+
+### Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication
+
+To access the pins via hardware (faster and less jittery than software access), and to allow the use of the UART Pin for communication with the sensors you need to change two settings:
+
+1. Edit the `/boot/firmware/config.txt` file to include the following:
+
 
 ```
 [all]
@@ -124,92 +166,48 @@ dtoverlay=pwm-2chan,pin=12,pin2=13,func=4,func2=4
 enable_uart=1
 ```
 
-## Configure remote access
 
-### Option 1: with RealVNC
 
-From your Raspberry Pi:
+### Udev Rules for Consistent USB Device Naming
 
-1. Go to the website and create an account: [RealVNC](https://www.realvnc.com/es/)
-2. Subscribe to Lite access (free access): [Lite Access](https://www.realvnc.com/es/connect/plan/lite/). Follow instructions [here](https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription) if you go around in a loop.
-3. Open the RealVNC server on the Raspberry Pi (it is automatically installed when you install Raspberry Pi OS) and configure it for your team.
-4. Go to **Device Access** on the RealVNC webpage and add your current device.
-5. Back in the RealVNC window, you should see a code that allows remote connections from other networks and an IP number that allows connection from the same network.
+When you connect your Bpod device to the Raspberry Pi, it’s assigned a file path in `/dev/`, typically named `ttyACM0`. However, this name may vary (ttyACM1, ttyACM2, etc.), especially if you have other USB devices connected. To ensure a consistent and recognizable name, you can create a symbolic link to your Bpod device.
 
-From your external computer or phone:
-
-1. Log in to the RealVNC webpage using your credentials.
-2. Install and open RealVNC Viewer on your external computer or phone.
-3. Connect to the Raspberry Pi using the RealVNC server's code if you are connecting from another network or the IP if you are connecting from the same network.
-
-### Option 2 (things are very slow with this): with raspi-connect
-
-1. Follow these instructions:
-<https://www.raspberrypi.com/news/raspberry-pi-connect/>
-
-## Udev rules
-
-Go to the rules folder:
-
+1. Navigate to the Udev rules folder where custom rules are stored:
 ```bash
 cd /etc/udev/rules.d
 ```
-
-Create a new rule file named `99-usb.rules`:
-
+2. Create a new rule file named `99-usb.rules`:
 ```bash
 sudo nano 99-usb.rules
 ```
-
-Add the following line to create a symbolic link to the bpod, changing "1-1:1.0" with the real port. You can use `dmesg` to check the ports:
+3. In the new rule file, add the following line to create a symbolic link named `Bpod` for any device that matches the pattern `ttyACM*`. This will allow any device named ttyACM* (where * can be any number) to be consistently linked, provided it’s connected
+to a specific USB port (in this case, the port associated with `KERNELS==3-1:1.0`).
 
 ```
-KERNEL=="ttyACM*",KERNELS=="1-1:1.0",SYMLINK+="Bpod"
+KERNEL=="ttyACM*",KERNELS=="3-1:1.0",SYMLINK+="Bpod"
 ```
+
+Note: The USB port identifier (KERNELS=="3-1:1.0") may vary depending on the physical USB port you are using. For reference, the 3-1:1.0 port on the Raspberry Pi is usually the USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command `dmesg` after connecting the device.
+
+4. Activate the new rule by triggering the Udev process:
 
 ```
 sudo udevadm trigger
 ```
+Now, whenever the Bpod device is connected to the specified USB port, it will consistently appear with the symbolic link `/dev/Bpod`, regardless of its dynamic ttyACM* designation.
 
-## I2C
 
-- We connect the temperature sensor and the scale to the I2C pins
-- We need to know the address of each of the sensors
-- For the temperature sensor is 0x45 (DFRobot HX711)
-- For the weight sensor is 0x64 (CQRobot SHT31)
-- The addresses can change to discover them:
-- 1 - connect the devices to the raspberry
-- 2 - install the tools for detection:
-`sudo apt-get install -y i2c-tools`
-- 3 - run the tools:
-`i2cdetect -y 1`
+### Install village
 
-## Create a telegram bot
+1. Make sure you are in .env environment (see above)
+2. Clone the repo inside your `/home/raspberry/` directory. In the terminal, type: `git clone https://github.com/BrainCircuitsBehaviorLab/village.git`
+3. Navigate to folder `village` and type `pip install -e .`
+4. You’re ready to start the system by simply running the `main.py` file. Just execute: `python /home/raspberry/village/village/main.py`
 
-- Text **@BotFather** in the search tab and select this bot.
-- Text: **/newbot** and send.
-- Follow Botfather instructions. Write down the token. Never share the token in github.
-- Open a chat with your new bot and activate it by sending: **/start**.
 
-### Check the token of an existing bot
 
-- Go to the **@BotFather** chat and send **/token**.
 
-### Make the bot triggers the alarms
 
-- Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the alarms from the bot and will be able to send commands to it.
-- Start a conversation with **@username_to_id_bot** to obtain your ID, the chat ID and the ID of all the other users.
-- Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)
-
-## Install village
-
-- Make sure you are in .env environment (see above)
-- Clone the repo anywhere you want. In the terminal, type:
-```git clone https://github.com/BrainCircuitsBehaviorLab/village.git```
-- Navigate to folder ```village``` and type ```pip install -e .```
-
-PUT THIS IN USAGE.MD OR SOMETHING LIKE THAT
-
-- Run the ```main.py``` file: ```python village/main.py```
-
-Feel free to adjust the formatting or content as needed!
+[Pi OS]: https://www.raspberrypi.com/software/
+[ISO]: https://example.com/ISO-link-TODO
+[UPDATE]: https://www.raspberrypi.com/documentation/computers/os.html

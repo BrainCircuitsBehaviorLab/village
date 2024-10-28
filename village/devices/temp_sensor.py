@@ -4,11 +4,12 @@ import smbus2
 
 from village.classes.protocols import TempSensorProtocol
 from village.log import log
+from village.settings import settings
 
 
 class TempSensor(TempSensorProtocol):
-    def __init__(self) -> None:
-        self.I2C_ADDR = 0x45  # I2C device address
+    def __init__(self, address: str) -> None:
+        self.I2C_ADDR = int(address, 16)
         self.bus = 1
         self.i2cbus = smbus2.SMBus(self.bus)
         self.error = ""
@@ -33,9 +34,9 @@ class TempSensor(TempSensorProtocol):
         return temp_string + " / " + RH_string
 
 
-def get_temp_sensor() -> TempSensorProtocol:
+def get_temp_sensor(address: str) -> TempSensorProtocol:
     try:
-        temp_sensor = TempSensor()
+        temp_sensor = TempSensor(address=address)
         log.info("Temp sensor successfully initialized")
         return temp_sensor
     except Exception:
@@ -43,4 +44,4 @@ def get_temp_sensor() -> TempSensorProtocol:
         return TempSensorProtocol()
 
 
-temp_sensor = get_temp_sensor()
+temp_sensor = get_temp_sensor(address=settings.get("TEMP_SENSOR_ADDRESS"))
