@@ -82,7 +82,7 @@
 {"filename": "api_generated/village.screen.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.screen.behaviour_window", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.time_utils", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.video", "info": ""}
-{"filename": "index.rst", "lineno": 96, "status": "unchecked", "code": 0, "uri": "#resources", "info": ""}
+{"filename": "index.rst", "lineno": 84, "status": "unchecked", "code": 0, "uri": "#resources", "info": ""}
 {"filename": "api_generated/village.classes.collection.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.collection.Collection", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.Actions", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.Active", "info": ""}
@@ -183,9 +183,9 @@
 {"filename": "api_generated/village.time_utils.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.time_utils.TimeUtils", "info": ""}
 {"filename": "api_generated/village.video.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.video.Example", "info": ""}
 {"filename": "how_to_build/index.rst", "lineno": 133, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/", "info": ""}
-{"filename": "user_guide/index.rst", "lineno": 10, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task", "info": ""}
-{"filename": "index.rst", "lineno": 94, "status": "unchecked", "code": 0, "uri": "mailto:marinraf@gmail.com", "info": ""}
-{"filename": "how_to_build/index.rst", "lineno": 211, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
-{"filename": "index.rst", "lineno": 96, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/village/", "info": ""}
-{"filename": "how_to_build/index.rst", "lineno": 134, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/connect/plan/lite/", "info": ""}
+{"filename": "index.rst", "lineno": 84, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/village/", "info": ""}
+{"filename": "index.rst", "lineno": 99, "status": "unchecked", "code": 0, "uri": "mailto:marinraf@gmail.com", "info": ""}
 {"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "working", "code": 0, "uri": "https://github.com/DFRobot/DFRobot_HX711_I2C", "info": ""}
+{"filename": "how_to_build/index.rst", "lineno": 211, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
+{"filename": "user_guide/index.rst", "lineno": 10, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task", "info": ""}
+{"filename": "how_to_build/index.rst", "lineno": 134, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/connect/plan/lite/", "info": ""}

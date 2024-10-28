@@ -78,19 +78,26 @@ Animal Entry and Exit Logic
    :align: center
 |
 
-Open Source Project Develop by
+Open Source
 =========================================================
 
+Training Village is an open-source project. You can find the code in our `GitHub repository <https://github.com/BrainCircuitsBehaviorLab/village/>`_. and all the necessary resources to build it in the :ref:`resources section<resources>`.
+
+
+Developed by:
+
 |
+
 .. raw:: html
 
    <a href="https://braincircuitsbehavior.org"
-   style="color:#00008B; font-size:20px; font-weight:normal;
+   style="color:#00008B; font-size:24px; font-weight:normal;
    font-family:'Futura', sans-serif; text-decoration:none;">
    BRAIN CIRCUITS AND BEHAVIOR LAB
    </a>
-|
 
 Contact: `marinraf@gmail.com <mailto:marinraf@gmail.com>`_
 
-Training Village is an open-source project. You can find all the code in our `GitHub repository <https://github.com/BrainCircuitsBehaviorLab/village/>`_ and all the necessary resources in the :ref:`resources section<resources>`.
+|
+|
+|
