@@ -29,8 +29,8 @@
             href="../search.html" />
         <link rel="index" title="Index"
             href="../genindex.html" />
-        <link rel="next" title="Data Collection Examples"
-            href="../data_collection.html" />
+        <link rel="next" title="Data Collection"
+            href="../data_collection_index.html" />
         <link rel="prev" title="Assembly Instructions"
             href="assembly_instructions.html" />
 
@@ -132,11 +132,11 @@
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/index.html">User Guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide_index.html">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/remote.html">Configure Remote Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
@@ -144,13 +144,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">How to Build the Training Village</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Software Installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection.html">Data Collection Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a></li>
@@ -163,7 +164,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.video.html">video</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../resources.html">Resources</a></li>
 </ul>
 
 </nav>
@@ -199,19 +199,19 @@
   </a>
   
 <div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="index.html">How to Build the Training Village</a>
+       href="../how_to_build_index.html">How to Build the Training Village</a>
     
 <div class="mr-1">/</div><span aria-current="page"
         class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Software Installation</span>
 </nav>
 
     <div id="content" role="main">
-      <section class="tex2jax_ignore mathjax_ignore" id="software-installation">
+      <section id="software-installation">
 <h1>Software Installation</h1>
-<p>You can download a working ISO image containing the operating system (Raspberry Pi OS) and a pre-installed version of all the necessary libraries and Python code here (link).
-Follow the instructions in this page in case you prefer to install everything manually.</p>
+<p>You can download a ready-to-use ISO image containing the operating system (Raspberry Pi OS) along with all necessary libraries and Python code pre-installed <a class="reference internal" href="../TODO-LINK.html"><span class="std std-doc">here</span></a>.</p>
+<p>Follow the instructions on this page if you prefer a manual installation. The process can be challenging, so proceed only if you have a basic understanding of Linux distributions and are comfortable using the terminal.</p>
 <section id="what-you-need">
-<h2>What you need</h2>
+<h2>What You Need</h2>
 <ul class="simple">
 <li><p>Raspberry Pi 5 - 8GB</p></li>
 <li><p>Fan</p></li>
@@ -221,251 +221,230 @@ Follow the instructions in this page in case you prefer to install everything ma
 <li><p>Screen</p></li>
 <li><p>Micro HDMI to HDMI cable</p></li>
 <li><p>Power supply for Raspberry Pi</p></li>
+<li><p>2 Raspberry Pi Camera Module 3 Wide Noir</p></li>
 <li><p>Ethernet cable (optional)</p></li>
+<li><p>Raspberry Pi Dac Pro (optional)</p></li>
+<li><p>2 servo motors</p></li>
+<li><p>RFID sensor</p></li>
+<li><p>Weight sensor</p></li>
+<li><p>Temperature sensor</p></li>
 </ul>
 </section>
 <section id="launch-raspberry-pi-os-for-the-first-time">
-<h2>Launch Raspberry Pi OS for the first time</h2>
+<h2>Launch Raspberry Pi OS for the First Time</h2>
 <ol class="arabic simple">
 <li><p>Connect a keyboard, mouse, and screen to the Raspberry Pi.</p></li>
 <li><p>Connect the Ethernet cable if you are going to use an Ethernet connection.</p></li>
 <li><p>If your SD card has the OS preinstalled, jump to step 4.</p></li>
-<li><p>If your SD card is empty, follow these instructions to download the OS and copy it to the SD: <a class="reference external" href="https://www.raspberrypi.com/software/">Raspberry Pi Software</a></p></li>
+<li><p>If your SD card is empty, follow these instructions to download the OS and copy it to the SD: <a class="reference external" href="https://www.raspberrypi.com/software/">Raspberry Pi OS</a></p></li>
 <li><p>Insert the SD card and start the Raspberry Pi.</p></li>
 <li><p>Select your country and keyboard language and choose English as the general language.</p></li>
-<li><p>Select the user (pi) and password (you know it).</p></li>
+<li><p>Type <code class="docutils literal notranslate"><span class="pre">raspberry</span></code> as the username and choose the password you want.</p></li>
 <li><p>Select your Wi-Fi or Ethernet connection.</p></li>
 <li><p>Choose your preferred web browser (Chromium).</p></li>
 <li><p>Select “Yes” when asked to update software (if you have your internet connection ready).</p></li>
 </ol>
 </section>
-<section id="sound-settings">
-<h2>Sound settings</h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">pulseaudio</span></code>  I think this one is not necessary</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libportaudio2</span></code></p></li>
-</ul>
-</section>
-<section id="screen-settings-and-i2c-communication">
-<h2>Screen settings and I2C communication</h2>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">raspi-config</span></code></p>
-<ul class="simple">
-<li><p>Go to <strong>Display Options</strong> and disable blanking.</p></li>
-</ul>
-<p>Optional if you have a touch screen: IS THIS TRUE?</p>
-<ul class="simple">
-<li><p>Go to <strong>Advanced Options</strong> and select X11 (instead of Wayland).</p></li>
-<li><p>Go to <strong>Interface Options</strong> and enable I2C.</p></li>
-</ul>
-<p>Modifying options in raspi-config usually is the same that modifying or adding lines to <strong>/boot/firmware/config.txt</strong></p>
-</li>
-</ul>
-<section id="if-you-are-using-one-screen-only">
-<h3>If you are using one screen only</h3>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">nano</span> <span class="pre">/boot/firmware/cmdline.txt</span></code></p>
-<ul>
-<li><p>Add the text: <code class="docutils literal notranslate"><span class="pre">vc4.fvc4.force_hotplug=1</span></code></p></li>
-</ul>
-</li>
-</ul>
-</section>
-<section id="if-you-are-using-2-screens">
-<h3>If you are using 2 screens</h3>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">nano</span> <span class="pre">/boot/firmware/cmdline.txt</span></code></p>
-<ul>
-<li><p>Add the text: <code class="docutils literal notranslate"><span class="pre">vc4.fvc4.force_hotplug=3</span></code> (1 for using the first HDMI, 2 for using the second one, and 3 to use both of them).</p></li>
-</ul>
-</li>
-</ul>
-</section>
-</section>
-<section id="updating-the-system-and-installing-software">
-<h2>Updating the system and installing software</h2>
-<p>Update software, instructions from <a class="reference external" href="https://www.raspberrypi.com/documentation/computers/os.html">here</a>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">sudo<span class="w"> </span>apt<span class="w"> </span>update
-</span><span id="line-2">sudo<span class="w"> </span>apt<span class="w"> </span>full-upgrade
+<section id="updating-the-system">
+<h2>Updating the System</h2>
+<ol class="arabic simple">
+<li><p>Make sure you have internet connection and then update the software. <a class="reference external" href="https://www.raspberrypi.com/documentation/computers/os.html">Detailed instructions</a>.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
+</span><span id="line-2"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">full</span><span class="o">-</span><span class="n">upgrade</span>
 </span></code></pre></div>
 </div>
-<p>Install OpenCV (library to manage video):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python3-opencv
-</span><span id="line-2">sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>opencv-data
+</section>
+<section id="installing-needed-libraries">
+<h2>Installing Needed Libraries</h2>
+<ol class="arabic simple">
+<li><p>Install OpenCV (library to manage video):</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">python3</span><span class="o">-</span><span class="n">opencv</span>
+</span><span id="line-2"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">opencv</span><span class="o">-</span><span class="n">data</span>
 </span></code></pre></div>
 </div>
-<p>Install VS Code (optional):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>code
+<ol class="arabic simple" start="2">
+<li><p>Install sound libraries: TODO check if pulseaudio is really needed.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">pulseaudio</span>
+</span><span id="line-2"><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libportaudio2</span>
 </span></code></pre></div>
 </div>
-<ul class="simple">
+<ol class="arabic simple" start="3">
+<li><p>Install PyQT5 multimedia</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">pyqt5</span><span class="o">.</span><span class="n">qtmultimedia</span>
+</span><span id="line-2"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">libqt5multimedia5</span><span class="o">-</span><span class="n">plugins</span>
+</span></code></pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Install VS Code (optional):</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">code</span>
+</span></code></pre></div>
+</div>
+</section>
+<section id="creating-a-python-environment-and-installing-pip-libraries">
+<h2>Creating a Python Environment and Installing pip Libraries</h2>
+<ol class="arabic simple">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> environment that includes all the packages installed in the global
+Python environment:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">--</span><span class="n">system</span><span class="o">-</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span> <span class="o">~/.</span><span class="n">env</span>
+</span></code></pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Activate it:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">source</span> <span class="o">~/.</span><span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</span></code></pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Install needed libraries with pip:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">pip</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">dateutil</span>
+</span><span id="line-2"><span class="n">pip</span> <span class="n">install</span> <span class="n">setuptools_scm</span>
+</span><span id="line-3"><span class="n">pip</span> <span class="n">install</span> <span class="n">sounddevice</span>
+</span><span id="line-4"><span class="n">pip</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">telegram</span><span class="o">-</span><span class="n">bot</span>
+</span><span id="line-5"><span class="n">pip</span> <span class="n">install</span> <span class="n">scipy</span>
+</span></code></pre></div>
+</div>
+</section>
+<section id="changing-preferences">
+<h2>Changing Preferences</h2>
+<ol class="arabic simple">
 <li><p>Enable auto-login by clicking on <strong>Preferences</strong> -&gt; <strong>Raspberry Pi Configuration</strong> -&gt; <strong>Auto login</strong>.</p></li>
 <li><p>Add CPU monitors to the toolbar: Right-click on the toolbar, select <strong>Add/Remove Panel Items</strong>, and click <strong>Add</strong>. Select <strong>CPU Temperature Monitor</strong> and <strong>CPU Usage monitor</strong>.</p></li>
-<li><p>Change the resolution of the screen (or screens) to 1280 x 720: <strong>Preferences</strong> -&gt; <strong>Screen Configuration</strong>.</p></li>
-</ul>
+</ol>
 </section>
-<section id="pyqt5-multimedia">
-<h2>PyQT5 multimedia</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-pyqt5.qtmultimedia
-</span><span id="line-2">sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libqt5multimedia5-plugins
+<section id="screen-settings">
+<h2>Screen Settings</h2>
+<ol class="arabic simple">
+<li><p>Run the raspi-config.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">raspi</span><span class="o">-</span><span class="n">config</span>
 </span></code></pre></div>
 </div>
+<ol class="arabic simple" start="2">
+<li><p>Go to <strong>Display Options</strong> and disable blanking.</p></li>
+<li><p>Go to <strong>Advanced Options</strong> and select X11 (instead of Wayland).</p></li>
+</ol>
+<p>Then, you need to configure the system to recognize a screen even if none is physically connected, so the software renders properly when accessed remotely. If you want to use an additional screen to present stimuli in the behavioral box, you need to set the system to work with two screens.</p>
+<ol class="arabic simple" start="4">
+<li><p>Modify the file: <code class="docutils literal notranslate"><span class="pre">/boot/firmware/cmdline.txt</span></code></p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">cmdline</span><span class="o">.</span><span class="n">txt</span>
+</span></code></pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Add the following text: <code class="docutils literal notranslate"><span class="pre">vc4.fvc4.force_hotplug=1</span></code> if you are using only one screen,
+or <code class="docutils literal notranslate"><span class="pre">vc4.fvc4.force_hotplug=3</span></code> if you are using two screens.</p></li>
+</ol>
+<p>Explanation of values: (1 makes the system operate as if a screen is connected to HDMI 1). (2 makes the system operate as if a screen is connected to HDMI 2). (3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2).</p>
+<ol class="arabic simple" start="6">
+<li><p>Change the resolution of the screen (or screens) to 1280 x 720: <strong>Preferences</strong> -&gt;
+<strong>Screen Configuration</strong>.</p></li>
+</ol>
 </section>
-<section id="setting-env-environment">
-<h2>Setting .env environment</h2>
-<p>Create a .env environment with all the packages installed in the general Python:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>--system-site-packages<span class="w"> </span>~/.env
+<section id="i2c-communication">
+<h2>I2C Communication</h2>
+<p>The temperature sensor and the weight sensor are connected to the I2C pins of the Raspberry.</p>
+<ol class="arabic simple">
+<li><p>First, activate the I2C communication:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">raspi</span><span class="o">-</span><span class="n">config</span>
 </span></code></pre></div>
 </div>
-<p>Activate it:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nb">source</span><span class="w"> </span>~/.env/bin/activate
+<ol class="arabic simple" start="2">
+<li><p>Go to <strong>Interface Options</strong> and enable I2C.</p></li>
+</ol>
+<p>The system is configured to work with address = 0x45 for the temperature sensor (DFRobot HX711) and address = 0x64 for the weight sensor (CQRobot SHT31). If you are using different models or if the devices are not recognized, follow these steps to verify that the addresses are correct:</p>
+<ol class="arabic simple" start="3">
+<li><p>Connect the devices to the raspberry.</p></li>
+<li><p>Install the detection tools:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">i2c</span><span class="o">-</span><span class="n">tools</span>
 </span></code></pre></div>
 </div>
-<p>Install needed libraries with pip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>python-dateutil
-</span><span id="line-2">pip<span class="w"> </span>install<span class="w"> </span>setuptools_scm
-</span><span id="line-3">pip<span class="w"> </span>install<span class="w"> </span>sounddevice
-</span><span id="line-4">pip<span class="w"> </span>install<span class="w"> </span>python-telegram-bot
-</span><span id="line-5">pip<span class="w"> </span>install<span class="w"> </span>scipy
+<ol class="arabic simple" start="5">
+<li><p>Run the tools:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
 </span></code></pre></div>
 </div>
+<ol class="arabic simple" start="6">
+<li><p>Change the addresses in the python code by modifying the corresponding settings in
+<code class="docutils literal notranslate"><span class="pre">village/settings.py</span></code> (extra_settings).</p></li>
+</ol>
 </section>
-<section id="accessing-the-pins-by-hardware-for-servos-and-using-pin-uart-to-communicate">
-<h2>Accessing the pins by hardware (for servos) and using pin uart to communicate</h2>
-<p>We need to change an option to be able to access the pins by hardware (faster and less jittery than accessing them by software):</p>
-<p>modify the <strong>/boot/firmware/config.txt</strong> file to include</p>
+<section id="accessing-pins-via-hardware-for-servos-and-using-uart-pin-for-communication">
+<h2>Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication</h2>
+<p>To access the pins via hardware (faster and less jittery than software access), and to allow the use of the UART Pin for communication with the sensors you need to change two settings:</p>
+<ol class="arabic simple">
+<li><p>Edit the <code class="docutils literal notranslate"><span class="pre">/boot/firmware/config.txt</span></code> file to include the following:</p></li>
+</ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="p">[</span><span class="nb">all</span><span class="p">]</span>
 </span><span id="line-2"><span class="n">dtoverlay</span><span class="o">=</span><span class="n">pwm</span><span class="o">-</span><span class="mi">2</span><span class="n">chan</span><span class="p">,</span><span class="n">pin</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span><span class="n">pin2</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span><span class="n">func</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">func2</span><span class="o">=</span><span class="mi">4</span>
 </span><span id="line-3"><span class="n">enable_uart</span><span class="o">=</span><span class="mi">1</span>
 </span></code></pre></div>
 </div>
 </section>
-<section id="configure-remote-access">
-<h2>Configure remote access</h2>
-<section id="option-1-with-realvnc">
-<h3>Option 1: with RealVNC</h3>
-<p>From your Raspberry Pi:</p>
+<section id="udev-rules-for-consistent-usb-device-naming">
+<h2>Udev Rules for Consistent USB Device Naming</h2>
+<p>When you connect your Bpod device to the Raspberry Pi, it’s assigned a file path in <code class="docutils literal notranslate"><span class="pre">/dev/</span></code>, typically named <code class="docutils literal notranslate"><span class="pre">ttyACM0</span></code>. However, this name may vary (ttyACM1, ttyACM2, etc.), especially if you have other USB devices connected. To ensure a consistent and recognizable name, you can create a symbolic link to your Bpod device.</p>
 <ol class="arabic simple">
-<li><p>Go to the website and create an account: <a class="reference external" href="https://www.realvnc.com/es/">RealVNC</a></p></li>
-<li><p>Subscribe to Lite access (free access): <a class="reference external" href="https://www.realvnc.com/es/connect/plan/lite/">Lite Access</a>. Follow instructions <a class="reference external" href="https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription">here</a> if you go around in a loop.</p></li>
-<li><p>Open the RealVNC server on the Raspberry Pi (it is automatically installed when you install Raspberry Pi OS) and configure it for your team.</p></li>
-<li><p>Go to <strong>Device Access</strong> on the RealVNC webpage and add your current device.</p></li>
-<li><p>Back in the RealVNC window, you should see a code that allows remote connections from other networks and an IP number that allows connection from the same network.</p></li>
+<li><p>Navigate to the Udev rules folder where custom rules are stored:</p></li>
 </ol>
-<p>From your external computer or phone:</p>
-<ol class="arabic simple">
-<li><p>Log in to the RealVNC webpage using your credentials.</p></li>
-<li><p>Install and open RealVNC Viewer on your external computer or phone.</p></li>
-<li><p>Connect to the Raspberry Pi using the RealVNC server’s code if you are connecting from another network or the IP if you are connecting from the same network.</p></li>
-</ol>
-</section>
-<section id="option-2-things-are-very-slow-with-this-with-raspi-connect">
-<h3>Option 2 (things are very slow with this): with raspi-connect</h3>
-<ol class="arabic simple">
-<li><p>Follow these instructions:
-<a class="reference external" href="https://www.raspberrypi.com/news/raspberry-pi-connect/">https://www.raspberrypi.com/news/raspberry-pi-connect/</a></p></li>
-</ol>
-</section>
-</section>
-<section id="udev-rules">
-<h2>Udev rules</h2>
-<p>Go to the rules folder:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nb">cd</span><span class="w"> </span>/etc/udev/rules.d
 </span></code></pre></div>
 </div>
-<p>Create a new rule file named <code class="docutils literal notranslate"><span class="pre">99-usb.rules</span></code>:</p>
+<ol class="arabic simple" start="2">
+<li><p>Create a new rule file named <code class="docutils literal notranslate"><span class="pre">99-usb.rules</span></code>:</p></li>
+</ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">sudo<span class="w"> </span>nano<span class="w"> </span><span class="m">99</span>-usb.rules
 </span></code></pre></div>
 </div>
-<p>Add the following line to create a symbolic link to the bpod, changing “1-1:1.0” with the real port. You can use <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> to check the ports:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">KERNEL</span><span class="o">==</span><span class="s2">&quot;ttyACM*&quot;</span><span class="p">,</span><span class="n">KERNELS</span><span class="o">==</span><span class="s2">&quot;1-1:1.0&quot;</span><span class="p">,</span><span class="n">SYMLINK</span><span class="o">+=</span><span class="s2">&quot;Bpod&quot;</span>
+<ol class="arabic simple" start="3">
+<li><p>In the new rule file, add the following line to create a symbolic link named <code class="docutils literal notranslate"><span class="pre">Bpod</span></code> for any device that matches the pattern <code class="docutils literal notranslate"><span class="pre">ttyACM*</span></code>. This will allow any device named ttyACM* (where * can be any number) to be consistently linked, provided it’s connected
+to a specific USB port (in this case, the port associated with <code class="docutils literal notranslate"><span class="pre">KERNELS==3-1:1.0</span></code>).</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">KERNEL</span><span class="o">==</span><span class="s2">&quot;ttyACM*&quot;</span><span class="p">,</span><span class="n">KERNELS</span><span class="o">==</span><span class="s2">&quot;3-1:1.0&quot;</span><span class="p">,</span><span class="n">SYMLINK</span><span class="o">+=</span><span class="s2">&quot;Bpod&quot;</span>
 </span></code></pre></div>
 </div>
+<p>Note: The USB port identifier (KERNELS==“3-1:1.0”) may vary depending on the physical USB port you are using. For reference, the 3-1:1.0 port on the Raspberry Pi is usually the USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> after connecting the device.</p>
+<ol class="arabic simple" start="4">
+<li><p>Activate the new rule by triggering the Udev process:</p></li>
+</ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sudo</span> <span class="n">udevadm</span> <span class="n">trigger</span>
 </span></code></pre></div>
 </div>
-</section>
-<section id="i2c">
-<h2>I2C</h2>
-<ul class="simple">
-<li><p>We connect the temperature sensor and the scale to the I2C pins</p></li>
-<li><p>We need to know the address of each of the sensors</p></li>
-<li><p>For the temperature sensor is 0x45 (DFRobot HX711)</p></li>
-<li><p>For the weight sensor is 0x64 (CQRobot SHT31)</p></li>
-<li><p>The addresses can change to discover them:</p></li>
-<li><p>1 - connect the devices to the raspberry</p></li>
-<li><p>2 - install the tools for detection:
-<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">-y</span> <span class="pre">i2c-tools</span></code></p></li>
-<li><p>3 - run the tools:
-<code class="docutils literal notranslate"><span class="pre">i2cdetect</span> <span class="pre">-y</span> <span class="pre">1</span></code></p></li>
-</ul>
-</section>
-<section id="create-a-telegram-bot">
-<h2>Create a telegram bot</h2>
-<ul class="simple">
-<li><p>Text <strong>&#64;BotFather</strong> in the search tab and select this bot.</p></li>
-<li><p>Text: <strong>/newbot</strong> and send.</p></li>
-<li><p>Follow Botfather instructions. Write down the token. Never share the token in github.</p></li>
-<li><p>Open a chat with your new bot and activate it by sending: <strong>/start</strong>.</p></li>
-</ul>
-<section id="check-the-token-of-an-existing-bot">
-<h3>Check the token of an existing bot</h3>
-<ul class="simple">
-<li><p>Go to the <strong>&#64;BotFather</strong> chat and send <strong>/token</strong>.</p></li>
-</ul>
-</section>
-<section id="make-the-bot-triggers-the-alarms">
-<h3>Make the bot triggers the alarms</h3>
-<ul class="simple">
-<li><p>Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the alarms from the bot and will be able to send commands to it.</p></li>
-<li><p>Start a conversation with <strong>&#64;username_to_id_bot</strong> to obtain your ID, the chat ID and the ID of all the other users.</p></li>
-<li><p>Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)</p></li>
-</ul>
-</section>
+<p>Now, whenever the Bpod device is connected to the specified USB port, it will consistently appear with the symbolic link <code class="docutils literal notranslate"><span class="pre">/dev/Bpod</span></code>, regardless of its dynamic ttyACM* designation.</p>
 </section>
 <section id="install-village">
 <h2>Install village</h2>
-<ul class="simple">
+<ol class="arabic simple">
 <li><p>Make sure you are in .env environment (see above)</p></li>
-<li><p>Clone the repo anywhere you want. In the terminal, type:
-<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/BrainCircuitsBehaviorLab/village.git</span></code></p></li>
+<li><p>Clone the repo inside your <code class="docutils literal notranslate"><span class="pre">/home/raspberry/</span></code> directory. In the terminal, type: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/BrainCircuitsBehaviorLab/village.git</span></code></p></li>
 <li><p>Navigate to folder <code class="docutils literal notranslate"><span class="pre">village</span></code> and type <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code></p></li>
-</ul>
-<p>PUT THIS IN <a class="reference external" href="http://USAGE.MD">USAGE.MD</a> OR SOMETHING LIKE THAT</p>
-<ul class="simple">
-<li><p>Run the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">village/main.py</span></code></p></li>
-</ul>
-<p>Feel free to adjust the formatting or content as needed!</p>
+<li><p>You’re ready to start the system by simply running the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file. Just execute: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">/home/raspberry/village/village/main.py</span></code></p></li>
+</ol>
 </section>
 </section>
 
     </div></div><aside id="right-sidebar" class="hidden text-sm xl:block">
   <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
     <ul>
-<li><a class="reference internal" href="#what-you-need">What you need</a></li>
-<li><a class="reference internal" href="#launch-raspberry-pi-os-for-the-first-time">Launch Raspberry Pi OS for the first time</a></li>
-<li><a class="reference internal" href="#sound-settings">Sound settings</a></li>
-<li><a class="reference internal" href="#screen-settings-and-i2c-communication">Screen settings and I2C communication</a><ul>
-<li><a class="reference internal" href="#if-you-are-using-one-screen-only">If you are using one screen only</a></li>
-<li><a class="reference internal" href="#if-you-are-using-2-screens">If you are using 2 screens</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#updating-the-system-and-installing-software">Updating the system and installing software</a></li>
-<li><a class="reference internal" href="#pyqt5-multimedia">PyQT5 multimedia</a></li>
-<li><a class="reference internal" href="#setting-env-environment">Setting .env environment</a></li>
-<li><a class="reference internal" href="#accessing-the-pins-by-hardware-for-servos-and-using-pin-uart-to-communicate">Accessing the pins by hardware (for servos) and using pin uart to communicate</a></li>
-<li><a class="reference internal" href="#configure-remote-access">Configure remote access</a><ul>
-<li><a class="reference internal" href="#option-1-with-realvnc">Option 1: with RealVNC</a></li>
-<li><a class="reference internal" href="#option-2-things-are-very-slow-with-this-with-raspi-connect">Option 2 (things are very slow with this): with raspi-connect</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#udev-rules">Udev rules</a></li>
-<li><a class="reference internal" href="#i2c">I2C</a></li>
-<li><a class="reference internal" href="#create-a-telegram-bot">Create a telegram bot</a><ul>
-<li><a class="reference internal" href="#check-the-token-of-an-existing-bot">Check the token of an existing bot</a></li>
-<li><a class="reference internal" href="#make-the-bot-triggers-the-alarms">Make the bot triggers the alarms</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#what-you-need">What You Need</a></li>
+<li><a class="reference internal" href="#launch-raspberry-pi-os-for-the-first-time">Launch Raspberry Pi OS for the First Time</a></li>
+<li><a class="reference internal" href="#updating-the-system">Updating the System</a></li>
+<li><a class="reference internal" href="#installing-needed-libraries">Installing Needed Libraries</a></li>
+<li><a class="reference internal" href="#creating-a-python-environment-and-installing-pip-libraries">Creating a Python Environment and Installing pip Libraries</a></li>
+<li><a class="reference internal" href="#changing-preferences">Changing Preferences</a></li>
+<li><a class="reference internal" href="#screen-settings">Screen Settings</a></li>
+<li><a class="reference internal" href="#i2c-communication">I2C Communication</a></li>
+<li><a class="reference internal" href="#accessing-pins-via-hardware-for-servos-and-using-uart-pin-for-communication">Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication</a></li>
+<li><a class="reference internal" href="#udev-rules-for-consistent-usb-device-naming">Udev Rules for Consistent USB Device Naming</a></li>
 <li><a class="reference internal" href="#install-village">Install village</a></li>
 </ul>
 </div>
@@ -483,7 +462,7 @@ Follow the instructions in this page in case you prefer to install everything ma
 </footer>
             </div>
             
-            <script src="../_static/documentation_options.js?v=2ad26282"></script>
+            <script src="../_static/documentation_options.js?v=64fb0b61"></script>
             <script src="../_static/doctools.js?v=9bcbadda"></script>
             <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
             <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>

@@ -31,8 +31,8 @@
             href="../genindex.html" />
         <link rel="next" title="Project Structure"
             href="project_structure.html" />
-        <link rel="prev" title="Configure Remote Access"
-            href="remote.html" />
+        <link rel="prev" title="Using the GUI"
+            href="GUI.html" />
 
         <script>
     <!-- Prevent Flash of wrong theme -->
@@ -132,11 +132,11 @@
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide_index.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure Remote Access</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
@@ -144,13 +144,14 @@
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../how_to_build/index.html">How to Build the Training Village</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection.html">Data Collection Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a></li>
@@ -163,7 +164,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.video.html">video</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../resources.html">Resources</a></li>
 </ul>
 
 </nav>
@@ -199,18 +199,47 @@
   </a>
   
 <div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="index.html">User Guide</a>
+       href="../user_guide_index.html">User Guide</a>
     
 <div class="mr-1">/</div><span aria-current="page"
         class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Create a Telegram Bot</span>
 </nav>
 
     <div id="content" role="main">
-      <section class="tex2jax_ignore mathjax_ignore" id="create-a-telegram-bot">
+      <section id="create-a-telegram-bot">
 <h1>Create a Telegram Bot</h1>
+<ol class="arabic simple">
+<li><p>Text <code class="docutils literal notranslate"><span class="pre">&#64;BotFather</span></code> in the search tab and select this bot.</p></li>
+<li><p>Text: <code class="docutils literal notranslate"><span class="pre">/newbot</span></code> and send.</p></li>
+<li><p>Follow Botfather instructions. Write down the token. Never share the token in github.</p></li>
+<li><p>Open a chat with your new bot and activate it by sending: <code class="docutils literal notranslate"><span class="pre">/start</span></code>.</p></li>
+</ol>
+<section id="check-the-token-of-an-existing-bot">
+<h2>Check the token of an existing bot</h2>
+<ol class="arabic simple" start="5">
+<li><p>Go to the <code class="docutils literal notranslate"><span class="pre">&#64;BotFather</span></code> chat and send <code class="docutils literal notranslate"><span class="pre">/token</span></code>.</p></li>
+</ol>
+</section>
+<section id="make-the-bot-triggers-the-alarms">
+<h2>Make the bot triggers the alarms</h2>
+<ol class="arabic simple" start="6">
+<li><p>Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the
+alarms from the bot and will be able to send commands to it.</p></li>
+<li><p>Start a conversation with <code class="docutils literal notranslate"><span class="pre">&#64;username_to_id_bot</span></code> to obtain your ID, the chat ID and
+the ID of all the other users.</p></li>
+<li><p>Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)</p></li>
+</ol>
+</section>
 </section>
 
-    </div></div>
+    </div></div><aside id="right-sidebar" class="hidden text-sm xl:block">
+  <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+    <ul>
+<li><a class="reference internal" href="#check-the-token-of-an-existing-bot">Check the token of an existing bot</a></li>
+<li><a class="reference internal" href="#make-the-bot-triggers-the-alarms">Make the bot triggers the alarms</a></li>
+</ul>
+</div>
+</aside>
                         </main>
                     </div>
                 </div><footer class="py-6 border-t border-border md:py-0">
@@ -224,7 +253,7 @@
 </footer>
             </div>
             
-            <script src="../_static/documentation_options.js?v=2ad26282"></script>
+            <script src="../_static/documentation_options.js?v=64fb0b61"></script>
             <script src="../_static/doctools.js?v=9bcbadda"></script>
             <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
             <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>

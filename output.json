@@ -1,7 +1,6 @@
-{"filename": "how_to_build/index.rst", "lineno": 23, "status": "ignored", "code": 0, "uri": "https://www.raspberrypi.com/software/", "info": ""}
-{"filename": "how_to_build/index.rst", "lineno": 60, "status": "ignored", "code": 0, "uri": "https://www.raspberrypi.com/documentation/computers/os.html", "info": ""}
-{"filename": "how_to_build/index.rst", "lineno": 134, "status": "ignored", "code": 0, "uri": "https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription", "info": ""}
-{"filename": "how_to_build/index.rst", "lineno": 147, "status": "ignored", "code": 0, "uri": "https://www.raspberrypi.com/news/raspberry-pi-connect/", "info": ""}
+{"filename": "how_to_build/software_installation.md", "lineno": 31, "status": "ignored", "code": 0, "uri": "https://www.raspberrypi.com/software/", "info": ""}
+{"filename": "how_to_build/software_installation.md", "lineno": 42, "status": "ignored", "code": 0, "uri": "https://www.raspberrypi.com/documentation/computers/os.html", "info": ""}
+{"filename": "user_guide/remote.md", "lineno": 10, "status": "ignored", "code": 0, "uri": "https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.classes", "info": ""}
 {"filename": "api_generated/village.classes.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.classes.collection", "info": ""}
 {"filename": "api_generated/village.classes.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.classes.enums", "info": ""}
@@ -82,7 +81,6 @@
 {"filename": "api_generated/village.screen.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.screen.behaviour_window", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.time_utils", "info": ""}
 {"filename": "api_index.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#module-village.video", "info": ""}
-{"filename": "index.rst", "lineno": 84, "status": "unchecked", "code": 0, "uri": "#resources", "info": ""}
 {"filename": "api_generated/village.classes.collection.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.collection.Collection", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.Actions", "info": ""}
 {"filename": "api_generated/village.classes.enums.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.classes.enums.Active", "info": ""}
@@ -182,10 +180,11 @@
 {"filename": "api_generated/village.screen.behaviour_window.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.screen.behaviour_window.BehaviourWindow", "info": ""}
 {"filename": "api_generated/village.time_utils.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.time_utils.TimeUtils", "info": ""}
 {"filename": "api_generated/village.video.rst", "lineno": 1, "status": "unchecked", "code": 0, "uri": "#village.video.Example", "info": ""}
-{"filename": "how_to_build/index.rst", "lineno": 133, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/", "info": ""}
-{"filename": "index.rst", "lineno": 84, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/village/", "info": ""}
-{"filename": "index.rst", "lineno": 99, "status": "unchecked", "code": 0, "uri": "mailto:marinraf@gmail.com", "info": ""}
+{"filename": "user_guide/remote.md", "lineno": 5, "status": "working", "code": 0, "uri": "https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3", "info": ""}
+{"filename": "resources/resources.md", "lineno": 5, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/village", "info": ""}
+{"filename": "user_guide/project_structure.md", "lineno": 10, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task", "info": ""}
+{"filename": "index.rst", "lineno": 14, "status": "unchecked", "code": 0, "uri": "mailto:marinraf@gmail.com", "info": ""}
+{"filename": "index.rst", "lineno": 3, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/village/", "info": ""}
 {"filename": "api_generated/village.devices.rst", "lineno": 1, "status": "working", "code": 0, "uri": "https://github.com/DFRobot/DFRobot_HX711_I2C", "info": ""}
-{"filename": "how_to_build/index.rst", "lineno": 211, "status": "redirected", "code": 308, "uri": "http://USAGE.MD", "info": "https://usage.md/"}
-{"filename": "user_guide/index.rst", "lineno": 10, "status": "working", "code": 0, "uri": "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task", "info": ""}
-{"filename": "how_to_build/index.rst", "lineno": 134, "status": "working", "code": 0, "uri": "https://www.realvnc.com/es/connect/plan/lite/", "info": ""}
+{"filename": "user_guide/remote.md", "lineno": 7, "status": "working", "code": 0, "uri": "https://www.realvnc.com/en/", "info": ""}
+{"filename": "user_guide/remote.md", "lineno": 10, "status": "working", "code": 0, "uri": "https://www.realvnc.com/en/connect/plan/lite/", "info": ""}

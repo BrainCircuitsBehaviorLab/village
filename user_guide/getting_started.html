@@ -29,10 +29,10 @@
             href="../search.html" />
         <link rel="index" title="Index"
             href="../genindex.html" />
-        <link rel="next" title="Animal Procedures"
-            href="animal_procedures.html" />
+        <link rel="next" title="Configure remote access"
+            href="remote.html" />
         <link rel="prev" title="User Guide"
-            href="index.html" />
+            href="../user_guide_index.html" />
 
         <script>
     <!-- Prevent Flash of wrong theme -->
@@ -132,11 +132,11 @@
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide_index.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure Remote Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
@@ -144,13 +144,14 @@
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../how_to_build/index.html">How to Build the Training Village</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection.html">Data Collection Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a></li>
@@ -163,7 +164,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.video.html">video</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../resources.html">Resources</a></li>
 </ul>
 
 </nav>
@@ -199,15 +199,18 @@
   </a>
   
 <div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="index.html">User Guide</a>
+       href="../user_guide_index.html">User Guide</a>
     
 <div class="mr-1">/</div><span aria-current="page"
         class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Getting Started</span>
 </nav>
 
     <div id="content" role="main">
-      <section class="tex2jax_ignore mathjax_ignore" id="getting-started">
+      <section id="getting-started">
 <h1>Getting Started</h1>
+<p>First, ensure that the corridor is assembled. Follow these <a class="reference internal" href="../how_to_build/assembly_instructions.html"><span class="std std-doc">instructions</span></a> to complete the assembly. If you prefer to build it yourself, <a class="reference internal" href="../how_to_build/list_of_parts.html"><span class="std std-doc">here</span></a> you will find the plans for all the pieces as well as a list of all necessary electronic components.</p>
+<p>The Raspberry Pi includes an SD card that contains both the operating system (Raspberry Pi OS) and all the required software pre-installed. Before placing the Raspberry Pi in its designated space in the corridor, you only need to configure it for remote access.</p>
+<p>If you are using your own Raspberry Pi, click <a class="reference internal" href="../how_to_build/software_installation.html"><span class="std std-doc">here</span></a> for the software installation instructions.</p>
 </section>
 
     </div></div>
@@ -224,7 +227,7 @@
 </footer>
             </div>
             
-            <script src="../_static/documentation_options.js?v=2ad26282"></script>
+            <script src="../_static/documentation_options.js?v=64fb0b61"></script>
             <script src="../_static/doctools.js?v=9bcbadda"></script>
             <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
             <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>

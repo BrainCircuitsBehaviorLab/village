@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="./" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>User Guide | Training village</title>
+<meta content="User Guide | Training village" property="og:title"/>
+<meta content="User Guide | Training village" name="twitter:title"/>
+<link href="_static/pygments.css?v=8d216cef" rel="stylesheet" type="text/css"/>
+<link href="_static/theme.css?v=edd7d3d2" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=04772280" rel="stylesheet" type="text/css"/>
+<link href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide_index.html" rel="canonical"/>
+<link href="_static/favicon.svg" rel="icon"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="user_guide/getting_started.html" rel="next" title="Getting Started"/>
+<link href="index.html" rel="prev" title="What Is The Training Village?"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+                Skip to content
+            </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="index.html">
+<img alt="Logo" class="mr-2 hidden dark:block" height="24" src="_static/favicon-white.svg" width="24"/>
+<img alt="Logo" class="mr-2 dark:hidden" height="24" src="_static/favicon.svg" width="24"/><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">Training village</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<a href="https://github.com/BrainCircuitsBehaviorLab/village" rel="noopener nofollow" title="Visit repository on GitHub">
+<div class="inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md disabled:opacity-50 disabled:pointer-events-none hover:bg-accent hover:text-accent-foreground h-9 w-9">
+<svg fill="currentColor" height="26px" style="margin-top:-2px;display:inline" viewbox="0 0 45 44" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M22.477.927C10.485.927.76 10.65.76 22.647c0 9.596 6.223 17.736 14.853 20.608 1.087.2 1.483-.47 1.483-1.047 0-.516-.019-1.881-.03-3.693-6.04 1.312-7.315-2.912-7.315-2.912-.988-2.51-2.412-3.178-2.412-3.178-1.972-1.346.149-1.32.149-1.32 2.18.154 3.327 2.24 3.327 2.24 1.937 3.318 5.084 2.36 6.321 1.803.197-1.403.759-2.36 1.379-2.903-4.823-.548-9.894-2.412-9.894-10.734 0-2.37.847-4.31 2.236-5.828-.224-.55-.969-2.759.214-5.748 0 0 1.822-.584 5.972 2.226 1.732-.482 3.59-.722 5.437-.732 1.845.01 3.703.25 5.437.732 4.147-2.81 5.967-2.226 5.967-2.226 1.185 2.99.44 5.198.217 5.748 1.392 1.517 2.232 3.457 2.232 5.828 0 8.344-5.078 10.18-9.916 10.717.779.67 1.474 1.996 1.474 4.021 0 2.904-.027 5.247-.027 5.96 0 .58.392 1.256 1.493 1.044C37.981 40.375 44.2 32.24 44.2 22.647c0-11.996-9.726-21.72-21.722-21.72" fill="currentColor" fill-rule="evenodd"></path></svg>
+</div>
+</a>
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="index.html">
+<img alt="Logo" class="mr-2 hidden dark:block" height="16" src="_static/favicon-white.svg" width="16"/>
+<img alt="Logo" class="mr-2 dark:hidden" height="16" src="_static/favicon.svg" width="16"/><span class="font-bold text-clip whitespace-nowrap">Training village</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="current reference internal expandable" href="#">User Guide<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="user_guide/getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/project_structure.html">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="how_to_build_index.html">How to Build the Training Village<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_to_build/software_installation.html">Software Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_collection_index.html">Data Collection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources_index.html">Resources</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="api_index.html">API<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.devices.html">devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.classes.html">classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.pybpodapi.html">pybpodapi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.screen.html">screen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.log.html">log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.rt_plots.html">rt_plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.time_utils.html">time_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_generated/village.video.html">video</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_500px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="index.html">
+<span class="hidden md:inline">Training village</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">User Guide</span>
+</nav>
+<div id="content" role="main">
+<section id="user-guide">
+<h1>User Guide</h1>
+
+<section id="getting-started">
+<h2>Getting Started</h2>
+<p>First, ensure that the corridor is assembled. Follow these <a class="reference internal" href="how_to_build/assembly_instructions.html"><span class="std std-doc">instructions</span></a> to complete the assembly. If you prefer to build it yourself, <a class="reference internal" href="how_to_build/list_of_parts.html"><span class="std std-doc">here</span></a> you will find the plans for all the pieces as well as a list of all necessary electronic components.</p>
+<p>The Raspberry Pi includes an SD card that contains both the operating system (Raspberry Pi OS) and all the required software pre-installed. Before placing the Raspberry Pi in its designated space in the corridor, you only need to configure it for remote access.</p>
+<p>If you are using your own Raspberry Pi, click <a class="reference internal" href="how_to_build/software_installation.html"><span class="std std-doc">here</span></a> for the software installation instructions.</p>
+</section>
+<section id="animal-procedures">
+<h2>Animal Procedures</h2>
+</section>
+<section id="using-the-gui">
+<h2>Using the GUI</h2>
+<section id="software-launch-and-configuration">
+<h3>Software Launch and Configuration</h3>
+<p>Now that you have your Training Village installed, let’s run it for first time and configure some settings.</p>
+</section>
+<section id="first-boot-configuration">
+<h3>First Boot Configuration</h3>
+<p>For the first time, connect the Raspberry Pi to a keyboard, mouse, and screen. For performance reasons, the screen resolution is set to 1280x720.
+Once the operating system boots, you should simply configure the internet connection.
+After that, open a terminal and run:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Run on terminal</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">run_village</span>
+</span></code></pre></div>
+</div>
+</div>
+<p>The following screen should appear:
+<img alt="Main Training village screen" src="../_static/main_screen.png"/></p>
+<p>There is a menu in the top, lets start by configuring the settings.</p>
+</section>
+</section>
+<section id="configure-remote-access">
+<h2>Configure remote access</h2>
+<p>First, we need to set up the system’s internet connection. The easiest way to do this is to connect the Raspberry Pi to a keyboard, mouse, screen, and Ethernet cable (if you are using a wired connection) before powering it on for the first time. For performance reasons, the screen resolution is forcibly set to 1280x720, regardless of the display you use.</p>
+<p>Once the operating system boots up, simply configure the internet connection. <a class="reference external" href="https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3" rel="nofollow noopener">Help<svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>.</p>
+<p>Now we’ll set up remote access using <a class="reference external" href="https://www.realvnc.com/en/" rel="nofollow noopener"><strong>RealVNC</strong><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>. Follow these steps:</p>
+<p>From your Raspberry Pi:</p>
+<ol class="arabic">
+<li><div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"> Go to the [**Lite Access Subscription Page**][LITE] of RealVNC and create an account (free for non-commercial use). Follow these [detailed instructions][INSTRUCTIONS] if you encounter any issues.
+</span></code></pre></div>
+</div>
+</li>
+<li><div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"> Open the **RealVNC Server** on the Raspberry Pi (it is installed automatically with Raspberry Pi OS) and configure it for your team.
+</span></code></pre></div>
+</div>
+</li>
+<li><div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"> Go to the **Device Access** section on the RealVNC webpage and add your current device.
+</span></code></pre></div>
+</div>
+</li>
+<li><div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"> In the RealVNC window, you will see a code that allows remote connections from other networks and an IP address for connections from the same network.
+</span></code></pre></div>
+</div>
+</li>
+</ol>
+<p>From your external computer or phone:</p>
+<ol class="arabic">
+<li><div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"> Log in to the RealVNC webpage with your credentials.
+</span></code></pre></div>
+</div>
+</li>
+<li><div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"> Install and open **RealVNC Viewer** on your external computer or phone.
+</span></code></pre></div>
+</div>
+</li>
+<li><div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"> Connect to the Raspberry Pi using the RealVNC server’s code if connecting from a different network, or the IP address if connecting from the same network.
+</span></code></pre></div>
+</div>
+</li>
+</ol>
+<p>There is also an alternative option for remote connection using <strong>raspi-connect</strong>; however, we currently do not recommend it due to some issues we encountered during testing, and suboptimal performance.</p>
+</section>
+<section id="create-a-telegram-bot">
+<h2>Create a Telegram Bot</h2>
+<ol class="arabic simple">
+<li><p>Text <code class="docutils literal notranslate"><span class="pre">@BotFather</span></code> in the search tab and select this bot.</p></li>
+<li><p>Text: <code class="docutils literal notranslate"><span class="pre">/newbot</span></code> and send.</p></li>
+<li><p>Follow Botfather instructions. Write down the token. Never share the token in github.</p></li>
+<li><p>Open a chat with your new bot and activate it by sending: <code class="docutils literal notranslate"><span class="pre">/start</span></code>.</p></li>
+</ol>
+<section id="check-the-token-of-an-existing-bot">
+<h3>Check the token of an existing bot</h3>
+<ol class="arabic simple" start="5">
+<li><p>Go to the <code class="docutils literal notranslate"><span class="pre">@BotFather</span></code> chat and send <code class="docutils literal notranslate"><span class="pre">/token</span></code>.</p></li>
+</ol>
+</section>
+<section id="make-the-bot-triggers-the-alarms">
+<h3>Make the bot triggers the alarms</h3>
+<ol class="arabic simple" start="6">
+<li><p>Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the
+alarms from the bot and will be able to send commands to it.</p></li>
+<li><p>Start a conversation with <code class="docutils literal notranslate"><span class="pre">@username_to_id_bot</span></code> to obtain your ID, the chat ID and
+the ID of all the other users.</p></li>
+<li><p>Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)</p></li>
+</ol>
+</section>
+</section>
+<section id="project-structure">
+<h2>Project Structure</h2>
+<p>For training animals, the code and data are organized into projects. A project’s structure is automatically created when a new project is started.</p>
+<p>A folder is created for the project:
+/village/village_projects/name_of_the_project/</p>
+<p>Within this folder, there are two subfolders: /data and /code</p>
+<p>The first time you run training village, it will automatically create a project called ‘demo_project’. It will also clone the
+<a class="reference external" href="https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task" rel="nofollow noopener">follow-the-light-task<svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a> repository, which contains a working example for a simple project. You can use it as a base to start creating your own tasks. (If you are code-savvy, you can dive right into it to explore the logic).</p>
+<p>Let’s first explore how the code is organized:</p>
+<section id="code">
+<h3>Code</h3>
+<p>The training protocol consists of one or more Python scripts, each representing a task that the animals can perform. In addition to these scripts, a training script is required (called ‘training_protocol.py’). The training script is run every time a subject finishes a task and contains the logic to either advance or regress the subject in their training based on their performance. This could involve changing the animal to a different task and/or modifying the parameters used in the task.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Example 1</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">code/
+</span><span id="line-2">├── habituation.py
+</span><span id="line-3">├── lick_teaching.py
+</span><span id="line-4">├── task_simple.py
+</span><span id="line-5">├── final_task.py
+</span><span id="line-6">├── training_protocol.py
+</span></code></pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Example 2</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">code/
+</span><span id="line-2">├── follow_the_light.py
+</span><span id="line-3">├── training_protocol.py
+</span></code></pre></div>
+</div>
+</div>
+<p>In Example 1, there are several tasks corresponding to different training stages. For examples, animals start with ‘habituation’, a simple task that helps them get used to the behavioral box. After one or two sessions, they move on to ‘lick_teaching’, where they learn to lick the behavioral ports. Once they have completed a sufficient number of trials, they progress to ‘simple_task’, a simplified version of the final task. When performance reaches an adequate level, they transition to ‘final_task’. The logic governing task progression is written in ‘training_protocol.py’.</p>
+<p>In Example 2, there is only one task, follow_the_light, but each time a subject finishes a session, ‘training_protocol.py’ adjusts variables to increase the task’s difficulty.</p>
+<p>The user can choose either approach—or a combination of both—to organize the training as needed.</p>
+</section>
+<section id="tasks">
+<h3>Tasks</h3>
+<p>To create a task, create a Python file, and within it, a class with the task’s name, inheriting functionality from the generic <strong>Task</strong> class. This process is straightforward. Let’s look at an example:</p>
+<p>Within the folder: village/village_projects/demo_project/code/, we have created the file simple_task.py with the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+</span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></code></pre></div>
+</div>
+<p>The task is named SimpleTask. It is initialized with <strong>init</strong>, and we acquire all the properties of the generic Task class using super().<strong>init</strong>(). The naming conventions follow Python standards: CamelCase for class names and lower_case for filenames and function names.
+If you try to run this task as-is, you will encounter an error indicating that certain methods must be implemented in your class. These methods are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">create_trial</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">after_trial</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">close</span></code></p></li>
+</ul>
+<p>We can implement these methods for now, even if they don’t perform any actions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+</span><span id="line-2">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="line-4">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-5">        <span class="k">return</span>
+</span><span id="line-6">    <span class="k">def</span> <span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-7">        <span class="k">return</span>
+</span><span id="line-8">    <span class="k">def</span> <span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-9">        <span class="k">return</span>
+</span><span id="line-10">    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-11">        <span class="k">return</span>
+</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="system-state-machine">
+<h2>System State Machine</h2>
+</section>
+<section id="maintenance">
+<h2>Maintenance</h2>
+<p class="lead">This section provides all the necessary information for maintaining and managing the system.</p>
+<p>This is a routine to maintain proper functioning and hygiene in the MV system. The main duties include:</p>
+<section id="daily">
+<h3>Daily</h3>
+<ul class="simple">
+<li><p>Check <a class="reference internal" href="user_guide/alarms.html"><span class="std std-doc">Telegram alarms</span></a> and fix problems if required.</p></li>
+<li><p>Review [daily reports] to assess mice progression in the training.</p></li>
+</ul>
+</section>
+<section id="weekly">
+<h3>Weekly</h3>
+<ul class="simple">
+<li><p>Clean the behavioral box and corridor.</p></li>
+<li><p>Clean and change sucrose water inside the behavioral box.</p></li>
+</ul>
+</section>
+<section id="biweekly">
+<h3>Biweekly</h3>
+<ul class="simple">
+<li><p>Change citric acid bottles.</p></li>
+<li><p>Change cages and enrichment (check if there is enough food).<br/>
+<em>This can be done every 3 weeks if needed.</em></p></li>
+</ul>
+</section>
+<section id="monthly">
+<h3>Monthly</h3>
+<ul class="simple">
+<li><p>Clean the mask and remove droppings below it.</p></li>
+</ul>
+</section>
+<section id="occasionally">
+<h3>Occasionally</h3>
+<ul class="simple">
+<li><p>Manual water delivery to specific mice (when required).</p></li>
+<li><p>Water calibration (once every two months or if you suspect something is not working properly).</p></li>
+</ul>
+</section>
+</section>
+<section id="receiving-and-responding-to-telegram-alarms">
+<h2>Receiving and responding to Telegram Alarms</h2>
+<section id="interrogate-the-system">
+<h3>Interrogate the system</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/status</span> <span class="pre">‘hours’</span></code> → Summary of what happened in the behavioral box the last hours.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code> → Screenshot of the cameras’ recording.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/plot</span> <span class="pre">‘days’</span></code> → Gui plots.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/report</span> <span class="pre">‘hours</span> <span class="pre">days’</span></code> → status+cam+plot.</p></li>
+</ul>
+</section>
+<section id="alarms">
+<h3>Alarms</h3>
+
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
+<th class="head"><p><strong>Frequency</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Recommended Actions</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Check weight and water</strong></p></td>
+<td><p>Very frequent</p></td>
+<td><p>Triggered when a mouse weighs less than 50% basal weight or has drunk less than the threshold.</p></td>
+<td><p>- For weight: Check for intersession issues, manually weigh, assess health score, and review performance.  - For water: If below 600 µl for 2-3 days, supplement with 500-1000 µl manually.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mouse in box for ‘x’ seconds</strong></p></td>
+<td><p>Very frequent</p></td>
+<td><p>Mouse has been in the box for a long time.</p></td>
+<td><p>Connect remotely, play buzzer, open/close door. If no response &gt;5 hours, go in person. Check temperature.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mouse trapped in corridor</strong></p></td>
+<td><p>Frequent</p></td>
+<td><p>Two mice overlap in the doors’ zone, allowing task to start, or mouse escaped to corridor.</p></td>
+<td><p>Open door 1 remotely. If suspected escape, check corridor videos.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2 mice in box</strong></p></td>
+<td><p>Frequent</p></td>
+<td><p>System detects two mice inside the box.</p></td>
+<td><p>Verify via inner camera. If true, make them exit, delete session, and review videos. If false, check camera settings for overlap.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Animal on the floor</strong></p></td>
+<td><p>Very frequent</p></td>
+<td><p>Mouse has learned to go down to the floor of the box.</p></td>
+<td><p>If a regular explorer, ignore. If a new animal, check if it knows how to return. Manually help if needed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Few trials</strong></p></td>
+<td><p>Very frequent</p></td>
+<td><p>Indicates fewer trials than expected, common in new or poorly trained mice.</p></td>
+<td><p>- Well-trained mice: Check the behavioral box and task manually.  - New mice: Consider moving to an easier stage if not improving.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Last session ended</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>Session ended unexpectedly.</p></td>
+<td><p>- Check doors, RFID, and scale for issues.  - Ensure camera and script are running.  - Verify animal movement and room status.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Overdetections in ‘Session’</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>Abnormal number of photogate beam crosses detected.</p></td>
+<td><p>Check buzzer or photogate alignment. Adjust or replace components as needed.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Touchscreen not working for ‘Subject’</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>Touchscreen failure during session.</p></td>
+<td><p>Disconnect and reconnect the device. Restart PC if the issue persists.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Last heartbeat</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>PC is off or has lost internet connection.</p></td>
+<td><p>Go in person to check for power or network issues.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Bpod communication error</strong></p></td>
+<td><p>Rare</p></td>
+<td><p>Communication error between the Bpod and the system.</p></td>
+<td><p>Usually can be ignored unless it becomes frequent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bpod not sending softcodes</strong></p></td>
+<td><p>Never happens</p></td>
+<td><p>Issue with Bpod softcode transmission.</p></td>
+<td><p>Ignore unless it starts happening frequently.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Bpod not sending serials</strong></p></td>
+<td><p>Never happens</p></td>
+<td><p>Issue with Bpod serial transmission.</p></td>
+<td><p>Ignore unless it starts happening frequently.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Ecohab not detecting</strong></p></td>
+<td><p>Not detected by alarm</p></td>
+<td><p>Antennas not detected by Ecohab.</p></td>
+<td><p>Restart Ecohab script, reconnect USB and power supply. Check antenna status.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#getting-started'" class="reference internal" href="#getting-started">Getting Started</a></li>
+<li><a :data-current="activeSection === '#animal-procedures'" class="reference internal" href="#animal-procedures">Animal Procedures</a></li>
+<li><a :data-current="activeSection === '#using-the-gui'" class="reference internal" href="#using-the-gui">Using the GUI</a><ul>
+<li><a :data-current="activeSection === '#software-launch-and-configuration'" class="reference internal" href="#software-launch-and-configuration">Software Launch and Configuration</a></li>
+<li><a :data-current="activeSection === '#first-boot-configuration'" class="reference internal" href="#first-boot-configuration">First Boot Configuration</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#configure-remote-access'" class="reference internal" href="#configure-remote-access">Configure remote access</a></li>
+<li><a :data-current="activeSection === '#create-a-telegram-bot'" class="reference internal" href="#create-a-telegram-bot">Create a Telegram Bot</a><ul>
+<li><a :data-current="activeSection === '#check-the-token-of-an-existing-bot'" class="reference internal" href="#check-the-token-of-an-existing-bot">Check the token of an existing bot</a></li>
+<li><a :data-current="activeSection === '#make-the-bot-triggers-the-alarms'" class="reference internal" href="#make-the-bot-triggers-the-alarms">Make the bot triggers the alarms</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#project-structure'" class="reference internal" href="#project-structure">Project Structure</a><ul>
+<li><a :data-current="activeSection === '#code'" class="reference internal" href="#code">Code</a></li>
+<li><a :data-current="activeSection === '#tasks'" class="reference internal" href="#tasks">Tasks</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#system-state-machine'" class="reference internal" href="#system-state-machine">System State Machine</a></li>
+<li><a :data-current="activeSection === '#maintenance'" class="reference internal" href="#maintenance">Maintenance</a><ul>
+<li><a :data-current="activeSection === '#daily'" class="reference internal" href="#daily">Daily</a></li>
+<li><a :data-current="activeSection === '#weekly'" class="reference internal" href="#weekly">Weekly</a></li>
+<li><a :data-current="activeSection === '#biweekly'" class="reference internal" href="#biweekly">Biweekly</a></li>
+<li><a :data-current="activeSection === '#monthly'" class="reference internal" href="#monthly">Monthly</a></li>
+<li><a :data-current="activeSection === '#occasionally'" class="reference internal" href="#occasionally">Occasionally</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#receiving-and-responding-to-telegram-alarms'" class="reference internal" href="#receiving-and-responding-to-telegram-alarms">Receiving and responding to Telegram Alarms</a><ul>
+<li><a :data-current="activeSection === '#interrogate-the-system'" class="reference internal" href="#interrogate-the-system">Interrogate the system</a></li>
+<li><a :data-current="activeSection === '#alarms'" class="reference internal" href="#alarms">Alarms</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Rafael Marin, Balma Serrano, Hernando Vergara Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="_static/documentation_options.js?v=64fb0b61"></script>
+<script src="_static/doctools.js?v=9bcbadda"></script>
+<script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+<script defer="defer" src="_static/theme.js?v=1808ab49"></script>
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+</body>
+</html>

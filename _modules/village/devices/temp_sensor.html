@@ -127,11 +127,11 @@
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide_index.html">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/remote.html">Configure Remote Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/state_machine.html">System State Machine</a></li>
@@ -139,13 +139,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../how_to_build/index.html">How to Build the Training Village</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_build_index.html">How to Build the Training Village</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../data_collection.html">Data Collection Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_collection_index.html">Data Collection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../resources_index.html">Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.devices.html">devices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a></li>
@@ -158,7 +159,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.video.html">video</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../resources.html">Resources</a></li>
 </ul>
 
 </nav>
@@ -208,55 +208,56 @@
 </span><span id="line-4">
 </span><span id="line-5"><span class="kn">from</span> <span class="nn">village.classes.protocols</span> <span class="kn">import</span> <span class="n">TempSensorProtocol</span>
 </span><span id="line-6"><span class="kn">from</span> <span class="nn">village.log</span> <span class="kn">import</span> <span class="n">log</span>
-</span><span id="line-7">
+</span><span id="line-7"><span class="kn">from</span> <span class="nn">village.settings</span> <span class="kn">import</span> <span class="n">settings</span>
 </span><span id="line-8">
+</span><span id="line-9">
 <div class="viewcode-block" id="TempSensor">
 <a class="viewcode-back" href="../../../api_generated/village.devices.temp_sensor.TempSensor.html#village.devices.temp_sensor.TempSensor">[docs]</a>
-</span><span id="line-9"><span class="k">class</span> <span class="nc">TempSensor</span><span class="p">(</span><span class="n">TempSensorProtocol</span><span class="p">):</span>
+</span><span id="line-10"><span class="k">class</span> <span class="nc">TempSensor</span><span class="p">(</span><span class="n">TempSensorProtocol</span><span class="p">):</span>
 <div class="viewcode-block" id="TempSensor.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.devices.temp_sensor.TempSensor.html#village.devices.temp_sensor.TempSensor.__init__">[docs]</a>
-</span><span id="line-10">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-11">        <span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span> <span class="o">=</span> <span class="mh">0x45</span>  <span class="c1"># I2C device address</span>
-</span><span id="line-12">        <span class="bp">self</span><span class="o">.</span><span class="n">bus</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span id="line-13">        <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span> <span class="o">=</span> <span class="n">smbus2</span><span class="o">.</span><span class="n">SMBus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="p">)</span>
-</span><span id="line-14">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span id="line-15">        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+</span><span id="line-11">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-12">        <span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+</span><span id="line-13">        <span class="bp">self</span><span class="o">.</span><span class="n">bus</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="line-14">        <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span> <span class="o">=</span> <span class="n">smbus2</span><span class="o">.</span><span class="n">SMBus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="p">)</span>
+</span><span id="line-15">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span id="line-16">        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
-</span><span id="line-16">
-</span><span id="line-17">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-18">        <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span><span class="o">.</span><span class="n">write_byte_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span><span class="p">,</span> <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x34</span><span class="p">)</span>
-</span><span id="line-19">
-</span><span id="line-20">    <span class="k">def</span> <span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-</span><span id="line-21">        <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span><span class="o">.</span><span class="n">write_byte_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span><span class="p">,</span> <span class="mh">0xE0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">)</span>
-</span><span id="line-22">        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span><span class="o">.</span><span class="n">read_i2c_block_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-</span><span id="line-23">        <span class="n">rawT</span> <span class="o">=</span> <span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</span><span id="line-24">        <span class="n">rawR</span> <span class="o">=</span> <span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-</span><span id="line-25">        <span class="n">temp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">45</span> <span class="o">+</span> <span class="n">rawT</span> <span class="o">*</span> <span class="mi">175</span> <span class="o">/</span> <span class="mi">65535</span>
-</span><span id="line-26">        <span class="n">RH</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">rawR</span> <span class="o">/</span> <span class="mi">65535</span>
-</span><span id="line-27">        <span class="k">return</span> <span class="n">temp</span><span class="p">,</span> <span class="n">RH</span>
-</span><span id="line-28">
-</span><span id="line-29">    <span class="k">def</span> <span class="nf">get_temperature_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="line-30">        <span class="n">temp</span><span class="p">,</span> <span class="n">RH</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_temperature</span><span class="p">()</span>
-</span><span id="line-31">        <span class="n">temp_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:.2f}</span><span class="s2">ºC&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-</span><span id="line-32">        <span class="n">RH_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:.2f}</span><span class="s2">%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">RH</span><span class="p">)</span>
-</span><span id="line-33">        <span class="k">return</span> <span class="n">temp_string</span> <span class="o">+</span> <span class="s2">&quot; / &quot;</span> <span class="o">+</span> <span class="n">RH_string</span></div>
+</span><span id="line-17">
+</span><span id="line-18">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-19">        <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span><span class="o">.</span><span class="n">write_byte_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span><span class="p">,</span> <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x34</span><span class="p">)</span>
+</span><span id="line-20">
+</span><span id="line-21">    <span class="k">def</span> <span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+</span><span id="line-22">        <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span><span class="o">.</span><span class="n">write_byte_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span><span class="p">,</span> <span class="mh">0xE0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">)</span>
+</span><span id="line-23">        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span><span class="o">.</span><span class="n">read_i2c_block_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</span><span id="line-24">        <span class="n">rawT</span> <span class="o">=</span> <span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</span><span id="line-25">        <span class="n">rawR</span> <span class="o">=</span> <span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+</span><span id="line-26">        <span class="n">temp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">45</span> <span class="o">+</span> <span class="n">rawT</span> <span class="o">*</span> <span class="mi">175</span> <span class="o">/</span> <span class="mi">65535</span>
+</span><span id="line-27">        <span class="n">RH</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">rawR</span> <span class="o">/</span> <span class="mi">65535</span>
+</span><span id="line-28">        <span class="k">return</span> <span class="n">temp</span><span class="p">,</span> <span class="n">RH</span>
+</span><span id="line-29">
+</span><span id="line-30">    <span class="k">def</span> <span class="nf">get_temperature_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-31">        <span class="n">temp</span><span class="p">,</span> <span class="n">RH</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_temperature</span><span class="p">()</span>
+</span><span id="line-32">        <span class="n">temp_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:.2f}</span><span class="s2">ºC&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+</span><span id="line-33">        <span class="n">RH_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:.2f}</span><span class="s2">%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">RH</span><span class="p">)</span>
+</span><span id="line-34">        <span class="k">return</span> <span class="n">temp_string</span> <span class="o">+</span> <span class="s2">&quot; / &quot;</span> <span class="o">+</span> <span class="n">RH_string</span></div>
 
-</span><span id="line-34">
 </span><span id="line-35">
+</span><span id="line-36">
 <div class="viewcode-block" id="get_temp_sensor">
 <a class="viewcode-back" href="../../../api_generated/village.devices.temp_sensor.get_temp_sensor.html#village.devices.temp_sensor.get_temp_sensor">[docs]</a>
-</span><span id="line-36"><span class="k">def</span> <span class="nf">get_temp_sensor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TempSensorProtocol</span><span class="p">:</span>
-</span><span id="line-37">    <span class="k">try</span><span class="p">:</span>
-</span><span id="line-38">        <span class="n">temp_sensor</span> <span class="o">=</span> <span class="n">TempSensor</span><span class="p">()</span>
-</span><span id="line-39">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Temp sensor successfully initialized&quot;</span><span class="p">)</span>
-</span><span id="line-40">        <span class="k">return</span> <span class="n">temp_sensor</span>
-</span><span id="line-41">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span id="line-42">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not initialize temp sensor&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
-</span><span id="line-43">        <span class="k">return</span> <span class="n">TempSensorProtocol</span><span class="p">()</span></div>
+</span><span id="line-37"><span class="k">def</span> <span class="nf">get_temp_sensor</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TempSensorProtocol</span><span class="p">:</span>
+</span><span id="line-38">    <span class="k">try</span><span class="p">:</span>
+</span><span id="line-39">        <span class="n">temp_sensor</span> <span class="o">=</span> <span class="n">TempSensor</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">)</span>
+</span><span id="line-40">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Temp sensor successfully initialized&quot;</span><span class="p">)</span>
+</span><span id="line-41">        <span class="k">return</span> <span class="n">temp_sensor</span>
+</span><span id="line-42">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span id="line-43">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not initialize temp sensor&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+</span><span id="line-44">        <span class="k">return</span> <span class="n">TempSensorProtocol</span><span class="p">()</span></div>
 
-</span><span id="line-44">
 </span><span id="line-45">
-</span><span id="line-46"><span class="n">temp_sensor</span> <span class="o">=</span> <span class="n">get_temp_sensor</span><span class="p">()</span>
+</span><span id="line-46">
+</span><span id="line-47"><span class="n">temp_sensor</span> <span class="o">=</span> <span class="n">get_temp_sensor</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TEMP_SENSOR_ADDRESS&quot;</span><span class="p">))</span>
 </span></code></pre></div>
     </div></div>
                         </main>
@@ -272,7 +273,7 @@
 </footer>
             </div>
             
-            <script src="../../../_static/documentation_options.js?v=2ad26282"></script>
+            <script src="../../../_static/documentation_options.js?v=64fb0b61"></script>
             <script src="../../../_static/doctools.js?v=9bcbadda"></script>
             <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
             <script defer="defer" src="../../../_static/theme.js?v=1808ab49"></script>

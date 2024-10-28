@@ -1,8 +1,8 @@
-# List of Parts
+## List of Parts
 
 Below are the detailed lists of what you'll need to print, purchase, and assemble.
 
-## 3D-Printed Parts
+### 3D-Printed Parts
 
 You'll need to 3D print the following parts to build the Mouse Village system. Make sure
 to use the provided STL files in the **original orientation** for accuracy (the
@@ -21,9 +21,11 @@ parts **don't need supports** unless mentioned):
   - Door mechanisms
   - Enclosures for the electronics
 
-<!-- [Download all the 3D printing files here][3D files] -->
+[Download all the 3D printing files here][3D]
 
-## CNC Machined Parts
+
+
+### CNC Machined Parts
 
 Below are the CAD files for the parts that need to be CNC machined:
 
@@ -39,7 +41,28 @@ Below are the CAD files for the parts that need to be CNC machined:
   system without needing to handle them. They fit into a slot on each cage connector,
   preventing the mice from exiting when the tubes are disconnected.
 
-## Electronic Components
+
+### Aluminium Extrusions and Tubes
+
+For the structural support and frame of the Mouse Village system, you will need
+aluminium extrusions and tubes. These provide durability and stability to the entire
+setup. Below is a basic list of what you'll need:
+
+- **Aluminium Extrusions**:
+  - 20x20 mm extrusions (for the chamber frame)
+  - 30x30 mm extrusions (for heavier support sections)
+- **Tubes**:
+  - Aluminium tubes (for connecting various components and ensuring rigidity)
+
+Make sure to source these parts from reliable suppliers to ensure quality and fit.
+
+Feel free to follow the instructions in the
+[Assembly Instructions Section][ASSEMBLY]
+for detailed guidance on how to assemble the Training Village system.
+
+
+
+### Electronic Components
 
 Here’s the list of all the electronic components you will need to purchase:
 
@@ -56,26 +79,9 @@ Here’s the list of all the electronic components you will need to purchase:
   - IR camera for monitoring
   - Power supply and cables
 
-<!-- [View the electronic components list here][Electronic components] -->
+[View the electronic components list here][ELECTRONIC]
 
-## Aluminium Extrusions and Tubes
 
-For the structural support and frame of the Mouse Village system, you will need
-aluminium extrusions and tubes. These provide durability and stability to the entire
-setup. Below is a basic list of what you'll need:
-
-- **Aluminium Extrusions**:
-  - 20x20 mm extrusions (for the chamber frame)
-  - 30x30 mm extrusions (for heavier support sections)
-- **Tubes**:
-  - Aluminium tubes (for connecting various components and ensuring rigidity)
-
-Make sure to source these parts from reliable suppliers to ensure quality and fit.
-
-Feel free to follow the instructions in the
-[Assembly Instructions Section][Assembly Instructions]
-for detailed guidance on how to assemble the Training Village system.
-
-<!-- [3D files]: https://example.com/3d-files-link -->
-<!-- [Electronic components]: https://example.com/electronic-components-link -->
-[Assembly Instructions]: ../_static/training-village-instructions.pdf
+[3D]: /TODO-LINK.md
+[ELECTRONIC]: /TODO-LINK.md
+[ASSEMBLY]: /how_to_build/assembly_instructions.md

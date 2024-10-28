@@ -15,11 +15,11 @@
             content="black" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Configure Remote Access | Training village</title>
+        <title>Configure remote access | Training village</title>
         <meta property="og:title"
-            content="Configure Remote Access | Training village" />
+            content="Configure remote access | Training village" />
         <meta name="twitter:title"
-            content="Configure Remote Access | Training village" />
+            content="Configure remote access | Training village" />
         <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8d216cef" />
         <link rel="stylesheet" type="text/css" href="../_static/theme.css?v=edd7d3d2" />
         <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=04772280" />
@@ -29,10 +29,10 @@
             href="../search.html" />
         <link rel="index" title="Index"
             href="../genindex.html" />
-        <link rel="next" title="Create a Telegram Bot"
-            href="telegram.html" />
-        <link rel="prev" title="Using the GUI"
-            href="GUI.html" />
+        <link rel="next" title="Animal Procedures"
+            href="animal_procedures.html" />
+        <link rel="prev" title="Getting Started"
+            href="getting_started.html" />
 
         <script>
     <!-- Prevent Flash of wrong theme -->
@@ -132,11 +132,11 @@
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide_index.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Configure Remote Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
@@ -144,13 +144,14 @@
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../how_to_build/index.html">How to Build the Training Village</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection.html">Data Collection Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a></li>
@@ -163,7 +164,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.video.html">video</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../resources.html">Resources</a></li>
 </ul>
 
 </nav>
@@ -199,15 +199,32 @@
   </a>
   
 <div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="index.html">User Guide</a>
+       href="../user_guide_index.html">User Guide</a>
     
 <div class="mr-1">/</div><span aria-current="page"
-        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Configure Remote Access</span>
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Configure remote access</span>
 </nav>
 
     <div id="content" role="main">
-      <section class="tex2jax_ignore mathjax_ignore" id="configure-remote-access">
-<h1>Configure Remote Access</h1>
+      <section id="configure-remote-access">
+<h1>Configure remote access</h1>
+<p>First, we need to set up the system’s internet connection. The easiest way to do this is to connect the Raspberry Pi to a keyboard, mouse, screen, and Ethernet cable (if you are using a wired connection) before powering it on for the first time. For performance reasons, the screen resolution is forcibly set to 1280x720, regardless of the display you use.</p>
+<p>Once the operating system boots up, simply configure the internet connection. <a class="reference external" href="https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3">Help</a>.</p>
+<p>Now we’ll set up remote access using <a class="reference external" href="https://www.realvnc.com/en/"><strong>RealVNC</strong></a>. Follow these steps:</p>
+<p>From your Raspberry Pi:</p>
+<ol class="arabic simple">
+<li><p>Go to the <a class="reference external" href="https://www.realvnc.com/en/connect/plan/lite/"><strong>Lite Access Subscription Page</strong></a> of RealVNC and create an account (free for non-commercial use). Follow these <a class="reference external" href="https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription">detailed instructions</a> if you encounter any issues.</p></li>
+<li><p>Open the <strong>RealVNC Server</strong> on the Raspberry Pi (it is installed automatically with Raspberry Pi OS) and configure it for your team.</p></li>
+<li><p>Go to the <strong>Device Access</strong> section on the RealVNC webpage and add your current device.</p></li>
+<li><p>In the RealVNC window, you will see a code that allows remote connections from other networks and an IP address for connections from the same network.</p></li>
+</ol>
+<p>From your external computer or phone:</p>
+<ol class="arabic simple">
+<li><p>Log in to the RealVNC webpage with your credentials.</p></li>
+<li><p>Install and open <strong>RealVNC Viewer</strong> on your external computer or phone.</p></li>
+<li><p>Connect to the Raspberry Pi using the RealVNC server’s code if connecting from a different network, or the IP address if connecting from the same network.</p></li>
+</ol>
+<p>There is also an alternative option for remote connection using <strong>raspi-connect</strong>; however, we currently do not recommend it due to some issues we encountered during testing, and suboptimal performance.</p>
 </section>
 
     </div></div>
@@ -224,7 +241,7 @@
 </footer>
             </div>
             
-            <script src="../_static/documentation_options.js?v=2ad26282"></script>
+            <script src="../_static/documentation_options.js?v=64fb0b61"></script>
             <script src="../_static/doctools.js?v=9bcbadda"></script>
             <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
             <script defer="defer" src="../_static/theme.js?v=1808ab49"></script>
