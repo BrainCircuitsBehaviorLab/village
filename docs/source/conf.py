@@ -139,9 +139,10 @@ html_theme_options = {
         # Para quitar en todas las páginas el toc: "**": [],
         # Para quitarlo en alguna página en concreto: nombre_de_la_pagina: []
         "**": ["page-toc"],
-        "index": [],
+        # "index": [],
     },
-    "use_download_button": False, # True si quieres que aparezca el botón de descarga 
+    "home_page_in_toc": True,
+    "use_download_button": False,  # True si quieres que aparezca el botón de descarga
     # "logo_light": "_static/favicon.svg",
     # "logo_dark": "_static/favicon-white.svg",
     # "light_logo": "logo.png",

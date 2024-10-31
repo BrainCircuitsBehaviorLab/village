@@ -1,4 +1,4 @@
-How to Build the Training Village
+How to Build It
 =================================
 
 .. toctree::

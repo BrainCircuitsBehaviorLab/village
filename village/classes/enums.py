@@ -119,12 +119,12 @@ class Cycle(SuperEnum):
 class Actions(SuperEnum):
     CORRIDOR = "CORRIDOR"
     PORTS = "PORTS"
-    SOFTCODES = "SOFTCODES"
+    FUNCTIONS = "FUNCTIONS"
 
 
 class Info(SuperEnum):
     SYSTEM_INFO = "SYSTEM_INFO"
-    CORRIDOR_SETTINGS = "CORRIDOR_SETTINGS"
+    DETECTION_SETTINGS = "DETECTION_SETTINGS"
 
 
 class DataTable(SuperEnum):

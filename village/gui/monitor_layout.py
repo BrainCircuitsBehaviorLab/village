@@ -360,7 +360,10 @@ class MonitorLayout(Layout):
             possible_values,
             index,
             self.toggle_actions_button,
-            "Perform actions on the corridor, behavioral ports or softcodes",
+            """
+            Perform actions on the corridor, light the behavioral ports or run
+            user-defined python functions
+            """,
         )
 
         index = Info.get_index_from_string(manager.info.value)
@@ -413,7 +416,7 @@ class MonitorLayout(Layout):
         match manager.info:
             case manager.info.SYSTEM_INFO:
                 self.page4Layout.update_gui()
-            case manager.info.CORRIDOR_SETTINGS:
+            case manager.info.DETECTION_SETTINGS:
                 self.page5Layout.update_gui()
 
     def update_buttons(self) -> None:
@@ -668,7 +671,7 @@ class SoftcodesLayout(Layout):
             row = i // 2 * 2
             column = 0 if i % 2 == 0 else 18
             button: PushButton = self.create_and_add_button(
-                "SOFTCODE" + str(i + 1),
+                "FUNCTION" + str(i + 1),
                 row,
                 column,
                 16,

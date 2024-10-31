@@ -17,4 +17,4 @@ Contact: [marinraf@gmail.com](mailto:marinraf@gmail.com)
 [REPO]: https://github.com/BrainCircuitsBehaviorLab/village/
 [RESOURCES]: /resources_index.rst
 
-<br>
+<br><br><br><br><br><br><br><br>

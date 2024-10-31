@@ -100,17 +100,17 @@ pip install scipy
 ```
 
 ### Changing Preferences
-1. Enable auto-login by clicking on **Preferences** -> **Raspberry Pi Configuration** -> **Auto login**.
-2. Add CPU monitors to the toolbar: Right-click on the toolbar, select **Add/Remove Panel Items**, and click **Add**. Select **CPU Temperature Monitor** and **CPU Usage monitor**.
+1. Enable auto-login by clicking on `Preferences` -> `Raspberry Pi Configuration` -> `Auto login`.
+2. Add CPU monitors to the toolbar: Right-click on the toolbar, select `Add/Remove Panel Items`, and click `Add`. Select `CPU Temperature Monitor` and `CPU Usage monitor`.
 
 ### Screen Settings
-1. Run the raspi-config.
+1. Run the `raspi-config`.
 
 ```
 sudo raspi-config
 ```
-2. Go to **Display Options** and disable blanking.
-3. Go to **Advanced Options** and select X11 (instead of Wayland).
+2. Go to `Display Options` and disable blanking.
+3. Go to `Advanced Options` and select X11 (instead of Wayland).
 
 Then, you need to configure the system to recognize a screen even if none is physically connected, so the software renders properly when accessed remotely. If you want to use an additional screen to present stimuli in the behavioral box, you need to set the system to work with two screens.
 
@@ -124,33 +124,20 @@ sudo nano /boot/firmware/cmdline.txt
 
 Explanation of values: (1 makes the system operate as if a screen is connected to HDMI 1). (2 makes the system operate as if a screen is connected to HDMI 2). (3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2).
 
-6. Change the resolution of the screen (or screens) to 1280 x 720: **Preferences** ->
- **Screen Configuration**.
+6. Change the resolution of the screen (or screens) to 1280 x 720: `Preferences` ->
+ `Screen Configuration`.
 
 
 ### I2C Communication
 
 The temperature sensor and the weight sensor are connected to the I2C pins of the Raspberry.
-1. First, activate the I2C communication:
+1. Run the `raspi-config`.
 
 ```
 sudo raspi-config
 ```
-2. Go to **Interface Options** and enable I2C.
+2. Go to `Interface Options` and enable I2C.
 
-The system is configured to work with address = 0x45 for the temperature sensor (DFRobot HX711) and address = 0x64 for the weight sensor (CQRobot SHT31). If you are using different models or if the devices are not recognized, follow these steps to verify that the addresses are correct:
-
-3. Connect the devices to the raspberry.
-4. Install the detection tools:
-```
-sudo apt-get install -y i2c-tools
-```
-5. Run the tools:
-```
-i2cdetect -y 1
-```
-6. Change the addresses in the python code by modifying the corresponding settings in
-`village/settings.py` (extra_settings).
 
 
 ### Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication
@@ -173,11 +160,11 @@ enable_uart=1
 When you connect your Bpod device to the Raspberry Pi, it’s assigned a file path in `/dev/`, typically named `ttyACM0`. However, this name may vary (ttyACM1, ttyACM2, etc.), especially if you have other USB devices connected. To ensure a consistent and recognizable name, you can create a symbolic link to your Bpod device.
 
 1. Navigate to the Udev rules folder where custom rules are stored:
-```bash
+```
 cd /etc/udev/rules.d
 ```
 2. Create a new rule file named `99-usb.rules`:
-```bash
+```
 sudo nano 99-usb.rules
 ```
 3. In the new rule file, add the following line to create a symbolic link named `Bpod` for any device that matches the pattern `ttyACM*`. This will allow any device named ttyACM* (where * can be any number) to be consistently linked, provided it’s connected
@@ -197,12 +184,44 @@ sudo udevadm trigger
 Now, whenever the Bpod device is connected to the specified USB port, it will consistently appear with the symbolic link `/dev/Bpod`, regardless of its dynamic ttyACM* designation.
 
 
-### Install village
+### Install Training Village
 
-1. Make sure you are in .env environment (see above)
-2. Clone the repo inside your `/home/raspberry/` directory. In the terminal, type: `git clone https://github.com/BrainCircuitsBehaviorLab/village.git`
-3. Navigate to folder `village` and type `pip install -e .`
-4. You’re ready to start the system by simply running the `main.py` file. Just execute: `python /home/raspberry/village/village/main.py`
+1. Make sure you are in .env environment.
+```
+source ~/.env/bin/activate
+```
+2. Clone the repository inside your `/home/raspberry/` directory.
+```
+git clone https://github.com/BrainCircuitsBehaviorLab/village.git
+```
+3. Navigate to folder `village`.
+```
+cd /home/raspberry/village
+```
+4. Install the repository.
+```
+pip install -e .
+```
+5. You’re ready to start the system by simply running the `main.py` file.
+```python /home/raspberry/village/village/main.py```
+
+### Create an Alias and Run the Training Village
+1. Edit the .bashrc file:
+```
+nano ~/.bashrc
+```
+2. Add the following line to create an alias:
+```
+alias run_village='/home/raspberry/.env/bin/python /home/raspberry/village/village/main.py'
+```
+3. Reload the .bahsrc:
+```
+source ~/.bashrc
+```
+4. Run Training village:
+```
+run_village
+```
 
 [Pi OS]: https://www.raspberrypi.com/software/
 [ISO]: /TODO-LINK.md
