@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=d70f0a06"></script>
+    <script src="../_static/documentation_options.js?v=213cdf9b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -147,6 +147,14 @@
 </button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    What Is The Training Village?
+                </a>
+            </li>
+        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -154,6 +162,8 @@
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing and Calibrating Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="detection.html">Animal Detection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
@@ -161,7 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
@@ -319,6 +329,7 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
     </div>
@@ -417,21 +428,21 @@
 <h1>Configure remote access</h1>
 <p>First, we need to set up the system’s internet connection. The easiest way to do this is to connect the Raspberry Pi to a keyboard, mouse, screen, and Ethernet cable (if you are using a wired connection) before powering it on for the first time. For performance reasons, the screen resolution is forcibly set to 1280x720, regardless of the display you use.</p>
 <p>Once the operating system boots up, simply configure the internet connection. <a class="reference external" href="https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3">Help</a>.</p>
-<p>Now we’ll set up remote access using <a class="reference external" href="https://www.realvnc.com/en/"><strong>RealVNC</strong></a>. Follow these steps:</p>
+<p>Now we’ll set up remote access using <a class="reference external" href="https://www.realvnc.com/en/">RealVNC</a>. Follow these steps:</p>
 <p>From your Raspberry Pi:</p>
 <ol class="arabic simple">
-<li><p>Go to the <a class="reference external" href="https://www.realvnc.com/en/connect/plan/lite/"><strong>Lite Access Subscription Page</strong></a> of RealVNC and create an account (free for non-commercial use). Follow these <a class="reference external" href="https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription">detailed instructions</a> if you encounter any issues.</p></li>
-<li><p>Open the <strong>RealVNC Server</strong> on the Raspberry Pi (it is installed automatically with Raspberry Pi OS) and configure it for your team.</p></li>
-<li><p>Go to the <strong>Device Access</strong> section on the RealVNC webpage and add your current device.</p></li>
+<li><p>Go to the <a class="reference external" href="https://www.realvnc.com/en/connect/plan/lite/">Lite Access Subscription Page</a> of RealVNC and create an account (free for non-commercial use). Follow these <a class="reference external" href="https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription">detailed instructions</a> if you encounter any issues.</p></li>
+<li><p>Open the RealVNC Server on the Raspberry Pi (it is installed automatically with Raspberry Pi OS) and configure it for your team.</p></li>
+<li><p>Go to the Device Access section on the RealVNC webpage and add your current device.</p></li>
 <li><p>In the RealVNC window, you will see a code that allows remote connections from other networks and an IP address for connections from the same network.</p></li>
 </ol>
 <p>From your external computer or phone:</p>
 <ol class="arabic simple">
 <li><p>Log in to the RealVNC webpage with your credentials.</p></li>
-<li><p>Install and open <strong>RealVNC Viewer</strong> on your external computer or phone.</p></li>
+<li><p>Install and open RealVNC Viewer on your external computer or phone.</p></li>
 <li><p>Connect to the Raspberry Pi using the RealVNC server’s code if connecting from a different network, or the IP address if connecting from the same network.</p></li>
 </ol>
-<p>There is also an alternative option for remote connection using <strong>raspi-connect</strong>; however, we currently do not recommend it due to some issues we encountered during testing, and suboptimal performance.</p>
+<p>There is also an alternative option for remote connection using <a class="reference external" href="https://www.raspberrypi.com/software/connect/">raspi-connect</a>; however, we currently do not recommend it due to some issues we encountered during testing, and suboptimal performance.</p>
 <br>
 </section>
 

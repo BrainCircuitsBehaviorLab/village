@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=d70f0a06"></script>
+    <script src="../_static/documentation_options.js?v=213cdf9b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -147,6 +147,14 @@
 </button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    What Is The Training Village?
+                </a>
+            </li>
+        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -154,6 +162,8 @@
 <li class="toctree-l2"><a class="reference internal" href="remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing and Calibrating Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="detection.html">Animal Detection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
@@ -161,7 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
@@ -319,6 +329,7 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
     </div>
@@ -461,7 +472,7 @@
 </section>
 <section id="tasks">
 <h2>Tasks</h2>
-<p>To create a task, create a Python file, and within it, a class with the task’s name, inheriting functionality from the generic <strong>Task</strong> class. This process is straightforward. Let’s look at an example:</p>
+<p>To create a task, create a Python file, and within it, a class with the task’s name, inheriting functionality from the generic <code class="docutils literal notranslate"><span class="pre">Task</span></code> class. This process is straightforward. Let’s look at an example:</p>
 <p>Within the folder: village/village_projects/demo_project/code/, we have created the file simple_task.py with the following code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

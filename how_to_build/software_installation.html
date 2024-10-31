@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=d70f0a06"></script>
+    <script src="../_static/documentation_options.js?v=213cdf9b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -147,6 +147,14 @@
 </button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    What Is The Training Village?
+                </a>
+            </li>
+        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -154,6 +162,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/testing.html">Testing and Calibrating Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/detection.html">Animal Detection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
@@ -161,7 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Software Installation</a></li>
@@ -319,6 +329,7 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
     </div>
@@ -421,7 +432,8 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#i2c-communication">I2C Communication</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-pins-via-hardware-for-servos-and-using-uart-pin-for-communication">Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#udev-rules-for-consistent-usb-device-naming">Udev Rules for Consistent USB Device Naming</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-village">Install village</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-training-village">Install Training Village</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-an-alias-and-run-the-training-village">Create an Alias and Run the Training Village</a></li>
 </ul>
             </nav>
         </div>
@@ -541,21 +553,21 @@ Python environment:</p></li>
 <section id="changing-preferences">
 <h2>Changing Preferences</h2>
 <ol class="arabic simple">
-<li><p>Enable auto-login by clicking on <strong>Preferences</strong> -&gt; <strong>Raspberry Pi Configuration</strong> -&gt; <strong>Auto login</strong>.</p></li>
-<li><p>Add CPU monitors to the toolbar: Right-click on the toolbar, select <strong>Add/Remove Panel Items</strong>, and click <strong>Add</strong>. Select <strong>CPU Temperature Monitor</strong> and <strong>CPU Usage monitor</strong>.</p></li>
+<li><p>Enable auto-login by clicking on <code class="docutils literal notranslate"><span class="pre">Preferences</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Raspberry</span> <span class="pre">Pi</span> <span class="pre">Configuration</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Auto</span> <span class="pre">login</span></code>.</p></li>
+<li><p>Add CPU monitors to the toolbar: Right-click on the toolbar, select <code class="docutils literal notranslate"><span class="pre">Add/Remove</span> <span class="pre">Panel</span> <span class="pre">Items</span></code>, and click <code class="docutils literal notranslate"><span class="pre">Add</span></code>. Select <code class="docutils literal notranslate"><span class="pre">CPU</span> <span class="pre">Temperature</span> <span class="pre">Monitor</span></code> and <code class="docutils literal notranslate"><span class="pre">CPU</span> <span class="pre">Usage</span> <span class="pre">monitor</span></code>.</p></li>
 </ol>
 </section>
 <section id="screen-settings">
 <h2>Screen Settings</h2>
 <ol class="arabic simple">
-<li><p>Run the raspi-config.</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">raspi-config</span></code>.</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">raspi</span><span class="o">-</span><span class="n">config</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Go to <strong>Display Options</strong> and disable blanking.</p></li>
-<li><p>Go to <strong>Advanced Options</strong> and select X11 (instead of Wayland).</p></li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">Display</span> <span class="pre">Options</span></code> and disable blanking.</p></li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">Advanced</span> <span class="pre">Options</span></code> and select X11 (instead of Wayland).</p></li>
 </ol>
 <p>Then, you need to configure the system to recognize a screen even if none is physically connected, so the software renders properly when accessed remotely. If you want to use an additional screen to present stimuli in the behavioral box, you need to set the system to work with two screens.</p>
 <ol class="arabic simple" start="4">
@@ -570,39 +582,21 @@ or <code class="docutils literal notranslate"><span class="pre">vc4.fvc4.force_h
 </ol>
 <p>Explanation of values: (1 makes the system operate as if a screen is connected to HDMI 1). (2 makes the system operate as if a screen is connected to HDMI 2). (3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2).</p>
 <ol class="arabic simple" start="6">
-<li><p>Change the resolution of the screen (or screens) to 1280 x 720: <strong>Preferences</strong> -&gt;
-<strong>Screen Configuration</strong>.</p></li>
+<li><p>Change the resolution of the screen (or screens) to 1280 x 720: <code class="docutils literal notranslate"><span class="pre">Preferences</span></code> -&gt;
+<code class="docutils literal notranslate"><span class="pre">Screen</span> <span class="pre">Configuration</span></code>.</p></li>
 </ol>
 </section>
 <section id="i2c-communication">
 <h2>I2C Communication</h2>
 <p>The temperature sensor and the weight sensor are connected to the I2C pins of the Raspberry.</p>
 <ol class="arabic simple">
-<li><p>First, activate the I2C communication:</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">raspi-config</span></code>.</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">raspi</span><span class="o">-</span><span class="n">config</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Go to <strong>Interface Options</strong> and enable I2C.</p></li>
-</ol>
-<p>The system is configured to work with address = 0x45 for the temperature sensor (DFRobot HX711) and address = 0x64 for the weight sensor (CQRobot SHT31). If you are using different models or if the devices are not recognized, follow these steps to verify that the addresses are correct:</p>
-<ol class="arabic simple" start="3">
-<li><p>Connect the devices to the raspberry.</p></li>
-<li><p>Install the detection tools:</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">i2c</span><span class="o">-</span><span class="n">tools</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="5">
-<li><p>Run the tools:</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="6">
-<li><p>Change the addresses in the python code by modifying the corresponding settings in
-<code class="docutils literal notranslate"><span class="pre">village/settings.py</span></code> (extra_settings).</p></li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">Interface</span> <span class="pre">Options</span></code> and enable I2C.</p></li>
 </ol>
 </section>
 <section id="accessing-pins-via-hardware-for-servos-and-using-uart-pin-for-communication">
@@ -623,13 +617,13 @@ or <code class="docutils literal notranslate"><span class="pre">vc4.fvc4.force_h
 <ol class="arabic simple">
 <li><p>Navigate to the Udev rules folder where custom rules are stored:</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/etc/udev/rules.d
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">udev</span><span class="o">/</span><span class="n">rules</span><span class="o">.</span><span class="n">d</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
 <li><p>Create a new rule file named <code class="docutils literal notranslate"><span class="pre">99-usb.rules</span></code>:</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span><span class="m">99</span>-usb.rules
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="mi">99</span><span class="o">-</span><span class="n">usb</span><span class="o">.</span><span class="n">rules</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -648,14 +642,63 @@ to a specific USB port (in this case, the port associated with <code class="docu
 </div>
 <p>Now, whenever the Bpod device is connected to the specified USB port, it will consistently appear with the symbolic link <code class="docutils literal notranslate"><span class="pre">/dev/Bpod</span></code>, regardless of its dynamic ttyACM* designation.</p>
 </section>
-<section id="install-village">
-<h2>Install village</h2>
+<section id="install-training-village">
+<h2>Install Training Village</h2>
 <ol class="arabic simple">
-<li><p>Make sure you are in .env environment (see above)</p></li>
-<li><p>Clone the repo inside your <code class="docutils literal notranslate"><span class="pre">/home/raspberry/</span></code> directory. In the terminal, type: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/BrainCircuitsBehaviorLab/village.git</span></code></p></li>
-<li><p>Navigate to folder <code class="docutils literal notranslate"><span class="pre">village</span></code> and type <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code></p></li>
-<li><p>You’re ready to start the system by simply running the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file. Just execute: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">/home/raspberry/village/village/main.py</span></code></p></li>
+<li><p>Make sure you are in .env environment.</p></li>
 </ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Clone the repository inside your <code class="docutils literal notranslate"><span class="pre">/home/raspberry/</span></code> directory.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">BrainCircuitsBehaviorLab</span><span class="o">/</span><span class="n">village</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Navigate to folder <code class="docutils literal notranslate"><span class="pre">village</span></code>.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">raspberry</span><span class="o">/</span><span class="n">village</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Install the repository.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>You’re ready to start the system by simply running the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file.
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">/home/raspberry/village/village/main.py</span></code></p></li>
+</ol>
+</section>
+<section id="create-an-alias-and-run-the-training-village">
+<h2>Create an Alias and Run the Training Village</h2>
+<ol class="arabic simple">
+<li><p>Edit the .bashrc file:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Add the following line to create an alias:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alias</span> <span class="n">run_village</span><span class="o">=</span><span class="s1">&#39;/home/raspberry/.env/bin/python /home/raspberry/village/village/main.py&#39;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Reload the .bahsrc:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Run Training village:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_village</span>
+</pre></div>
+</div>
 <br>
 </section>
 </section>
@@ -716,7 +759,8 @@ to a specific USB port (in this case, the port associated with <code class="docu
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#i2c-communication">I2C Communication</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-pins-via-hardware-for-servos-and-using-uart-pin-for-communication">Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#udev-rules-for-consistent-usb-device-naming">Udev Rules for Consistent USB Device Naming</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-village">Install village</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-training-village">Install Training Village</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-an-alias-and-run-the-training-village">Create an Alias and Run the Training Village</a></li>
 </ul>
   </nav></div>
 

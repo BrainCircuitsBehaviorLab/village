@@ -31,6 +31,6 @@ Actions
    
       ~Actions.CORRIDOR
       ~Actions.PORTS
-      ~Actions.SOFTCODES
+      ~Actions.FUNCTIONS
    
    

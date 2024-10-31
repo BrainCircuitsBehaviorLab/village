@@ -30,6 +30,6 @@ Info
    .. autosummary::
    
       ~Info.SYSTEM_INFO
-      ~Info.CORRIDOR_SETTINGS
+      ~Info.DETECTION_SETTINGS
    
    

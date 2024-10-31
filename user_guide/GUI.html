@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=d70f0a06"></script>
+    <script src="../_static/documentation_options.js?v=213cdf9b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -50,7 +50,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Create a Telegram Bot" href="telegram.html" />
+    <link rel="next" title="Testing and Calibrating Components" href="testing.html" />
     <link rel="prev" title="Animal Procedures" href="animal_procedures.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -147,6 +147,14 @@
 </button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    What Is The Training Village?
+                </a>
+            </li>
+        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -154,6 +162,8 @@
 <li class="toctree-l2"><a class="reference internal" href="remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing and Calibrating Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="detection.html">Animal Detection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
@@ -161,7 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build the Training Village</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
@@ -319,6 +329,7 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
     </div>
@@ -411,8 +422,11 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#software-launch-and-configuration">Software Launch and Configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#first-boot-configuration">First Boot Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main">MAIN</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monitor">MONITOR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">TASKS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">DATA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#settings">SETTINGS</a></li>
 </ul>
             </nav>
         </div>
@@ -426,24 +440,50 @@
                   
   <section id="using-the-gui">
 <h1>Using the GUI</h1>
-<section id="software-launch-and-configuration">
-<h2>Software Launch and Configuration</h2>
-<p>Now that you have your Training Village installed, let’s run it for first time and configure some settings.</p>
-</section>
-<section id="first-boot-configuration">
-<h2>First Boot Configuration</h2>
-<p>For the first time, connect the Raspberry Pi to a keyboard, mouse, and screen. For performance reasons, the screen resolution is set to 1280x720.
-Once the operating system boots, you should simply configure the internet connection.
-After that, open a terminal and run:</p>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Run on terminal</span></div>
+<p>Once the system is set up for remote access, disconnect the keyboard, mouse, and monitor, and place the Raspberry Pi in its designated position in the corridor. Connect the two servo motors, the RFID reader, and the temperature sensor. Connect the two cameras as well. Also, connect the Bpod to the USB port closest to the Raspberry Pi’s Ethernet port.</p>
+<p><img alt="Connections" src="../_images/connections.png" /></p>
+<p>To run the Training Village, open a terminal window and type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_village</span>
 </pre></div>
 </div>
-</div>
-<p>The following screen should appear:
-<img alt="Main Training village screen" src="../_images/main_screen.png" /></p>
-<p>There is a menu in the top, lets start by configuring the settings.</p>
+<p>This will activate a Python environment (.env) and execute the file <code class="docutils literal notranslate"><span class="pre">/home/raspberry/village/village/main.py</span></code>.</p>
+<p>When the GUI starts, the system checks the connection with various necessary components (cameras, temperature sensor, weight sensor, etc.). If any connection cannot be established, a warning message will appear, and Training Village will run in testing mode. If you encounter any connection issues, refer to the <a class="reference internal" href="../troubleshooting_index.html"><span class="std std-doc">troubleshooting section</span></a>.</p>
+<p>Once the GUI starts, you will see a menu at the top with the following options: MAIN, MONITOR, TASKS, DATA, and SETTINGS.</p>
+<section id="main">
+<h2>MAIN</h2>
+<p><img alt="Main Training village screen" src="../_images/main_screen.png" /></p>
+<p>This is the default screen. In this screen the Raspberry Pi doesn’t need to do any rendering work to display videos (although videos continue to be recorded and saved). If the user doesn’t take any action for 5 minutes, the system automatically returns to this screen.</p>
+</section>
+<section id="monitor">
+<h2>MONITOR</h2>
+<p><img alt="Monitor Training village screen" src="../_images/monitor_screen.png" /></p>
+<p>This screen is used to monitor the system’s status, including both the corridor and the behavioral box.
+We can see images captured by the two cameras: one above the corridor and one recording the behavioral box. There are several buttons at the top center:</p>
+<ul class="simple">
+<li><p>STOP TASK: Manually stops a task.</p></li>
+<li><p>GO TO WAIT STATE: Automatically sets the system to WAIT mode. <a class="reference internal" href="state_machine.html"><span class="std std-doc">Here</span></a> we described the different states the system can be in.</p></li>
+<li><p>Tag Reader: (ON/OFF). Enables or disables the RFID reader.</p></li>
+<li><p>Cycle: AUTO/DAY/NIGHT. Since lighting changes with the day-night cycle, some camera parameters need to be adjusted accordingly. This button allows you to manually switch to day or night mode for testing and adjustments.</p></li>
+<li><p>Info: (DETECTION SETTINGS/SYSTEM INFO). This button switches the information displayed at the bottom of the screen.</p></li>
+<li><p>SYSTEM INFO shows recent system events.</p></li>
+<li><p>DETECTION SETTINGS: Allows control over parameters for detecting animals in both the corridor and the behavioral box. In the <a class="reference internal" href="detection.html"><span class="std std-doc">detection section</span></a>, we provide a detailed explanation of how these settings work.</p></li>
+<li><p>Actions: (CORRIDOR/PORTS/FUNCTIONS). This button switches between different groups of actions you can perform in real time.</p>
+<ul>
+<li><p>CORRIDOR: list of buttons to open and close the doors, get a weight from the scale and get the temperature and humidity in the room.</p></li>
+<li><p>PORTS: list of buttons that allow you to turn on the LEDs in the behavior ports.</p></li>
+<li><p>FUNCTIONS: list of buttons to launch user-created Python functions (such as functions to display stimuli on a screen, play sounds, etc.).</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="tasks">
+<h2>TASKS</h2>
+</section>
+<section id="data">
+<h2>DATA</h2>
+</section>
+<section id="settings">
+<h2>SETTINGS</h2>
 <br>
 </section>
 </section>
@@ -469,11 +509,11 @@ After that, open a terminal and run:</p>
       </div>
     </a>
     <a class="right-next"
-       href="telegram.html"
+       href="testing.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Create a Telegram Bot</p>
+        <p class="prev-next-title">Testing and Calibrating Components</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -494,8 +534,11 @@ After that, open a terminal and run:</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#software-launch-and-configuration">Software Launch and Configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#first-boot-configuration">First Boot Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main">MAIN</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monitor">MONITOR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">TASKS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">DATA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#settings">SETTINGS</a></li>
 </ul>
   </nav></div>
 

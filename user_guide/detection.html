@@ -1,0 +1,566 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Animal Detection &#8212; Training village</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=04772280" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=213cdf9b"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/detection';</script>
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/detection.html" />
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Create a Telegram Bot" href="telegram.html" />
+    <link rel="prev" title="Testing and Calibrating Components" href="testing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Training village - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Training village - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    What Is The Training Village?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing and Calibrating Components</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Animal Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">Resources</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.devices.bpod.html">bpod</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.bpod.get_bpod.html">get_bpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.bpod.PyBpod.html">PyBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.bpod.Softcode.html">Softcode</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.classes.collection.html">collection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.collection.Collection.html">Collection</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.classes.enums.html">enums</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.classes.protocols.html">protocols</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.protocols.CameraProtocol.html">CameraProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.protocols.EventProtocol.html">EventProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.protocols.PyBpodProtocol.html">PyBpodProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.protocols.ScaleProtocol.html">ScaleProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.protocols.TelegramBotProtocol.html">TelegramBotProtocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.protocols.TempSensorProtocol.html">TempSensorProtocol</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.classes.settings_class.html">settings_class</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.classes.subject.html">subject</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.subject.Subject.html">Subject</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.classes.task.html">task</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.task.Event.html">Event</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.task.Output.html">Output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.task.Task.html">Task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.task.TaskError.html">village.classes.task.TaskError</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.classes.training.html">training</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.training.Settings.html">Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.training.Training.html">Training</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.training.TrainingError.html">village.classes.training.TrainingError</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api_generated/village.pybpodapi.html">pybpodapi</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.html">bpod</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.Bpod.html">Bpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.bpod_base.html">bpod_base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.bpod_com_protocol.html">bpod_com_protocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.bpod_com_protocol_modules.html">bpod_com_protocol_modules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.bpod_io.html">bpod_io</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.hardware.html">hardware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.non_blockingsocketreceive.html">non_blockingsocketreceive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.non_blockingstreamreader.html">non_blockingstreamreader</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod.settings.html">settings</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod_modules.html">bpod_modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod_modules.bpod_module.html">bpod_module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.bpod_modules.bpod_modules.html">bpod_modules</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.pybpodapi.com.html">com</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.com.arcom.html">arcom</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.com.messaging.html">messaging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.com.protocol.html">protocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.com.stderr_buffer.html">stderr_buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.com.stdout_buffer.html">stdout_buffer</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.pybpodapi.exceptions.html">exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.exceptions.bpod_error.html">bpod_error</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.pybpodapi.protocol.html">protocol</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.pybpodapi.session.html">session</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.session.Session.html">Session</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.session.StreamsWrapper.html">StreamsWrapper</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.pybpodapi.state_machine.html">state_machine</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.state_machine.StateMachine.html">StateMachine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.state_machine.conditions.html">conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.state_machine.global_counters.html">global_counters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.state_machine.global_timers.html">global_timers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.state_machine.state_machine_base.html">state_machine_base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.state_machine.state_machine_builder.html">state_machine_builder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.state_machine.state_machine_runner.html">state_machine_runner</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.pybpodapi.utils.html">utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.utils.csv.html">csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.pybpodapi.utils.date_parser.html">date_parser</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api_generated/village.screen.html">screen</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api_generated/village.screen.behaviour_window.html">behaviour_window</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.screen.behaviour_window.BehaviourWindow.html">BehaviourWindow</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api_generated/village.log.html">log</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.log.Log.html">Log</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api_generated/village.rt_plots.html">rt_plots</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.rt_plots.RTPlots.html">RTPlots</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api_generated/village.time_utils.html">time_utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api_generated/village.video.html">video</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.video.Example.html">Example</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Animal Detection</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#detection-in-the-corridor">Detection in the Corridor</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="animal-detection">
+<h1>Animal Detection</h1>
+<p>An automated animal detection algorithm operates continuously on both the corridor camera and the behavioral box camera. The algorithm processes the image by converting it to black and white pixels based on a set luminance threshold (pixels above the threshold are marked white, those below are black). By counting the black pixels, the system determines whether a specific area is empty, contains one mouse, or holds multiple animals.</p>
+<p>The corridor is typically constructed from white filament to facilitate detecting darker-colored animals, though it can also be built in black to detect light-colored animals. Detection of dark or light pixels can simply by set by adjusting the corresponding <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings</span></a>.</p>
+<section id="detection-in-the-corridor">
+<h2>Detection in the Corridor</h2>
+<p>To set up detection in the corridor, begin by configuring the three designated areas (green, magenta, and blue rectangles):</p>
+<p><img alt="Detection settings" src="../_images/detection_settings.png" /></p>
+<ul class="simple">
+<li><p>Area 1: Should cover the section of the corridor before the first door.</p></li>
+<li><p>Area 2: Should span from the first door up to the start of Area 3.</p></li>
+<li><p>Area 3: Begins where Area 2 ends and continues to the second door. Area 3 must be large enough to fully contain one mouse but not exceed that size significantly.</p></li>
+</ul>
+<p>When an animal is detected by the RFID antenna, the system checks the status of all three areas. For an animal to be permitted to enter, both Area 1 and Area 2 must be empty, while pixel detection should only occur in Area 3. These conditions must be met for 500 ms, and no other animal should have been detected within the last 15 seconds. If multiple animals attempt to enter the corridor simultaneously, and one is detected by RFID but is not allowed to proceed due to other detections in the corridor, the system enforces a 15-second wait before allowing another animal to enter. These time parameters are adjustable in the <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings section</span></a>.</p>
+<p>Each area has separate threshold values for day and night. At night, illumination comes solely from an infrared lamp, while during the day, the room lights provide additional lighting, creating slight variations in brightness. Different thresholds can be set for each area to account for any reflections or shadows affecting illumination. Accurate threshold configuration is essential for reliable detection.
+To set these thresholds, allow an animal to enter the corridor and activate the <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_CORRIDOR</span></code> setting to visualize detected pixels. Ideally, only the animal’s pixels should be detected, with minimal detection beyond the animal itself.</p>
+<p>This helps illustrate how threshold adjustments impact detection accuracy.</p>
+<p><img alt="Detection" src="../_images/detection.png" /></p>
+<p>Once these primary thresholds are set, configure two additional thresholds:</p>
+<ul class="simple">
+<li><p>max_area_no_mouse: This defines the maximum number of pixels that can be detected while confirming that no animal is in the area. Minor noise or image artifacts may occur, so allowing for up to 40 or 50 pixels while still considering the area empty is usually reasonable.</p></li>
+<li><p>max_area_one_mouse: This defines the maximum pixel count that still indicates only one animal is present. This threshold depends largely on the animals’ size. To determine it, observe a single animal’s pixel count as it moves within the corridor, noting that pixel count may vary based on its posture (crouched or stretched out) and individual size. Similarly, allow two animals in the corridor and record their combined pixel count.</p></li>
+</ul>
+<p><img alt="Mice_positionsi" src="../_images/mice_positions.png" /></p>
+<p>In this example, one animal might range between 1800 and 2800 pixels, while two animals might range from 2600 to 3600 pixels. Setting this threshold to around 2500 pixels provides a safe margin, though there may be cases where a single animal is not allowed to enter if it stretches fully. Two animals can be detected as one if perfectly aligned, one on top of the other. To minimize such errors, the algorithm requires that the camera detection conditions be stable for at least 500 ms after an RFID detection, as it is unlikely for two animals to stay perfectly aligned for that duration.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="testing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Testing and Calibrating Components</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="telegram.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Create a Telegram Bot</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#detection-in-the-corridor">Detection in the Corridor</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Rafael Marin
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Rafael Marin, Balma Serrano, Hernando Vergara.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -41,7 +41,7 @@ The user can choose either approach—or a combination of both—to organize the
 
 ### Tasks
 
-To create a task, create a Python file, and within it, a class with the task’s name, inheriting functionality from the generic **Task** class. This process is straightforward. Let’s look at an example:
+To create a task, create a Python file, and within it, a class with the task’s name, inheriting functionality from the generic `Task` class. This process is straightforward. Let’s look at an example:
 
 Within the folder: village/village_projects/demo_project/code/, we have created the file simple_task.py with the following code:
 
