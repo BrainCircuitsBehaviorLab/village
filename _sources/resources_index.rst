@@ -1,6 +1,7 @@
 Resources
 =================================
 
+.. toctree::
+    :maxdepth: 1
 
-.. include:: resources/resources.md
-   :parser: myst_parser.sphinx_
+    resources/print_files.md
