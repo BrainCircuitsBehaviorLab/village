@@ -58,6 +58,25 @@ Feel free to follow the instructions in the
 [Assembly Instructions Section][ASSEMBLY]
 for detailed guidance on how to assemble the Training Village system.
 
+### Bpod + Ports
+
+- [**Bpod**](https://sanworks.io/shop/viewproduct?productID=1036), x1 - 1495.0€
+- [**Interface board**](https://sanworks.io/shop/viewproduct?productID=1008), x6 - Total: 228.0€, The number needed depends on task
+- **Mouse port**[3d printed part.com](https://github.com/sanworks/Bpod/blob/4b756d8251f0a06ee9a442e9cac465872c1b4174/CAD/Ports/Mouse%20nosepoke/STL/Mousepoke.stl), x1 - Total: 5.0€, The number needed depends on the task
+- **White LED (VAOL-3GWY4)**, x1 - 0.7€
+- **IR Emitter (OPB100Z)**, x6 - Total: 54.0€, If not available, you can buy parts separately: emitter and receiver (OPB100-EZ + OPB100-SZ)
+- [**Stainless steel tube**](https://www.amazon.es/gp/product/B07TYVB4R8/ref=ox_sc_act_title_1?smid=A2NF1LB1MEBSO1&psc=1), 50cm x 1.6mm internal diameter x 2mm external diameter, x1 - 9.0€
+- [**Plastic tube**](https://www.amazon.es/gp/product/B08H8H1QWT/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1), 1.5m x 2mm internal diameter x 4mm external diameter, x1 - 8.0€,
+- [**Pump**](https://www.amazon.es/gp/product/B07XMPNB1T/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1), x1 - 11.0€, Tube is 3mm internal diameter x 5mm external diameter (useful for 2 x 4 too)
+
+### Raspberry + Cams
+
+- [**Raspberry pi 5 8GB, 256GB SD**](https://www.tiendatec.es/raspberry-pi/kits-raspberry-pi/2235-raspberry-pi-5-starter-kit-negro-.html), x1 - 142.95€
+- [**Raspberry pi camera**](https://www.tiendatec.es/raspberry-pi/camaras/1987-camara-oficial-raspberry-pi-v3-12mpx-wide-noir--5056561800899.html),Raspberry pi camera v3 wide noir, x2 - 79.9€
+- [**Raspberry camera cable connector**](https://www.tiendatec.es/raspberry-pi/cables/508-conector-empalme-cable-ffc-para-camara-raspberry-pi-8405080320000.html), 20cm cable to 100 cm cable, x2 - 11.9€
+- [**Raspberry camera cable**](https://www.tiendatec.es/raspberry-pi/cables/2154-1256-cable-adaptador-fpc-camara-pantalla-raspberry-pi-5.html), 20 cm, x2 - 2.5€
+- [**Flex wire for raspberry camera 100 cm**](https://www.tiendatec.es/raspberry-pi/cables/497-cable-flex-csi-dsi-camara-o-pantalla-raspberry-pi-100cm-8404970320014.html), x2 - 6.9€
+
 ### Training Village HAT
 
 - **Training village HAT**, x1 - 100.0€
