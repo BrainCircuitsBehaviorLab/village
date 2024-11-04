@@ -182,3 +182,5 @@ linkcheck_ignore = [
 linkcheck_anchors_ignore_for_url = [
     "https://github.com/neuroinformatics-unit/actions/tree/v2/build_sphinx_docs",
 ]
+
+autosectionlabel_prefix_document = True

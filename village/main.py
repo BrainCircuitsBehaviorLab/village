@@ -132,12 +132,12 @@ def system_run() -> None:
             case State.LAUNCH_AUTO:
                 if manager.launch_task_auto():
                     manager.task.cam_box = cam_box
-                    manager.state = State.RUN_ACTION
+                    manager.state = State.RUN_FIRST
                 else:
                     manager.state = State.OPEN_DOOR2_STOP
 
-            case State.RUN_ACTION:
-                # Task running, waiting for the first action in the behavioral box
+            case State.RUN_FIRST:
+                # Task running, waiting for the areas to be clean to close the door2
                 id, multiple = rfid.get_id()
                 if id == manager.subject.tag:
                     log.info(

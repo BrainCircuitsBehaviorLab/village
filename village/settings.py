@@ -221,7 +221,7 @@ camera_settings = [
         "AREA2_CORRIDOR",
         [200, 300, 300, 350, 100, 100],
         list[int],
-        """The second area of the corridor, between the first and the second door.
+        """The second area of the corridor, between the first door and the area3.
         Values are left, top, right, bottom, threshold for detection during day
         and threshold for deterction during night.""",
     ),
@@ -229,7 +229,15 @@ camera_settings = [
         "AREA3_CORRIDOR",
         [300, 300, 400, 350, 100, 100],
         list[int],
-        """The third area of the corridor, between the second door and the behavioral
+        """The third area of the corridor, between the area2 and the second door.
+        Values are left, top, right, bottom, threshold for detection during day
+        and threshold for deterction during night.""",
+    ),
+    Setting(
+        "AREA4_CORRIDOR",
+        [400, 300, 500, 350, 100, 100],
+        list[int],
+        """The fourth area of the corridor, between the second door and the behavioral
         box. Values are left, top, right, bottom, threshold for detection during day
         and threshold for deterction during night.""",
     ),

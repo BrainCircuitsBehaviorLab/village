@@ -237,7 +237,7 @@ class MonitorLayout(Layout):
         self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
 
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 16, 88, 18, 36)
+        self.addLayout(self.central_layout, 12, 88, 18, 36)
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
         self.page1Layout = MotorLayout(self.window, 20, 36)
@@ -267,38 +267,26 @@ class MonitorLayout(Layout):
         self.bottom_layout.addWidget(self.page4)
         self.bottom_layout.addWidget(self.page5)
 
-        self.stop_task_button: PushButton = self.create_and_add_button(
-            "STOP TASK",
-            4,
-            89,
-            16,
+        self.stop_button: PushButton = self.create_and_add_button(
+            "",
+            0,
+            170,
+            20,
             2,
-            self.stop_task,
-            "Stop a running task",
-        )
-
-        self.go_to_wait_button: PushButton = self.create_and_add_button(
-            "GO TO WAIT STATE",
-            4,
-            106,
-            17,
-            2,
-            self.go_to_wait,
-            """
-            If the systems thinks there is a subject in the corridor or the box,
-            but there isn't, you can force going to the WAIT state.
-            """,
+            self.stop,
+            "",
+            "lightcoral",
         )
 
         self.tag_reader_label: Label = self.create_and_add_label(
-            "Tag reader: ", 7, 90, 12, 2, "black"
+            "Tag reader: ", 4, 90, 12, 2, "black"
         )
         key = "TAG_READER"
         possible_values = Active.values()
         index = Active.get_index_from_value(manager.tag_reader)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
-            7,
+            4,
             100,
             20,
             2,
@@ -309,14 +297,14 @@ class MonitorLayout(Layout):
         )
 
         self.cycle_label: Label = self.create_and_add_label(
-            "Cycle: ", 9, 90, 12, 2, "black"
+            "Cycle: ", 6, 90, 12, 2, "black"
         )
         key = "CYCLE"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(manager.cycle)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
-            9,
+            6,
             100,
             20,
             2,
@@ -327,7 +315,7 @@ class MonitorLayout(Layout):
         )
 
         self.info_label: Label = self.create_and_add_label(
-            "Info: ", 11, 90, 33, 2, "black"
+            "Info: ", 32, 90, 33, 2, "black"
         )
 
         key = "INFO"
@@ -335,7 +323,7 @@ class MonitorLayout(Layout):
         index = Info.get_index_from_value(manager.info)
         self.info_button = self.create_and_add_toggle_button(
             key,
-            11,
+            32,
             100,
             20,
             2,
@@ -346,14 +334,14 @@ class MonitorLayout(Layout):
         )
 
         self.actions_label: Label = self.create_and_add_label(
-            "Actions: ", 13, 90, 33, 2, "black"
+            "Actions: ", 10, 90, 33, 2, "black"
         )
         key = "ACTIONS"
         possible_values = Actions.values()
         index = Actions.get_index_from_value(manager.actions)
         self.actions_button = self.create_and_add_toggle_button(
             key,
-            13,
+            10,
             100,
             20,
             2,
@@ -374,12 +362,13 @@ class MonitorLayout(Layout):
 
         self.update_buttons()
 
-    def stop_task(self) -> None:
-        manager.state = State.SAVE_MANUAL
-        self.update_gui()
-
-    def go_to_wait(self) -> None:
-        manager.state = State.WAIT
+    def stop(self) -> None:
+        if manager.state.can_stop_task():
+            manager.state = State.SAVE_MANUAL
+            self.update_gui()
+        elif manager.state.can_go_to_wait():
+            manager.state = State.WAIT
+            self.update_gui()
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
         manager.cycle = Cycle[value]
@@ -420,8 +409,21 @@ class MonitorLayout(Layout):
                 self.page5Layout.update_gui()
 
     def update_buttons(self) -> None:
-        self.stop_task_button.setEnabled(manager.state.can_stop_task())
-        self.go_to_wait_button.setEnabled(manager.state.can_go_to_wait())
+        if manager.state.can_stop_task():
+            self.stop_button.setText("STOP TASK")
+            self.stop_button.setToolTip("Stop a running task")
+            self.stop_button.show()
+        elif manager.state.can_go_to_wait():
+            self.stop_button.setText("GO TO WAIT STATE")
+            self.stop_button.setToolTip(
+                """
+                If the systems thinks there is a subject in the corridor or the box,
+                but there isn't, you can force going to the WAIT state.
+                """
+            )
+            self.stop_button.show()
+        else:
+            self.stop_button.hide()
 
 
 class MotorLayout(Layout):
@@ -677,7 +679,7 @@ class SoftcodesLayout(Layout):
                 16,
                 2,
                 self.softode_clicked,
-                "Run the softcode" + str(i),
+                "Run the user-fucntion" + str(i),
             )
             self.buttons.append(button)
 
@@ -702,8 +704,9 @@ class CorridorLayout(Layout):
         self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 124)
 
         self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 0, self.color_area1_str)
-        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 32, self.color_area2_str)
-        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 64, self.color_area3_str)
+        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 26, self.color_area2_str)
+        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 52, self.color_area3_str)
+        self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 78, self.color_area4_str)
 
         self.draw_area_buttons_box("AREA1_BOX", 2, 126, self.color_area1_str)
         self.draw_area_buttons_box("AREA2_BOX", 2, 149, self.color_area2_str)

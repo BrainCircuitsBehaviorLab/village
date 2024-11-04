@@ -35,6 +35,7 @@ class TasksLayout(Layout):
             2,
             self.run_task,
             "Run the selected task",
+            "powderblue",
         )
 
         self.task_buttons: list[PushButton] = []

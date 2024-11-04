@@ -51,7 +51,7 @@ class State(SuperEnum):
     DETECTION = "Gathering subject data, checking requirements to enter"
     ACCESS = "Closing door1, opening door2"
     LAUNCH_AUTO = "Launching the task automatically"
-    RUN_ACTION = "Task running, waiting for the first action in the behavioral box"
+    RUN_FIRST = "Task running, waiting for the areas to be clean to close the door2"
     CLOSE_DOOR2 = "Closing door2"
     RUN_CLOSED = "Task running, the subject cannot leave yet"
     OPEN_DOOR2 = "Opening door2"
@@ -92,7 +92,7 @@ class State(SuperEnum):
     def can_stop_task(self) -> bool:
         if self in (
             State.LAUNCH_AUTO,
-            State.RUN_ACTION,
+            State.RUN_FIRST,
             State.RUN_CLOSED,
             State.RUN_OPENED,
             State.RUN_TRAPPED,

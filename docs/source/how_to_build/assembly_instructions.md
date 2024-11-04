@@ -1,4 +1,4 @@
-## Assembly Instructions
+# Assembly Instructions
 
 We provide comprehensive instructions to help you build the Training Village system,
 using the [3D-printed parts] and electronic components. You can either download the full

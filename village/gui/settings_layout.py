@@ -164,7 +164,8 @@ class SettingsLayout(Layout):
                 25,
                 2,
                 self.restore_button_clicked,
-                "Restore the factory settings" "mistyrose",
+                "Restore the factory settings",
+                "mistyrose",
             )
             self.restore_button.clicked.connect(self.restore_button_clicked)
 

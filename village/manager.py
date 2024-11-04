@@ -389,7 +389,7 @@ class Manager:
                 manager.state = State.SAVE_MANUAL
             elif manager.state in [
                 State.LAUNCH_AUTO,
-                State.RUN_ACTION,
+                State.RUN_FIRST,
                 State.RUN_OPENED,
                 State.RUN_CLOSED,
                 State.OPEN_DOOR2,

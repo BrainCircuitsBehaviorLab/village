@@ -136,7 +136,7 @@ class Camera(CameraProtocol):
         # areas and thresholds settings
         self.areas: list[list[int]] = []
         self.thresholds: list[int] = []
-        self.number_of_areas = 3 if self.name == "CORRIDOR" else 4
+        self.number_of_areas = 4
 
         threshold_index = 4
         if self.name == "CORRIDOR" and not manager.day:
@@ -152,8 +152,8 @@ class Camera(CameraProtocol):
         self.areas_active: list[bool] = []
         self.areas_allowed: list[bool] = []
         if self.name == "CORRIDOR":
-            self.areas_active = [True, True, True]
-            self.areas_allowed = [True, True, True]
+            self.areas_active = [True, True, True, True]
+            self.areas_allowed = [True, True, True, True]
         else:
             for i in range(1, self.number_of_areas + 1):
                 val = settings.get("USAGE" + str(i) + "_BOX")
@@ -492,6 +492,9 @@ class Camera(CameraProtocol):
             return False
         elif self.counts[2] > self.one_or_two_mice:
             log.info("large detection in area3: " + str(self.counts[2]))
+            return False
+        elif self.counts[3] > self.zero_or_one_mouse:
+            log.info("detection in area4: " + str(self.counts[3]))
             return False
         else:
             return True
