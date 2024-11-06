@@ -1,4 +1,4 @@
-## Temperature or Weight Sensor Connection Error
+### Temperature or Weight Sensor Connection Error
 
 The system is configured to work with address = 0x45 for the temperature sensor (DFRobot HX711) and address = 0x64 for the weight sensor (CQRobot SHT31). If you are using different models or if the devices are not recognized, follow these steps to verify that the addresses are correct:
 

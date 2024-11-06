@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Project Structure &#8212; Training village</title>
+    <title>Creating a New Training Protocol &#8212; Training village</title>
   
   
   
@@ -40,18 +40,18 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=1c787c9c"></script>
+    <script src="../_static/documentation_options.js?v=efdb92ab"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/project_structure';</script>
-    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/project_structure.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/creating';</script>
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/creating.html" />
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="System State Machine" href="state_machine.html" />
-    <link rel="prev" title="Create a Telegram Bot" href="telegram.html" />
+    <link rel="prev" title="Using an Existing Training Protocol" href="using.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -155,17 +155,15 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html">Testing and Calibrating Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="detection.html">Animal Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using.html">Using an Existing Training Protocol</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Creating a New Training Protocol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
@@ -177,9 +175,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../initial_configuration_index.html">Initial Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/backup.html">Scheduling Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -332,6 +332,13 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/ISO.html">System ISO Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
@@ -415,7 +422,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Project Structure</h1>
+    <h1>Creating a New Training Protocol</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -438,8 +445,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="project-structure">
-<h1>Project Structure</h1>
+  <section id="creating-a-new-training-protocol">
+<h1>Creating a New Training Protocol</h1>
 <p>For training animals, the code and data are organized into projects. A project’s structure is automatically created when a new project is started.</p>
 <p>A folder is created for the project:
 /village/village_projects/name_of_the_project/</p>
@@ -520,12 +527,12 @@ If you try to run this task as-is, you will encounter an error indicating that c
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="telegram.html"
+       href="using.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Create a Telegram Bot</p>
+        <p class="prev-next-title">Using an Existing Training Protocol</p>
       </div>
     </a>
     <a class="right-next"

@@ -10,7 +10,7 @@ The corridor is typically constructed from white filament to facilitate detectin
 
 To set up detection in the corridor, begin by configuring the three designated areas (green, magenta, and blue rectangles):
 
-![Detection settings](../_static/detection_settings.png)
+![Detection settings](/_static/detection_settings.png)
 
 
 - Area 1: Should cover the section of the corridor before the first door.
@@ -24,13 +24,13 @@ To set these thresholds, allow an animal to enter the corridor and activate the 
 
 This helps illustrate how threshold adjustments impact detection accuracy.
 
-![Detection](../_static/detection.png)
+![Detection](/_static/detection.png)
 
 Once these primary thresholds are set, configure two additional thresholds:
 - max_area_no_mouse: This defines the maximum number of pixels that can be detected while confirming that no animal is in the area. Minor noise or image artifacts may occur, so allowing for up to 40 or 50 pixels while still considering the area empty is usually reasonable.
 - max_area_one_mouse: This defines the maximum pixel count that still indicates only one animal is present. This threshold depends largely on the animals’ size. To determine it, observe a single animal’s pixel count as it moves within the corridor, noting that pixel count may vary based on its posture (crouched or stretched out) and individual size. Similarly, allow two animals in the corridor and record their combined pixel count.
 
-![Mice_positionsi](../_static/mice_positions.png)
+![Mice_positionsi](/_static/mice_positions.png)
 
 In this example, one animal might range between 1800 and 2800 pixels, while two animals might range from 2600 to 3600 pixels. Setting this threshold to around 2500 pixels provides a safe margin, though there may be cases where a single animal is not allowed to enter if it stretches fully. Two animals can be detected as one if perfectly aligned, one on top of the other. To minimize such errors, the algorithm requires that the camera detection conditions be stable for at least 500 ms after an RFID detection, as it is unlikely for two animals to stay perfectly aligned for that duration.
 

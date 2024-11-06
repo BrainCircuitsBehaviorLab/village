@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Training village</title>
+    <title>Using an Existing Training Protocol &#8212; Training village</title>
   
   
   
@@ -40,16 +40,18 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=1c787c9c"></script>
+    <script src="../_static/documentation_options.js?v=efdb92ab"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'resources/resources';</script>
-    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/resources/resources.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/using';</script>
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/using.html" />
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Creating a New Training Protocol" href="creating.html" />
+    <link rel="prev" title="Animal Detection" href="detection.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -100,8 +102,6 @@
     <div class="bd-container__inner bd-page-width">
       
       
-      
-        
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
@@ -155,20 +155,18 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/remote.html">Configure remote access</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/testing.html">Testing and Calibrating Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/detection.html">Animal Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/project_structure.html">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing and Calibrating Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="detection.html">Animal Detection</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Using an Existing Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="creating.html">Creating a New Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -177,9 +175,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="print_files.html">3D Printing Files</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../initial_configuration_index.html">Initial Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/backup.html">Scheduling Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -332,6 +332,13 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/ISO.html">System ISO Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
@@ -402,9 +409,7 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</button>
+
 </div></div>
       
     </div>
@@ -415,19 +420,11 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>Using an Existing Training Protocol</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -437,12 +434,10 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <ul class="simple">
-<li><p><a class="reference internal" href="../TODO-LINK.html"><span class="std std-doc">Design files for the touchscreen behavioral box</span></a></p></li>
-<li><p><a class="reference internal" href="../TODO-LINK.html"><span class="std std-doc">ISO image with the system pre-installed</span></a></p></li>
-<li><p><a class="reference external" href="https://github.com/BrainCircuitsBehaviorLab/village">Code</a></p></li>
-</ul>
+  <section id="using-an-existing-training-protocol">
+<h1>Using an Existing Training Protocol</h1>
 <br>
+</section>
 
 
                 </article>
@@ -455,28 +450,30 @@
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="detection.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Animal Detection</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="creating.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Creating a New Training Protocol</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
             </div>
             
             
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-  </nav></div>
-
-</div></div>
               
             
           </div>

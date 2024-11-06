@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Configure remote access &#8212; Training village</title>
+    <title>Create a Telegram Bot &#8212; Training village</title>
   
   
   
@@ -40,18 +40,18 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=1c787c9c"></script>
+    <script src="../_static/documentation_options.js?v=efdb92ab"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/remote';</script>
-    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/remote.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'initial_configuration/telegram';</script>
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/initial_configuration/telegram.html" />
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Animal Procedures" href="animal_procedures.html" />
-    <link rel="prev" title="Getting Started" href="getting_started.html" />
+    <link rel="next" title="Scheduling Backups" href="backup.html" />
+    <link rel="prev" title="Configure remote access" href="remote.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -155,20 +155,18 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Configure remote access</a></li>
-<li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing and Calibrating Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="detection.html">Animal Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/testing.html">Testing and Calibrating Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/detection.html">Animal Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/using.html">Using an Existing Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/creating.html">Creating a New Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -177,9 +175,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../initial_configuration_index.html">Initial Configuration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure remote access</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">Scheduling Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -332,6 +332,13 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/ISO.html">System ISO Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
@@ -402,7 +409,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -413,11 +422,20 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Configure remote access</h1>
+    <h1>Create a Telegram Bot</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-token-of-an-existing-bot">Check the token of an existing bot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-the-bot-triggers-the-alarms">Make the bot triggers the alarms</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -427,26 +445,31 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="configure-remote-access">
-<h1>Configure remote access</h1>
-<p>First, we need to set up the system’s internet connection. The easiest way to do this is to connect the Raspberry Pi to a keyboard, mouse, screen, and Ethernet cable (if you are using a wired connection) before powering it on for the first time. For performance reasons, the screen resolution is forcibly set to 1280x720, regardless of the display you use.</p>
-<p>Once the operating system boots up, simply configure the internet connection. <a class="reference external" href="https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3">Help</a>.</p>
-<p>Now we’ll set up remote access using <a class="reference external" href="https://www.realvnc.com/en/">RealVNC</a>. Follow these steps:</p>
-<p>From your Raspberry Pi:</p>
+  <section id="create-a-telegram-bot">
+<h1>Create a Telegram Bot</h1>
 <ol class="arabic simple">
-<li><p>Go to the <a class="reference external" href="https://www.realvnc.com/en/connect/plan/lite/">Lite Access Subscription Page</a> of RealVNC and create an account (free for non-commercial use). Follow these <a class="reference external" href="https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription">detailed instructions</a> if you encounter any issues.</p></li>
-<li><p>Open the RealVNC Server on the Raspberry Pi (it is installed automatically with Raspberry Pi OS) and configure it for your team.</p></li>
-<li><p>Go to the Device Access section on the RealVNC webpage and add your current device.</p></li>
-<li><p>In the RealVNC window, you will see a code that allows remote connections from other networks and an IP address for connections from the same network.</p></li>
+<li><p>Text <code class="docutils literal notranslate"><span class="pre">&#64;BotFather</span></code> in the search tab and select this bot.</p></li>
+<li><p>Text: <code class="docutils literal notranslate"><span class="pre">/newbot</span></code> and send.</p></li>
+<li><p>Follow Botfather instructions. Write down the token. Never share the token in github.</p></li>
+<li><p>Open a chat with your new bot and activate it by sending: <code class="docutils literal notranslate"><span class="pre">/start</span></code>.</p></li>
 </ol>
-<p>From your external computer or phone:</p>
-<ol class="arabic simple">
-<li><p>Log in to the RealVNC webpage with your credentials.</p></li>
-<li><p>Install and open RealVNC Viewer on your external computer or phone.</p></li>
-<li><p>Connect to the Raspberry Pi using the RealVNC server’s code if connecting from a different network, or the IP address if connecting from the same network.</p></li>
+<section id="check-the-token-of-an-existing-bot">
+<h2>Check the token of an existing bot</h2>
+<ol class="arabic simple" start="5">
+<li><p>Go to the <code class="docutils literal notranslate"><span class="pre">&#64;BotFather</span></code> chat and send <code class="docutils literal notranslate"><span class="pre">/token</span></code>.</p></li>
 </ol>
-<p>There is also an alternative option for remote connection using <a class="reference external" href="https://www.raspberrypi.com/software/connect/">raspi-connect</a>; however, we currently do not recommend it due to some issues we encountered during testing, and suboptimal performance.</p>
+</section>
+<section id="make-the-bot-triggers-the-alarms">
+<h2>Make the bot triggers the alarms</h2>
+<ol class="arabic simple" start="6">
+<li><p>Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the
+alarms from the bot and will be able to send commands to it.</p></li>
+<li><p>Start a conversation with <code class="docutils literal notranslate"><span class="pre">&#64;username_to_id_bot</span></code> to obtain your ID, the chat ID and
+the ID of all the other users.</p></li>
+<li><p>Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)</p></li>
+</ol>
 <br>
+</section>
 </section>
 
 
@@ -461,20 +484,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="getting_started.html"
+       href="remote.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Getting Started</p>
+        <p class="prev-next-title">Configure remote access</p>
       </div>
     </a>
     <a class="right-next"
-       href="animal_procedures.html"
+       href="backup.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Animal Procedures</p>
+        <p class="prev-next-title">Scheduling Backups</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -484,6 +507,23 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-token-of-an-existing-bot">Check the token of an existing bot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-the-bot-triggers-the-alarms">Make the bot triggers the alarms</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=1c787c9c"></script>
+    <script src="../_static/documentation_options.js?v=efdb92ab"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -50,7 +50,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Data Collection" href="../data_collection_index.html" />
+    <link rel="next" title="Initial Configuration" href="../initial_configuration_index.html" />
     <link rel="prev" title="Assembly Instructions" href="assembly_instructions.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -155,17 +155,15 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">Using the GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/testing.html">Testing and Calibrating Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/detection.html">Animal Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/project_structure.html">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/using.html">Using an Existing Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/creating.html">Creating a New Training Protocol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
@@ -177,9 +175,11 @@
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Software Installation</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../initial_configuration_index.html">Initial Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/backup.html">Scheduling Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -332,6 +332,13 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/ISO.html">System ISO Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
@@ -727,11 +734,11 @@ to a specific USB port (in this case, the port associated with <code class="docu
       </div>
     </a>
     <a class="right-next"
-       href="../data_collection_index.html"
+       href="../initial_configuration_index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Data Collection</p>
+        <p class="prev-next-title">Initial Configuration</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

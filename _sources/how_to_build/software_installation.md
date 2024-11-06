@@ -28,7 +28,7 @@ Follow the instructions on this page if you prefer a manual installation. The pr
 1. Connect a keyboard, mouse, and screen to the Raspberry Pi.
 2. Connect the Ethernet cable if you are going to use an Ethernet connection.
 3. If your SD card has the OS preinstalled, jump to step 4.
-4. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi OS][Pi OS]
+4. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi OS][OS]
 5. Insert the SD card and start the Raspberry Pi.
 6. Select your country and keyboard language and choose English as the general language.
 7. Type `raspberry` as the username and choose the password you want.
@@ -223,7 +223,7 @@ source ~/.bashrc
 run_village
 ```
 
-[Pi OS]: https://www.raspberrypi.com/software/
+[OS]: https://www.raspberrypi.com/software/
 [ISO]: /TODO-LINK.md
 [UPDATE]: https://www.raspberrypi.com/documentation/computers/os.html
 

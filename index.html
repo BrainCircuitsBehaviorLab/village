@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="_static/documentation_options.js?v=1c787c9c"></script>
+    <script src="_static/documentation_options.js?v=efdb92ab"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -50,7 +50,7 @@
     <link rel="icon" href="_static/favicon.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="User Guide" href="user_guide_index.html" />
+    <link rel="next" title="Getting Started" href="getting_started_index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -156,17 +156,15 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="nav bd-sidenav">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="getting_started_index.html">Getting Started</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="user_guide_index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/remote.html">Configure remote access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/GUI.html">Using the GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/testing.html">Testing and Calibrating Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/detection.html">Animal Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/project_structure.html">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/using.html">Using an Existing Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/creating.html">Creating a New Training Protocol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/state_machine.html">System State Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/maintenance.html">Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
@@ -178,9 +176,11 @@
 <li class="toctree-l2"><a class="reference internal" href="how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="data_collection_index.html">Data Collection</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="initial_configuration_index.html">Initial Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="initial_configuration/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initial_configuration/backup.html">Scheduling Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initial_configuration/heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -333,6 +333,13 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/ISO.html">System ISO Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/code.html">Code Repository</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="faq_index.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
@@ -429,7 +436,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-does-it-work">How Does It Work?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-corridor">The Corridor</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-controller">The Controller</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#animal-entry-and-exit-logic">Animal Entry and Exit Logic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#system-usage">System Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-source">Open Source</a></li>
 </ul>
             </nav>
@@ -446,8 +453,8 @@
 <h1>What Is The Training Village?</h1>
 <div class="toctree-wrapper compound">
 </div>
-<p>The Training Village is a system designed for the automated training of rodents. It allows animals to live in the system 24/7 and access a behavioral box to perform tasks at any time, day or night. Users can either design their own training protocols or use one of the available ones (e.g., 2AFC).
-The system monitors the animals through two cameras—one in the entry corridor and another inside the behavioral box. Remote access is available at any time to check on the system’s status. Additionally, a configurable alert system integrated with Telegram allows users to receive real-time notifications regarding system conditions.</p>
+<p>The Training Village is a system designed for the continuous automated training of rodents in complex cognitive tasks. In the system, RFID-tagged animals live in groups and access individually the behavioral box (e.g. an operant chamber) to perform tasks at any time, rain or shine. The Training Village is  designed to wrap around your  own task protocols and integrate with your behavioral control system although we provide it in tandem with a general-purpose touchscreen chamber and some standard task protocols run by BPoD (by <a class="reference external" href="https://sanworks.io">Sanworks</a>).
+The system monitors the animals through two cameras—one in the entry corridor and another inside the behavioral box. Remote access is available at any time to check on the system’s status. Additionally, a configurable alert system integrated with Telegram allows users to receive real-time notifications regarding system conditions.  The Training Village is freely available, and legally protected by <a class="reference external" href="https://www.gnu.org/licenses/quick-guide-gplv3.pdf">GPL version 3</a> and <a class="reference external" href="https://www.oshwa.org/definition/">OSHW version 1</a> licenses.</p>
 <video controls width="100%">
   <source src="_static/video.m4v" type="video/mp4">
 </video>
@@ -456,7 +463,7 @@ The system monitors the animals through two cameras—one in the entry corridor 
 <h2>How Does It Work?</h2>
 <p><img alt="training_village" src="_images/training_village.png" /></p>
 <p>The system is composed of several key components: the housing where the animals live, the behavioral box where tasks are performed, and the corridor that regulates access to the behavioral box.</p>
-<p><strong>The Housing:</strong> The animals live together in one or more cages, which promotes better welfare. Any type of cage can be used, as long as it is connected to the corridor via a tube. We offer a solution with 2 or 4 cages connected by transparent acrylic tubes, which can serve different purposes (e.g., one cage with food, another for resting). Optionally, RFID sensors can be installed in the corridors connecting the cages (ECOHAB(link))) to gather more data on the animals’ social behavior.</p>
+<p><strong>The Housing:</strong> The animals live together in one or more cages, which promotes better welfare. Any type of cage can be used, as long as it is connected to the corridor via a tube. We offer a solution with 2 or 4 cages connected by transparent acrylic tubes, which can serve different purposes (e.g., one cage with food, another for resting). Optionally, RFID sensors can be installed in the corridors connecting the cages (ECOHAB(link)) to gather more data on the animals’ social behavior.</p>
 <p><strong>The Behavioral Box:</strong> Any type of behavioral box can be used. We provide two design options: one with auditory stimuli and three behavioral ports, and another with a touchscreen and one port. The system is designed to interact with behavioral boxes controlled by Bpod (using Python). Integration with other controllers, such as Bcontrol or Bonsai, is currently under development.</p>
 <br></section>
 <section id="the-corridor">
@@ -472,9 +479,11 @@ Most of the elements in the mouse version of the corridor are 3D-printed, except
 <p>To simplify interaction with the hardware components, we have designed a custom Raspberry Pi HAT (Hardware Attached on Top). This HAT provides the necessary connectors to control two servo motors, an RFID reader, a weight sensor, and a temperature sensor. This setup ensures seamless device connectivity, delivering a plug-and-play experience.</p>
 <p><img alt="controller" src="_images/raspberry_hat.png" /></p>
 <br></section>
-<section id="animal-entry-and-exit-logic">
-<h2>Animal Entry and Exit Logic</h2>
-<p><img alt="entrances" src="_images/entrances.png" /></p>
+<section id="system-usage">
+<h2>System Usage</h2>
+<p>The Training Village has been rigorously tested in the <a class="reference external" href="https://braincircuitsbehavior.org">Brain Circuits and Behavioral Lab</a> with different groups of mice and two different behavioral tasks: a multi-choice delayed response task and a foraging task. Recently, the system has been adapted to rats in the <a class="reference external" href="https://www.uab.cat/en/incuab/fx-animalmindslab-en">Animal Minds Lab</a>.</p>
+<p>The Training Village can work continuously for months, allowing the automatic collection of large datasets of cognitive-demanding tasks that often require long training periods (e.g. 20-40 sessions). It automatically adjusts training difficulty, timing, and session duration based on each animal’s motivation and needs,  letting subjects learn at their own pace while ensuring a balanced usage of the behavioral box. On average, mice in the Training Village perform about three sessions per day, with a significant preference for the nighttime. Behavioral box occupancy depends on the group size. With groups of 14 animals housed together in the system, the average occupancy is around 70% of the total daytime (i.e. 16.8 hours of training per day), indicating a high usage at this capacity. Subjects’ performance and motivation are comparable to the manual training, yet with a significant reduction in the experimenter involvement.</p>
+<p><img alt="plots" src="_images/plots.png" /></p>
 <br></section>
 <section id="open-source">
 <h2>Open Source</h2>
@@ -502,11 +511,11 @@ BRAIN CIRCUITS AND BEHAVIOR LAB
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="user_guide_index.html"
+       href="getting_started_index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">User Guide</p>
+        <p class="prev-next-title">Getting Started</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -530,7 +539,7 @@ BRAIN CIRCUITS AND BEHAVIOR LAB
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-does-it-work">How Does It Work?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-corridor">The Corridor</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-controller">The Controller</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#animal-entry-and-exit-logic">Animal Entry and Exit Logic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#system-usage">System Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-source">Open Source</a></li>
 </ul>
   </nav></div>

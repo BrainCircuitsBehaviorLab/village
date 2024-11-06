@@ -38,7 +38,7 @@ State
       ~State.DETECTION
       ~State.ACCESS
       ~State.LAUNCH_AUTO
-      ~State.RUN_ACTION
+      ~State.RUN_FIRST
       ~State.CLOSE_DOOR2
       ~State.RUN_CLOSED
       ~State.OPEN_DOOR2

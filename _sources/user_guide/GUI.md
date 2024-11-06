@@ -2,7 +2,7 @@
 
 Once the system is set up for remote access, disconnect the keyboard, mouse, and monitor, and place the Raspberry Pi in its designated position in the corridor. Connect the two servo motors, the RFID reader, and the temperature sensor. Connect the two cameras as well. Also, connect the Bpod to the USB port closest to the Raspberry Pi’s Ethernet port.
 
-![Connections](../_static/connections.png)
+![Connections](/_static/connections.png)
 
 To run the Training Village, open a terminal window and type:
 ```
@@ -18,14 +18,14 @@ Once the GUI starts, you will see a menu at the top with the following options: 
 
 ### MAIN
 
-![Main Training village screen](../_static/main_screen.png)
+![Main Training village screen](/_static/main_screen.png)
 
 This is the default screen. In this screen the Raspberry Pi doesn’t need to do any rendering work to display videos (although videos continue to be recorded and saved). If the user doesn’t take any action for 5 minutes, the system automatically returns to this screen.
 
 
 ### MONITOR
 
-![Monitor Training village screen](../_static/monitor_screen.png)
+![Monitor Training village screen](/_static/monitor_screen.png)
 
 This screen is used to monitor the system’s status, including both the corridor and the behavioral box.
 We can see images captured by the two cameras: one above the corridor and one recording the behavioral box. There are several buttons at the top center:
@@ -51,8 +51,6 @@ We can see images captured by the two cameras: one above the corridor and one re
 
 
 
-[TROUBLE]: /troubleshooting_index.rst
+[TROUBLE]: /faq_index.rst
 [STATES]: /user_guide/state_machine.md
 [DETECTION]: /user_guide/detection.md
-
-<br>

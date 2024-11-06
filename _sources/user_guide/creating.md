@@ -1,4 +1,4 @@
-## Project Structure
+## Creating a New Training Protocol
 
 For training animals, the code and data are organized into projects. A project’s structure is automatically created when a new project is started.
 

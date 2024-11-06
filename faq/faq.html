@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Create a Telegram Bot &#8212; Training village</title>
+    <title>&lt;no title&gt; &#8212; Training village</title>
   
   
   
@@ -40,18 +40,16 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../_static/documentation_options.js?v=1c787c9c"></script>
+    <script src="../_static/documentation_options.js?v=efdb92ab"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/telegram';</script>
-    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/telegram.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'faq/faq';</script>
+    <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/faq/faq.html" />
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Project Structure" href="project_structure.html" />
-    <link rel="prev" title="Animal Detection" href="detection.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -102,6 +100,8 @@
     <div class="bd-container__inner bd-page-width">
       
       
+      
+        
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
@@ -155,20 +155,18 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="remote.html">Configure remote access</a></li>
-<li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GUI.html">Using the GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing and Calibrating Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="detection.html">Animal Detection</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="alarms.html">Receiving and responding to Telegram Alarms</a></li>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/testing.html">Testing and Calibrating Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/detection.html">Animal Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/using.html">Using an Existing Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/creating.html">Creating a New Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receiving and responding to Telegram Alarms</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -177,9 +175,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_collection_index.html">Data Collection</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../initial_configuration_index.html">Initial Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/backup.html">Scheduling Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -332,6 +332,13 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/ISO.html">System ISO Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
@@ -415,7 +422,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Create a Telegram Bot</h1>
+    <h1><no title></h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -424,10 +431,9 @@
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-token-of-an-existing-bot">Check the token of an existing bot</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-the-bot-triggers-the-alarms">Make the bot triggers the alarms</a></li>
+                <ul class="simple visible nav section-nav flex-column">
 </ul>
+
             </nav>
         </div>
     </div>
@@ -438,32 +444,56 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="create-a-telegram-bot">
-<h1>Create a Telegram Bot</h1>
-<ol class="arabic simple">
-<li><p>Text <code class="docutils literal notranslate"><span class="pre">&#64;BotFather</span></code> in the search tab and select this bot.</p></li>
-<li><p>Text: <code class="docutils literal notranslate"><span class="pre">/newbot</span></code> and send.</p></li>
-<li><p>Follow Botfather instructions. Write down the token. Never share the token in github.</p></li>
-<li><p>Open a chat with your new bot and activate it by sending: <code class="docutils literal notranslate"><span class="pre">/start</span></code>.</p></li>
-</ol>
-<section id="check-the-token-of-an-existing-bot">
-<h2>Check the token of an existing bot</h2>
-<ol class="arabic simple" start="5">
-<li><p>Go to the <code class="docutils literal notranslate"><span class="pre">&#64;BotFather</span></code> chat and send <code class="docutils literal notranslate"><span class="pre">/token</span></code>.</p></li>
-</ol>
-</section>
-<section id="make-the-bot-triggers-the-alarms">
-<h2>Make the bot triggers the alarms</h2>
-<ol class="arabic simple" start="6">
-<li><p>Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the
-alarms from the bot and will be able to send commands to it.</p></li>
-<li><p>Start a conversation with <code class="docutils literal notranslate"><span class="pre">&#64;username_to_id_bot</span></code> to obtain your ID, the chat ID and
-the ID of all the other users.</p></li>
-<li><p>Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)</p></li>
-</ol>
-<br>
-</section>
-</section>
+  <br>
+<ul class="simple">
+<li><p><strong>For which kind of behavioral tasks is the Training Village suited for? For which tasks is not suited?</strong> The system is best suited for tasks that require a long training period (2-3 months) and that you benefit from repeating for many sessions (e.g. longitudinal studies across months). They also need to be reward based tasks (foraging, addiction, perceptual decision making, memory, navigation, etc) to motivate the animals to work on the task day after day. Tasks based on punishments or aversive stimuli will not work as the mice will have no reason to enter into the behavioral box once they learn about it. The system is also optimal to study the learning process in a given task:  by setting a pre-fixed training pipeline you will be able to compare the progress in task performance during the learning phase not just across animals in the same batch, but, in principle, also across animal batches, something which is very hard when humans intervene in the training.
+<br><br></p></li>
+<li><p><strong>Can I use the system if I am still setting up my behavioral task (i.e. I do not have a preset training schedule yet)?</strong> Yes, the system can be used to design new tasks, a period in which you would be manually adjusting task variables and parameters. But you will maximize the power of the system, once your training pipeline is well defined (i.e. training stages, quantitative criteria to advance or go back across stages, etc) and the system can run on “its own” without constant (and often subjective) adjustment of task parameters.
+<br><br></p></li>
+<li><p><strong>Regarding animal regulation, is the Training Village a system that substitutes the normal cages of the animals and hence is located into the animal housing premises of our animal facility? Or is a system that substitutes the operant behavioral chamber and hence is located into the behavioral experimentation premises?</strong> The training village is meant to improve the way we carry out cognitive testing in rodents by allowing animals to self pace their training schedule. For that reason, it transforms the common “Mon-to-Fri daily session” approach we typically do in our experiments with a more continuous training in which animals perform several sessions per day seven days per week. For that reason, the system should be technically located in rooms reserved for behavioral experimentation inside the animal facility.
+<br><br></p></li>
+<li><p><strong>What happens if there is a power outage in the animal facility?</strong> The Training Village is a system that requires continuous and reliable connectivity to the internet because it is designed to be controlled remotely. It’s necessary to set up a script to run on an external system (we include instructions for setting it up on your own server or a cloud service like Amazon AWS) that will execute every hour to check from outside that the system is responsive (i.e., that the Raspberry Pi is running and connected to the internet). If the internet connection fails or there is a power failure, the remote bot will detect the system is not responding and will send an Alarm via Telegram.  If the power comes back to the system, the Raspberry Pi will restart automatically and you will be able to connect remotely and restart the Training Village software. If the power does not come back, you will have to come to the facility in person to check the state of the animals (e.g. whether there are mice inside of the operant chamber, etc).  If your animal facility suffers from common outages or power fluctuations that could damage the Raspberry Pi, we advise you to use a UPS to protect the system.
+<br><br></p></li>
+<li><p><strong>Can mice get accidentally guillotined by the closing of a door?</strong> This is extremely unlikely because the corridor doors are only closed if the camera above the corridor does not detect any mice nearby. Moreover, the transparent top of the corridor is made of a flexible plastic such that, in case of an unlikely event that the closing doors catches a mouse passing through, the top will give way for the animal to escape.
+<br><br></p></li>
+<li><p><strong>Can the Training Village detect the one mouse escaped from the cages?</strong> Yes, the system is constantly monitoring which mice are trying to enter the behavioral box. When a mouse has not been detected in the corridor for the last 24 hours, the system triggers an alarm warning reporting that a particular mouse is “missing”. The reasons causing this alarm can go from health problems to animals escaping. That is why this type of alarm has to be quickly attended in person.
+<br><br></p></li>
+<li><p><strong>Can you keep the system running during weekends? How about longer holidays?</strong> Yes you can, but there must always be someone “on call” that can come to the animal facility in person in a short period of time (a few hours). Perhaps the facility staff can do that or perhaps someone else from the lab. What you cannot do is leave the system running while you’re away for several days and there is nobody “on call” to come in case of an unexpected event.
+<br><br></p></li>
+<li><p><strong>I do not use BPod in my behavioral task but a different acquisition system. Can I still use the Training Village?</strong> The Training Village comes with a tested integration with BPoD run using PyBod. But the intention is that, in principle, it can be integrated with any system. Depending on the system, this may require more or less adjustment of the software. Contact us if you are interested in exploring the integration with another behavioral control system.
+<br><br></p></li>
+<li><p><strong>How can the Training Village be used to perform pharmacological manipulations of the task behavior?</strong> Pharmacological interventions implying the continuous administration of a drug during several days (e.g. using osmotic pumps) or one-time interventions but whose effects can last several hours or days, can very well be carried out with the Training Village: you administer the drug to a subgroup of mice in the system and then allow them enter the behavioral box at different time points from the injection point. Repeating this process several times should allow you to obtain the time resolved effect of the drug on your behavior.  On the other hand, pharmacological interventions with a transient effect that must be measured immediately after the administration are better assessed with a manual approach in which you can control the timing between administration and the task.
+<br><br></p></li>
+<li><p><strong>Is the Training Village compatible with optogenetic manipulations during the task?</strong> No, not at the moment. We have used the Training Village in the past to train animals on a task that takes a few weeks of training. Then we have implanted the mice with light cannulas and put them back into the system (make sure you use protective caps for the implanted cannulas). We have then combined manual optogenetic sessions in which mice are tethered to the laser and manually introduced to the same behavioral box of the system with periods (nights and weekends) in which mice can still enter freely into the box to keep “practicing” the task without tethering. This combination of automatic and manual training requires to set detailed, individualized access schedules in the Training Village so that manual sessions always are preceded by  sufficiently long period without access to the task (e.g. a mouse programmed to run a manual session on Monday morning, has to be banned in the Training Village for access to the behavioral task from Sunday evening on).
+Finally, we are currently exploring the compatibility of our system with the wireless battery-free optogenetic implants from Neurolux. This integration would allow for automatic self-paced optogenetic experiments 24/7. Stay tuned if you want to know more about this integration.
+<br><br></p></li>
+<li><p><strong>Is the Training Village compatible with electrophysiological recordings during the task?</strong>  No, not at the moment. As explained in the previous question regarding optogenetics, you can still train your mice using the Training Village and then implant them. In contrast with optogenetics implants, electrophysiology implants are harder to protect from other animals housed together so we have normally switched to individual housing and only manual sessions, once the animals were implanted with electrodes.
+<br><br></p></li>
+<li><p><strong>Can the Training Village be used in tasks needing more than one animal (e.g. prosocial or competition tasks involving two subjects)?</strong> No, at the moment the corridor provides access to the behavioral box to one animal at a time. But enabling multiple mice would be an easy extension which would only require a simple modification of the code controlling the corridor so that it can safely allow access to a second animal while the first is waiting inside.
+<br><br></p></li>
+<li><p><strong>If mice in the Training Village end up doing a similar number of trials in the task than when run manually, what is the advantage of using the TV?</strong> Many!</p>
+<ul>
+<li><p><strong>a.</strong> The Training Village is not meant to maximize the number of trials we obtain in a task per animal but it aims to improve the conditions in which mice carry out these tasks in the lab.</p></li>
+<li><p><strong>b.</strong> The individual tracking of animal variables including weight, water intake in the task, locomotor activity and task performance, paired with the alarm system enables experimenters to remotely have a detailed and continuous monitoring of  the animals so that they can react promptly to any circumstance that may be causing animal suffering.</p></li>
+<li><p><strong>c.</strong> By removing human intervention in the training process, we decrease the stress of the animals from transportation and handling providing the stable and predictable conditions that are optimal for animal cognitive testing.</p></li>
+<li><p><strong>d.</strong> Moreover, by running continuously, mice carry out a similar number of trials per day than in manual training but they are distributed over several shorter sessions, which reduces the within-session effects.</p></li>
+<li><p><strong>e.</strong> Because the experiment in the Training Village runs continuously for several weeks or months removing the variability introduced by the pauses on weekends or holidays in the traditional manual training (i.e. the so-called “monday effect”).  These conditions of continuity, stability  in higher quality data, which as a consequence can reduce the number of animals used in this type of experiments.</p></li>
+<li><p><strong>f.</strong> Automatisation of the full training process forces experimenters to objectivise and quantify every subjective decision, increasing data reproducibility, removing unconscious biases and implementing de facto blinding of all experiments.</p></li>
+<li><p><strong>g.</strong> Finally, the automatisation of the full process impacts positively in the working conditions of the researchers carrying out these experiments which can be very repetitive and boring.
+<br><br></p></li>
+</ul>
+</li>
+<li><p><strong>What is the maximum number of animals I can house in the Training Village and why?</strong> The number of mice you can house in the system depends on the number of cages you connect and the amount of time you need your animals to run the task every day. Assuming you connect four type-500 mouse cages (220 x 220 x 145 mm) you could in principle house up to 4 x 4 = 16 mice. However, if you aim that your animals run your task for about 90-120 mins every day (e.g. 3 sessions of ~30-40 mins), having more than 10-12 mice would be too much. A good indicator of whether the behavioral box is “too occupied” implying that mice are not doing as many sessions as they would if they had more access is the percentage
+<br><br></p></li>
+<li><p><strong>What is approximately the cost of all the pieces of the Training Village?</strong> The cost of 3D-printing the corridor parts, plus the Raspberry Pi and peripherals (camera, RFID reader, scale, temperature probe, etc) is around 2000€. If you want to include the cost of our general-purpose touchscreen chamber controlled with BPod, you will have to add another 3000€.
+<br><br></p></li>
+<li><p><strong>If mice self organize to enter in the behavioral box, how does the Training Village prevent one or two dominant mice monopolize its use?</strong> The only measure we take for this monopolization to take place is to prevent mice from reentering the box for around 4 hours after they exit. The penalty period after each session, also prevents mice from entering the behavioral box without sufficient motivation to perform the task.  Ultimately with only this measure, mice distribute the time in the behavioral box surprisingly uniformly as shown in <a class="reference download internal" download="" href="../_downloads/2bd5889a3e63beda9824b911f3d9cb92/plot.png"><span class="xref download myst">Fig1</span></a>.
+<br><br></p></li>
+<li><p><strong>How can you control the duration of the sessions? What prevents animals from staying inside the behavioral box for a long time blocking the access of the rest of the mice?</strong>  In principle, the mice could enter the behavioral box and stay there for as long as they want, preventing the rest of the mice from running the task. In practice, this happens very rarely. In fact, mice like to enter the box, stay there briefly and come back to the homecage. We prevent these short “exploratory” entrances by setting a minimum session duration during which mice cannot exit because the door is closed (we start with short sessions of 10 mins until we reach standard minimum durations of 30-40 mins). Most of the time, after this minimum session time, the sound of the door opening is a strong cue that makes mice finish the session and exit the box. Sometimes, if they are very engaged, they stay longer performing the task until they decide to finish and leave. Very occasionally, however, they finish doing the task but stay inside the box (sometimes they fall asleep inside). For these rare cases, the system triggers a wake-up signal to invite mice to leave (a loud buzzer inside the behavioral box together with the door opening and closing).
+<br><br></p></li>
+<li><p><strong>Are mice necessarily food or water deprived in the Training Village?</strong> In principle, you need to use the same type of deprivation you use when you carry out your behavior manually. We have successfully used ad libitum water with 2-3% citric acid in the cage together with 10% sucrose water during the task to maintain mice and rats motivated to enter the behavioral box and perform hundreds of trials per day in standard decision making tasks. Having ad libitum water with citric taste in the cage allows animals will not get quickly dehydrated if there is a problem in the system and they cannot access the behavioral task.
+<br><br></p></li>
+</ul>
 
 
                 </article>
@@ -476,24 +506,6 @@ the ID of all the other users.</p></li>
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="detection.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Animal Detection</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="project_structure.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Project Structure</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -510,10 +522,9 @@ the ID of all the other users.</p></li>
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-token-of-an-existing-bot">Check the token of an existing bot</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-the-bot-triggers-the-alarms">Make the bot triggers the alarms</a></li>
+    <ul class="simple visible nav section-nav flex-column">
 </ul>
+
   </nav></div>
 
 </div></div>

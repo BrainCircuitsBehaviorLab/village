@@ -9,13 +9,14 @@ What Is The Training Village?
 .. toctree::
    :hidden:
    :maxdepth: 2
-   :caption: Contents:
 
+   getting_started_index.rst
    user_guide_index.rst
    how_to_build_index.rst
-   data_collection_index.rst
-   resources_index.rst
+   initial_configuration_index.rst
    api_index.rst
+   resources_index.rst
+   faq_index.rst
    troubleshooting_index.rst
 
 
@@ -27,7 +28,7 @@ What Is The Training Village?
    :parser: myst_parser.sphinx_
 .. include:: main/controller.md
    :parser: myst_parser.sphinx_
-.. include:: main/entry.md
+.. include:: main/usage.md
    :parser: myst_parser.sphinx_
 .. include:: main/open_source.md
    :parser: myst_parser.sphinx_
