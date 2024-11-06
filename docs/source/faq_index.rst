@@ -1,9 +1,6 @@
-Faq
+FAQ
 =================================
 
 
-.. include:: faq/faq.md
-   :parser: myst_parser.sphinx_
-
-.. include:: faq/troubleshooting.md
+.. include:: /faq/faq.md
    :parser: myst_parser.sphinx_

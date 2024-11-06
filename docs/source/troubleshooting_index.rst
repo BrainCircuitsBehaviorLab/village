@@ -1,6 +1,6 @@
-Getting Started
+Troubleshooting
 =================================
 
 
-.. include:: /getting_started/started.md
+.. include:: /troubleshooting/troubleshooting.md
    :parser: myst_parser.sphinx_

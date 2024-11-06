@@ -28,7 +28,8 @@ from village.time_utils import time_utils
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
 # configure the logging of libcamera (the C++ library picamera2 uses)
 # '0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
-os.environ["LIBCAMERA_LOG_LEVELS"] = "3"
+os.environ["LIBCAMERA_LOG_LEVELS"] = "1"
+# Picamera2.set_logging(Picamera2.DEBUG)
 
 
 # use this function to get info
@@ -65,7 +66,12 @@ class Camera(CameraProtocol):
         self.path_video = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".mp4")
         self.path_csv = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".csv")
         self.path_picture = os.path.join(settings.get("DATA_DIRECTORY"), name + ".jpg")
-        self.output = FfmpegOutput(self.path_video)
+        # self.output = FfmpegOutput(self.path_video)
+        # self.output = FfmpegOutput(
+        #     self.path_video, extra_args=["-thread_queue_size", "1024"]
+        # )
+
+        self.output = FfmpegOutput(self.path_video + " -thread_queue_size 1024")
         self.cam.pre_callback = self.pre_process
 
         color_area1 = settings.get("COLOR_AREA1")
@@ -124,6 +130,7 @@ class Camera(CameraProtocol):
         self.cropped_frames: list[Any] = []
 
         self.error = ""
+        self.error_frame = 0
 
         self.is_recording = False
 
@@ -201,11 +208,13 @@ class Camera(CameraProtocol):
                 settings.get("VIDEOS_DIRECTORY"),
                 self.name + "_" + time_start + ".csv",
             )
-        self.output = FfmpegOutput(self.path_video)
+        self.output = FfmpegOutput(self.path_video + " -thread_queue_size 1024")
         self.is_recording = True
+        print("start encoding: " + self.path_video)
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_record(self) -> None:
+        print("stop encoding: " + self.path_video)
         self.cam.stop_encoder()
         self.is_recording = False
         self.save_csv()
@@ -232,6 +241,11 @@ class Camera(CameraProtocol):
         min_length = min(
             len(self.frames), len(self.timings), len(self.trials), len(self.states)
         )
+
+        print("frames: ", len(self.frames))
+        print("timings: ", len(self.timings))
+        print("trials: ", len(self.trials))
+        print("states: ", len(self.states))
 
         self.frames = self.frames[:min_length]
         self.timings = self.timings[:min_length]
@@ -288,6 +302,12 @@ class Camera(CameraProtocol):
                 self.write_trial()
                 self.write_pixel_detection()
                 self.write_csv()
+            else:
+                self.error_frame += 1
+                if self.error_frame == 1:
+                    log.error("first None frame")
+                if self.error_frame % 20000 == 0:
+                    log.error("frame None: " + str(self.error_frame))
 
     def get_gray_frame(self) -> None:
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)

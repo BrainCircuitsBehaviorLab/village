@@ -17,6 +17,7 @@ What Is The Training Village?
    api_index.rst
    resources_index.rst
    faq_index.rst
+   troubleshooting_index.rst
 
 
 .. include:: main/what_is.md
@@ -27,7 +28,7 @@ What Is The Training Village?
    :parser: myst_parser.sphinx_
 .. include:: main/controller.md
    :parser: myst_parser.sphinx_
-.. include:: main/entry.md
+.. include:: main/usage.md
    :parser: myst_parser.sphinx_
 .. include:: main/open_source.md
    :parser: myst_parser.sphinx_

@@ -1,3 +1,11 @@
+# This file is part of the Training Village repository.
+# Copyright (C) [2024] [BRAIN CIRCUITS AND BEHAVIOR LAB]
+#
+# This program is licensed under the GNU General Public License v3 (GPLv3).
+# See the LICENSE.md file in the root of this repository for full license text.
+# For more details, see <http://www.gnu.org/licenses/>.
+
+
 # VARIABLES WE CAN IMPORT IN ANY FILE
 # settings (no dependencies)
 # time_utils (no dependencies)
@@ -98,7 +106,7 @@ def system_run() -> None:
         if i == 2000:
             log.alarm("Alarma de prueba", subject="RAFA")
 
-        if i % 100 == 0:
+        if i % 6000 == 0:
             log.info("counter: " + str(i) + " textos de prueba")
 
         if cam_corridor.chrono.get_seconds() > 1800:

@@ -196,9 +196,8 @@ class Task:
 
         if self.df.shape[0] > 100000:
             log.alarm(
-                """
-                      The session file is too big, probably due to
-                      overdetections in some of the ports""",
+                """The session file is very large, probably due to
+                overdetections in some of the ports""",
                 subject=self.subject,
             )
 
