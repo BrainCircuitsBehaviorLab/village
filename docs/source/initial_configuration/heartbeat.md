@@ -1,4 +1,4 @@
-## Sending Heartbeat Signals to a Remote Device
+## Send Heartbeat Signals to a Remote Device
 
 
 <br>

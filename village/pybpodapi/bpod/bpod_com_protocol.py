@@ -227,32 +227,52 @@ class BpodCOMProtocol(BpodBase):
         max_states = self._arcom.read_uint16()  # type: int
         logger.debug("Read max states: %s", max_states)
 
+        print("max_states", max_states)
+
         cycle_period = self._arcom.read_uint16()  # type: int
         logger.debug("Read cycle period: %s", cycle_period)
+
+        print(cycle_period)
 
         max_serial_events = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of events per serial channel: %s", max_serial_events)
 
+        print(max_serial_events)
+
         n_global_timers = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of global timers: %s", n_global_timers)
+
+        print(n_global_timers)
 
         n_global_counters = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of global counters: %s", n_global_counters)
 
+        print(n_global_counters)
+
         n_conditions = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of conditions: %s", n_conditions)
+
+        print(n_conditions)
 
         n_inputs = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of inputs: %s", n_inputs)
 
+        print("n_inputs", n_inputs)
+
         inputs = self._arcom.read_char_array(array_len=n_inputs)
         logger.debug("Read inputs: %s", inputs)
+
+        print("inputs", inputs)
 
         n_outputs = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of outputs: %s", n_outputs)
 
-        outputs = self._arcom.read_char_array(array_len=n_outputs)
+        print("n_outputs", n_outputs)
+
+        outputs = self._arcom.read_char_array(array_len=30)
         logger.debug("Read outputs: %s", outputs)
+
+        print("outputs", outputs)
 
         hardware.max_states = max_states
         hardware.cycle_period = cycle_period
@@ -263,7 +283,11 @@ class BpodCOMProtocol(BpodBase):
         hardware.inputs = inputs
         hardware.outputs = outputs  # + ['G', 'G', 'G']
 
+        print("okokoko")
+
         hardware.live_timestamps = self._bpodcom_get_timestamp_transmission()
+
+        print("end")
 
     def _bpodcom_enable_ports(self, hardware):
         """

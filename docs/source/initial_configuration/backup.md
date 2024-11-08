@@ -1,3 +1,3 @@
-## Scheduling Backups
+## Schedule Backups
 
 <br>

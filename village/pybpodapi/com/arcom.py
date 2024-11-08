@@ -91,7 +91,9 @@ class ArCOM(object):
         :param baudRate:
         :return:
         """
-        baudrate = 4000000
+        # TODO check this value
+        # baudrate = 4000000
+        baudrate = 256000
         self.serial_object = serial.Serial(
             serial_port, baudrate=baudrate, timeout=timeout
         )

@@ -42,8 +42,11 @@ class Softcode:
 
 class PyBpod(PyBpodProtocol):
     def __init__(self) -> None:
+        print("voy a bpod")
         self.bpod = Bpod()
+        print("voy a sma")
         self.sma = StateMachine(self.bpod)
+        print("voy a softcode")
         self.softcode = Softcode()
         self.session = self.bpod.session
         self.connected = True

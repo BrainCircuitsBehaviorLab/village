@@ -346,29 +346,49 @@
 
 # print(a["hola"])
 
-import pandas as pd
+# import pandas as pd
 
-df4 = pd.DataFrame({"hola": [], "_Transition3": []})
-
-
-# a = 4
-# a = "hola"
-
-print(df4.columns)
-print(type(df4.columns))
-print(type(df4.columns[1]))
-
-columns_to_drop = [
-    item
-    for item in df4.columns
-    if isinstance(item, str)
-    and (
-        item.startswith("_Tup")
-        or item.startswith("_Transition")
-        or item.startswith("_Global")
-        or item.startswith("_Condition")
-    )
-]
+# df4 = pd.DataFrame({"hola": [], "_Transition3": []})
 
 
-print(columns_to_drop)
+# # a = 4
+# # a = "hola"
+
+# print(df4.columns)
+# print(type(df4.columns))
+# print(type(df4.columns[1]))
+
+# columns_to_drop = [
+#     item
+#     for item in df4.columns
+#     if isinstance(item, str)
+#     and (
+#         item.startswith("_Tup")
+#         or item.startswith("_Transition")
+#         or item.startswith("_Global")
+#         or item.startswith("_Condition")
+#     )
+# ]
+
+
+# print(columns_to_drop)
+
+
+import serial
+
+# 110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400,
+# 57600, 115200, 128000 and 256000
+
+# baudrate = 57600 #
+# siempre busy
+
+baudrate = 4000000  # se cuelga
+
+#
+# audrate = 9600  # se cuelga
+
+serial_object = serial.Serial("/dev/Bpod", baudrate=baudrate, timeout=1)
+
+print("OK")
+
+input("press")
