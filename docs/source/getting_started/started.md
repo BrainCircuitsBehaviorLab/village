@@ -11,8 +11,8 @@ If you prefer to build the Training Village yourself, start by checking the comp
 
 
 [INSTRUCTIONS]: /how_to_build/assembly_instructions.md
-[CONFIGURE]: /initial_configuration_index.srt
-[GUIDE]: /user_guide_index.srt
+[CONFIGURE]: /initial_configuration_index.rst
+[GUIDE]: /user_guide_index.rst
 [PLANS]: /how_to_build/list_of_parts.md
 [ISO]: /resources/ISO.md
 [SOFTWARE]: /how_to_build/software_installation.md
