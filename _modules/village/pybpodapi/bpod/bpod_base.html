@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../../../../_static/documentation_options.js?v=add39398"></script>
+    <script src="../../../../_static/documentation_options.js?v=701d346b"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -175,10 +175,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../initial_configuration_index.html">Initial Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/hardware.html">Hardware Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/remote.html">Configure Remote Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/backup.html">Scheduling Backups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/backup.html">Schedule Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/heartbeat.html">Send Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -596,22 +597,28 @@
         <span class="c1"># check the firmware version</span>
         <span class="n">firmware_version</span><span class="p">,</span> <span class="n">machine_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_firmware_version</span><span class="p">()</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="n">firmware_version</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">firmware_version</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BPOD_TARGET_FIRMWARE&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">BpodErrorException</span><span class="p">(</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;Error: Old firmware detected.</span>
 <span class="sd">                Please update Bpod 0.7 + firmware and try again.&quot;&quot;&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">firmware_version</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BPOD_TARGET_FIRMWARE&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">BpodErrorException</span><span class="p">(</span>
-<span class="w">                </span><span class="sd">&quot;&quot;&quot;Error: Future firmware detected.</span>
-<span class="sd">                Please update the Bpod python software.&quot;&quot;&quot;</span>
-            <span class="p">)</span>
+        <span class="c1"># if firmware_version &gt; settings.get(&quot;BPOD_TARGET_FIRMWARE&quot;):</span>
+        <span class="c1">#     raise BpodErrorException(</span>
+        <span class="c1">#         &quot;&quot;&quot;Error: Future firmware detected.</span>
+        <span class="c1">#         Please update the Bpod python software.&quot;&quot;&quot;</span>
+        <span class="c1">#     )</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="o">.</span><span class="n">firmware_version</span> <span class="o">=</span> <span class="n">firmware_version</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="o">.</span><span class="n">machine_type</span> <span class="o">=</span> <span class="n">machine_type</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;00&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_hardware_description</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_enable_ports</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">BpodErrorException</span><span class="p">(</span><span class="s2">&quot;Error: Failed to enable Bpod inputs.&quot;</span><span class="p">)</span>
@@ -624,16 +631,24 @@
         <span class="c1"># check if any module is connected</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bpod_modules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_get_modules_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="p">)</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bpod_modules</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
 
         <span class="c1"># initialise the server to handle commands</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_port</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">socketin</span> <span class="o">=</span> <span class="n">NonBlockingSocketReceive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">socketin</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 

@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../../../../_static/documentation_options.js?v=add39398"></script>
+    <script src="../../../../_static/documentation_options.js?v=701d346b"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -175,10 +175,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../initial_configuration_index.html">Initial Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/hardware.html">Hardware Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/remote.html">Configure Remote Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/backup.html">Scheduling Backups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/backup.html">Schedule Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../initial_configuration/heartbeat.html">Send Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -677,32 +678,52 @@
         <span class="n">max_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_uint16</span><span class="p">()</span>  <span class="c1"># type: int</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read max states: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">max_states</span><span class="p">)</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max_states&quot;</span><span class="p">,</span> <span class="n">max_states</span><span class="p">)</span>
+
         <span class="n">cycle_period</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_uint16</span><span class="p">()</span>  <span class="c1"># type: int</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read cycle period: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cycle_period</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">cycle_period</span><span class="p">)</span>
 
         <span class="n">max_serial_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_uint8</span><span class="p">()</span>  <span class="c1"># type: int</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read number of events per serial channel: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">max_serial_events</span><span class="p">)</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="n">max_serial_events</span><span class="p">)</span>
+
         <span class="n">n_global_timers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_uint8</span><span class="p">()</span>  <span class="c1"># type: int</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read number of global timers: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">n_global_timers</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">n_global_timers</span><span class="p">)</span>
 
         <span class="n">n_global_counters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_uint8</span><span class="p">()</span>  <span class="c1"># type: int</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read number of global counters: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">n_global_counters</span><span class="p">)</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="n">n_global_counters</span><span class="p">)</span>
+
         <span class="n">n_conditions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_uint8</span><span class="p">()</span>  <span class="c1"># type: int</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read number of conditions: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">n_conditions</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">n_conditions</span><span class="p">)</span>
 
         <span class="n">n_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_uint8</span><span class="p">()</span>  <span class="c1"># type: int</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read number of inputs: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">)</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n_inputs&quot;</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">)</span>
+
         <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_char_array</span><span class="p">(</span><span class="n">array_len</span><span class="o">=</span><span class="n">n_inputs</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read inputs: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;inputs&quot;</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
 
         <span class="n">n_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_uint8</span><span class="p">()</span>  <span class="c1"># type: int</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read number of outputs: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">)</span>
 
-        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_char_array</span><span class="p">(</span><span class="n">array_len</span><span class="o">=</span><span class="n">n_outputs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n_outputs&quot;</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">)</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arcom</span><span class="o">.</span><span class="n">read_char_array</span><span class="p">(</span><span class="n">array_len</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read outputs: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;outputs&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
 
         <span class="n">hardware</span><span class="o">.</span><span class="n">max_states</span> <span class="o">=</span> <span class="n">max_states</span>
         <span class="n">hardware</span><span class="o">.</span><span class="n">cycle_period</span> <span class="o">=</span> <span class="n">cycle_period</span>
@@ -713,7 +734,11 @@
         <span class="n">hardware</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span>
         <span class="n">hardware</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span>  <span class="c1"># + [&#39;G&#39;, &#39;G&#39;, &#39;G&#39;]</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;okokoko&quot;</span><span class="p">)</span>
+
         <span class="n">hardware</span><span class="o">.</span><span class="n">live_timestamps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_get_timestamp_transmission</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_bpodcom_enable_ports</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hardware</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

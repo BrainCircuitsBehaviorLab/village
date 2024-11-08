@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../../../_static/documentation_options.js?v=add39398"></script>
+    <script src="../../../_static/documentation_options.js?v=701d346b"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -175,10 +175,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../initial_configuration_index.html">Initial Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/remote.html">Configure remote access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/hardware.html">Hardware Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/remote.html">Configure Remote Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/backup.html">Scheduling Backups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/heartbeat.html">Sending Heartbeat Signals to a Remote Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/backup.html">Schedule Backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/heartbeat.html">Send Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../api_index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -497,8 +498,11 @@
 <div class="viewcode-block" id="PyBpod.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.devices.bpod.PyBpod.html#village.devices.bpod.PyBpod.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;voy a bpod&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span> <span class="o">=</span> <span class="n">Bpod</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;voy a sma&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sma</span> <span class="o">=</span> <span class="n">StateMachine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;voy a softcode&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">softcode</span> <span class="o">=</span> <span class="n">Softcode</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">session</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
