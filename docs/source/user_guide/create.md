@@ -1,4 +1,4 @@
-## Creating a New Training Protocol
+## Create a New Training Protocol
 
 For training animals, the code and data are organized into projects. A project’s structure is automatically created when a new project is started.
 
@@ -73,5 +73,3 @@ class SimpleTask(Task):
     def close(self):
         return
 ```
-
-<br>

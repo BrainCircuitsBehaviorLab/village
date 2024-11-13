@@ -42,11 +42,8 @@ class Softcode:
 
 class PyBpod(PyBpodProtocol):
     def __init__(self) -> None:
-        print("voy a bpod")
         self.bpod = Bpod()
-        print("voy a sma")
         self.sma = StateMachine(self.bpod)
-        print("voy a softcode")
         self.softcode = Softcode()
         self.session = self.bpod.session
         self.connected = True
@@ -296,7 +293,6 @@ class PyBpod(PyBpodProtocol):
 
     def reconnect(self) -> None:
         if not self.connected:
-            print("reconnecting")
             self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
         self.softcode = Softcode()
@@ -322,7 +318,6 @@ class PyBpod(PyBpodProtocol):
         try:
             self.bpod.close()
         except AttributeError:
-            print("no me hizo bpod close")
             pass
 
 

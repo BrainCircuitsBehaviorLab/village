@@ -84,7 +84,7 @@ def get_scale(address: str) -> ScaleProtocol:
         log.info("Scale successfully initialized")
         return scale
     except Exception:
-        log.error("Could not initialize bpod", exception=traceback.format_exc())
+        log.error("Could not initialize scale", exception=traceback.format_exc())
         return ScaleProtocol()
 
 

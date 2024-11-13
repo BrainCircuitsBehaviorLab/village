@@ -1,14 +1,16 @@
 from __future__ import annotations
 
+from functools import partial
 from typing import TYPE_CHECKING
 
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (
     QDialog,
     QHBoxLayout,
     QLabel,
     QLineEdit,
     QPushButton,
+    QScrollArea,
     QStackedLayout,
     QVBoxLayout,
     QWidget,
@@ -238,18 +240,33 @@ class MonitorLayout(Layout):
 
         self.central_layout = QStackedLayout()
         self.addLayout(self.central_layout, 12, 88, 18, 36)
+
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
         self.page1Layout = MotorLayout(self.window, 20, 36)
         self.page1.setLayout(self.page1Layout)
+
         self.page2 = QWidget()
         self.page2.setStyleSheet("background-color:white")
         self.page2Layout = PortsLayout(self.window, 20, 36)
         self.page2.setLayout(self.page2Layout)
+
         self.page3 = QWidget()
         self.page3.setStyleSheet("background-color:white")
-        self.page3Layout = SoftcodesLayout(self.window, 20, 36)
-        self.page3.setLayout(self.page3Layout)
+        self.page3_layout = QVBoxLayout(self.page3)
+
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.page3_sub_widget = QWidget()
+        self.page3_sub_layout = FunctionsLayout(self.window, 15, 26)
+        self.page3_sub_widget.setLayout(self.page3_sub_layout)
+
+        self.scroll_area.setWidget(self.page3_sub_widget)
+
+        self.page3_layout.addWidget(self.scroll_area)
+        self.page3.setLayout(self.page3_layout)
+
         self.central_layout.addWidget(self.page1)
         self.central_layout.addWidget(self.page2)
         self.central_layout.addWidget(self.page3)
@@ -392,13 +409,6 @@ class MonitorLayout(Layout):
         index = Info.get_index_from_string(value)
         self.bottom_layout.setCurrentIndex(index)
 
-    def change_layout(self) -> bool:
-        return True
-
-    def close(self) -> None:
-        cam_corridor.stop_window_preview()
-        cam_box.stop_window_preview()
-
     def update_gui(self) -> None:
         self.update_status_label()
         self.update_buttons()
@@ -425,6 +435,11 @@ class MonitorLayout(Layout):
         else:
             self.stop_button.hide()
 
+    def change_layout(self) -> bool:
+        cam_corridor.stop_preview_window()
+        cam_box.stop_preview_window()
+        return True
+
 
 class MotorLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
@@ -448,7 +463,7 @@ class MotorLayout(Layout):
         )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            10,
+            9,
             6,
             22,
             2,
@@ -457,7 +472,7 @@ class MotorLayout(Layout):
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            12,
+            11,
             6,
             22,
             2,
@@ -466,7 +481,7 @@ class MotorLayout(Layout):
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            14,
+            13,
             6,
             22,
             2,
@@ -475,7 +490,7 @@ class MotorLayout(Layout):
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            20,
+            17,
             6,
             22,
             2,
@@ -661,7 +676,7 @@ class PortsLayout(Layout):
         print("water clicked")
 
 
-class SoftcodesLayout(Layout):
+class FunctionsLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.lbs: list[LabelButtons] = []
@@ -669,22 +684,22 @@ class SoftcodesLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        for i in range(20):
+        for i in range(98):
             row = i // 2 * 2
-            column = 0 if i % 2 == 0 else 18
-            button: PushButton = self.create_and_add_button(
+            column = 0 if i % 2 == 0 else 13
+            button = self.create_and_add_button(
                 "FUNCTION" + str(i + 1),
                 row,
                 column,
-                16,
+                13,
                 2,
-                self.softode_clicked,
-                "Run the user-fucntion" + str(i),
+                partial(self.function_clicked, i + 1),
+                "Run the user-function" + str(i),
             )
             self.buttons.append(button)
 
-    def softode_clicked(self) -> None:
-        print("softcode clicked")
+    def function_clicked(self, i=0) -> None:
+        print("function clicked " + str(i))
 
 
 class CorridorLayout(Layout):
@@ -806,7 +821,7 @@ class CorridorLayout(Layout):
         )
 
     def close(self) -> None:
-        print("hidiig")
+        return
 
     def draw_mice_buttons(self, name: str, row: int, column: int) -> None:
         width = 14

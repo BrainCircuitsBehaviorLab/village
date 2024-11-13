@@ -102,7 +102,8 @@ exclude_patterns = [
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 # html_theme = "sphinxawesome_theme"
-html_theme = "sphinx_book_theme"
+# html_theme = "sphinx_book_theme"
+html_theme = "furo"
 
 html_title = "Training village"
 
@@ -135,19 +136,23 @@ github_icon = (
 html_logo = "_static/logo.png"
 
 html_theme_options = {
-    "secondary_sidebar_items": {
-        # Para quitar en todas las páginas el toc: "**": [],
-        # Para quitarlo en alguna página en concreto: nombre_de_la_pagina: []
-        "**": ["page-toc"],
-        # "index": [],
-    },
-    "home_page_in_toc": True,
-    "use_download_button": False,  # True si quieres que aparezca el botón de descarga
+    # "secondary_sidebar_items": {
+    #     # Para quitar en todas las páginas el toc: "**": [],
+    #     # Para quitarlo en alguna página en concreto: nombre_de_la_pagina: []
+    #     "**": [],
+    #     # "**": ["page-toc"],
+    #     # "index": [],
+    # },
+    # "home_page_in_toc": True,
+    # "use_download_button": False,  # True si quieres que aparezca el botón de descarga
     # "logo_light": "_static/favicon.svg",
     # "logo_dark": "_static/favicon-white.svg",
     # "light_logo": "logo.png",
     # "dark_logo": "logo.png",
     "globaltoc_includehidden": True,
+    "body_max_width": "none",
+    # "page_width": "auto",
+    "sidebar_hide_name": True,
 }
 html_permalinks = False
 

@@ -131,10 +131,10 @@ class CameraProtocol:
     def start_camera(self) -> None:
         return
 
-    def stop_preview(self) -> None:
-        return
+    def start_preview_window(self) -> QWidget:
+        return QWidget()
 
-    def stop_window_preview(self) -> None:
+    def stop_preview_window(self) -> None:
         return
 
     def start_record(self, path_video: str = "", path_csv: str = "") -> None:
@@ -157,9 +157,6 @@ class CameraProtocol:
 
     def pre_process(self, request) -> None:
         return
-
-    def start_preview_window(self) -> QWidget:
-        return QWidget()
 
     def log(self, text: str) -> None:
         return

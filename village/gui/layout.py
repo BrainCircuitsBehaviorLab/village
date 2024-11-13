@@ -188,11 +188,6 @@ class Layout(QGridLayout):
         if not stacked:
             self.create_common_elements()
 
-    def switch_to_main_layout(self) -> None:
-        if manager.state == State.SETTINGS:
-            manager.state = State.WAIT
-        self.window.create_main_layout()
-
     def create_common_elements(self) -> None:
         self.status_label = self.create_and_add_label("", 2, 0, 212, 2, "black")
         self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
@@ -282,15 +277,11 @@ class Layout(QGridLayout):
     def change_layout(self) -> bool:
         return True
 
-    def close(self) -> None:
-        return
-
-    def main_button_clicked(self) -> None:
-        if self.change_layout():
+    def main_button_clicked(self, auto: bool = False) -> None:
+        if self.change_layout() or auto:
             if manager.state == State.SETTINGS:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
-            self.close()
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
@@ -298,7 +289,6 @@ class Layout(QGridLayout):
             if manager.state == State.SETTINGS:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
-            self.close()
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
@@ -306,7 +296,6 @@ class Layout(QGridLayout):
             if manager.state in [State.WAIT, State.SETTINGS]:
                 manager.state = State.SETTINGS
                 manager.reset_subject_task_training()
-                self.close()
                 self.window.create_tasks_layout()
             else:
                 text = """Tasks can not be launched if there is a subject in the box
@@ -322,7 +311,6 @@ class Layout(QGridLayout):
             if manager.state == State.SETTINGS:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
-            self.close()
             self.window.create_data_layout()
 
     def settings_button_clicked(self) -> None:
@@ -330,7 +318,6 @@ class Layout(QGridLayout):
             if manager.state in [State.WAIT, State.SETTINGS]:
                 manager.state = State.SETTINGS
                 manager.reset_subject_task_training()
-                self.close()
                 self.window.create_settings_layout()
             else:
                 text = """Settings can not be changed if there is a subject in the box
@@ -347,8 +334,9 @@ class Layout(QGridLayout):
     def delete_optional_widgets(self, type: str) -> None:
         for i in reversed(range(self.count())):
             widget = self.itemAt(i).widget()
-            if widget.property("type") == type:
-                widget.hide()
+            if widget is not None:
+                if widget.property("type") == type:
+                    widget.hide()
 
     def create_and_add_label(
         self,

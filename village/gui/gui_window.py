@@ -86,4 +86,4 @@ class GuiWindow(QWidget):
 
     def check_update_chrono(self) -> None:
         if self.update_chrono.get_milliseconds() > settings.get("SCREENSAVE_TIME_MS"):
-            self.layout.switch_to_main_layout()
+            self.layout.main_button_clicked(auto=True)

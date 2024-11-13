@@ -71,7 +71,8 @@ class Camera(CameraProtocol):
         #     self.path_video, extra_args=["-thread_queue_size", "1024"]
         # )
 
-        self.output = FfmpegOutput(self.path_video + " -thread_queue_size 1024")
+        # self.output = FfmpegOutput(self.path_video + " -thread_queue_size 1024")
+        self.output = FfmpegOutput("-thread_queue_size 1024 " + self.path_video)
         self.cam.pre_callback = self.pre_process
 
         color_area1 = settings.get("COLOR_AREA1")
@@ -186,10 +187,9 @@ class Camera(CameraProtocol):
     def start_camera(self) -> None:
         self.cam.start()
 
-    def stop_preview(self) -> None:
-        self.cam.stop_preview()
-
-    def stop_window_preview(self) -> None:
+    def stop_preview_window(self) -> None:
+        if self.cam._preview is not None:
+            self.cam.stop_preview()
         self.window.cleanup()
         self.cam.start_preview(Preview.NULL)
 
@@ -210,11 +210,9 @@ class Camera(CameraProtocol):
             )
         self.output = FfmpegOutput(self.path_video + " -thread_queue_size 1024")
         self.is_recording = True
-        print("start encoding: " + self.path_video)
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_record(self) -> None:
-        print("stop encoding: " + self.path_video)
         self.cam.stop_encoder()
         self.is_recording = False
         self.save_csv()
@@ -302,12 +300,6 @@ class Camera(CameraProtocol):
                 self.write_trial()
                 self.write_pixel_detection()
                 self.write_csv()
-            else:
-                self.error_frame += 1
-                if self.error_frame == 1:
-                    log.error("first None frame")
-                if self.error_frame % 20000 == 0:
-                    log.error("frame None: " + str(self.error_frame))
 
     def get_gray_frame(self) -> None:
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
@@ -493,10 +485,8 @@ class Camera(CameraProtocol):
             self.states.append(self.state)
 
     def start_preview_window(self) -> QWidget:
-        try:
-            self.stop_preview()
-        except Exception:
-            pass
+        if self.cam._preview is not None:
+            self.cam.stop_preview()
         self.window = QGlPicamera2(self.cam)
         return self.window
 

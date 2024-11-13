@@ -138,19 +138,18 @@ class BpodBase(object):
         # check the firmware version
         firmware_version, machine_type = self._bpodcom_firmware_version()
 
-        print(firmware_version)
-
         if firmware_version < settings.get("BPOD_TARGET_FIRMWARE"):
             raise BpodErrorException(
                 """Error: Old firmware detected.
                 Please update Bpod 0.7 + firmware and try again."""
             )
 
-        # if firmware_version > settings.get("BPOD_TARGET_FIRMWARE"):
-        #     raise BpodErrorException(
-        #         """Error: Future firmware detected.
-        #         Please update the Bpod python software."""
-        #     )
+        if firmware_version > settings.get("BPOD_TARGET_FIRMWARE"):
+            print("Firmware version is new: ", firmware_version)
+            # raise BpodErrorException(
+            #     """Error: Future firmware detected.
+            #     Please update the Bpod python software."""
+            # )
 
         self._hardware.firmware_version = firmware_version
         self._hardware.machine_type = machine_type

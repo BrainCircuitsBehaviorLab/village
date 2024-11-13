@@ -10,6 +10,7 @@ What Is The Training Village?
    :hidden:
    :maxdepth: 2
 
+   index.rst
    getting_started_index.rst
    user_guide_index.rst
    how_to_build_index.rst
@@ -19,16 +20,5 @@ What Is The Training Village?
    faq_index.rst
    troubleshooting_index.rst
 
-
 .. include:: main/what_is.md
-   :parser: myst_parser.sphinx_
-.. include:: main/how_does.md
-   :parser: myst_parser.sphinx_
-.. include:: main/corridor.md
-   :parser: myst_parser.sphinx_
-.. include:: main/controller.md
-   :parser: myst_parser.sphinx_
-.. include:: main/usage.md
-   :parser: myst_parser.sphinx_
-.. include:: main/open_source.md
    :parser: myst_parser.sphinx_

@@ -33,10 +33,8 @@ class Example:
             "/home/mousevillage/village_projects/demo_project/data/videos/BOX.mp4"
         )
         fps = int(self.cap.get(cv2.CAP_PROP_FPS))
-        print(fps)
         self.timer = QTimer()
         millisecs = int(1000.0 / fps)
-        print(millisecs)
         self.timer.setTimerType(Qt.PreciseTimer)
         self.timer.timeout.connect(self.nextFrameSlot)
         self.timer.start(millisecs)

@@ -30,6 +30,3 @@ class MainLayout(Layout):
                 "DEBUG",
                 text,
             )
-
-    def switch_to_main_layout(self) -> None:
-        return

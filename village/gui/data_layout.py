@@ -16,8 +16,10 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QTableView,
     QVBoxLayout,
+    QWidget,
 )
 
 from village.classes.enums import DataTable
@@ -109,7 +111,7 @@ class DaysSelectionDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("Select Days or On/Off")
 
-        self.layout = QVBoxLayout(self)
+        self.layout: QVBoxLayout = QVBoxLayout(self)
 
         self.days_checkboxes = {
             "Mon": QCheckBox("Monday"),
@@ -329,6 +331,7 @@ class DataLayout(Layout):
         super().__init__(window)
         self.df = DataFrame()
         self.complete_df = DataFrame()
+        self.window = window
         self.draw()
 
     def draw(self) -> None:
@@ -673,32 +676,27 @@ class DataLayout(Layout):
             self.update_data()
             self.create_table()
 
-    def change_layout(self) -> bool:
-        if manager.state == State.SETTINGS:
-            manager.state = State.WAIT
-        return True
-
     def edit_next_settings(self, current_value: str) -> str:
         manager.training.load_settings_from_jsonstring(current_value)
         dict_values = manager.training.get_dict()
 
         self.reply = QDialog()
         self.reply.setWindowTitle("Next settings")
-        self.reply.setFixedWidth(600)
-        layout = QVBoxLayout()
+
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
         self.line_edits: list[QLineEdit] = []
 
         properties = manager.training.get_settings_names()
         for name in properties:
-            value = dict_values.get(name)
-            value = value if value is not None else ""
+            value = dict_values.get(name, "")
             label = QLabel(name + ":")
             line_edit = QLineEdit()
             line_edit.setPlaceholderText(str(value))
             h_layout = QHBoxLayout()
             h_layout.addWidget(label)
             h_layout.addWidget(line_edit)
-            layout.addLayout(h_layout)
+            content_layout.addLayout(h_layout)
             self.line_edits.append(line_edit)
 
         btns_layout = QHBoxLayout()
@@ -706,11 +704,28 @@ class DataLayout(Layout):
         self.btn_cancel = QPushButton("CANCEL")
         btns_layout.addWidget(self.btn_ok)
         btns_layout.addWidget(self.btn_cancel)
-        layout.addLayout(btns_layout)
-        self.reply.setLayout(layout)
+        content_layout.addLayout(btns_layout)
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setWidget(content_widget)
+
+        main_layout = QVBoxLayout(self.reply)
+        main_layout.addWidget(scroll_area)
 
         self.btn_ok.clicked.connect(self.reply.accept)
         self.btn_cancel.clicked.connect(self.reply.reject)
+
+        self.reply.adjustSize()
+        current_height = self.reply.sizeHint().height()
+        max_width = int(self.window.window_width * 0.5)
+        max_height = min(
+            current_height + int(self.window.window_height / 10),
+            int(self.window.window_height * 0.8),
+        )
+        self.reply.setFixedWidth(max_width)
+        self.reply.setFixedHeight(max_height)
 
         if self.reply.exec_():
             for index, line_edit in enumerate(self.line_edits):

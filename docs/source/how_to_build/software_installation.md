@@ -224,7 +224,7 @@ run_village
 ```
 
 [OS]: https://www.raspberrypi.com/software/
-[ISO]: /TODO-LINK.md
+[ISO]: https://www.raspberrypi.com/software/
 [UPDATE]: https://www.raspberrypi.com/documentation/computers/os.html
 
 <br>

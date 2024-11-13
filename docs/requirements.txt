@@ -1,11 +1,10 @@
+furo
 linkify-it-py
 myst-parser
 nbsphinx
-pydata-sphinx-theme
 setuptools-scm
 sphinx
 sphinx-autodoc-typehints
+sphinx-book-theme
 sphinx-sitemap
-sphinx_book_theme
-sphinxawesome_theme
 sphinxcontrib-video

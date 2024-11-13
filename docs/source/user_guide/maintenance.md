@@ -35,5 +35,3 @@ _This can be done every 3 weeks if needed._
 - Water calibration (once every two months or if you suspect something is not working properly).
 
 [ALARMS]: /user_guide/alarms.md
-
-<br>

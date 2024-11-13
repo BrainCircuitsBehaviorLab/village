@@ -1,4 +1,4 @@
-## Receiving and responding to Telegram Alarms
+## Receive and respond to Telegram Alarms
 
 ### Interrogate the system
 
@@ -122,5 +122,3 @@ Sometimes Bpod fails. Ignore it unless it becomes frequent.
 | **Bpod not sending softcodes**                 | Never happens         | Issue with Bpod softcode transmission.                                                            | Ignore unless it starts happening frequently.                                                                                                                                                                                               |
 | **Bpod not sending serials**                   | Never happens         | Issue with Bpod serial transmission.                                                              | Ignore unless it starts happening frequently.                                                                                                                                                                                               |
 | **Ecohab not detecting**                       | Not detected by alarm | Antennas not detected by Ecohab.                                                                  | Restart Ecohab script, reconnect USB and power supply. Check antenna status.                                                                                                                                                                 |
-
-<br>
