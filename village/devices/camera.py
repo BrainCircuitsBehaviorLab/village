@@ -165,10 +165,10 @@ class Camera(CameraProtocol):
         else:
             for i in range(1, self.number_of_areas + 1):
                 val = settings.get("USAGE" + str(i) + "_BOX")
-                if val == AreaActive.MICE_ALLOWED:
+                if val == AreaActive.ALLOWED:
                     self.areas_active.append(True)
                     self.areas_allowed.append(True)
-                elif val == AreaActive.MICE_NOT_ALLOWED:
+                elif val == AreaActive.NOT_ALLOWED:
                     self.areas_active.append(True)
                     self.areas_allowed.append(False)
                 else:

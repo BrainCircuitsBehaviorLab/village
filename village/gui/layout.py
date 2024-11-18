@@ -274,11 +274,11 @@ class Layout(QGridLayout):
                 "Wait until the box is empty before exiting the application",
             )
 
-    def change_layout(self) -> bool:
+    def change_layout(self, auto: bool = False) -> bool:
         return True
 
     def main_button_clicked(self, auto: bool = False) -> None:
-        if self.change_layout() or auto:
+        if self.change_layout(auto=auto):
             if manager.state == State.SETTINGS:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()

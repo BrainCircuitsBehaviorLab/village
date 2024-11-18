@@ -1,5 +1,13 @@
 ## GUI Overview
 
+Launch the GUI by entering the following command in a terminal:
+
+```
+run_village
+```
+
+When the GUI launches, the system automatically checks connections with essential components (such as cameras, temperature sensors, weight sensors, etc.). If any connection cannot be established, a warning message will display, and the Training Village will enter debug mode. For help resolving connection issues, refer to the [troubleshooting section][TROUBLE].
+
 Once the GUI is active, a menu will appear at the top with the following options: `MAIN`, `MONITOR`, `TASKS`, `DATA`, and `SETTINGS`.
 
 ### MAIN
@@ -30,11 +38,11 @@ The `MONITOR` screen is used to track the system’s status, displaying real-tim
 
 On this screen, the active training protocol is displayed on the left side, along with a list of all available tasks.
 
-Clicking on the training protocol allows you to test its functionality (check the [Test a New Training Protocol][TEST] section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:
+Clicking on the training protocol allows you to test its functionality (check the [Test a Training Protocol][TEST] section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:
 
-`Subject`: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.
-`maximum_duration`: The task will automatically end when this timer is reached.
-`maximum_number_of_trials`: The task will automatically end once this number of trials is completed.
+- `Subject`: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.
+- `maximum_duration`: The task will automatically end when this timer is reached.
+- `maximum_number_of_trials`: The task will automatically end once this number of trials is completed.
 
 In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the [Create a New Training Protocol][CREATE] section, we explain how to create a protocol and define its variables.
 
@@ -45,21 +53,27 @@ The `RUN TASK` button starts the task.
 
 On this screen, saved data is displayed. The following tables are accessible:
 
-`EVENTS`: A system log that records entries and exits of animals as well as unsuccessful entry attempts. Selecting an event and clicking on `VIDEO` provides access to the corresponding video.
-`SESSIONS SUMMARY`: A list of all training sessions. Clicking on an item in the list allows access to the corresponding CSV file in either standard or raw format, as well as the session video and a user-configurable plot.
-`SUBJECTS`: A list of all subjects in the experiment, where the following details can be edited:
-`name`: Name of the subject.
-`tag`: RFID tag of the subject.
-`basal_weight`: Baseline weight of the subject.
-`active`: Status of the subject, which can be always active (ON), inactive (OFF), or active on specific days (Monday through Sunday). When inactive, the subject is not detected by the RFID reader and does not trigger Telegram alarms.
-`next_session_time`: Based on the refractory period, this is the time when the animal is allowed to re-enter the behavioral box.
-`next_settings`: Settings for the next time the animal enters the behavioral box, including the name of the next assigned task and the corresponding variable values within the training protocol.
-`WATER_CALIBRATION`: Calibration values for water valves or pumps.
-`SOUND_CALIBRATION`: Volume calibration values for the left and right speakers.
-`TEMPERATURES`: List of recorded temperature and humidity values.
-`SESSION`: The latest session, either currently in progress or the most recently completed. Clicking on PLOT opens a user-configurable, real-time plot.
+- `EVENTS`: A system log that records entries and exits of animals as well as unsuccessful entry attempts. Selecting an event and clicking on `VIDEO` provides access to the corresponding video.
 
-A more detailed description of these tables, including how and where they are saved, can be found in the [Saved Data][SAVE] section.
+- `SESSIONS SUMMARY`: A list of all training sessions. Clicking on an item in the list allows access to the corresponding CSV file in either standard or raw format, as well as the session video and a user-configurable plot.
+
+- `SUBJECTS`: A list of all subjects in the experiment, where the following details can be edited:
+    - `name`: Name of the subject.
+    - `tag`: RFID tag of the subject.
+    - `basal_weight`: Baseline weight of the subject.
+    - `active`: Status of the subject, which can be always active (ON), inactive (OFF), or active on specific days (Monday through Sunday). When inactive, the subject is not detected by the RFID reader (and therefore cannot enter the behavioral box) and does not trigger Telegram alarms.
+    - `next_session_time`: Based on the refractory period, this is the time when the animal is allowed to re-enter the behavioral box.
+    - `next_settings`: Settings for the next time the animal enters the behavioral box, including the name of the next assigned task and the corresponding variable values within the training protocol.
+
+- `WATER_CALIBRATION`: Calibration values for water valves or pumps.
+
+- `SOUND_CALIBRATION`: Volume calibration values for the left and right speakers.
+
+- `TEMPERATURES`: List of recorded temperature and humidity values.
+
+- `SESSION`: The latest session, either currently in progress or the most recently completed. Clicking on PLOT opens a user-configurable, real-time plot.
+
+A more detailed description of these tables, including how and where they are saved, can be found in the [Saved Data][DATA] section.
 
 ### SETTINGS
 ![Main Training village screen](/_static/settings_screen.png)
@@ -69,6 +83,6 @@ List of all modifiable settings. Hover over each item for more information.
 [TROUBLE]: /troubleshooting/troubleshooting.md
 [STATES]: /user_guide/states.md
 [DETECTION]: /user_guide/detection.md
-[TEST]: /user_guide/test_new.md
+[TEST]: /user_guide/test.md
 [CREATE]: /user_guide/create.md
-[SAVE]: /user_guide/saved.md
+[DATA]: /user_guide/data.md

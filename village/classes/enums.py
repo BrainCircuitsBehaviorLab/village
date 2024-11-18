@@ -41,8 +41,8 @@ class ScreenActive(SuperEnum):
 
 
 class AreaActive(SuperEnum):
-    MICE_ALLOWED = "MICE_ALLOWED"
-    MICE_NOT_ALLOWED = "MICE_NOT_ALLOWED"
+    ALLOWED = "ALLOWED"
+    NOT_ALLOWED = "NOT_ALLOWED"
     OFF = "OFF"
 
 

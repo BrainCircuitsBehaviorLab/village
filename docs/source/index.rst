@@ -11,7 +11,6 @@ What Is The Training Village?
    :maxdepth: 2
 
    index.rst
-   getting_started_index.rst
    user_guide_index.rst
    how_to_build_index.rst
    initial_configuration_index.rst

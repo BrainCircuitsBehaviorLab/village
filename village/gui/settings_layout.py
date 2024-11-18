@@ -128,14 +128,14 @@ class SettingsLayout(Layout):
         if (
             all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
         ) or modify == "TOUCHSCREEN SETTINGS":
-            row = 20
+            row = 22
             name = "TOUCHSCREEN SETTINGS"
             for s in settings.touchscreen_settings:
                 self.create_label_and_value(row, 44, s, name)
                 row += 2
 
         if all or modify == "BPOD SETTINGS":
-            row = 26
+            row = 28
             name = "BPOD SETTINGS"
             label = self.create_and_add_label(name, row, 44, 30, 2, "black")
             label.setProperty("type", name)
@@ -169,8 +169,10 @@ class SettingsLayout(Layout):
             )
             self.restore_button.clicked.connect(self.restore_button_clicked)
 
-    def change_layout(self) -> bool:
-        if self.apply_button.isEnabled():
+    def change_layout(self, auto: bool = False) -> bool:
+        if auto:
+            return True
+        elif self.apply_button.isEnabled():
 
             reply = QMessageBox.question(
                 self.window,

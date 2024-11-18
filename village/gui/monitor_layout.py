@@ -47,9 +47,9 @@ class LabelButtons:
         self.short_name = name.split("_")[0]
         self.mapping_dict_index = {
             "left": 0,
-            "Max area empty": 0,
+            "empty_limit": 0,
             "top": 1,
-            "Max area one mouse": 1,
+            "subject_limit": 1,
             "right": 2,
             "bottom": 3,
             "threshold": 4,
@@ -59,9 +59,9 @@ class LabelButtons:
         }
         self.mapping_dict_max = {
             "left": 640,
-            "Max area empty": 1000000,
+            "empty_limit": 1000000,
             "top": 480,
-            "Max area one mouse": 1000000,
+            "subject_limit": 1000000,
             "right": 640,
             "bottom": 480,
             "threshold": 255,
@@ -71,9 +71,9 @@ class LabelButtons:
         }
         self.mapping_dict_increase = {
             "left": "\u2192",
-            "Max area empty": "\u2191",
+            "empty_limit": "\u2191",
             "top": "\u2193",
-            "Max area one mouse": "\u2191",
+            "subject_limit": "\u2191",
             "right": "\u2192",
             "bottom": "\u2193",
             "threshold": "\u2191",
@@ -83,9 +83,9 @@ class LabelButtons:
         }
         self.mapping_dict_decrease = {
             "left": "\u2190",
-            "Max area empty": "\u2193",
+            "empty_limit": "\u2193",
             "top": "\u2191",
-            "Max area one mouse": "\u2193",
+            "subject_limit": "\u2193",
             "right": "\u2190",
             "bottom": "\u2191",
             "threshold": "\u2193",
@@ -435,7 +435,7 @@ class MonitorLayout(Layout):
         else:
             self.stop_button.hide()
 
-    def change_layout(self) -> bool:
+    def change_layout(self, auto: bool = False) -> bool:
         cam_corridor.stop_preview_window()
         cam_box.stop_preview_window()
         return True
@@ -825,7 +825,7 @@ class CorridorLayout(Layout):
 
     def draw_mice_buttons(self, name: str, row: int, column: int) -> None:
         width = 14
-        for direction in ("Max area empty", "Max area one mouse"):
+        for direction in ("empty_limit", "subject_limit"):
             lb = LabelButtons(name, direction, row, column, width, "black", self)
             self.lbs.append(lb)
             column += 26

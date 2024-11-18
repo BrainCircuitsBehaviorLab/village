@@ -4,6 +4,7 @@ User Guide
 .. toctree::
     :maxdepth: 1
 
+    user_guide/started.md
     user_guide/animal_procedures.md
     user_guide/GUI.md
     user_guide/settings.md

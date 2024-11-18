@@ -18,7 +18,7 @@ The Training Village is freely available, and legally protected by [GPL version 
 
 The system is composed of several key components: the housing where the animals live, the behavioral box where tasks are performed, and the corridor that regulates access to the behavioral box.
 
-###The Housing
+### The Housing
 The animals live together in one or more cages, which promotes better welfare. Any type of cage can be used, as long as it is connected to the corridor via a tube. We offer a solution with 2 or 4 cages connected by transparent acrylic tubes, which can serve different purposes (e.g., one cage with food, another for nesting). Optionally, RFID sensors can be installed in the tubes connecting the cages ([Eco-HAB][ECO]) to gather more data on the animals’ social behavior.
 
 ### The Behavioral Box

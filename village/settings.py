@@ -217,12 +217,6 @@ a different version, please update it by following the instructions at sanworks.
         list[Active],
         "Enabled behavior ports on the Bpod.",
     ),
-    Setting(
-        "BPOD_BEHAVIOR_PORTS_WATER",
-        ["OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"],
-        list[Active],
-        "Behavior ports that deliver water.",
-    ),
     Setting("BPOD_SERIAL_PORT", "/dev/Bpod", str, "The serial port of the Bpod"),
     Setting(
         "BPOD_NET_PORT",
@@ -278,7 +272,7 @@ coordinates, along with the detection threshold.""",
     ),
     Setting(
         "USAGE1_BOX",
-        "MICE_ALLOWED",
+        "ALLOWED",
         AreaActive,
         """Specifies if animals are allowed in this area, not allowed, or if the area
 is deactivated.""",
@@ -329,19 +323,19 @@ is deactivated.""",
         "DETECTION_OF_MOUSE_CORRIDOR",
         [50, 2000],
         list[int],
-        """If the number of black pixels in any corridor area is less than the first
-value, the area is considered empty. If the black pixel count falls between the first
-and second values, one mouse is considered to be in the area. If the count exceeds the
-second value, more than one mouse is assumed to be present.""",
+        """If the number of detected pixels in any corridor area is less than
+empty_limit, the area is considered empty. If the detected pixel count is between
+empty_limit and subject_limit, the area is considered to contain one subject. If the
+count exceeds subject_limit, the area is considered to contain multiple subjects.""",
     ),
     Setting(
         "DETECTION_OF_MOUSE_BOX",
         [50, 2000],
         list[int],
-        """If the number of black pixels in any box area is less than the first
-value, the area is considered empty. If the black pixel count falls between the first
-and second values, one mouse is considered to be in the area. If the count exceeds the
-second value, more than one mouse is assumed to be present.""",
+        """If the number of detected pixels in any box area is less than
+empty_limit, the area is considered empty. If the detected pixel count is between
+empty_limit and subject_limit, the area is considered to contain one subject. If the
+count exceeds subject_limit, the area is considered to contain multiple subjects.""",
     ),
     Setting(
         "VIEW_DETECTION_CORRIDOR",
