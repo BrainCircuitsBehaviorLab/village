@@ -29,8 +29,8 @@ AreaActive
 
    .. autosummary::
    
-      ~AreaActive.MICE_ALLOWED
-      ~AreaActive.MICE_NOT_ALLOWED
+      ~AreaActive.ALLOWED
+      ~AreaActive.NOT_ALLOWED
       ~AreaActive.OFF
    
    

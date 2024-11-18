@@ -7,7 +7,7 @@
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/settings.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.svg"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>Configure Settings - Training village</title>
+        <title>Initial Settings - Training village</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
@@ -203,11 +203,11 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="started.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">GUI Overview</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Configure Settings</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Initial Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="subjects.html">Create New Subjects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="corridor.html">Calibrate and Test Corridor Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="detection.html">Calibrate and Test Animal Detection</a></li>
@@ -619,8 +619,20 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="configure-settings">
-<h1>Configure Settings</h1>
+          <section id="initial-settings">
+<h1>Initial Settings</h1>
+<p>Some initial settings must be configured before the system can be used. Go to the <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> screen and adjust the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MAIN</span> <span class="pre">SETTINGS</span></code>: For animals on a day/night cycle with changing room lighting, set <code class="docutils literal notranslate"><span class="pre">DAYTIME</span></code> and  <code class="docutils literal notranslate"><span class="pre">NIGHTTIME</span></code> to ensure camera detection thresholds automatically switch between day and night modes. Adjust the <code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">COLOR</span></code> parameter if light-colored animals are being used on a dark corridor.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>:  If using sounds, enable <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> and select the <strong>RPi DAC Pro</strong> device from the <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code> list.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SCREEN</span> <span class="pre">SETTINGS</span></code>: If a screen or touchscreen is used to present stimuli, select the type in <code class="docutils literal notranslate"><span class="pre">USE_SCREEN</span></code> and configure the remaining parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BPOD</span> <span class="pre">SETTINGS</span></code>: Set up the ports to be used (BNC, WIRED, and BEHAVIOR ports).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code>: If a Telegram bot is already configured, enter the obtained token in <code class="docutils literal notranslate"><span class="pre">TELEGRAM_TOKEN</span></code>, the chat ID for notifications in <code class="docutils literal notranslate"><span class="pre">TELEGRAM_CHAT</span></code>, and the IDs of users authorized to access the bot in <code class="docutils literal notranslate"><span class="pre">TELEGRAM_USERS</span></code>.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Never share the TELEGRAM_TOKEN. Settings are stored in a private .INI file outside of the repository folder to prevent accidental sharing on GitHub or similar platforms.</p>
+</div>
 </section>
 
         </article>
@@ -672,7 +684,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=12a04c5a"></script>
+</div><script src="../_static/documentation_options.js?v=88a0456b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

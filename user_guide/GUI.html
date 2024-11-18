@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Configure Settings" href="settings.html" /><link rel="prev" title="Animal Procedures" href="animal_procedures.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Initial Settings" href="settings.html" /><link rel="prev" title="Animal Procedures" href="animal_procedures.html" />
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/GUI.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.svg"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
@@ -203,11 +203,11 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="started.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">GUI Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="settings.html">Configure Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html">Initial Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="subjects.html">Create New Subjects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="corridor.html">Calibrate and Test Corridor Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="detection.html">Calibrate and Test Animal Detection</a></li>
@@ -621,6 +621,11 @@
         <article role="main" id="furo-main-content">
           <section id="gui-overview">
 <h1>GUI Overview</h1>
+<p>Launch the GUI by entering the following command in a terminal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">run_village</span>
+</pre></div>
+</div>
+<p>When the GUI launches, the system automatically checks connections with essential components (such as cameras, temperature sensors, weight sensors, etc.). If any connection cannot be established, a warning message will display, and the Training Village will enter debug mode. For help resolving connection issues, refer to the <a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">troubleshooting section</span></a>.</p>
 <p>Once the GUI is active, a menu will appear at the top with the following options: <code class="docutils literal notranslate"><span class="pre">MAIN</span></code>, <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code>, <code class="docutils literal notranslate"><span class="pre">TASKS</span></code>, <code class="docutils literal notranslate"><span class="pre">DATA</span></code>, and <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>.</p>
 <section id="main">
 <h2>MAIN</h2>
@@ -653,10 +658,12 @@
 <h2>TASKS</h2>
 <p><img alt="Tasks Training Village screen" src="../_images/tasks_screen.png" /></p>
 <p>On this screen, the active training protocol is displayed on the left side, along with a list of all available tasks.</p>
-<p>Clicking on the training protocol allows you to test its functionality (check the <a class="reference internal" href="#/user_guide/test_new.md"><span class="xref myst">Test a New Training Protocol</span></a> section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:</p>
-<p><code class="docutils literal notranslate"><span class="pre">Subject</span></code>: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.
-<code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>: The task will automatically end when this timer is reached.
-<code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>: The task will automatically end once this number of trials is completed.</p>
+<p>Clicking on the training protocol allows you to test its functionality (check the <a class="reference internal" href="test.html"><span class="std std-doc">Test a Training Protocol</span></a> section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Subject</span></code>: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>: The task will automatically end when this timer is reached.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>: The task will automatically end once this number of trials is completed.</p></li>
+</ul>
 <p>In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the <a class="reference internal" href="create.html"><span class="std std-doc">Create a New Training Protocol</span></a> section, we explain how to create a protocol and define its variables.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code> button starts the task.</p>
 </section>
@@ -664,20 +671,25 @@
 <h2>DATA</h2>
 <p><img alt="Main Training village screen" src="../_images/data_screen.png" /></p>
 <p>On this screen, saved data is displayed. The following tables are accessible:</p>
-<p><code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>: A system log that records entries and exits of animals as well as unsuccessful entry attempts. Selecting an event and clicking on <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> provides access to the corresponding video.
-<code class="docutils literal notranslate"><span class="pre">SESSIONS</span> <span class="pre">SUMMARY</span></code>: A list of all training sessions. Clicking on an item in the list allows access to the corresponding CSV file in either standard or raw format, as well as the session video and a user-configurable plot.
-<code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code>: A list of all subjects in the experiment, where the following details can be edited:
-<code class="docutils literal notranslate"><span class="pre">name</span></code>: Name of the subject.
-<code class="docutils literal notranslate"><span class="pre">tag</span></code>: RFID tag of the subject.
-<code class="docutils literal notranslate"><span class="pre">basal_weight</span></code>: Baseline weight of the subject.
-<code class="docutils literal notranslate"><span class="pre">active</span></code>: Status of the subject, which can be always active (ON), inactive (OFF), or active on specific days (Monday through Sunday). When inactive, the subject is not detected by the RFID reader and does not trigger Telegram alarms.
-<code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>: Based on the refractory period, this is the time when the animal is allowed to re-enter the behavioral box.
-<code class="docutils literal notranslate"><span class="pre">next_settings</span></code>: Settings for the next time the animal enters the behavioral box, including the name of the next assigned task and the corresponding variable values within the training protocol.
-<code class="docutils literal notranslate"><span class="pre">WATER_CALIBRATION</span></code>: Calibration values for water valves or pumps.
-<code class="docutils literal notranslate"><span class="pre">SOUND_CALIBRATION</span></code>: Volume calibration values for the left and right speakers.
-<code class="docutils literal notranslate"><span class="pre">TEMPERATURES</span></code>: List of recorded temperature and humidity values.
-<code class="docutils literal notranslate"><span class="pre">SESSION</span></code>: The latest session, either currently in progress or the most recently completed. Clicking on PLOT opens a user-configurable, real-time plot.</p>
-<p>A more detailed description of these tables, including how and where they are saved, can be found in the <a class="reference internal" href="#/user_guide/saved.md"><span class="xref myst">Saved Data</span></a> section.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>: A system log that records entries and exits of animals as well as unsuccessful entry attempts. Selecting an event and clicking on <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> provides access to the corresponding video.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SESSIONS</span> <span class="pre">SUMMARY</span></code>: A list of all training sessions. Clicking on an item in the list allows access to the corresponding CSV file in either standard or raw format, as well as the session video and a user-configurable plot.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code>: A list of all subjects in the experiment, where the following details can be edited:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: Name of the subject.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: RFID tag of the subject.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">basal_weight</span></code>: Baseline weight of the subject.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">active</span></code>: Status of the subject, which can be always active (ON), inactive (OFF), or active on specific days (Monday through Sunday). When inactive, the subject is not detected by the RFID reader (and therefore cannot enter the behavioral box) and does not trigger Telegram alarms.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>: Based on the refractory period, this is the time when the animal is allowed to re-enter the behavioral box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next_settings</span></code>: Settings for the next time the animal enters the behavioral box, including the name of the next assigned task and the corresponding variable values within the training protocol.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WATER_CALIBRATION</span></code>: Calibration values for water valves or pumps.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SOUND_CALIBRATION</span></code>: Volume calibration values for the left and right speakers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURES</span></code>: List of recorded temperature and humidity values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SESSION</span></code>: The latest session, either currently in progress or the most recently completed. Clicking on PLOT opens a user-configurable, real-time plot.</p></li>
+</ul>
+<p>A more detailed description of these tables, including how and where they are saved, can be found in the <a class="reference internal" href="data.html"><span class="std std-doc">Saved Data</span></a> section.</p>
 </section>
 <section id="settings">
 <h2>SETTINGS</h2>
@@ -696,7 +708,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Configure Settings</div>
+                <div class="title">Initial Settings</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -758,7 +770,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=12a04c5a"></script>
+</div><script src="../_static/documentation_options.js?v=88a0456b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Calibrate and Test Corridor Components" href="corridor.html" /><link rel="prev" title="Configure Settings" href="settings.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Calibrate and Test Corridor Components" href="corridor.html" /><link rel="prev" title="Initial Settings" href="settings.html" />
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/subjects.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.svg"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
@@ -203,11 +203,11 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="started.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">GUI Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="settings.html">Configure Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html">Initial Settings</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Create New Subjects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="corridor.html">Calibrate and Test Corridor Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="detection.html">Calibrate and Test Animal Detection</a></li>
@@ -621,6 +621,20 @@
         <article role="main" id="furo-main-content">
           <section id="create-new-subjects">
 <h1>Create New Subjects</h1>
+<p>To create a new subject, some data is required: a unique name, the tag ID of its RFID capsule, and its baseline weight. To obtain the RFID tag, place the animal in the corridor area where the RFID reader is located. Go to the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen and ensure the <code class="docutils literal notranslate"><span class="pre">Tag</span> <span class="pre">reader</span></code> is activated. The animal should be detected, and its tag will appear in a log message at the bottom of the screen. To view this message, make sure <code class="docutils literal notranslate"><span class="pre">SYSTEM_INFO</span></code> is selected so that the log appears at the bottom.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All messages displayed in <code class="docutils literal notranslate"><span class="pre">SYSTEM_INFO</span></code> are recorded in the <code class="docutils literal notranslate"><span class="pre">/data/events.csv</span></code> file located in your project folder. You can also preview this CSV file by going to the <code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen and checking the <code class="docutils literal notranslate"><span class="pre">EVENTS</span></code> table.</p>
+</div>
+<p>Next, go to the <code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen and select the <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code> table. By clicking the <code class="docutils literal notranslate"><span class="pre">ADD</span></code> button, a new row representing a subject will be created. Complete or edit its parameters as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The subject’s name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: The ID of its RFID capsule.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">basal_weight</span></code>: Weigh the animal to record its baseline weight as a reference.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">active</span></code>: Change the value to ON to allow the animal to access the behavioral box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>: By default, this is set to the date and time the subject is created.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next_settings</span></code>: Assigns the settings defined as default settings in the training protocol.</p></li>
+</ul>
 </section>
 
         </article>
@@ -644,7 +658,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Configure Settings</div>
+                <div class="title">Initial Settings</div>
                 
               </div>
             </a>
@@ -672,7 +686,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=12a04c5a"></script>
+</div><script src="../_static/documentation_options.js?v=88a0456b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

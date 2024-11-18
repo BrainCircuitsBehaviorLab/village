@@ -203,11 +203,11 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../getting_started_index.html">Getting Started</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="started.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="animal_procedures.html">Animal Procedures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">GUI Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="settings.html">Configure Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html">Initial Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="subjects.html">Create New Subjects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="corridor.html">Calibrate and Test Corridor Components</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Calibrate and Test Animal Detection</a></li>
@@ -621,29 +621,41 @@
         <article role="main" id="furo-main-content">
           <section id="calibrate-and-test-animal-detection">
 <h1>Calibrate and Test Animal Detection</h1>
-<p>An automated animal detection algorithm operates continuously on both the corridor camera and the behavioral box camera. The algorithm processes the image by converting it to black and white pixels based on a set luminance threshold (pixels above the threshold are marked white, those below are black). By counting the black pixels, the system determines whether a specific area is empty, contains one mouse, or holds multiple animals.</p>
-<p>The corridor is typically constructed from white filament to facilitate detecting darker-colored animals, though it can also be built in black to detect light-colored animals. Detection of dark or light pixels can simply by set by adjusting the corresponding <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings</span></a>.</p>
+<p>An automated animal detection algorithm operates continuously on both the corridor camera and the behavioral box camera. The algorithm processes each image by converting it to black-and-white pixels based on a set luminance threshold (pixels above the threshold are marked white, and those below are marked black). By counting the black pixels, the system determines whether a specific area is empty, contains one mouse, or holds multiple animals.</p>
 <section id="detection-in-the-corridor">
 <h2>Detection in the Corridor</h2>
-<p>To set up detection in the corridor, begin by configuring the three designated areas (green, magenta, and blue rectangles):</p>
-<p><img alt="Detection settings" src="../_images/detection_settings.png" /></p>
+<p>The corridor is typically constructed with white filament, making it easier to detect darker-colored animals, but it can also be built in black to detect light-colored animals. The detection of dark or light pixels can be adjusted simply by configuring the appropriate <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">setting</span></a>.</p>
+<p><img alt="entrances" src="../_images/entrances.png" /></p>
+<p>To set up detection in the corridor, start by configuring four designated areas (green, magenta, blue and red rectangles):
+<img alt="Detection settings" src="../_images/detection_settings.png" /></p>
 <ul class="simple">
-<li><p>Area 1: Should cover the section of the corridor before the first door.</p></li>
-<li><p>Area 2: Should span from the first door up to the start of Area 3.</p></li>
-<li><p>Area 3: Begins where Area 2 ends and continues to the second door. Area 3 must be large enough to fully contain one mouse but not exceed that size significantly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">1</span></code>: Should cover the corridor section before the first door.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">2</span></code>: Should span from the first door up to the beginning of Area 3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">3</span></code>: Starts where Area 2 ends and extends to the second door. It should be large enough to fully contain one mouse but not exceed that size significantly. This is the area where the RFID reader is located.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">4</span></code>: Should cover the corridor section after the second door.</p></li>
 </ul>
-<p>When an animal is detected by the RFID antenna, the system checks the status of all three areas. For an animal to be permitted to enter, both Area 1 and Area 2 must be empty, while pixel detection should only occur in Area 3. These conditions must be met for 500 ms, and no other animal should have been detected within the last 15 seconds. If multiple animals attempt to enter the corridor simultaneously, and one is detected by RFID but is not allowed to proceed due to other detections in the corridor, the system enforces a 15-second wait before allowing another animal to enter. These time parameters are adjustable in the <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings section</span></a>.</p>
-<p>Each area has separate threshold values for day and night. At night, illumination comes solely from an infrared lamp, while during the day, the room lights provide additional lighting, creating slight variations in brightness. Different thresholds can be set for each area to account for any reflections or shadows affecting illumination. Accurate threshold configuration is essential for reliable detection.
-To set these thresholds, allow an animal to enter the corridor and activate the <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_CORRIDOR</span></code> setting to visualize detected pixels. Ideally, only the animal’s pixels should be detected, with minimal detection beyond the animal itself.</p>
-<p>This helps illustrate how threshold adjustments impact detection accuracy.</p>
+<p>When an animal is detected by the RFID antenna, the system checks the status of all four areas.For an animal to be permitted entry, Areas 1, 2, and 4 must be empty, with pixel detection occurring only in Area 3. These conditions must hold for 500 ms, and no other animal should have been detected by the RFID in the last 15 seconds. These timing parameters are adjustable in the <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings section</span></a>.</p>
+<p>Each area has separate threshold values for day and night. At night, illumination comes solely from an infrared lamp, while during the day, the room lights provide additional lighting, creating slight variations in brightness. Different thresholds can be set for each area to account for any reflections or shadows affecting illumination. Accurate threshold configuration is essential for reliable detection.</p>
+<p>To set these thresholds, allow an animal to enter the corridor and activate <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION</span></code> to visualize detected pixels. Ideally, only the animal’s pixels should be detected, with minimal detection outside of the animal. This visual feedback helps adjust the thresholds for optimal detection accuracy.</p>
 <p><img alt="Detection" src="../_images/detection.png" /></p>
-<p>Once these primary thresholds are set, configure two additional thresholds:</p>
+<p>We have identified the number of pixels occupied by each animal; now we need to determine how many animals are in the corridor.</p>
 <ul class="simple">
-<li><p>max_area_no_mouse: This defines the maximum number of pixels that can be detected while confirming that no animal is in the area. Minor noise or image artifacts may occur, so allowing for up to 40 or 50 pixels while still considering the area empty is usually reasonable.</p></li>
-<li><p>max_area_one_mouse: This defines the maximum pixel count that still indicates only one animal is present. This threshold depends largely on the animals’ size. To determine it, observe a single animal’s pixel count as it moves within the corridor, noting that pixel count may vary based on its posture (crouched or stretched out) and individual size. Similarly, allow two animals in the corridor and record their combined pixel count.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">empty_limit</span></code>: Defines the maximum pixel count that can be detected while confirming the area is empty. Allowing for up to 40 or 50 pixels due to minor noise or artifacts is usually reasonable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">subject_limit</span></code>: Defines the maximum pixel count for one animal. This threshold depends on the animals’ size. To determine it, observe the pixel count for a single animal as it moves within the corridor, noting that it may vary based on posture (crouched or stretched out) and individual size. Similarly, record the combined pixel count for two animals in the corridor.</p></li>
 </ul>
 <p><img alt="Mice_positionsi" src="../_images/mice_positions.png" /></p>
 <p>In this example, one animal might range between 1800 and 2800 pixels, while two animals might range from 2600 to 3600 pixels. Setting this threshold to around 2500 pixels provides a safe margin, though there may be cases where a single animal is not allowed to enter if it stretches fully. Two animals can be detected as one if perfectly aligned, one on top of the other. To minimize such errors, the algorithm requires that the camera detection conditions be stable for at least 500 ms after an RFID detection, as it is unlikely for two animals to stay perfectly aligned for that duration.</p>
+</section>
+<section id="detection-in-the-behavioral-box">
+<h2>Detection in the Behavioral Box</h2>
+<p><img alt="Detection settings" src="../_images/detection_settings2.png" /></p>
+<p>It is possible to define up to 4 areas within the behavioral box. These areas can be of two types:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ALLOWED</span></code>: A zone where the animal is expected to be. An alarm will trigger if the detected pixels exceed the subject_limit, indicating the possibility that two animals may have entered the behavioral box simultaneously by mistake.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NOT_ALLOWED</span></code>: A zone where the animal should not be. If the animal is detected in one of these zones, a Telegram alarm will be sent.</p></li>
+</ul>
+<p>The process for configuring these values is similar to that of the corridor camera.
+In the example image, the corridor and the touchscreen area are elevated and represent the zones where animals are expected to be. The blue and red zones, on the floor, should remain free of animals unless one has jumped into them.</p>
 </section>
 </section>
 
@@ -704,6 +716,7 @@ To set these thresholds, allow an animal to enter the corridor and activate the 
             <ul>
 <li><a class="reference internal" href="#">Calibrate and Test Animal Detection</a><ul>
 <li><a class="reference internal" href="#detection-in-the-corridor">Detection in the Corridor</a></li>
+<li><a class="reference internal" href="#detection-in-the-behavioral-box">Detection in the Behavioral Box</a></li>
 </ul>
 </li>
 </ul>
@@ -715,7 +728,7 @@ To set these thresholds, allow an animal to enter the corridor and activate the 
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=12a04c5a"></script>
+</div><script src="../_static/documentation_options.js?v=88a0456b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
