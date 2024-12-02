@@ -28,4 +28,4 @@ TODOS:
 * Los tornillos no se ven. Poner en el pdf cuales son
 * Actualizar piezas
 * Dibujo del motor para pegar y montar esta mal
-* 
+*
