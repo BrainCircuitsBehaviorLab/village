@@ -295,22 +295,22 @@ class MonitorLayout(Layout):
             "lightcoral",
         )
 
-        self.tag_reader_label: Label = self.create_and_add_label(
-            "Tag reader: ", 4, 90, 12, 2, "black"
+        self.rfid_reader_label: Label = self.create_and_add_label(
+            "RFID reader: ", 4, 90, 12, 2, "black"
         )
-        key = "TAG_READER"
+        key = "RFID_READER"
         possible_values = Active.values()
-        index = Active.get_index_from_value(manager.tag_reader)
+        index = Active.get_index_from_value(manager.rfid_reader)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
             4,
-            100,
+            102,
             20,
             2,
             possible_values,
             index,
-            self.toggle_tag_reader_button,
-            "Activation of the tag reader: ON, OFF",
+            self.toggle_rfid_reader_button,
+            "Activation of the RFID reader: ON, OFF",
         )
 
         self.cycle_label: Label = self.create_and_add_label(
@@ -322,7 +322,7 @@ class MonitorLayout(Layout):
         self.cycle_button = self.create_and_add_toggle_button(
             key,
             6,
-            100,
+            102,
             20,
             2,
             possible_values,
@@ -331,44 +331,39 @@ class MonitorLayout(Layout):
             "Cycle of the corridor: AUTO, DAY, NIGHT",
         )
 
-        self.info_label: Label = self.create_and_add_label(
-            "Info: ", 32, 90, 33, 2, "black"
-        )
-
         key = "INFO"
         possible_values = Info.values()
         index = Info.get_index_from_value(manager.info)
         self.info_button = self.create_and_add_toggle_button(
             key,
             32,
-            100,
-            20,
+            89,
+            33,
             2,
             possible_values,
             index,
             self.toggle_info_button,
             "Info and values of the cameras or info about the system",
+            color="white",
         )
 
-        self.actions_label: Label = self.create_and_add_label(
-            "Actions: ", 10, 90, 33, 2, "black"
-        )
         key = "ACTIONS"
         possible_values = Actions.values()
         index = Actions.get_index_from_value(manager.actions)
         self.actions_button = self.create_and_add_toggle_button(
             key,
             10,
-            100,
-            20,
+            89,
+            33,
             2,
             possible_values,
             index,
             self.toggle_actions_button,
             """
-            Perform actions on the corridor, light the behavioral ports or run
-            user-defined python functions
+            Perform actions on the corridor, in the behavior ports or run
+            user-defined python functions.
             """,
+            color="white",
         )
 
         index = Info.get_index_from_string(manager.info.value)
@@ -392,8 +387,8 @@ class MonitorLayout(Layout):
         settings.set(key, value)
         self.update_status_label()
 
-    def toggle_tag_reader_button(self, value: str, key: str) -> None:
-        manager.tag_reader = Active[value]
+    def toggle_rfid_reader_button(self, value: str, key: str) -> None:
+        manager.rfid_reader = Active[value]
         settings.set(key, value)
         self.update_status_label()
 

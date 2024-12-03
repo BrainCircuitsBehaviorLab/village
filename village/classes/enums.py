@@ -50,41 +50,35 @@ class State(SuperEnum):
     WAIT = "All subjects are at home, waiting for RFID detection"
     DETECTION = "Gathering subject data, checking requirements to enter"
     ACCESS = "Closing door1, opening door2"
-    LAUNCH_AUTO = "Launching the task automatically"
-    RUN_FIRST = "Task running, waiting for the areas to be clean to close the door2"
+    LAUNCH_AUTO = "Automatically launching the task"
+    RUN_FIRST = "Task running, waiting for the corridor to become empty"
     CLOSE_DOOR2 = "Closing door2"
     RUN_CLOSED = "Task running, the subject cannot leave yet"
     OPEN_DOOR2 = "Opening door2"
     RUN_OPENED = "Task running, the subject can leave"
-    EXIT_UNSAVED = "Closing door2, opening door1 (data still not saved)"
+    EXIT_UNSAVED = "Closing door2, opening door1; data still not saved"
     SAVE_OUTSIDE = "Stopping the task, saving the data; the subject is already outside"
     SAVE_INSIDE = "Stopping the task, saving the data; the subject is still inside"
     WAIT_EXIT = "Task finished, waiting for the subject to leave"
-    EXIT_SAVED = "Closing door2, opening door1 (data already saved)"
-    OPEN_DOOR1 = "Opening door1, a subject is trapped"
-    CLOSE_DOOR1 = "Closing door1, the subject is not trapped anymore"
-    RUN_TRAPPED = "Task running, waiting for the trapped subject to return home"
-    SAVE_TRAPPED = "Stopping the task, saving the data; a subject is trapped"
+    EXIT_SAVED = "Closing door2, opening door1; data already saved"
     OPEN_DOOR2_STOP = "Opening door2, disconnecting RFID"
-    OPEN_DOORS_STOP = "Opening both doors, disconnecting RFID"
-    ERROR = "Manual intervention required"
-    LAUNCH_MANUAL = "Launching the task manually"
-    RUN_MANUAL = "Task is running manually"
+    MANUAL_MODE = "Settings are being changed or task is being manually prepared"
+    LAUNCH_MANUAL = "Manually launching the task"
+    RUN_MANUAL = "Task running manually"
     SAVE_MANUAL = "Stopping the task, saving the data; task is running manually"
-    SETTINGS = "Settings are being changed or task is being manually prepared"
     EXIT_GUI = "In the GUI window, ready to exit the app"
 
     def __init__(self, description: str) -> None:
         self.description = description
 
     def can_exit(self) -> bool:
-        if self in (State.WAIT, State.SETTINGS, State.ERROR):
+        if self in (State.WAIT, State.MANUAL_MODE):
             return True
         else:
             return False
 
     def can_edit_subjects(self) -> bool:
-        if self in (State.WAIT, State.SETTINGS):
+        if self in (State.WAIT, State.MANUAL_MODE):
             return True
         else:
             return False
@@ -95,7 +89,6 @@ class State(SuperEnum):
             State.RUN_FIRST,
             State.RUN_CLOSED,
             State.RUN_OPENED,
-            State.RUN_TRAPPED,
             State.LAUNCH_MANUAL,
             State.RUN_MANUAL,
         ):
@@ -104,7 +97,7 @@ class State(SuperEnum):
             return False
 
     def can_go_to_wait(self) -> bool:
-        if self in (State.ERROR, State.WAIT_EXIT):
+        if self == State.WAIT_EXIT:
             return True
         else:
             return False

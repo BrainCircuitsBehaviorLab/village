@@ -21,7 +21,7 @@ class SettingsLayout(Layout):
         super().__init__(window)
         self.apply_button = PushButton("", "black", self.apply_button_clicked, "")
         self.restore_button = PushButton("", "black", self.restore_button_clicked, "")
-        manager.state = State.SETTINGS
+        manager.state = State.MANUAL_MODE
         manager.changing_settings = False
         self.draw(all=True, modify="")
 

@@ -48,7 +48,7 @@ class TableView(QTableView):
                 self.model_parent.layout_parent.search_edit.setText("")
                 self.model_parent.layout_parent.update_gui()
                 if column_name == "next_settings" and manager.state.can_edit_subjects():
-                    manager.state = State.SETTINGS
+                    manager.state = State.MANUAL_MODE
                     current_value = self.model().data(index, Qt.DisplayRole)
                     new_value = self.model_parent.layout_parent.edit_next_settings(
                         current_value
@@ -59,7 +59,7 @@ class TableView(QTableView):
                     column_name == "next_session_time"
                     and manager.state.can_edit_subjects()
                 ):
-                    manager.state = State.SETTINGS
+                    manager.state = State.MANUAL_MODE
                     current_value = self.model().data(index, Qt.DisplayRole)
                     new_value = self.model_parent.layout_parent.edit_next_session_time(
                         current_value
@@ -67,11 +67,11 @@ class TableView(QTableView):
                     self.model().setData(index, new_value, Qt.EditRole)
                     self.save_changes_in_df()
                 elif column_name == "active" and manager.state.can_edit_subjects():
-                    manager.state = State.SETTINGS
+                    manager.state = State.MANUAL_MODE
                     current_value = self.model().data(index, Qt.DisplayRole)
                     self.openDaysSelectionDialog(index, current_value)
                 elif manager.state.can_edit_subjects():
-                    manager.state = State.SETTINGS
+                    manager.state = State.MANUAL_MODE
                     super().mouseDoubleClickEvent(event)
                 else:
                     text = "Wait until the box is empty before editing the tables."

@@ -58,7 +58,7 @@ class Rfid:
         self.thread.join()
 
     def get_id(self) -> tuple[str, bool]:
-        if manager.tag_reader == Active.ON:
+        if manager.rfid_reader == Active.ON:
             return (self.id, self.multiple)
         else:
             return ("", False)

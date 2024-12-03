@@ -20,16 +20,16 @@ The default screen where the Raspberry Pi does not perform any rendering to disp
 
 The `MONITOR` screen is used to track the system’s status, displaying real-time video feeds from both the corridor and the behavioral box. Here, you can view images captured by the two cameras: one positioned above the corridor and another focused on the behavioral box. Several buttons are available at the center of the screen:
 
-- `Tag Reader (ON/OFF)`: Enables or disables the RFID reader. Disabling the RFID reader prevents animals from entering the behavioral box.
+- `RFID Reader (ON/OFF)`: Enables or disables the RFID reader. Disabling the RFID reader prevents animals from entering the behavioral box.
 
 - `Cycle (AUTO/DAY/NIGHT)`: This button allows you to manually set the cameras to day or night mode, or leave them in AUTO mode. In AUTO mode, the cameras automatically switch between day and night at specified times, which can be configured in [settings][SETTINGS]. For animal welfare, the room lights should follow a day/night cycle, and the cameras must be calibrated accordingly to ensure accurate detection under both lighting conditions. Detailed instructions for this configuration can be found in the [Animal Detection][DETECTION] section.
 
-- `Actions (CORRIDOR/PORTS/FUNCTIONS)`: This button toggles between different groups of real-time actions.
+- `CORRIDOR/PORTS/FUNCTIONS`: This button toggles between different groups of real-time actions.
     - `CORRIDOR`: Provides controls for the doors, scale, and temperature sensor.
     - `PORTS`: Allows you to turn on the LEDs or deliver water for one second in the behavior ports.
     - `FUNCTIONS`: Allows you to execute user-defined Python functions, such as displaying visual stimuli, playing sounds, etc. Instructions for creating these functions can be found in the [Create a New Training Protocol][NEW] section.
 
-- `Info (DETECTION SETTINGS/SYSTEM INFO)`: This button switches the information displayed at the bottom of the screen.
+- `DETECTION SETTINGS/SYSTEM INFO`: This button switches the information displayed at the bottom of the screen.
     - `SYSTEM INFO`: Shows recent system events and logs.
     - `DETECTION SETTINGS`: Enables control over the animal detection parameters for both the corridor and the behavioral box. A detailed explanation of these settings is available in the [detection section][DETECTION].
 

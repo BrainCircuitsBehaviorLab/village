@@ -12,8 +12,9 @@ if TYPE_CHECKING:
 
 
 class MainLayout(Layout):
-    def __init__(self, window: GuiWindow) -> None:
+    def __init__(self, window: GuiWindow, first_draw: bool = False) -> None:
         super().__init__(window)
+        self.first_draw = first_draw
         self.draw()
 
     def draw(self) -> None:
@@ -24,7 +25,7 @@ class MainLayout(Layout):
         text = "Error initializing the system, please check the logs. "
         text += "System running in debug mode. "
         text += manager.errors
-        if manager.errors != "":
+        if manager.errors != "" and self.first_draw:
             QMessageBox.information(
                 self.window,
                 "DEBUG",

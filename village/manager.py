@@ -30,7 +30,7 @@ class Manager:
         training (Training): Instance of Training class.
         state (State): Current state of the system.
         table (DataTable): Data table type.
-        tag_reader (Active): Tag reader settings.
+        rfid_reader (Active): RFID reader settings.
         cycle (Cycle): Current cycle settings.
         info (Info): Information settings.
         actions (Actions): Actions settings.
@@ -56,7 +56,7 @@ class Manager:
         self.training: Training = Training()
         self.state: State = State.WAIT
         self.table: DataTable = DataTable.EVENTS
-        self.tag_reader: Active = settings.get("TAG_READER")
+        self.rfid_reader: Active = settings.get("RFID_READER")
         self.cycle: Cycle = settings.get("CYCLE")
         self.info: Info = settings.get("INFO")
         self.actions: Actions = settings.get("ACTIONS")
@@ -278,7 +278,7 @@ class Manager:
         state_description = self.state.description
         subject_name = self.subject.name
         task_name = self.task.name
-        tag_reader_name = self.tag_reader.name
+        rfid_reader_name = self.rfid_reader.name
         cycle_text = self.cycle_text
 
         self.text = (
@@ -293,8 +293,8 @@ class Manager:
             + "TASK: "
             + task_name
             + "     //////     "
-            + "TAG_READER: "
-            + tag_reader_name
+            + "RFID_READER: "
+            + rfid_reader_name
             + "     //////     "
             + "CYCLE: "
             + cycle_text
@@ -335,7 +335,7 @@ class Manager:
             self.run_task_in_thread()
             return True
         except Exception:
-            log.alarm(
+            log.error(
                 "Error launching task " + self.task.name,
                 subject=self.subject.name,
                 exception=traceback.format_exc(),
@@ -344,23 +344,24 @@ class Manager:
 
     def launch_task_auto(self) -> bool:
         try:
-            manager.training.load_settings_from_jsonstring(self.subject.next_settings)
-            task_name = manager.training.settings.next_task
+            self.training.load_settings_from_jsonstring(self.subject.next_settings)
+            task_name = self.training.settings.next_task
             cls = self.tasks.get(task_name)
             if cls is None:
-                log.error(
-                    "Task: " + task_name + " not found", subject=self.subject.name
+                log.alarm(
+                    "Error launching task " + task_name + " not found",
+                    subject=self.subject.name,
                 )
                 return False
             elif issubclass(cls, Task):
                 self.task = cls()
                 self.task.subject = self.subject.name
-                self.task.settings = manager.training.settings
+                self.task.settings = self.training.settings
                 self.run_task_in_thread()
                 return True
             else:
                 log.alarm(
-                    "Task: " + task_name + " is not a subclass of Task",
+                    "Error launching task " + task_name + " is not a subclass of Task",
                     subject=self.subject.name,
                 )
                 return False
@@ -381,13 +382,13 @@ class Manager:
             self.task.run()
         except Exception:
             if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:
-                log.alarm(
+                log.error(
                     "Error running task " + self.task.name,
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
-                manager.state = State.SAVE_MANUAL
-            elif manager.state in [
+                self.state = State.SAVE_MANUAL
+            elif self.state in [
                 State.LAUNCH_AUTO,
                 State.RUN_FIRST,
                 State.RUN_OPENED,
@@ -400,19 +401,7 @@ class Manager:
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
-                manager.state = State.OPEN_DOOR2_STOP
-            elif manager.state in [
-                State.OPEN_DOOR1,
-                State.CLOSE_DOOR1,
-                State.RUN_TRAPPED,
-            ]:
-                log.alarm(
-                    "Error running task " + self.task.name,
-                    subject=self.subject.name,
-                    exception=traceback.format_exc(),
-                )
-                manager.state = State.SAVE_TRAPPED
-
+                self.state = State.OPEN_DOOR2_STOP
         finally:
             self.task.close()
 

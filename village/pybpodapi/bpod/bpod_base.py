@@ -154,11 +154,7 @@ class BpodBase(object):
         self._hardware.firmware_version = firmware_version
         self._hardware.machine_type = machine_type
 
-        print("00")
-
         self._bpodcom_hardware_description(self._hardware)
-
-        print("a")
 
         if not self._bpodcom_enable_ports(self._hardware):
             raise BpodErrorException("Error: Failed to enable Bpod inputs.")
@@ -171,24 +167,16 @@ class BpodBase(object):
         # check if any module is connected
         self.bpod_modules = self._bpodcom_get_modules_info(self._hardware)
 
-        print("b")
-
         self._hardware.setup(self.bpod_modules)
-
-        print("c")
 
         # initialise the server to handle commands
         if self.net_port is not None:
-            print("d")
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.sock.bind(("0.0.0.0", self.net_port))
             self.socketin = NonBlockingSocketReceive(self.sock)
         else:
-            print("e")
             self.sock = None
             self.socketin = None
-
-        print("f")
 
         return self
 

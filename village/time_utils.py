@@ -58,8 +58,11 @@ class TimeUtils:
         return wrapper
 
     class Chrono:
-        def __init__(self) -> None:
-            self.init_time = datetime.now()
+        def __init__(self, initial_offset: bool = False) -> None:
+            if initial_offset:
+                self.init_time = datetime.now() - timedelta(days=1)
+            else:
+                self.init_time = datetime.now()
 
         def reset(self) -> None:
             self.init_time = datetime.now()

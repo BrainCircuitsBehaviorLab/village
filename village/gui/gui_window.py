@@ -29,7 +29,7 @@ class GuiWindow(QWidget):
         self.setGeometry(rect)
         self.setFixedSize(QSize(self.window_width, self.window_height))
         self.setWindowTitle("Village")
-        self.layout: Layout = MainLayout(self)
+        self.layout: Layout = MainLayout(self, first_draw=True)
         self.setLayout(self.layout)
         self.update_chrono = time_utils.Chrono()
         self.update_timer = QTimer()

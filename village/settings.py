@@ -85,13 +85,6 @@ alarm_settings = [
 this amount, an alarm is triggered.""",
     ),
     Setting(
-        "MINIMUM_WATER_48",
-        1000,
-        int,
-        """Minimum water intake in ml over 48 hours. If the animal drinks less than
-this amount, an alarm is triggered.""",
-    ),
-    Setting(
         "MINIMUM_TEMPERATURE",
         19,
         int,
@@ -387,7 +380,7 @@ extra_settings = [
     Setting("COLOR_AREA2", (204, 51, 170), tuple, "The color of the second area."),
     Setting("COLOR_AREA3", (51, 119, 204), tuple, "The color of the third area."),
     Setting("COLOR_AREA4", (221, 51, 0), tuple, "The color of the fourth area."),
-    Setting("TAG_READER", "ON", Active, "The tag reader status."),
+    Setting("RFID_READER", "ON", Active, "The RFID reader status."),
     Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)."),
     Setting("INFO", "SYSTEM_INFO", Info, "The information status."),
     Setting("ACTIONS", "CORRIDOR", Actions, "The actions status."),
@@ -404,6 +397,13 @@ extra_settings = [
         default_project_directory + "/code",
         str,
         "The default directory of the user code.",
+    ),
+    Setting(
+        "ALARM_AREA4_TIME",
+        3600,
+        int,
+        """If the alarm detection in area4 is triggered, the minimum time in seconds to
+wait before sending the same alarm again.""",
     ),
 ]
 

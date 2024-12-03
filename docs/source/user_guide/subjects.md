@@ -1,6 +1,6 @@
 ## Create New Subjects
 
-To create a new subject, some data is required: a unique name, the tag ID of its RFID capsule, and its baseline weight. To obtain the RFID tag, place the animal in the corridor area where the RFID reader is located. Go to the `MONITOR` screen and ensure the `Tag reader` is activated. The animal should be detected, and its tag will appear in a log message at the bottom of the screen. To view this message, make sure `SYSTEM_INFO` is selected so that the log appears at the bottom.
+To create a new subject, some data is required: a unique name, the tag ID of its RFID capsule, and its baseline weight. To obtain the RFID tag, place the animal in the corridor area where the RFID reader is located. Go to the `MONITOR` screen and ensure the `RFID reader` is activated. The animal should be detected, and its tag will appear in a log message at the bottom of the screen. To view this message, make sure `SYSTEM_INFO` is selected so that the log appears at the bottom.
 
 ```{note}
 All messages displayed in `SYSTEM_INFO` are recorded in the `/data/events.csv` file located in your project folder. You can also preview this CSV file by going to the `DATA` screen and checking the `EVENTS` table.

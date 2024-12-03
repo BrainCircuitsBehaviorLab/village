@@ -27,13 +27,13 @@ class Subject:
                 self.next_settings = self.subject_series["next_settings"]
                 return True
             except Exception:
-                log.error(
-                    "data incorrectly saved in subjects.csv",
+                log.alarm(
+                    "Invalid data in subjects.csv",
                     exception=traceback.format_exc(),
                 )
                 return False
         else:
-            log.error("data incorrectly saved in subjects.csv")
+            log.alarm("Invalid data in subjects.csv")
             return False
 
     def minimum_time_ok(self) -> bool:

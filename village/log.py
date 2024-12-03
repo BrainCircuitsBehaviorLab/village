@@ -73,4 +73,3 @@ class Log:
 
 
 log = Log()
-log = Log()

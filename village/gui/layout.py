@@ -89,6 +89,7 @@ class ToggleButton(QPushButton):
         action: Callable,
         complete_name: bool,
         description: str,
+        color: str = "lightgray",
     ) -> None:
         super().__init__()
         self.key = key
@@ -98,6 +99,7 @@ class ToggleButton(QPushButton):
         self.complete_name = complete_name
         self.description = description
         self.value = self.possible_values[self.index]
+        self.color = color
         self.update_style()
         self.pressed.connect(self.on_pressed)
 
@@ -106,7 +108,7 @@ class ToggleButton(QPushButton):
             self.setText(self.key + " " + self.value)
         else:
             self.setText(self.value)
-        color = "darkgray" if self.value == "OFF" else "lightgray"
+        color = "darkgray" if self.value == "OFF" else self.color
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if self.description != "":
             style += "QToolTip {background-color: white; color: black; font-size: 12px}"
@@ -279,22 +281,22 @@ class Layout(QGridLayout):
 
     def main_button_clicked(self, auto: bool = False) -> None:
         if self.change_layout(auto=auto):
-            if manager.state == State.SETTINGS:
+            if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
         if self.change_layout():
-            if manager.state == State.SETTINGS:
+            if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
         if self.change_layout():
-            if manager.state in [State.WAIT, State.SETTINGS]:
-                manager.state = State.SETTINGS
+            if manager.state in [State.WAIT, State.MANUAL_MODE]:
+                manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
                 self.window.create_tasks_layout()
             else:
@@ -308,15 +310,15 @@ class Layout(QGridLayout):
 
     def data_button_clicked(self) -> None:
         if self.change_layout():
-            if manager.state == State.SETTINGS:
+            if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
             self.window.create_data_layout()
 
     def settings_button_clicked(self) -> None:
         if self.change_layout():
-            if manager.state in [State.WAIT, State.SETTINGS]:
-                manager.state = State.SETTINGS
+            if manager.state in [State.WAIT, State.MANUAL_MODE]:
+                manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
                 self.window.create_settings_layout()
             else:
@@ -426,6 +428,7 @@ class Layout(QGridLayout):
         action: Callable,
         description: str,
         complete_name: bool = False,
+        color: str = "lightgray",
     ) -> ToggleButton:
 
         button = ToggleButton(
@@ -435,6 +438,7 @@ class Layout(QGridLayout):
             action,
             complete_name,
             description,
+            color,
         )
         button.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(button, row, column, height, width)

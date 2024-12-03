@@ -44,7 +44,7 @@
 # 6. continue importing data
 #       if the project directory is the demo directory and the code is empty,
 #       download the code from the github repository
-# 7. continue importing datadata.tag_reader
+# 7. continue importing datadata.rfid_reader
 #       set the logprotocol to the events collection
 # 8. continue importing data
 #       log that the village has started
@@ -90,7 +90,7 @@ else:
     log.start("VILLAGE_DEBUG")
 
 
-# create a secondary thread to run some function
+# create a secondary thread
 def system_run() -> None:
 
     i = 0
@@ -101,12 +101,12 @@ def system_run() -> None:
 
     while True:
         i += 1
-        time.sleep(0.1)
+        time.sleep(0.01)
 
-        if i == 2000:
+        if i == 20000:
             log.alarm("Alarma de prueba", subject="RAFA")
 
-        if i % 6000 == 0:
+        if i % 60000 == 0:
             log.info("counter: " + str(i) + " textos de prueba")
 
         if cam_corridor.chrono.get_seconds() > 1800:
@@ -136,8 +136,10 @@ def system_run() -> None:
                 # Closing door1, opening door2
                 motor1.close()
                 motor2.open()
+                manager.state = State.LAUNCH_AUTO
 
             case State.LAUNCH_AUTO:
+                # Automatically launching the task
                 if manager.launch_task_auto():
                     manager.task.cam_box = cam_box
                     manager.state = State.RUN_FIRST
@@ -145,7 +147,7 @@ def system_run() -> None:
                     manager.state = State.OPEN_DOOR2_STOP
 
             case State.RUN_FIRST:
-                # Task running, waiting for the areas to be clean to close the door2
+                # Task running, waiting for the corridor to become empty"
                 id, multiple = rfid.get_id()
                 if id == manager.subject.tag:
                     log.info(
@@ -155,7 +157,7 @@ def system_run() -> None:
                 elif id != "":
                     log.alarm(
                         """Another subject detected while main subject is in the box.
-                        Disconnecting RFID""",
+                        Disconnecting RFID reader.""",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
@@ -174,10 +176,7 @@ def system_run() -> None:
                     motor2.close()
                     manager.state = State.RUN_CLOSED
                 else:
-                    log.alarm(
-                        "Subject trapped in the corridor", subject=manager.subject.name
-                    )
-                    manager.state = State.OPEN_DOORS_STOP
+                    pass
 
             case State.RUN_CLOSED:
                 # Task running, the subject cannot leave yet
@@ -187,7 +186,6 @@ def system_run() -> None:
                         "Subject not allowed to leave. Task has not started yet",
                         subject=manager.subject.name,
                     )
-                    manager.state = State.OPEN_DOORS_STOP
                 elif id != "":
                     log.alarm(
                         """Another subject detected in the corridor while
@@ -195,7 +193,6 @@ def system_run() -> None:
                         """,
                         subject=manager.subject.name,
                     )
-                    manager.state = State.OPEN_DOOR1
                 if (
                     manager.task.current_trial
                     >= manager.task.settings.maximum_number_of_trials
@@ -214,7 +211,7 @@ def system_run() -> None:
                 pass
 
             case State.EXIT_UNSAVED:
-                # Closing door2, opening door1 (data still not saved)
+                # Closing door2, opening door1; data still not saved
                 pass
 
             case State.SAVE_OUTSIDE:
@@ -237,45 +234,26 @@ def system_run() -> None:
                 # Closing door2, opening door1 (data already saved)
                 pass
 
-            case State.OPEN_DOOR1:
-                # Opening door1, a subject is trapped
-                pass
-
-            case State.CLOSE_DOOR1:
-                # Closing door1, the subject is not trapped anymore
-                pass
-
-            case State.RUN_TRAPPED:
-                # Task running, waiting for the trapped subject to return home
-                pass
-
-            case State.SAVE_TRAPPED:
-                # Stopping the task, saving the data; a subject is trapped
-                pass
-
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
                 motor2.open()
-                manager.tag_reader = Active.OFF
+                manager.rfid_reader = Active.OFF
                 manager.state = State.SAVE_INSIDE
 
-            case State.OPEN_DOORS_STOP:
-                # Opening both doors, disconnecting RFID
-                pass
-
-            case State.ERROR:
-                # Manual intervention required
+            case State.MANUAL_MODE:
+                # Settings are being changed or task is being manually prepared
                 pass
 
             case State.LAUNCH_MANUAL:
-                # Launching the task manually
+                # Manually launching the task
                 if manager.launch_task_manual():
+                    manager.task.cam_box = cam_box
                     manager.state = State.RUN_MANUAL
                 else:
-                    manager.state = State.ERROR
+                    pass
 
             case State.RUN_MANUAL:
-                # Task is running manually
+                # Task running manually
                 if (
                     manager.task.current_trial
                     >= manager.task.settings.maximum_number_of_trials
@@ -290,10 +268,6 @@ def system_run() -> None:
                 manager.task.disconnect_and_save()
                 manager.reset_subject_task_training()
                 manager.state = State.WAIT
-
-            case State.SETTINGS:
-                # Settings are being changed or task is being manually prepared
-                pass
 
             case State.EXIT_GUI:
                 # In the GUI window, ready to exit the app

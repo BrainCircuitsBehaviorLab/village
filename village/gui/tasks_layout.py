@@ -8,7 +8,6 @@ from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
 from village.classes.enums import State
 from village.classes.task import Task
-from village.devices.camera import cam_box
 from village.gui.layout import Layout
 from village.manager import manager
 
@@ -176,7 +175,7 @@ class TasksLayout(Layout):
                 2,
                 self.possible_subjects,
                 0,
-                self.subject_selected,
+                self.select_subject,
             )
             self.subject_combo.setProperty("type", "optional")
             self.create_gui_properties()
@@ -197,7 +196,7 @@ class TasksLayout(Layout):
                 row += 2
         self.update_gui()
 
-    def subject_selected(self, value: str, key: str) -> None:
+    def select_subject(self, value: str, key: str) -> None:
         current_value = ""
         if value != "None":
             manager.subject.subject_series = manager.subjects.get_last_entry(
@@ -215,7 +214,6 @@ class TasksLayout(Layout):
 
     def run_task(self) -> None:
         manager.task.settings = manager.training.settings
-        manager.task.cam_box = cam_box
         manager.state = State.LAUNCH_MANUAL
         self.monitor_button_clicked()
         self.update_gui()

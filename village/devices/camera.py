@@ -135,6 +135,8 @@ class Camera(CameraProtocol):
 
         self.is_recording = False
 
+        self.area4_alarm_chono = time_utils.Chrono(initial_offset=True)
+
         self.cam.start()
 
     def set_properties(self) -> None:
@@ -495,16 +497,22 @@ class Camera(CameraProtocol):
 
     def areas_corridor_ok(self) -> bool:
         if self.counts[0] > self.zero_or_one_mouse:
-            log.info("detection in area1: " + str(self.counts[0]))
+            log.info("Detection in area1: " + str(self.counts[0]))
             return False
         elif self.counts[1] > self.zero_or_one_mouse:
-            log.info("detection in area2: " + str(self.counts[1]))
+            log.info("Detection in area2: " + str(self.counts[1]))
             return False
         elif self.counts[2] > self.one_or_two_mice:
-            log.info("large detection in area3: " + str(self.counts[2]))
+            log.info("Large detection in area3: " + str(self.counts[2]))
             return False
         elif self.counts[3] > self.zero_or_one_mouse:
-            log.info("detection in area4: " + str(self.counts[3]))
+            text = "Detection in area4: " + str(self.counts[3])
+            if self.area4_alarm_chono.get_seconds() > settings.get("ALARM_AREA4_TIME"):
+                self.area4_alarm_chono.reset()
+                log.alarm(text)
+            else:
+                log.info(text)
+
             return False
         else:
             return True
