@@ -216,7 +216,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../user_guide/plots.html">Create Real-Time Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../user_guide/data.html">Saved Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../user_guide/state_machine.html">System State Machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../user_guide/alarms.html">Receive and respond to Telegram Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../user_guide/maintenance.html">Maintenance</a></li>
 </ul>
 </li>
@@ -675,8 +675,11 @@
         <span class="k">return</span> <span class="n">wrapper</span>
 
     <span class="k">class</span> <span class="nc">Chrono</span><span class="p">:</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_offset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">initial_offset</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
         <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
@@ -725,7 +728,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=2153bc7e"></script>
+</div><script src="../../_static/documentation_options.js?v=5540659b"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>

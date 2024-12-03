@@ -216,7 +216,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/plots.html">Create Real-Time Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/data.html">Saved Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/state_machine.html">System State Machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/alarms.html">Receive and respond to Telegram Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/maintenance.html">Maintenance</a></li>
 </ul>
 </li>
@@ -791,11 +791,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="o">.</span><span class="n">firmware_version</span> <span class="o">=</span> <span class="n">firmware_version</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="o">.</span><span class="n">machine_type</span> <span class="o">=</span> <span class="n">machine_type</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;00&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_hardware_description</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_enable_ports</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">BpodErrorException</span><span class="p">(</span><span class="s2">&quot;Error: Failed to enable Bpod inputs.&quot;</span><span class="p">)</span>
@@ -808,24 +804,16 @@
         <span class="c1"># check if any module is connected</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bpod_modules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_get_modules_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_hardware</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bpod_modules</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
 
         <span class="c1"># initialise the server to handle commands</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_port</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">socketin</span> <span class="o">=</span> <span class="n">NonBlockingSocketReceive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">socketin</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -1376,7 +1364,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=2153bc7e"></script>
+</div><script src="../../../../_static/documentation_options.js?v=5540659b"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>

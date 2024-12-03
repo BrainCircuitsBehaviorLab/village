@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Receive and respond to Telegram Alarms" href="alarms.html" /><link rel="prev" title="Saved Data" href="data.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Receive and Respond to Telegram Alarms" href="alarms.html" /><link rel="prev" title="Saved Data" href="data.html" />
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/state_machine.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.svg"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
@@ -180,7 +180,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -217,7 +217,7 @@
 <li class="toctree-l2"><a class="reference internal" href="plots.html">Create Real-Time Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html">Saved Data</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">System State Machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="alarms.html">Receive and respond to Telegram Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="alarms.html">Receive and Respond to Telegram Alarms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
 </ul>
 </li>
@@ -613,7 +613,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -622,7 +622,46 @@
           <section id="system-state-machine">
 <h1>System State Machine</h1>
 <p><img alt="State machine" src="../_images/states.png" /></p>
-<p><br><br><br></p>
+<p>This is the state diagram of all possible system states and their descriptions.</p>
+<p>Black arrows represent events that trigger a state transition, while red arrows indicate possible alarms, which may or may not cause a state change.</p>
+<p>States in green represent a normal cycle in automatic mode. States in blue indicate manual manipulation of the system by a user. The orange state is reached after an error that the system cannot resolve on its own, requiring remote intervention.</p>
+<p>Lighter-colored states are transitional and resolve quickly, leading to darker-colored states, which are stable states.</p>
+<section id="normal-cycle-for-an-animal-session">
+<h2>Normal Cycle for an Animal Session</h2>
+<p>A typical session of an animal performing a task follows this sequence:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">WAIT</span></code>: The system remains in this state until an RFID detection occurs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DETECTION</span></code>: In this state, the system determines whether the subject is allowed to enter the behavioral box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ACCESS</span></code>: If the subject is allowed to enter, Door 1 is closed, and Door 2 is opened.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LAUNCH_AUTO</span></code>: The task is automatically launched.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_FIRST</span></code>: The task begins, but Door 2 remains open until the corridor is empty.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLOSE_DOOR2</span></code>: Once the corridor is empty, Door 2 is closed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_CLOSED</span></code>: The task is running, and the subject inside the behavioral box is not allowed to leave until a configurable minimum time for the task has elapsed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OPEN_DOOR2</span></code>: Once the minimum time has elapsed, Door 2 opens.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_OPENED</span></code>: The subject is allowed to leave the behavioral box if desired, or it may continue performing the task. At this point, two possible scenarios can occur:</p></li>
+</ol>
+<section id="option-a-the-subject-leaves-before-the-tasks-maximum-time">
+<h3>Option A: The Subject Leaves Before the Task’s Maximum Time</h3>
+<p>If the scale detects that the animal is returning to the home cage, the system transitions to:</p>
+<ol class="arabic simple" start="9">
+<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_UNSAVED</span></code>: Door 2 is closed, and Door 1 is opened to allow the subject to return home.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SAVE_OUTSIDE</span></code>: After the subject has returned to the home cage, the task is closed, and all data is saved.</p></li>
+</ol>
+</section>
+<section id="option-b-the-subject-stays-in-the-box-until-the-maximum-time">
+<h3>Option B: The Subject Stays in the Box Until the Maximum Time</h3>
+<p>If the subject does not leave the behavioral box before the task’s maximum time is reached, the system transitions to:</p>
+<ol class="arabic simple" start="9">
+<li><p><code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>: The task is closed, and all data is saved while the subject is still inside the behavioral box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WAIT_EXIT</span></code>: Until the subject attempts to leave and is detected by the scale.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_SAVE</span></code>: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.</p></li>
+</ol>
+</section>
+<section id="in-both-cases">
+<h3>In Both Cases</h3>
+<p>The system transitions back to the initial WAIT state, ready for the next session.</p>
+</section>
+</section>
 </section>
 
         </article>
@@ -635,7 +674,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Receive and respond to Telegram Alarms</div>
+                <div class="title">Receive and Respond to Telegram Alarms</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -668,13 +707,37 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">System State Machine</a><ul>
+<li><a class="reference internal" href="#normal-cycle-for-an-animal-session">Normal Cycle for an Animal Session</a><ul>
+<li><a class="reference internal" href="#option-a-the-subject-leaves-before-the-tasks-maximum-time">Option A: The Subject Leaves Before the Task’s Maximum Time</a></li>
+<li><a class="reference internal" href="#option-b-the-subject-stays-in-the-box-until-the-maximum-time">Option B: The Subject Stays in the Box Until the Maximum Time</a></li>
+<li><a class="reference internal" href="#in-both-cases">In Both Cases</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=2153bc7e"></script>
+</div><script src="../_static/documentation_options.js?v=5540659b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

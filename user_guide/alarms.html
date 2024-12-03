@@ -7,7 +7,7 @@
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/alarms.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.svg"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>Receive and respond to Telegram Alarms - Training village</title>
+        <title>Receive and Respond to Telegram Alarms - Training village</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
@@ -217,7 +217,7 @@
 <li class="toctree-l2"><a class="reference internal" href="plots.html">Create Real-Time Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html">Saved Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Receive and respond to Telegram Alarms</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Receive and Respond to Telegram Alarms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
 </ul>
 </li>
@@ -620,198 +620,99 @@
         </div>
         <article role="main" id="furo-main-content">
           <section id="receive-and-respond-to-telegram-alarms">
-<h1>Receive and respond to Telegram Alarms</h1>
+<h1>Receive and Respond to Telegram Alarms</h1>
 <section id="interrogate-the-system">
 <h2>Interrogate the system</h2>
+<p>You can use various commands to retrieve information from the system. Simply type these commands in a private chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
+All commands start with the / symbol:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">/status</span> <span class="pre">‘hours’</span></code> → Summary of what happened in the behavioral box the last hours.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code> → Screenshot of the cameras’ recording.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/plot</span> <span class="pre">‘days’</span></code> → Gui plots.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/report</span> <span class="pre">‘hours</span> <span class="pre">days’</span></code> → status+cam+plot.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/status</span> <span class="pre">‘hours’</span></code>: Provides a summary of the behavioral box activity during the last specified hours (default is 24 hours).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code>: Sends a screenshot from both cameras.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/plot</span> <span class="pre">‘days’</span></code>: Displays a plot of entrances and attempts over the last specified days (default is 3 days).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/report</span> <span class="pre">‘hours</span> <span class="pre">days’</span></code>: Combines status, cam, and plot into a single report.</p></li>
 </ul>
 </section>
 <section id="alarms">
 <h2>Alarms</h2>
-<!--
-### ALARM: check weight and water
-
-**Very frequent**
-
-Triggered when a mouse weighs less than 50% of its basal weight or has drunk less than 400 µl in the last 24 hours, or less than 1000 µl in the last 48h.
-
-- **Weight**: Check intersession if all animals have a drop; it might indicate a lack of water or food in the setup, or that the scale is not working well. If it's a single animal, weigh it manually, assess its health score, and check its last session's performance. It might be too lost in the training.
-- **Water**: Used to be very important but with CA we can relax. Check if the animal has been drinking less than 600 µl during 2-3 consecutive days, and if so, supplement manually with 500-1000 µl.
-
-### ALARM: mouse has been more than ‘x’ seconds in the box
-
-**Very frequent**
-
-Connect remotely. If the mouse is sleeping, play a buzzer sound or open and close the door. It will exit automatically. If it doesn’t exit after a long time (>5 hours), go in person to check what happens. If the room temperature is very high, they tend to sleep more inside. If so, email Sergi.
-
-### ALARM: Mouse trapped in the corridor
-
-**Frequent**
-
-Usually occurs when 2 mice overlap in the door 2 zone, allowing the task to start. This usually resolves itself, but if not, open door 1 remotely. This alarm can also be triggered if a mouse escapes from the cage and walks on top of the corridor. If you suspect this, check corridor videos where the alarm was triggered.
-
-### ALARM: 2 mice in box
-
-**Frequent**
-
-Check the inner camera remotely. Can you see two mice? If yes, make them exit, delete the session, and check why with videos. If no, check if cam areas are overlapping with the touchscreen (false alarm). Adjust the areas in the camera settings manually.
-
-### ALARM: Animal on the floor
-
-**Very frequent**
-
-Some animals learn how to go down (e.g., A49), and once they learn, they do it often. It’s not harmful, just annoying because they lose a lot of time exploring something unrelated to the task.
-
-- If it’s a regular explorer, just ignore it.
-- If it’s a new animal, check why it’s on the floor and if it knows how to come back. If not, you will need to help it manually.
-
-Sometimes this is a false alarm when the camera is moved and areas are misplaced. If so, correct it.
-
-### ALARM: Few trials
-
-**Very frequent in novel animals**
-
-- For well-trained animals: If triggered, something might be wrong in the behavioral box (e.g., a photogate is misplaced, or the pump is not working). Go in person and test the task manually.
-- For novel animals: If triggered after being for a long time (>5 days) in the same stage, it means they are very lost in the training. Move them to an easier stage manually.
-
-### ALARM: last session ended
-
-**Rare**
-
-Check remotely what’s happening:
-
-- **Correct functioning of the doors**: If not, go in person and fix it (e.g., dust, motor, or Arduino issues).
-- **RFID detections**: If not in the last few hours, check if the button is on.
-- **Scale detection**: Tag scale and get weight 4-5 times. It should weigh slightly different numbers. If always 0, it’s likely not working—go in person to check connections.
-- **Camera problems**: If the camera is not working, reload academy. If still not working, try `cd /dev → ls` in terminal to check if you can see the camera. If not, reconnect or change its port.
-- **Academy script**: Ensure the script is running. If an error occurs, check for wrong lines in subjects or events.
-- **Animal movement**: If everything works but animals are not moving, check in person if corridor access is closed or if animals are sick or have escaped.
-
-### ALARM: Overdetections in ‘Session’
-
-**Rare**
-
-Indicates an abnormal amount of photogate beam crosses. This can happen due to interference from the buzzer port or misaligned photogates.
-
-- If Buzzer (Port 2), go in person, connect, and disconnect the device. If it happens many days with the same device, change it.
-- If photogates: Check in person if they are correctly aligned. If not, align them. If still not working, change the photogates.
-
-### ALARM: touchscreen not working for ‘Subject’
-
-**Rare**
-
-Usually occurs due to electronic failures. If sporadic, ignore it. If frequent, disconnect the touch device, turn off the PC, reconnect it, and turn it on.
-
-### ALARM: last heartbeat
-
-**Rare**
-
-PC is off or has lost internet connection. Go in person and check what’s happening.
-
-### ALARM: bpod communication error
-
-**Rare**
-
-Sometimes Bpod fails. Ignore it unless it becomes frequent.
-
-## Errors not detected by the alarm system
-
-- **Ecohab not detecting**: Stop Ecohab script, disconnect USB & power supply. Reconnect everything in the following order: 1) Power supply 2) USB 3) Ecohab script. Check that all antennas (1-6) are detected.
-- **High temperatures in the room**: Ventilation system is very bad; many times temperatures rise above 24ºC. Email Sergi.
-- **Reloading academy**: Stops Ecohab. Be sure to play Ecohab after.
-- **Inside camera freeze/doesn’t work**: Reload academy. If still not working, check `cd /dev ls` to find the camera. If not, change the device.
-- **Bpod stuck in a task**: Close academy, unplug and plug Bpod (it becomes blue), wait 1 minute, and play academy again.
-- **Sound not working**: Check buzzer cables, Bpod power supply (only affects high-pitch sounds).
-- **Water not delivered**: Check pump, valves, refill bottle, calibrate.
-- **Touchscreen ghost detections**: Remove mask, clean IR frame.
-- **Screen issues**: Check cables and display settings. -->
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
-<th class="head"><p><strong>Frequency</strong></p></th>
-<th class="head"><p><strong>Description</strong></p></th>
-<th class="head"><p><strong>Recommended Actions</strong></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><strong>Check weight and water</strong></p></td>
-<td><p>Very frequent</p></td>
-<td><p>Triggered when a mouse weighs less than 50% basal weight or has drunk less than the threshold.</p></td>
-<td><p>- For weight: Check for intersession issues, manually weigh, assess health score, and review performance.  - For water: If below 600 µl for 2-3 days, supplement with 500-1000 µl manually.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Mouse in box for ‘x’ seconds</strong></p></td>
-<td><p>Very frequent</p></td>
-<td><p>Mouse has been in the box for a long time.</p></td>
-<td><p>Connect remotely, play buzzer, open/close door. If no response &gt;5 hours, go in person. Check temperature.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Mouse trapped in corridor</strong></p></td>
-<td><p>Frequent</p></td>
-<td><p>Two mice overlap in the doors’ zone, allowing task to start, or mouse escaped to corridor.</p></td>
-<td><p>Open door 1 remotely. If suspected escape, check corridor videos.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>2 mice in box</strong></p></td>
-<td><p>Frequent</p></td>
-<td><p>System detects two mice inside the box.</p></td>
-<td><p>Verify via inner camera. If true, make them exit, delete session, and review videos. If false, check camera settings for overlap.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Animal on the floor</strong></p></td>
-<td><p>Very frequent</p></td>
-<td><p>Mouse has learned to go down to the floor of the box.</p></td>
-<td><p>If a regular explorer, ignore. If a new animal, check if it knows how to return. Manually help if needed.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Few trials</strong></p></td>
-<td><p>Very frequent</p></td>
-<td><p>Indicates fewer trials than expected, common in new or poorly trained mice.</p></td>
-<td><p>- Well-trained mice: Check the behavioral box and task manually.  - New mice: Consider moving to an easier stage if not improving.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Last session ended</strong></p></td>
-<td><p>Rare</p></td>
-<td><p>Session ended unexpectedly.</p></td>
-<td><p>- Check doors, RFID, and scale for issues.  - Ensure camera and script are running.  - Verify animal movement and room status.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Overdetections in ‘Session’</strong></p></td>
-<td><p>Rare</p></td>
-<td><p>Abnormal number of photogate beam crosses detected.</p></td>
-<td><p>Check buzzer or photogate alignment. Adjust or replace components as needed.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Touchscreen not working for ‘Subject’</strong></p></td>
-<td><p>Rare</p></td>
-<td><p>Touchscreen failure during session.</p></td>
-<td><p>Disconnect and reconnect the device. Restart PC if the issue persists.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Last heartbeat</strong></p></td>
-<td><p>Rare</p></td>
-<td><p>PC is off or has lost internet connection.</p></td>
-<td><p>Go in person to check for power or network issues.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Bpod communication error</strong></p></td>
-<td><p>Rare</p></td>
-<td><p>Communication error between the Bpod and the system.</p></td>
-<td><p>Usually can be ignored unless it becomes frequent.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Bpod not sending softcodes</strong></p></td>
-<td><p>Never happens</p></td>
-<td><p>Issue with Bpod softcode transmission.</p></td>
-<td><p>Ignore unless it starts happening frequently.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Bpod not sending serials</strong></p></td>
-<td><p>Never happens</p></td>
-<td><p>Issue with Bpod serial transmission.</p></td>
-<td><p>Ignore unless it starts happening frequently.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Ecohab not detecting</strong></p></td>
-<td><p>Not detected by alarm</p></td>
-<td><p>Antennas not detected by Ecohab.</p></td>
-<td><p>Restart Ecohab script, reconnect USB and power supply. Check antenna status.</p></td>
-</tr>
-</tbody>
-</table>
+<p>The system is designed to cover every potential scenario, resulting in an extensive list of alarms. While many of these alarms may never be triggered, some could only appear once every few months.</p>
+<section id="system-checks-performed-every-hour">
+<h3>System Checks Performed Every Hour</h3>
+<p>These checks occur hourly and may trigger the following alarms:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Low</span> <span class="pre">Temperature</span></code>: The temperature has dropped below the configured threshold in <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">High</span> <span class="pre">Temperature</span></code>: The temperature has exceeded the configured threshold in <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">Detection</span> <span class="pre">in</span> <span class="pre">6h</span></code>: No animal has been detected by the RFID reader in the last 6 hours. This could indicate that the detection system is malfunctioning or that Door 1 is mistakenly closed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">Session</span> <span class="pre">in</span> <span class="pre">12h</span></code>: No animal has performed a session in the last 12 hours. This could indicate that the detection system is malfunctioning or that Door 1 is mistakenly closed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Heartbeat</span> <span class="pre">Not</span> <span class="pre">Received</span></code>: The last heartbeat signal was not received. The system sends a heartbeat signal to an external server every hour. If the server does not receive the signal, it instructs the Telegram bot to send this alarm.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A missing heartbeat may result from a temporary internet outage, a power failure, or a system freeze.</p>
+<p>In such cases, first attempt to connect remotely:</p>
+<ul class="simple">
+<li><p>If the system has restarted, simply relaunch Training Village.</p></li>
+<li><p>If the process is unresponsive, investigate the terminal error messages.</p></li>
+<li><p>If remote access fails, a physical check may be required to ensure the animals’ safety.</p></li>
+</ul>
 </div>
+</section>
+<section id="subject-checks-performed-twice-a-day">
+<h3>Subject Checks Performed Twice a Day</h3>
+<p>Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake and average weight for all subjects.
+A warning alarm is also sent if one or more subjects have a warning, with only the most critical warning shown for each subject.
+Warnings are listed in order of severity, from least to most critical:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Low</span> <span class="pre">Weight</span></code>: The subject’s weight is less than half its baseline weight. Ensure there are no calibration or functionality problems with the scale.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Low</span> <span class="pre">Water</span> <span class="pre">Intake</span> <span class="pre">24h</span></code>: The subject has consumed less than the configured water threshold in the last 24 hours. This threshold can be adjusted in <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">detection</span> <span class="pre">12h</span></code>: The subject has not been detected by the RFID reader for the last 12 hours (considering only hours when the animal is active).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">session</span> <span class="pre">24h</span></code>: The subject has not performed a session for the last 24 hours (considering only hours when the animal is active).</p></li>
+</ul>
+</section>
+<section id="checks-performed-when-a-subject-is-detected-and-the-task-is-prepared">
+<h3>Checks Performed When a Subject is Detected, and the Task is Prepared</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Invalid</span> <span class="pre">data</span> <span class="pre">in</span> <span class="pre">subjects.csv</span></code>: An error occurred while reading the subjects.csv file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Area4</span> <span class="pre">Detection</span></code>: Pixels are detected in Area 4, which should always be empty when the behavioral box is vacant. Check for dirt, lighting issues, or whether an animal has entered the corridor due to a malfunction (e.g., a faulty door).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Error</span> <span class="pre">Launching</span> <span class="pre">Task</span></code>: A problem in the task code prevents it from starting. The task is terminated, and the RFID reader is disabled.</p></li>
+</ul>
+<p>#### Checks Performed While the Task is Running</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Error</span> <span class="pre">Running</span> <span class="pre">Task</span></code>: An issue occurred during task execution, likely due to an error in the task code. The task is terminated, and the RFID reader is disabled.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Min</span> <span class="pre">Time</span> <span class="pre">&amp;</span> <span class="pre">Areas3-4</span> <span class="pre">Detection</span></code>: The minimum task time has elapsed, but Door 2 could not close because Areas 3 and 4 were never cleared. This could occur if the subject remained in the corridor without entering, there was a door malfunction allowing multiple animals into the corridor, or the pixel detection system was not functioning correctly. As a result, the task is terminated, and the RFID reader is disabled.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wrong</span> <span class="pre">RFID</span> <span class="pre">Detection</span></code>: Two scenarios may trigger this alarm. In both cases, the task is terminated, and the RFID reader is disabled.</p>
+<ol class="arabic simple">
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">RUN_CLOSED</span></code> state: RFID is detected when no animal should be in the corridor.</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">RUN_FIRST</span></code> or <code class="docutils literal notranslate"><span class="pre">RUN_OPENED</span></code> states: RFID is detected for an animal that is not performing the task, likely indicating two animals have entered the behavioral box…</p></li>
+</ol>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">Subjects</span> <span class="pre">in</span> <span class="pre">Box</span></code>: A high pixel count suggests multiple animals entered the behavioral box. Check remotely to determine if this is accurate or a false alarm caused by dirt or threshold misconfiguration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Subject</span> <span class="pre">in</span> <span class="pre">Prohibited</span> <span class="pre">Area</span></code>: Pixels are detected in a restricted area. Verify if this is caused by an animal, dirt, or threshold issues.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In certain critical situations, the task is terminated, and the RFID reader is disconnected to prevent other subjects from entering the behavioral box until the issue is resolved.</p>
+<p>In these cases, the system waits for the subject currently in the box to exit and be weighed on the scale. Once this is completed, Door 2 is closed, and Door 1 is opened.</p>
+<p>It is essential to connect remotely, verify that all animals are in the home cage, resolve the issue, and reactivate the RFID reader.</p>
+</div>
+</section>
+<section id="checks-performed-after-the-task-finishes">
+<h3>Checks Performed After the Task Finishes</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Few</span> <span class="pre">Trials</span> <span class="pre">Completed</span></code>: This alarm is triggered if the subject completes fewer trials than the configured minimum (set in <a class="reference internal" href="GUI.html#settings"><span class="std std-ref">settings</span></a>). It will always trigger if no trials are completed, which may indicate an issue with the task code or hardware.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Large</span> <span class="pre">Dataframe</span></code>: The resulting dataframe contains over 100,000 rows, often caused by a malfunction (e.g., a photogate sending multiple signals per second).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Subject</span> <span class="pre">in</span> <span class="pre">Box</span> <span class="pre">Too</span> <span class="pre">Long</span></code>: An hour has passed since the task ended, and the subject remains inside the behavioral box. This usually indicates the subject fell asleep. The system attempts to wake the subject every 10 minutes by slightly opening and closing Door 2. You can also connect remotely to play a sound in the box to wake the animal.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Always review videos corresponding to unusual alarms to identify the root cause, such as dirt, threshold issues, lighting errors, or hardware malfunctions.</p>
+<p>To view a video:</p>
+<ol class="arabic simple">
+<li><p>Locate the alarm in <code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen -&gt; <code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>.</p></li>
+<li><p>Click the alarm row, then select <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> to watch the footage.</p></li>
+</ol>
+<p>For common errors, such as multiple animals in the behavioral box or prolonged time inside, consult the <a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">troubleshooting section</span></a>, which lists frequent issues and their solutions.</p>
+</div>
+</section>
 </section>
 </section>
 
@@ -870,9 +771,15 @@ Sometimes Bpod fails. Ignore it unless it becomes frequent.
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Receive and respond to Telegram Alarms</a><ul>
+<li><a class="reference internal" href="#">Receive and Respond to Telegram Alarms</a><ul>
 <li><a class="reference internal" href="#interrogate-the-system">Interrogate the system</a></li>
-<li><a class="reference internal" href="#alarms">Alarms</a></li>
+<li><a class="reference internal" href="#alarms">Alarms</a><ul>
+<li><a class="reference internal" href="#system-checks-performed-every-hour">System Checks Performed Every Hour</a></li>
+<li><a class="reference internal" href="#subject-checks-performed-twice-a-day">Subject Checks Performed Twice a Day</a></li>
+<li><a class="reference internal" href="#checks-performed-when-a-subject-is-detected-and-the-task-is-prepared">Checks Performed When a Subject is Detected, and the Task is Prepared</a></li>
+<li><a class="reference internal" href="#checks-performed-after-the-task-finishes">Checks Performed After the Task Finishes</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -884,7 +791,7 @@ Sometimes Bpod fails. Ignore it unless it becomes frequent.
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=2153bc7e"></script>
+</div><script src="../_static/documentation_options.js?v=5540659b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

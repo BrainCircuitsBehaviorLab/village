@@ -1,124 +1,102 @@
-## Receive and respond to Telegram Alarms
+## Receive and Respond to Telegram Alarms
 
 ### Interrogate the system
+You can use various commands to retrieve information from the system. Simply type these commands in a private chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
+All commands start with the / symbol:
 
-- `/status ‘hours’` → Summary of what happened in the behavioral box the last hours.
-- `/cam` → Screenshot of the cameras’ recording.
-- `/plot ‘days’` → Gui plots.
-- `/report ‘hours days’` → status+cam+plot.
+- `/status ‘hours’`: Provides a summary of the behavioral box activity during the last specified hours (default is 24 hours).
+- `/cam`: Sends a screenshot from both cameras.
+- `/plot ‘days’`: Displays a plot of entrances and attempts over the last specified days (default is 3 days).
+- `/report ‘hours days’`: Combines status, cam, and plot into a single report.
+
 
 ### Alarms
-<!--
-### ALARM: check weight and water
+The system is designed to cover every potential scenario, resulting in an extensive list of alarms. While many of these alarms may never be triggered, some could only appear once every few months.
 
-**Very frequent**
+#### System Checks Performed Every Hour
 
-Triggered when a mouse weighs less than 50% of its basal weight or has drunk less than 400 µl in the last 24 hours, or less than 1000 µl in the last 48h.
+These checks occur hourly and may trigger the following alarms:
 
-- **Weight**: Check intersession if all animals have a drop; it might indicate a lack of water or food in the setup, or that the scale is not working well. If it's a single animal, weigh it manually, assess its health score, and check its last session's performance. It might be too lost in the training.
-- **Water**: Used to be very important but with CA we can relax. Check if the animal has been drinking less than 600 µl during 2-3 consecutive days, and if so, supplement manually with 500-1000 µl.
+- `Low Temperature`: The temperature has dropped below the configured threshold in [settings][SETTINGS].
 
-### ALARM: mouse has been more than ‘x’ seconds in the box
+- `High Temperature`: The temperature has exceeded the configured threshold in [settings][SETTINGS].
 
-**Very frequent**
+- `No Detection in 6h`: No animal has been detected by the RFID reader in the last 6 hours. This could indicate that the detection system is malfunctioning or that Door 1 is mistakenly closed.
 
-Connect remotely. If the mouse is sleeping, play a buzzer sound or open and close the door. It will exit automatically. If it doesn’t exit after a long time (>5 hours), go in person to check what happens. If the room temperature is very high, they tend to sleep more inside. If so, email Sergi.
+- `No Session in 12h`: No animal has performed a session in the last 12 hours. This could indicate that the detection system is malfunctioning or that Door 1 is mistakenly closed.
 
-### ALARM: Mouse trapped in the corridor
+- `Heartbeat Not Received`: The last heartbeat signal was not received. The system sends a heartbeat signal to an external server every hour. If the server does not receive the signal, it instructs the Telegram bot to send this alarm.
 
-**Frequent**
+```{important}
+ A missing heartbeat may result from a temporary internet outage, a power failure, or a system freeze.
 
-Usually occurs when 2 mice overlap in the door 2 zone, allowing the task to start. This usually resolves itself, but if not, open door 1 remotely. This alarm can also be triggered if a mouse escapes from the cage and walks on top of the corridor. If you suspect this, check corridor videos where the alarm was triggered.
+In such cases, first attempt to connect remotely:
+- If the system has restarted, simply relaunch Training Village.
+- If the process is unresponsive, investigate the terminal error messages.
+- If remote access fails, a physical check may be required to ensure the animals’ safety.
+```
 
-### ALARM: 2 mice in box
+#### Subject Checks Performed Twice a Day
 
-**Frequent**
+Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake and average weight for all subjects.
+A warning alarm is also sent if one or more subjects have a warning, with only the most critical warning shown for each subject.
+Warnings are listed in order of severity, from least to most critical:
 
-Check the inner camera remotely. Can you see two mice? If yes, make them exit, delete the session, and check why with videos. If no, check if cam areas are overlapping with the touchscreen (false alarm). Adjust the areas in the camera settings manually.
+- `Low Weight`: The subject’s weight is less than half its baseline weight. Ensure there are no calibration or functionality problems with the scale.
 
-### ALARM: Animal on the floor
+- `Low Water Intake 24h`: The subject has consumed less than the configured water threshold in the last 24 hours. This threshold can be adjusted in [settings][SETTINGS].
 
-**Very frequent**
+- `No detection 12h`: The subject has not been detected by the RFID reader for the last 12 hours (considering only hours when the animal is active).
 
-Some animals learn how to go down (e.g., A49), and once they learn, they do it often. It’s not harmful, just annoying because they lose a lot of time exploring something unrelated to the task.
+- `No session 24h`: The subject has not performed a session for the last 24 hours (considering only hours when the animal is active).
 
-- If it’s a regular explorer, just ignore it.
-- If it’s a new animal, check why it’s on the floor and if it knows how to come back. If not, you will need to help it manually.
+#### Checks Performed When a Subject is Detected, and the Task is Prepared
 
-Sometimes this is a false alarm when the camera is moved and areas are misplaced. If so, correct it.
+- `Invalid data in subjects.csv`: An error occurred while reading the subjects.csv file.
 
-### ALARM: Few trials
+- `Area4 Detection`: Pixels are detected in Area 4, which should always be empty when the behavioral box is vacant. Check for dirt, lighting issues, or whether an animal has entered the corridor due to a malfunction (e.g., a faulty door).
 
-**Very frequent in novel animals**
+- `Error Launching Task`: A problem in the task code prevents it from starting. The task is terminated, and the RFID reader is disabled.
 
-- For well-trained animals: If triggered, something might be wrong in the behavioral box (e.g., a photogate is misplaced, or the pump is not working). Go in person and test the task manually.
-- For novel animals: If triggered after being for a long time (>5 days) in the same stage, it means they are very lost in the training. Move them to an easier stage manually.
+#### Checks Performed While the Task is Running
 
-### ALARM: last session ended
+- `Error Running Task`: An issue occurred during task execution, likely due to an error in the task code. The task is terminated, and the RFID reader is disabled.
 
-**Rare**
+- `Min Time & Areas3-4 Detection`: The minimum task time has elapsed, but Door 2 could not close because Areas 3 and 4 were never cleared. This could occur if the subject remained in the corridor without entering, there was a door malfunction allowing multiple animals into the corridor, or the pixel detection system was not functioning correctly. As a result, the task is terminated, and the RFID reader is disabled.
 
-Check remotely what’s happening:
+- `Wrong RFID Detection`: Two scenarios may trigger this alarm. In both cases, the task is terminated, and the RFID reader is disabled.
+	1.	In the `RUN_CLOSED` state: RFID is detected when no animal should be in the corridor.
+	2.	In `RUN_FIRST` or `RUN_OPENED` states: RFID is detected for an animal that is not performing the task, likely indicating two animals have entered the behavioral box..
 
-- **Correct functioning of the doors**: If not, go in person and fix it (e.g., dust, motor, or Arduino issues).
-- **RFID detections**: If not in the last few hours, check if the button is on.
-- **Scale detection**: Tag scale and get weight 4-5 times. It should weigh slightly different numbers. If always 0, it’s likely not working—go in person to check connections.
-- **Camera problems**: If the camera is not working, reload academy. If still not working, try `cd /dev → ls` in terminal to check if you can see the camera. If not, reconnect or change its port.
-- **Academy script**: Ensure the script is running. If an error occurs, check for wrong lines in subjects or events.
-- **Animal movement**: If everything works but animals are not moving, check in person if corridor access is closed or if animals are sick or have escaped.
+- `2 Subjects in Box`: A high pixel count suggests multiple animals entered the behavioral box. Check remotely to determine if this is accurate or a false alarm caused by dirt or threshold misconfiguration.
 
-### ALARM: Overdetections in ‘Session’
+- `Subject in Prohibited Area`: Pixels are detected in a restricted area. Verify if this is caused by an animal, dirt, or threshold issues.
 
-**Rare**
+```{important}
+In certain critical situations, the task is terminated, and the RFID reader is disconnected to prevent other subjects from entering the behavioral box until the issue is resolved.
 
-Indicates an abnormal amount of photogate beam crosses. This can happen due to interference from the buzzer port or misaligned photogates.
+In these cases, the system waits for the subject currently in the box to exit and be weighed on the scale. Once this is completed, Door 2 is closed, and Door 1 is opened.
 
-- If Buzzer (Port 2), go in person, connect, and disconnect the device. If it happens many days with the same device, change it.
-- If photogates: Check in person if they are correctly aligned. If not, align them. If still not working, change the photogates.
+It is essential to connect remotely, verify that all animals are in the home cage, resolve the issue, and reactivate the RFID reader.
+```
 
-### ALARM: touchscreen not working for ‘Subject’
+#### Checks Performed After the Task Finishes
 
-**Rare**
+- `Few Trials Completed`: This alarm is triggered if the subject completes fewer trials than the configured minimum (set in [settings][SETTINGS]). It will always trigger if no trials are completed, which may indicate an issue with the task code or hardware.
 
-Usually occurs due to electronic failures. If sporadic, ignore it. If frequent, disconnect the touch device, turn off the PC, reconnect it, and turn it on.
+- `Large Dataframe`: The resulting dataframe contains over 100,000 rows, often caused by a malfunction (e.g., a photogate sending multiple signals per second).
 
-### ALARM: last heartbeat
+- `Subject in Box Too Long`: An hour has passed since the task ended, and the subject remains inside the behavioral box. This usually indicates the subject fell asleep. The system attempts to wake the subject every 10 minutes by slightly opening and closing Door 2. You can also connect remotely to play a sound in the box to wake the animal.
 
-**Rare**
+```{important}
+Always review videos corresponding to unusual alarms to identify the root cause, such as dirt, threshold issues, lighting errors, or hardware malfunctions.
 
-PC is off or has lost internet connection. Go in person and check what’s happening.
+To view a video:
+1. Locate the alarm in `DATA` screen -> `EVENTS`.
+2. Click the alarm row, then select `VIDEO` to watch the footage.
 
-### ALARM: bpod communication error
+For common errors, such as multiple animals in the behavioral box or prolonged time inside, consult the [troubleshooting section][TROUBLE], which lists frequent issues and their solutions.
+```
 
-**Rare**
-
-Sometimes Bpod fails. Ignore it unless it becomes frequent.
-
-## Errors not detected by the alarm system
-
-- **Ecohab not detecting**: Stop Ecohab script, disconnect USB & power supply. Reconnect everything in the following order: 1) Power supply 2) USB 3) Ecohab script. Check that all antennas (1-6) are detected.
-- **High temperatures in the room**: Ventilation system is very bad; many times temperatures rise above 24ºC. Email Sergi.
-- **Reloading academy**: Stops Ecohab. Be sure to play Ecohab after.
-- **Inside camera freeze/doesn’t work**: Reload academy. If still not working, check `cd /dev ls` to find the camera. If not, change the device.
-- **Bpod stuck in a task**: Close academy, unplug and plug Bpod (it becomes blue), wait 1 minute, and play academy again.
-- **Sound not working**: Check buzzer cables, Bpod power supply (only affects high-pitch sounds).
-- **Water not delivered**: Check pump, valves, refill bottle, calibrate.
-- **Touchscreen ghost detections**: Remove mask, clean IR frame.
-- **Screen issues**: Check cables and display settings. -->
-
-| **Alarm**                                      | **Frequency**         | **Description**                                                                                  | **Recommended Actions**                                                                                                                                                                                                                       |
-|------------------------------------------------|-----------------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Check weight and water**                     | Very frequent         | Triggered when a mouse weighs less than 50% basal weight or has drunk less than the threshold.    | - For weight: Check for intersession issues, manually weigh, assess health score, and review performance.  - For water: If below 600 µl for 2-3 days, supplement with 500-1000 µl manually.                                              |
-| **Mouse in box for ‘x’ seconds**               | Very frequent         | Mouse has been in the box for a long time.                                                        | Connect remotely, play buzzer, open/close door. If no response >5 hours, go in person. Check temperature.                                                                                                                                   |
-| **Mouse trapped in corridor**                  | Frequent              | Two mice overlap in the doors' zone, allowing task to start, or mouse escaped to corridor.        | Open door 1 remotely. If suspected escape, check corridor videos.                                                                                                                                                                           |
-| **2 mice in box**                              | Frequent              | System detects two mice inside the box.                                                           | Verify via inner camera. If true, make them exit, delete session, and review videos. If false, check camera settings for overlap.                                                                                                             |
-| **Animal on the floor**                        | Very frequent         | Mouse has learned to go down to the floor of the box.                                             | If a regular explorer, ignore. If a new animal, check if it knows how to return. Manually help if needed.                                                                                                                                   |
-| **Few trials**                                 | Very frequent         | Indicates fewer trials than expected, common in new or poorly trained mice.                       | - Well-trained mice: Check the behavioral box and task manually.  - New mice: Consider moving to an easier stage if not improving.                                                                                                       |
-| **Last session ended**                         | Rare                  | Session ended unexpectedly.                                                                       | - Check doors, RFID, and scale for issues.  - Ensure camera and script are running.  - Verify animal movement and room status.                                                                                                       |
-| **Overdetections in ‘Session’**                | Rare                  | Abnormal number of photogate beam crosses detected.                                               | Check buzzer or photogate alignment. Adjust or replace components as needed.                                                                                                                                                                 |
-| **Touchscreen not working for ‘Subject’**      | Rare                  | Touchscreen failure during session.                                                               | Disconnect and reconnect the device. Restart PC if the issue persists.                                                                                                                                                                      |
-| **Last heartbeat**                             | Rare                  | PC is off or has lost internet connection.                                                        | Go in person to check for power or network issues.                                                                                                                                                                                           |
-| **Bpod communication error**                   | Rare                  | Communication error between the Bpod and the system.                                              | Usually can be ignored unless it becomes frequent.                                                                                                                                                                                           |
-| **Bpod not sending softcodes**                 | Never happens         | Issue with Bpod softcode transmission.                                                            | Ignore unless it starts happening frequently.                                                                                                                                                                                               |
-| **Bpod not sending serials**                   | Never happens         | Issue with Bpod serial transmission.                                                              | Ignore unless it starts happening frequently.                                                                                                                                                                                               |
-| **Ecohab not detecting**                       | Not detected by alarm | Antennas not detected by Ecohab.                                                                  | Restart Ecohab script, reconnect USB and power supply. Check antenna status.                                                                                                                                                                 |
+[SETTINGS]: /user_guide/GUI.md#settings
+[TROUBLE]: /troubleshooting/troubleshooting.md

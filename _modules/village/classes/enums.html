@@ -216,7 +216,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/plots.html">Create Real-Time Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/data.html">Saved Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/state_machine.html">System State Machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/alarms.html">Receive and respond to Telegram Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/maintenance.html">Maintenance</a></li>
 </ul>
 </li>
@@ -682,28 +682,22 @@
     <span class="n">WAIT</span> <span class="o">=</span> <span class="s2">&quot;All subjects are at home, waiting for RFID detection&quot;</span>
     <span class="n">DETECTION</span> <span class="o">=</span> <span class="s2">&quot;Gathering subject data, checking requirements to enter&quot;</span>
     <span class="n">ACCESS</span> <span class="o">=</span> <span class="s2">&quot;Closing door1, opening door2&quot;</span>
-    <span class="n">LAUNCH_AUTO</span> <span class="o">=</span> <span class="s2">&quot;Launching the task automatically&quot;</span>
-    <span class="n">RUN_FIRST</span> <span class="o">=</span> <span class="s2">&quot;Task running, waiting for the areas to be clean to close the door2&quot;</span>
+    <span class="n">LAUNCH_AUTO</span> <span class="o">=</span> <span class="s2">&quot;Automatically launching the task&quot;</span>
+    <span class="n">RUN_FIRST</span> <span class="o">=</span> <span class="s2">&quot;Task running, waiting for the corridor to become empty&quot;</span>
     <span class="n">CLOSE_DOOR2</span> <span class="o">=</span> <span class="s2">&quot;Closing door2&quot;</span>
     <span class="n">RUN_CLOSED</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject cannot leave yet&quot;</span>
     <span class="n">OPEN_DOOR2</span> <span class="o">=</span> <span class="s2">&quot;Opening door2&quot;</span>
     <span class="n">RUN_OPENED</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject can leave&quot;</span>
-    <span class="n">EXIT_UNSAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1 (data still not saved)&quot;</span>
+    <span class="n">EXIT_UNSAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1; data still not saved&quot;</span>
     <span class="n">SAVE_OUTSIDE</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; the subject is already outside&quot;</span>
     <span class="n">SAVE_INSIDE</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; the subject is still inside&quot;</span>
     <span class="n">WAIT_EXIT</span> <span class="o">=</span> <span class="s2">&quot;Task finished, waiting for the subject to leave&quot;</span>
-    <span class="n">EXIT_SAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1 (data already saved)&quot;</span>
-    <span class="n">OPEN_DOOR1</span> <span class="o">=</span> <span class="s2">&quot;Opening door1, a subject is trapped&quot;</span>
-    <span class="n">CLOSE_DOOR1</span> <span class="o">=</span> <span class="s2">&quot;Closing door1, the subject is not trapped anymore&quot;</span>
-    <span class="n">RUN_TRAPPED</span> <span class="o">=</span> <span class="s2">&quot;Task running, waiting for the trapped subject to return home&quot;</span>
-    <span class="n">SAVE_TRAPPED</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; a subject is trapped&quot;</span>
+    <span class="n">EXIT_SAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1; data already saved&quot;</span>
     <span class="n">OPEN_DOOR2_STOP</span> <span class="o">=</span> <span class="s2">&quot;Opening door2, disconnecting RFID&quot;</span>
-    <span class="n">OPEN_DOORS_STOP</span> <span class="o">=</span> <span class="s2">&quot;Opening both doors, disconnecting RFID&quot;</span>
-    <span class="n">ERROR</span> <span class="o">=</span> <span class="s2">&quot;Manual intervention required&quot;</span>
-    <span class="n">LAUNCH_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Launching the task manually&quot;</span>
-    <span class="n">RUN_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Task is running manually&quot;</span>
+    <span class="n">MANUAL_MODE</span> <span class="o">=</span> <span class="s2">&quot;Settings are being changed or task is being manually prepared&quot;</span>
+    <span class="n">LAUNCH_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Manually launching the task&quot;</span>
+    <span class="n">RUN_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Task running manually&quot;</span>
     <span class="n">SAVE_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; task is running manually&quot;</span>
-    <span class="n">SETTINGS</span> <span class="o">=</span> <span class="s2">&quot;Settings are being changed or task is being manually prepared&quot;</span>
     <span class="n">EXIT_GUI</span> <span class="o">=</span> <span class="s2">&quot;In the GUI window, ready to exit the app&quot;</span>
 
 <div class="viewcode-block" id="State.__init__">
@@ -713,13 +707,13 @@
 
 
     <span class="k">def</span> <span class="nf">can_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">SETTINGS</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">ERROR</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">MANUAL_MODE</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">can_edit_subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">SETTINGS</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">MANUAL_MODE</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -730,7 +724,6 @@
             <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
             <span class="n">State</span><span class="o">.</span><span class="n">RUN_CLOSED</span><span class="p">,</span>
             <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
-            <span class="n">State</span><span class="o">.</span><span class="n">RUN_TRAPPED</span><span class="p">,</span>
             <span class="n">State</span><span class="o">.</span><span class="n">LAUNCH_MANUAL</span><span class="p">,</span>
             <span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span>
         <span class="p">):</span>
@@ -739,7 +732,7 @@
             <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">can_go_to_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT_EXIT</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT_EXIT</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
@@ -816,7 +809,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=2153bc7e"></script>
+</div><script src="../../../_static/documentation_options.js?v=5540659b"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>

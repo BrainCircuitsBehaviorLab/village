@@ -48,17 +48,11 @@ State
       ~State.SAVE_INSIDE
       ~State.WAIT_EXIT
       ~State.EXIT_SAVED
-      ~State.OPEN_DOOR1
-      ~State.CLOSE_DOOR1
-      ~State.RUN_TRAPPED
-      ~State.SAVE_TRAPPED
       ~State.OPEN_DOOR2_STOP
-      ~State.OPEN_DOORS_STOP
-      ~State.ERROR
+      ~State.MANUAL_MODE
       ~State.LAUNCH_MANUAL
       ~State.RUN_MANUAL
       ~State.SAVE_MANUAL
-      ~State.SETTINGS
       ~State.EXIT_GUI
    
    
