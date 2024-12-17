@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import json
+import os
+import traceback
 from typing import TYPE_CHECKING, Any
 
+import cv2
 import pandas as pd
 from classes.enums import State
 from pandas import DataFrame
-from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, QTimer, pyqtSignal
+from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import (
     QCheckBox,
     QDateTimeEdit,
@@ -17,6 +21,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QPushButton,
     QScrollArea,
+    QStackedLayout,
     QTableView,
     QVBoxLayout,
     QWidget,
@@ -24,7 +29,13 @@ from PyQt5.QtWidgets import (
 
 from village.classes.enums import DataTable
 from village.gui.layout import Layout
+from village.log import log
 from village.manager import manager
+from village.plots.create_pixmap import create_pixmap
+from village.plots.sound_calibration_plot import sound_calibration_plot
+from village.plots.temperatures_plot import temperatures_plot
+from village.plots.water_calibration_plot import water_calibration_plot
+from village.settings import settings
 from village.time_utils import time_utils
 
 if TYPE_CHECKING:
@@ -47,7 +58,7 @@ class TableView(QTableView):
                 self.searching = ""
                 self.model_parent.layout_parent.search_edit.setText("")
                 self.model_parent.layout_parent.update_gui()
-                if column_name == "next_settings" and manager.state.can_edit_subjects():
+                if column_name == "next_settings" and manager.state.can_edit_data():
                     manager.state = State.MANUAL_MODE
                     current_value = self.model().data(index, Qt.DisplayRole)
                     new_value = self.model_parent.layout_parent.edit_next_settings(
@@ -56,8 +67,7 @@ class TableView(QTableView):
                     self.model().setData(index, new_value, Qt.EditRole)
                     self.save_changes_in_df()
                 elif (
-                    column_name == "next_session_time"
-                    and manager.state.can_edit_subjects()
+                    column_name == "next_session_time" and manager.state.can_edit_data()
                 ):
                     manager.state = State.MANUAL_MODE
                     current_value = self.model().data(index, Qt.DisplayRole)
@@ -66,11 +76,11 @@ class TableView(QTableView):
                     )
                     self.model().setData(index, new_value, Qt.EditRole)
                     self.save_changes_in_df()
-                elif column_name == "active" and manager.state.can_edit_subjects():
+                elif column_name == "active" and manager.state.can_edit_data():
                     manager.state = State.MANUAL_MODE
                     current_value = self.model().data(index, Qt.DisplayRole)
                     self.openDaysSelectionDialog(index, current_value)
-                elif manager.state.can_edit_subjects():
+                elif manager.state.can_edit_data():
                     manager.state = State.MANUAL_MODE
                     super().mouseDoubleClickEvent(event)
                 else:
@@ -94,6 +104,9 @@ class TableView(QTableView):
         elif manager.table == DataTable.SOUND_CALIBRATION:
             manager.sound_calibration.df = self.model_parent.df
             manager.sound_calibration.save_from_df(manager.training)
+        elif manager.table == DataTable.SESSIONS_SUMMARY:
+            manager.sessions_summary.df = self.model_parent.df
+            manager.sessions_summary.save_from_df(manager.training)
         manager.state = State.WAIT
 
     def openDaysSelectionDialog(self, index, current_value) -> None:
@@ -329,47 +342,188 @@ class Table(QAbstractTableModel):
 class DataLayout(Layout):
     def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
-        self.df = DataFrame()
-        self.complete_df = DataFrame()
-        self.window = window
         self.draw()
 
     def draw(self) -> None:
         self.data_button.setDisabled(True)
 
+        self.central_layout = QStackedLayout()
+        self.addLayout(self.central_layout, 4, 0, 46, 210)
+        self.page1 = QWidget()
+        self.page1.setStyleSheet("background-color:white")
+        self.page1Layout = DfLayout(self.window, 46, 210)
+        self.page1.setLayout(self.page1Layout)
+        self.page2 = QWidget()
+        self.page2.setStyleSheet("background-color:white")
+        self.page2Layout = VideoLayout(self.window, 46, 210)
+        self.page2.setLayout(self.page2Layout)
+        self.page3 = QWidget()
+        self.page3.setStyleSheet("background-color:white")
+        self.page3Layout = PlotLayout(self.window, 46, 210)
+        self.page3.setLayout(self.page3Layout)
+
+        self.central_layout.addWidget(self.page1)
+        self.central_layout.addWidget(self.page2)
+        self.central_layout.addWidget(self.page3)
+
+        self.central_layout.setCurrentWidget(self.page1)
+
+        self.page1Layout.video_change_requested.connect(self.change_to_video)
+        self.page1Layout.plot_change_requested.connect(self.change_to_plot)
+        self.page2Layout.data_from_video_change_requested.connect(self.change_to_df)
+        self.page3Layout.data_from_plot_change_requested.connect(self.change_to_df)
+
+        self.update_data()
+
+    def change_to_video(self, path: str) -> None:
+        self.central_layout.setCurrentWidget(self.page2)
+        self.page2Layout.start_video(path)
+
+    def change_to_plot(self, path: str) -> None:
+        self.central_layout.setCurrentWidget(self.page3)
+        pixmap = QPixmap()
+
+        if manager.table == DataTable.SESSIONS_SUMMARY:
+            try:
+                paths = self.page1Layout.get_paths_from_sessions_summary_row(
+                    self.page1Layout.get_selected_row_series()
+                )
+                df = pd.read_csv(paths[0], sep=";")
+                df_raw = pd.read_csv(paths[1], sep=";")
+                figure = manager.session_plot.create_plot(df, df_raw)
+                pixmap = create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create session plot", exception=traceback.format_exc()
+                )
+        elif manager.table == DataTable.SUBJECTS:
+            path = self.page1Layout.get_path_from_subjects_row(
+                self.page1Layout.get_selected_row_series()
+            )
+            try:
+                df = pd.read_csv(path, sep=";")
+                figure = manager.subject_plot.create_plot(df)
+                pixmap = create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create plot for file: " + path,
+                    exception=traceback.format_exc(),
+                )
+        elif manager.table == DataTable.WATER_CALIBRATION:
+            try:
+                figure = water_calibration_plot(manager.water_calibration.df)
+                pixmap = create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create water calibration plot",
+                    exception=traceback.format_exc(),
+                )
+        elif manager.table == DataTable.SOUND_CALIBRATION:
+            try:
+                figure = sound_calibration_plot(manager.sound_calibration.df)
+                pixmap = create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create sound calibration plot",
+                    exception=traceback.format_exc(),
+                )
+        elif manager.table == DataTable.TEMPERATURES:
+            try:
+                figure = temperatures_plot(manager.temperatures.df)
+                pixmap = create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create temperatures plot",
+                    exception=traceback.format_exc(),
+                )
+        elif manager.table == DataTable.SESSION:
+            try:
+                dfs = manager.get_both_sessions_dfs()
+                figure = manager.session_plot.create_plot(dfs[0], dfs[1])
+                pixmap = create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create session plot", exception=traceback.format_exc()
+                )
+        elif manager.table in (DataTable.OLD_SESSION, DataTable.OLD_SESSION_RAW):
+            try:
+                figure = manager.session_plot.create_plot(
+                    manager.old_session_df, manager.old_session_raw_df
+                )
+                pixmap = create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create session plot",
+                    exception=traceback.format_exc(),
+                )
+        if not pixmap.isNull():
+            self.page3Layout.plot_label.setPixmap(pixmap)
+        else:
+            self.page3Layout.plot_label.setText("Plot could not be generated")
+
+    def change_to_df(self) -> None:
+        self.central_layout.setCurrentWidget(self.page1)
+
+    def update_data(self) -> None:
+        if self.central_layout.currentIndex() == 0:
+            self.page1Layout.update_data()
+            self.page1Layout.create_table()
+        elif self.central_layout.currentIndex() == 1:
+            self.page2Layout.update_data()
+        elif self.central_layout.currentIndex() == 2:
+            self.page3Layout.update_data()
+
+    def update_gui(self) -> None:
+        self.update_status_label()
+        if self.central_layout.currentIndex() == 0:
+            self.page1Layout.update_gui()
+        elif self.central_layout.currentIndex() == 1:
+            self.page2Layout.update_gui()
+        elif self.central_layout.currentIndex() == 2:
+            self.page3Layout.update_gui()
+
+
+class DfLayout(Layout):
+    plot_change_requested = pyqtSignal(str)
+    video_change_requested = pyqtSignal(str)
+
+    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self.df = DataFrame()
+        self.complete_df = DataFrame()
+        self.draw()
+
+    def draw(self) -> None:
         self.searching = ""
         self.previous_searching = ""
 
         possible_values = DataTable.values()
-        possible_values.pop()
+        possible_values = possible_values[:-2]
 
         index = DataTable.get_index_from_value(manager.table)
 
         self.title = self.create_and_add_combo_box(
-            "title", 5, 5, 35, 2, possible_values, index, self.change_data_table
+            "title", 0, 5, 35, 2, possible_values, index, self.change_data_table
         )
 
-        self.search_label = self.create_and_add_label("search", 5, 45, 10, 2, "Search")
-        self.search_edit = self.create_and_add_line_edit("", 5, 55, 25, 2, self.search)
+        self.search_label = self.create_and_add_label("search", 0, 45, 10, 2, "Search")
+        self.search_edit = self.create_and_add_line_edit("", 0, 55, 25, 2, self.search)
 
         self.first_button = self.create_and_add_button(
-            "FIRST", 5, 85, 20, 2, self.button_clicked, "first"
+            "FIRST", 0, 85, 20, 2, self.button_clicked, "first"
         )
         self.second_button = self.create_and_add_button(
-            "SECOND", 5, 110, 20, 2, self.button_clicked, "second"
+            "SECOND", 0, 110, 20, 2, self.button_clicked, "second"
         )
         self.third_button = self.create_and_add_button(
-            "THIRD", 5, 135, 20, 2, self.button_clicked, "third"
+            "THIRD", 0, 135, 20, 2, self.button_clicked, "third"
         )
         self.fourth_button = self.create_and_add_button(
-            "FOURTH", 5, 160, 20, 2, self.button_clicked, "fourth"
+            "FOURTH", 0, 160, 20, 2, self.button_clicked, "fourth"
         )
         self.fifth_button = self.create_and_add_button(
-            "FIFTH", 5, 185, 20, 2, self.button_clicked, "fifth"
+            "FIFTH", 0, 185, 20, 2, self.button_clicked, "fifth"
         )
-
-        self.update_data()
-        self.create_table()
 
     def update_data(self) -> None:
         match manager.table:
@@ -392,12 +546,29 @@ class DataLayout(Layout):
                 self.complete_df = manager.temperatures.df
                 self.widths = [20, 20, 20]
             case DataTable.SESSION:
-                self.complete_df = manager.sound_calibration.df
-                self.widths = [20, 20, 20, 20, 20, 20]
+                self.complete_df = manager.update_session_df()
+                self.widths = [20, 20, 20, 70, 70]
             case DataTable.OLD_SESSION:
-                self.complete_df = manager.sound_calibration.df
+                self.complete_df = manager.old_session_df
                 self.widths = [20, 20, 20, 20, 20, 20]
+                self.title.setCurrentIndex(-1)
+            case DataTable.OLD_SESSION_RAW:
+                self.complete_df = manager.old_session_raw_df
+                self.widths = [20, 20, 20, 60, 60]
+                self.title.setCurrentIndex(-1)
         self.df = self.obtain_searched_df()
+
+    def create_table(self) -> None:
+        editable = True if manager.table == DataTable.SUBJECTS else False
+        self.model = self.create_and_add_table(
+            self.df, 4, 0, 210, 42, widths=self.widths, editable=editable
+        )
+        self.model.dataChanged.connect(self.on_data_changed)
+
+        self.update_buttons()
+        self.model.table_view.selectionModel().selectionChanged.connect(
+            self.update_buttons
+        )
 
     def create_and_add_table(
         self,
@@ -426,10 +597,11 @@ class DataLayout(Layout):
         return model
 
     def change_data_table(self, value: str, key: str) -> None:
-        if manager.table != DataTable(value):
-            manager.table = DataTable(value)
-            self.update_data()
-            self.create_table()
+        if value != "":
+            if manager.table != DataTable(value):
+                manager.table = DataTable(value)
+                self.update_data()
+                self.create_table()
 
     def obtain_searched_df(self) -> DataFrame:
         if self.searching == "":
@@ -444,20 +616,7 @@ class DataLayout(Layout):
                 )
             ]
 
-    def create_table(self) -> None:
-        editable = True if manager.table == DataTable.SUBJECTS else False
-        self.model = self.create_and_add_table(
-            self.df, 8, 0, 210, 42, widths=self.widths, editable=editable
-        )
-        self.model.dataChanged.connect(self.on_data_changed)
-
-        self.update_buttons()
-        self.model.table_view.selectionModel().selectionChanged.connect(
-            self.update_buttons
-        )
-
     def update_gui(self) -> None:
-        self.update_status_label()
         self.update_data()
         if self.searching == self.previous_searching:
             self.model.add_rows(self.df)
@@ -591,7 +750,7 @@ class DataLayout(Layout):
                 self.fourth_button.hide()
                 self.connect_button_to_plot(self.fifth_button)
                 self.fifth_button.setEnabled(True)
-            case DataTable.OLD_SESSION:
+            case DataTable.OLD_SESSION | DataTable.OLD_SESSION_RAW:
                 self.first_button.hide()
                 self.second_button.hide()
                 self.third_button.hide()
@@ -606,20 +765,100 @@ class DataLayout(Layout):
     def button_clicked(self) -> None:
         pass
 
+    def data_button_clicked(self) -> None:
+        p = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[0]
+        try:
+            df = pd.read_csv(p, sep=";")
+            manager.old_session_df = df
+            self.change_data_table("OLD_SESSION", "")
+        except Exception:
+            log.error("Can not read file: " + p, exception=traceback.format_exc())
+
     def data_raw_button_clicked(self) -> None:
-        pass
+        try:
+            p = self.get_paths_from_sessions_summary_row(
+                self.get_selected_row_series()
+            )[1]
+            df = pd.read_csv(p, sep=";")
+            manager.old_session_raw_df = df
+            self.change_data_table("OLD_SESSION_RAW", "")
+        except Exception:
+            log.error("Can not read file: " + p, exception=traceback.format_exc())
+
+    def get_selected_row_series(self) -> pd.Series | None:
+        selected_indexes = self.model.table_view.selectionModel().selectedRows()
+        if selected_indexes:
+            index = selected_indexes[0]
+            return self.model.df.iloc[index.row()]
+        else:
+            return None
+
+    def get_path_from_events_row(self, row: pd.Series) -> str:
+        date_str = row["date"]
+        date = time_utils.date_from_string(date_str)
+        video_directory = settings.get("VIDEOS_DIRECTORY")
+        return time_utils.find_closest_file(video_directory, "CORRIDOR", date)
+
+    def get_path_from_subjects_row(self, row: pd.Series) -> str:
+        subject = row["name"]
+        sessions_directory = settings.get("SESSIONS_DIRECTORY")
+        path = os.path.join(sessions_directory, subject, subject + ".csv")
+        return path
+
+    def get_paths_from_sessions_summary_row(self, row: pd.Series) -> list[str]:
+        date_str = row["date"]
+        task = row["task"]
+        subject = row["subject"]
+        date = time_utils.date_from_string(date_str)
+        date_str = time_utils.filename_string_from_date(date)
+        filename = subject + "_" + task + "_" + date_str
+        sessions_directory = settings.get("SESSIONS_DIRECTORY")
+        video_directory = settings.get("VIDEOS_DIRECTORY")
+        session_path = os.path.join(sessions_directory, subject, filename + ".csv")
+        session_raw_path = os.path.join(
+            sessions_directory, subject, filename + "_RAW.csv"
+        )
+        session_settings_path = os.path.join(
+            sessions_directory, subject, filename + ".json"
+        )
+        video_path = os.path.join(video_directory, subject, filename + ".mp4")
+        video_data_path = os.path.join(sessions_directory, subject, filename + ".csv")
+
+        paths = [
+            session_path,
+            session_raw_path,
+            session_settings_path,
+            video_path,
+            video_data_path,
+        ]
+
+        return paths
 
     def video_button_clicked(self) -> None:
-        pass
+        path = ""
+        selected_row = self.get_selected_row_series()
+        if selected_row is not None:
+            if manager.table == DataTable.EVENTS:
+                path = self.get_path_from_events_row(selected_row)
+            elif manager.table == DataTable.SESSIONS_SUMMARY:
+                path = self.get_paths_from_sessions_summary_row(selected_row)[3]
+        self.video_change_requested.emit(path)
 
     def plot_button_clicked(self) -> None:
-        pass
-
-    def data_button_clicked(self) -> None:
-        pass
+        selected_row = self.get_selected_row_series()
+        if selected_row is not None:
+            self.plot_change_requested.emit("")
+        elif manager.table in [
+            DataTable.OLD_SESSION,
+            DataTable.OLD_SESSION_RAW,
+            DataTable.WATER_CALIBRATION,
+            DataTable.SOUND_CALIBRATION,
+            DataTable.TEMPERATURES,
+        ]:
+            self.plot_change_requested.emit("")
 
     def add_button_clicked(self) -> None:
-        if manager.state.can_edit_subjects():
+        if manager.state.can_edit_data():
             self.searching = ""
             self.search_edit.setText("")
             self.update_gui()
@@ -640,24 +879,39 @@ class DataLayout(Layout):
         self.update_gui()
         selected_indexes = self.model.table_view.selectionModel().selectedRows()
         if selected_indexes:
-            if manager.state.can_edit_subjects():
+            if manager.state.can_edit_data():
+                if manager.table == DataTable.SUBJECTS:
+                    text = """Do you want to delete the selected subject?
+                    This action cannot be undone."""
+                elif manager.table == DataTable.SESSIONS_SUMMARY:
+                    text = """Do you want to delete the selected session?
+                    The session data and the video will be deleted.
+                    The session will be removed from the sessions_summary.
+                    This action cannot be undone."""
+                else:
+                    text = """Do you want to delete the selected row?
+                    This action cannot be undone."""
                 reply = QMessageBox.question(
                     self.window,
                     "Delete",
-                    """Do you want to delete the selected row?
-                    This action cannot be undone.""",
+                    text,
                     QMessageBox.Yes | QMessageBox.No,
                     QMessageBox.No,
                 )
                 if reply == QMessageBox.Yes:
-                    for index in selected_indexes:
-                        self.model.beginRemoveRows(
-                            QModelIndex(), index.row(), index.row()
+                    if manager.table == DataTable.SESSIONS_SUMMARY:
+                        del_paths = self.get_paths_from_sessions_summary_row(
+                            self.get_selected_row_series()
                         )
-                        self.model.df.drop(index.row(), inplace=True)
-                        self.model.df.reset_index(drop=True, inplace=True)
-                        self.model.endRemoveRows()
+                        for path in del_paths:
+                            if os.path.exists(path):
+                                os.remove(path)
 
+                    index = selected_indexes[0]
+                    self.model.beginRemoveRows(QModelIndex(), index.row(), index.row())
+                    self.model.df.drop(index.row(), inplace=True)
+                    self.model.df.reset_index(drop=True, inplace=True)
+                    self.model.endRemoveRows()
                 self.model.table_view.save_changes_in_df()
                 self.model.table_view.selectionModel().clearSelection()
                 self.update_buttons()
@@ -678,7 +932,7 @@ class DataLayout(Layout):
 
     def edit_next_settings(self, current_value: str) -> str:
         manager.training.load_settings_from_jsonstring(current_value)
-        dict_values = manager.training.get_dict()
+        new_dict = manager.training.get_dict()
 
         self.reply = QDialog()
         self.reply.setWindowTitle("Next settings")
@@ -689,7 +943,7 @@ class DataLayout(Layout):
 
         properties = manager.training.get_settings_names()
         for name in properties:
-            value = dict_values.get(name, "")
+            value = new_dict.get(name, "")
             label = QLabel(name + ":")
             line_edit = QLineEdit()
             line_edit.setPlaceholderText(str(value))
@@ -735,9 +989,9 @@ class DataLayout(Layout):
                     if line_edit.text()
                     else line_edit.placeholderText()
                 )
-                dict_values[name] = value
-
-        return json.dumps(dict_values)
+                new_dict[name] = value
+        new_dict = manager.training.correct_types_in_dict(new_dict)
+        return json.dumps(new_dict)
 
     def edit_next_session_time(self, current_value: str) -> str:
         self.reply = QDialog()
@@ -767,3 +1021,94 @@ class DataLayout(Layout):
 
     def on_data_changed(self) -> None:
         self.model.table_view.save_changes_in_df()
+
+
+class PlotLayout(Layout):
+    data_from_plot_change_requested = pyqtSignal(str)
+
+    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self.draw()
+
+    def draw(self) -> None:
+        self.plot_label = QLabel()
+        self.addWidget(self.plot_label, 0, 0, 46, 210)
+
+        self.create_and_add_button("CLOSE", 0, 180, 20, 2, self.close, "Close the plot")
+
+    def update_data(self) -> None:
+        pass
+
+    def close(self) -> None:
+        self.data_from_plot_change_requested.emit("")
+
+
+class VideoLayout(Layout):
+    data_from_video_change_requested = pyqtSignal(str)
+
+    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self.draw()
+
+    def draw(self) -> None:
+        self.video_label = QLabel()
+        self.addWidget(self.video_label, 0, 0, 46, 210)
+
+        self.create_and_add_button(
+            "CLOSE", 0, 180, 20, 2, self.close, "Close the video"
+        )
+        self.create_and_add_button(
+            "PLAY/PAUSE", 4, 180, 20, 2, self.play_pause, "Play or pause the video"
+        )
+
+    def start_video(self, path: str) -> None:
+        try:
+            self.cap = cv2.VideoCapture(path)
+            fps = int(self.cap.get(cv2.CAP_PROP_FPS))
+            self.timer = QTimer()
+            millisecs = int(1000.0 / fps)
+            self.timer.setTimerType(Qt.PreciseTimer)
+            self.timer.timeout.connect(self.next_frame_slot)
+            self.timer.start(millisecs)
+        except Exception:
+            pass
+
+    def play_pause(self) -> None:
+        try:
+            if self.timer.isActive():
+                self.timer.stop()
+            else:
+                self.timer.start()
+        except Exception:
+            pass
+
+    def stop(self) -> None:
+        try:
+            self.timer.stop()
+            self.cap.release()
+        except Exception:
+            pass
+
+    def close(self) -> None:
+        self.stop()
+        self.data_from_video_change_requested.emit("")
+
+    def next_frame_slot(self) -> None:
+        ret, frame = self.cap.read()
+        if ret:
+            img = QImage(
+                frame.data,
+                frame.shape[1],
+                frame.shape[0],
+                frame.strides[0],
+                QImage.Format_BGR888,
+            )
+
+            # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            # img = QImage(frame, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
+
+            pix = QPixmap.fromImage(img)
+            self.video_label.setPixmap(pix)
+
+    def update_data(self) -> None:
+        pass

@@ -462,5 +462,4 @@ class Layout(QGridLayout):
         return combo_box
 
     def update_gui(self) -> None:
-        if not self.stacked:
-            self.update_status_label()
+        pass

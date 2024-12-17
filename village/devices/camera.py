@@ -28,7 +28,7 @@ from village.time_utils import time_utils
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
 # configure the logging of libcamera (the C++ library picamera2 uses)
 # '0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
-os.environ["LIBCAMERA_LOG_LEVELS"] = "1"
+os.environ["LIBCAMERA_LOG_LEVELS"] = "2"
 # Picamera2.set_logging(Picamera2.DEBUG)
 
 
@@ -72,7 +72,7 @@ class Camera(CameraProtocol):
         # )
 
         # self.output = FfmpegOutput(self.path_video + " -thread_queue_size 1024")
-        self.output = FfmpegOutput("-thread_queue_size 1024 " + self.path_video)
+        self.output = FfmpegOutput(self.path_video)
         self.cam.pre_callback = self.pre_process
 
         color_area1 = settings.get("COLOR_AREA1")
@@ -210,7 +210,7 @@ class Camera(CameraProtocol):
                 settings.get("VIDEOS_DIRECTORY"),
                 self.name + "_" + time_start + ".csv",
             )
-        self.output = FfmpegOutput(self.path_video + " -thread_queue_size 1024")
+        self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
@@ -242,10 +242,10 @@ class Camera(CameraProtocol):
             len(self.frames), len(self.timings), len(self.trials), len(self.states)
         )
 
-        print("frames: ", len(self.frames))
-        print("timings: ", len(self.timings))
-        print("trials: ", len(self.trials))
-        print("states: ", len(self.states))
+        # print("frames: ", len(self.frames))
+        # print("timings: ", len(self.timings))
+        # print("trials: ", len(self.trials))
+        # print("states: ", len(self.states))
 
         self.frames = self.frames[:min_length]
         self.timings = self.timings[:min_length]
@@ -490,6 +490,7 @@ class Camera(CameraProtocol):
         if self.cam._preview is not None:
             self.cam.stop_preview()
         self.window = QGlPicamera2(self.cam)
+        # self.window.context().setShareContext(shared_context)
         return self.window
 
     def log(self, text: str) -> None:

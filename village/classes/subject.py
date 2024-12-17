@@ -16,7 +16,7 @@ class Subject:
         self.next_settings: str = ""
         self.subject_series: pd.Series | None = None
 
-    def create_from_subject_series(self) -> bool:
+    def create_from_subject_series(self, auto: bool) -> bool:
         if self.subject_series is not None:
             try:
                 self.name = self.subject_series["name"]
@@ -25,6 +25,8 @@ class Subject:
                 self.active = self.subject_series["active"]
                 self.next_session_time = self.subject_series["next_session_time"]
                 self.next_settings = self.subject_series["next_settings"]
+                if auto:
+                    log.info("Subject detected", subject=self.name)
                 return True
             except Exception:
                 log.alarm(
@@ -42,4 +44,8 @@ class Subject:
         if now > next_session:
             return True
         else:
+            log.info(
+                "Subject not allowed to enter until " + self.next_session_time,
+                subject=self.name,
+            )
             return False

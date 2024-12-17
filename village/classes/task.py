@@ -35,7 +35,6 @@ class Task:
         self.bpod: PyBpodProtocol = bpod
         self.name: str = self.get_name()
         self.subject: str = "None"
-        self.weight: float = np.nan
         self.current_trial: int = 1
         self.current_trial_states: list = []
         self.touch_response: list = []
@@ -64,6 +63,7 @@ class Task:
         self.new_df: pd.DataFrame = pd.DataFrame()
         self.df_all: pd.DataFrame = pd.DataFrame()
         self.force_stop: bool = False
+        self.manual_number_of_trials: int = 1000000
         self.chrono = time_utils.Chrono()
 
     # OVERWRITE THESE METHODS IN YOUR TASKS
@@ -91,7 +91,7 @@ class Task:
         def test_run():
             self.create_paths()
             self.start()
-            while self.current_trial < self.settings.maximum_number_of_trials:
+            while self.current_trial < self.manual_number_of_trials:
                 self.bpod.create_state_machine()
                 self.create_trial()
                 self.bpod.send_and_run_state_machine()
@@ -109,10 +109,9 @@ class Task:
         self.create_paths()
         if self.subject != "None":
             self.cam_box.start_record(self.video_path, self.video_data_path)
-        self.bpod.reconnect()
         self.start()
         while (
-            self.current_trial < self.settings.maximum_number_of_trials
+            self.current_trial < self.manual_number_of_trials
             and self.chrono.get_seconds() < self.settings.maximum_duration
             and not self.force_stop
         ):
@@ -146,15 +145,20 @@ class Task:
 
         self.bpod.register_value("TRIAL", None)
 
-    def disconnect_and_save(self) -> None:
+    def disconnect_and_save(self) -> tuple[bool, float, int, int]:
+        save: bool = False
+        duration: float = 0.0
+        trials: int = 0
+        water: int = 0
         self.bpod.stop()
         # TODO kill the screen
         if self.subject != "None":
             try:
-                self.save_csv()
+                duration, trials, water = self.save_csv()
                 self.save_json()
                 self.cam_box.stop_record()
                 # TODO update training
+                save = True
             except Exception:
                 log.alarm(
                     "Error saving the task: " + self.name,
@@ -162,6 +166,7 @@ class Task:
                     exception=traceback.format_exc(),
                 )
         self.bpod.close()
+        return save, duration, trials, water
 
     def save_json(self) -> None:
 
@@ -170,7 +175,6 @@ class Task:
         default_properties_to_save = [
             "minimum_duration",
             "maximum_duration",
-            "maximum_number_of_trials",
         ]
         default_properties_to_not_save = [
             "next_task",
@@ -190,7 +194,11 @@ class Task:
         with open(self.session_settings_path, "w") as f:
             json.dump(dictionary, f)
 
-    def save_csv(self) -> None:
+    def save_csv(self) -> tuple[float, int, int]:
+
+        duration: float = 0.0
+        trials: int = 0
+        water: int = 0
 
         self.df = pd.read_csv(self.rt_session_path, sep=";")
 
@@ -201,13 +209,20 @@ class Task:
                 subject=self.subject,
             )
 
-        if self.df["TRIAL"].iloc[-1] > 1:
+        trials = self.df["TRIAL"].iloc[-1]
+
+        if trials > 1:
+            non_nan_values = self.df["START"].dropna()
+
+            if not non_nan_values.empty:
+                duration = float(non_nan_values.iloc[-1] - non_nan_values.iloc[0])
+
             self.df.to_csv(self.raw_session_path, index=None, header=True, sep=";")
 
-            self.new_df = self.transform_df()
+            self.new_df = self.transform(self.df)
 
             try:
-                water = int(self.new_df["water"].iloc[-1])
+                water = int(self.new_df["water"].sum())
             except Exception:
                 water = 0
 
@@ -243,7 +258,9 @@ class Task:
                 "No trials were recorded in task: " + self.name, subject=self.subject
             )
 
-    def transform_df(self) -> pd.DataFrame:
+        return duration, trials, water
+
+    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
 
         def make_list(x) -> Any | float | str:
             if x.size <= 1:
@@ -253,7 +270,7 @@ class Task:
             else:
                 return ";".join([str(x.iloc[i]) for i in range(len(x))])
 
-        df0 = self.df
+        df0 = df
         df0["idx"] = range(1, len(df0) + 1)
         df1 = df0.set_index("idx")
         df2 = df1.pivot_table(
@@ -372,6 +389,6 @@ class Task:
             Path(self.sessions_directory, self.filename + ".json")
         )
 
-        self.video_path = str(Path(self.video_directory, self.filename + ".avi"))
+        self.video_path = str(Path(self.video_directory, self.filename + ".mp4"))
         self.video_data_path = str(Path(self.video_directory, self.filename + ".csv"))
         self.subject_path = str(Path(self.sessions_directory, self.subject + ".csv"))

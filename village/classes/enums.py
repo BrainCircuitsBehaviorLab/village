@@ -77,7 +77,7 @@ class State(SuperEnum):
         else:
             return False
 
-    def can_edit_subjects(self) -> bool:
+    def can_edit_data(self) -> bool:
         if self in (State.WAIT, State.MANUAL_MODE):
             return True
         else:
@@ -85,11 +85,9 @@ class State(SuperEnum):
 
     def can_stop_task(self) -> bool:
         if self in (
-            State.LAUNCH_AUTO,
             State.RUN_FIRST,
             State.RUN_CLOSED,
             State.RUN_OPENED,
-            State.LAUNCH_MANUAL,
             State.RUN_MANUAL,
         ):
             return True
@@ -129,3 +127,4 @@ class DataTable(SuperEnum):
     TEMPERATURES = "TEMPERATURES"
     SESSION = "SESSION"
     OLD_SESSION = "OLD_SESSION"
+    OLD_SESSION_RAW = "OLD_SESSION_RAW"

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Callable
 
 from PyQt5.QtWidgets import QWidget
 
@@ -14,7 +14,7 @@ class PyBpodProtocol:
     session: Session | Any
     connected: bool = False
 
-    def reconnect(self) -> None:
+    def reconnect(self, functions: list[Callable]) -> None:
         return
 
     def add_state(
@@ -72,6 +72,9 @@ class PyBpodProtocol:
     def register_value(self, name: str, value: Any) -> None:
         return
 
+    def send_softcode(self, idx: int) -> None:
+        return
+
 
 class TelegramBotProtocol:
     error: str = "Error connecting to the telegram bot "
@@ -89,7 +92,10 @@ class ScaleProtocol:
     def calibrate(self, weight: float) -> None:
         return
 
-    def get_weight(self) -> Any | float:
+    def get_weight(self) -> float:
+        return 0.0
+
+    def get_weight_subject(self) -> float:
         return 0.0
 
     def get_weight_string(self) -> str:

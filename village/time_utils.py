@@ -1,3 +1,4 @@
+import os
 import time
 from datetime import datetime, timedelta
 from typing import Any
@@ -56,6 +57,30 @@ class TimeUtils:
             return result
 
         return wrapper
+
+    @staticmethod
+    def find_closest_file(directory: str, prefix: str, date: datetime) -> str:
+        closest_file = None
+        closest_time = None
+        path = ""
+
+        for filename in os.listdir(directory):
+            if filename.startswith(prefix) and filename.endswith(".mp4"):
+                try:
+                    date_str = filename[len(prefix) + 1 : -4]
+                    file_date = datetime.strptime(date_str, "%Y%m%d_%H%M%S")
+
+                    if file_date < date:
+                        if closest_time is None or file_date > closest_time:
+                            closest_time = file_date
+                            closest_file = filename
+                except ValueError:
+                    continue
+
+        if closest_file is not None:
+            path = os.path.join(directory, closest_file)
+
+        return path
 
     class Chrono:
         def __init__(self, initial_offset: bool = False) -> None:

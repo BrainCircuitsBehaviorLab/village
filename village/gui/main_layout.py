@@ -31,3 +31,6 @@ class MainLayout(Layout):
                 "DEBUG",
                 text,
             )
+
+    def update_gui(self) -> None:
+        self.update_status_label()

@@ -3,14 +3,13 @@ from typing import Any
 
 import numpy as np
 import sounddevice as sd
-from scipy.signal import firwin, lfilter
 
 from village.manager import manager
 from village.settings import settings
 
 
 class SoundDevice:
-    def __init__(self, samplerate=192000, channels=2, latency="low") -> None:
+    def __init__(self, samplerate, channels=2, latency="high") -> None:
         self.samplerate = samplerate
         self.channels = channels
         self.latency = latency
@@ -85,67 +84,73 @@ class SoundDevice:
         return np.ascontiguousarray(sound.T, dtype=np.float32)
 
 
-def whiteNoiseGen(
-    amp,
-    band_freq_bottom,
-    band_freq_top,
-    duration,
-    samplerate=192000,
-    filter_len=10000,
-    randgen=None,
-) -> Any:
-    """whiteNoiseGen(amp, band_fs_bot, band_fs_top):
-    beware this is not actually whitenoise
-    amp: float, amplitude
-    band_freq_bottom: int, bottom freq of the band
-    band_freq_top: int, top freq
-    duration: secs
-    samplerate: must match the sound device samplerate
-    filter_len: filter len, def 10k
-    *** if this takes too long try shortening filter_len or using a lower samplerate***
-    randgen: np.random.RandomState instance to sample from
-
-    returns: sound vector (np.array)
+def tone_generator(
+    duration: float,
+    amplitude: float,
+    frequency: float,
+    ramp_time: float,
+    samplerate: int,
+) -> np.ndarray[Any, np.dtype[np.floating[Any]]]:
     """
-    mean = 0
-    std = 1
-    if randgen is None:
-        randgen = np.random
+    Generate a single tone with ramping
+    Args:
+        duration (float): Duration (seconds)
+        ramp_time (float): Ramp up/down time (seconds)
+        amplitude (float): Tone amplitude
+        frequency (float): Tone frequency
+        samplerate (int): Samplerate must match the sound device samplerate
+    Returns:
+        np.ndarray: Generated tone
+    """
 
-    if (
-        isinstance(amp, float)
-        and isinstance(band_freq_top, int)
-        and isinstance(band_freq_bottom, int)
-        and band_freq_bottom < band_freq_top
-    ):
-        band_fs = [band_freq_bottom, band_freq_top]
-        white_noise = amp * randgen.normal(
-            mean, std, size=int(samplerate * (duration + 1))
-        )
-        band_pass = firwin(
-            filter_len,
-            [band_fs[0] / (samplerate * 0.5), band_fs[1] / (samplerate * 0.5)],
-            pass_zero=False,
-        )
-        band_noise = lfilter(band_pass, 1, white_noise)
-        s1 = band_noise[samplerate : int(samplerate * (duration + 1))]
-        return s1  # use np.zeros(s1.size) to get equal-size empty vec.
-    else:
-        raise ValueError("whiteNoiseGen needs (float, int, int, num,) as arguments")
+    time = np.linspace(0, duration, int(samplerate * duration))
+    # If no frequency specified, return zero array
+    if frequency == 0:
+        return np.zeros_like(time)
+    # Generate tone
+    tone = amplitude * np.sin(2 * np.pi * frequency * time)
+    # Calculate ramp points
+    sample_rate = 1 / (time[1] - time[0])
+    ramp_points = int(ramp_time * sample_rate)
+    # Create ramp arrays
+    if ramp_points > 0:
+        ramp_up = np.linspace(0, 1, ramp_points)
+        ramp_down = np.linspace(1, 0, ramp_points)
+        # Apply ramps
+        tone[:ramp_points] *= ramp_up
+        tone[-ramp_points:] *= ramp_down
+    return tone
 
 
-soundDevice = SoundDevice()
+def whitenoise_generator(
+    duration: float,
+    amplitude: float,
+    samplerate: int,
+) -> np.ndarray[Any, np.dtype[np.floating[Any]]]:
+    """
+    Generate white noise with ramping
+    Args:
+        duration (float): Duration (seconds)
+        amplitude (float): Noise amplitude
+        samplerate (int): Samplerate must match the sound device samplerate
+    """
+    noise = amplitude * np.random.uniform(-1, 1, int(samplerate * duration))
+    return noise
 
-input("soundDevice created")
 
-sound = whiteNoiseGen(0.5, 1000, 2000, 1)
+samplerate = 192000
 
-input("white noise created")
+# duration = 3
+# ramp = 0.005
+# amplitude = 0.01
+# frequency = 6000
 
-soundDevice.load(sound)
 
-input("sound loaded")
+sound_device = SoundDevice(samplerate=samplerate)
 
-soundDevice.playSound()
-
-input("sound played")
+# sound = tone_generator(duration, amplitude, frequency, ramp, samplerate)
+# # sound = whitenoise_generator(duration, amplitude, samplerate)
+# sound_device.load(sound)
+# sound_device.playSound()
+# import time
+# time.sleep(duration + 1)

@@ -69,6 +69,12 @@ of seconds prior to a detection.""",
         """Number of corridor videos stored. When the limit is reached, the oldest
 video is deleted each time a new video is recorded.""",
     ),
+    Setting(
+        "WEIGHT_THRESHOLD",
+        10.0,
+        float,
+        "The minimum weight in grams to consider that the animal is on the scale.",
+    ),
 ]
 
 sound_settings = [
@@ -404,6 +410,14 @@ extra_settings = [
         int,
         """If the alarm detection in area4 is triggered, the minimum time in seconds to
 wait before sending the same alarm again.""",
+    ),
+    Setting(
+        "WEIGHT_DEVIATION_RATIO",
+        0.25,
+        float,
+        """The standard deviation / mean ratio of the weight to consider it as correct.
+If the ratio is greater than this value, the weight is considered an outlier probably
+because the animal is moving or it is not completely on the scale.""",
     ),
 ]
 

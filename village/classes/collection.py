@@ -4,6 +4,7 @@ import traceback
 from pathlib import Path
 from typing import Any, Type, Union
 
+import numpy as np
 import pandas as pd
 
 from village.classes.protocols import EventProtocol
@@ -26,7 +27,7 @@ class Collection(EventProtocol):
                 columns_str: str = ";".join(self.columns) + "\n"
                 file.write(columns_str)
         try:
-            self.df = pd.read_csv(self.path, dtype=self.dict, na_filter=False, sep=";")
+            self.df = pd.read_csv(self.path, dtype=self.dict, sep=";")
         except Exception:
             log.error(
                 "error reading from: " + str(self.path),
@@ -35,7 +36,9 @@ class Collection(EventProtocol):
             sys.exit()
 
     def add_entry(self, entry: list) -> None:
-        entry_str = [str(e) for e in entry]
+        entry_str = [
+            "" if isinstance(e, float) and np.isnan(e) else str(e) for e in entry
+        ]
         new_row = pd.DataFrame([entry_str], columns=self.columns)
         new_row = self.convert_df_to_types(new_row)
         self.df = pd.concat([self.df, new_row], ignore_index=True)
@@ -64,15 +67,15 @@ class Collection(EventProtocol):
         return df
 
     def check_split_csv(self) -> None:
-        if len(self.df) > 110000:
-            first_100000: pd.DataFrame = self.df.head(100000)
+        if len(self.df) > 11000:
+            first_100000: pd.DataFrame = self.df.head(10000)
             date_str: str = time_utils.now_string_for_filename()
             new_filename: str = self.name + "_" + date_str + ".csv"
             directory: str = settings.get("DATA_DIRECTORY")
             new_path: str = os.path.join(directory, new_filename)
             first_100000.to_csv(new_path, index=False, sep=";")
 
-            last: pd.DataFrame = self.df.tail(len(self.df) - 100000)
+            last: pd.DataFrame = self.df.tail(len(self.df) - 10000)
             last.to_csv(self.path, index=False, sep=";")
 
             self.df = last
@@ -88,6 +91,12 @@ class Collection(EventProtocol):
         if not column_df.empty:
             return column_df.iloc[0]
         return None
+
+    def change_last_entry(self, column: str, value: Any) -> None:
+        last_entry = self.df.iloc[-1]
+        last_entry[column] = value
+        self.df.iloc[-1] = last_entry
+        self.save_from_df(Training())
 
     def log(self, date: str, type: str, subject: str, description: str) -> None:
         if self.columns == ["date", "type", "subject", "description"]:

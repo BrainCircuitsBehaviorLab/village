@@ -2,7 +2,7 @@ import re
 import socket
 import time
 import traceback
-from typing import Any
+from typing import Any, Callable
 
 from village.classes.protocols import PyBpodProtocol
 from village.log import log
@@ -19,7 +19,7 @@ class Softcode:
         self.client_socket.settimeout(1.0)
         self.address = ("127.0.0.1", address)
 
-    def send(self, idx) -> None:
+    def send(self, idx: int) -> None:
         """Send the softcode to the port idx"""
         str_message = "SoftCode" + str(idx)
         message = str_message.encode("utf-8")
@@ -48,6 +48,7 @@ class PyBpod(PyBpodProtocol):
         self.session = self.bpod.session
         self.connected = True
         self.error = ""
+        self.functions: list[Callable] = []
 
     def add_state(
         self,
@@ -116,6 +117,9 @@ class PyBpod(PyBpodProtocol):
 
     def register_value(self, name: str, value: Any) -> None:
         self.bpod.register_value(name, value)
+
+    def send_softcode(self, idx: int) -> None:
+        self.softcode.send(idx)
 
     @staticmethod
     def parse_message_input(message: str | tuple[str, int]) -> tuple[str, int, int]:
@@ -291,13 +295,19 @@ class PyBpod(PyBpodProtocol):
             value=value,
         )
 
-    def reconnect(self) -> None:
+    def softcode_handler_function(self, data: int) -> None:
+        if 1 <= data <= 99:
+            self.functions[data]()
+
+    def reconnect(self, functions: list[Callable]) -> None:
         if not self.connected:
             self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
         self.softcode = Softcode()
         self.session = self.bpod.session
         self.connected = True
+        self.functions = functions
+        self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
 
     def clean(self) -> None:
         self.add_state(

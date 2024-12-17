@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
@@ -25,6 +26,8 @@ from village.gui.layout import Label, Layout, PushButton
 from village.log import log
 from village.manager import manager
 from village.settings import settings
+
+# from devices.bpod import bpod
 
 if TYPE_CHECKING:
     from village.devices.motor import Motor
@@ -291,7 +294,7 @@ class MonitorLayout(Layout):
             20,
             2,
             self.stop,
-            "",
+            "Stop a running task",
             "lightcoral",
         )
 
@@ -376,11 +379,18 @@ class MonitorLayout(Layout):
 
     def stop(self) -> None:
         if manager.state.can_stop_task():
-            manager.state = State.SAVE_MANUAL
-            self.update_gui()
+            if manager.state == State.RUN_MANUAL:
+                log.info("Task manually stopped.", subject=manager.subject.name)
+                manager.state = State.SAVE_MANUAL
+            else:
+                log.info(
+                    "Task manually stopped. Disconnectig RFID Reader.",
+                    subject=manager.subject.name,
+                )
+                manager.state = State.OPEN_DOOR2_STOP
         elif manager.state.can_go_to_wait():
             manager.state = State.WAIT
-            self.update_gui()
+        self.update_gui()
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
         manager.cycle = Cycle[value]
@@ -417,7 +427,7 @@ class MonitorLayout(Layout):
         if manager.state.can_stop_task():
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
-            self.stop_button.show()
+            self.stop_button.setEnabled(True)
         elif manager.state.can_go_to_wait():
             self.stop_button.setText("GO TO WAIT STATE")
             self.stop_button.setToolTip(
@@ -426,9 +436,11 @@ class MonitorLayout(Layout):
                 but there isn't, you can force going to the WAIT state.
                 """
             )
-            self.stop_button.show()
+            self.stop_button.setEnabled(True)
         else:
-            self.stop_button.hide()
+            self.stop_button.setText("STOP TASK")
+            self.stop_button.setToolTip("Stop a running task")
+            self.stop_button.setEnabled(False)
 
     def change_layout(self, auto: bool = False) -> bool:
         cam_corridor.stop_preview_window()
@@ -648,7 +660,7 @@ class PortsLayout(Layout):
                 0,
                 16,
                 2,
-                self.led_clicked,
+                partial(self.led_clicked, i + 1),
                 "Light the LED" + str(i),
             )
             self.buttons.append(button1)
@@ -659,16 +671,16 @@ class PortsLayout(Layout):
                 18,
                 16,
                 2,
-                self.water_clicked,
+                partial(self.water_clicked, i + 1),
                 "Deliver water for 0.1 seconds" + str(i),
             )
             self.buttons.append(button2)
 
-    def led_clicked(self) -> None:
-        print("LED clicked")
+    def led_clicked(self, i=0) -> None:
+        print("LED clicked " + str(i))
 
-    def water_clicked(self) -> None:
-        print("water clicked")
+    def water_clicked(self, i=0) -> None:
+        print("water clicked " + str(i))
 
 
 class FunctionsLayout(Layout):
@@ -694,7 +706,10 @@ class FunctionsLayout(Layout):
             self.buttons.append(button)
 
     def function_clicked(self, i=0) -> None:
-        print("function clicked " + str(i))
+        try:
+            manager.functions[i]()
+        except Exception:
+            log.error("Can not run function" + str(i), exception=traceback.format_exc())
 
 
 class CorridorLayout(Layout):

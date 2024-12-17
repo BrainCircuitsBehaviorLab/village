@@ -10,8 +10,8 @@
 # settings (no dependencies)
 # time_utils (no dependencies)
 # log (depens on time_utils in init and later
-#       it depens on data for the events and telegram_bot for the alarms)
-# data (depends on settings, time_utils and log)
+#       it depens on manager for the events and telegram_bot for the alarms)
+# manager (depends on settings, time_utils and log)
 #   contains subject, task,
 #   subjects, events, sessions_summary, water_calibration, sound_calibration
 # DEVICES WE CAN IMPORT IN ANY FILE (depend on settings and utils)
@@ -27,36 +27,10 @@
 # temp_sensor
 
 
-# When launching the application the following processes are executed:
-# 1. start importing data from village.data.py
-#       this causes the import of settings and time_utils
-# 2. import settings from village.settings.py
-#       if they don't exist they are automatically created from factory settings
-#       the extra settings are read from the code every time the application is launched
-# 3. import time_utils from village.time_utils.py
-# 4. continue importing data
-#       read the path setting for the project directory
-#       if the directory doesn't exist create it and its subdirectories
-# 5. continue importing data
-#       read the data from project directory (events, sessions_summary,
-#       subjects, water_calibration, sound_calibration)
-#       if the files don't exist create them
-# 6. continue importing data
-#       if the project directory is the demo directory and the code is empty,
-#       download the code from the github repository
-# 7. continue importing datadata.rfid_reader
-#       set the logprotocol to the events collection
-# 8. continue importing data
-#       log that the village has started
-# 9. try import bpod from village.devices.bpod.py and log the result
-# 10. try to import cam_corridor and cam_box from village.devices.camera.py and
-#       log the result
-# 11. assign the bpod to the task in data
-# 12. import all tasks from the code directory and log the result
-
-
 import threading
 import time
+
+from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
 from village.devices.bpod import bpod
@@ -69,6 +43,7 @@ from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
 from village.log import log
 from village.manager import manager
+from village.settings import settings
 
 # init
 manager.task.bpod = bpod
@@ -91,7 +66,7 @@ else:
 
 
 # create a secondary thread
-def system_run() -> None:
+def system_run(bevavior_window: QWidget) -> None:
 
     i = 0
     id = ""
@@ -103,8 +78,10 @@ def system_run() -> None:
         i += 1
         time.sleep(0.01)
 
-        if i == 20000:
-            log.alarm("Alarma de prueba", subject="RAFA")
+        if i == 2000:
+            bpod.send_softcode(1)
+        #     log.alarm("Alarma de prueba", subject="RAFA")
+        #     behavior_window.toggle_animation()
 
         if i % 60000 == 0:
             log.info("counter: " + str(i) + " textos de prueba")
@@ -118,12 +95,13 @@ def system_run() -> None:
                 # All subjects are at home, waiting for RFID detection
                 id, multiple = rfid.get_id()
                 if id != "":
+                    log.info("Tag detected: " + id)
                     manager.state = State.DETECTION
             case State.DETECTION:
                 # Gathering subject data, checking requirements to enter
                 if (
                     manager.get_subject_from_tag(id)
-                    and manager.subject.create_from_subject_series()
+                    and manager.subject.create_from_subject_series(auto=True)
                     and manager.subject.minimum_time_ok()
                     and cam_corridor.areas_corridor_ok()
                     and not manager.multiple_detections(multiple)
@@ -149,90 +127,121 @@ def system_run() -> None:
             case State.RUN_FIRST:
                 # Task running, waiting for the corridor to become empty"
                 id, multiple = rfid.get_id()
-                if id == manager.subject.tag:
-                    log.info(
-                        "Subject not allowed to leave. Task has not started yet",
-                        subject=manager.subject.name,
-                    )
-                elif id != "":
+                if id != manager.subject.tag and id != "":
                     log.alarm(
-                        """Another subject detected while main subject is in the box.
+                        """Wrong RFID detection.
+                        Another subject detected while main subject is in the box.
                         Disconnecting RFID reader.""",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
-                if (
-                    manager.task.current_trial
-                    >= manager.task.settings.maximum_number_of_trials
-                    or manager.task.chrono.get_seconds()
-                    >= manager.task.settings.maximum_duration
-                    or manager.task.force_stop
+                elif (
+                    manager.task.chrono.get_seconds()
+                    >= manager.task.settings.minimum_duration
                 ):
+                    log.alarm(
+                        """Minimum time reached and areas 3 or 4 were never empty.
+                              Disconnecting RFID reader.""",
+                        subject=manager.subject.name,
+                    )
                     manager.state = State.OPEN_DOOR2_STOP
+
+                elif cam_corridor.area_3_empty() and cam_corridor.area_4_empty():
+                    manager.state = State.CLOSE_DOOR2
 
             case State.CLOSE_DOOR2:
                 # Closing door2
-                if cam_corridor.area_3_empty():
-                    motor2.close()
-                    manager.state = State.RUN_CLOSED
-                else:
-                    pass
+                motor2.close()
+                manager.state = State.RUN_CLOSED
 
             case State.RUN_CLOSED:
                 # Task running, the subject cannot leave yet
                 id, multiple = rfid.get_id()
-                if id == manager.subject.tag:
-                    log.info(
-                        "Subject not allowed to leave. Task has not started yet",
-                        subject=manager.subject.name,
-                    )
-                elif id != "":
+                if id != "":
                     log.alarm(
-                        """Another subject detected in the corridor while
-                        main subject is in the box.
+                        """Wrong RFID detection. Subject detected in the corridor while
+                        main subject should be in the box.
                         """,
                         subject=manager.subject.name,
                     )
-                if (
-                    manager.task.current_trial
-                    >= manager.task.settings.maximum_number_of_trials
-                    or manager.task.chrono.get_seconds()
-                    >= manager.task.settings.maximum_duration
-                    or manager.task.force_stop
+                    manager.state = State.OPEN_DOOR2_STOP
+                elif (
+                    manager.task.chrono.get_seconds()
+                    >= manager.task.settings.minimum_duration
                 ):
+                    log.info(
+                        "Minimum time reached, subject can leave.",
+                        subject=manager.subject.name,
+                    )
                     manager.state = State.OPEN_DOOR2_STOP
 
             case State.OPEN_DOOR2:
                 # Opening door2
-                pass
+                motor2.open()
+                manager.state = State.RUN_OPENED
 
             case State.RUN_OPENED:
                 # task running, the subject can leave
-                pass
+                id, multiple = rfid.get_id()
+                if id != "" and id != manager.subject.tag:
+                    log.alarm(
+                        """Wrong RFID detection.
+                        Another subject detected while main subject is in the box.
+                        Disconnecting RFID reader.""",
+                        subject=manager.subject.name,
+                    )
+                    manager.state = State.OPEN_DOOR2_STOP
+                elif (
+                    manager.task.chrono.get_seconds()
+                    >= manager.task.settings.maximum_duration
+                ):
+                    log.info(
+                        "Maximum time reached, stopping the task.",
+                        subject=manager.subject.name,
+                    )
+                    manager.state = State.SAVE_INSIDE
+                else:
+                    weight = scale.get_weight_subject()
+                    if weight > settings.get("WEIGHT_THRESHOLD"):
+                        log.info(
+                            "Weight detected " + str(weight) + " g",
+                            subject=manager.subject.name,
+                        )
+                        manager.weight = weight
+                        manager.state = State.EXIT_UNSAVED
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
-                pass
+                motor2.close()
+                motor1.open()
+                manager.state = State.SAVE_OUTSIDE
 
             case State.SAVE_OUTSIDE:
                 # Stopping the task, saving the data; the subject is already outside
-                manager.task.disconnect_and_save()
-                manager.reset_subject_task_training()
+                manager.disconnect_and_save()
                 manager.state = State.WAIT
 
             case State.SAVE_INSIDE:
                 # Stopping the task, saving the data; the subject is still inside
-                manager.task.disconnect_and_save()
-                manager.reset_subject_task_training()
+                manager.disconnect_and_save()
                 manager.state = State.WAIT_EXIT
 
             case State.WAIT_EXIT:
                 # Task finished, waiting for the subject to leave
-                pass
+                weight = scale.get_weight_subject()
+                if weight > settings.get("WEIGHT_THRESHOLD"):
+                    log.info(
+                        "Weight detected " + str(weight) + " g",
+                        subject=manager.subject.name,
+                    )
+                    manager.sessions_summary.change_last_entry("weight", weight)
+                    manager.state = State.EXIT_SAVED
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
-                pass
+                motor2.close()
+                motor1.open()
+                manager.state = State.WAIT
 
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
@@ -255,18 +264,15 @@ def system_run() -> None:
             case State.RUN_MANUAL:
                 # Task running manually
                 if (
-                    manager.task.current_trial
-                    >= manager.task.settings.maximum_number_of_trials
+                    manager.task.current_trial >= manager.task.manual_number_of_trials
                     or manager.task.chrono.get_seconds()
                     >= manager.task.settings.maximum_duration
-                    or manager.task.force_stop
                 ):
                     manager.state = State.SAVE_MANUAL
 
             case State.SAVE_MANUAL:
                 # Stopping the task, saving the data; the task was manually stopped
-                manager.task.disconnect_and_save()
-                manager.reset_subject_task_training()
+                manager.disconnect_and_save()
                 manager.state = State.WAIT
 
             case State.EXIT_GUI:
@@ -274,9 +280,13 @@ def system_run() -> None:
                 pass
 
 
+# create the GUI that will run in the main thread
+gui = Gui()
+behavior_window = gui.behavior_window
+
 # start the secondary thread (control of the system)
-system_state = threading.Thread(target=system_run, daemon=True)
+system_state = threading.Thread(target=system_run, args=(behavior_window,), daemon=True)
 system_state.start()
 
-# start the primary thread (GUI)
-gui = Gui()
+# start the GUI
+gui.q_app.exec()

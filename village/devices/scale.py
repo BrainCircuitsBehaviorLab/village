@@ -5,13 +5,13 @@ https://github.com/DFRobot/DFRobot_HX711_I2C
 
 import time
 import traceback
-from typing import Any
 
 import smbus2
 
 from village.classes.protocols import ScaleProtocol
 from village.log import log
 from village.settings import settings
+from village.time_utils import time_utils
 
 
 class Scale(ScaleProtocol):
@@ -21,7 +21,8 @@ class Scale(ScaleProtocol):
         self.REG_DATA_GET_RAM_DATA = 0x66  # Get sensor raw data
         self.rxbuf = [0, 0, 0, 0]
         self.bus = 1
-        self.calibration = settings.get("SCALE_CALIBRATION_VALUE")
+        self.calibration: float = settings.get("SCALE_CALIBRATION_VALUE")
+        self.ratio: float = settings.get("WEIGHT_DEVIATION_RATIO")
         self.offset = 0.0
         self.i2cbus = smbus2.SMBus(self.bus)
         self.error = ""
@@ -29,22 +30,41 @@ class Scale(ScaleProtocol):
 
     # @time_utils.measure_time
     def tare(self) -> None:
-        self.offset = self.average(5)
+        try:
+            self.offset = self.average(5)[0]
+        except Exception:
+            log.error("Error taring scale", exception=traceback.format_exc())
 
     def calibrate(self, weight: float) -> None:
-        raw_value = self.get_weight() * self.calibration
-        new_calibration = raw_value / weight
-        self.calibration = new_calibration
-        settings.set("SCALE_CALIBRATION_VALUE", new_calibration)
-
-    # @time_utils.measure_time
-    def get_weight(self) -> Any | float:
-        value = self.average(1)
-        return abs((value - self.offset) / self.calibration)
+        try:
+            raw_value: float = self.get_weight() * self.calibration
+            if raw_value < 0.01:
+                log.error("Error calibrating scale", exception=traceback.format_exc())
+                return
+            new_calibration = raw_value / weight
+            self.calibration = new_calibration
+            settings.set("SCALE_CALIBRATION_VALUE", new_calibration)
+        except Exception:
+            log.error("Error calibrating scale", exception=traceback.format_exc())
 
     def get_weight_string(self) -> str:
         weight = self.get_weight()
         return "{:.2f} g".format(weight)
+
+    def get_weight_subject(self) -> float:
+        return 0.0
+
+    @time_utils.measure_time
+    def get_weight(self) -> float:
+        try:
+            value, correct = self.average(5)
+            if correct:
+                return abs((value - self.offset) / self.calibration)
+            else:
+                return 0.0
+        except Exception:
+            log.error("Error getting weight", exception=traceback.format_exc())
+            return 0.0
 
     def get_value(self) -> int:
         data = self.read_reg(self.REG_DATA_GET_RAM_DATA, 4)
@@ -57,23 +77,22 @@ class Scale(ScaleProtocol):
             return 0
         return value ^ 0x800000
 
-    def average(self, times) -> Any | float:
-        sum = 0
+    def average(self, times: int) -> tuple[float, bool]:
+        weights: list[float] = []
         for i in range(times):
-            data = self.get_value()
-            if data == 0:
-                times = times - 1
-            else:
-                sum = sum + data
-        if times == 0:
-            times = 1
-        return float(sum) / times
+            weights.append(self.get_value())
+        weights = [x for x in weights if x != 0]
+        average = sum(weights) / len(weights)
+        variance = sum([((x - average) ** 2) for x in weights]) / len(weights)
+        sd: float = variance**0.5
+        correct = (sd / average) < self.ratio
+        return average, correct
 
-    def read_reg(self, reg, len) -> list[int]:
+    def read_reg(self, reg: int, len: int) -> list[int]:
         self.i2cbus.write_byte(self.I2C_ADDR, reg)
-        time.sleep(0.03)
+        time.sleep(0.1)
         for i in range(len):
-            time.sleep(0.03)
+            time.sleep(0.1)
             self.rxbuf[i] = self.i2cbus.read_byte(self.I2C_ADDR)
         return self.rxbuf
 

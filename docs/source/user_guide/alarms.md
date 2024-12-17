@@ -10,6 +10,7 @@ All commands start with the / symbol:
 - `/report ‘hours days’`: Combines status, cam, and plot into a single report.
 
 
+
 ### Alarms
 The system is designed to cover every potential scenario, resulting in an extensive list of alarms. While many of these alarms may never be triggered, some could only appear once every few months.
 
@@ -58,7 +59,7 @@ Warnings are listed in order of severity, from least to most critical:
 
 - `Error Launching Task`: A problem in the task code prevents it from starting. The task is terminated, and the RFID reader is disabled.
 
-#### Checks Performed While the Task is Running
+#### Checks Performed While the Task is Running
 
 - `Error Running Task`: An issue occurred during task execution, likely due to an error in the task code. The task is terminated, and the RFID reader is disabled.
 

@@ -5,7 +5,6 @@
 #     def __init__(self) -> None:
 #         super().__init__()
 
-#         self.maximum_number_of_trials = 0  # 0 means infinite (the task finishes)
 #         self.minimum_duration = 3  # in seconds (door2 opens, animal can leave)
 #         self.maximum_duration = 6  # in seconds (the task finishes)
 
@@ -208,7 +207,7 @@
 # from village.devices.bpod import bpod
 
 # # Ejemplos de uso input:
-# print(bpod.parse_message_input("_Tup"))
+# print(bpod.parse_message_input("Tup"))
 # print(bpod.parse_message_input("Port1In"))
 # print(bpod.parse_message_input("Port2Out"))
 # print(bpod.parse_message_input("PA1_Port1In"))
@@ -221,10 +220,10 @@
 # print(bpod.parse_message_input("Serial3_12"))
 # print(bpod.parse_message_input("SoftCode1"))
 # print(bpod.parse_message_input("SoftCode34"))
-# print(bpod.parse_message_input("_GlobalTimer1_Start"))
-# print(bpod.parse_message_input("_GlobalTimer2_End"))
-# print(bpod.parse_message_input("_GlobalCounter3_End"))
-# print(bpod.parse_message_input("_Condition1"))
+# print(bpod.parse_message_input("GlobalTimer1Start"))
+# print(bpod.parse_message_input("GlobalTimer2End"))
+# print(bpod.parse_message_input("GlobalCounter3End"))
+# print(bpod.parse_message_input("Condition1"))
 
 
 # # output
@@ -233,18 +232,18 @@
 # print(bpod.parse_message_output(("PWM2", 3)))
 # print(bpod.parse_message_output(("PWM2", 103)))
 # print(bpod.parse_message_output(("PWM1", 26)))
-# print(bpod.parse_message_output(("Valve", 4)))
-# print(bpod.parse_message_output(("BNC1", 3)))
-# print(bpod.parse_message_output(("BNC2", 0)))
-# print(bpod.parse_message_output(("Wire1", 3)))
-# print(bpod.parse_message_output(("Wire2", 0)))
+# print(bpod.parse_message_output("Valve4"))
+# print(bpod.parse_message_output("BNC1High"))
+# print(bpod.parse_message_output("BNC2Low"))
+# print(bpod.parse_message_output("Wire1High"))
+# print(bpod.parse_message_output("Wire2Low"))
 # print(bpod.parse_message_output(("Serial4", 3)))
 # print(bpod.parse_message_output(("Serial2", 31)))
-# print(bpod.parse_message_output(("SoftCode", 23)))
-# print(bpod.parse_message_output(("SoftCode", 5)))
-# print(bpod.parse_message_output(("_GlobalTimerTrig", 1)))
-# print(bpod.parse_message_output(("_GlobalTimerCancel", 2)))
-# print(bpod.parse_message_output(("_GlobalCounterReset", 3)))
+# print(bpod.parse_message_output("SoftCode23"))
+# print(bpod.parse_message_output("SoftCode5"))
+# print(bpod.parse_message_output("GlobalTimer1Trig"))
+# print(bpod.parse_message_output("GlobalTimer2Cancel"))
+# print(bpod.parse_message_output("GlobalCounter3Reset"))
 
 
 # bpod.add_state(
@@ -374,21 +373,49 @@
 # print(columns_to_drop)
 
 
-import serial
+# import serial
 
-# 110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400,
-# 57600, 115200, 128000 and 256000
+# # 110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400,
+# # 57600, 115200, 128000 and 256000
 
-# baudrate = 57600 #
-# siempre busy
+# # baudrate = 57600 #
+# # siempre busy
 
-baudrate = 4000000  # se cuelga
 
-#
-# audrate = 9600  # se cuelga
+# baudrate = 115200
 
-serial_object = serial.Serial("/dev/Bpod", baudrate=baudrate, timeout=1)
+# serial_object = serial.Serial("/dev/Bpod", baudrate=baudrate, timeout=1)
 
-print("OK")
+# print("OK")
 
-input("press")
+# input("press")
+
+
+# from village.pybpodapi.protocol import Bpod, StateMachine
+
+# bpod = Bpod()
+
+# input("ok")
+# import numpy as np
+# import pandas as pd
+
+# entry = ["hola", 3, 5, np.nan, "hjdkl", [3, 2, 5], ["a", "b"]]
+# entry_str = ["" if isinstance(e, float) and np.isnan(e) else str(e) for e in entry]
+
+# print(entry_str)
+
+
+# my_dict = {
+#     "date": str,
+#     "subject": str,
+#     "tag": str,
+#     "weight": float,
+#     "task": str,
+#     "duration": float,
+#     "trials": int,
+#     "water": float,
+#     "settings": str,
+# }
+
+
+# df = pd.read_csv("data.csv", dtype=my_dict, na_filter=False, sep=";")

@@ -1,4 +1,5 @@
 import importlib
+import importlib.util
 import inspect
 import os
 import subprocess
@@ -6,12 +7,16 @@ import sys
 import traceback
 from pathlib import Path
 from threading import Thread
+from typing import Callable
 
+import numpy as np
+import pandas as pd
 import sounddevice as sd
 from PyQt5.QtWidgets import QLayout
 
 from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
+from village.classes.plot import SessionPlot, SubjectPlot
 from village.classes.subject import Subject
 from village.classes.task import Task
 from village.classes.training import Training
@@ -54,6 +59,8 @@ class Manager:
         self.subject = Subject()
         self.task = Task()
         self.training: Training = Training()
+        self.subject_plot: SubjectPlot = SubjectPlot()
+        self.session_plot: SessionPlot = SessionPlot()
         self.state: State = State.WAIT
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
@@ -64,9 +71,17 @@ class Manager:
         self.text: str = ""
         self.old_text: str = ""
         self.day: bool = True
+        self.weight: float = np.nan
         self.changing_settings: bool = False
         self.tasks: dict[str, type] = dict()
         self.errors: str = ""
+        self.functions: list[Callable] = [lambda: None for _ in range(99)]
+        self.session_df = pd.DataFrame()
+        self.old_session_df = pd.DataFrame()
+        self.old_session_raw_df = pd.DataFrame()
+        self.rt_session_path = str(
+            Path(settings.get("SESSIONS_DIRECTORY"), "session.csv")
+        )
 
         self.update_cycle()
         self.create_directories()
@@ -188,11 +203,33 @@ class Manager:
         python_files: list[str] = []
         tasks = dict()
         training_found = 0
+        session_plot_found = 0
+        subject_plot_found = 0
+        functions_path = ""
 
         for root, dirs, files in os.walk(directory):
             for file in files:
+                if file == "functions.py":
+                    functions_path = os.path.join(root, file)
                 if file.endswith(".py"):
                     python_files.append(os.path.join(root, file))
+
+        if os.path.exists(functions_path):
+            module_name = "custom_module"
+            spec = importlib.util.spec_from_file_location(module_name, functions_path)
+            if spec and spec.loader:
+                module = importlib.util.module_from_spec(spec)
+                try:
+                    spec.loader.exec_module(module)
+                    for i in range(1, 100):
+                        func_name = f"function{i}"
+                        if hasattr(module, func_name):
+                            self.functions[i] = getattr(module, func_name)
+                except Exception:
+                    log.error(
+                        "Couldn't import user functions",
+                        exception=traceback.format_exc(),
+                    )
 
         for python_file in python_files:
             relative_path = os.path.relpath(python_file, directory)
@@ -207,11 +244,21 @@ class Manager:
                         if name not in tasks:
                             tasks[name] = cls
                     elif issubclass(cls, Training) and cls != Training:
-                        if training_found == 0:
-                            training_found += 1
+                        training_found += 1
+                        if training_found == 1:
                             t = cls()
                             t.copy_settings()
                             self.training = t
+                    elif issubclass(cls, SessionPlot) and cls != SessionPlot:
+                        session_plot_found += 1
+                        if session_plot_found == 1:
+                            p = cls()
+                            self.session_plot = p
+                    elif issubclass(cls, SubjectPlot) and cls != SubjectPlot:
+                        subject_plot_found += 1
+                        if subject_plot_found == 1:
+                            s = cls()
+                            self.subject_plot = s
             except Exception:
                 log.error(
                     "Couldn't import " + module_name, exception=traceback.format_exc()
@@ -223,7 +270,18 @@ class Manager:
             log.info("Training protocol successfully imported")
         else:
             log.error("Multiple training protocols found")
-        # self.tasks = tasks
+        if session_plot_found == 0:
+            log.error("Session plot not found")
+        elif session_plot_found == 1:
+            log.info("Session plot successfully imported")
+        else:
+            log.error("Multiple session plots found")
+        if subject_plot_found == 0:
+            log.error("Subject plot not found")
+        elif subject_plot_found == 1:
+            log.info("Subject plot successfully imported")
+        else:
+            log.error("Multiple subject plots found")
         self.tasks = dict(sorted(tasks.items()))
         number_of_tasks = len(tasks)
         if number_of_tasks == 1:
@@ -235,7 +293,7 @@ class Manager:
         subject_series = self.subjects.get_last_entry(column="tag", value=tag)
 
         if subject_series is None:
-            log.error("subject with tag: " + tag + " not found")
+            log.error("Subject with tag: " + tag + " not found")
             return False
         else:
             self.subject.subject_series = subject_series
@@ -332,6 +390,8 @@ class Manager:
 
     def launch_task_manual(self) -> bool:
         try:
+            self.weight = np.nan
+            log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
         except Exception:
@@ -344,12 +404,15 @@ class Manager:
 
     def launch_task_auto(self) -> bool:
         try:
+            self.weight = np.nan
             self.training.load_settings_from_jsonstring(self.subject.next_settings)
             task_name = self.training.settings.next_task
             cls = self.tasks.get(task_name)
             if cls is None:
                 log.alarm(
-                    "Error launching task " + task_name + " not found",
+                    "Error launching task: "
+                    + task_name
+                    + " not found. Disconnecting RFID Reader.",
                     subject=self.subject.name,
                 )
                 return False
@@ -357,6 +420,7 @@ class Manager:
                 self.task = cls()
                 self.task.subject = self.subject.name
                 self.task.settings = self.training.settings
+                log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
             else:
@@ -379,6 +443,7 @@ class Manager:
 
     def run_task(self) -> None:
         try:
+            self.task.bpod.reconnect(self.functions)
             self.task.run()
         except Exception:
             if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:
@@ -409,6 +474,42 @@ class Manager:
         self.task = Task()
         self.subject = Subject()
         self.training.restore()
+
+    def update_session_df(self) -> pd.DataFrame:
+        try:
+            self.session_df = pd.read_csv(self.rt_session_path, sep=";")
+        except Exception:
+            self.session_df = pd.DataFrame()
+        return self.session_df
+
+    def get_both_sessions_dfs(self) -> list[pd.DataFrame]:
+        df = self.update_session_df()
+        df2 = self.task.transform(df)
+        return [df, df2]
+
+    def disconnect_and_save(self) -> None:
+        save, duration, trials, water = self.task.disconnect_and_save()
+        if save:
+            self.save_to_sessions_summary(duration, trials, water)
+        self.reset_subject_task_training()
+
+    def save_to_sessions_summary(
+        self, duration: float, trials: int, water: int
+    ) -> None:
+
+        self.sessions_summary.add_entry(
+            [
+                self.task.date,
+                self.subject.name,
+                self.subject.tag,
+                self.weight,
+                self.task.name,
+                duration,
+                trials,
+                water,
+                self.training.get_jsonstring(),
+            ]
+        )
 
 
 manager = Manager()

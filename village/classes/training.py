@@ -11,7 +11,6 @@ class Settings:
     def __init__(self) -> None:
         self.next_task = "-1"
         self.refractary_period = -1
-        self.maximum_number_of_trials: int = -1
         self.minimum_duration: float = -1
         self.maximum_duration: float = -1
 
@@ -23,11 +22,6 @@ class Training:
 
     def check_variables(self) -> None:
         self.settings.refractary_period = int(self.settings.refractary_period)
-        self.settings.maximum_number_of_trials = int(
-            self.settings.maximum_number_of_trials
-        )
-        if self.settings.maximum_number_of_trials == 0:
-            self.settings.maximum_number_of_trials = 1000000
         self.settings.minimum_duration = float(self.settings.minimum_duration)
         self.settings.maximum_duration = float(self.settings.maximum_duration)
         if self.settings.next_task == "-1":
@@ -37,11 +31,6 @@ class Training:
                 """
                 The variable refractary_period is required (must be a positive integer)
                 """
-            )
-        if self.settings.maximum_number_of_trials < 0:
-            raise TrainingError(
-                """The variable maximum_number_of_trials is required
-                (must be a positive integer or zero for infinite trials)"""
             )
         if self.settings.minimum_duration < 0:
             raise TrainingError(
@@ -71,7 +60,6 @@ class Training:
             "next_task",
             "minimum_duration",
             "maximum_duration",
-            "maximum_number_of_trials",
             "refractary_period",
         ]
         extra_properties = [
@@ -81,6 +69,14 @@ class Training:
         ]
         properties = default_properties + extra_properties
         return properties
+
+    # def get_types(self) -> dict[str, Any]:
+    #     types = {}
+    #     for name in self.get_settings_names():
+    #         if hasattr(self.settings, name):
+    #             value = getattr(self.settings, name)
+    #             types[name] = type(value)
+    #     return types
 
     def get_dict(self) -> dict[str, Any]:
         properties = {}
@@ -102,6 +98,7 @@ class Training:
         return json.dumps(self.get_dict())
 
     def load_settings_from_dict(self, current_dict: dict[str, Any]) -> None:
+        current_dict = self.correct_types_in_dict(current_dict)
         for key, value in self.get_default_dict().items():
             if key in current_dict:
                 setattr(self.settings, key, current_dict[key])
@@ -133,3 +130,23 @@ class Training:
             if key in current_dict:
                 new_dict[key] = current_dict[key]
         return json.dumps(new_dict)
+
+    def correct_types_in_dict(self, current_dict: dict[str, Any]) -> dict[str, Any]:
+        default_dict: dict[str, Any] = self.get_default_dict()
+        for key, value in current_dict.items():
+            if key in default_dict:
+                try:
+                    if isinstance(default_dict[key], int):
+                        value = int(value)
+                    elif isinstance(default_dict[key], float):
+                        value = float(value)
+                    elif isinstance(default_dict[key], bool):
+                        value = value.lower() in ["true", "1", "yes"]
+                    elif isinstance(default_dict[key], list):
+                        value = eval(value) if value.startswith("[") else str(value)
+                    elif isinstance(default_dict[key], dict):
+                        value = eval(value) if value.startswith("{") else str(value)
+                except Exception:
+                    pass
+                current_dict[key] = value
+        return current_dict

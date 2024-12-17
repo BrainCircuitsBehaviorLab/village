@@ -321,6 +321,7 @@ class SettingsLayout(Layout):
             self.line_edits_settings.append(s)
         elif s.key == "SOUND_DEVICE":
             possible_values = manager.get_sound_devices()
+            print(possible_values)
             value = settings.get(s.key)
             index = possible_values.index(value) if value in possible_values else 0
             self.sound_device_combobox = self.create_and_add_combo_box(
@@ -509,3 +510,6 @@ class SettingsLayout(Layout):
 
     def create_project_directory(self, path) -> bool:
         return manager.create_directories_from_path(path)
+
+    def update_gui(self) -> None:
+        self.update_status_label()

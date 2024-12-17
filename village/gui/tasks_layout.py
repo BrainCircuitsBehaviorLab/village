@@ -188,9 +188,18 @@ class TasksLayout(Layout):
         remove_names = ["next_task", "minimum_duration", "refractary_period"]
         properties = {k: v for k, v in properties.items() if k not in remove_names}
 
+        self.create_label_and_value(
+            self.right_sub_layout,
+            row,
+            2,
+            "manual_number_of_trials",
+            str(manager.task.manual_number_of_trials),
+        )
+        row += 4
+
         for i, (k, v) in enumerate(properties.items()):
             self.create_label_and_value(self.right_sub_layout, row, 2, k, str(v))
-            if i == 1:
+            if i == 0:
                 row += 4
             else:
                 row += 2
@@ -202,7 +211,7 @@ class TasksLayout(Layout):
             manager.subject.subject_series = manager.subjects.get_last_entry(
                 "name", value
             )
-            if manager.subject.create_from_subject_series():
+            if manager.subject.create_from_subject_series(auto=False):
                 manager.task.subject = value
             if manager.subject.subject_series is not None:
                 try:
@@ -242,8 +251,9 @@ class TasksLayout(Layout):
         remove_names = ["next_task", "minimum_duration", "refractary_period"]
         properties = {k: v for k, v in properties.items() if k not in remove_names}
         new_dict = {}
+        manager.task.manual_number_of_trials = int(self.line_edits[0].text())
         for i, (k, v) in enumerate(properties.items()):
-            new_dict[k] = self.line_edits[i].text()
+            new_dict[k] = self.line_edits[i + 1].text()
         manager.training.load_settings_from_dict(new_dict)
 
     def update_gui(self) -> None:
