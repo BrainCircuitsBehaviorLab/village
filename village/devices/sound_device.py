@@ -36,7 +36,7 @@ class SoundDevice:
                 "Sound: The length of the vectors v1 and v2 has to be the same."
             )
         try:
-            self.stopSound()
+            self.stop()
         except AttributeError:
             pass
 
@@ -48,12 +48,12 @@ class SoundDevice:
         self.process = Process(target=self._play_sound_background, daemon=True)
         self.process.start()
 
-    def playSound(self) -> None:
+    def play(self) -> None:
         if self.sound.size == 0:
             raise ValueError("SoundR: No sound loaded. Please, use the method load().")
         self.playing.value = 1  # type: ignore
 
-    def stopSound(self) -> None:
+    def stop(self) -> None:
         try:
             if self.playing.value == 1:  # type: ignore
                 self.playing.value = 2  # type: ignore
@@ -151,6 +151,6 @@ sound_device = SoundDevice(samplerate=samplerate)
 # sound = tone_generator(duration, amplitude, frequency, ramp, samplerate)
 # # sound = whitenoise_generator(duration, amplitude, samplerate)
 # sound_device.load(sound)
-# sound_device.playSound()
+# sound_device.play()
 # import time
 # time.sleep(duration + 1)
