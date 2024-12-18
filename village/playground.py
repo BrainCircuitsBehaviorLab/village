@@ -419,3 +419,23 @@
 
 
 # df = pd.read_csv("data.csv", dtype=my_dict, na_filter=False, sep=";")
+
+
+# from time import sleep
+
+# from picamera2 import Picamera2, Preview
+
+# if __name__ == "__main__":
+#     cam = Picamera2(1)
+#     cam.start_preview(Preview.QT)
+#     #show the video in the screen
+#     print("Press any key to stop the video")
+#     # cam.start_recording("video.h264")
+#     sleep(3)
+
+# %%
+import pandas as pd
+
+data = "/home/pi/village_projects/demo_project/data/sessions/test/test.csv"
+df = pd.read_csv(data, sep=";", na_filter=False)
+# %%
