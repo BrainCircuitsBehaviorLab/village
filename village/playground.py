@@ -433,9 +433,22 @@
 #     # cam.start_recording("video.h264")
 #     sleep(3)
 
-# %%
-import pandas as pd
+# # %%
+# import pandas as pd
 
-data = "/home/pi/village_projects/demo_project/data/sessions/test/test.csv"
-df = pd.read_csv(data, sep=";", na_filter=False)
+# data = "/home/pi/village_projects/demo_project/data/sessions/test/test.csv"
+# df = pd.read_csv(data, sep=";", na_filter=False)
+# # %%
+# import matplotlib.pyplot as plt
+# from matplotlib.figure import Figure
+
+
+# def create_plot(df: pd.DataFrame, df_raw: pd.DataFrame) -> Figure:
+#     fig, ax = plt.subplots(figsize=(10, 6))
+#     df.plot(kind="line", x="TRIAL_START", y="trial", ax=ax)
+#     ax.scatter(df["TRIAL_START"], df["trial"], color="red")
+#     return fig
+
+
+# fig = create_plot(df, df)
 # %%
