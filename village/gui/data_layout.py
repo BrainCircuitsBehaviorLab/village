@@ -438,9 +438,14 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.SESSION:
             try:
+                print("1")
                 dfs = manager.get_both_sessions_dfs()
+                print("2")
+                print(dfs)
                 figure = manager.session_plot.create_plot(dfs[0], dfs[1])
+                print("3")
                 pixmap = create_pixmap(figure)
+                print("4")
             except Exception:
                 log.error(
                     "Can not create session plot", exception=traceback.format_exc()
@@ -849,6 +854,7 @@ class DfLayout(Layout):
         if selected_row is not None:
             self.plot_change_requested.emit("")
         elif manager.table in [
+            DataTable.SESSION,
             DataTable.OLD_SESSION,
             DataTable.OLD_SESSION_RAW,
             DataTable.WATER_CALIBRATION,

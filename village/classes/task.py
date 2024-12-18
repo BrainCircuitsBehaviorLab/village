@@ -221,6 +221,8 @@ class Task:
 
             self.new_df = self.transform(self.df)
 
+            trials = self.new_df.shape[0]
+
             try:
                 water = int(self.new_df["water"].sum())
             except Exception:

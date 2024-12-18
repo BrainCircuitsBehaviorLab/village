@@ -215,6 +215,7 @@ class Camera(CameraProtocol):
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_record(self) -> None:
+        print("stopping encoder")
         self.cam.stop_encoder()
         self.is_recording = False
         self.save_csv()
