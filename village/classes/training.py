@@ -1,6 +1,8 @@
 import json
 from typing import Any
 
+import pandas as pd
+
 
 class TrainingError(Exception):
     def __init__(self, message) -> None:
@@ -19,6 +21,8 @@ class Training:
     def __init__(self) -> None:
         self.default_settings = Settings()
         self.settings = Settings()
+        self.subject = "None"
+        self.df: pd.DataFrame = pd.DataFrame()
 
     def check_variables(self) -> None:
         self.settings.refractary_period = int(self.settings.refractary_period)
@@ -150,3 +154,8 @@ class Training:
                     pass
                 current_dict[key] = value
         return current_dict
+
+    def get_string(self) -> str:
+        dict = self.get_dict()
+        new_dict = self.correct_types_in_dict(dict)
+        return json.dumps(new_dict)

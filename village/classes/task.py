@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from village.classes.protocols import CameraProtocol, PyBpodProtocol
-from village.classes.training import Settings
+from village.classes.training import Settings, Training
 from village.devices.bpod import bpod
 from village.log import log
 from village.pybpodapi.bpod.hardware.events import EventName
@@ -56,6 +56,7 @@ class Task:
         self.subject_path: str = ""
         self.rt_session_path: str = ""
         self.settings: Settings = Settings()
+        self.training: Training = Training()
         self.trial_data: dict = {}
 
         self.process = Thread()
@@ -91,7 +92,7 @@ class Task:
         def test_run():
             self.create_paths()
             self.start()
-            while self.current_trial < self.manual_number_of_trials:
+            while self.current_trial <= self.manual_number_of_trials:
                 self.bpod.create_state_machine()
                 self.create_trial()
                 self.bpod.send_and_run_state_machine()
@@ -111,7 +112,7 @@ class Task:
             self.cam_box.start_record(self.video_path, self.video_data_path)
         self.start()
         while (
-            self.current_trial < self.manual_number_of_trials
+            self.current_trial <= self.manual_number_of_trials
             and self.chrono.get_seconds() < self.settings.maximum_duration
             and not self.force_stop
         ):
@@ -154,10 +155,13 @@ class Task:
         # TODO kill the screen
         if self.subject != "None":
             try:
+                self.cam_box.stop_record()
                 duration, trials, water = self.save_csv()
                 self.save_json()
-                self.cam_box.stop_record()
-                # TODO update training
+                self.training.df = self.df_all
+                self.training.subject = self.subject
+                self.training.settings = self.settings
+                self.training.update_training_settings()
                 save = True
             except Exception:
                 log.alarm(

@@ -41,7 +41,6 @@ class Manager:
         actions (Actions): Actions settings.
         cycle_text (str): Text representation of the current cycle.
         text (str): Current system text.
-        old_text (str): Previous system text.
         day (bool): Indicates if it's day.
         changing_settings (bool): Indicates if settings are being changed.
         tasks (dict[str, type]): Dictionary of tasks.
@@ -69,7 +68,6 @@ class Manager:
         self.actions: Actions = settings.get("ACTIONS")
         self.cycle_text: str = ""
         self.text: str = ""
-        self.old_text: str = ""
         self.day: bool = True
         self.weight: float = np.nan
         self.changing_settings: bool = False
@@ -331,7 +329,7 @@ class Manager:
                         self.cycle_text = "AUTO (NIGHT)"
                         self.day = False
 
-    def update_text(self) -> bool:
+    def update_text(self) -> None:
         state_name = self.state.name
         state_description = self.state.description
         subject_name = self.subject.name
@@ -357,10 +355,6 @@ class Manager:
             + "CYCLE: "
             + cycle_text
         )
-
-        value = self.text != self.old_text
-        self.old_text = self.text
-        return value
 
     def multiple_detections(self, multiple: bool) -> bool:
         if multiple:
@@ -420,6 +414,7 @@ class Manager:
                 self.task = cls()
                 self.task.subject = self.subject.name
                 self.task.settings = self.training.settings
+                self.task.training = self.training
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True

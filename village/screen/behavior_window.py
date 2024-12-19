@@ -47,7 +47,6 @@ class BehaviorWindow(QWidget):
         event.ignore()
 
     def toggle_animation(self) -> None:
-        print("Toggling animation")
         self.animation_running = not self.animation_running
 
     def animate(self) -> None:

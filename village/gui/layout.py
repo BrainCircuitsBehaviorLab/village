@@ -17,7 +17,6 @@ from PyQt5.QtWidgets import (
     QTimeEdit,
 )
 
-from village.devices.camera import cam_box, cam_corridor
 from village.manager import manager
 from village.settings import settings
 
@@ -193,7 +192,7 @@ class Layout(QGridLayout):
     def create_common_elements(self) -> None:
         self.status_label = self.create_and_add_label("", 2, 0, 212, 2, "black")
         self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-        self.update_status_label(force=True)
+        self.update_status_label()
         self.exit_button = self.create_and_add_button(
             "EXIT",
             0,
@@ -242,12 +241,10 @@ class Layout(QGridLayout):
             "Go to the setting menu",
         )
 
-    def update_status_label(self, force=False) -> None:
+    def update_status_label(self) -> None:
         manager.update_cycle()
-        if manager.update_text() or force:
-            self.status_label.setText(manager.text)
-            cam_box.change = True
-            cam_corridor.change = True
+        manager.update_text()
+        self.status_label.setText(manager.text)
 
     def exit_button_clicked(self) -> None:
         if manager.state.can_exit():

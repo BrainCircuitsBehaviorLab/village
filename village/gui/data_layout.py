@@ -12,6 +12,7 @@ from pandas import DataFrame
 from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, QTimer, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import (
+    QAbstractScrollArea,
     QCheckBox,
     QDateTimeEdit,
     QDialog,
@@ -438,14 +439,9 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.SESSION:
             try:
-                print("1")
                 dfs = manager.get_both_sessions_dfs()
-                print("2")
-                print(dfs)
                 figure = manager.session_plot.create_plot(dfs[0], dfs[1])
-                print("3")
                 pixmap = create_pixmap(figure)
-                print("4")
             except Exception:
                 log.error(
                     "Can not create session plot", exception=traceback.format_exc()
@@ -587,9 +583,14 @@ class DfLayout(Layout):
     ) -> Table:
 
         model = Table(df, self, editable)
-        model.table_view.setFixedSize(
-            width * self.column_width, height * self.row_height
-        )
+        # model.table_view.setFixedSize(
+        #     width * self.column_width, height * self.row_height
+        # )
+
+        model.table_view.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        model.table_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        model.table_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+
         model.table_view.setSelectionBehavior(QTableView.SelectRows)
         model.table_view.setSelectionMode(QTableView.SingleSelection)
         for i in range(len(widths)):

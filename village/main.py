@@ -264,7 +264,7 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.RUN_MANUAL:
                 # Task running manually
                 if (
-                    manager.task.current_trial >= manager.task.manual_number_of_trials
+                    manager.task.current_trial > manager.task.manual_number_of_trials
                     or manager.task.chrono.get_seconds()
                     >= manager.task.settings.maximum_duration
                 ):

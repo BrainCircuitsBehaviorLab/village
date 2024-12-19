@@ -215,7 +215,6 @@ class Camera(CameraProtocol):
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_record(self) -> None:
-        print("stopping encoder")
         self.cam.stop_encoder()
         self.is_recording = False
         self.save_csv()
@@ -242,11 +241,6 @@ class Camera(CameraProtocol):
         min_length = min(
             len(self.frames), len(self.timings), len(self.trials), len(self.states)
         )
-
-        # print("frames: ", len(self.frames))
-        # print("timings: ", len(self.timings))
-        # print("trials: ", len(self.trials))
-        # print("states: ", len(self.states))
 
         self.frames = self.frames[:min_length]
         self.timings = self.timings[:min_length]
@@ -413,6 +407,10 @@ class Camera(CameraProtocol):
         )
 
     def write_frame_number_and_timestamp(self) -> None:
+        if not self.is_recording:
+            self.frame_number = 0
+            self.timing = 0
+
         cv2.putText(
             self.frame,
             self.timestamp,

@@ -181,6 +181,7 @@ class TasksLayout(Layout):
             self.create_gui_properties()
 
     def create_gui_properties(self) -> None:
+        self.line_edits = []
         self.central_sub_layout.delete_optional_widgets("optional2")
         self.right_sub_layout.delete_optional_widgets("optional2")
         row = 4
@@ -222,7 +223,9 @@ class TasksLayout(Layout):
         self.create_gui_properties()
 
     def run_task(self) -> None:
+        self.change_properties()
         manager.task.settings = manager.training.settings
+        manager.task.training = manager.training
         manager.state = State.LAUNCH_MANUAL
         self.monitor_button_clicked()
         self.update_gui()
@@ -241,7 +244,7 @@ class TasksLayout(Layout):
         )
         label.setProperty("type", "optional2")
         line_edit = layout.create_and_add_line_edit(
-            value, row, column + width, 52, 2, self.change_properties
+            value, row, column + width, 52, 2, self.change_text
         )
         line_edit.setProperty("type", "optional2")
         self.line_edits.append(line_edit)
@@ -251,10 +254,19 @@ class TasksLayout(Layout):
         remove_names = ["next_task", "minimum_duration", "refractary_period"]
         properties = {k: v for k, v in properties.items() if k not in remove_names}
         new_dict = {}
-        manager.task.manual_number_of_trials = int(self.line_edits[0].text())
+
+        try:
+            manager.task.manual_number_of_trials = int(self.line_edits[0].text())
+        except Exception:
+            pass
+
         for i, (k, v) in enumerate(properties.items()):
             new_dict[k] = self.line_edits[i + 1].text()
+
         manager.training.load_settings_from_dict(new_dict)
+
+    def change_text(self) -> None:
+        pass
 
     def update_gui(self) -> None:
         self.update_status_label()
