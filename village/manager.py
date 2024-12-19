@@ -271,15 +271,15 @@ class Manager:
         else:
             log.error("Multiple training protocols found")
         if session_plot_found == 0:
-            log.error("Session plot not found")
+            log.error("Custom Session plot not found, using default")
         elif session_plot_found == 1:
-            log.info("Session plot successfully imported")
+            log.info("Custom Session plot successfully imported")
         else:
             log.error("Multiple session plots found")
         if subject_plot_found == 0:
-            log.error("Subject plot not found")
+            log.error("Custom Subject plot not found, using default")
         elif subject_plot_found == 1:
-            log.info("Subject plot successfully imported")
+            log.info("Custom Subject plot successfully imported")
         else:
             log.error("Multiple subject plots found")
         self.tasks = dict(sorted(tasks.items()))
