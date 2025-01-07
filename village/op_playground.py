@@ -2,14 +2,13 @@ import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                            QHBoxLayout, QPushButton, QLabel, QComboBox, 
                            QSpinBox, QGroupBox)
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebKitWidgets import QWebView  # Changed from QWebEngineView
 from PyQt5.QtCore import QUrl
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 import tempfile
 import os
-import time
 
 class PlotlyFigureManager:
     """Class to handle creation and management of Plotly figures"""
@@ -18,7 +17,7 @@ class PlotlyFigureManager:
         self.temp_dir = tempfile.gettempdir()
         self.html_path = os.path.join(self.temp_dir, 'plotly_graph.html')
         
-    def create_multiplot(self, num_points=10000):
+    def create_multiplot(self, num_points=50):  # Reduced default points
         # Create sample data
         x = np.linspace(0, 10, num_points)
         y1 = np.sin(x)
@@ -58,15 +57,17 @@ class PlotlyFigureManager:
             row=2, col=2
         )
         
-        # Update layout
+        # Update layout with reduced size
         fig.update_layout(
-            height=800,
+            height=600,  # Reduced height
+            width=800,   # Added explicit width
             title_text="Trigonometric Functions",
-            showlegend=True
+            showlegend=True,
+            autosize=False  # Prevent autosize to reduce memory usage
         )
         
-        # Save to file
-        fig.write_html(self.html_path)
+        # Save to file with reduced config
+        fig.write_html(self.html_path, include_plotlyjs='cdn')  # Use CDN for plotly.js
         return self.html_path
     
     def cleanup(self):
@@ -77,7 +78,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Advanced Data Viewer')
-        self.setGeometry(100, 100, 1200, 900)
+        self.setGeometry(100, 100, 1000, 800)  # Reduced window size
         
         # Initialize PlotlyFigureManager
         self.figure_manager = PlotlyFigureManager()
@@ -97,10 +98,10 @@ class MainWindow(QMainWindow):
         controls_layout.addWidget(QLabel("Data Type:"))
         controls_layout.addWidget(self.data_selector)
         
-        # Add points spinbox
+        # Add points spinbox with reduced range
         self.points_spinbox = QSpinBox()
-        self.points_spinbox.setRange(10, 100000)
-        self.points_spinbox.setValue(100000)
+        self.points_spinbox.setRange(10, 200)  # Reduced maximum points
+        self.points_spinbox.setValue(50)  # Reduced default value
         self.points_spinbox.setSingleStep(10)
         controls_layout.addWidget(QLabel("Number of Points:"))
         controls_layout.addWidget(self.points_spinbox)
@@ -113,8 +114,8 @@ class MainWindow(QMainWindow):
         controls_group.setLayout(controls_layout)
         layout.addWidget(controls_group)
         
-        # Create WebEngine View
-        self.web_view = QWebEngineView()
+        # Create WebView instead of WebEngineView
+        self.web_view = QWebView()
         layout.addWidget(self.web_view)
         
         # Initialize plots
@@ -124,7 +125,6 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage('Ready')
     
     def update_plots(self):
-        starttime = time.time()
         num_points = self.points_spinbox.value()
         self.statusBar().showMessage('Updating plots...')
         
@@ -132,9 +132,7 @@ class MainWindow(QMainWindow):
         html_path = self.figure_manager.create_multiplot(num_points)
         self.web_view.setUrl(QUrl.fromLocalFile(html_path))
         
-        endtime = time.time()
-        text = f'Plots updated in {endtime - starttime:.2f} seconds'
-        self.statusBar().showMessage(text)
+        self.statusBar().showMessage('Plots updated')
     
     def closeEvent(self, event):
         self.figure_manager.cleanup()
