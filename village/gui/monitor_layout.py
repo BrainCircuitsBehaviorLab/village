@@ -4,6 +4,7 @@ import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (
     QDialog,
@@ -18,6 +19,7 @@ from PyQt5.QtWidgets import (
 )
 
 from village.classes.enums import Actions, Active, Cycle, Info, State
+from village.classes.plot import OnlinePlotFigureManager
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.scale import scale
@@ -292,11 +294,22 @@ class MonitorLayout(Layout):
         self.stop_button: PushButton = self.create_and_add_button(
             "",
             0,
-            170,
-            20,
+            175,
+            14,
             2,
             self.stop,
             "Stop a running task",
+            "lightcoral",
+        )
+
+        self.online_plots_button: PushButton = self.create_and_add_button(
+            "ONLINE PLOTS",
+            0,
+            160,
+            14,
+            2,
+            self.show_online_plots_clicked,
+            "Show the online plots",
             "lightcoral",
         )
 
@@ -448,6 +461,25 @@ class MonitorLayout(Layout):
         cam_corridor.stop_preview_window()
         cam_box.stop_preview_window()
         return True
+
+    def show_online_plots_clicked(self) -> None:
+        self.figure_manager = OnlinePlotFigureManager()
+        self.figure_manager.create_multiplot(100)
+        self.reply = QDialog()
+        self.reply.setWindowTitle("Online Plots")
+        x = self.column_width * 10
+        y = self.row_height * 5
+        width = self.column_width * 62
+        height = self.row_height * 20
+        self.reply.setGeometry(x, y, width, height)
+        layout = QVBoxLayout()
+        # Create canvas and toolbar
+        self.canvas = FigureCanvas(self.figure_manager.fig)
+        # self.toolbar = NavigationToolbar(self.canvas, self)
+        # layout.addWidget(self.toolbar)
+        layout.addWidget(self.canvas)
+        self.reply.setLayout(layout)
+        self.reply.exec_()
 
 
 class MotorLayout(Layout):
