@@ -241,20 +241,22 @@ class MonitorLayout(Layout):
         self.addWidget(self.qpicamera2_corridor, 4, 0, 30, 88)
         self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
 
+        self.central_widget = QWidget(self.window)
+        self.bottom_widget = QWidget(self.window)
         self.central_layout = QStackedLayout()
         self.addLayout(self.central_layout, 12, 88, 18, 36)
 
-        self.page1 = QWidget()
+        self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
         self.page1Layout = MotorLayout(self.window, 20, 36)
         self.page1.setLayout(self.page1Layout)
 
-        self.page2 = QWidget()
+        self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
         self.page2Layout = PortsLayout(self.window, 20, 36)
         self.page2.setLayout(self.page2Layout)
 
-        self.page3 = QWidget()
+        self.page3 = QWidget(self.central_widget)
         self.page3.setStyleSheet("background-color:white")
         self.page3_layout = QVBoxLayout(self.page3)
 
@@ -276,11 +278,11 @@ class MonitorLayout(Layout):
 
         self.bottom_layout = QStackedLayout()
         self.addLayout(self.bottom_layout, 34, 0, 16, 212)
-        self.page4 = QWidget()
+        self.page4 = QWidget(self.bottom_widget)
         self.page4.setStyleSheet("background-color:white")
         self.page4Layout = InfoLayout(self.window, 16, 212)
         self.page4.setLayout(self.page4Layout)
-        self.page5 = QWidget()
+        self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
         self.page5Layout = CorridorLayout(self.window, 16, 212)
         self.page5.setLayout(self.page5Layout)

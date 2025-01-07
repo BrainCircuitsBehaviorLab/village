@@ -134,8 +134,9 @@ class Camera(CameraProtocol):
         self.error_frame = 0
 
         self.is_recording = False
+        self.show_time_info = False
 
-        self.area4_alarm_chono = time_utils.Chrono(initial_offset=True)
+        self.area4_alarm_chrono = time_utils.Chrono(initial_offset=True)
 
         self.cam.start()
 
@@ -180,10 +181,6 @@ class Camera(CameraProtocol):
         # detection settings
         self.zero_or_one_mouse = settings.get("DETECTION_OF_MOUSE_" + self.name)[0]
         self.one_or_two_mice = settings.get("DETECTION_OF_MOUSE_" + self.name)[1]
-
-        self.no_mouse = settings.get("NO_MOUSE_" + self.name)
-        self.one_mouse = settings.get("ONE_MOUSE_" + self.name)
-        self.two_mice = settings.get("TWO_MICE_" + self.name)
         self.view_detection = settings.get("VIEW_DETECTION_" + self.name) == Active.ON
 
     def start_camera(self) -> None:
@@ -212,12 +209,15 @@ class Camera(CameraProtocol):
             )
         self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
+        self.show_time_info = True
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_record(self) -> None:
-        self.cam.stop_encoder()
-        self.is_recording = False
-        self.save_csv()
+        if self.is_recording:
+            self.is_recording = False
+            self.cam.stop_encoder()
+            self.save_csv()
+        self.show_time_info = False
         self.reset_values()
 
     def reset_values(self) -> None:
@@ -407,7 +407,7 @@ class Camera(CameraProtocol):
         )
 
     def write_frame_number_and_timestamp(self) -> None:
-        if not self.is_recording:
+        if not self.show_time_info:
             self.frame_number = 0
             self.timing = 0
 
@@ -506,9 +506,9 @@ class Camera(CameraProtocol):
             log.info("Large detection in area3: " + str(self.counts[2]))
             return False
         elif self.counts[3] > self.zero_or_one_mouse:
-            text = "Detection in area4: " + str(self.counts[3])
-            if self.area4_alarm_chono.get_seconds() > settings.get("ALARM_AREA4_TIME"):
-                self.area4_alarm_chono.reset()
+            text = "Detection in area4 when it should be empty: " + str(self.counts[3])
+            if self.area4_alarm_chrono.get_seconds() > settings.get("ALARM_AREA4_TIME"):
+                self.area4_alarm_chrono.reset()
                 log.alarm(text)
             else:
                 log.info(text)
@@ -516,6 +516,20 @@ class Camera(CameraProtocol):
             return False
         else:
             return True
+
+    # def areas_box_ok(self) -> bool:
+    #     message = None
+    #     pixels = 0
+    #     for i in range(4):
+    #         if self.areas_allowed[i]:
+    #             and self.counts[i] > self.one_or_two_mice:
+    #             message = "2 subjects in box"
+    #             break
+    #         if not self.areas_allowed[i] and self.counts[i] > self.zero_or_one_mouse:
+    #             message = "1 mouse in prohibited area"
+    #             break
+    #     if message:
+    #         log.alarm(message)
 
     def area_1_empty(self) -> bool:
         return self.counts[0] <= self.zero_or_one_mouse

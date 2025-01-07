@@ -132,6 +132,7 @@ class CameraProtocol:
     error: str = "Error connecting to the camera "
     trial: int = -1
     is_recording: bool = False
+    show_time_info: bool = False
     chrono = time_utils.Chrono()
 
     def start_camera(self) -> None:

@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import QLayout
 from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
 from village.classes.plot import SessionPlot, SubjectPlot
+from village.classes.protocols import CameraProtocol
 from village.classes.subject import Subject
 from village.classes.task import Task
 from village.classes.training import Training
@@ -73,6 +74,7 @@ class Manager:
         self.changing_settings: bool = False
         self.tasks: dict[str, type] = dict()
         self.errors: str = ""
+        self.max_time_counter: int = 1
         self.functions: list[Callable] = [lambda: None for _ in range(99)]
         self.session_df = pd.DataFrame()
         self.old_session_df = pd.DataFrame()
@@ -382,7 +384,15 @@ class Manager:
         devices_str = [d["name"] for d in devices]
         return devices_str
 
-    def launch_task_manual(self) -> bool:
+    def launch_task_manual(self, cam: CameraProtocol) -> bool:
+        self.task.create_paths()
+        self.task.cam_box = cam
+        if self.subject.name != "None":
+            self.task.cam_box.start_record(
+                self.task.video_path, self.task.video_data_path
+            )
+        else:
+            self.task.cam_box.show_time_info = True
         try:
             self.weight = np.nan
             log.start(task=self.task.name, subject=self.subject.name)
@@ -396,7 +406,13 @@ class Manager:
             )
             return False
 
-    def launch_task_auto(self) -> bool:
+    def launch_task_auto(self, cam: CameraProtocol) -> bool:
+        self.task.create_paths()
+        if self.subject != "None":
+            self.task.cam_box = cam
+            self.task.cam_box.start_record(
+                self.task.video_path, self.task.video_data_path
+            )
         try:
             self.weight = np.nan
             self.training.load_settings_from_jsonstring(self.subject.next_settings)
@@ -420,13 +436,15 @@ class Manager:
                 return True
             else:
                 log.alarm(
-                    "Error launching task " + task_name + " is not a subclass of Task",
+                    "Error launching task: "
+                    + task_name
+                    + " is not a subclass of Task. Disconnecting RFID Reader.",
                     subject=self.subject.name,
                 )
                 return False
         except Exception:
             log.alarm(
-                "Error launching task " + task_name,
+                "Error launching task: " + task_name + " Disconnecting RFID Reader.",
                 subject=self.subject.name,
                 exception=traceback.format_exc(),
             )
@@ -457,7 +475,9 @@ class Manager:
                 State.CLOSE_DOOR2,
             ]:
                 log.alarm(
-                    "Error running task " + self.task.name,
+                    "Error running task "
+                    + self.task.name
+                    + " Disconnecting RFID Reader.",
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
@@ -469,6 +489,7 @@ class Manager:
         self.task = Task()
         self.subject = Subject()
         self.training.restore()
+        self.max_time_counter = 1
 
     def update_session_df(self) -> pd.DataFrame:
         try:
@@ -482,14 +503,16 @@ class Manager:
         df2 = self.task.transform(df)
         return [df, df2]
 
-    def disconnect_and_save(self) -> None:
-        save, duration, trials, water = self.task.disconnect_and_save()
+    def disconnect_and_save(self, run_mode: str) -> None:
+        save, duration, trials, water, settings_str = self.task.disconnect_and_save(
+            run_mode
+        )
         if save:
-            self.save_to_sessions_summary(duration, trials, water)
-        self.reset_subject_task_training()
+            self.save_to_sessions_summary(duration, trials, water, settings_str)
+        log.end(task=self.task.name, subject=self.subject.name)
 
     def save_to_sessions_summary(
-        self, duration: float, trials: int, water: int
+        self, duration: float, trials: int, water: int, settings_used_str: str
     ) -> None:
 
         self.sessions_summary.add_entry(
@@ -502,7 +525,7 @@ class Manager:
                 duration,
                 trials,
                 water,
-                self.training.get_jsonstring(),
+                settings_used_str,
             ]
         )
 

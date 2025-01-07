@@ -3,10 +3,12 @@ from __future__ import annotations
 from functools import partial
 from typing import TYPE_CHECKING, Type
 
+import pandas as pd
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
 from village.classes.enums import State
+from village.classes.subject import Subject
 from village.classes.task import Task
 from village.gui.layout import Layout
 from village.manager import manager
@@ -27,6 +29,7 @@ class TasksLayout(Layout):
         super().__init__(window)
         self.window = window
         self.selected = ""
+        self.testing_training = False
         self.draw()
 
     def draw(self) -> None:
@@ -39,7 +42,7 @@ class TasksLayout(Layout):
             98,
             16,
             2,
-            self.run_task,
+            self.run_task_button_clicked,
             "Run the selected task",
             "powderblue",
         )
@@ -124,7 +127,15 @@ class TasksLayout(Layout):
                 button.setEnabled(False)
             for line_edit in self.line_edits:
                 line_edit.setEnabled(False)
+        elif self.testing_training:
+            self.run_task_button.setText("TEST TRAINING")
+            self.run_task_button.setEnabled(True)
+            for button in self.task_buttons:
+                button.setEnabled(True)
+            for line_edit in self.line_edits:
+                line_edit.setEnabled(True)
         elif self.selected != "":
+            self.run_task_button.setText("RUN TASK")
             self.run_task_button.setEnabled(True)
             for button in self.task_buttons:
                 if button.text() == self.selected:
@@ -142,6 +153,7 @@ class TasksLayout(Layout):
 
     def select_task(self, cls: Type, name: str) -> None:
         if issubclass(cls, Task):
+            self.testing_training = False
             self.selected = name
             self.central_sub_layout.delete_optional_widgets("optional")
             self.central_sub_layout.delete_optional_widgets("optional2")
@@ -180,13 +192,45 @@ class TasksLayout(Layout):
             self.subject_combo.setProperty("type", "optional")
             self.create_gui_properties()
 
+    def test_training(self) -> None:
+        self.testing_training = True
+        self.central_sub_layout.delete_optional_widgets("optional")
+        self.central_sub_layout.delete_optional_widgets("optional2")
+        self.right_sub_layout.delete_optional_widgets("optional")
+        self.right_sub_layout.delete_optional_widgets("optional2")
+        self.check_buttons()
+        manager.reset_subject_task_training()
+
+        self.subject_label = self.right_sub_layout.create_and_add_label(
+            "Subject", 0, 2, 20, 2, "black"
+        )
+        self.subject_label.setProperty("type", "optional")
+
+        self.possible_subjects = ["None"] + manager.subjects.df["name"].tolist()
+        self.subject_combo = self.right_sub_layout.create_and_add_combo_box(
+            "subject",
+            0,
+            32,
+            30,
+            2,
+            self.possible_subjects,
+            0,
+            self.select_subject,
+        )
+        self.subject_combo.setProperty("type", "optional")
+        self.create_gui_properties_select()
+
     def create_gui_properties(self) -> None:
         self.line_edits = []
         self.central_sub_layout.delete_optional_widgets("optional2")
         self.right_sub_layout.delete_optional_widgets("optional2")
         row = 4
         properties = manager.training.get_dict()
-        remove_names = ["next_task", "minimum_duration", "refractary_period"]
+        remove_names = [
+            "next_task",
+            "minimum_duration",
+            "refractary_period",
+        ]
         properties = {k: v for k, v in properties.items() if k not in remove_names}
 
         self.create_label_and_value(
@@ -197,6 +241,27 @@ class TasksLayout(Layout):
             str(manager.task.manual_number_of_trials),
         )
         row += 4
+
+        for i, (k, v) in enumerate(properties.items()):
+            self.create_label_and_value(self.right_sub_layout, row, 2, k, str(v))
+            if i == 0:
+                row += 4
+            else:
+                row += 2
+        self.update_gui()
+
+    def create_gui_properties_select(self) -> None:
+        self.line_edits = []
+        self.central_sub_layout.delete_optional_widgets("optional2")
+        self.right_sub_layout.delete_optional_widgets("optional2")
+        row = 8
+        properties = manager.training.get_dict()
+        remove_names = [
+            "next_task",
+            "minimum_duration",
+            "refractary_period",
+        ]
+        properties = {k: v for k, v in properties.items() if k not in remove_names}
 
         for i, (k, v) in enumerate(properties.items()):
             self.create_label_and_value(self.right_sub_layout, row, 2, k, str(v))
@@ -219,16 +284,31 @@ class TasksLayout(Layout):
                     current_value = manager.subject.subject_series["next_settings"]
                 except Exception:
                     pass
+        else:
+            manager.subject = Subject()
+            manager.task.subject = "None"
         manager.training.load_settings_from_jsonstring(current_value)
-        self.create_gui_properties()
+        if self.testing_training:
+            self.create_gui_properties_select()
+        else:
+            self.create_gui_properties()
 
-    def run_task(self) -> None:
+    def run_task_button_clicked(self) -> None:
         self.change_properties()
         manager.task.settings = manager.training.settings
         manager.task.training = manager.training
-        manager.state = State.LAUNCH_MANUAL
-        self.monitor_button_clicked()
-        self.update_gui()
+        if self.testing_training:
+            try:
+                manager.task.training.df = pd.read_csv(
+                    manager.task.subject_path, sep=";"
+                )
+                manager.task.training.update_training_settings()
+            except Exception:
+                pass
+        else:
+            manager.state = State.LAUNCH_MANUAL
+            self.monitor_button_clicked()
+            self.update_gui()
 
     def create_label_and_value(
         self,
@@ -251,7 +331,11 @@ class TasksLayout(Layout):
 
     def change_properties(self) -> None:
         properties = manager.training.get_dict()
-        remove_names = ["next_task", "minimum_duration", "refractary_period"]
+        remove_names = [
+            "next_task",
+            "minimum_duration",
+            "refractary_period",
+        ]
         properties = {k: v for k, v in properties.items() if k not in remove_names}
         new_dict = {}
 
@@ -271,6 +355,3 @@ class TasksLayout(Layout):
     def update_gui(self) -> None:
         self.update_status_label()
         self.check_buttons()
-
-    def test_training(self) -> None:
-        pass

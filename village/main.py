@@ -78,8 +78,8 @@ def system_run(bevavior_window: QWidget) -> None:
         i += 1
         time.sleep(0.01)
 
-        if i == 2000:
-            bpod.send_softcode(1)
+        # if i == 2000:
+        #     bpod.send_softcode(1)
         #     log.alarm("Alarma de prueba", subject="RAFA")
         #     behavior_window.toggle_animation()
 
@@ -93,6 +93,7 @@ def system_run(bevavior_window: QWidget) -> None:
         match manager.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
+                manager.reset_subject_task_training()
                 id, multiple = rfid.get_id()
                 if id != "":
                     log.info("Tag detected: " + id)
@@ -118,8 +119,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_AUTO:
                 # Automatically launching the task
-                if manager.launch_task_auto():
-                    manager.task.cam_box = cam_box
+                if manager.launch_task_auto(cam_box):
                     manager.state = State.RUN_FIRST
                 else:
                     manager.state = State.OPEN_DOOR2_STOP
@@ -129,9 +129,9 @@ def system_run(bevavior_window: QWidget) -> None:
                 id, multiple = rfid.get_id()
                 if id != manager.subject.tag and id != "":
                     log.alarm(
-                        """Wrong RFID detection.
-                        Another subject detected while main subject is in the box.
-                        Disconnecting RFID reader.""",
+                        "Wrong RFID detection."
+                        + " Another subject detected while main subject is in the box."
+                        + " Disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
@@ -140,8 +140,8 @@ def system_run(bevavior_window: QWidget) -> None:
                     >= manager.task.settings.minimum_duration
                 ):
                     log.alarm(
-                        """Minimum time reached and areas 3 or 4 were never empty.
-                              Disconnecting RFID reader.""",
+                        "Minimum time reached and areas 3 or 4 were never empty."
+                        + " Disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
@@ -159,9 +159,10 @@ def system_run(bevavior_window: QWidget) -> None:
                 id, multiple = rfid.get_id()
                 if id != "":
                     log.alarm(
-                        """Wrong RFID detection. Subject detected in the corridor while
-                        main subject should be in the box.
-                        """,
+                        "Wrong RFID detection."
+                        + " Subject detected in the corridor while main"
+                        + " subject should be in the box."
+                        + " Disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
@@ -185,9 +186,9 @@ def system_run(bevavior_window: QWidget) -> None:
                 id, multiple = rfid.get_id()
                 if id != "" and id != manager.subject.tag:
                     log.alarm(
-                        """Wrong RFID detection.
-                        Another subject detected while main subject is in the box.
-                        Disconnecting RFID reader.""",
+                        "Wrong RFID detection."
+                        + " Another subject detected while main subject is in the box."
+                        + " Disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
@@ -218,16 +219,35 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.SAVE_OUTSIDE:
                 # Stopping the task, saving the data; the subject is already outside
-                manager.disconnect_and_save()
+                manager.disconnect_and_save("Auto")
                 manager.state = State.WAIT
 
             case State.SAVE_INSIDE:
                 # Stopping the task, saving the data; the subject is still inside
-                manager.disconnect_and_save()
+                manager.disconnect_and_save("Auto")
                 manager.state = State.WAIT_EXIT
 
             case State.WAIT_EXIT:
                 # Task finished, waiting for the subject to leave
+                if (
+                    manager.task.chrono.get_seconds()
+                    > manager.task.settings.maximum_duration
+                    + manager.max_time_counter * 3600
+                ):
+                    text = (
+                        "The subject has been in the box for "
+                        + str(manager.task.chrono.get_seconds())
+                        + " seconds. "
+                    )
+                    if manager.max_time_counter == 1:
+                        text += "1 hour since the task ended."
+                    else:
+                        text += (
+                            str(manager.max_time_counter)
+                            + " hours since the task ended."
+                        )
+                    log.alarm(text, subject=manager.subject.name)
+                    manager.max_time_counter += 1
                 weight = scale.get_weight_subject()
                 if weight > settings.get("WEIGHT_THRESHOLD"):
                     log.info(
@@ -255,8 +275,8 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_MANUAL:
                 # Manually launching the task
-                if manager.launch_task_manual():
-                    manager.task.cam_box = cam_box
+                if manager.launch_task_manual(cam_box):
+                    # manager.task.cam_box = cam_box
                     manager.state = State.RUN_MANUAL
                 else:
                     pass
@@ -272,7 +292,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.SAVE_MANUAL:
                 # Stopping the task, saving the data; the task was manually stopped
-                manager.disconnect_and_save()
+                manager.disconnect_and_save("Manual")
                 manager.state = State.WAIT
 
             case State.EXIT_GUI:

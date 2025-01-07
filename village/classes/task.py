@@ -100,16 +100,16 @@ class Task:
                 self.after_trial()
                 self.register_values()
                 self.current_trial += 1
-            self.disconnect_and_save()
+            self.disconnect_and_save("Manual")
 
         self.process = Thread(target=test_run, daemon=daemon)
         self.process.start()
         return
 
     def run(self) -> None:
-        self.create_paths()
-        if self.subject != "None":
-            self.cam_box.start_record(self.video_path, self.video_data_path)
+        # self.create_paths()
+        # if self.subject != "None":
+        #     self.cam_box.start_record(self.video_path, self.video_data_path)
         self.start()
         while (
             self.current_trial <= self.manual_number_of_trials
@@ -124,6 +124,7 @@ class Task:
             self.after_trial()
             self.register_values()
             self.current_trial += 1
+        # self.cam_box.stop_record()
 
     def get_trial_data(self) -> None:
         self.trial_data = self.bpod.session.current_trial.export()
@@ -139,29 +140,29 @@ class Task:
         self.bpod.register_value("system_name", self.system_name)
         self.bpod.register_value("date", self.date)
 
-        # get all the attributes in self.settings and register them
-        for name in vars(self.settings):
-            attribute = getattr(self.settings, name)
-            self.bpod.register_value(name, attribute)
+        # # get all the attributes in self.settings and register them
+        # for name in vars(self.settings):
+        #     attribute = getattr(self.settings, name)
+        #     self.bpod.register_value(name, attribute)
 
         self.bpod.register_value("TRIAL", None)
 
-    def disconnect_and_save(self) -> tuple[bool, float, int, int]:
+    def disconnect_and_save(self, run_mode: str) -> tuple[bool, float, int, int, str]:
         save: bool = False
         duration: float = 0.0
         trials: int = 0
         water: int = 0
+        settings_str: str = ""
         self.bpod.stop()
+        self.cam_box.stop_record()
         # TODO kill the screen
         if self.subject != "None":
             try:
-                self.cam_box.stop_record()
                 duration, trials, water = self.save_csv()
-                self.save_json()
+                settings_str = self.save_json(run_mode)
                 self.training.df = self.df_all
                 self.training.subject = self.subject
                 self.training.settings = self.settings
-                self.training.update_training_settings()
                 save = True
             except Exception:
                 log.alarm(
@@ -169,10 +170,18 @@ class Task:
                     subject=self.subject,
                     exception=traceback.format_exc(),
                 )
+            try:
+                self.training.update_training_settings()
+            except Exception:
+                log.alarm(
+                    "Error updating the training settings for task: " + self.name,
+                    subject=self.subject,
+                    exception=traceback.format_exc(),
+                )
         self.bpod.close()
-        return save, duration, trials, water
+        return save, duration, trials, water, settings_str
 
-    def save_json(self) -> None:
+    def save_json(self, run_mode: str) -> str:
 
         dictionary: dict[str, Any] = {}
 
@@ -195,8 +204,13 @@ class Task:
                 value = getattr(self.settings, name)
                 dictionary[name] = value
 
+        dictionary["run_mode"] = run_mode
+        json_string = json.dumps(dictionary)
+
         with open(self.session_settings_path, "w") as f:
-            json.dump(dictionary, f)
+            f.write(json_string)
+
+        return json_string
 
     def save_csv(self) -> tuple[float, int, int]:
 
@@ -208,8 +222,8 @@ class Task:
 
         if self.df.shape[0] > 100000:
             log.alarm(
-                """The session file is very large, probably due to
-                overdetections in some of the ports""",
+                "The session file is very large, probably due to"
+                + " overdetections in some of the ports",
                 subject=self.subject,
             )
 

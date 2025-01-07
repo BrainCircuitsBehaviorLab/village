@@ -87,6 +87,20 @@ class TableView(QTableView):
                 else:
                     text = "Wait until the box is empty before editing the tables."
                     QMessageBox.information(self, "EDIT", text)
+            elif flags:
+                text = str(index.data())
+                if column_name == "settings":
+                    try:
+                        data = json.loads(text)
+                        lines = [f"{key}: {value}" for key, value in data.items()]
+                        text = "\n".join(lines)
+                    except Exception:
+                        log.error(
+                            "Error reading settings", exception=traceback.format_exc()
+                        )
+                else:
+                    text = text.replace("  |  ", "\n")
+                QMessageBox.information(self, "", text)
             else:
                 super().mouseDoubleClickEvent(event)
         else:
@@ -828,7 +842,7 @@ class DfLayout(Layout):
             sessions_directory, subject, filename + ".json"
         )
         video_path = os.path.join(video_directory, subject, filename + ".mp4")
-        video_data_path = os.path.join(sessions_directory, subject, filename + ".csv")
+        video_data_path = os.path.join(video_directory, subject, filename + ".csv")
 
         paths = [
             session_path,
