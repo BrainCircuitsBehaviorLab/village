@@ -475,6 +475,7 @@ class DataLayout(Layout):
             self.page3Layout.plot_label.setPixmap(pixmap)
         else:
             self.page3Layout.plot_label.setText("Plot could not be generated")
+        # TODO: should the figure be closed?
 
     def change_to_df(self) -> None:
         self.central_layout.setCurrentWidget(self.page1)

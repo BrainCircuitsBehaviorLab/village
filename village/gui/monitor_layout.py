@@ -464,7 +464,7 @@ class MonitorLayout(Layout):
 
     def show_online_plots_clicked(self) -> None:
         self.figure_manager = OnlinePlotFigureManager()
-        self.figure_manager.create_multiplot(100)
+        self.figure_manager.create_multiplot(manager.task.trial_data)
         self.reply = QDialog()
         self.reply.setWindowTitle("Online Plots")
         x = self.column_width * 10
