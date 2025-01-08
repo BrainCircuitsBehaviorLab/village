@@ -5,16 +5,19 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
 from classes.enums import State
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTime
 from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
 from PyQt5.QtWidgets import (
     QComboBox,
+    QDialog,
     QGridLayout,
     QLabel,
     QLineEdit,
     QMessageBox,
     QPushButton,
     QTimeEdit,
+    QVBoxLayout,
 )
 
 from village.manager import manager
@@ -460,3 +463,19 @@ class Layout(QGridLayout):
 
     def update_gui(self) -> None:
         pass
+
+
+class OnlinePlotDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Online Plots")
+        layout = QVBoxLayout()
+        self.canvas = FigureCanvas(manager.online_plot_figure_manager.fig)
+        layout.addWidget(self.canvas)
+        self.setLayout(layout)
+
+    def closeEvent(self, event):
+        # Implement specific actions here
+        manager.online_plot_figure_manager.active = False
+        print("Dialog closed, online plots stopped")
+        super().closeEvent(event)

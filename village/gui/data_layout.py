@@ -454,7 +454,9 @@ class DataLayout(Layout):
         elif manager.table == DataTable.SESSION:
             try:
                 dfs = manager.get_both_sessions_dfs()
-                figure = manager.session_plot.create_plot(dfs[0], dfs[1])
+                # TODO: this needs to change to the online plot and
+                # not use the session_plot
+                figure = manager.session_plot.create_plot(dfs[1], dfs[0])
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(

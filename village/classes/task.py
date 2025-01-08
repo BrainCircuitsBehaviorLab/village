@@ -93,17 +93,24 @@ class Task:
             self.create_paths()
             self.start()
             while self.current_trial <= self.manual_number_of_trials:
-                self.bpod.create_state_machine()
-                self.create_trial()
-                self.bpod.send_and_run_state_machine()
-                self.get_trial_data()
-                self.after_trial()
-                self.register_values()
-                self.current_trial += 1
+                self.do_trial()
             self.disconnect_and_save("Manual")
 
         self.process = Thread(target=test_run, daemon=daemon)
         self.process.start()
+        return
+
+    def do_trial(self, send_to_cam: bool = False) -> None:
+        self.bpod.create_state_machine()
+        if send_to_cam:
+            self.cam_box.trial = self.current_trial
+        self.create_trial()
+        self.bpod.send_and_run_state_machine()
+        self.get_trial_data()
+        self.after_trial()
+        self.register_default_values()
+        self.current_trial += 1
+
         return
 
     def run(self) -> None:
@@ -116,14 +123,7 @@ class Task:
             and self.chrono.get_seconds() < self.settings.maximum_duration
             and not self.force_stop
         ):
-            self.bpod.create_state_machine()
-            self.cam_box.trial = self.current_trial
-            self.create_trial()
-            self.bpod.send_and_run_state_machine()
-            self.get_trial_data()
-            self.after_trial()
-            self.register_values()
-            self.current_trial += 1
+            self.do_trial(send_to_cam=True)
         # self.cam_box.stop_record()
 
     def get_trial_data(self) -> None:
@@ -134,7 +134,11 @@ class Task:
         # TODO: parse this data and add more things
         return None
 
-    def register_values(self) -> None:
+    def register_value(self, name: str, value: Any) -> None:
+        self.bpod.register_value(name, value)
+        self.trial_data[name] = value
+
+    def register_default_values(self) -> None:
         self.bpod.register_value("task", self.name)
         self.bpod.register_value("subject", self.subject)
         self.bpod.register_value("system_name", self.system_name)

@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import QLayout
 
 from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
-from village.classes.plot import SessionPlot, SubjectPlot
+from village.classes.plot import OnlinePlotFigureManager, SessionPlot, SubjectPlot
 from village.classes.protocols import CameraProtocol
 from village.classes.subject import Subject
 from village.classes.task import Task
@@ -61,6 +61,9 @@ class Manager:
         self.training: Training = Training()
         self.subject_plot: SubjectPlot = SubjectPlot()
         self.session_plot: SessionPlot = SessionPlot()
+        self.online_plot_figure_manager: OnlinePlotFigureManager = (
+            OnlinePlotFigureManager()
+        )
         self.state: State = State.WAIT
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
@@ -205,6 +208,7 @@ class Manager:
         training_found = 0
         session_plot_found = 0
         subject_plot_found = 0
+        online_plot_found = 0
         functions_path = ""
 
         for root, dirs, files in os.walk(directory):
@@ -259,6 +263,14 @@ class Manager:
                         if subject_plot_found == 1:
                             s = cls()
                             self.subject_plot = s
+                    elif (
+                        issubclass(cls, OnlinePlotFigureManager)
+                        and cls != OnlinePlotFigureManager
+                    ):
+                        online_plot_found += 1
+                        if online_plot_found == 1:
+                            o = cls()
+                            self.online_plot_figure_manager = o
             except Exception:
                 log.error(
                     "Couldn't import " + module_name, exception=traceback.format_exc()
@@ -282,6 +294,12 @@ class Manager:
             log.info("Custom Subject plot successfully imported")
         else:
             log.error("Multiple subject plots found")
+        if online_plot_found == 0:
+            log.error("Custom Online plot not found, using default")
+        elif online_plot_found == 1:
+            log.info("Custom Online plot successfully imported")
+        else:
+            log.error("Multiple online plots found")
         self.tasks = dict(sorted(tasks.items()))
         number_of_tasks = len(tasks)
         if number_of_tasks == 1:

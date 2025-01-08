@@ -4,7 +4,7 @@ import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import pandas as pd
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (
     QDialog,
@@ -19,12 +19,11 @@ from PyQt5.QtWidgets import (
 )
 
 from village.classes.enums import Actions, Active, Cycle, Info, State
-from village.classes.plot import OnlinePlotFigureManager
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
-from village.gui.layout import Label, Layout, PushButton
+from village.gui.layout import Label, Layout, OnlinePlotDialog, PushButton
 from village.log import log
 from village.manager import manager
 from village.settings import settings
@@ -463,23 +462,23 @@ class MonitorLayout(Layout):
         return True
 
     def show_online_plots_clicked(self) -> None:
-        self.figure_manager = OnlinePlotFigureManager()
-        self.figure_manager.create_multiplot(manager.task.trial_data)
-        self.reply = QDialog()
-        self.reply.setWindowTitle("Online Plots")
-        x = self.column_width * 10
-        y = self.row_height * 5
-        width = self.column_width * 62
-        height = self.row_height * 20
-        self.reply.setGeometry(x, y, width, height)
-        layout = QVBoxLayout()
-        # Create canvas and toolbar
-        self.canvas = FigureCanvas(self.figure_manager.fig)
-        # self.toolbar = NavigationToolbar(self.canvas, self)
-        # layout.addWidget(self.toolbar)
-        layout.addWidget(self.canvas)
-        self.reply.setLayout(layout)
-        self.reply.exec_()
+        try:
+            # this fails if no trial is finished:
+            session_dfs = manager.get_both_sessions_dfs()
+            manager.online_plot_figure_manager.create_multiplot(session_dfs[1])
+        except Exception:
+            manager.online_plot_figure_manager.create_multiplot(pd.DataFrame())
+
+        manager.online_plot_figure_manager.active = True
+        geom = (
+            self.column_width * 10,
+            self.row_height * 5,
+            self.column_width * 62,
+            self.row_height * 20,
+        )
+        self.reply = OnlinePlotDialog()
+        self.reply.setGeometry(*geom)
+        self.reply.show()
 
 
 class MotorLayout(Layout):

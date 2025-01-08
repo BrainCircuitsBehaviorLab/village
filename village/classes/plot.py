@@ -37,57 +37,59 @@ class SubjectPlot:
 
 
 class OnlinePlotFigureManager:
-    # TODO: modify this so it receives the data to plot
-    """Class to handle creation and management of Matplotlib figures"""
+    """
+    Class to handle creation and management of Matplotlib figures
+    to monitor behavioral data in real-time.
+
+    Use this with the variables you are sending registering in your task,
+    that are part of Task.trial_data.
+    """
 
     def __init__(self):
         self.fig = plt.figure(figsize=(10, 8))
+        self.ax1 = self.fig.add_subplot(121)
+        self.df = pd.DataFrame()
+        self.active = False
 
-    def create_multiplot(self, trial_data: dict) -> Figure:
-        self.fig.clear()
+    def create_multiplot(self, df: pd.DataFrame) -> Figure:
+        try:
+            self.df = df[["trial", "TRIAL_START"]]
+            self.make_plot()
+            self.fig.tight_layout()
+        except Exception:
+            self.make_error_plot()
 
-        # Create sample data
-        # x = np.linspace(0, 10, num_points)
-        # y1 = np.sin(x)
-        # y2 = np.cos(x)
-        # y3 = np.tan(x)
-
-        # Create subplots
-        ax1 = self.fig.add_subplot(221)
-        ax2 = self.fig.add_subplot(222)
-        ax3 = self.fig.add_subplot(223)
-        ax4 = self.fig.add_subplot(224)
-
-        # Plot data
-        # ax1.plot(x, y1, label="Sine")
-        # ax1.set_title("Sine Wave")
-        # ax1.grid(True)
-
-        # ax2.plot(x, y2, label="Cosine")
-        # ax2.set_title("Cosine Wave")
-        ax2.grid(True)
-
-        # ax3.plot(x, y3, label="Tangent")
-        # ax3.set_title("Tangent Wave")
-        ax3.grid(True)
-
-        # # Combined plot
-        # ax4.plot(x, y1, label="Sine")
-        # ax4.plot(x, y2, label="Cosine")
-        # ax4.set_title("Combined")
-        ax4.grid(True)
-        # ax4.legend()
-
-        # plot the dict data as text in the first axis,
-        # formatted as one key-value pair per line
-        ax1.text(
-            0.5,
-            0.5,
-            "\n".join([f"{k}: {v}" for k, v in trial_data.items()]),
-            ha="center",
-            va="center",
-            fontsize=6,
-        )
-
-        self.fig.tight_layout()
         return self.fig
+
+    def update_plot(self, trial_data: dict) -> None:
+        try:
+            self.update_df(trial_data)
+            self.make_plot()
+        except Exception:
+            pass
+
+    def update_df(self, trial_data: dict) -> None:
+        new_row = pd.DataFrame(
+            {
+                "TRIAL_START": [trial_data["Trial start timestamp"]],
+                "trial": self.df.shape[0] + 1,
+            }
+        )
+        self.df = pd.concat([self.df, new_row], ignore_index=True)
+
+    def make_plot(self) -> None:
+        self.ax1.clear()
+        self.df.plot(kind="scatter", x="TRIAL_START", y="trial", ax=self.ax1)
+        self.fig.canvas.draw()
+
+    def make_error_plot(self) -> None:
+        self.ax1.clear()
+        self.ax1.text(
+            0.5,
+            0.5,
+            "Error loading data",
+            horizontalalignment="center",
+            verticalalignment="center",
+            transform=self.ax1.transAxes,
+        )
+        self.fig.canvas.draw()
