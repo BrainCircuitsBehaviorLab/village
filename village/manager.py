@@ -338,13 +338,19 @@ class Manager:
         task_name = self.task.name
         rfid_reader_name = self.rfid_reader.name
         cycle_text = self.cycle_text
-        try:
-            bpod_state = (
-                "BPOD state: "
-                + self.task.bpod.sma.state_names[self.task.bpod.sma.current_state]  # type: ignore
-            )
-        except Exception:
-            bpod_state = ""
+
+        # TODO: add the state of the bpod, but this would have to be
+        # implemented in the bpod code, sending a signal to the manager
+        # when the state changes
+        # try:
+        #     bpod_state = (
+        #         "BPOD state: "
+        #         + self.task.bpod.sma.state_names[
+        #               self.task.bpod.sma.current_state
+        #           ]  # type: ignore
+        #     )
+        # except Exception:
+        #     bpod_state = ""
 
         self.text = (
             "SYSTEM STATE: "
@@ -363,8 +369,8 @@ class Manager:
             + "     //////     "
             + "CYCLE: "
             + cycle_text
-            + "     //////     "
-            + bpod_state
+            # + "     //////     "
+            # + bpod_state
         )
 
     def multiple_detections(self, multiple: bool) -> bool:
