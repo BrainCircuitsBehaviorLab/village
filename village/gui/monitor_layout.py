@@ -311,6 +311,9 @@ class MonitorLayout(Layout):
             "Show the online plots",
             "lightcoral",
         )
+        self.online_plots_button.setToolTip(
+            "Show the online plots when a task is running"
+        )
 
         self.rfid_reader_label: Label = self.create_and_add_label(
             "RFID reader: ", 4, 90, 12, 2, "black"
@@ -442,6 +445,7 @@ class MonitorLayout(Layout):
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
             self.stop_button.setEnabled(True)
+            self.online_plots_button.setEnabled(True)
         elif manager.state.can_go_to_wait():
             self.stop_button.setText("GO TO WAIT STATE")
             self.stop_button.setToolTip(
@@ -455,6 +459,7 @@ class MonitorLayout(Layout):
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
             self.stop_button.setEnabled(False)
+            self.online_plots_button.setEnabled(False)
 
     def change_layout(self, auto: bool = False) -> bool:
         cam_corridor.stop_preview_window()

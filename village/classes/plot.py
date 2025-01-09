@@ -66,7 +66,7 @@ class OnlinePlotFigureManager:
             self.update_df(trial_data)
             self.make_plot()
         except Exception:
-            pass
+            self.make_error_plot()
 
     def update_df(self, trial_data: dict) -> None:
         new_row = pd.DataFrame(
@@ -87,7 +87,7 @@ class OnlinePlotFigureManager:
         self.ax1.text(
             0.5,
             0.5,
-            "Error loading data",
+            "Could not create plot",
             horizontalalignment="center",
             verticalalignment="center",
             transform=self.ax1.transAxes,
