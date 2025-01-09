@@ -21,6 +21,7 @@ from village.classes.protocols import CameraProtocol
 from village.classes.subject import Subject
 from village.classes.task import Task
 from village.classes.training import Training
+from village.devices.temp_sensor import temp_sensor
 from village.log import log
 from village.settings import settings
 from village.time_utils import time_utils
@@ -88,6 +89,8 @@ class Manager:
         self.create_collections()
         log.event_protocol = self.events
         self.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
+        self.detections = time_utils.TimestampTracker(hours=6)
+        self.sessions = time_utils.TimestampTracker(hours=12)
 
     @staticmethod
     def change_directory_settings(new_path: str) -> None:
@@ -525,6 +528,7 @@ class Manager:
         if save:
             self.save_to_sessions_summary(duration, trials, water, settings_str)
         log.end(task=self.task.name, subject=self.subject.name)
+        manager.sessions.add_timestamp()
 
     def save_to_sessions_summary(
         self, duration: float, trials: int, water: int, settings_used_str: str
@@ -543,6 +547,86 @@ class Manager:
                 settings_used_str,
             ]
         )
+
+    def cycle_checks(self) -> None:
+        df = self.events.df
+        self.sessions_summary
+
+        df["date"] = pd.to_datetime(df["date"])
+
+        # time_24_hours_ago = time_utils.hours_ago(24)
+
+        # filtered_df = df[
+        #     (df["description"] == "Subject detected")
+        #     & (df["date"] >= time_24_hours_ago)
+        # ]
+
+        # active_subjects = self.subjects
+
+    def hourly_checks(self) -> None:
+        temp, _, temp_string = temp_sensor.get_temperature()
+        if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
+            log.alarm(
+                "Temperature above maximum: " + temp_string,
+                subject=self.subject.name,
+            )
+        elif temp < float(settings.get("MINIMUM_TEMPERATURE")):
+            log.alarm(
+                "Temperature below minimum: " + temp_string,
+                subject=self.subject.name,
+            )
+
+        if self.detections.clean_and_count() == 0:
+            value = str(self.detections.hours)
+            log.alarm("No subjects detected in the last " + value + " hours")
+
+        if self.sessions.clean_and_count() == 0:
+            value = str(self.sessions.hours)
+            log.alarm("No sessions performed in the last " + value + " hours")
+
+    @staticmethod
+    def create_global_csv_for_subject(subject: str, sessions_directory: str) -> None:
+        subject_directory = os.path.join(sessions_directory, subject)
+        final_path = os.path.join(sessions_directory, subject, subject + ".csv")
+
+        sessions = []
+        for file in os.listdir(subject_directory):
+            if file.endswith("RAW.csv"):
+                continue
+            elif file.endswith(".csv"):
+                sessions.append(file)
+
+        def extract_datetime(file_name) -> str:
+            base_name = str(os.path.basename(file_name))
+            datetime = base_name.split("_")[2] + base_name.split("_")[3].split(".")[0]
+            return datetime
+
+        sorted_sessions = sorted(sessions, key=extract_datetime)
+
+        dfs: list[pd.DataFrame] = []
+
+        for i, session in enumerate(sorted_sessions):
+            df = pd.read_csv(session, sep=";").insert(
+                loc=0, column="session", value=i + 1
+            )
+            dfs.append(df)
+
+        final_df = pd.concat(dfs)
+
+        priority_columns = [
+            "session",
+            "date",
+            "trial",
+            "subject",
+            "task",
+            "system_name",
+        ]
+        reordered_columns = priority_columns + [
+            col for col in final_df.columns if col not in priority_columns
+        ]
+        final_df = final_df[reordered_columns]
+
+        final_df.to_csv(final_path, header=True, index=False, sep=";")
 
 
 manager = Manager()

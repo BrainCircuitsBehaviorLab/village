@@ -412,6 +412,13 @@ extra_settings = [
 wait before sending the same alarm again.""",
     ),
     Setting(
+        "ALARM_BOX_TIME",
+        3600,
+        int,
+        """If the alarms 2 subjects in box or Subject in prohibited area are triggered,
+the minimum time in seconds to wait before sending the same alarm again.""",
+    ),
+    Setting(
         "WEIGHT_DEVIATION_RATIO",
         0.25,
         float,

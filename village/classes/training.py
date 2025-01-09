@@ -15,6 +15,7 @@ class Settings:
         self.refractary_period = -1
         self.minimum_duration: float = -1
         self.maximum_duration: float = -1
+        self.observations: str = ""
 
 
 class Training:
@@ -22,6 +23,7 @@ class Training:
         self.default_settings = Settings()
         self.settings = Settings()
         self.subject = "None"
+        self.last_task = "None"
         self.df: pd.DataFrame = pd.DataFrame()
 
     def check_variables(self) -> None:
@@ -66,12 +68,14 @@ class Training:
             "maximum_duration",
             "refractary_period",
         ]
+        observations = ["observations"]
         extra_properties = [
             prop
             for prop in vars(self.default_settings)
-            if prop not in default_properties
+            if prop not in default_properties + observations
         ]
-        properties = default_properties + extra_properties
+        properties = default_properties + extra_properties + observations
+
         return properties
 
     # def get_types(self) -> dict[str, Any]:

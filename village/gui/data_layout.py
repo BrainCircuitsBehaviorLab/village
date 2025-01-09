@@ -55,54 +55,76 @@ class TableView(QTableView):
             flags = self.model().flags(index)
             column = index.column()
             column_name = self.model().headerData(column, Qt.Horizontal, Qt.DisplayRole)
-            if flags & Qt.ItemIsEditable:
-                self.searching = ""
-                self.model_parent.layout_parent.search_edit.setText("")
-                self.model_parent.layout_parent.update_gui()
-                if column_name == "next_settings" and manager.state.can_edit_data():
-                    manager.state = State.MANUAL_MODE
-                    current_value = self.model().data(index, Qt.DisplayRole)
-                    new_value = self.model_parent.layout_parent.edit_next_settings(
-                        current_value
-                    )
-                    self.model().setData(index, new_value, Qt.EditRole)
-                    self.save_changes_in_df()
-                elif (
-                    column_name == "next_session_time" and manager.state.can_edit_data()
-                ):
-                    manager.state = State.MANUAL_MODE
-                    current_value = self.model().data(index, Qt.DisplayRole)
-                    new_value = self.model_parent.layout_parent.edit_next_session_time(
-                        current_value
-                    )
-                    self.model().setData(index, new_value, Qt.EditRole)
-                    self.save_changes_in_df()
-                elif column_name == "active" and manager.state.can_edit_data():
-                    manager.state = State.MANUAL_MODE
-                    current_value = self.model().data(index, Qt.DisplayRole)
-                    self.openDaysSelectionDialog(index, current_value)
-                elif manager.state.can_edit_data():
-                    manager.state = State.MANUAL_MODE
-                    super().mouseDoubleClickEvent(event)
-                else:
+            if manager.table == DataTable.SUBJECTS:
+                if flags & Qt.ItemIsEditable and manager.state.can_edit_data():
+                    self.searching = ""
+                    self.model_parent.layout_parent.search_edit.setText("")
+                    self.model_parent.layout_parent.update_gui()
+                    if column_name == "next_settings":
+                        manager.state = State.MANUAL_MODE
+                        current_value = self.model().data(index, Qt.DisplayRole)
+                        new_value = self.model_parent.layout_parent.edit_next_settings(
+                            current_value
+                        )
+                        self.model().setData(index, new_value, Qt.EditRole)
+                        self.save_changes_in_df()
+                    elif column_name == "next_session_time":
+                        manager.state = State.MANUAL_MODE
+                        current_value = self.model().data(index, Qt.DisplayRole)
+                        new_value = (
+                            self.model_parent.layout_parent.edit_next_session_time(
+                                current_value
+                            )
+                        )
+                        self.model().setData(index, new_value, Qt.EditRole)
+                        self.save_changes_in_df()
+                    elif column_name == "active":
+                        manager.state = State.MANUAL_MODE
+                        current_value = self.model().data(index, Qt.DisplayRole)
+                        self.openDaysSelectionDialog(index, current_value)
+                    else:
+                        manager.state = State.MANUAL_MODE
+                        super().mouseDoubleClickEvent(event)
+                elif flags & Qt.ItemIsEditable:
                     text = "Wait until the box is empty before editing the tables."
                     QMessageBox.information(self, "EDIT", text)
-            elif flags:
-                text = str(index.data())
-                if column_name == "settings":
-                    try:
-                        data = json.loads(text)
-                        lines = [f"{key}: {value}" for key, value in data.items()]
-                        text = "\n".join(lines)
-                    except Exception:
-                        log.error(
-                            "Error reading settings", exception=traceback.format_exc()
-                        )
                 else:
-                    text = text.replace("  |  ", "\n")
-                QMessageBox.information(self, "", text)
+                    super().mouseDoubleClickEvent(event)
+
+            elif manager.table == DataTable.SESSIONS_SUMMARY:
+                if flags & Qt.ItemIsEditable:
+                    if column_name == "settings":
+                        manager.state = State.MANUAL_MODE
+                        current_value = self.model().data(index, Qt.DisplayRole)
+                        new_value = self.model_parent.layout_parent.edit_task_settings(
+                            current_value, manager.state.can_edit_data()
+                        )
+                        self.model().setData(index, new_value, Qt.EditRole)
+                        self.save_changes_in_df()
+
+                        parent = self.model_parent.layout_parent
+
+                        paths = parent.get_paths_from_sessions_summary_row(
+                            parent.get_selected_row_series()
+                        )
+
+                        json_path = paths[2]
+                        try:
+                            with open(json_path, "w") as file:
+                                json.dump(current_value, file)
+                        except Exception:
+                            log.error(
+                                "Error trying to modify the json file",
+                                exception=traceback.format_exc(),
+                            )
+                    else:
+                        text = str(index.data())
+                        text = text.replace("  |  ", "\n")
+                        QMessageBox.information(self, "", text)
             else:
-                super().mouseDoubleClickEvent(event)
+                text = str(index.data())
+                text = text.replace("  |  ", "\n")
+                QMessageBox.information(self, "", text)
         else:
             super().mouseDoubleClickEvent(event)
 
@@ -475,7 +497,7 @@ class DataLayout(Layout):
             self.page3Layout.plot_label.setPixmap(pixmap)
         else:
             self.page3Layout.plot_label.setText("Plot could not be generated")
-        # TODO: should the figure be closed?
+            # TODO: should the figure be closed?
 
     def change_to_df(self) -> None:
         self.central_layout.setCurrentWidget(self.page1)
@@ -575,7 +597,11 @@ class DfLayout(Layout):
         self.df = self.obtain_searched_df()
 
     def create_table(self) -> None:
-        editable = True if manager.table == DataTable.SUBJECTS else False
+        editable = (
+            True
+            if manager.table in (DataTable.SUBJECTS, DataTable.SESSIONS_SUMMARY)
+            else False
+        )
         self.model = self.create_and_add_table(
             self.df, 4, 0, 210, 42, widths=self.widths, editable=editable
         )
@@ -921,19 +947,25 @@ class DfLayout(Layout):
                     QMessageBox.No,
                 )
                 if reply == QMessageBox.Yes:
-                    if manager.table == DataTable.SESSIONS_SUMMARY:
-                        del_paths = self.get_paths_from_sessions_summary_row(
-                            self.get_selected_row_series()
-                        )
-                        for path in del_paths:
-                            if os.path.exists(path):
-                                os.remove(path)
+                    row = self.get_selected_row_series()
+                    if row is not None:
+                        if manager.table == DataTable.SESSIONS_SUMMARY:
+                            del_paths = self.get_paths_from_sessions_summary_row(row)
+                            for path in del_paths:
+                                if os.path.exists(path):
+                                    os.remove(path)
 
-                    index = selected_indexes[0]
-                    self.model.beginRemoveRows(QModelIndex(), index.row(), index.row())
-                    self.model.df.drop(index.row(), inplace=True)
-                    self.model.df.reset_index(drop=True, inplace=True)
-                    self.model.endRemoveRows()
+                        subject = row["subject"]
+                        directory = str(settings.get("SESSIONS_DIRECTORY"))
+                        manager.create_global_csv_for_subject(subject, directory)
+
+                        index = selected_indexes[0]
+                        self.model.beginRemoveRows(
+                            QModelIndex(), index.row(), index.row()
+                        )
+                        self.model.df.drop(index.row(), inplace=True)
+                        self.model.df.reset_index(drop=True, inplace=True)
+                        self.model.endRemoveRows()
                 self.model.table_view.save_changes_in_df()
                 self.model.table_view.selectionModel().clearSelection()
                 self.update_buttons()
@@ -952,6 +984,75 @@ class DfLayout(Layout):
             self.update_data()
             self.create_table()
 
+    def edit_task_settings(self, current_value: str, can_edit: bool) -> str:
+        try:
+            new_dict = json.loads(current_value)
+        except Exception:
+            log.error(
+                "Error reading settings",
+                exception=traceback.format_exc(),
+            )
+
+        self.reply = QDialog()
+        self.reply.setWindowTitle("Task settings")
+
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+        self.line_edits: list[QLineEdit] = []
+
+        for name, value in new_dict.items():
+            label = QLabel(name + ":")
+            line_edit = QLineEdit()
+            line_edit.setReadOnly(True)
+            if name == "observations" and can_edit:
+                line_edit.setReadOnly(False)
+            line_edit.setPlaceholderText(str(value))
+            h_layout = QHBoxLayout()
+            h_layout.addWidget(label)
+            h_layout.addWidget(line_edit)
+            content_layout.addLayout(h_layout)
+            self.line_edits.append(line_edit)
+
+        btns_layout = QHBoxLayout()
+        self.btn_ok = QPushButton("SAVE")
+        self.btn_cancel = QPushButton("CANCEL")
+        btns_layout.addWidget(self.btn_ok)
+        btns_layout.addWidget(self.btn_cancel)
+        content_layout.addLayout(btns_layout)
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setWidget(content_widget)
+
+        main_layout = QVBoxLayout(self.reply)
+        main_layout.addWidget(scroll_area)
+
+        self.btn_ok.clicked.connect(self.reply.accept)
+        self.btn_cancel.clicked.connect(self.reply.reject)
+
+        self.reply.adjustSize()
+        current_height = self.reply.sizeHint().height()
+        max_width = int(self.window.window_width * 0.5)
+        max_height = min(
+            current_height + int(self.window.window_height / 10),
+            int(self.window.window_height * 0.8),
+        )
+        self.reply.setFixedWidth(max_width)
+        self.reply.setFixedHeight(max_height)
+
+        if self.reply.exec_():
+            for index, line_edit in enumerate(self.line_edits):
+                name = list(new_dict.keys())[index]
+                if name == "observations":
+                    value = (
+                        line_edit.text()
+                        if line_edit.text()
+                        else line_edit.placeholderText()
+                    )
+                    new_dict[name] = value
+        return json.dumps(new_dict)
+
     def edit_next_settings(self, current_value: str) -> str:
         manager.training.load_settings_from_jsonstring(current_value)
         new_dict = manager.training.get_dict()
@@ -961,7 +1062,7 @@ class DfLayout(Layout):
 
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
-        self.line_edits: list[QLineEdit] = []
+        self.line_edits = []
 
         properties = manager.training.get_settings_names()
         for name in properties:

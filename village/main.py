@@ -44,6 +44,7 @@ from village.gui.gui import Gui
 from village.log import log
 from village.manager import manager
 from village.settings import settings
+from village.time_utils import time_utils
 
 # init
 manager.task.bpod = bpod
@@ -71,6 +72,10 @@ def system_run(bevavior_window: QWidget) -> None:
     i = 0
     id = ""
     multiple = False
+    hour_change_detector = time_utils.HourChangeDetector()
+    cycle_change_detector = time_utils.CycleChangeDetector(
+        settings.get("DAYTIME"), settings.get("NIGHTTIME")
+    )
 
     cam_corridor.start_record()
 
@@ -90,6 +95,12 @@ def system_run(bevavior_window: QWidget) -> None:
             cam_corridor.stop_record()
             cam_corridor.start_record()
 
+        if hour_change_detector.has_hour_changed():
+            manager.hourly_checks()
+
+        if cycle_change_detector.has_cycle_changed():
+            manager.cycle_checks()
+
         match manager.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
@@ -100,6 +111,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.state = State.DETECTION
             case State.DETECTION:
                 # Gathering subject data, checking requirements to enter
+                manager.detections.add_timestamp()
                 if (
                     manager.get_subject_from_tag(id)
                     and manager.subject.create_from_subject_series(auto=True)

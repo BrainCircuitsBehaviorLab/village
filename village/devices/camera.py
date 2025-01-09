@@ -136,7 +136,8 @@ class Camera(CameraProtocol):
         self.is_recording = False
         self.show_time_info = False
 
-        self.area4_alarm_chrono = time_utils.Chrono(initial_offset=True)
+        self.area4_alarm_timer = time_utils.Timer(settings.get("ALARM_AREA4_TIME"))
+        self.box_alarm_timer = time_utils.Timer(settings.get("ALARM_BOX_TIME"))
 
         self.cam.start()
 
@@ -297,6 +298,8 @@ class Camera(CameraProtocol):
                 self.write_trial()
                 self.write_pixel_detection()
                 self.write_csv()
+                if self.name == "BOX":
+                    self.areas_box_ok()
 
     def get_gray_frame(self) -> None:
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
@@ -507,8 +510,7 @@ class Camera(CameraProtocol):
             return False
         elif self.counts[3] > self.zero_or_one_mouse:
             text = "Detection in area4 when it should be empty: " + str(self.counts[3])
-            if self.area4_alarm_chrono.get_seconds() > settings.get("ALARM_AREA4_TIME"):
-                self.area4_alarm_chrono.reset()
+            if self.area4_alarm_timer.has_elapsed():
                 log.alarm(text)
             else:
                 log.info(text)
@@ -517,19 +519,23 @@ class Camera(CameraProtocol):
         else:
             return True
 
-    # def areas_box_ok(self) -> bool:
-    #     message = None
-    #     pixels = 0
-    #     for i in range(4):
-    #         if self.areas_allowed[i]:
-    #             and self.counts[i] > self.one_or_two_mice:
-    #             message = "2 subjects in box"
-    #             break
-    #         if not self.areas_allowed[i] and self.counts[i] > self.zero_or_one_mouse:
-    #             message = "1 mouse in prohibited area"
-    #             break
-    #     if message:
-    #         log.alarm(message)
+    def areas_box_ok(self) -> None:
+        pixels_allowed = 0
+        pixels_not_allowed = 0
+
+        pixels_allowed = sum(
+            count for count, allow in zip(self.counts, self.areas_allowed) if allow
+        )
+        pixels_not_allowed = sum(
+            count for count, allow in zip(self.counts, self.areas_allowed) if not allow
+        )
+
+        if pixels_allowed > self.one_or_two_mice:
+            if self.box_alarm_timer.has_elapsed():
+                log.alarm("2 subjects in box")
+        elif pixels_not_allowed > self.zero_or_one_mouse:
+            if self.box_alarm_timer.has_elapsed():
+                log.alarm("1 mouse in prohibited area")
 
     def area_1_empty(self) -> bool:
         return self.counts[0] <= self.zero_or_one_mouse

@@ -162,6 +162,7 @@ class Task:
                 settings_str = self.save_json(run_mode)
                 self.training.df = self.df_all
                 self.training.subject = self.subject
+                self.training.last_task = self.name
                 self.training.settings = self.settings
                 save = True
             except Exception:
@@ -185,13 +186,11 @@ class Task:
 
         dictionary: dict[str, Any] = {}
 
-        default_properties_to_save = [
-            "minimum_duration",
-            "maximum_duration",
-        ]
+        default_properties_to_save = ["minimum_duration", "maximum_duration"]
         default_properties_to_not_save = [
             "next_task",
             "refractary_period",
+            "observations",
         ]
         default_properties = default_properties_to_save + default_properties_to_not_save
         extra_properties = [
@@ -205,6 +204,7 @@ class Task:
                 dictionary[name] = value
 
         dictionary["run_mode"] = run_mode
+        dictionary["observations"] = self.settings.observations
         json_string = json.dumps(dictionary)
 
         with open(self.session_settings_path, "w") as f:
@@ -261,8 +261,21 @@ class Task:
                 ] * self.new_df.shape[0]
                 self.df_all = pd.concat([self.df_all, self.new_df], sort=True)
             except FileNotFoundError:
-                self.new_df.insert(loc=0, column="session", value=1)
+                self.new_df["session"] = [1] * self.new_df.shape[0]
                 self.df_all = self.new_df
+
+            priority_columns = [
+                "session",
+                "date",
+                "trial",
+                "subject",
+                "task",
+                "system_name",
+            ]
+            reordered_columns = priority_columns + [
+                col for col in self.df_all.columns if col not in priority_columns
+            ]
+            self.df_all = self.df_all[reordered_columns]
 
             self.df_all.to_csv(self.subject_path, header=True, index=False, sep=";")
 
