@@ -72,6 +72,7 @@ def system_run(bevavior_window: QWidget) -> None:
     i = 0
     id = ""
     multiple = False
+    trial = 0
     hour_change_detector = time_utils.HourChangeDetector()
     cycle_change_detector = time_utils.CycleChangeDetector(
         settings.get("DAYTIME"), settings.get("NIGHTTIME")
@@ -94,6 +95,11 @@ def system_run(bevavior_window: QWidget) -> None:
         if cam_corridor.chrono.get_seconds() > 1800:
             cam_corridor.stop_record()
             cam_corridor.start_record()
+
+        if manager.online_plot_figure_manager.active:
+            if manager.task.current_trial > trial:
+                trial = manager.task.current_trial
+                manager.online_plot_figure_manager.update_plot(manager.task.trial_data)
 
         if hour_change_detector.has_hour_changed():
             manager.hourly_checks()
