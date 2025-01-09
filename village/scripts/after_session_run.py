@@ -24,6 +24,8 @@ class AfterSessionRun():
             remote_host=self.remote_host,
             port=self.port
         )
+        # TODO: deal with deleted data
+        # TODO: make reports
 
 if __name__ == "__main__":
     after_session_run = AfterSessionRun()

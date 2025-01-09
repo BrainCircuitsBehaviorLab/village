@@ -100,6 +100,8 @@ def system_run(bevavior_window: QWidget) -> None:
             if manager.task.current_trial > trial:
                 trial = manager.task.current_trial
                 manager.online_plot_figure_manager.update_plot(manager.task.trial_data)
+        else:
+            trial = 0
 
         if hour_change_detector.has_hour_changed():
             manager.hourly_checks()
