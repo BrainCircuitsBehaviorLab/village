@@ -46,14 +46,16 @@ class OnlinePlotFigureManager:
     """
 
     def __init__(self):
+        self.name = "Online Plot"
         self.fig = plt.figure(figsize=(10, 8))
         self.ax1 = self.fig.add_subplot(121)
         self.df = pd.DataFrame()
         self.active = False
+        self.columns_to_plot = ["trial", "TRIAL_START"]
 
     def create_multiplot(self, df: pd.DataFrame) -> Figure:
         try:
-            self.df = df[["trial", "TRIAL_START"]]
+            self.df = df[self.columns_to_plot].copy()
             self.make_plot()
             self.fig.tight_layout()
         except Exception:
@@ -69,12 +71,9 @@ class OnlinePlotFigureManager:
             self.make_error_plot()
 
     def update_df(self, trial_data: dict) -> None:
-        new_row = pd.DataFrame(
-            {
-                "TRIAL_START": [trial_data["Trial start timestamp"]],
-                "trial": self.df.shape[0] + 1,
-            }
-        )
+        # get the same keys from the dictionary
+        trial_data = {k: v for k, v in trial_data.items() if k in self.columns_to_plot}
+        new_row = pd.DataFrame(data=trial_data, columns=self.df.columns, index=[0])
         self.df = pd.concat([self.df, new_row], ignore_index=True)
 
     def make_plot(self) -> None:

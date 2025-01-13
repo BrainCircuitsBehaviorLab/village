@@ -119,6 +119,7 @@ class PyBpod(PyBpodProtocol):
         self.bpod.register_value(name, value)
 
     def send_softcode(self, idx: int) -> None:
+        # TODO: Move outside bpod as this is to receive softcodes in bpod
         self.softcode.send(idx)
 
     @staticmethod
