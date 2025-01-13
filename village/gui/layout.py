@@ -134,7 +134,11 @@ class ComboBox(QComboBox):
         self.possible_values = possible_values
         self.index = index
         self.action = action
-        self.value = self.possible_values[self.index]
+        try:
+            self.value = self.possible_values[self.index]
+        except Exception:
+            self.index = 0
+            self.value = self.possible_values[self.index]
         self.setCurrentText(self.value)
         self.currentTextChanged.connect(self.handleTextChanged)
         self.update_style()

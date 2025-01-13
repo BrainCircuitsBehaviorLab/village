@@ -108,11 +108,8 @@ class TempSensorProtocol:
     def start(self) -> None:
         return
 
-    def get_temperature(self) -> tuple[float, float]:
-        return 0.0, 0.0
-
-    def get_temperature_string(self) -> str:
-        return ""
+    def get_temperature(self) -> tuple[float, float, str]:
+        return 0.0, 0.0, ""
 
 
 class EventProtocol:

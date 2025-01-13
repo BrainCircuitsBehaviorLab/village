@@ -16,6 +16,7 @@ dependencies = [
     "python-telegram-bot",
     "scipy",
     "sphinx_book_theme",
+    "fire",
 ]
 
 license = {text = "MIT"}

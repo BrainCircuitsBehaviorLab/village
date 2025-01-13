@@ -10,6 +10,10 @@ class TimeUtils:
         return datetime.now()
 
     @staticmethod
+    def hours_ago(hours: int) -> datetime:
+        return datetime.now() - timedelta(hours=hours)
+
+    @staticmethod
     def time_since_start(start: datetime) -> timedelta:
         return datetime.now() - start
 
@@ -83,11 +87,8 @@ class TimeUtils:
         return path
 
     class Chrono:
-        def __init__(self, initial_offset: bool = False) -> None:
-            if initial_offset:
-                self.init_time = datetime.now() - timedelta(days=1)
-            else:
-                self.init_time = datetime.now()
+        def __init__(self) -> None:
+            self.init_time = datetime.now()
 
         def reset(self) -> None:
             self.init_time = datetime.now()
@@ -100,6 +101,73 @@ class TimeUtils:
 
         def get_milliseconds(self) -> int:
             return int(self.get_time() / timedelta(milliseconds=1))
+
+    class Timer:
+        def __init__(self, seconds: int) -> None:
+            self.seconds = seconds
+            self.init_time = datetime.now() - timedelta(seconds=seconds)
+
+        # the first time has_elapsed is true
+        def has_elapsed(self) -> bool:
+            value = datetime.now() - self.init_time >= timedelta(seconds=self.seconds)
+            if value:
+                self.reset()
+            return value
+
+        def reset(self) -> None:
+            self.init_time = datetime.now()
+
+    class HourChangeDetector:
+        def __init__(self) -> None:
+            self.last_hour = datetime.now().hour
+
+        def has_hour_changed(self) -> bool:
+            current_hour = datetime.now().hour
+
+            if current_hour != self.last_hour:
+                self.last_hour = current_hour
+                return True
+            return False
+
+    class CycleChangeDetector:
+        def __init__(self, day_time: str, night_time: str) -> None:
+            self.day_time = TimeUtils.date_from_setting_string(day_time)
+            self.night_time = TimeUtils.date_from_setting_string(night_time)
+            self.last_state = self._get_current_cycle()
+
+        def _get_current_cycle(self) -> str:
+            now = time_utils.now()
+
+            if self.day_time < self.night_time:
+                if self.day_time <= now < self.night_time:
+                    return "day"
+                else:
+                    return "night"
+            else:
+                if now >= self.day_time or now < self.night_time:
+                    return "day"
+                else:
+                    return "night"
+
+        def has_cycle_changed(self) -> bool:
+            current_state = self._get_current_cycle()
+            if current_state != self.last_state:
+                self.last_state = current_state
+                return True
+            return False
+
+    class TimestampTracker:
+        def __init__(self, hours: int) -> None:
+            self.timestamps = [datetime.now()]
+            self.hours = hours
+
+        def add_timestamp(self) -> None:
+            self.timestamps.append(datetime.now())
+
+        def clean_and_count(self) -> int:
+            hours_ago = datetime.now() - timedelta(hours=self.hours)
+            self.timestamps = [ts for ts in self.timestamps if ts > hours_ago]
+            return len(self.timestamps)
 
 
 time_utils = TimeUtils()
