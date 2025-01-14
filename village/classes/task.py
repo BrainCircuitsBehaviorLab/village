@@ -129,6 +129,9 @@ class Task:
 
     def get_trial_data(self) -> None:
         self.trial_data = self.bpod.session.current_trial.export()
+        # rename one of the keys
+        self.trial_data["TRIAL_START"] = self.trial_data.pop("Trial start timestamp")
+        self.trial_data["trial"] = self.current_trial
         self.trial_data["ordered_list_of_events"] = [
             msg.content for msg in self.bpod.session.current_trial.events_occurrences
         ]
