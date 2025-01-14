@@ -426,6 +426,12 @@ the minimum time in seconds to wait before sending the same alarm again.""",
 If the ratio is greater than this value, the weight is considered an outlier probably
 because the animal is moving or it is not completely on the scale.""",
     ),
+    Setting(
+        "MATPLOTLIB_DPI",
+        100,
+        int,
+        "The DPI of the matplotlib plots.",
+    ),
 ]
 
 

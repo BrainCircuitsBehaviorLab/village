@@ -10,8 +10,8 @@ import pandas as pd
 from village.classes.protocols import EventProtocol
 from village.classes.training import Training
 from village.log import log
+from village.scripts import time_utils
 from village.settings import settings
-from village.time_utils import time_utils
 
 
 class Collection(EventProtocol):

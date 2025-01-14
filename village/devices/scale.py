@@ -10,8 +10,8 @@ import smbus2
 
 from village.classes.protocols import ScaleProtocol
 from village.log import log
+from village.scripts import time_utils
 from village.settings import settings
-from village.time_utils import time_utils
 
 
 class Scale(ScaleProtocol):

@@ -43,8 +43,12 @@ from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
 from village.log import log
 from village.manager import manager
+from village.scripts import time_utils
 from village.settings import settings
-from village.time_utils import time_utils
+
+# to debug segfaults uncomment the following lines
+# import faulthandler
+# faulthandler.enable()
 
 # init
 manager.task.bpod = bpod

@@ -11,8 +11,8 @@ from village.classes.protocols import TelegramBotProtocol
 from village.devices.camera import cam_box, cam_corridor
 from village.log import log
 from village.rt_plots import rt_plots
+from village.scripts import time_utils
 from village.settings import settings
-from village.time_utils import time_utils
 
 
 class TelegramBot(TelegramBotProtocol):

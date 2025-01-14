@@ -329,7 +329,7 @@ class BpodBase(object):
         sma.is_running = True
         while sma.is_running:
 
-            time.sleep(0.1)
+            time.sleep(0.001)
 
             # read commands from a net socket
             if self.socketin is not None:

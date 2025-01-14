@@ -2,7 +2,6 @@ import importlib
 import importlib.util
 import inspect
 import os
-import subprocess
 import sys
 import traceback
 from pathlib import Path
@@ -11,8 +10,6 @@ from typing import Callable
 
 import numpy as np
 import pandas as pd
-import sounddevice as sd
-from PyQt5.QtWidgets import QLayout
 
 from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
@@ -23,8 +20,8 @@ from village.classes.task import Task
 from village.classes.training import Training
 from village.devices.temp_sensor import temp_sensor
 from village.log import log
+from village.scripts import time_utils, utils
 from village.settings import settings
-from village.time_utils import time_utils
 
 
 class Manager:
@@ -88,65 +85,12 @@ class Manager:
         )
 
         self.update_cycle()
-        self.create_directories()
+        utils.create_directories()
         self.create_collections()
         log.event_protocol = self.events
-        self.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
+        utils.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
         self.detections = time_utils.TimestampTracker(hours=6)
         self.sessions = time_utils.TimestampTracker(hours=12)
-
-    @staticmethod
-    def change_directory_settings(new_path: str) -> None:
-        settings.set("PROJECT_DIRECTORY", new_path)
-        settings.set("DATA_DIRECTORY", str(Path(new_path, "data")))
-        settings.set("SESSIONS_DIRECTORY", str(Path(new_path, "data", "sessions")))
-        settings.set("VIDEOS_DIRECTORY", str(Path(new_path, "data", "videos")))
-        settings.set("CODE_DIRECTORY", str(Path(new_path, "code")))
-
-    @staticmethod
-    def create_directories() -> None:
-        directory = Path(settings.get("PROJECT_DIRECTORY"))
-        directory.mkdir(parents=True, exist_ok=True)
-        directory = Path(settings.get("DATA_DIRECTORY"))
-        directory.mkdir(parents=True, exist_ok=True)
-        directory = Path(settings.get("SESSIONS_DIRECTORY"))
-        directory.mkdir(parents=True, exist_ok=True)
-        directory = Path(settings.get("VIDEOS_DIRECTORY"))
-        directory.mkdir(parents=True, exist_ok=True)
-        directory = Path(settings.get("CODE_DIRECTORY"))
-        directory.mkdir(parents=True, exist_ok=True)
-
-    @staticmethod
-    def create_directories_from_path(p: str) -> bool:
-        try:
-            path = Path(p)
-            path.mkdir(parents=True, exist_ok=True)
-            data = Path(path, "data")
-            data.mkdir(parents=True, exist_ok=True)
-            sessions = Path(data, "sessions")
-            sessions.mkdir(parents=True, exist_ok=True)
-            videos = Path(data, "videos")
-            videos.mkdir(parents=True, exist_ok=True)
-            code = Path(path, "code")
-            code.mkdir(parents=True, exist_ok=True)
-            return True
-        except Exception:
-            return False
-
-    @staticmethod
-    def download_github_repository(repository: str) -> None:
-        directory = Path(settings.get("CODE_DIRECTORY"))
-        default_directory = Path(settings.get("DEFAULT_CODE_DIRECTORY"))
-        if len(os.listdir(directory)) == 0 and directory == default_directory:
-            directory.mkdir(parents=True, exist_ok=True)
-            try:
-                subprocess.run(["git", "clone", repository, directory])
-                log.info("Repository " + repository + " downloaded")
-            except Exception:
-                log.error(
-                    "Error downloading repository " + repository,
-                    exception=traceback.format_exc(),
-                )
 
     def create_collections(self) -> None:
         self.events = Collection(
@@ -403,23 +347,6 @@ class Manager:
             return True
         return False
 
-    def delete_all_elements(self, layout: QLayout) -> None:
-        for i in reversed(range(layout.count())):
-            layoutItem = layout.itemAt(i)
-            if layoutItem is not None:
-                if layoutItem.widget() is not None:
-                    widgetToRemove = layoutItem.widget()
-                    widgetToRemove.deleteLater()
-                else:
-                    if layoutItem.layout() is not None:
-                        self.delete_all_elements(layoutItem.layout())
-
-    @staticmethod
-    def get_sound_devices() -> list[str]:
-        devices = sd.query_devices()
-        devices_str = [d["name"] for d in devices]
-        return devices_str
-
     def launch_task_manual(self, cam: CameraProtocol) -> bool:
         self.task.create_paths()
         self.task.cam_box = cam
@@ -567,32 +494,81 @@ class Manager:
         )
 
     def cycle_checks(self) -> None:
-        df = self.events.df
-        self.sessions_summary
+        minimum_water = float(settings.get("MINIMUM_WATER"))
+        events = self.events.df.copy()
+        subjects = self.subjects.df.copy()
+        sessions_summary = self.sessions_summary.df.copy()
 
-        df["date"] = pd.to_datetime(df["date"])
+        events["date"] = pd.to_datetime(events["date"])
+        sessions_summary["date"] = pd.to_datetime(sessions_summary["date"])
 
-        # time_24_hours_ago = time_utils.hours_ago(24)
+        time_24_hours_ago = time_utils.hours_ago(24)
 
-        # filtered_df = df[
-        #     (df["description"] == "Subject detected")
-        #     & (df["date"] >= time_24_hours_ago)
-        # ]
+        detections = events[
+            (events["description"] == "Subject detected")
+            & (events["date"] >= time_24_hours_ago)
+        ]
+        sessions = events[
+            (events["type"] == "START") & (events["date"] >= time_24_hours_ago)
+        ]
+        sessions_summary = sessions_summary[
+            sessions_summary["date"] >= time_24_hours_ago
+        ]
 
-        # active_subjects = self.subjects
+        subject_detections = detections.groupby("subject").size().to_dict()
+        subject_sessions = sessions.groupby("subject").size().to_dict()
+        subject_water = sessions_summary.groupby("subject")["water"].sum().to_dict()
+        subject_weight = sessions_summary.groupby("subject")["weight"].mean().to_dict()
+
+        active_subjects = subjects.loc[
+            subjects["active"].apply(utils.is_active), "name"
+        ].tolist()
+        active_hours = utils.calculate_active_hours(subjects)
+
+        report_text = "REPORT\n\n"
+        report_text += "subject;detections;sessions;water;weight\n"
+
+        for sub in active_subjects:
+            detections_str = str(subject_detections[sub])
+            sessions_str = str(subject_sessions[sub])
+            water_str = str(subject_water[sub])
+            weight_str = str(subject_weight[sub])
+            report_text += (
+                sub
+                + ";"
+                + detections_str
+                + ";"
+                + sessions_str
+                + ";"
+                + water_str
+                + ";"
+                + weight_str
+                + "\n"
+            )
+
+        log.alarm(report_text)
+
+        for sub in active_subjects:
+            water = subject_water[sub]
+            if active_hours[sub] >= 24:
+                if subject_detections[sub] == 0:
+                    log.alarm("No detections in the last 24 hours", subject=sub)
+                elif subject_sessions[sub] == 0:
+                    log.alarm("No sessions in the last 24 hours", subject=sub)
+                elif water < minimum_water:
+                    log.alarm(
+                        "Low water consumption ("
+                        + str(water)
+                        + "ml) in the last 24 hours",
+                        subject=sub,
+                    )
 
     def hourly_checks(self) -> None:
         temp, _, temp_string = temp_sensor.get_temperature()
         if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
-            log.alarm(
-                "Temperature above maximum: " + temp_string,
-                subject=self.subject.name,
-            )
+            log.alarm("Temperature above maximum: " + temp_string)
         elif temp < float(settings.get("MINIMUM_TEMPERATURE")):
-            log.alarm(
-                "Temperature below minimum: " + temp_string,
-                subject=self.subject.name,
-            )
+            log.alarm("Temperature below minimum: " + temp_string)
 
         if self.detections.clean_and_count() == 0:
             value = str(self.detections.hours)
@@ -601,50 +577,6 @@ class Manager:
         if self.sessions.clean_and_count() == 0:
             value = str(self.sessions.hours)
             log.alarm("No sessions performed in the last " + value + " hours")
-
-    @staticmethod
-    def create_global_csv_for_subject(subject: str, sessions_directory: str) -> None:
-        subject_directory = os.path.join(sessions_directory, subject)
-        final_path = os.path.join(sessions_directory, subject, subject + ".csv")
-
-        sessions = []
-        for file in os.listdir(subject_directory):
-            if file.endswith("RAW.csv"):
-                continue
-            elif file.endswith(".csv"):
-                sessions.append(file)
-
-        def extract_datetime(file_name) -> str:
-            base_name = str(os.path.basename(file_name))
-            datetime = base_name.split("_")[2] + base_name.split("_")[3].split(".")[0]
-            return datetime
-
-        sorted_sessions = sorted(sessions, key=extract_datetime)
-
-        dfs: list[pd.DataFrame] = []
-
-        for i, session in enumerate(sorted_sessions):
-            df = pd.read_csv(session, sep=";").insert(
-                loc=0, column="session", value=i + 1
-            )
-            dfs.append(df)
-
-        final_df = pd.concat(dfs)
-
-        priority_columns = [
-            "session",
-            "date",
-            "trial",
-            "subject",
-            "task",
-            "system_name",
-        ]
-        reordered_columns = priority_columns + [
-            col for col in final_df.columns if col not in priority_columns
-        ]
-        final_df = final_df[reordered_columns]
-
-        final_df.to_csv(final_path, header=True, index=False, sep=";")
 
 
 manager = Manager()

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Callable
 from PyQt5.QtWidgets import QWidget
 
 from village.pybpodapi.session import Session
-from village.time_utils import time_utils
+from village.scripts import time_utils
 
 if TYPE_CHECKING:
     from village.pybpodapi.session import Session

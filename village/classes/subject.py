@@ -3,7 +3,7 @@ import traceback
 import pandas as pd
 
 from village.log import log
-from village.time_utils import time_utils
+from village.scripts import time_utils, utils
 
 
 class Subject:
@@ -11,7 +11,7 @@ class Subject:
         self.name: str = name
         self.tag: str = ""
         self.basal_weight: float = 0.0
-        self.active: bool = False
+        self.active: str = "Off"
         self.next_session_time: str = ""
         self.next_settings: str = ""
         self.subject_series: pd.Series | None = None
@@ -41,7 +41,10 @@ class Subject:
     def minimum_time_ok(self) -> bool:
         next_session = time_utils.date_from_string(self.next_session_time)
         now = time_utils.now()
-        if now > next_session:
+        if not utils.is_active(self.active):
+            log.info("Subject not active", subject=self.name)
+            return False
+        elif now > next_session:
             return True
         else:
             log.info(

@@ -10,11 +10,12 @@ import pandas as pd
 from village.classes.protocols import CameraProtocol, PyBpodProtocol
 from village.classes.training import Settings, Training
 from village.devices.bpod import bpod
+from village.devices.sound_device import sound_device
 from village.log import log
 from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
+from village.scripts import time_utils
 from village.settings import settings
-from village.time_utils import time_utils
 
 
 class TaskError(Exception):
@@ -157,6 +158,7 @@ class Task:
         trials: int = 0
         water: int = 0
         settings_str: str = ""
+        sound_device.stop()
         self.bpod.stop()
         self.cam_box.stop_record()
         # TODO kill the screen

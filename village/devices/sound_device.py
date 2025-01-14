@@ -4,8 +4,13 @@ from typing import Any
 import numpy as np
 import sounddevice as sd
 
-from village.manager import manager
 from village.settings import settings
+
+
+def get_sound_devices() -> list[str]:
+    devices = sd.query_devices()
+    devices_str = [d["name"] for d in devices]
+    return devices_str
 
 
 class SoundDevice:
@@ -13,7 +18,7 @@ class SoundDevice:
         self.samplerate = samplerate
         self.channels = channels
         self.latency = latency
-        devices = manager.get_sound_devices()
+        devices = get_sound_devices()
         device = settings.get("SOUND_DEVICE")
         self.index = devices.index(device) if device in devices else 0
 

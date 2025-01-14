@@ -203,8 +203,8 @@ class Layout(QGridLayout):
         self.exit_button = self.create_and_add_button(
             "EXIT",
             0,
-            192,
-            20,
+            194,
+            18,
             2,
             self.exit_button_clicked,
             "Exit the application",
@@ -213,7 +213,7 @@ class Layout(QGridLayout):
         self.main_button = self.create_and_add_button(
             "MAIN",
             0,
-            56,
+            61,
             20,
             2,
             self.main_button_clicked,
@@ -223,7 +223,7 @@ class Layout(QGridLayout):
         self.monitor_button = self.create_and_add_button(
             "MONITOR",
             0,
-            76,
+            79,
             20,
             2,
             self.monitor_button_clicked,
@@ -231,18 +231,18 @@ class Layout(QGridLayout):
         )
 
         self.tasks_button = self.create_and_add_button(
-            "TASKS", 0, 96, 20, 2, self.tasks_button_clicked, "Go to the tasks menu"
+            "TASKS", 0, 97, 18, 2, self.tasks_button_clicked, "Go to the tasks menu"
         )
 
         self.data_button = self.create_and_add_button(
-            "DATA", 0, 116, 20, 2, self.data_button_clicked, "Go to the data menu"
+            "DATA", 0, 115, 18, 2, self.data_button_clicked, "Go to the data menu"
         )
 
         self.settings_button = self.create_and_add_button(
             "SETTINGS",
             0,
-            136,
-            20,
+            133,
+            18,
             2,
             self.settings_button_clicked,
             "Go to the setting menu",

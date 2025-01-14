@@ -10,9 +10,8 @@ from village.gui.main_layout import MainLayout
 from village.gui.monitor_layout import MonitorLayout
 from village.gui.settings_layout import SettingsLayout
 from village.gui.tasks_layout import TasksLayout
-from village.manager import manager
+from village.scripts import time_utils, utils
 from village.settings import settings
-from village.time_utils import time_utils
 
 if TYPE_CHECKING:
     from village.gui.gui import Gui
@@ -45,31 +44,31 @@ class GuiWindow(QWidget):
         return super().eventFilter(source, event)
 
     def create_main_layout(self) -> None:
-        manager.delete_all_elements(self.layout)
+        utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MainLayout(self)
         self.setLayout(self.layout)
 
     def create_monitor_layout(self) -> None:
-        manager.delete_all_elements(self.layout)
+        utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MonitorLayout(self)
         self.setLayout(self.layout)
 
     def create_tasks_layout(self) -> None:
-        manager.delete_all_elements(self.layout)
+        utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = TasksLayout(self)
         self.setLayout(self.layout)
 
     def create_data_layout(self) -> None:
-        manager.delete_all_elements(self.layout)
+        utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = DataLayout(self)
         self.setLayout(self.layout)
 
     def create_settings_layout(self) -> None:
-        manager.delete_all_elements(self.layout)
+        utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = SettingsLayout(self)
         self.setLayout(self.layout)

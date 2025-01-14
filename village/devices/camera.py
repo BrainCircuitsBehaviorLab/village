@@ -22,8 +22,8 @@ from PyQt5.QtWidgets import QWidget
 from village.classes.protocols import CameraProtocol
 from village.log import log
 from village.manager import manager
+from village.scripts import time_utils
 from village.settings import Color, settings
-from village.time_utils import time_utils
 
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
 # configure the logging of libcamera (the C++ library picamera2 uses)
@@ -298,7 +298,7 @@ class Camera(CameraProtocol):
                 self.write_trial()
                 self.write_pixel_detection()
                 self.write_csv()
-                if self.name == "BOX":
+                if self.name == "BOX" and self.is_recording:
                     self.areas_box_ok()
 
     def get_gray_frame(self) -> None:

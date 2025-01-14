@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 import pandas as pd
 from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
     QDialog,
     QHBoxLayout,
@@ -26,6 +27,8 @@ from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, OnlinePlotDialog, PushButton
 from village.log import log
 from village.manager import manager
+from village.plots.corridor_plot import corridor_plot
+from village.plots.create_pixmap import create_pixmap
 from village.settings import settings
 
 # from devices.bpod import bpod
@@ -279,22 +282,31 @@ class MonitorLayout(Layout):
 
         self.bottom_layout = QStackedLayout()
         self.addLayout(self.bottom_layout, 34, 0, 16, 212)
+
         self.page4 = QWidget(self.bottom_widget)
         self.page4.setStyleSheet("background-color:white")
         self.page4Layout = InfoLayout(self.window, 16, 212)
         self.page4.setLayout(self.page4Layout)
+
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
         self.page5Layout = CorridorLayout(self.window, 16, 212)
         self.page5.setLayout(self.page5Layout)
+
+        self.page6 = QWidget(self.bottom_widget)
+        self.page6.setStyleSheet("background-color:white")
+        self.page6Layout = PlotLayout(self.window, 16, 212)
+        self.page6.setLayout(self.page6Layout)
+
         self.bottom_layout.addWidget(self.page4)
         self.bottom_layout.addWidget(self.page5)
+        self.bottom_layout.addWidget(self.page6)
 
         self.stop_button: PushButton = self.create_and_add_button(
             "",
             0,
             175,
-            14,
+            18,
             2,
             self.stop,
             "Stop a running task",
@@ -304,15 +316,12 @@ class MonitorLayout(Layout):
         self.online_plots_button: PushButton = self.create_and_add_button(
             "ONLINE PLOTS",
             0,
-            160,
-            14,
+            156,
+            18,
             2,
             self.show_online_plots_clicked,
-            "Show the online plots",
-            "lightcoral",
-        )
-        self.online_plots_button.setToolTip(
-            "Show the online plots when a task is running"
+            "Show the online plots when a task is running",
+            "lightskyblue",
         )
 
         self.rfid_reader_label: Label = self.create_and_add_label(
@@ -949,3 +958,43 @@ class InfoLayout(Layout):
     def update_gui(self) -> None:
         text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
         self.events_text.setText(text)
+
+
+class PlotLayout(Layout):
+    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self.draw()
+
+    def draw(self) -> None:
+        self.plot_label = QLabel()
+        width = 212
+        height = 16
+        dpi = int(settings.get("MATPLOTLIB_DPI"))
+        self.addWidget(self.plot_label, 0, 0, height, width)
+
+        pixmap = QPixmap()
+        try:
+            subjects = manager.subjects.df["name"].tolist()
+            plot_width = (width * self.column_width - 10) / dpi
+            plot_height = (height * self.row_height - 5) / dpi
+            figure = corridor_plot(
+                manager.events.df.copy(),
+                subjects,
+                plot_width,
+                plot_height,
+            )
+            pixmap = create_pixmap(figure)
+        except Exception:
+            log.error(
+                "Can not create corridor plot",
+                exception=traceback.format_exc(),
+            )
+
+        if not pixmap.isNull():
+            self.plot_label.setPixmap(pixmap)
+        else:
+            self.plot_label.setText("Plot could not be generated")
+            # TODO: should the figure be closed?
+
+    def update_gui(self) -> None:
+        pass

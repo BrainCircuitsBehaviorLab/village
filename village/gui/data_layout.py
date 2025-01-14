@@ -36,8 +36,8 @@ from village.plots.create_pixmap import create_pixmap
 from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.plots.temperatures_plot import temperatures_plot
 from village.plots.water_calibration_plot import water_calibration_plot
+from village.scripts import time_utils, utils
 from village.settings import settings
-from village.time_utils import time_utils
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -420,6 +420,10 @@ class DataLayout(Layout):
         self.central_layout.setCurrentWidget(self.page3)
         pixmap = QPixmap()
 
+        dpi = int(settings.get("MATPLOTLIB_DPI"))
+        width = 210 * self.column_width / dpi
+        height = 46 * self.row_height / dpi
+
         if manager.table == DataTable.SESSIONS_SUMMARY:
             try:
                 paths = self.page1Layout.get_paths_from_sessions_summary_row(
@@ -427,7 +431,7 @@ class DataLayout(Layout):
                 )
                 df = pd.read_csv(paths[0], sep=";")
                 df_raw = pd.read_csv(paths[1], sep=";")
-                figure = manager.session_plot.create_plot(df, df_raw)
+                figure = manager.session_plot.create_plot(df, df_raw, width, height)
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -439,7 +443,7 @@ class DataLayout(Layout):
             )
             try:
                 df = pd.read_csv(path, sep=";")
-                figure = manager.subject_plot.create_plot(df)
+                figure = manager.subject_plot.create_plot(df, width, height)
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -448,7 +452,7 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.WATER_CALIBRATION:
             try:
-                figure = water_calibration_plot(manager.water_calibration.df)
+                figure = water_calibration_plot(manager.water_calibration.df.copy())
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -457,7 +461,7 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.SOUND_CALIBRATION:
             try:
-                figure = sound_calibration_plot(manager.sound_calibration.df)
+                figure = sound_calibration_plot(manager.sound_calibration.df.copy())
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -466,7 +470,7 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.TEMPERATURES:
             try:
-                figure = temperatures_plot(manager.temperatures.df)
+                figure = temperatures_plot(manager.temperatures.df.copy())
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -478,7 +482,7 @@ class DataLayout(Layout):
                 dfs = manager.get_both_sessions_dfs()
                 # TODO: this needs to change to the online plot and
                 # not use the session_plot
-                figure = manager.session_plot.create_plot(dfs[1], dfs[0])
+                figure = manager.session_plot.create_plot(dfs[1], dfs[0], width, height)
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -487,7 +491,7 @@ class DataLayout(Layout):
         elif manager.table in (DataTable.OLD_SESSION, DataTable.OLD_SESSION_RAW):
             try:
                 figure = manager.session_plot.create_plot(
-                    manager.old_session_df, manager.old_session_raw_df
+                    manager.old_session_df, manager.old_session_raw_df, width, height
                 )
                 pixmap = create_pixmap(figure)
             except Exception:
@@ -913,7 +917,7 @@ class DfLayout(Layout):
             self.search_edit.setText("")
             self.update_gui()
             self.changes_made = True
-            self.update_status_label()
+            # self.update_status_label()
             self.update_buttons()
             row_count = self.model.rowCount()
             self.model.insertRow(row_count)
@@ -959,7 +963,7 @@ class DfLayout(Layout):
 
                         subject = row["subject"]
                         directory = str(settings.get("SESSIONS_DIRECTORY"))
-                        manager.create_global_csv_for_subject(subject, directory)
+                        utils.create_global_csv_for_subject(subject, directory)
 
                         index = selected_indexes[0]
                         self.model.beginRemoveRows(
@@ -977,7 +981,7 @@ class DfLayout(Layout):
 
     def cancel(self) -> None:
         manager.state = State.WAIT
-        self.update_status_label()
+        # self.update_status_label()
         self.update_buttons()
         if manager.table == DataTable.SUBJECTS:
             self.model.beginResetModel()

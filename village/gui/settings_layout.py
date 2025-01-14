@@ -11,6 +11,8 @@ from village.devices.camera import cam_box, cam_corridor
 from village.gui.layout import Layout, LineEdit, PushButton, TimeEdit, ToggleButton
 from village.manager import manager
 from village.settings import Setting, settings
+from village.devices.sound_device import get_sound_devices
+from village.scripts import utils
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -297,7 +299,7 @@ class SettingsLayout(Layout):
             path = os.path.dirname(value)
             # check if path exists
             if not os.path.exists(path):
-                manager.create_directories_from_path(path)
+                utils.create_directories_from_path(path)
             possible_values = [os.path.join(path, name) for name in os.listdir(path)]
             possible_values += ["NEW"]
             index = possible_values.index(value) if value in possible_values else 0
@@ -320,7 +322,7 @@ class SettingsLayout(Layout):
             self.line_edits.append(line_edit)
             self.line_edits_settings.append(s)
         elif s.key == "SOUND_DEVICE":
-            possible_values = manager.get_sound_devices()
+            possible_values = get_sound_devices()
             value = settings.get(s.key)
             index = possible_values.index(value) if value in possible_values else 0
             self.sound_device_combobox = self.create_and_add_combo_box(
@@ -477,7 +479,7 @@ class SettingsLayout(Layout):
                 project_dir = os.path.dirname(old_project)
                 path = os.path.join(project_dir, text)
                 if self.create_project_directory(path):
-                    manager.change_directory_settings(path)
+                    utils.change_directory_settings(path)
                     self.window.reload_app()
                     return
             self.project_directory_combobox.blockSignals(True)
@@ -498,7 +500,7 @@ class SettingsLayout(Layout):
             )
 
             if reply == QMessageBox.Yes:
-                manager.change_directory_settings(value)
+                utils.change_directory_settings(value)
                 self.window.reload_app()
             else:
                 self.project_directory_combobox.blockSignals(True)
@@ -508,7 +510,7 @@ class SettingsLayout(Layout):
                 self.project_directory_combobox.blockSignals(False)
 
     def create_project_directory(self, path) -> bool:
-        return manager.create_directories_from_path(path)
+        return utils.create_directories_from_path(path)
 
     def update_gui(self) -> None:
         self.update_status_label()

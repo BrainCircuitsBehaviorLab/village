@@ -7,8 +7,8 @@ import serial
 
 from village.classes.enums import Active
 from village.manager import manager
+from village.scripts import time_utils
 from village.settings import settings
-from village.time_utils import time_utils
 
 
 class Rfid:

@@ -1,7 +1,7 @@
 import re
 
 from village.classes.protocols import CameraProtocol, EventProtocol, TelegramBotProtocol
-from village.time_utils import time_utils
+from village.scripts import time_utils
 
 
 class Log:
