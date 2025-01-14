@@ -29,8 +29,6 @@ def corridor_plot(
     start_first, start_second = time_utils.one_week_ago_init_times(first, second)
     end = time_utils.tomorrow_init_time(first)
 
-    print(start_first, start_second, end)
-
     df["date"] = pd.to_datetime(df["date"])
 
     df = df[df["date"] >= start_first]
@@ -92,8 +90,5 @@ def corridor_plot(
     ax.tick_params(axis="y", labelsize=6)
 
     fig.subplots_adjust(left=0.03, right=0.97, top=0.97, bottom=0.1)
-    # plt.tight_layout()
-
-    # fig.patch.set_facecolor("green")
 
     return fig

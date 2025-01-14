@@ -30,7 +30,7 @@ class SoftcodeOccurrence(BaseMessage):
 
     @property
     def softcode_name(self):
-        return "SoftcodeOut" + str(self.content)
+        return "SoftCodeOut" + str(self.content)
 
     def tolist(self):
         return [self.host_timestamp, None, self.softcode_name, None]

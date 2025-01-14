@@ -10,7 +10,7 @@ from village.pybpodapi.protocol import Bpod, StateMachine
 from village.settings import settings
 
 
-class Softcode:
+class SoftCode:
 
     def __init__(self) -> None:
         """Open the connection"""
@@ -44,7 +44,7 @@ class PyBpod(PyBpodProtocol):
     def __init__(self) -> None:
         self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
-        self.softcode = Softcode()
+        self.softcode = SoftCode()
         self.session = self.bpod.session
         self.connected = True
         self.error = ""
@@ -304,7 +304,7 @@ class PyBpod(PyBpodProtocol):
         if not self.connected:
             self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
-        self.softcode = Softcode()
+        self.softcode = SoftCode()
         self.session = self.bpod.session
         self.connected = True
         self.functions = functions

@@ -91,6 +91,7 @@ class Manager:
         utils.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
         self.detections = time_utils.TimestampTracker(hours=6)
         self.sessions = time_utils.TimestampTracker(hours=12)
+        self.detection_change = True
 
     def create_collections(self) -> None:
         self.events = Collection(

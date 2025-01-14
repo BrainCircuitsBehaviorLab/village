@@ -11,7 +11,6 @@ from village.pybpodapi.bpod.hardware.hardware import Hardware
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
 from village.pybpodapi.com.messaging.event_occurrence import EventOccurrence
 from village.pybpodapi.com.messaging.event_resume import EventResume
-from village.pybpodapi.com.messaging.softcode_occurrence import SoftcodeOccurrence
 from village.pybpodapi.com.messaging.state_transition import StateTransition
 from village.pybpodapi.com.messaging.trial import Trial
 from village.pybpodapi.com.messaging.value import ValueMessage
@@ -601,8 +600,8 @@ class BpodBase(object):
                 self._session += StateTransition(state_name, time)
 
         elif opcode == 2:  # Handle soft code
-            my_time = (datetime_now.now() - self.bpod_start_timepc).total_seconds()
-            self._session += SoftcodeOccurrence(data, my_time)
+            # my_time = (datetime_now.now() - self.bpod_start_timepc).total_seconds()
+            # self._session += SoftcodeOccurrence(data, my_time)
             self.softcode_handler_function(data)
 
     def __update_timestamps(self, sma, state_change_indexes):

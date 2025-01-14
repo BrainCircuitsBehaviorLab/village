@@ -238,7 +238,7 @@ class Task:
 
         trials = self.df["TRIAL"].iloc[-1]
 
-        if trials > 1:
+        if trials > 0:
             non_nan_values = self.df["START"].dropna()
 
             if not non_nan_values.empty:
@@ -334,7 +334,7 @@ class Task:
             and (
                 item[1].startswith("_Tup")
                 or item[1].startswith("_Transition")
-                or item[1].startswith("_Global")
+                # or item[1].startswith("_Global")
                 or item[1].startswith("_Condition")
             )
         ]
@@ -347,7 +347,7 @@ class Task:
             and (
                 col.startswith("_Tup")
                 or col.startswith("_Transition")
-                or col.startswith("_Global")
+                # or col.startswith("_Global")
                 or col.startswith("_Condition")
             )
         ]
