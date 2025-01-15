@@ -82,24 +82,28 @@ class Task:
         raise TaskError("The method close(self) is required")
 
     # DO NOT OVERWRITE THESE METHODS
-    def test(self, subject: str = "None") -> None:
-        self.subject = subject
-        self.start()
-        self.create_trial()
-        self.after_trial()
-        self.close()
-
     def run_in_thread(self, daemon=True) -> None:
         def test_run():
             self.create_paths()
             self.start()
             while self.current_trial <= self.manual_number_of_trials:
                 self.do_trial()
+            self.close()
             self.disconnect_and_save("Manual")
 
         self.process = Thread(target=test_run, daemon=daemon)
         self.process.start()
         return
+
+    def run(self) -> None:
+        self.start()
+        while (
+            self.current_trial <= self.manual_number_of_trials
+            and self.chrono.get_seconds() < self.settings.maximum_duration
+            and not self.force_stop
+        ):
+            self.do_trial(send_to_cam=True)
+        self.close()
 
     def do_trial(self, send_to_cam: bool = False) -> None:
         self.bpod.create_state_machine()
@@ -110,33 +114,49 @@ class Task:
         self.get_trial_data()
         self.after_trial()
         self.register_default_values()
+        self.concatenate_trial_data()
         self.current_trial += 1
-
         return
 
-    def run(self) -> None:
-        # self.create_paths()
-        # if self.subject != "None":
-        #     self.cam_box.start_record(self.video_path, self.video_data_path)
-        self.start()
-        while (
-            self.current_trial <= self.manual_number_of_trials
-            and self.chrono.get_seconds() < self.settings.maximum_duration
-            and not self.force_stop
-        ):
-            self.do_trial(send_to_cam=True)
-        # self.cam_box.stop_record()
-
+    @time_utils.measure_time
     def get_trial_data(self) -> None:
-        self.trial_data = self.bpod.session.current_trial.export()
-        # rename one of the keys
-        self.trial_data["TRIAL_START"] = self.trial_data.pop("Trial start timestamp")
-        self.trial_data["trial"] = self.current_trial
-        self.trial_data["ordered_list_of_events"] = [
-            msg.content for msg in self.bpod.session.current_trial.events_occurrences
-        ]
-        # TODO: parse this data and add more things
-        return None
+        print(self.current_trial)
+        data = self.bpod.session.current_trial.export()
+        occurrences = self.bpod.session.current_trial.events_occurrences
+
+        self.trial_data.update(
+            {
+                "date": self.date,
+                "trial": self.current_trial,
+                "subject": self.subject,
+                "task": self.name,
+                "system_name": self.system_name,
+                "TRIAL_START": data["Trial start timestamp"],
+                "TRIAL_END": max(
+                    [
+                        max(timestamps)
+                        for timestamps in data["Events timestamps"].values()
+                    ]
+                ),
+            }
+        )
+
+        for event, timestamps in data["Events timestamps"].items():
+            self.trial_data[f"{event}_START"] = ",".join(map(str, timestamps))
+
+        for state, intervals in data["States timestamps"].items():
+            starts = [start for start, _ in intervals]
+            ends = [end for _, end in intervals]
+            self.trial_data[f"STATE_{state}_START"] = ",".join(map(str, starts))
+            self.trial_data[f"STATE_{state}_END"] = ",".join(map(str, ends))
+
+        self.trial_data["ordered_list_of_events"] = [msg.content for msg in occurrences]
+
+    @time_utils.measure_time
+    def concatenate_trial_data(self) -> None:
+        self.row_df = pd.DataFrame([self.trial_data])
+        self.new_df = pd.concat([self.new_df, self.row_df], ignore_index=True)
+        self.trial_data = {}
 
     def register_value(self, name: str, value: Any) -> None:
         self.bpod.register_value(name, value)
@@ -238,15 +258,13 @@ class Task:
 
         trials = self.df["TRIAL"].iloc[-1]
 
-        if trials > 1:
+        if trials > 0:
             non_nan_values = self.df["START"].dropna()
 
             if not non_nan_values.empty:
                 duration = float(non_nan_values.iloc[-1] - non_nan_values.iloc[0])
 
             self.df.to_csv(self.raw_session_path, index=None, header=True, sep=";")
-
-            self.new_df = self.transform(self.df)
 
             trials = self.new_df.shape[0]
 
@@ -310,7 +328,7 @@ class Task:
             elif x.isnull().all():
                 return np.nan
             else:
-                return ";".join([str(x.iloc[i]) for i in range(len(x))])
+                return ",".join([str(x.iloc[i]) for i in range(len(x))])
 
         df0 = df
         df0["idx"] = range(1, len(df0) + 1)
@@ -331,12 +349,7 @@ class Task:
             item
             for item in df4.columns
             if type(item) == tuple
-            and (
-                item[1].startswith("_Tup")
-                or item[1].startswith("_Transition")
-                or item[1].startswith("_Global")
-                or item[1].startswith("_Condition")
-            )
+            and (item[1].startswith("_Tup") or item[1].startswith("_Transition"))
         ]
         df4.drop(columns=columns_to_drop, inplace=True)
 
@@ -344,12 +357,7 @@ class Task:
             col
             for col in df4.columns
             if isinstance(col, str)
-            and (
-                col.startswith("_Tup")
-                or col.startswith("_Transition")
-                or col.startswith("_Global")
-                or col.startswith("_Condition")
-            )
+            and (col.startswith("_Tup") or col.startswith("_Transition"))
         ]
         df4.drop(columns=columns_to_drop2, inplace=True)
 

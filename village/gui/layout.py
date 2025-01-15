@@ -295,6 +295,7 @@ class Layout(QGridLayout):
             if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
+            manager.detection_change = True
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:

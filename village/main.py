@@ -120,6 +120,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 id, multiple = rfid.get_id()
                 if id != "":
                     log.info("Tag detected: " + id)
+                    manager.detection_change = True
                     manager.state = State.DETECTION
             case State.DETECTION:
                 # Gathering subject data, checking requirements to enter
@@ -144,6 +145,7 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.LAUNCH_AUTO:
                 # Automatically launching the task
                 if manager.launch_task_auto(cam_box):
+                    manager.detection_change = True
                     manager.state = State.RUN_FIRST
                 else:
                     manager.state = State.OPEN_DOOR2_STOP
@@ -244,11 +246,13 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.SAVE_OUTSIDE:
                 # Stopping the task, saving the data; the subject is already outside
                 manager.disconnect_and_save("Auto")
+                manager.detection_change = True
                 manager.state = State.WAIT
 
             case State.SAVE_INSIDE:
                 # Stopping the task, saving the data; the subject is still inside
                 manager.disconnect_and_save("Auto")
+                manager.detection_change = True
                 manager.state = State.WAIT_EXIT
 
             case State.WAIT_EXIT:
@@ -301,6 +305,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Manually launching the task
                 if manager.launch_task_manual(cam_box):
                     # manager.task.cam_box = cam_box
+                    manager.detection_change = True
                     manager.state = State.RUN_MANUAL
                 else:
                     pass
@@ -317,6 +322,7 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.SAVE_MANUAL:
                 # Stopping the task, saving the data; the task was manually stopped
                 manager.disconnect_and_save("Manual")
+                manager.detection_change = True
                 manager.state = State.WAIT
 
             case State.EXIT_GUI:

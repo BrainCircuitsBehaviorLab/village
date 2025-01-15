@@ -2,7 +2,9 @@ import os
 import subprocess
 import traceback
 from pathlib import Path
+from typing import Any
 
+import numpy as np
 import pandas as pd
 from PyQt5.QtWidgets import QLayout
 
@@ -171,3 +173,122 @@ def delete_all_elements_from_layout(layout: QLayout) -> None:
             else:
                 if layoutItem.layout() is not None:
                     delete_all_elements_from_layout(layoutItem.layout())
+
+
+def reformat_trial_data(
+    data: dict, date: str, trial: int, subject: str, task: str, system_name: str
+) -> dict:
+
+    output = {
+        "date": date,
+        "trial": trial,
+        "subject": subject,
+        "task": task,
+        "system_name": system_name,
+        "TRIAL_START": data["TRIAL_START"],
+        "TRIAL_END": max(
+            [max(timestamps) for timestamps in data["Events timestamps"].values()]
+        ),
+    }
+
+    for event, timestamps in data["Events timestamps"].items():
+        output[f"{event}_START"] = ",".join(map(str, timestamps))
+
+    for state, intervals in data["States timestamps"].items():
+        starts = [start for start, _ in intervals]
+        ends = [end for _, end in intervals]
+        output[f"STATE_{state}_START"] = ",".join(map(str, starts))
+        output[f"STATE_{state}_END"] = ",".join(map(str, ends))
+
+    useful_keys = data.keys() - {
+        "Events timestamps",
+        "States timestamps",
+        "ordered_list_of_events",
+    }
+
+    output.update({key: data[key] for key in useful_keys})
+
+    return output
+
+
+def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
+
+    def make_list(x) -> Any | float | str:
+        if x.size <= 1:
+            return x
+        elif x.isnull().all():
+            return np.nan
+        else:
+            return ",".join([str(x.iloc[i]) for i in range(len(x))])
+
+    df0 = df
+    df0["idx"] = range(1, len(df0) + 1)
+    df1 = df0.set_index("idx")
+    df2 = df1.pivot_table(
+        index="TRIAL", columns="MSG", values=["START", "END"], aggfunc=make_list
+    )
+
+    df3 = df1.pivot_table(
+        index="TRIAL",
+        columns="MSG",
+        values="VALUE",
+        aggfunc=lambda x: x if x.size == 1 else x.iloc[0],
+    )
+    df4 = pd.concat([df2, df3], axis=1, sort=False)
+
+    columns_to_drop = [
+        item
+        for item in df4.columns
+        if type(item) == tuple
+        and (item[1].startswith("_Tup") or item[1].startswith("_Transition"))
+    ]
+    df4.drop(columns=columns_to_drop, inplace=True)
+
+    columns_to_drop2 = [
+        col
+        for col in df4.columns
+        if isinstance(col, str)
+        and (col.startswith("_Tup") or col.startswith("_Transition"))
+    ]
+    df4.drop(columns=columns_to_drop2, inplace=True)
+
+    df4.columns = [
+        item[1] + "_" + item[0] if type(item) == tuple else item for item in df4.columns
+    ]
+
+    df4.replace("", np.nan, inplace=True)
+    df4.dropna(subset=["TRIAL_END"], inplace=True)
+    df4["trial"] = range(1, len(df4) + 1)
+
+    list_of_columns = df4.columns
+
+    start_list = [item for item in list_of_columns if item.endswith("_START")]
+    end_list = [item for item in list_of_columns if item.endswith("_END")]
+    other_list = [
+        item
+        for item in list_of_columns
+        if item not in start_list and item not in end_list
+    ]
+
+    states_list = []
+    for item in start_list:
+        states_list.append(item)
+        for item2 in end_list:
+            if item2.startswith(item[:-5]):
+                states_list.append(item2)
+
+    new_list = [
+        "date",
+        "trial",
+        "subject",
+        "task",
+        "system_name",
+        "TRIAL_START",
+        "TRIAL_END",
+    ]
+    new_list += states_list + other_list
+    new_list = pd.Series(new_list).drop_duplicates().tolist()
+
+    df4 = df4[new_list]
+
+    return df4

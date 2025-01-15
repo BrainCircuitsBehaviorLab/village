@@ -295,7 +295,7 @@ class MonitorLayout(Layout):
 
         self.page6 = QWidget(self.bottom_widget)
         self.page6.setStyleSheet("background-color:white")
-        self.page6Layout = PlotLayout(self.window, 16, 212)
+        self.page6Layout = CorridorPlotLayout(self.window, 16, 212)
         self.page6.setLayout(self.page6Layout)
 
         self.bottom_layout.addWidget(self.page4)
@@ -433,12 +433,14 @@ class MonitorLayout(Layout):
         settings.set(key, value)
         index = Actions.get_index_from_string(value)
         self.central_layout.setCurrentIndex(index)
+        self.update_gui()
 
     def toggle_info_button(self, value: str, key: str) -> None:
         manager.info = Info[value]
         settings.set(key, value)
         index = Info.get_index_from_string(value)
         self.bottom_layout.setCurrentIndex(index)
+        self.update_gui()
 
     def update_gui(self) -> None:
         self.update_status_label()
@@ -448,6 +450,10 @@ class MonitorLayout(Layout):
                 self.page4Layout.update_gui()
             case manager.info.DETECTION_SETTINGS:
                 self.page5Layout.update_gui()
+            case manager.info.DETECTION_PLOT:
+                if manager.detection_change:
+                    manager.detection_change = False
+                    self.page6Layout.update_gui()
 
     def update_buttons(self) -> None:
         if manager.state.can_stop_task():
@@ -960,7 +966,7 @@ class InfoLayout(Layout):
         self.events_text.setText(text)
 
 
-class PlotLayout(Layout):
+class CorridorPlotLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.draw()
@@ -972,16 +978,19 @@ class PlotLayout(Layout):
         dpi = int(settings.get("MATPLOTLIB_DPI"))
         self.addWidget(self.plot_label, 0, 0, height, width)
 
-        pixmap = QPixmap()
+        self.pixmap = QPixmap()
+
+        self.subjects = manager.subjects.df["name"].tolist()
+        self.plot_width = (width * self.column_width - 10) / dpi
+        self.plot_height = (height * self.row_height - 5) / dpi
+
+    def update_gui(self) -> None:
         try:
-            subjects = manager.subjects.df["name"].tolist()
-            plot_width = (width * self.column_width - 10) / dpi
-            plot_height = (height * self.row_height - 5) / dpi
             figure = corridor_plot(
                 manager.events.df.copy(),
-                subjects,
-                plot_width,
-                plot_height,
+                self.subjects,
+                self.plot_width,
+                self.plot_height,
             )
             pixmap = create_pixmap(figure)
         except Exception:
@@ -995,6 +1004,3 @@ class PlotLayout(Layout):
         else:
             self.plot_label.setText("Plot could not be generated")
             # TODO: should the figure be closed?
-
-    def update_gui(self) -> None:
-        pass
