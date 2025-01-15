@@ -158,9 +158,9 @@ class Manager:
         online_plot_found = 0
         functions_path = ""
 
-        for root, dirs, files in os.walk(directory):
+        for root, _, files in os.walk(directory):
             for file in files:
-                if file == "functions.py":
+                if file == "softcode_functions.py":
                     functions_path = os.path.join(root, file)
                 if file.endswith(".py"):
                     python_files.append(os.path.join(root, file))

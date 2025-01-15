@@ -8,7 +8,11 @@ class SessionPlot:
         self.name = "Session Plot"
 
     def create_plot(
-        self, df: pd.DataFrame, df_raw: pd.DataFrame, width: float, height: float
+        self,
+        df: pd.DataFrame,
+        df_raw: pd.DataFrame,
+        width: float = 10,
+        height: float = 8,
     ) -> Figure:
         """
         Default plot for the session. Cumulative count of trials by trial start.
@@ -25,7 +29,9 @@ class SubjectPlot:
     def __init__(self) -> None:
         self.name = "Subject Plot"
 
-    def create_plot(self, df: pd.DataFrame, width: float, height: float) -> Figure:
+    def create_plot(
+        self, df: pd.DataFrame, width: float = 10, height: float = 8
+    ) -> Figure:
         """
         Default plot for the subject.
         You can override this method in the child class in

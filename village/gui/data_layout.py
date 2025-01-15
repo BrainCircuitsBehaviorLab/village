@@ -960,10 +960,9 @@ class DfLayout(Layout):
                             for path in del_paths:
                                 if os.path.exists(path):
                                     os.remove(path)
-
-                        subject = row["subject"]
-                        directory = str(settings.get("SESSIONS_DIRECTORY"))
-                        utils.create_global_csv_for_subject(subject, directory)
+                            subject = row["subject"]
+                            directory = str(settings.get("SESSIONS_DIRECTORY"))
+                            utils.create_global_csv_for_subject(subject, directory)
 
                         index = selected_indexes[0]
                         self.model.beginRemoveRows(
