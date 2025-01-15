@@ -47,7 +47,7 @@ class PyBpodProtocol:
         return
 
     def set_global_counter(
-        self, condition_number: Any, condition_channel: Any, channel_value: Any
+        self, counter_number: Any, target_event: Any, threshold: Any
     ) -> None:
         return
 

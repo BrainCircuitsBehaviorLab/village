@@ -150,23 +150,23 @@ class OutputChannel(object):
     SoftCode98 = ("SoftCode", 98)
 
     #: GlobalTimerTrig
-    GlobalTimer1Trig = ("_GlobalTimerTrig", 1)
-    GlobalTimer2Trig = ("_GlobalTimerTrig", 2)
-    GlobalTimer3Trig = ("_GlobalTimerTrig", 3)
-    GlobalTimer4Trig = ("_GlobalTimerTrig", 4)
-    GlobalTimer5Trig = ("_GlobalTimerTrig", 5)
+    GlobalTimer1Trig = ("GlobalTimerTrig", 1)
+    GlobalTimer2Trig = ("GlobalTimerTrig", 2)
+    GlobalTimer3Trig = ("GlobalTimerTrig", 3)
+    GlobalTimer4Trig = ("GlobalTimerTrig", 4)
+    GlobalTimer5Trig = ("GlobalTimerTrig", 5)
 
     #: GlobalTimerCancel
-    GlobalTimer1Cancel = ("_GlobalTimerCancel", 1)
-    GlobalTimer2Cancel = ("_GlobalTimerCancel", 2)
-    GlobalTimer3Cancel = ("_GlobalTimerCancel", 3)
-    GlobalTimer4Cancel = ("_GlobalTimerCancel", 4)
-    GlobalTimer5Cancel = ("_GlobalTimerCancel", 5)
+    GlobalTimer1Cancel = ("GlobalTimerCancel", 1)
+    GlobalTimer2Cancel = ("GlobalTimerCancel", 2)
+    GlobalTimer3Cancel = ("GlobalTimerCancel", 3)
+    GlobalTimer4Cancel = ("GlobalTimerCancel", 4)
+    GlobalTimer5Cancel = ("GlobalTimerCancel", 5)
 
     #: GlobalCounterReset
-    GlobalCounterReset = "_GlobalCounterReset"
-    GlobalCounter1Reset = ("_GlobalCounterReset", 1)
-    GlobalCounter2Reset = ("_GlobalCounterReset", 2)
-    GlobalCounter3Reset = ("_GlobalCounterReset", 3)
-    GlobalCounter4Reset = ("_GlobalCounterReset", 4)
-    GlobalCounter5Reset = ("_GlobalCounterReset", 5)
+    GlobalCounterReset = "GlobalCounterReset"
+    GlobalCounter1Reset = ("GlobalCounterReset", 1)
+    GlobalCounter2Reset = ("GlobalCounterReset", 2)
+    GlobalCounter3Reset = ("GlobalCounterReset", 3)
+    GlobalCounter4Reset = ("GlobalCounterReset", 4)
+    GlobalCounter5Reset = ("GlobalCounterReset", 5)

@@ -146,16 +146,16 @@ class PyBpod(PyBpodProtocol):
         softcode_pattern = re.compile(r"SoftCode([0-9][0-9]?)")
 
         # Pattern for GlobalTimer#_End
-        global_timer_end_pattern = re.compile(r"_GlobalTimer([0-9])_(End)")
+        global_timer_end_pattern = re.compile(r"GlobalTimer([0-9])_(End)")
 
         # Pattern for GlobalTimer#_Start
-        global_timer_start_pattern = re.compile(r"_GlobalTimer([0-9])_(Start)")
+        global_timer_start_pattern = re.compile(r"GlobalTimer([0-9])_(Start)")
 
         # Pattern for GlobalCounter# with _End and _Reset suffixes
-        global_counter_pattern = re.compile(r"_GlobalCounter([0-9])_(End)")
+        global_counter_pattern = re.compile(r"GlobalCounter([0-9])_(End)")
 
         # Pattern for "Condition#"
-        condition_pattern = re.compile(r"_Condition([0-9])")
+        condition_pattern = re.compile(r"Condition([0-9])")
 
         if msg == "_Tup":
             return ("_Tup", 1, 1)
@@ -190,19 +190,19 @@ class PyBpod(PyBpodProtocol):
 
         elif global_timer_start_match := global_timer_start_pattern.match(msg):
             channel, _ = global_timer_start_match.groups()
-            return ("_GlobalTimer", int(channel), 1)
+            return ("GlobalTimer", int(channel), 1)
 
         elif global_timer_end_match := global_timer_end_pattern.match(msg):
             channel, _ = global_timer_end_match.groups()
-            return ("_GlobalTimer_End", int(channel), 1)
+            return ("GlobalTimer_End", int(channel), 1)
 
         elif global_counter_end_match := global_counter_pattern.match(msg):
             channel, _ = global_counter_end_match.groups()
-            return ("_GlobalCounter_End", int(channel), 1)
+            return ("GlobalCounter_End", int(channel), 1)
 
         elif condition_match := condition_pattern.match(msg):
             channel = condition_match.group(1)
-            return ("_Condition", int(channel), 1)
+            return ("Condition", int(channel), 1)
 
         else:
             raise ValueError(f"Unrecognized message format: {msg}")
@@ -230,14 +230,14 @@ class PyBpod(PyBpodProtocol):
         # Pattern for ("SoftCode", Y) messages (where Y is 1-99)
         softcode_pattern = re.compile(r"\('SoftCode',\s*([0-9][0-9]?)")
 
-        # Pattern for ("_GlobalTimerTrig", Y) messages (where Y is 1-9)
-        global_timer_trig_pattern = re.compile(r"\('_GlobalTimerTrig',\s*([0-9])")
+        # Pattern for ("GlobalTimerTrig", Y) messages (where Y is 1-9)
+        global_timer_trig_pattern = re.compile(r"\('GlobalTimerTrig',\s*([0-9])")
 
-        # Pattern for ("_GlobalTimerCancel", Y) messages (where Y is 1-9)
-        global_timer_cancel_pattern = re.compile(r"\('_GlobalTimerCancel',\s*([0-9])")
+        # Pattern for ("GlobalTimerCancel", Y) messages (where Y is 1-9)
+        global_timer_cancel_pattern = re.compile(r"\('GlobalTimerCancel',\s*([0-9])")
 
-        # Pattern for ("_GlobalCounterReset", Y) messages (where Y is 1-9)
-        global_counter_reset_pattern = re.compile(r"\('_GlobalCounterReset',\s*([0-9])")
+        # Pattern for ("GlobalCounterReset", Y) messages (where Y is 1-9)
+        global_counter_reset_pattern = re.compile(r"\('GlobalCounterReset',\s*([0-9])")
 
         if pwm_match := pwm_pattern.match(msg):
             channel, val = pwm_match.groups()
@@ -265,15 +265,15 @@ class PyBpod(PyBpodProtocol):
 
         elif global_timer_trig_match := global_timer_trig_pattern.match(msg):
             val = global_timer_trig_match.group(1)
-            return ("_GlobalTimerTrig", "", int(val))
+            return ("GlobalTimerTrig", "", int(val))
 
         elif global_timer_cancel_match := global_timer_cancel_pattern.match(msg):
             val = global_timer_cancel_match.group(1)
-            return ("_GlobalTimerCancel", "", int(val))
+            return ("GlobalTimerCancel", "", int(val))
 
         elif global_counter_reset_match := global_counter_reset_pattern.match(msg):
             val = global_counter_reset_match.group(1)
-            return ("_GlobalCounterReset", "", int(val))
+            return ("GlobalCounterReset", "", int(val))
 
         else:
             raise ValueError(f"Unrecognized message format: {msg}")

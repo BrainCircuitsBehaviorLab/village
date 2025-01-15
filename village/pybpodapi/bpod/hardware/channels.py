@@ -145,23 +145,23 @@ class Channels(object):
 
         self.events_positions.globalTimerStart = Pos
         for i in range(hardware.n_global_timers):
-            self.event_names += ["_GlobalTimer" + str(i + 1) + "_Start"]
+            self.event_names += ["GlobalTimer" + str(i + 1) + "_Start"]
             Pos += 1
 
         self.events_positions.globalTimerEnd = Pos
         for i in range(hardware.n_global_timers):
-            self.event_names += ["_GlobalTimer" + str(i + 1) + "_End"]
-            self.input_channel_names += ["_GlobalTimer" + str(i + 1)]
+            self.event_names += ["GlobalTimer" + str(i + 1) + "_End"]
+            self.input_channel_names += ["GlobalTimer" + str(i + 1)]
             Pos += 1
 
         self.events_positions.globalCounter = Pos
         for i in range(hardware.n_global_counters):
-            self.event_names += ["_GlobalCounter" + str(i + 1) + "_End"]
+            self.event_names += ["GlobalCounter" + str(i + 1) + "_End"]
             Pos += 1
 
         self.events_positions.condition = Pos
         for i in range(hardware.n_conditions):
-            self.event_names += ["_Condition" + str(i + 1)]
+            self.event_names += ["Condition" + str(i + 1)]
             Pos += 1
 
         self.event_names += ["_Tup"]
@@ -224,11 +224,11 @@ class Channels(object):
                     "PWM" + str(nPorts)
                 ]  # Assume an SPI shift register mapping bits of a byte to 8 valves
 
-        self.output_channel_names += ["_GlobalTimerTrig"]
+        self.output_channel_names += ["GlobalTimerTrig"]
         self.events_positions.globalTimerTrigger = len(self.output_channel_names) - 1
-        self.output_channel_names += ["_GlobalTimerCancel"]
+        self.output_channel_names += ["GlobalTimerCancel"]
         self.events_positions.globalTimerCancel = len(self.output_channel_names) - 1
-        self.output_channel_names += ["_GlobalCounterReset"]
+        self.output_channel_names += ["GlobalCounterReset"]
 
         logger.debug("output_channel_names: %s", self.output_channel_names)
 

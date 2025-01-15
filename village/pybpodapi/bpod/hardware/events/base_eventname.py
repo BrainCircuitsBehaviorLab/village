@@ -20,7 +20,7 @@ class BaseEventName(object):
         :param str event_name:
         :rtype: bool
         """
-        return True if event_name.startswith("_Condition") else False
+        return True if event_name.startswith("Condition") else False
 
     @staticmethod
     def is_global_counter_end(event_name):
@@ -31,7 +31,7 @@ class BaseEventName(object):
         """
         return (
             True
-            if event_name.startswith("_GlobalCounter") and event_name.endswith("End")
+            if event_name.startswith("GlobalCounter") and event_name.endswith("End")
             else False
         )
 
@@ -41,7 +41,7 @@ class BaseEventName(object):
         :param str event_name:
         :rtype: bool
         """
-        return event_name == "_GlobalTimerTrig"
+        return event_name == "GlobalTimerTrig"
 
     @staticmethod
     def is_global_timer_cancel(event_name):
@@ -50,7 +50,7 @@ class BaseEventName(object):
         :param str event_name:
         :rtype: bool
         """
-        return event_name == "_GlobalTimerCancel"
+        return event_name == "GlobalTimerCancel"
 
     @staticmethod
     def is_global_timer_start(event_name):
@@ -61,7 +61,7 @@ class BaseEventName(object):
         """
         return (
             True
-            if event_name.startswith("_GlobalTimer") and event_name.endswith("Start")
+            if event_name.startswith("GlobalTimer") and event_name.endswith("Start")
             else False
         )
 
@@ -74,6 +74,6 @@ class BaseEventName(object):
         """
         return (
             True
-            if event_name.startswith("_GlobalTimer") and event_name.endswith("End")
+            if event_name.startswith("GlobalTimer") and event_name.endswith("End")
             else False
         )

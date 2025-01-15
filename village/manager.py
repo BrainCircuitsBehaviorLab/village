@@ -463,9 +463,9 @@ class Manager:
         return self.session_df
 
     def get_both_sessions_dfs(self) -> list[pd.DataFrame]:
+        # TODO
         df = self.update_session_df()
-        df2 = self.task.transform(df)
-        return [df, df2]
+        return [df, self.task.new_df]
 
     def disconnect_and_save(self, run_mode: str) -> None:
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
