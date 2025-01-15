@@ -77,7 +77,7 @@ class Manager:
         self.errors: str = ""
         self.max_time_counter: int = 1
         self.functions: list[Callable] = [lambda: None for _ in range(99)]
-        self.session_df = pd.DataFrame()
+        self.raw_session_df = pd.DataFrame()
         self.old_session_df = pd.DataFrame()
         self.old_session_raw_df = pd.DataFrame()
         self.rt_session_path = str(
@@ -457,15 +457,15 @@ class Manager:
 
     def update_session_df(self) -> pd.DataFrame:
         try:
-            self.session_df = pd.read_csv(self.rt_session_path, sep=";")
+            self.raw_session_df = pd.read_csv(self.rt_session_path, sep=";")
         except Exception:
-            self.session_df = pd.DataFrame()
-        return self.session_df
+            self.raw_session_df = pd.DataFrame()
+        return self.raw_session_df
 
     def get_both_sessions_dfs(self) -> list[pd.DataFrame]:
         # TODO
         df = self.update_session_df()
-        return [df, self.task.new_df]
+        return [df, self.task.session_df]
 
     def disconnect_and_save(self, run_mode: str) -> None:
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
