@@ -25,6 +25,8 @@ class Training:
         self.subject = "None"
         self.last_task = "None"
         self.df: pd.DataFrame = pd.DataFrame()
+        self.gui_tabs: dict[str, list[str]] = {}
+        self.define_gui_tabs()
 
     def check_variables(self) -> None:
         self.settings.refractary_period = int(self.settings.refractary_period)
@@ -53,6 +55,9 @@ class Training:
 
     def update_training_settings(self) -> None:
         raise TrainingError("The method update_training_settings(self) is required")
+
+    def define_gui_tabs(self) -> None:
+        self.gui_tabs = {}
 
     # DO NOT OVERWRITE THESE METHODS
     def copy_settings(self) -> None:
