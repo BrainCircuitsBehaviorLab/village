@@ -63,7 +63,7 @@ class PyBpodProtocol:
     def stop(self) -> None:
         return
 
-    def manual_override_input(self, message: str | tuple) -> None:
+    def manual_override_input(self, message: str) -> None:
         return
 
     def manual_override_output(self, message: str | tuple) -> None:

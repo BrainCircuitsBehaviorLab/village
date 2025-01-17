@@ -65,6 +65,7 @@ class BpodCOMProtocol(BpodBase):
                 input_channel_name
             )
             try:
+                print(channel_number, value)
                 self._bpodcom_override_input_state(channel_number, value)
             except:  # noqa: E722
                 raise BpodErrorException(
@@ -282,9 +283,7 @@ class BpodCOMProtocol(BpodBase):
             )
 
         for j, i in enumerate(hardware.wired_inputports_indexes):
-            hardware.inputs_enabled[i] = (
-                settings.get("BPOD_WIRED_PORTS_ENABLED")[j] == Active.ON
-            )
+            hardware.inputs_enabled[i] = False
 
         for j, i in enumerate(hardware.behavior_inputports_indexes):
             hardware.inputs_enabled[i] = (

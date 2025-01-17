@@ -11,7 +11,7 @@ class BaseEventName(object):
         :param str event_name:
         :rtype: bool
         """
-        return True if event_name.startswith("_Tup") else False
+        return True if event_name.startswith("Tup") else False
 
     @staticmethod
     def is_condition(event_name):
