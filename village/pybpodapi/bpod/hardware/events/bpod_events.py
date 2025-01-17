@@ -12,7 +12,7 @@ class EventName(BaseEventName):
     """
 
     #: Tup
-    Tup = "_Tup"
+    Tup = "Tup"
 
     #: Port
     Port1In = "Port1In"
@@ -47,12 +47,6 @@ class EventName(BaseEventName):
     BNC1Low = "BNC1Low"
     BNC2High = "BNC2High"
     BNC2Low = "BNC2Low"
-
-    #: Wire
-    Wire1High = "Wire1High"
-    Wire1Low = "Wire1Low"
-    Wire2High = "Wire2High"
-    Wire2Low = "Wire2Low"
 
     # Serial 1
     Serial1_1 = "Serial1_1"
@@ -303,25 +297,25 @@ class EventName(BaseEventName):
     SoftCode60 = "SoftCode60"
 
     #: GlobalTimer_Start
-    GlobalTimer1Start = "GlobalTimer1_Start"
-    GlobalTimer2Start = "GlobalTimer2_Start"
-    GlobalTimer3Start = "GlobalTimer3_Start"
-    GlobalTimer4Start = "GlobalTimer4_Start"
-    GlobalTimer5Start = "GlobalTimer5_Start"
+    GlobalTimer1Start = "GlobalTimer1Start"
+    GlobalTimer2Start = "GlobalTimer2Start"
+    GlobalTimer3Start = "GlobalTimer3Start"
+    GlobalTimer4Start = "GlobalTimer4Start"
+    GlobalTimer5Start = "GlobalTimer5Start"
 
     #: GlobalTimer_End
-    GlobalTimer1End = "GlobalTimer1_End"
-    GlobalTimer2End = "GlobalTimer2_End"
-    GlobalTimer3End = "GlobalTimer3_End"
-    GlobalTimer4End = "GlobalTimer4_End"
-    GlobalTimer5End = "GlobalTimer5_End"
+    GlobalTimer1End = "GlobalTimer1End"
+    GlobalTimer2End = "GlobalTimer2End"
+    GlobalTimer3End = "GlobalTimer3End"
+    GlobalTimer4End = "GlobalTimer4End"
+    GlobalTimer5End = "GlobalTimer5End"
 
     #: GlobalCounter_End
-    GlobalCounter1End = "GlobalCounter1_End"
-    GlobalCounter2End = "GlobalCounter2_End"
-    GlobalCounter3End = "GlobalCounter3_End"
-    GlobalCounter4End = "GlobalCounter4_End"
-    GlobalCounter5End = "GlobalCounter5_End"
+    GlobalCounter1End = "GlobalCounter1End"
+    GlobalCounter2End = "GlobalCounter2End"
+    GlobalCounter3End = "GlobalCounter3End"
+    GlobalCounter4End = "GlobalCounter4End"
+    GlobalCounter5End = "GlobalCounter5End"
 
     #: Condition
     Condition1 = "Condition1"

@@ -446,8 +446,6 @@ class Manager:
                     exception=traceback.format_exc(),
                 )
                 self.state = State.OPEN_DOOR2_STOP
-        finally:
-            self.task.close()
 
     def reset_subject_task_training(self) -> None:
         self.task = Task()

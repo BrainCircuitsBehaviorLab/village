@@ -8,7 +8,7 @@ Some initial settings must be configured before the system can be used. Go to th
 
 - `SCREEN SETTINGS`: If a screen or touchscreen is used to present stimuli, select the type in `USE_SCREEN` and configure the remaining parameters.
 
-- `BPOD SETTINGS`: Set up the ports to be used (BNC, WIRED, and BEHAVIOR ports).
+- `BPOD SETTINGS`: Set up the ports to be used (BNC, and BEHAVIOR ports).
 
 - `TELEGRAM SETTINGS`: If a Telegram bot is already configured, enter the obtained token in `TELEGRAM_TOKEN`, the chat ID for notifications in `TELEGRAM_CHAT`, and the IDs of users authorized to access the bot in `TELEGRAM_USERS`.
 

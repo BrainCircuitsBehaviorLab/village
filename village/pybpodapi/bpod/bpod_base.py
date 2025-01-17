@@ -600,8 +600,6 @@ class BpodBase(object):
                 self._session += StateTransition(state_name, time)
 
         elif opcode == 2:  # Handle soft code
-            # my_time = (datetime_now.now() - self.bpod_start_timepc).total_seconds()
-            # self._session += SoftcodeOccurrence(data, my_time)
             self.softcode_handler_function(data)
 
     def __update_timestamps(self, sma, state_change_indexes):

@@ -142,18 +142,25 @@ class Task:
         )
 
         for event, timestamps in data["Events timestamps"].items():
-            self.trial_data[f"{event}_START"] = ",".join(map(str, timestamps))
+            self.trial_data[event] = timestamps
 
         for state, intervals in data["States timestamps"].items():
+            print("")
+            print(intervals)
+            print(type(intervals))
+            print("")
             starts = [start for start, _ in intervals]
             ends = [end for _, end in intervals]
-            self.trial_data[f"STATE_{state}_START"] = ",".join(map(str, starts))
-            self.trial_data[f"STATE_{state}_END"] = ",".join(map(str, ends))
+            self.trial_data[f"STATE_{state}_START"] = starts
+            self.trial_data[f"STATE_{state}_END"] = ends
 
         self.trial_data["ordered_list_of_events"] = [msg.content for msg in occurrences]
 
     @time_utils.measure_time
     def concatenate_trial_data(self) -> None:
+        # for key, value in self.trial_data.items():
+        #     if isinstance(value, list):
+        #         self.trial_data[key] = ",".join(map(str, value))
         self.row_df = pd.DataFrame([self.trial_data])
         self.new_df = pd.concat([self.new_df, self.row_df], ignore_index=True)
         self.trial_data = {}
@@ -281,7 +288,7 @@ class Task:
             self.new_df.to_csv(self.session_path, header=True, index=False, sep=";")
 
             try:
-                self.df_all = pd.read_csv(self.subject_path, sep=";")
+                self.df_all = pd.read_csv(self.subject_path, sep=";", low_memory=False)
 
                 self.new_df["session"] = [
                     (int(self.df_all["session"].iloc[-1]) + 1)
@@ -309,7 +316,7 @@ class Task:
             def safe_to_numeric(series) -> Any:
                 try:
                     return pd.to_numeric(series)
-                except ValueError:
+                except Exception:
                     return series
 
             self.df_all = self.df_all.apply(safe_to_numeric)
@@ -349,7 +356,7 @@ class Task:
             item
             for item in df4.columns
             if type(item) == tuple
-            and (item[1].startswith("_Tup") or item[1].startswith("_Transition"))
+            and (item[1].startswith("Tup") or item[1].startswith("_Transition"))
         ]
         df4.drop(columns=columns_to_drop, inplace=True)
 
@@ -357,7 +364,7 @@ class Task:
             col
             for col in df4.columns
             if isinstance(col, str)
-            and (col.startswith("_Tup") or col.startswith("_Transition"))
+            and (col.startswith("Tup") or col.startswith("_Transition"))
         ]
         df4.drop(columns=columns_to_drop2, inplace=True)
 

@@ -205,12 +205,6 @@ a different version, please update it by following the instructions at sanworks.
         "Enabled BNC ports on the Bpod.",
     ),
     Setting(
-        "BPOD_WIRED_PORTS_ENABLED",
-        ["OFF", "OFF"],
-        list[Active],
-        "Enabled wired ports on the Bpod.",
-    ),
-    Setting(
         "BPOD_BEHAVIOR_PORTS_ENABLED",
         ["ON", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"],
         list[Active],

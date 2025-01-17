@@ -68,26 +68,57 @@ def download_github_repository(repository: str) -> None:
 
 def create_global_csv_for_subject(subject: str, sessions_directory: str) -> None:
     subject_directory = os.path.join(sessions_directory, subject)
-    final_path = os.path.join(sessions_directory, subject, subject + ".csv")
+    final_name = subject + ".csv"
+    final_path = os.path.join(sessions_directory, subject, final_name)
 
     sessions = []
     for file in os.listdir(subject_directory):
-        if file.endswith("RAW.csv"):
+        if file.endswith("_RAW.csv"):
+            continue
+        if file == final_name:
             continue
         elif file.endswith(".csv"):
             sessions.append(file)
 
-    def extract_datetime(file_name) -> str:
-        base_name = str(os.path.basename(file_name))
+    def extract_datetime(filename) -> str:
+        base_name = str(os.path.basename(filename))
         datetime = base_name.split("_")[2] + base_name.split("_")[3].split(".")[0]
         return datetime
 
-    sorted_sessions = sorted(sessions, key=extract_datetime)
+    sessions_datetimes = []
+
+    for session in sessions:
+        try:
+            datetime = extract_datetime(session)
+            sessions_datetimes.append((session, datetime))
+        except Exception:
+            pass
+
+    sorted_sessions = [
+        session for session, _ in sorted(sessions_datetimes, key=lambda x: x[1])
+    ]
+
+    # sorted_sessions = [
+    #     session for session, _ in sorted(sessions_with_datetimes, key=lambda x: x[1])
+    # ]
+
+    # sorted_sessions = sorted(
+    #     (session for session in sessions if extract_datetime(session) is not None),
+    #     key=extract_datetime,
+    # )
+
+    sorted_sessions = [
+        os.path.join(subject_directory, session) for session in sorted_sessions
+    ]
 
     dfs: list[pd.DataFrame] = []
 
     for i, session in enumerate(sorted_sessions):
-        df = pd.read_csv(session, sep=";").insert(loc=0, column="session", value=i + 1)
+        df = pd.read_csv(session, sep=";")
+        print(i, session)
+        print(df)
+        df.insert(loc=0, column="session", value=i + 1)
+        print(df)
         dfs.append(df)
 
     final_df = pd.concat(dfs)
@@ -240,7 +271,7 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
         item
         for item in df4.columns
         if type(item) == tuple
-        and (item[1].startswith("_Tup") or item[1].startswith("_Transition"))
+        and (item[1].startswith("Tup") or item[1].startswith("_Transition"))
     ]
     df4.drop(columns=columns_to_drop, inplace=True)
 
@@ -248,7 +279,7 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
         col
         for col in df4.columns
         if isinstance(col, str)
-        and (col.startswith("_Tup") or col.startswith("_Transition"))
+        and (col.startswith("Tup") or col.startswith("_Transition"))
     ]
     df4.drop(columns=columns_to_drop2, inplace=True)
 

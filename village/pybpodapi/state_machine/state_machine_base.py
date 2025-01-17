@@ -2,10 +2,10 @@
 import logging
 
 from village.pybpodapi.bpod.hardware.events import EventName
-from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
 from village.pybpodapi.state_machine.conditions import Conditions
 from village.pybpodapi.state_machine.global_counters import GlobalCounters
 from village.pybpodapi.state_machine.global_timers import GlobalTimers
+from village.scripts.parse_bpod_messages import parse_output_to_tuple
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +127,7 @@ class StateMachineBase(object):
             sma.add_state(
                 state_name='Port1Lit',
                 state_timer=.25,
-                state_change_conditions={'_Tup': 'Port3Lit'},
+                state_change_conditions={'Tup': 'Port3Lit'},
                 output_actions=[('PWM1', 255)])
 
         """
@@ -220,10 +220,13 @@ class StateMachineBase(object):
                 self.input_matrix[state_name_idx].append(
                     (event_code, destination_state_number)
                 )
+
+        output_actions = [parse_output_to_tuple(item) for item in output_actions]
+
         for action_name, action_value in output_actions:
             if action_name == "Valve":
                 output_code = self.hardware.channels.output_channel_names.index(
-                    OutputChannel.Valve + str(action_value)
+                    "Valve" + str(action_value)
                 )
                 output_value = 1
 
@@ -251,7 +254,7 @@ class StateMachineBase(object):
 
                 output_value = action_value
 
-            if action_name == OutputChannel.GlobalCounterReset:
+            if action_name == "GlobalCounterReset":
                 self.global_counters.reset_matrix[output_value] = 1
 
             # For backwards compatibility, integers specifying global timers

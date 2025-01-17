@@ -145,18 +145,18 @@ class Channels(object):
 
         self.events_positions.globalTimerStart = Pos
         for i in range(hardware.n_global_timers):
-            self.event_names += ["GlobalTimer" + str(i + 1) + "_Start"]
+            self.event_names += ["GlobalTimer" + str(i + 1) + "Start"]
             Pos += 1
 
         self.events_positions.globalTimerEnd = Pos
         for i in range(hardware.n_global_timers):
-            self.event_names += ["GlobalTimer" + str(i + 1) + "_End"]
+            self.event_names += ["GlobalTimer" + str(i + 1) + "End"]
             self.input_channel_names += ["GlobalTimer" + str(i + 1)]
             Pos += 1
 
         self.events_positions.globalCounter = Pos
         for i in range(hardware.n_global_counters):
-            self.event_names += ["GlobalCounter" + str(i + 1) + "_End"]
+            self.event_names += ["GlobalCounter" + str(i + 1) + "End"]
             Pos += 1
 
         self.events_positions.condition = Pos
@@ -164,7 +164,7 @@ class Channels(object):
             self.event_names += ["Condition" + str(i + 1)]
             Pos += 1
 
-        self.event_names += ["_Tup"]
+        self.event_names += ["Tup"]
         self.events_positions.Tup = Pos
         Pos += 1
 
