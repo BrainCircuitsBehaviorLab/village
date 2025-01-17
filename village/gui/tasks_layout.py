@@ -328,9 +328,21 @@ class TasksLayout(Layout):
             name, row, column, width, 2, "black", bold=True
         )
         label.setProperty("type", "optional2")
-        line_edit = layout.create_and_add_line_edit(
-            value, row, column + width, 52, 2, self.change_text
-        )
+        if name in manager.training.gui_tabs_restricted:
+            line_edit = layout.create_and_add_combo_box(
+                name,
+                row,
+                column + width,
+                52,
+                2,
+                manager.training.gui_tabs_restricted[name],
+                0,
+                self.change_combo,
+            )
+        else:
+            line_edit = layout.create_and_add_line_edit(
+                value, row, column + width, 52, 2, self.change_text
+            )
         line_edit.setProperty("type", "optional2")
         self.line_edits.append(line_edit)
 
@@ -350,11 +362,23 @@ class TasksLayout(Layout):
             pass
 
         for i, (k, v) in enumerate(properties.items()):
+            # TODO: discuss the i + 1 with Rafa.
+            # Should we handle the settings changing through the actions?
+            # Or make line_edits a dictionary so we can access it by key?
             new_dict[k] = self.line_edits[i + 1].text()
+            # widget = self.line_edits[i]
+            # if isinstance(widget, QLineEdit):
+            #     new_dict[k] = widget.text()
+            # elif isinstance(widget, QComboBox):
+            #     new_dict[k] = widget.currentText()
 
         manager.training.load_settings_from_dict(new_dict)
 
     def change_text(self) -> None:
+        pass
+
+    def change_combo(self, value: str, key: str) -> None:
+        # TODO: I need to do something here to change this in line_edits?
         pass
 
     def update_gui(self) -> None:

@@ -26,6 +26,7 @@ class Training:
         self.last_task = "None"
         self.df: pd.DataFrame = pd.DataFrame()
         self.gui_tabs: dict[str, list[str]] = {}
+        self.gui_tabs_restricted: dict[str, list[Any]] = {}
         self.define_gui_tabs()
 
     def check_variables(self) -> None:
