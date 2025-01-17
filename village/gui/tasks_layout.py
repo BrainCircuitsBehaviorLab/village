@@ -188,24 +188,6 @@ class TasksLayout(Layout):
             self.info_label.setWordWrap(True)
             self.info_label.setProperty("type", "optional")
             self.info_label.setAlignment(Qt.AlignTop | Qt.AlignLeft)
-
-            self.subject_label = self.right_layout_general.create_and_add_label(
-                "Subject", 2, 2, 20, 2, "black"
-            )
-            self.subject_label.setProperty("type", "optional")
-
-            self.possible_subjects = ["None"] + manager.subjects.df["name"].tolist()
-            self.subject_combo = self.right_layout_general.create_and_add_combo_box(
-                "subject",
-                2,
-                32,
-                30,
-                2,
-                self.possible_subjects,
-                0,
-                self.select_subject,
-            )
-            self.subject_combo.setProperty("type", "optional")
             self.create_gui_properties_task()
 
     def test_training(self) -> None:
@@ -216,7 +198,15 @@ class TasksLayout(Layout):
         self.right_layout_general.delete_optional_widgets("optional2")
         self.check_buttons()
         manager.reset_subject_task_training()
+        self.create_gui_properties_common(start_row_general=8)
 
+    def create_gui_properties_common(self, start_row_general: int) -> None:
+        self.line_edits = []
+        self.central_sub_layout.delete_optional_widgets("optional2")
+        self.right_layout_general.delete_optional_widgets("optional2")
+        # remove all the tabs from the right_layout and recreate general
+        self.restart_tab_panel()
+        # restore subject selection
         self.subject_label = self.right_layout_general.create_and_add_label(
             "Subject", 0, 2, 20, 2, "black"
         )
@@ -234,14 +224,6 @@ class TasksLayout(Layout):
             self.select_subject,
         )
         self.subject_combo.setProperty("type", "optional")
-        self.create_gui_properties_common(start_row_general=8)
-
-    def create_gui_properties_common(self, start_row_general: int) -> None:
-        self.line_edits = []
-        self.central_sub_layout.delete_optional_widgets("optional2")
-        self.right_layout_general.delete_optional_widgets("optional2")
-        # remove all the tabs from the right_layout and recreate general
-        self.restart_tab_panel()
         remove_names = [
             "next_task",
             "minimum_duration",
@@ -264,7 +246,7 @@ class TasksLayout(Layout):
                         tab_layout, row, 2, property, str(properties[property])
                     )
                     row += 2
-                    remove_names.append(property)
+                    properties.pop(property)
                 else:
                     # log error
                     print(
