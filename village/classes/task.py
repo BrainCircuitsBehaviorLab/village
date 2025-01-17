@@ -61,9 +61,9 @@ class Task:
         self.trial_data: dict = {}
 
         self.process = Thread()
-        self.df: pd.DataFrame = pd.DataFrame()
-        self.new_df: pd.DataFrame = pd.DataFrame()
-        self.df_all: pd.DataFrame = pd.DataFrame()
+        self.raw_df: pd.DataFrame = pd.DataFrame()
+        self.session_df: pd.DataFrame = pd.DataFrame()
+        self.subject_df: pd.DataFrame = pd.DataFrame()
         self.force_stop: bool = False
         self.manual_number_of_trials: int = 1000000
         self.chrono = time_utils.Chrono()
@@ -162,7 +162,7 @@ class Task:
         #     if isinstance(value, list):
         #         self.trial_data[key] = ",".join(map(str, value))
         self.row_df = pd.DataFrame([self.trial_data])
-        self.new_df = pd.concat([self.new_df, self.row_df], ignore_index=True)
+        self.session_df = pd.concat([self.session_df, self.row_df], ignore_index=True)
         self.trial_data = {}
 
     def register_value(self, name: str, value: Any) -> None:
@@ -196,7 +196,7 @@ class Task:
             try:
                 duration, trials, water = self.save_csv()
                 settings_str = self.save_json(run_mode)
-                self.training.df = self.df_all
+                self.training.df = self.subject_df
                 self.training.subject = self.subject
                 self.training.last_task = self.name
                 self.training.settings = self.settings
@@ -254,29 +254,29 @@ class Task:
         trials: int = 0
         water: int = 0
 
-        self.df = pd.read_csv(self.rt_session_path, sep=";")
+        self.raw_df = pd.read_csv(self.rt_session_path, sep=";")
 
-        if self.df.shape[0] > 100000:
+        if self.raw_df.shape[0] > 100000:
             log.alarm(
                 "The session file is very large, probably due to"
                 + " overdetections in some of the ports",
                 subject=self.subject,
             )
 
-        trials = self.df["TRIAL"].iloc[-1]
+        trials = self.raw_df["TRIAL"].iloc[-1]
 
         if trials > 0:
-            non_nan_values = self.df["START"].dropna()
+            non_nan_values = self.raw_df["START"].dropna()
 
             if not non_nan_values.empty:
                 duration = float(non_nan_values.iloc[-1] - non_nan_values.iloc[0])
 
-            self.df.to_csv(self.raw_session_path, index=None, header=True, sep=";")
+            self.raw_df.to_csv(self.raw_session_path, index=None, header=True, sep=";")
 
-            trials = self.new_df.shape[0]
+            trials = self.session_df.shape[0]
 
             try:
-                water = int(self.new_df["water"].sum())
+                water = int(self.session_df["water"].sum())
             except Exception:
                 water = 0
 
@@ -285,18 +285,22 @@ class Task:
                     "No water was drunk in task: " + self.name, subject=self.subject
                 )
 
-            self.new_df.to_csv(self.session_path, header=True, index=False, sep=";")
+            self.session_df.to_csv(self.session_path, header=True, index=False, sep=";")
 
             try:
-                self.df_all = pd.read_csv(self.subject_path, sep=";", low_memory=False)
+                self.subject_df = pd.read_csv(
+                    self.subject_path, sep=";", low_memory=False
+                )
 
-                self.new_df["session"] = [
-                    (int(self.df_all["session"].iloc[-1]) + 1)
-                ] * self.new_df.shape[0]
-                self.df_all = pd.concat([self.df_all, self.new_df], sort=True)
+                self.session_df["session"] = [
+                    (int(self.subject_df["session"].iloc[-1]) + 1)
+                ] * self.session_df.shape[0]
+                self.subject_df = pd.concat(
+                    [self.subject_df, self.session_df], sort=True
+                )
             except FileNotFoundError:
-                self.new_df["session"] = [1] * self.new_df.shape[0]
-                self.df_all = self.new_df
+                self.session_df["session"] = [1] * self.session_df.shape[0]
+                self.subject_df = self.session_df
 
             priority_columns = [
                 "session",
@@ -307,11 +311,11 @@ class Task:
                 "system_name",
             ]
             reordered_columns = priority_columns + [
-                col for col in self.df_all.columns if col not in priority_columns
+                col for col in self.subject_df.columns if col not in priority_columns
             ]
-            self.df_all = self.df_all[reordered_columns]
+            self.subject_df = self.subject_df[reordered_columns]
 
-            self.df_all.to_csv(self.subject_path, header=True, index=False, sep=";")
+            self.subject_df.to_csv(self.subject_path, header=True, index=False, sep=";")
 
             def safe_to_numeric(series) -> Any:
                 try:
@@ -319,7 +323,7 @@ class Task:
                 except Exception:
                     return series
 
-            self.df_all = self.df_all.apply(safe_to_numeric)
+            self.subject_df = self.subject_df.apply(safe_to_numeric)
         else:
             log.alarm(
                 "No trials were recorded in task: " + self.name, subject=self.subject

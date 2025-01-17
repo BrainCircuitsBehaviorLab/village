@@ -8,7 +8,11 @@ class SessionPlot:
         self.name = "Session Plot"
 
     def create_plot(
-        self, df: pd.DataFrame, df_raw: pd.DataFrame, width: float, height: float
+        self,
+        df: pd.DataFrame,
+        df_raw: pd.DataFrame,
+        width: float = 10,
+        height: float = 8,
     ) -> Figure:
         """
         Default plot for the session. Cumulative count of trials by trial start.
@@ -25,7 +29,9 @@ class SubjectPlot:
     def __init__(self) -> None:
         self.name = "Subject Plot"
 
-    def create_plot(self, df: pd.DataFrame, width: float, height: float) -> Figure:
+    def create_plot(
+        self, df: pd.DataFrame, width: float = 10, height: float = 8
+    ) -> Figure:
         """
         Default plot for the subject.
         You can override this method in the child class in
@@ -43,45 +49,31 @@ class OnlinePlotFigureManager:
     Class to handle creation and management of Matplotlib figures
     to monitor behavioral data in real-time.
 
-    Use this with the variables you are sending registering in your task,
-    that are part of Task.trial_data.
+    Use this with the variables you are registering in your task,
+    that are part of Task.session_df.
     """
 
     def __init__(self):
         self.name = "Online Plot"
         self.fig = plt.figure(figsize=(10, 8))
         self.ax1 = self.fig.add_subplot(121)
-        self.df = pd.DataFrame()
         self.active = False
-        self.columns_to_plot = ["trial", "TRIAL_START"]
 
-    def create_multiplot(self, df: pd.DataFrame) -> Figure:
+    def update_plot(self, df: pd.DataFrame) -> None:
+        """
+        This is the method that will be called every time the
+        data is updated. You should override this method in your
+        child class in your code repository.
+        """
         try:
-            self.df = df[self.columns_to_plot].copy()
-            self.make_plot()
-            self.fig.tight_layout()
+            self.make_plot(df)
         except Exception:
             self.make_error_plot()
-
-        return self.fig
-
-    def update_plot(self, trial_data: dict) -> None:
-        try:
-            self.update_df(trial_data)
-            self.make_plot()
-        except Exception:
-            self.make_error_plot()
-
-    def update_df(self, trial_data: dict) -> None:
-        # get the same keys from the dictionary
-        trial_data = {k: v for k, v in trial_data.items() if k in self.columns_to_plot}
-        new_row = pd.DataFrame(data=trial_data, columns=self.df.columns, index=[0])
-        self.df = pd.concat([self.df, new_row], ignore_index=True)
-
-    def make_plot(self) -> None:
-        self.ax1.clear()
-        self.df.plot(kind="scatter", x="TRIAL_START", y="trial", ax=self.ax1)
         self.fig.canvas.draw()
+
+    def make_plot(self, df: pd.DataFrame) -> None:
+        self.ax1.clear()
+        df.plot(kind="scatter", x="TRIAL_START", y="trial", ax=self.ax1)
 
     def make_error_plot(self) -> None:
         self.ax1.clear()
@@ -93,4 +85,3 @@ class OnlinePlotFigureManager:
             verticalalignment="center",
             transform=self.ax1.transAxes,
         )
-        self.fig.canvas.draw()

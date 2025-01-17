@@ -484,10 +484,10 @@ class MonitorLayout(Layout):
     def show_online_plots_clicked(self) -> None:
         try:
             # this fails if no trial is finished:
-            session_dfs = manager.get_both_sessions_dfs()
-            manager.online_plot_figure_manager.create_multiplot(session_dfs[1])
+            # session_dfs = manager.get_both_sessions_dfs()
+            manager.online_plot_figure_manager.update_plot(manager.task.session_df)
         except Exception:
-            manager.online_plot_figure_manager.create_multiplot(pd.DataFrame())
+            manager.online_plot_figure_manager.update_plot(pd.DataFrame())
 
         manager.online_plot_figure_manager.active = True
         geom = (

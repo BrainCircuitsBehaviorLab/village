@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Type
 
 import pandas as pd
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QScrollArea, QTabWidget, QVBoxLayout, QWidget
 
 from village.classes.enums import State
 from village.classes.subject import Subject
@@ -69,7 +69,7 @@ class TasksLayout(Layout):
         self.addLayout(self.central_layout, 14, 45, 34, 70)
 
         self.right_layout = QVBoxLayout()
-        self.addLayout(self.right_layout, 14, 120, 34, 90)
+        self.addLayout(self.right_layout, 13, 120, 35, 90)
 
         self.left_scroll = QScrollArea()
         self.left_scroll.setWidgetResizable(True)
@@ -81,14 +81,15 @@ class TasksLayout(Layout):
         self.central_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.central_sub_widget = QWidget()
 
-        self.right_scroll = QScrollArea()
-        self.right_scroll.setWidgetResizable(True)
-        self.right_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.right_sub_widget = QWidget()
-
         self.left_sub_layout = ExtraLayout(self.window, 30, 32)
         self.central_sub_layout = ExtraLayout(self.window, 30, 64)
-        self.right_sub_layout = ExtraLayout(self.window, 30, 84)
+
+        # Create a QTabWidget
+        self.right_tabs = QTabWidget()
+        self.right_layout.addWidget(self.right_tabs)
+
+        # Create the General tab and its scroll area
+        self.restart_tab_panel()
 
         row = 0
         self.left_sub_layout.create_and_add_label("Tasks", row, 0, 20, 2, "black")
@@ -114,11 +115,26 @@ class TasksLayout(Layout):
         self.central_scroll.setWidget(self.central_sub_widget)
         self.central_layout.addWidget(self.central_scroll)
 
-        self.right_sub_widget.setLayout(self.right_sub_layout)
-        self.right_scroll.setWidget(self.right_sub_widget)
-        self.right_layout.addWidget(self.right_scroll)
-
         self.check_buttons()
+
+    def create_tab_with_scroll_area(self, tab_name: str, layout: ExtraLayout) -> None:
+        tab = QWidget()
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        widget = QWidget()
+        scroll_area.setWidget(widget)
+        tab_layout = QVBoxLayout(widget)
+        widget.setLayout(tab_layout)
+        tab_layout.addLayout(layout)
+        tab.setLayout(QVBoxLayout())
+        tab.layout().addWidget(scroll_area)
+        self.right_tabs.addTab(tab, tab_name)
+
+    def restart_tab_panel(self) -> None:
+        self.right_tabs.clear()
+        self.right_layout_general = ExtraLayout(self.window, 30, 84)
+        self.create_tab_with_scroll_area("General", self.right_layout_general)
 
     def check_buttons(self) -> None:
         if manager.state.can_stop_task():
@@ -157,8 +173,8 @@ class TasksLayout(Layout):
             self.selected = name
             self.central_sub_layout.delete_optional_widgets("optional")
             self.central_sub_layout.delete_optional_widgets("optional2")
-            self.right_sub_layout.delete_optional_widgets("optional")
-            self.right_sub_layout.delete_optional_widgets("optional2")
+            self.right_layout_general.delete_optional_widgets("optional")
+            self.right_layout_general.delete_optional_widgets("optional2")
             self.check_buttons()
             manager.reset_subject_task_training()
             manager.task = cls()
@@ -173,15 +189,15 @@ class TasksLayout(Layout):
             self.info_label.setProperty("type", "optional")
             self.info_label.setAlignment(Qt.AlignTop | Qt.AlignLeft)
 
-            self.subject_label = self.right_sub_layout.create_and_add_label(
-                "Subject", 0, 2, 20, 2, "black"
+            self.subject_label = self.right_layout_general.create_and_add_label(
+                "Subject", 2, 2, 20, 2, "black"
             )
             self.subject_label.setProperty("type", "optional")
 
             self.possible_subjects = ["None"] + manager.subjects.df["name"].tolist()
-            self.subject_combo = self.right_sub_layout.create_and_add_combo_box(
+            self.subject_combo = self.right_layout_general.create_and_add_combo_box(
                 "subject",
-                0,
+                2,
                 32,
                 30,
                 2,
@@ -190,24 +206,24 @@ class TasksLayout(Layout):
                 self.select_subject,
             )
             self.subject_combo.setProperty("type", "optional")
-            self.create_gui_properties()
+            self.create_gui_properties_task()
 
     def test_training(self) -> None:
         self.testing_training = True
         self.central_sub_layout.delete_optional_widgets("optional")
         self.central_sub_layout.delete_optional_widgets("optional2")
-        self.right_sub_layout.delete_optional_widgets("optional")
-        self.right_sub_layout.delete_optional_widgets("optional2")
+        self.right_layout_general.delete_optional_widgets("optional")
+        self.right_layout_general.delete_optional_widgets("optional2")
         self.check_buttons()
         manager.reset_subject_task_training()
 
-        self.subject_label = self.right_sub_layout.create_and_add_label(
+        self.subject_label = self.right_layout_general.create_and_add_label(
             "Subject", 0, 2, 20, 2, "black"
         )
         self.subject_label.setProperty("type", "optional")
 
         self.possible_subjects = ["None"] + manager.subjects.df["name"].tolist()
-        self.subject_combo = self.right_sub_layout.create_and_add_combo_box(
+        self.subject_combo = self.right_layout_general.create_and_add_combo_box(
             "subject",
             0,
             32,
@@ -218,58 +234,65 @@ class TasksLayout(Layout):
             self.select_subject,
         )
         self.subject_combo.setProperty("type", "optional")
-        self.create_gui_properties_select()
+        self.create_gui_properties_common(start_row_general=8)
 
-    def create_gui_properties(self) -> None:
+    def create_gui_properties_common(self, start_row_general: int) -> None:
         self.line_edits = []
         self.central_sub_layout.delete_optional_widgets("optional2")
-        self.right_sub_layout.delete_optional_widgets("optional2")
-        row = 4
-        properties = manager.training.get_dict()
+        self.right_layout_general.delete_optional_widgets("optional2")
+        # remove all the tabs from the right_layout and recreate general
+        self.restart_tab_panel()
         remove_names = [
             "next_task",
             "minimum_duration",
             "refractary_period",
         ]
-        properties = {k: v for k, v in properties.items() if k not in remove_names}
+        properties = {
+            k: v
+            for k, v in manager.training.get_dict().items()
+            if k not in remove_names
+        }
+        # sort the properties into the tabs
+        for tab_name, properties_list in manager.training.gui_tabs.items():
+            # create a tab
+            tab_layout = ExtraLayout(self.window, 30, 84)
+            self.create_tab_with_scroll_area(tab_name, tab_layout)
+            row = 4
+            for property in properties_list:
+                if property in properties:
+                    self.create_label_and_value(
+                        tab_layout, row, 2, property, str(properties[property])
+                    )
+                    row += 2
+                    remove_names.append(property)
+                else:
+                    # log error
+                    print(
+                        f"Tab setting {property} not found in settings, check spelling"
+                    )
 
+        # add the rest to general tab
+        for i, (k, v) in enumerate(properties.items()):
+            self.create_label_and_value(
+                self.right_layout_general, start_row_general, 2, k, str(v)
+            )
+            if i == 0:
+                start_row_general += 4
+            else:
+                start_row_general += 2
+        self.update_gui()
+
+    def create_gui_properties_task(self) -> None:
+        row = 4
         self.create_label_and_value(
-            self.right_sub_layout,
+            self.right_layout_general,
             row,
             2,
             "manual_number_of_trials",
             str(manager.task.manual_number_of_trials),
         )
         row += 4
-
-        for i, (k, v) in enumerate(properties.items()):
-            self.create_label_and_value(self.right_sub_layout, row, 2, k, str(v))
-            if i == 0:
-                row += 4
-            else:
-                row += 2
-        self.update_gui()
-
-    def create_gui_properties_select(self) -> None:
-        self.line_edits = []
-        self.central_sub_layout.delete_optional_widgets("optional2")
-        self.right_sub_layout.delete_optional_widgets("optional2")
-        row = 8
-        properties = manager.training.get_dict()
-        remove_names = [
-            "next_task",
-            "minimum_duration",
-            "refractary_period",
-        ]
-        properties = {k: v for k, v in properties.items() if k not in remove_names}
-
-        for i, (k, v) in enumerate(properties.items()):
-            self.create_label_and_value(self.right_sub_layout, row, 2, k, str(v))
-            if i == 0:
-                row += 4
-            else:
-                row += 2
-        self.update_gui()
+        self.create_gui_properties_common(row)
 
     def select_subject(self, value: str, key: str) -> None:
         current_value = ""
@@ -289,9 +312,9 @@ class TasksLayout(Layout):
             manager.task.subject = "None"
         manager.training.load_settings_from_jsonstring(current_value)
         if self.testing_training:
-            self.create_gui_properties_select()
+            self.create_gui_properties_common(start_row_general=8)
         else:
-            self.create_gui_properties()
+            self.create_gui_properties_task()
 
     def run_task_button_clicked(self) -> None:
         self.change_properties()

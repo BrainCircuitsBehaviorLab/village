@@ -81,7 +81,7 @@ def corridor_plot(
     ax.set_ylim(-0.5, len(subjects) - 0.5)
 
     ax.set_xticks(start_seconds)
-    ax.set_yticks(subjects)
+    ax.set_yticks(len(subjects))
     ax.set_yticklabels(subjects)
     ax.xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter("%Y-%m-%d"))
     ax.set_facecolor(color_second)
