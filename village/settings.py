@@ -388,6 +388,12 @@ extra_settings = [
         "UPDATE_TIME_MS", 2000, int, "The update time in ms for the tables and plots."
     ),
     Setting("SCREENSAVE_TIME_MS", 300000, int, "The time in ms for the screensave."),
+    Setting(
+        "CORRIDOR_VIDEO_DURATION",
+        1800,
+        int,
+        "The duration of the corridor videos in seconds.",
+    ),
     Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1."),
     Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2."),
     Setting("SCALE_ADDRESS", "0x64", str, "The address of the scale."),

@@ -41,7 +41,7 @@ On this screen, the active training protocol is displayed on the left side, alon
 Clicking on the training protocol allows you to test its functionality (check the [Test a Training Protocol][TEST] section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:
 
 - `Subject`: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.
-- `manual_number_of_trials`: The task will automatically end once this number of trials is completed.
+- `maximum_number_of_trials`: The task will automatically end once this number of trials is completed.
 - `maximum_duration`: The task will automatically end when this timer is reached.
 
 In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the [Create a New Training Protocol][CREATE] section, we explain how to create a protocol and define its variables.

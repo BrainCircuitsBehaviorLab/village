@@ -111,13 +111,14 @@ class Training:
     def get_jsonstring(self) -> str:
         return json.dumps(self.get_dict())
 
-    def load_settings_from_dict(self, current_dict: dict[str, Any]) -> None:
-        current_dict = self.correct_types_in_dict(current_dict)
+    def load_settings_from_dict(self, current_dict: dict[str, Any]) -> list[str]:
+        wrong_keys, current_dict = self.correct_types_in_dict(current_dict)
         for key, value in self.get_default_dict().items():
             if key in current_dict:
                 setattr(self.settings, key, current_dict[key])
             else:
                 setattr(self.settings, key, value)
+        return wrong_keys
 
     def load_settings_from_jsonstring(self, current_value: str) -> None:
         try:
@@ -145,27 +146,30 @@ class Training:
                 new_dict[key] = current_dict[key]
         return json.dumps(new_dict)
 
-    def correct_types_in_dict(self, current_dict: dict[str, Any]) -> dict[str, Any]:
+    def correct_types_in_dict(
+        self, current_dict: dict[str, Any]
+    ) -> tuple[list[str], dict[str, Any]]:
+        wrong_keys: list[str] = []
         default_dict: dict[str, Any] = self.get_default_dict()
         for key, value in current_dict.items():
             if key in default_dict:
                 try:
-                    if isinstance(default_dict[key], int):
-                        value = int(value)
+                    if isinstance(default_dict[key], bool):
+                        value = value.lower() in ["true", "1", "yes"]
+                    elif isinstance(default_dict[key], int):
+                        value = float(value)
                     elif isinstance(default_dict[key], float):
                         value = float(value)
-                    elif isinstance(default_dict[key], bool):
-                        value = value.lower() in ["true", "1", "yes"]
                     elif isinstance(default_dict[key], list):
-                        value = eval(value) if value.startswith("[") else str(value)
+                        value = eval(value)
                     elif isinstance(default_dict[key], dict):
-                        value = eval(value) if value.startswith("{") else str(value)
+                        value = eval(value)
                 except Exception:
-                    pass
+                    wrong_keys.append(key)
                 current_dict[key] = value
-        return current_dict
+        return wrong_keys, current_dict
 
     def get_string(self) -> str:
         dict = self.get_dict()
-        new_dict = self.correct_types_in_dict(dict)
+        _, new_dict = self.correct_types_in_dict(dict)
         return json.dumps(new_dict)

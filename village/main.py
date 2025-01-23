@@ -27,6 +27,7 @@
 # temp_sensor
 
 
+import gc
 import threading
 import time
 
@@ -51,6 +52,8 @@ from village.settings import settings
 # faulthandler.enable()
 
 # init
+gc.disable()
+# automatic garbage collection disabled, we will use it manually when no task is running
 manager.task.bpod = bpod
 log.telegram_protocol = telegram_bot
 log.cam_protocol = cam_corridor
@@ -86,17 +89,21 @@ def system_run(bevavior_window: QWidget) -> None:
 
     while True:
         i += 1
-        time.sleep(0.01)
+        time.sleep(0.001)
 
         # if i == 2000:
         #     bpod.send_softcode(1)
         #     log.alarm("Alarma de prueba", subject="RAFA")
         #     behavior_window.toggle_animation()
 
-        if i % 60000 == 0:
-            log.info("counter: " + str(i) + " textos de prueba")
+        if manager.state == State.WAIT:
+            gc.enable()
+        else:
+            gc.disable()
 
-        if cam_corridor.chrono.get_seconds() > 1800:
+        if cam_corridor.chrono.get_seconds() > float(
+            settings.get("CORRIDOR_VIDEO_DURATION")
+        ):
             cam_corridor.stop_record()
             cam_corridor.start_record()
 
@@ -313,7 +320,7 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.RUN_MANUAL:
                 # Task running manually
                 if (
-                    manager.task.current_trial > manager.task.manual_number_of_trials
+                    manager.task.current_trial > manager.task.maximum_number_of_trials
                     or manager.task.chrono.get_seconds()
                     >= manager.task.settings.maximum_duration
                 ):

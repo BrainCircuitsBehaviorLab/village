@@ -4,7 +4,6 @@ import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
-import pandas as pd
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
@@ -19,12 +18,12 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from village.classes.enums import Actions, Active, Cycle, Info, State
+from village.classes.enums import Actions, Active, Cycle, Info
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
-from village.gui.layout import Label, Layout, OnlinePlotDialog, PushButton
+from village.gui.layout import Label, Layout, PushButton
 from village.log import log
 from village.manager import manager
 from village.plots.corridor_plot import corridor_plot
@@ -233,31 +232,31 @@ class MonitorLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
+        # self.background_label = self.create_and_add_label("", 4, 87, 38, 38, "black")
+        # self.background_label.setStyleSheet("background-color:lightgray")
+
+        rectangle = QWidget()
+        rectangle.setStyleSheet("background-color: lightgray;")
+        self.addWidget(rectangle, 4, 88, 28, 36)
 
         self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
 
         self.monitor_button.setDisabled(True)
 
-        self.qpicamera2_corridor = cam_corridor.start_preview_window()
-        self.qpicamera2_box = cam_box.start_preview_window()
-
-        self.addWidget(self.qpicamera2_corridor, 4, 0, 30, 88)
-        self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
-
         self.central_widget = QWidget(self.window)
         self.bottom_widget = QWidget(self.window)
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 12, 88, 18, 36)
+        self.addLayout(self.central_layout, 13, 88, 16, 36)
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = MotorLayout(self.window, 20, 36)
+        self.page1Layout = MotorLayout(self.window, 16, 36)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = PortsLayout(self.window, 20, 36)
+        self.page2Layout = PortsLayout(self.window, 16, 36)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
@@ -268,7 +267,7 @@ class MonitorLayout(Layout):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.page3_sub_widget = QWidget()
-        self.page3_sub_layout = FunctionsLayout(self.window, 15, 26)
+        self.page3_sub_layout = FunctionsLayout(self.window, 14, 26)
         self.page3_sub_widget.setLayout(self.page3_sub_layout)
 
         self.scroll_area.setWidget(self.page3_sub_widget)
@@ -302,37 +301,15 @@ class MonitorLayout(Layout):
         self.bottom_layout.addWidget(self.page5)
         self.bottom_layout.addWidget(self.page6)
 
-        self.stop_button: PushButton = self.create_and_add_button(
-            "",
-            0,
-            175,
-            18,
-            2,
-            self.stop,
-            "Stop a running task",
-            "lightcoral",
-        )
-
-        self.online_plots_button: PushButton = self.create_and_add_button(
-            "ONLINE PLOTS",
-            0,
-            156,
-            18,
-            2,
-            self.show_online_plots_clicked,
-            "Show the online plots when a task is running",
-            "lightskyblue",
-        )
-
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID reader: ", 4, 90, 12, 2, "black"
+            "RFID reader: ", 5, 90, 12, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
         index = Active.get_index_from_value(manager.rfid_reader)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
-            4,
+            5,
             102,
             20,
             2,
@@ -343,14 +320,14 @@ class MonitorLayout(Layout):
         )
 
         self.cycle_label: Label = self.create_and_add_label(
-            "Cycle: ", 6, 90, 12, 2, "black"
+            "Cycle: ", 7, 90, 12, 2, "black"
         )
         key = "CYCLE"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(manager.cycle)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
-            6,
+            7,
             102,
             20,
             2,
@@ -360,30 +337,14 @@ class MonitorLayout(Layout):
             "Cycle of the corridor: AUTO, DAY, NIGHT",
         )
 
-        key = "INFO"
-        possible_values = Info.values()
-        index = Info.get_index_from_value(manager.info)
-        self.info_button = self.create_and_add_toggle_button(
-            key,
-            32,
-            89,
-            33,
-            2,
-            possible_values,
-            index,
-            self.toggle_info_button,
-            "Info and values of the cameras or info about the system",
-            color="white",
-        )
-
         key = "ACTIONS"
         possible_values = Actions.values()
         index = Actions.get_index_from_value(manager.actions)
         self.actions_button = self.create_and_add_toggle_button(
             key,
-            10,
-            89,
-            33,
+            11,
+            88,
+            36,
             2,
             possible_values,
             index,
@@ -395,38 +356,43 @@ class MonitorLayout(Layout):
             color="white",
         )
 
+        key = "INFO"
+        possible_values = Info.values()
+        index = Info.get_index_from_value(manager.info)
+        self.info_button = self.create_and_add_toggle_button(
+            key,
+            32,
+            88,
+            36,
+            2,
+            possible_values,
+            index,
+            self.toggle_info_button,
+            "Info and values of the cameras or info about the system",
+            color="white",
+        )
+
         index = Info.get_index_from_string(manager.info.value)
         self.bottom_layout.setCurrentIndex(index)
 
         index = Actions.get_index_from_string(manager.actions.value)
         self.central_layout.setCurrentIndex(index)
 
-        self.update_buttons()
+        self.qpicamera2_corridor = cam_corridor.start_preview_window()
+        self.qpicamera2_box = cam_box.start_preview_window()
 
-    def stop(self) -> None:
-        if manager.state.can_stop_task():
-            if manager.state == State.RUN_MANUAL:
-                log.info("Task manually stopped.", subject=manager.subject.name)
-                manager.state = State.SAVE_MANUAL
-            else:
-                log.info(
-                    "Task manually stopped. Disconnectig RFID Reader.",
-                    subject=manager.subject.name,
-                )
-                manager.state = State.OPEN_DOOR2_STOP
-        elif manager.state.can_go_to_wait():
-            manager.state = State.WAIT
-        self.update_gui()
+        self.addWidget(self.qpicamera2_corridor, 4, 0, 30, 88)
+        self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
         manager.cycle = Cycle[value]
         settings.set(key, value)
-        self.update_status_label()
+        self.update_status_label_buttons()
 
     def toggle_rfid_reader_button(self, value: str, key: str) -> None:
         manager.rfid_reader = Active[value]
         settings.set(key, value)
-        self.update_status_label()
+        self.update_status_label_buttons()
 
     def toggle_actions_button(self, value: str, key: str) -> None:
         manager.actions = Actions[value]
@@ -443,8 +409,7 @@ class MonitorLayout(Layout):
         self.update_gui()
 
     def update_gui(self) -> None:
-        self.update_status_label()
-        self.update_buttons()
+        self.update_status_label_buttons()
         match manager.info:
             case manager.info.SYSTEM_INFO:
                 self.page4Layout.update_gui()
@@ -455,50 +420,10 @@ class MonitorLayout(Layout):
                     manager.detection_change = False
                     self.page6Layout.update_gui()
 
-    def update_buttons(self) -> None:
-        if manager.state.can_stop_task():
-            self.stop_button.setText("STOP TASK")
-            self.stop_button.setToolTip("Stop a running task")
-            self.stop_button.setEnabled(True)
-            self.online_plots_button.setEnabled(True)
-        elif manager.state.can_go_to_wait():
-            self.stop_button.setText("GO TO WAIT STATE")
-            self.stop_button.setToolTip(
-                """
-                If the systems thinks there is a subject in the corridor or the box,
-                but there isn't, you can force going to the WAIT state.
-                """
-            )
-            self.stop_button.setEnabled(True)
-        else:
-            self.stop_button.setText("STOP TASK")
-            self.stop_button.setToolTip("Stop a running task")
-            self.stop_button.setEnabled(False)
-            self.online_plots_button.setEnabled(False)
-
     def change_layout(self, auto: bool = False) -> bool:
         cam_corridor.stop_preview_window()
         cam_box.stop_preview_window()
         return True
-
-    def show_online_plots_clicked(self) -> None:
-        try:
-            # this fails if no trial is finished:
-            # session_dfs = manager.get_both_sessions_dfs()
-            manager.online_plot_figure_manager.update_plot(manager.task.session_df)
-        except Exception:
-            manager.online_plot_figure_manager.update_plot(pd.DataFrame())
-
-        manager.online_plot_figure_manager.active = True
-        geom = (
-            self.column_width * 10,
-            self.row_height * 5,
-            self.column_width * 62,
-            self.row_height * 20,
-        )
-        self.reply = OnlinePlotDialog()
-        self.reply.setGeometry(*geom)
-        self.reply.show()
 
 
 class MotorLayout(Layout):
@@ -514,7 +439,7 @@ class MotorLayout(Layout):
 
         self.change_angles: PushButton = self.create_and_add_button(
             "CHANGE MOTOR ANGLES",
-            5,
+            4,
             6,
             22,
             2,
@@ -523,7 +448,7 @@ class MotorLayout(Layout):
         )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            9,
+            7,
             6,
             22,
             2,
@@ -532,7 +457,7 @@ class MotorLayout(Layout):
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            11,
+            9,
             6,
             22,
             2,
@@ -541,7 +466,7 @@ class MotorLayout(Layout):
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            13,
+            11,
             6,
             22,
             2,
@@ -550,7 +475,7 @@ class MotorLayout(Layout):
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            17,
+            14,
             6,
             22,
             2,
@@ -709,7 +634,7 @@ class PortsLayout(Layout):
         for i in range(8):
             button1 = self.create_and_add_button(
                 "LED" + str(i + 1),
-                i * 2 + 1,
+                i * 2,
                 0,
                 16,
                 2,
@@ -720,7 +645,7 @@ class PortsLayout(Layout):
 
             button2 = self.create_and_add_button(
                 "WATER" + str(i + 1),
-                i * 2 + 1,
+                i * 2,
                 18,
                 16,
                 2,
@@ -959,7 +884,7 @@ class InfoLayout(Layout):
 
     def draw(self) -> None:
         text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
-        self.events_text = self.create_and_add_label(text, 0, 0, 210, 16, "black")
+        self.events_text = self.create_and_add_label(text, 0, 0, 209, 16, "black")
 
     def update_gui(self) -> None:
         text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
@@ -969,22 +894,23 @@ class InfoLayout(Layout):
 class CorridorPlotLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self.rows = rows
+        self.columns = columns
         self.draw()
 
     def draw(self) -> None:
         self.plot_label = QLabel()
-        width = 212
-        height = 16
         dpi = int(settings.get("MATPLOTLIB_DPI"))
-        self.addWidget(self.plot_label, 0, 0, height, width)
+        self.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
 
         self.pixmap = QPixmap()
 
         self.subjects = manager.subjects.df["name"].tolist()
-        self.plot_width = (width * self.column_width - 10) / dpi
-        self.plot_height = (height * self.row_height - 5) / dpi
+        self.plot_width = (self.columns * self.column_width - 10) / dpi
+        self.plot_height = (self.rows * self.row_height - 5) / dpi
 
     def update_gui(self) -> None:
+        pixmap = QPixmap()
         try:
             figure = corridor_plot(
                 manager.events.df.copy(),

@@ -298,7 +298,7 @@ class BpodBase(object):
                     )
             except:  # noqa: E722
                 self._session += ValueMessage("BPODCRASH", "waiting 100 ms")
-                time.sleep(0.001)
+                time.sleep(0.1)
                 self.send_state_machine(sma)
                 self._bpodcom_run_state_machine()
                 self._new_sma_sent = False

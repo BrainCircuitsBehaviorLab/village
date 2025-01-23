@@ -129,12 +129,13 @@ class Manager:
             [
                 "date",
                 "port_number",
-                "target(ul)",
-                "first_volume(ul)",
-                "volume(ul)",
-                "time(ms)",
+                "time(s)",
+                "water_delivered(ul)",
+                "calibration_number",
+                "water_expected(ul)",
+                "error(%)",
             ],
-            [str, int, float, float, float, float],
+            [str, int, float, float, int, float, float],
         )
         self.sound_calibration = Collection(
             "sound_calibration",
@@ -323,20 +324,18 @@ class Manager:
             + state_name
             + " ("
             + state_description
-            + ")     //////     "
+            + ")                    "
             + "SUBJECT: "
             + subject_name
-            + "     //////     "
+            + "                    "
             + "TASK: "
             + task_name
-            + "     //////     "
+            + "                    "
             + "RFID_READER: "
             + rfid_reader_name
-            + "     //////     "
+            + "                    "
             + "CYCLE: "
             + cycle_text
-            # + "     //////     "
-            # + bpod_state
         )
 
     def multiple_detections(self, multiple: bool) -> bool:

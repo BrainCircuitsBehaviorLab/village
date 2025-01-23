@@ -14,6 +14,7 @@ dependencies = [
     "setuptools_scm",
     "sounddevice",
     "python-telegram-bot",
+    "seaborn",
     "scipy",
     "sphinx_book_theme",
     "fire",

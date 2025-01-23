@@ -452,7 +452,9 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.WATER_CALIBRATION:
             try:
-                figure = water_calibration_plot(manager.water_calibration.df.copy())
+                figure = water_calibration_plot(
+                    manager.water_calibration.df.copy(), width, height
+                )
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -461,7 +463,9 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.SOUND_CALIBRATION:
             try:
-                figure = sound_calibration_plot(manager.sound_calibration.df.copy())
+                figure = sound_calibration_plot(
+                    manager.sound_calibration.df.copy(), width, height
+                )
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -470,7 +474,9 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.TEMPERATURES:
             try:
-                figure = temperatures_plot(manager.temperatures.df.copy())
+                figure = temperatures_plot(
+                    manager.temperatures.df.copy(), width, height
+                )
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -518,7 +524,7 @@ class DataLayout(Layout):
             self.page3Layout.update_data()
 
     def update_gui(self) -> None:
-        self.update_status_label()
+        self.update_status_label_buttons()
         if self.central_layout.currentIndex() == 0:
             self.page1Layout.update_gui()
         elif self.central_layout.currentIndex() == 1:
@@ -917,7 +923,6 @@ class DfLayout(Layout):
             self.search_edit.setText("")
             self.update_gui()
             self.changes_made = True
-            # self.update_status_label()
             self.update_buttons()
             row_count = self.model.rowCount()
             self.model.insertRow(row_count)
@@ -980,7 +985,6 @@ class DfLayout(Layout):
 
     def cancel(self) -> None:
         manager.state = State.WAIT
-        # self.update_status_label()
         self.update_buttons()
         if manager.table == DataTable.SUBJECTS:
             self.model.beginResetModel()
@@ -1118,7 +1122,7 @@ class DfLayout(Layout):
                     else line_edit.placeholderText()
                 )
                 new_dict[name] = value
-        new_dict = manager.training.correct_types_in_dict(new_dict)
+        _, new_dict = manager.training.correct_types_in_dict(new_dict)
         return json.dumps(new_dict)
 
     def edit_next_session_time(self, current_value: str) -> str:
@@ -1210,7 +1214,7 @@ class VideoLayout(Layout):
         except Exception:
             pass
 
-    def stop(self) -> None:
+    def stop_button_clicked(self) -> None:
         try:
             self.timer.stop()
             self.cap.release()
@@ -1218,7 +1222,7 @@ class VideoLayout(Layout):
             pass
 
     def close(self) -> None:
-        self.stop()
+        self.stop_button_clicked()
         self.data_from_video_change_requested.emit("")
 
     def next_frame_slot(self) -> None:

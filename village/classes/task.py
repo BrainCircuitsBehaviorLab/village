@@ -65,7 +65,7 @@ class Task:
         self.session_df: pd.DataFrame = pd.DataFrame()
         self.subject_df: pd.DataFrame = pd.DataFrame()
         self.force_stop: bool = False
-        self.manual_number_of_trials: int = 1000000
+        self.maximum_number_of_trials: int = 1000
         self.chrono = time_utils.Chrono()
 
     # OVERWRITE THESE METHODS IN YOUR TASKS
@@ -86,7 +86,7 @@ class Task:
         def test_run():
             self.create_paths()
             self.start()
-            while self.current_trial <= self.manual_number_of_trials:
+            while self.current_trial <= self.maximum_number_of_trials:
                 self.do_trial()
             self.close()
             self.disconnect_and_save("Manual")
@@ -98,7 +98,7 @@ class Task:
     def run(self) -> None:
         self.start()
         while (
-            self.current_trial <= self.manual_number_of_trials
+            self.current_trial <= self.maximum_number_of_trials
             and self.chrono.get_seconds() < self.settings.maximum_duration
             and not self.force_stop
         ):
@@ -118,9 +118,7 @@ class Task:
         self.current_trial += 1
         return
 
-    @time_utils.measure_time
     def get_trial_data(self) -> None:
-        print(self.current_trial)
         data = self.bpod.session.current_trial.export()
         occurrences = self.bpod.session.current_trial.events_occurrences
 
@@ -145,10 +143,6 @@ class Task:
             self.trial_data[event] = timestamps
 
         for state, intervals in data["States timestamps"].items():
-            print("")
-            print(intervals)
-            print(type(intervals))
-            print("")
             starts = [start for start, _ in intervals]
             ends = [end for _, end in intervals]
             self.trial_data[f"STATE_{state}_START"] = starts
@@ -156,11 +150,7 @@ class Task:
 
         self.trial_data["ordered_list_of_events"] = [msg.content for msg in occurrences]
 
-    @time_utils.measure_time
     def concatenate_trial_data(self) -> None:
-        # for key, value in self.trial_data.items():
-        #     if isinstance(value, list):
-        #         self.trial_data[key] = ",".join(map(str, value))
         self.row_df = pd.DataFrame([self.trial_data])
         self.session_df = pd.concat([self.session_df, self.row_df], ignore_index=True)
         self.trial_data = {}

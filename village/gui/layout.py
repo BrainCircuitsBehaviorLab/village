@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
+import pandas as pd
 from classes.enums import State
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTime
@@ -20,6 +21,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
 )
 
+from village.log import log
 from village.manager import manager
 from village.settings import settings
 
@@ -29,14 +31,22 @@ if TYPE_CHECKING:
 
 class Label(QLabel):
     def __init__(
-        self, text: str, color: str, right_aligment: bool, bold: bool, description: str
+        self,
+        text: str,
+        color: str,
+        right_aligment: bool,
+        bold: bool,
+        description: str,
+        background: str,
     ) -> None:
         super().__init__(text)
         style = "QLabel {color: " + color
         if bold:
-            style += "; font-weight: bold}"
-        else:
+            style += "; font-weight: bold"
+        if background == "":
             style += "}"
+        else:
+            style += "; background-color: " + background + "}"
         if description != "":
             style += "QToolTip {background-color: white; color: black; font-size: 12px}"
             self.setToolTip(description)
@@ -197,24 +207,16 @@ class Layout(QGridLayout):
             self.create_common_elements()
 
     def create_common_elements(self) -> None:
-        self.status_label = self.create_and_add_label("", 2, 0, 212, 2, "black")
-        self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-        self.update_status_label()
-        self.exit_button = self.create_and_add_button(
-            "EXIT",
-            0,
-            194,
-            18,
-            2,
-            self.exit_button_clicked,
-            "Exit the application",
-            "lightcoral",
+        self.status_label = self.create_and_add_label(
+            "", 2, 0, 210, 2, "white", background="black"
         )
+        self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+
         self.main_button = self.create_and_add_button(
             "MAIN",
             0,
-            61,
-            20,
+            0,
+            21,
             2,
             self.main_button_clicked,
             "Go to the main menu",
@@ -223,41 +225,127 @@ class Layout(QGridLayout):
         self.monitor_button = self.create_and_add_button(
             "MONITOR",
             0,
-            79,
-            20,
+            21,
+            21,
             2,
             self.monitor_button_clicked,
             "Go to the monitor menu",
         )
 
         self.tasks_button = self.create_and_add_button(
-            "TASKS", 0, 97, 18, 2, self.tasks_button_clicked, "Go to the tasks menu"
+            "TASKS",
+            0,
+            42,
+            21,
+            2,
+            self.tasks_button_clicked,
+            "Go to the tasks menu",
         )
 
         self.data_button = self.create_and_add_button(
-            "DATA", 0, 115, 18, 2, self.data_button_clicked, "Go to the data menu"
+            "DATA",
+            0,
+            63,
+            21,
+            2,
+            self.data_button_clicked,
+            "Go to the data menu",
+        )
+
+        self.water_calibration_button = self.create_and_add_button(
+            "WATER CALIBRATION",
+            0,
+            84,
+            22,
+            2,
+            self.water_calibration_button_clicked,
+            "Go to the water calibration menu",
+        )
+
+        self.sound_calibration_button = self.create_and_add_button(
+            "SOUND CALIBRATION",
+            0,
+            106,
+            22,
+            2,
+            self.water_calibration_button_clicked,
+            "Go to the sound calibration menu",
         )
 
         self.settings_button = self.create_and_add_button(
             "SETTINGS",
             0,
-            133,
-            18,
+            128,
+            21,
             2,
             self.settings_button_clicked,
             "Go to the setting menu",
         )
 
-    def update_status_label(self) -> None:
+        self.online_plots_button = self.create_and_add_button(
+            "ONLINE PLOTS",
+            0,
+            149,
+            21,
+            2,
+            self.show_online_plots_clicked,
+            "Show the online plots when a task is running",
+            "lightskyblue",
+        )
+
+        self.stop_button = self.create_and_add_button(
+            "",
+            0,
+            170,
+            21,
+            2,
+            self.stop_button_clicked,
+            "Stop a running task",
+            "lightcoral",
+        )
+
+        self.exit_button = self.create_and_add_button(
+            "EXIT",
+            0,
+            191,
+            21,
+            2,
+            self.exit_button_clicked,
+            "Exit the application",
+            "lightcoral",
+        )
+
+        self.update_status_label_buttons()
+
+    def update_status_label_buttons(self) -> None:
         manager.update_cycle()
         manager.update_text()
         self.status_label.setText(manager.text)
+        if manager.state.can_stop_task():
+            self.stop_button.setText("STOP TASK")
+            self.stop_button.setToolTip("Stop a running task")
+            self.stop_button.setEnabled(True)
+            self.online_plots_button.setEnabled(True)
+        elif manager.state.can_go_to_wait():
+            self.stop_button.setText("GO TO WAIT STATE")
+            self.stop_button.setToolTip(
+                """
+                If the systems thinks there is a subject in the corridor or the box,
+                but there isn't, you can force going to the WAIT state.
+                """
+            )
+            self.stop_button.setEnabled(True)
+        else:
+            self.stop_button.setText("STOP TASK")
+            self.stop_button.setToolTip("Stop a running task")
+            self.stop_button.setEnabled(False)
+            self.online_plots_button.setEnabled(False)
 
     def exit_button_clicked(self) -> None:
         if manager.state.can_exit():
             old_state = manager.state
             manager.state = State.EXIT_GUI
-            self.update_status_label()
+            self.update_status_label_buttons()
             text = "Are you sure you want to exit?"
             if manager.changing_settings:
                 text += " Changes will not be saved."
@@ -272,7 +360,7 @@ class Layout(QGridLayout):
                 self.window.exit_app()
             else:
                 manager.state = old_state
-                self.update_status_label()
+                self.update_status_label_buttons()
         else:
             QMessageBox.information(
                 self.window,
@@ -320,6 +408,36 @@ class Layout(QGridLayout):
                 manager.reset_subject_task_training()
             self.window.create_data_layout()
 
+    def water_calibration_button_clicked(self) -> None:
+        if self.change_layout():
+            if manager.state in [State.WAIT, State.MANUAL_MODE]:
+                manager.state = State.MANUAL_MODE
+                manager.reset_subject_task_training()
+                self.window.create_calibration_layout()
+            else:
+                text = """Calibration is not available if there is a subject in the box
+                or a detection in progress"""
+                QMessageBox.information(
+                    self.window,
+                    "CALIBRATION",
+                    text,
+                )
+
+    def sync_button_clicked(self) -> None:
+        if self.change_layout():
+            if manager.state in [State.WAIT, State.MANUAL_MODE]:
+                manager.state = State.MANUAL_MODE
+                manager.reset_subject_task_training()
+                self.window.create_calibration_layout()
+            else:
+                text = """Synchronization is not available if there is a subject in the
+                box or a detection in progress"""
+                QMessageBox.information(
+                    self.window,
+                    "SYNC",
+                    text,
+                )
+
     def settings_button_clicked(self) -> None:
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
@@ -334,6 +452,40 @@ class Layout(QGridLayout):
                     "SETTINGS",
                     text,
                 )
+
+    def stop_button_clicked(self) -> None:
+        if manager.state.can_stop_task():
+            if manager.state == State.RUN_MANUAL:
+                log.info("Task manually stopped.", subject=manager.subject.name)
+                manager.state = State.SAVE_MANUAL
+            else:
+                log.info(
+                    "Task manually stopped. Disconnectig RFID Reader.",
+                    subject=manager.subject.name,
+                )
+                manager.state = State.OPEN_DOOR2_STOP
+        elif manager.state.can_go_to_wait():
+            manager.state = State.WAIT
+        self.update_gui()
+
+    def show_online_plots_clicked(self) -> None:
+        try:
+            # this fails if no trial is finished:
+            # session_dfs = manager.get_both_sessions_dfs()
+            manager.online_plot_figure_manager.update_plot(manager.task.session_df)
+        except Exception:
+            manager.online_plot_figure_manager.update_plot(pd.DataFrame())
+
+        manager.online_plot_figure_manager.active = True
+        geom = (
+            self.column_width * 10,
+            self.row_height * 5,
+            self.column_width * 62,
+            self.row_height * 20,
+        )
+        self.reply = OnlinePlotDialog()
+        self.reply.setGeometry(*geom)
+        self.reply.show()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         event.ignore()
@@ -356,9 +508,10 @@ class Layout(QGridLayout):
         right_aligment: bool = False,
         bold: bool = True,
         description: str = "",
+        background: str = "",
     ) -> Label:
 
-        label = Label(text, color, right_aligment, bold, description)
+        label = Label(text, color, right_aligment, bold, description, background)
         label.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(label, row, column, height, width)
         return label

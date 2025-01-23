@@ -5,12 +5,21 @@ from typing import TYPE_CHECKING, Type
 
 import pandas as pd
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QScrollArea, QTabWidget, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import (
+    QComboBox,
+    QLineEdit,
+    QMessageBox,
+    QScrollArea,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 from village.classes.enums import State
 from village.classes.subject import Subject
 from village.classes.task import Task
 from village.gui.layout import Layout
+from village.log import log
 from village.manager import manager
 
 if TYPE_CHECKING:
@@ -30,10 +39,11 @@ class TasksLayout(Layout):
         self.window = window
         self.selected = ""
         self.testing_training = False
+        self.subject_index = 0
         self.draw()
 
     def draw(self) -> None:
-        self.line_edits: list[LineEdit] = []
+        self.line_edits: dict[str, LineEdit] = {}
         self.tasks_button.setDisabled(True)
 
         self.run_task_button = self.create_and_add_button(
@@ -58,7 +68,7 @@ class TasksLayout(Layout):
             4,
             30,
             2,
-            self.test_training,
+            self.training_button_clicked,
             "Test the training protocol to check that returns the correct values",
         )
 
@@ -141,14 +151,14 @@ class TasksLayout(Layout):
             self.run_task_button.setEnabled(False)
             for button in self.task_buttons:
                 button.setEnabled(False)
-            for line_edit in self.line_edits:
+            for line_edit in self.line_edits.values():
                 line_edit.setEnabled(False)
         elif self.testing_training:
             self.run_task_button.setText("TEST TRAINING")
             self.run_task_button.setEnabled(True)
             for button in self.task_buttons:
                 button.setEnabled(True)
-            for line_edit in self.line_edits:
+            for line_edit in self.line_edits.values():
                 line_edit.setEnabled(True)
         elif self.selected != "":
             self.run_task_button.setText("RUN TASK")
@@ -158,17 +168,18 @@ class TasksLayout(Layout):
                     button.setEnabled(False)
                 else:
                     button.setEnabled(True)
-            for line_edit in self.line_edits:
+            for line_edit in self.line_edits.values():
                 line_edit.setEnabled(True)
         else:
             self.run_task_button.setEnabled(False)
             for button in self.task_buttons:
                 button.setEnabled(True)
-            for line_edit in self.line_edits:
+            for line_edit in self.line_edits.values():
                 line_edit.setEnabled(True)
 
     def select_task(self, cls: Type, name: str) -> None:
         if issubclass(cls, Task):
+            self.subject_index = 0
             self.testing_training = False
             self.selected = name
             self.central_sub_layout.delete_optional_widgets("optional")
@@ -188,9 +199,10 @@ class TasksLayout(Layout):
             self.info_label.setWordWrap(True)
             self.info_label.setProperty("type", "optional")
             self.info_label.setAlignment(Qt.AlignTop | Qt.AlignLeft)
-            self.create_gui_properties_task()
+            self.create_gui_properties(testing_training=False)
 
-    def test_training(self) -> None:
+    def training_button_clicked(self) -> None:
+        self.subject_index = 0
         self.testing_training = True
         self.central_sub_layout.delete_optional_widgets("optional")
         self.central_sub_layout.delete_optional_widgets("optional2")
@@ -198,10 +210,10 @@ class TasksLayout(Layout):
         self.right_layout_general.delete_optional_widgets("optional2")
         self.check_buttons()
         manager.reset_subject_task_training()
-        self.create_gui_properties_common(start_row_general=8)
+        self.create_gui_properties(testing_training=True)
 
-    def create_gui_properties_common(self, start_row_general: int) -> None:
-        self.line_edits = []
+    def create_gui_properties(self, testing_training: bool) -> None:
+        self.line_edits = {}
         self.central_sub_layout.delete_optional_widgets("optional2")
         self.right_layout_general.delete_optional_widgets("optional2")
         # remove all the tabs from the right_layout and recreate general
@@ -220,12 +232,13 @@ class TasksLayout(Layout):
             30,
             2,
             self.possible_subjects,
-            0,
+            self.subject_index,
             self.select_subject,
         )
         self.subject_combo.setProperty("type", "optional")
         remove_names = [
             "next_task",
+            "maximum_duration",
             "minimum_duration",
             "refractary_period",
         ]
@@ -239,7 +252,7 @@ class TasksLayout(Layout):
             # create a tab
             tab_layout = ExtraLayout(self.window, 30, 84)
             self.create_tab_with_scroll_area(tab_name, tab_layout)
-            row = 4
+            row = 0
             for property in properties_list:
                 if property in properties:
                     self.create_label_and_value(
@@ -248,35 +261,36 @@ class TasksLayout(Layout):
                     row += 2
                     properties.pop(property)
                 else:
-                    # log error
-                    print(
+                    log.error(
                         f"Tab setting {property} not found in settings, check spelling"
                     )
 
         # add the rest to general tab
-        for i, (k, v) in enumerate(properties.items()):
+        row = 4
+        if not testing_training:
             self.create_label_and_value(
-                self.right_layout_general, start_row_general, 2, k, str(v)
+                self.right_layout_general,
+                row,
+                2,
+                "maximum_number_of_trials",
+                str(manager.task.maximum_number_of_trials),
             )
-            if i == 0:
-                start_row_general += 4
-            else:
-                start_row_general += 2
+            row += 2
+            self.create_label_and_value(
+                self.right_layout_general,
+                row,
+                2,
+                "maximum_duration",
+                str(manager.training.get_dict()["maximum_duration"]),
+            )
+            row += 4
+        for i, (k, v) in enumerate(properties.items()):
+            self.create_label_and_value(self.right_layout_general, row, 2, k, str(v))
+            row += 2
         self.update_gui()
 
-    def create_gui_properties_task(self) -> None:
-        row = 4
-        self.create_label_and_value(
-            self.right_layout_general,
-            row,
-            2,
-            "manual_number_of_trials",
-            str(manager.task.manual_number_of_trials),
-        )
-        row += 4
-        self.create_gui_properties_common(row)
-
     def select_subject(self, value: str, key: str) -> None:
+        self.subject_index = self.subject_combo.currentIndex()
         current_value = ""
         if value != "None":
             manager.subject.subject_series = manager.subjects.get_last_entry(
@@ -293,27 +307,31 @@ class TasksLayout(Layout):
             manager.subject = Subject()
             manager.task.subject = "None"
         manager.training.load_settings_from_jsonstring(current_value)
-        if self.testing_training:
-            self.create_gui_properties_common(start_row_general=8)
-        else:
-            self.create_gui_properties_task()
+        self.create_gui_properties(testing_training=self.testing_training)
 
     def run_task_button_clicked(self) -> None:
-        self.change_properties()
-        manager.task.settings = manager.training.settings
-        manager.task.training = manager.training
-        if self.testing_training:
-            try:
-                manager.task.training.df = pd.read_csv(
-                    manager.task.subject_path, sep=";"
-                )
-                manager.task.training.update_training_settings()
-            except Exception:
-                pass
+        wrong_keys = self.change_properties()
+        if len(wrong_keys) == 0:
+            manager.task.settings = manager.training.settings
+            manager.task.training = manager.training
+            if self.testing_training:
+                try:
+                    manager.task.training.df = pd.read_csv(
+                        manager.task.subject_path, sep=";"
+                    )
+                    manager.task.training.update_training_settings()
+                except Exception:
+                    pass
+            else:
+                manager.state = State.LAUNCH_MANUAL
+                self.monitor_button_clicked()
+                self.update_gui()
         else:
-            manager.state = State.LAUNCH_MANUAL
-            self.monitor_button_clicked()
-            self.update_gui()
+            QMessageBox.information(
+                self.window,
+                "ERROR",
+                "The following settings are wrong:\n" + "\n".join(wrong_keys),
+            )
 
     def create_label_and_value(
         self,
@@ -329,13 +347,14 @@ class TasksLayout(Layout):
         )
         label.setProperty("type", "optional2")
         if name in manager.training.gui_tabs_restricted:
+            optional_values = list(map(str, manager.training.gui_tabs_restricted[name]))
             line_edit = layout.create_and_add_combo_box(
                 name,
                 row,
                 column + width,
                 52,
                 2,
-                manager.training.gui_tabs_restricted[name],
+                optional_values,
                 0,
                 self.change_combo,
             )
@@ -344,12 +363,14 @@ class TasksLayout(Layout):
                 value, row, column + width, 52, 2, self.change_text
             )
         line_edit.setProperty("type", "optional2")
-        self.line_edits.append(line_edit)
+        self.line_edits[name] = line_edit
 
-    def change_properties(self) -> None:
+    def change_properties(self) -> list[str]:
+        wrong_values: list[str] = []
         properties = manager.training.get_dict()
         remove_names = [
             "next_task",
+            "maximum_duration",
             "minimum_duration",
             "refractary_period",
         ]
@@ -357,30 +378,39 @@ class TasksLayout(Layout):
         new_dict = {}
 
         try:
-            manager.task.manual_number_of_trials = int(self.line_edits[0].text())
+            manager.task.maximum_number_of_trials = abs(
+                int(self.line_edits["maximum_number_of_trials"].text())
+            )
         except Exception:
-            pass
+            wrong_values.append("maximum_number_of_trials")
+
+        try:
+            new_dict["maximum_duration"] = abs(
+                float(self.line_edits["maximum_duration"].text())
+            )
+        except Exception:
+            new_dict["maximum_duration"] = manager.training.get_dict()[
+                "maximum_duration"
+            ]
+            wrong_values.append("maximum_duration")
 
         for i, (k, v) in enumerate(properties.items()):
-            # TODO: discuss the i + 1 with Rafa.
-            # Should we handle the settings changing through the actions?
-            # Or make line_edits a dictionary so we can access it by key?
-            new_dict[k] = self.line_edits[i + 1].text()
-            # widget = self.line_edits[i]
-            # if isinstance(widget, QLineEdit):
-            #     new_dict[k] = widget.text()
-            # elif isinstance(widget, QComboBox):
-            #     new_dict[k] = widget.currentText()
+            widget = self.line_edits[k]
+            if isinstance(widget, QLineEdit):
+                new_dict[k] = widget.text()
+            elif isinstance(widget, QComboBox):
+                new_dict[k] = widget.currentText()
 
-        manager.training.load_settings_from_dict(new_dict)
+        wrong_keys = manager.training.load_settings_from_dict(new_dict)
+
+        return wrong_values + wrong_keys
 
     def change_text(self) -> None:
         pass
 
     def change_combo(self, value: str, key: str) -> None:
-        # TODO: I need to do something here to change this in line_edits?
         pass
 
     def update_gui(self) -> None:
-        self.update_status_label()
+        self.update_status_label_buttons()
         self.check_buttons()

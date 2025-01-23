@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
 from village.classes.enums import Active, ScreenActive, State
 from village.devices.camera import cam_box, cam_corridor
-from village.gui.layout import Layout, LineEdit, PushButton, TimeEdit, ToggleButton
+from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
 from village.manager import manager
 from village.settings import Setting, settings
 from village.devices.sound_device import get_sound_devices
@@ -21,8 +21,6 @@ if TYPE_CHECKING:
 class SettingsLayout(Layout):
     def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
-        self.apply_button = PushButton("", "black", self.apply_button_clicked, "")
-        self.restore_button = PushButton("", "black", self.restore_button_clicked, "")
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
         self.draw(all=True, modify="")
@@ -198,7 +196,7 @@ class SettingsLayout(Layout):
 
     def settings_changed(self, value: str = "", key: str = "") -> None:
         manager.changing_settings = True
-        self.update_status_label()
+        self.update_status_label_buttons()
         self.apply_button.setEnabled(True)
 
     def apply_button_clicked(self) -> None:
@@ -513,4 +511,4 @@ class SettingsLayout(Layout):
         return utils.create_directories_from_path(path)
 
     def update_gui(self) -> None:
-        self.update_status_label()
+        self.update_status_label_buttons()

@@ -11,6 +11,24 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 
+import traceback
+
+from PyQt5.QtCore import (
+    qInstallMessageHandler,
+)
+
+
+def qt_message_handler(mode, context, message) -> None:
+    # if mode == QtWarningMsg:
+    if True:
+        print(f"Qt Warning: {message}")
+        print("Stack Trace:")
+        print("".join(traceback.format_stack()))
+
+
+qInstallMessageHandler(qt_message_handler)
+
+
 class MainLayout(Layout):
     def __init__(self, window: GuiWindow, first_draw: bool = False) -> None:
         super().__init__(window)
@@ -33,4 +51,4 @@ class MainLayout(Layout):
             )
 
     def update_gui(self) -> None:
-        self.update_status_label()
+        self.update_status_label_buttons()
