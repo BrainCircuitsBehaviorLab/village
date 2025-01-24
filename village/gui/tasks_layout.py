@@ -358,6 +358,7 @@ class TasksLayout(Layout):
         label.setProperty("type", "optional2")
         if name in manager.training.gui_tabs_restricted:
             optional_values = list(map(str, manager.training.gui_tabs_restricted[name]))
+            default_index = optional_values.index(value)
             line_edit = layout.create_and_add_combo_box(
                 name,
                 row,
@@ -365,7 +366,7 @@ class TasksLayout(Layout):
                 52,
                 2,
                 optional_values,
-                0,
+                default_index,
                 self.change_combo,
             )
         else:
