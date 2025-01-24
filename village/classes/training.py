@@ -59,6 +59,7 @@ class Training:
 
     def define_gui_tabs(self) -> None:
         self.gui_tabs = {}
+        self.gui_tabs_restricted = {}
 
     # DO NOT OVERWRITE THESE METHODS
     def copy_settings(self) -> None:
