@@ -6,27 +6,6 @@
 # For more details, see <http://www.gnu.org/licenses/>.
 
 
-# VARIABLES WE CAN IMPORT IN ANY FILE
-# settings (no dependencies)
-# time_utils (no dependencies)
-# log (depens on time_utils in init and later
-#       it depens on manager for the events and telegram_bot for the alarms)
-# manager (depends on settings, time_utils and log)
-#   contains subject, task,
-#   subjects, events, sessions_summary, water_calibration, sound_calibration
-# DEVICES WE CAN IMPORT IN ANY FILE (depend on settings and utils)
-# bpod
-# cam_box
-# cam_corridor
-# motor1
-# motor2
-# rfid
-# scale
-# sound_device
-# telegram_bot
-# temp_sensor
-
-
 import gc
 import threading
 import time
@@ -51,9 +30,10 @@ from village.settings import settings
 # import faulthandler
 # faulthandler.enable()
 
-# init
-gc.disable()
 # automatic garbage collection disabled, we will use it manually when no task is running
+gc.disable()
+
+# init
 manager.task.bpod = bpod
 log.telegram_protocol = telegram_bot
 log.cam_protocol = cam_corridor

@@ -320,7 +320,7 @@ class Manager:
         #     bpod_state = ""
 
         self.text = (
-            "SYSTEM STATE: "
+            "     SYSTEM STATE: "
             + state_name
             + " ("
             + state_description

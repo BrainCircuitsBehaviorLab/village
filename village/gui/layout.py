@@ -210,13 +210,15 @@ class Layout(QGridLayout):
         self.status_label = self.create_and_add_label(
             "", 2, 0, 210, 2, "white", background="black"
         )
-        self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        # self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+
+        size = 20
 
         self.main_button = self.create_and_add_button(
             "MAIN",
             0,
             0,
-            21,
+            size,
             2,
             self.main_button_clicked,
             "Go to the main menu",
@@ -225,8 +227,8 @@ class Layout(QGridLayout):
         self.monitor_button = self.create_and_add_button(
             "MONITOR",
             0,
-            21,
-            21,
+            size,
+            size,
             2,
             self.monitor_button_clicked,
             "Go to the monitor menu",
@@ -235,8 +237,8 @@ class Layout(QGridLayout):
         self.tasks_button = self.create_and_add_button(
             "TASKS",
             0,
-            42,
-            21,
+            2 * size,
+            size,
             2,
             self.tasks_button_clicked,
             "Go to the tasks menu",
@@ -245,8 +247,8 @@ class Layout(QGridLayout):
         self.data_button = self.create_and_add_button(
             "DATA",
             0,
-            63,
-            21,
+            3 * size,
+            size,
             2,
             self.data_button_clicked,
             "Go to the data menu",
@@ -255,8 +257,8 @@ class Layout(QGridLayout):
         self.water_calibration_button = self.create_and_add_button(
             "WATER CALIBRATION",
             0,
-            84,
-            22,
+            4 * size,
+            size,
             2,
             self.water_calibration_button_clicked,
             "Go to the water calibration menu",
@@ -265,8 +267,8 @@ class Layout(QGridLayout):
         self.sound_calibration_button = self.create_and_add_button(
             "SOUND CALIBRATION",
             0,
-            106,
-            22,
+            5 * size,
+            size,
             2,
             self.water_calibration_button_clicked,
             "Go to the sound calibration menu",
@@ -275,8 +277,8 @@ class Layout(QGridLayout):
         self.settings_button = self.create_and_add_button(
             "SETTINGS",
             0,
-            128,
-            21,
+            6 * size,
+            size,
             2,
             self.settings_button_clicked,
             "Go to the setting menu",
@@ -285,19 +287,19 @@ class Layout(QGridLayout):
         self.online_plots_button = self.create_and_add_button(
             "ONLINE PLOTS",
             0,
-            149,
-            21,
+            170,
+            14,
             2,
             self.show_online_plots_clicked,
             "Show the online plots when a task is running",
-            "lightskyblue",
+            "powderblue",
         )
 
         self.stop_button = self.create_and_add_button(
             "",
             0,
-            170,
-            21,
+            184,
+            14,
             2,
             self.stop_button_clicked,
             "Stop a running task",
@@ -307,8 +309,8 @@ class Layout(QGridLayout):
         self.exit_button = self.create_and_add_button(
             "EXIT",
             0,
-            191,
-            21,
+            198,
+            14,
             2,
             self.exit_button_clicked,
             "Exit the application",

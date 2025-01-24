@@ -60,10 +60,10 @@ class TasksLayout(Layout):
         self.task_buttons: list[PushButton] = []
 
         row = 8
-        self.create_and_add_label("Training protocol", row, 4, 20, 2, "black")
+        self.create_and_add_label("TRAINING PROTOCOL", row, 4, 20, 2, "black")
         row += 2
         self.training_button = self.create_and_add_button(
-            "Test the training protocol",
+            "TEST THE TRAINING PROTOCOL",
             row,
             4,
             30,
@@ -85,24 +85,27 @@ class TasksLayout(Layout):
         self.left_scroll.setWidgetResizable(True)
         self.left_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.left_sub_widget = QWidget()
+        # self.left_sub_widget.setStyleSheet("border: 0px;")
 
         self.central_scroll = QScrollArea()
         self.central_scroll.setWidgetResizable(True)
         self.central_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.central_sub_widget = QWidget()
+        # self.central_sub_widget.setStyleSheet("border: 0px;")
 
         self.left_sub_layout = ExtraLayout(self.window, 30, 32)
         self.central_sub_layout = ExtraLayout(self.window, 30, 64)
 
         # Create a QTabWidget
         self.right_tabs = QTabWidget()
+        # self.right_tabs.setStyleSheet("QTabWidget::pane {border: 1px solid gray;}")
         self.right_layout.addWidget(self.right_tabs)
 
         # Create the General tab and its scroll area
         self.restart_tab_panel()
 
         row = 0
-        self.left_sub_layout.create_and_add_label("Tasks", row, 0, 20, 2, "black")
+        self.left_sub_layout.create_and_add_label("TASKS", row, 0, 20, 2, "black")
         row += 2
         for key, value in manager.tasks.items():
             button = self.left_sub_layout.create_and_add_button(
@@ -194,7 +197,7 @@ class TasksLayout(Layout):
             )
             self.name_label.setProperty("type", "optional")
             self.info_label = self.central_sub_layout.create_and_add_label(
-                manager.task.info, 2, 2, 60, 40, "black"
+                manager.task.info, 2, 2, 60, 30, "black"
             )
             self.info_label.setWordWrap(True)
             self.info_label.setProperty("type", "optional")

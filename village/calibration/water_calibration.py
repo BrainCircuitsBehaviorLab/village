@@ -2,7 +2,7 @@ from village.classes.task import Event, Task
 
 
 class WaterCalibration(Task):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.info = """

@@ -96,7 +96,7 @@ class Collection(EventProtocol):
         last_entry = self.df.iloc[-1]
         last_entry[column] = value
         self.df.iloc[-1] = last_entry
-        self.save_from_df(Training())
+        self.save_from_df()
 
     def log(self, date: str, type: str, subject: str, description: str) -> None:
         if self.columns == ["date", "type", "subject", "description"]:
@@ -107,7 +107,7 @@ class Collection(EventProtocol):
         # TODO
         return 0.01
 
-    def save_from_df(self, training: Training) -> None:
+    def save_from_df(self, training: Training = Training()) -> None:
         new_df = self.df_from_df(self.df, training)
         new_df.to_csv(self.path, index=False, sep=";")
         self.df = new_df

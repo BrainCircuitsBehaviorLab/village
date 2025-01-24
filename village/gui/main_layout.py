@@ -11,22 +11,19 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 
-import traceback
+# from PyQt5.QtCore import (
+#     qInstallMessageHandler,
+# )
 
-from PyQt5.QtCore import (
-    qInstallMessageHandler,
-)
+# def qt_message_handler(mode, context, message) -> None:
+#     pass
+#     # if mode == QtWarningMsg:
+#     # if True:
+#     #     print(f"Qt Warning: {message}")
+#     #     print(f"  File: {context.file}")
+#     #     print(f"  Line: {context.line}")
 
-
-def qt_message_handler(mode, context, message) -> None:
-    # if mode == QtWarningMsg:
-    if True:
-        print(f"Qt Warning: {message}")
-        print("Stack Trace:")
-        print("".join(traceback.format_stack()))
-
-
-qInstallMessageHandler(qt_message_handler)
+# qInstallMessageHandler(qt_message_handler)
 
 
 class MainLayout(Layout):

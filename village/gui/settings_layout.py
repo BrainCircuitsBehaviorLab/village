@@ -145,34 +145,34 @@ class SettingsLayout(Layout):
                 row += 2
 
         if all:
-            self.apply_button = self.create_and_add_button(
-                "Apply changes",
+            self.save_button = self.create_and_add_button(
+                "SAVE THE SETTINGS",
                 44,
-                187,
-                25,
+                186,
+                26,
                 2,
-                self.apply_button_clicked,
+                self.save_button_clicked,
                 "Apply and save the settings",
                 "powderblue",
             )
-            self.apply_button.setDisabled(True)
+            self.save_button.setDisabled(True)
 
             self.restore_button = self.create_and_add_button(
-                "Restore factory settings",
+                "RESTORE FACTORY SETTINGS",
                 48,
-                187,
-                25,
+                186,
+                26,
                 2,
                 self.restore_button_clicked,
                 "Restore the factory settings",
-                "mistyrose",
+                "lightcoral",
             )
             self.restore_button.clicked.connect(self.restore_button_clicked)
 
     def change_layout(self, auto: bool = False) -> bool:
         if auto:
             return True
-        elif self.apply_button.isEnabled():
+        elif self.save_button.isEnabled():
 
             reply = QMessageBox.question(
                 self.window,
@@ -183,11 +183,11 @@ class SettingsLayout(Layout):
             )
 
             if reply == QMessageBox.Save:
-                self.apply_button.setDisabled(True)
-                self.apply_button_clicked()
+                self.save_button.setDisabled(True)
+                self.save_button_clicked()
                 return True
             elif reply == QMessageBox.Discard:
-                self.apply_button.setDisabled(True)
+                self.save_button.setDisabled(True)
                 return True
             else:
                 return False
@@ -197,10 +197,10 @@ class SettingsLayout(Layout):
     def settings_changed(self, value: str = "", key: str = "") -> None:
         manager.changing_settings = True
         self.update_status_label_buttons()
-        self.apply_button.setEnabled(True)
+        self.save_button.setEnabled(True)
 
-    def apply_button_clicked(self) -> None:
-        self.apply_button.setDisabled(True)
+    def save_button_clicked(self) -> None:
+        self.save_button.setDisabled(True)
         manager.changing_settings = False
 
         for i, line_edit in enumerate(self.line_edits):

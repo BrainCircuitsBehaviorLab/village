@@ -1,21 +1,22 @@
 from __future__ import annotations  # noqa: I001
-from contextlib import suppress
 from typing import TYPE_CHECKING
 from PyQt5.QtWidgets import QMessageBox
 from village.classes.enums import State
-from village.devices.camera import cam_box, cam_corridor
 from village.gui.layout import Layout, Label, LineEdit
 from village.manager import manager
 from village.settings import settings
 from village.calibration.water_calibration import WaterCalibration
 import traceback
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (
-    QLabel,
-)
+from PyQt5.QtWidgets import QLabel, QTextEdit
+from PyQt5.QtCore import Qt
 from village.log import log
 from village.plots.water_calibration_plot import water_calibration_plot
 from village.plots.create_pixmap import create_pixmap
+from village.scripts import time_utils
+
+import pandas as pd
+import numpy as np
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -29,6 +30,10 @@ class WaterCalibrationLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
+        self.df = pd.DataFrame()
+        self.date = ""
+        self.calibration_number = 0
+        self.regression_text = ""
         self.calibration_initiated = False
         self.time_line_edits: list[LineEdit] = []
         self.total_weight_line_edits: list[LineEdit] = []
@@ -39,9 +44,10 @@ class WaterCalibrationLayout(Layout):
         self.water_delivered_labels2: list[Label] = []
         self.error_labels2: list[Label] = []
 
+        self.indices: list[int] = []
         self.times = [0.0 for _ in range(8)]
+        self.water_delivered = [0.0 for _ in range(8)]
         self.water2 = [0.0 for _ in range(8)]
-        self.expected_weight2 = [0.0 for _ in range(8)]
 
         self.calibration_input_label = self.create_and_add_label(
             "CALIBRATION INPUT",
@@ -173,7 +179,7 @@ class WaterCalibrationLayout(Layout):
 
         self.calibrate_button = self.create_and_add_button(
             "CALIBRATE -->",
-            16,
+            14,
             41,
             20,
             2,
@@ -185,7 +191,7 @@ class WaterCalibrationLayout(Layout):
 
         self.add_button = self.create_and_add_button(
             "ADD -->",
-            16,
+            14,
             105,
             20,
             2,
@@ -208,10 +214,10 @@ class WaterCalibrationLayout(Layout):
         self.test_button.setDisabled(True)
 
         self.save_button = self.create_and_add_button(
-            "Save calibration",
+            "SAVE CALIBRATION",
             44,
-            187,
-            25,
+            186,
+            26,
             2,
             self.delete_button_clicked,
             "Save the calibration",
@@ -220,22 +226,40 @@ class WaterCalibrationLayout(Layout):
         self.save_button.clicked.connect(self.save_button_clicked)
 
         self.delete_button = self.create_and_add_button(
-            "Delete calibration",
+            "DELETE THE CALIBRATION",
             48,
-            187,
-            25,
+            186,
+            26,
             2,
             self.delete_button_clicked,
             "Delete the calibration",
-            "mistyrose",
+            "lightcoral",
         )
         self.delete_button.clicked.connect(self.delete_button_clicked)
 
-        self.plot_layout = CalibrationPlotLayout(self.window, 26, 82)
-        self.addLayout(self.plot_layout, 4, 130, 26, 82)
+        self.plot_layout = CalibrationPlotLayout(self.window, 24, 82)
+        self.addLayout(self.plot_layout, 4, 130, 24, 82)
 
-        self.info_layout = InfoLayout(self.window, 20, 82)
-        self.addLayout(self.plot_layout, 30, 130, 20, 82)
+        self.title = self.create_and_add_label(
+            "port_number;time(s);water_delivered(ul)",
+            28,
+            130,
+            42,
+            2,
+            "black",
+            bold=False,
+        )
+
+        self.info_layout = InfoLayout(self.window, 20, 40)
+        self.addLayout(self.info_layout, 30, 130, 20, 40)
+
+        self.title2 = self.create_and_add_label(
+            "port_number;a;b;c", 28, 172, 40, 2, "black", bold=False
+        )
+        self.regression_label = self.create_and_add_label(
+            "", 30, 172, 40, 16, "black", bold=False
+        )
+        self.regression_label.setAlignment(Qt.AlignTop)
 
     def change_layout(self, auto: bool = False) -> bool:
         if auto:
@@ -267,15 +291,29 @@ class WaterCalibrationLayout(Layout):
         self.times = [0.0 for _ in range(8)]
         try:
             self.iterations = abs(int(self.iterations_line_edit.text()))
+            if self.iterations > 0:
+                self.iterations_line_edit.setStyleSheet(
+                    "QLineEdit {border: 1px solid black;}"
+                )
+            else:
+                self.iterations_line_edit.setStyleSheet("")
         except Exception:
             self.iterations = 0
+            self.iterations_line_edit.setStyleSheet("")
 
         for i in range(8):
             time = self.time_line_edits[i].text()
             try:
                 time_float = float(time)
                 self.times[i] = time_float
+                if time_float > 0:
+                    self.time_line_edits[i].setStyleSheet(
+                        "QLineEdit {border: 1px solid black;}"
+                    )
+                else:
+                    self.time_line_edits[i].setStyleSheet("")
             except Exception:
+                self.time_line_edits[i].setStyleSheet("")
                 time = "0"
 
             if time != "0" and self.iterations != 0:
@@ -286,7 +324,6 @@ class WaterCalibrationLayout(Layout):
     def test_changed(self, value: str = "", key: str = "") -> None:
         self.test_button.setEnabled(False)
         self.water2 = [0.0 for _ in range(8)]
-        self.expected_weight2 = [0.0 for _ in range(8)]
 
         try:
             self.iterations2 = abs(int(self.iterations_line_edit2.text()))
@@ -322,68 +359,10 @@ class WaterCalibrationLayout(Layout):
         pass
 
     def save_button_clicked(self) -> None:
-        self.save_button.setDisabled(True)
-        manager.changing_settings = False
-
-        for i, line_edit in enumerate(self.line_edits):
-            s = self.line_edits_settings[i]
-
-            if s.value_type == str:
-                value = line_edit.text()
-                settings.set(s.key, value)
-            elif s.value_type == float:
-                try:
-                    value_float = float(line_edit.text())
-                    settings.set(s.key, value_float)
-                    line_edit.setText(str(value_float))
-                except ValueError:
-                    line_edit.setText(str(settings.get(s.key)))
-
-            elif s.value_type == int:
-                try:
-                    value_int = round(float(line_edit.text()))
-                    settings.set(s.key, value_int)
-                    line_edit.setText(str(value_int))
-                except ValueError:
-                    line_edit.setText(str(settings.get(s.key)))
-
-        for i, time_edit in enumerate(self.time_edits):
-            s = self.time_edits_settings[i]
-            value = time_edit.time().toString("HH:mm")
-            settings.set(s.key, value)
-
-        for i, toggle_button in enumerate(self.toggle_buttons):
-            s = self.toggle_buttons_settings[i]
-
-            value = toggle_button.text()
-            settings.set(s.key, value)
-
-        for i, list_line in enumerate(self.list_of_line_edits):
-            s = self.list_of_line_edits_settings[i]
-
-            if s.value_type == list[int]:
-                values = [field.text() for field in list_line]
-                with suppress(BaseException):
-                    values_int = (int(values[0]), int(values[1]))
-                    settings.set(s.key, values_int)
-            else:
-                values = [field.text() for field in list_line]
-                settings.set(s.key, values)
-
-        for i, list_toggle in enumerate(self.list_of_toggle_buttons):
-            s = self.list_of_toggle_buttons_settings[i]
-
-            values = [field.text() for field in list_toggle]
-            settings.set(s.key, values)
-
-        try:
-            val = self.sound_device_combobox.currentText()
-            settings.set("SOUND_DEVICE", val)
-        except AttributeError:
-            pass
-
-        cam_corridor.change = True
-        cam_box.change = True
+        manager.water_calibration.df = pd.concat(
+            [manager.water_calibration.df, self.df]
+        )
+        manager.water_calibration.save_from_df()
 
     def delete_button_clicked(self) -> None:
         reply = QMessageBox.question(
@@ -402,19 +381,26 @@ class WaterCalibrationLayout(Layout):
         if manager.state == State.WAIT and self.calibration_initiated:
             self.calibration_initiated = False
             self.calibrate_button.setDisabled(True)
-            for index in self.indices:
-                self.total_weight_line_edits[index].setEnabled(True)
+            for index in range(len(self.total_weight_line_edits)):
+                if index in self.indices:
+                    self.total_weight_line_edits[index].setEnabled(True)
+                    self.total_weight_line_edits[index].setStyleSheet(
+                        "QLineEdit {border: 1px solid black;}"
+                    )
+                else:
+                    self.total_weight_line_edits[index].setStyleSheet("")
+
         self.add_button.setDisabled(True)
         for line_edit in self.water_delivered_labels:
             if line_edit.text() != "0":
                 self.add_button.setEnabled(True)
-        self.plot_layout.update_gui()
-        self.info_layout.update_gui()
+        self.regression_label.setText(self.regression_text)
 
     def select_port(self, value: str, index: int) -> None:
         pass
 
     def calibration_weighted(self, value: str = "", key: str = "") -> None:
+        self.water_delivered = [0.0 for _ in range(8)]
         for line_edit in self.water_delivered_labels:
             line_edit.setText("0")
         try:
@@ -422,6 +408,7 @@ class WaterCalibrationLayout(Layout):
                 line_edit = self.total_weight_line_edits[index]
                 result = float(line_edit.text()) / self.iterations * 1000
                 if result > 0:
+                    self.water_delivered[index] = result
                     self.water_delivered_labels[index].setText(str(result))
         except Exception:
             pass
@@ -431,7 +418,40 @@ class WaterCalibrationLayout(Layout):
             self.error_labels2[index].setText("0")
 
     def add_button_clicked(self) -> None:
-        pass
+        if self.date == "":
+            self.date = time_utils.now_string()
+        if self.calibration_number == 0:
+            try:
+                self.calibration_number = (
+                    manager.water_calibration.df["calibration_number"].max() + 1
+                )
+            except Exception:
+                self.calibration_number = 1
+        for i in self.indices:
+            row_dict = {
+                "date": self.date,
+                "port_number": i + 1,
+                "time(s)": self.times[i],
+                "water_delivered(ul)": self.water_delivered[i],
+                "calibration_number": self.calibration_number,
+                "water_expected(ul)": np.nan,
+                "error(%)": np.nan,
+            }
+
+            df = pd.DataFrame([row_dict])
+            self.df = pd.concat([self.df, df])
+
+        for line_edit in self.total_weight_line_edits:
+            line_edit.setText("0")
+            line_edit.setDisabled(True)
+            line_edit.setStyleSheet("")
+        self.add_button.setDisabled(True)
+        self.calibrate_button.setEnabled(True)
+        self.plot()
+        self.info_layout.update(self.df)
+
+    def plot(self) -> None:
+        self.plot_layout.update(self.df)
 
 
 class CalibrationPlotLayout(Layout):
@@ -443,6 +463,9 @@ class CalibrationPlotLayout(Layout):
 
     def draw(self) -> None:
         self.plot_label = QLabel()
+        self.plot_label.setStyleSheet(
+            "QLabel {border: 1px solid gray; background-color: white;}"
+        )
         dpi = int(settings.get("MATPLOTLIB_DPI"))
         self.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
 
@@ -451,14 +474,16 @@ class CalibrationPlotLayout(Layout):
         self.plot_width = (self.columns * self.column_width - 10) / dpi
         self.plot_height = (self.rows * self.row_height - 5) / dpi
 
-    def update_gui(self) -> None:
+    def update(self, df: pd.DataFrame) -> None:
+        pixmap = QPixmap()
         try:
-            figure = water_calibration_plot(
-                manager.water_calibration.df.copy(),
+            figure, text = water_calibration_plot(
+                df.copy(),
                 self.plot_width,
                 self.plot_height,
             )
             pixmap = create_pixmap(figure)
+            self.parent().regression_text = text
         except Exception:
             log.error(
                 "Can not create corridor plot",
@@ -469,18 +494,40 @@ class CalibrationPlotLayout(Layout):
             self.plot_label.setPixmap(pixmap)
         else:
             self.plot_label.setText("Plot could not be generated")
-            # TODO: should the figure be closed?
 
 
 class InfoLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self.rows = rows
+        self.columns = columns
         self.draw()
 
     def draw(self) -> None:
-        text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
-        self.events_text = self.create_and_add_label(text, 0, 0, 82, 20, "black")
+        self.text_edit = QTextEdit()
+        self.text_edit.setStyleSheet(
+            """
+            QTextEdit {
+                background-color: white;
+                color: black;
+                border: 1px solid gray;
+                font-size: 12px;
+            }
+        """
+        )
+        self.text_edit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.text_edit.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
-    def update_gui(self) -> None:
-        text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
-        self.events_text.setText(text)
+        self.addWidget(self.text_edit, 0, 0, self.rows, self.columns)
+
+        self.text_edit.textChanged.connect(self.handle_text_change)
+
+    def update(self, df: pd.DataFrame) -> None:
+        self.text_edit.blockSignals(True)
+        columns_to_include = ["port_number", "time(s)", "water_delivered(ul)"]
+        text = df[columns_to_include].to_csv(sep=";", index=False, header=False)
+        self.text_edit.setText(text)
+        self.text_edit.blockSignals(False)
+
+    def handle_text_change(self) -> None:
+        pass

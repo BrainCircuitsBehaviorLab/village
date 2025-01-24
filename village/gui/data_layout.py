@@ -134,16 +134,16 @@ class TableView(QTableView):
             manager.subjects.save_from_df(manager.training)
         elif manager.table == DataTable.TEMPERATURES:
             manager.temperatures.df = self.model_parent.df
-            manager.temperatures.save_from_df(manager.training)
+            manager.temperatures.save_from_df()
         elif manager.table == DataTable.WATER_CALIBRATION:
             manager.water_calibration.df = self.model_parent.df
-            manager.water_calibration.save_from_df(manager.training)
+            manager.water_calibration.save_from_df()
         elif manager.table == DataTable.SOUND_CALIBRATION:
             manager.sound_calibration.df = self.model_parent.df
-            manager.sound_calibration.save_from_df(manager.training)
+            manager.sound_calibration.save_from_df()
         elif manager.table == DataTable.SESSIONS_SUMMARY:
             manager.sessions_summary.df = self.model_parent.df
-            manager.sessions_summary.save_from_df(manager.training)
+            manager.sessions_summary.save_from_df()
         manager.state = State.WAIT
 
     def openDaysSelectionDialog(self, index, current_value) -> None:
@@ -556,6 +556,11 @@ class DfLayout(Layout):
             "title", 0, 5, 35, 2, possible_values, index, self.change_data_table
         )
 
+        self.back_button = self.create_and_add_button(
+            "<-- BACK", 0, 5, 35, 2, self.back_button_clicked, "back"
+        )
+        self.back_button.hide()
+
         self.search_label = self.create_and_add_label("search", 0, 45, 10, 2, "Search")
         self.search_edit = self.create_and_add_line_edit("", 0, 55, 25, 2, self.search)
 
@@ -602,11 +607,20 @@ class DfLayout(Layout):
                 self.complete_df = manager.old_session_df
                 self.widths = [20, 20, 20, 20, 20, 20]
                 self.title.setCurrentIndex(-1)
+                self.title.hide()
+                self.back_button.show()
             case DataTable.OLD_SESSION_RAW:
                 self.complete_df = manager.old_session_raw_df
                 self.widths = [20, 20, 20, 60, 60]
                 self.title.setCurrentIndex(-1)
+                self.title.hide()
+                self.back_button.show()
         self.df = self.obtain_searched_df()
+
+    def back_button_clicked(self) -> None:
+        self.back_button.hide()
+        self.title.show()
+        self.title.setCurrentText(DataTable.SESSIONS_SUMMARY.value)
 
     def create_table(self) -> None:
         editable = (
@@ -825,24 +839,28 @@ class DfLayout(Layout):
         pass
 
     def data_button_clicked(self) -> None:
-        p = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[0]
+        p0 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[0]
+        p1 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[1]
+        message = "Can not read file: " + p0
         try:
-            df = pd.read_csv(p, sep=";")
-            manager.old_session_df = df
+            manager.old_session_df = pd.read_csv(p0, sep=";")
+            message = "Can not read file: " + p1
+            manager.old_session_raw_df = pd.read_csv(p1, sep=";")
             self.change_data_table("OLD_SESSION", "")
         except Exception:
-            log.error("Can not read file: " + p, exception=traceback.format_exc())
+            log.error(message, exception=traceback.format_exc())
 
     def data_raw_button_clicked(self) -> None:
+        p0 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[0]
+        p1 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[1]
+        message = "Can not read file: " + p0
         try:
-            p = self.get_paths_from_sessions_summary_row(
-                self.get_selected_row_series()
-            )[1]
-            df = pd.read_csv(p, sep=";")
-            manager.old_session_raw_df = df
+            manager.old_session_df = pd.read_csv(p0, sep=";")
+            message = "Can not read file: " + p1
+            manager.old_session_raw_df = pd.read_csv(p1, sep=";")
             self.change_data_table("OLD_SESSION_RAW", "")
         except Exception:
-            log.error("Can not read file: " + p, exception=traceback.format_exc())
+            log.error(message, exception=traceback.format_exc())
 
     def get_selected_row_series(self) -> pd.Series | None:
         selected_indexes = self.model.table_view.selectionModel().selectedRows()
