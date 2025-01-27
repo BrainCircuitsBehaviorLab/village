@@ -8,11 +8,11 @@ from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
 from village.classes.enums import Active, ScreenActive, State
 from village.devices.camera import cam_box, cam_corridor
+from village.devices.sound_device import get_sound_devices
 from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
 from village.manager import manager
-from village.settings import Setting, settings
-from village.devices.sound_device import get_sound_devices
 from village.scripts import utils
+from village.settings import Setting, settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -135,7 +135,7 @@ class SettingsLayout(Layout):
                 row += 2
 
         if all or modify == "BPOD SETTINGS":
-            row = 28
+            row = 26
             name = "BPOD SETTINGS"
             label = self.create_and_add_label(name, row, 44, 30, 2, "black")
             label.setProperty("type", name)
