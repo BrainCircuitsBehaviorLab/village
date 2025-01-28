@@ -103,36 +103,45 @@ class Collection(EventProtocol):
             entry = [date, type, subject, description]
             self.add_entry(entry)
 
-    @time_utils.measure_time
     def get_valve_time(self, port: int, water: float) -> float:
-        calibration_df = self.df[self.df["port_number"] == port]
-        max_calibration = calibration_df["calibration_number"].max()
-        calibration_df = calibration_df[
-            calibration_df["calibration_number"] == max_calibration
-        ]
+        try:
+            calibration_df = self.df[self.df["port_number"] == port]
+            max_calibration = calibration_df["calibration_number"].max()
+            calibration_df = calibration_df[
+                calibration_df["calibration_number"] == max_calibration
+            ]
 
-        x = calibration_df["time(s)"].values
-        y = calibration_df["water_delivered(ul)"].values
+            x = calibration_df["time(s)"].values
+            y = calibration_df["water_delivered(ul)"].values
 
-        if len(x) == 2:
-            coeffs = np.polyfit(x, y, 1)
-            a, b = coeffs
-            c = 0
-        else:
-            coeffs = np.polyfit(x, y, 2)
-            a, b, c = coeffs
+            if len(x) == 2:
+                coeffs = np.polyfit(x, y, 1)
+                a, b = coeffs
+                c = 0
+            else:
+                coeffs = np.polyfit(x, y, 2)
+                a, b, c = coeffs
 
-        coeffs_for_root = [a, b, c - water]
-        roots = np.roots(coeffs_for_root)
+            coeffs_for_root = [a, b, c - water]
+            roots = np.roots(coeffs_for_root)
 
-        valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
+            valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
 
-        if valid_roots:
-            return round(float(np.min(valid_roots)), 4)
-        else:
-            text = "Check water calibration.csv"
-            text += "It is not possible to provide a valid time value for"
-            text += "a water delivery of " + str(water) + " ul"
+            if valid_roots:
+                return round(float(np.min(valid_roots)), 4)
+            else:
+                raise Exception
+        except Exception:
+            text = "\n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n"
+            text += "\tIt is not possible to provide a valid time value for "
+            text += "a water delivery of " + str(water) + " ul "
+            text += "for the port " + str(port) + ".\n"
+            text += (
+                "\t1. Make sure you have calibrated the valves/pumps you are using.\n"
+            )
+            text += "\t2. Make sure the water you want to give is "
+            text += "within calibration range.\n"
+            text += "\t3. Ultimately, check Check water_calibration.csv in 'data'.\n"
             raise ValueError(text)
 
     def save_from_df(self, training: Training = Training()) -> None:
