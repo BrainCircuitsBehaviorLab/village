@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import TYPE_CHECKING, Type
+from typing import TYPE_CHECKING, Type, Union
 
 import pandas as pd
 from PyQt5.QtCore import Qt
@@ -295,7 +295,17 @@ class TasksLayout(Layout):
         for i, (k, v) in enumerate(properties.items()):
             self.create_label_and_value(self.right_layout_general, row, 2, k, str(v))
             row += 2
+        # delete the "Hide" tab if it exists
+        hide_tab = self.find_tab_by_label("Hide")
+        if hide_tab:
+            self.right_tabs.removeTab(self.right_tabs.indexOf(hide_tab))
         self.update_gui()
+
+    def find_tab_by_label(self, label: str) -> Union[QWidget, None]:
+        for index in range(self.right_tabs.count()):
+            if self.right_tabs.tabText(index) == label:
+                return self.right_tabs.widget(index)
+        return None
 
     def select_subject(self, value: str, key: str) -> None:
         self.subject_index = self.subject_combo.currentIndex()
@@ -356,6 +366,7 @@ class TasksLayout(Layout):
         label.setProperty("type", "optional2")
         if name in manager.training.gui_tabs_restricted:
             optional_values = list(map(str, manager.training.gui_tabs_restricted[name]))
+            default_index = optional_values.index(value)
             line_edit = layout.create_and_add_combo_box(
                 name,
                 row,
@@ -363,7 +374,7 @@ class TasksLayout(Layout):
                 52,
                 2,
                 optional_values,
-                0,
+                default_index,
                 self.change_combo,
             )
         else:

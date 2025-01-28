@@ -135,7 +135,7 @@ class SettingsLayout(Layout):
                 row += 2
 
         if all or modify == "BPOD SETTINGS":
-            row = 28
+            row = 26
             name = "BPOD SETTINGS"
             label = self.create_and_add_label(name, row, 44, 30, 2, "black")
             label.setProperty("type", name)

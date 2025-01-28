@@ -184,7 +184,7 @@ class Task:
         # TODO kill the screen
         if self.subject != "None":
             try:
-                duration, trials, water = self.save_csv()
+                duration, trials, water = self.save_csv(run_mode=run_mode)
                 settings_str = self.save_json(run_mode)
                 self.training.df = self.subject_df
                 self.training.subject = self.subject
@@ -239,7 +239,7 @@ class Task:
 
         return json_string
 
-    def save_csv(self) -> tuple[float, int, int]:
+    def save_csv(self, run_mode: str) -> tuple[float, int, int]:
 
         duration: float = 0.0
         trials: int = 0
@@ -276,6 +276,7 @@ class Task:
                     "No water was drunk in task: " + self.name, subject=self.subject
                 )
 
+            self.session_df["run_mode"] = [run_mode] * self.session_df.shape[0]
             self.session_df.to_csv(self.session_path, header=True, index=False, sep=";")
 
             try:
@@ -300,6 +301,7 @@ class Task:
                 "subject",
                 "task",
                 "system_name",
+                "run_mode",
             ]
             reordered_columns = priority_columns + [
                 col for col in self.subject_df.columns if col not in priority_columns

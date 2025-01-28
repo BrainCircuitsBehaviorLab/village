@@ -80,6 +80,7 @@ video is deleted each time a new video is recorded.""",
 sound_settings = [
     Setting("USE_SOUNDCARD", "OFF", Active, "Use of a soundcard."),
     Setting("SOUND_DEVICE", "default", str, "The sound device."),
+    Setting("SAMPLERATE", 192000, int, "The samplerate of the sound device."),
 ]
 
 alarm_settings = [

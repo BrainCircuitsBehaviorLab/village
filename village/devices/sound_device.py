@@ -143,7 +143,7 @@ def whitenoise_generator(
     return noise
 
 
-samplerate = 192000
+samplerate = settings.get("SAMPLERATE")
 
 # duration = 3
 # ramp = 0.005
