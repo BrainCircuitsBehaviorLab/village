@@ -48,7 +48,7 @@ class TasksLayout(Layout):
 
         self.run_task_button = self.create_and_add_button(
             "RUN TASK",
-            8,
+            6,
             98,
             16,
             2,
@@ -59,7 +59,7 @@ class TasksLayout(Layout):
 
         self.task_buttons: list[PushButton] = []
 
-        row = 8
+        row = 5
         self.create_and_add_label("TRAINING PROTOCOL", row, 4, 20, 2, "black")
         row += 2
         self.training_button = self.create_and_add_button(
@@ -73,32 +73,35 @@ class TasksLayout(Layout):
         )
 
         self.left_layout = QVBoxLayout()
-        self.addLayout(self.left_layout, 14, 2, 34, 38)
+        self.addLayout(self.left_layout, 10, 2, 40, 38)
 
         self.central_layout = QVBoxLayout()
-        self.addLayout(self.central_layout, 14, 45, 34, 70)
+        self.addLayout(self.central_layout, 10, 45, 40, 70)
 
         self.right_layout = QVBoxLayout()
-        self.addLayout(self.right_layout, 13, 120, 35, 90)
+        self.addLayout(self.right_layout, 11, 120, 39, 90)
 
         self.left_scroll = QScrollArea()
+        self.left_scroll.setStyleSheet("border: 0px;")
+        self.left_scroll.setStyleSheet("QScrollArea  {border: 0px}")
         self.left_scroll.setWidgetResizable(True)
         self.left_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.left_sub_widget = QWidget()
-        # self.left_sub_widget.setStyleSheet("border: 0px;")
 
         self.central_scroll = QScrollArea()
+        self.central_scroll.setStyleSheet("border: 0px;")
+        self.central_scroll.setStyleSheet("QScrollArea {border: 0px;}")
         self.central_scroll.setWidgetResizable(True)
         self.central_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.central_sub_widget = QWidget()
-        # self.central_sub_widget.setStyleSheet("border: 0px;")
 
-        self.left_sub_layout = ExtraLayout(self.window, 30, 32)
-        self.central_sub_layout = ExtraLayout(self.window, 30, 64)
+        self.left_sub_layout = ExtraLayout(self.window, 36, 32)
+        self.central_sub_layout = ExtraLayout(self.window, 36, 64)
 
         # Create a QTabWidget
         self.right_tabs = QTabWidget()
-        # self.right_tabs.setStyleSheet("QTabWidget::pane {border: 1px solid gray;}")
+        self.right_tabs.setStyleSheet("border: 0px;")
+        self.right_tabs.setStyleSheet("QTabWidget  {border: 0px}")
         self.right_layout.addWidget(self.right_tabs)
 
         # Create the General tab and its scroll area
@@ -133,6 +136,8 @@ class TasksLayout(Layout):
     def create_tab_with_scroll_area(self, tab_name: str, layout: ExtraLayout) -> None:
         tab = QWidget()
         scroll_area = QScrollArea()
+        scroll_area.setStyleSheet("border: 0px;")
+        scroll_area.setStyleSheet("QScrollArea {border: 0px;}")
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         widget = QWidget()
@@ -343,7 +348,7 @@ class TasksLayout(Layout):
         column: int,
         name: str,
         value: str,
-        width: int = 30,
+        width: int = 28,
     ) -> None:
         label = layout.create_and_add_label(
             name, row, column, width, 2, "black", bold=True

@@ -1,4 +1,4 @@
-from __future__ import annotations  # noqa: I001
+from __future__ import annotations
 
 import os
 from contextlib import suppress
@@ -8,11 +8,11 @@ from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
 from village.classes.enums import Active, ScreenActive, State
 from village.devices.camera import cam_box, cam_corridor
+from village.devices.sound_device import get_sound_devices
 from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
 from village.manager import manager
-from village.settings import Setting, settings
-from village.devices.sound_device import get_sound_devices
 from village.scripts import utils
+from village.settings import Setting, settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow

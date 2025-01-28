@@ -68,7 +68,7 @@ class GuiWindow(QWidget):
         self.layout = DataLayout(self)
         self.setLayout(self.layout)
 
-    def create_calibration_layout(self) -> None:
+    def create_water_calibration_layout(self) -> None:
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = WaterCalibrationLayout(self)

@@ -199,6 +199,7 @@ class Task:
                 )
             try:
                 self.training.update_training_settings()
+
             except Exception:
                 log.alarm(
                     "Error updating the training settings for task: " + self.name,

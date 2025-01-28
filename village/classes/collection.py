@@ -103,9 +103,37 @@ class Collection(EventProtocol):
             entry = [date, type, subject, description]
             self.add_entry(entry)
 
-    def get_valve_time(self, port: int, volume: str) -> float:
-        # TODO
-        return 0.01
+    @time_utils.measure_time
+    def get_valve_time(self, port: int, water: float) -> float:
+        calibration_df = self.df[self.df["port_number"] == port]
+        max_calibration = calibration_df["calibration_number"].max()
+        calibration_df = calibration_df[
+            calibration_df["calibration_number"] == max_calibration
+        ]
+
+        x = calibration_df["time(s)"].values
+        y = calibration_df["water_delivered(ul)"].values
+
+        if len(x) == 2:
+            coeffs = np.polyfit(x, y, 1)
+            a, b = coeffs
+            c = 0
+        else:
+            coeffs = np.polyfit(x, y, 2)
+            a, b, c = coeffs
+
+        coeffs_for_root = [a, b, c - water]
+        roots = np.roots(coeffs_for_root)
+
+        valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
+
+        if valid_roots:
+            return round(float(np.min(valid_roots)), 4)
+        else:
+            text = "Check water calibration.csv"
+            text += "It is not possible to provide a valid time value for"
+            text += "a water delivery of " + str(water) + " ul"
+            raise ValueError(text)
 
     def save_from_df(self, training: Training = Training()) -> None:
         new_df = self.df_from_df(self.df, training)
@@ -130,7 +158,7 @@ class Collection(EventProtocol):
         if "active" in new_df.columns:
             weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
-            def convertir_active(value) -> str:
+            def convert_active(value) -> str:
                 value = value.strip()
                 if value in ("ON", "On", "on"):
                     return "ON"
@@ -141,7 +169,7 @@ class Collection(EventProtocol):
                     else:
                         return "OFF"
 
-            new_df["active"] = new_df["active"].apply(convertir_active)
+            new_df["active"] = new_df["active"].apply(convert_active)
 
         if "next_settings" in new_df.columns:
             new_df["next_settings"] = new_df["next_settings"].apply(

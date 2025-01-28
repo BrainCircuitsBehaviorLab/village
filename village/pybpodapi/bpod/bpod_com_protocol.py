@@ -65,7 +65,6 @@ class BpodCOMProtocol(BpodBase):
                 input_channel_name
             )
             try:
-                print(channel_number, value)
                 self._bpodcom_override_input_state(channel_number, value)
             except:  # noqa: E722
                 raise BpodErrorException(

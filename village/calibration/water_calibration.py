@@ -21,10 +21,6 @@ class WaterCalibration(Task):
             [("PWM" + str(i + 1), 255), "Valve" + str(i + 1)] for i in self.indices
         ]
 
-        print(self.states)
-        print(self.outputs)
-        print(self.times)
-
     def create_trial(self):
 
         for i in range(len(self.states) - 1):

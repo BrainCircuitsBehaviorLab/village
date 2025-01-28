@@ -232,9 +232,6 @@ class MonitorLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        # self.background_label = self.create_and_add_label("", 4, 87, 38, 38, "black")
-        # self.background_label.setStyleSheet("background-color:lightgray")
-
         rectangle = QWidget()
         rectangle.setStyleSheet("background-color: lightgray;")
         self.addWidget(rectangle, 4, 88, 28, 36)

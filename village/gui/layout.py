@@ -415,7 +415,7 @@ class Layout(QGridLayout):
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
-                self.window.create_calibration_layout()
+                self.window.create_water_calibration_layout()
             else:
                 text = """Calibration is not available if there is a subject in the box
                 or a detection in progress"""
@@ -430,7 +430,7 @@ class Layout(QGridLayout):
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
-                self.window.create_calibration_layout()
+                self.window.create_water_calibration_layout()
             else:
                 text = """Synchronization is not available if there is a subject in the
                 box or a detection in progress"""

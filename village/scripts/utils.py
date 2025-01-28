@@ -115,10 +115,7 @@ def create_global_csv_for_subject(subject: str, sessions_directory: str) -> None
 
     for i, session in enumerate(sorted_sessions):
         df = pd.read_csv(session, sep=";")
-        print(i, session)
-        print(df)
         df.insert(loc=0, column="session", value=i + 1)
-        print(df)
         dfs.append(df)
 
     final_df = pd.concat(dfs)
