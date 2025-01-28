@@ -132,16 +132,14 @@ class Collection(EventProtocol):
             else:
                 raise Exception
         except Exception:
-            text = "\n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n"
-            text += "\tIt is not possible to provide a valid time value for "
-            text += "a water delivery of " + str(water) + " ul "
-            text += "for the port " + str(port) + ".\n"
-            text += (
-                "\t1. Make sure you have calibrated the valves/pumps you are using.\n"
-            )
-            text += "\t2. Make sure the water you want to give is "
-            text += "within calibration range.\n"
-            text += "\t3. Ultimately, check Check water_calibration.csv in 'data'.\n"
+            text = f"""
+            \n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n
+            It is not possible to provide a valid time value
+            for a water delivery of {water} ul for the port {port}.\n
+            1. Make sure you have calibrated the valves/pumps you are using.\n
+            2. Make sure the water you want to give is within calibration range.\n
+            3. Ultimately, check water_calibration.csv in 'data'.\n
+            """
             raise ValueError(text)
 
     def save_from_df(self, training: Training = Training()) -> None:
