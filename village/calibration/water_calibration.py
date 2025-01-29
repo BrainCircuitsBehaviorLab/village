@@ -43,16 +43,3 @@ class WaterCalibration(Task):
 
     def close(self):
         pass
-
-
-if __name__ == "__main__":
-
-    task = WaterCalibration()
-
-    task.indices = [0]
-    task.times = [100 / 1000]
-    task.maximum_number_of_trials = 100
-    task.settings.maximum_duration = 1000
-
-    task.run()
-    task.bpod.close()

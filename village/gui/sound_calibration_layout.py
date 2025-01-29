@@ -10,13 +10,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLabel, QMessageBox, QPushButton, QScrollArea, QWidget
 
-from village.calibration.water_calibration import WaterCalibration
+from village.calibration.sound_calibration import SoundCalibration
 from village.classes.enums import State
 from village.gui.layout import Label, Layout, LineEdit
 from village.log import log
 from village.manager import manager
 from village.plots.create_pixmap import create_pixmap
-from village.plots.water_calibration_plot import water_calibration_plot
+from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.scripts import time_utils, utils
 from village.settings import settings
 
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 
-class WaterCalibrationLayout(Layout):
+class SoundCalibrationLayout(Layout):
     def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
         manager.state = State.MANUAL_MODE
@@ -40,38 +40,33 @@ class WaterCalibrationLayout(Layout):
         self.calibration_initiated = False
         self.test_initiated = False
         self.update_plot = False
-        self.time_line_edits: list[LineEdit] = []
-        self.total_weight_line_edits: list[LineEdit] = []
-        self.water_delivered_labels: list[Label] = []
+        self.gain_line_edits: list[LineEdit] = []
+        self.dB_obtained_line_edits: list[LineEdit] = []
+        self.dB_obtained_labels: list[Label] = []
 
-        self.water_line_edits2: list[LineEdit] = []
-        self.total_weight_line_edits2: list[LineEdit] = []
-        self.water_delivered_labels2: list[Label] = []
+        self.dB_expected_line_edits2: list[LineEdit] = []
+        self.dB_obtained_line_edits2: list[LineEdit] = []
         self.error_labels2: list[Label] = []
 
         self.ok_buttons2: list[QPushButton] = []
         self.add_buttons2: list[QPushButton] = []
 
         self.indices: list[int] = []
-        self.times = [0.0 for _ in range(8)]
-        self.water_delivered = [0.0 for _ in range(8)]
+        self.gains = [0.0 for _ in range(2)]
+        self.dB_obtained = [0.0 for _ in range(2)]
         self.indices2: list[int] = []
         self.indices2_cleared: list[int] = []
-        self.water2 = [0.0 for _ in range(8)]
-        self.times2 = [0.0 for _ in range(8)]
-        self.errors2 = [0.0 for _ in range(8)]
-        self.water_delivered2 = [0.0 for _ in range(8)]
+        self.dB_expected2 = [0.0 for _ in range(2)]
+        self.gains2 = [0.0 for _ in range(2)]
+        self.errors2 = [0.0 for _ in range(2)]
+        self.dB_obtained2 = [0.0 for _ in range(2)]
 
-        # ports
-        for i in range(8):
-            self.create_and_add_label(
-                "port" + str(i + 1), 9 + 2 * i, 1, 8, 2, "black", bold=False
-            )
+        # speakers
+        self.create_and_add_label("speaker left(0)", 11, 1, 8, 2, "black", bold=False)
+        self.create_and_add_label("speaker right(1)", 13, 1, 8, 2, "black", bold=False)
 
-        for i in range(8):
-            self.create_and_add_label(
-                "port" + str(i + 1), 34 + 2 * i, 1, 8, 2, "black", bold=False
-            )
+        self.create_and_add_label("speaker left(0)", 34, 1, 8, 2, "black", bold=False)
+        self.create_and_add_label("speaker right(1)", 36, 1, 8, 2, "black", bold=False)
 
         # input
         self.calibration_input_label = self.create_and_add_label(
@@ -93,60 +88,79 @@ class WaterCalibrationLayout(Layout):
         )
 
         # first input variable
-        self.time_label = self.create_and_add_label(
-            "TIME(s)", 7, 7, 12, 2, "black", bold=False
+        self.gain_label = self.create_and_add_label(
+            "GAIN", 7, 7, 12, 2, "black", bold=False
         )
-        for i in range(8):
+        for i in range(2):
             line_edit = self.create_and_add_line_edit(
                 "0", 9 + 2 * i, 7, 8, 2, self.calibration_changed
             )
-            self.time_line_edits.append(line_edit)
+            self.gain_line_edits.append(line_edit)
 
-        self.water_label2 = self.create_and_add_label(
-            "WATER EXPECTED(ul)", 32, 5, 20, 2, "black", bold=False
+        self.dB_expected_label2 = self.create_and_add_label(
+            "dB EXPECTED", 32, 5, 20, 2, "black", bold=False
         )
-        for i in range(8):
+        for i in range(2):
             line_edit = self.create_and_add_line_edit(
                 "0", 34 + 2 * i, 7, 8, 2, self.test_changed
             )
-            self.water_line_edits2.append(line_edit)
+            self.dB_expected_line_edits2.append(line_edit)
 
-        # iterations
-        self.iterations_label = self.create_and_add_label(
-            "ITERATIONS", 12, 18, 12, 2, "black", bold=False
+        # second input variable
+        self.freq_label = self.create_and_add_label(
+            "FREQ", 7, 18, 12, 2, "black", bold=False
         )
-        self.iterations_line_edit = self.create_and_add_line_edit(
-            "100", 14, 19, 8, 2, self.calibration_changed
+        for i in range(2):
+            line_edit = self.create_and_add_line_edit(
+                "0", 9 + 2 * i, 18, 8, 2, self.calibration_changed
+            )
+            self.freq_line_edits.append(line_edit)
+
+        self.freq_label2 = self.create_and_add_label(
+            "FREQ", 32, 18, 20, 2, "black", bold=False
+        )
+        for i in range(2):
+            line_edit = self.create_and_add_line_edit(
+                "0", 34 + 2 * i, 18, 8, 2, self.test_changed
+            )
+            self.freq_line_edits2.append(line_edit)
+
+        # duration
+        self.duration_label = self.create_and_add_label(
+            "DURATION(s)", 7, 28, 12, 2, "black", bold=False
+        )
+        self.duration_line_edit = self.create_and_add_line_edit(
+            "1", 9, 19, 28, 2, self.calibration_changed
         )
 
-        self.iterations_label2 = self.create_and_add_label(
-            "ITERATIONS", 37, 18, 12, 2, "black", bold=False
+        self.duration_label2 = self.create_and_add_label(
+            "DURATION(s)", 32, 28, 12, 2, "black", bold=False
         )
-        self.iterations_line_edit2 = self.create_and_add_line_edit(
-            "100", 39, 19, 8, 2, self.test_changed
+        self.duration_line_edit2 = self.create_and_add_line_edit(
+            "1", 34, 28, 8, 2, self.test_changed
         )
 
         # first button
         self.calibrate_button = self.create_and_add_button(
             "CALIBRATE ->",
-            16,
-            17,
+            11,
+            28,
             12,
             2,
             self.calibrate_button_clicked,
-            "Calibrate the ports with the values set in the input fields",
+            "Calibrate the speakers with the values set in the input fields",
             "powderblue",
         )
         self.calibrate_button.setDisabled(True)
 
         self.test_button = self.create_and_add_button(
             "TEST ->",
-            41,
-            17,
+            36,
+            28,
             12,
             2,
             self.test_button_clicked,
-            "Test the calibration of the ports",
+            "Test the calibration of the speakers",
             "powderblue",
         )
         self.test_button.setDisabled(True)
@@ -155,7 +169,7 @@ class WaterCalibrationLayout(Layout):
         self.calibration_output_label = self.create_and_add_label(
             "CALIBRATION OUTPUT",
             5,
-            28,
+            45,
             20,
             2,
             "black",
@@ -164,55 +178,42 @@ class WaterCalibrationLayout(Layout):
         self.calibration_output_label = self.create_and_add_label(
             "TEST OUTPUT",
             30,
-            28,
+            45,
             20,
             2,
             "black",
         )
 
-        # output total weight
-        self.total_weight_label = self.create_and_add_label(
-            "TOTAL WEIGHT(g)", 7, 28, 17, 2, "black", bold=False
+        # output dB obtained
+        self.dB_obtained_label = self.create_and_add_label(
+            "dB OBTAINED", 7, 45, 17, 2, "black", bold=False
         )
-        for i in range(8):
+        for i in range(2):
             line_edit = self.create_and_add_line_edit(
-                "0", 9 + 2 * i, 31, 8, 2, self.calibration_weighted
+                "0", 9 + 2 * i, 45, 8, 2, self.calibration_measured
             )
             line_edit.setDisabled(True)
-            self.total_weight_line_edits.append(line_edit)
+            self.dB_obtained_line_edits.append(line_edit)
 
-        self.total_weight_label2 = self.create_and_add_label(
-            "TOTAL WEIGHT(g)", 32, 28, 17, 2, "black", bold=False
+        self.dB_obtained_label2 = self.create_and_add_label(
+            "dB OBTAINED", 32, 45, 17, 2, "black", bold=False
         )
-        for i in range(8):
+        for i in range(2):
             line_edit = self.create_and_add_line_edit(
-                "0", 34 + 2 * i, 31, 8, 2, self.test_weighted
+                "0", 34 + 2 * i, 45, 8, 2, self.test_measured
             )
             line_edit.setDisabled(True)
-            self.total_weight_line_edits2.append(line_edit)
+            self.dB_obtained_line_edits2.append(line_edit)
 
-        # output water delivered
-        self.water_delivered_label = self.create_and_add_label(
-            "WATER DELIVERED(ul)", 7, 45, 20, 2, "black", bold=False
-        )
-        for i in range(8):
+        # error
+        for i in range(2):
             label = self.create_and_add_label(
-                "0", 9 + 2 * i, 45, 18, 2, "black", bold=False
+                "", 34 + 2 * i, 45, 18, 2, "black", bold=False
             )
             label.setAlignment(Qt.AlignCenter)
-            self.water_delivered_labels.append(label)
+            self.error_labels2.append(label)
 
-        self.water_delivered_label2 = self.create_and_add_label(
-            "WATER DELIVERED(ul)", 32, 45, 20, 2, "black", bold=False
-        )
-        for i in range(8):
-            label = self.create_and_add_label(
-                "0", 34 + 2 * i, 45, 18, 2, "black", bold=False
-            )
-            label.setAlignment(Qt.AlignCenter)
-            self.water_delivered_labels2.append(label)
-
-        # button or third output variable
+        # buttons
         self.add_button = self.create_and_add_button(
             "ADD ->",
             16,
@@ -226,7 +227,7 @@ class WaterCalibrationLayout(Layout):
         self.add_button.setDisabled(True)
 
         # ok and add buttons
-        for i in range(8):
+        for i in range(2):
             button = self.create_and_add_button(
                 "OK",
                 34 + 2 * i,
@@ -236,13 +237,13 @@ class WaterCalibrationLayout(Layout):
                 partial(self.ok_button_clicked, i),
                 """The value of this test is correct.
                 The error is within the acceptable limit.
-                Save the test result in water_calibration.csv.""",
+                Save the test result in sound_calibration.csv.""",
                 "powderblue",
             )
             button.setDisabled(True)
             self.ok_buttons2.append(button)
 
-        for i in range(8):
+        for i in range(2):
             button = self.create_and_add_button(
                 "ADD ->",
                 34 + 2 * i,
@@ -331,71 +332,71 @@ class WaterCalibrationLayout(Layout):
 
     def calibration_changed(self, value: str = "", key: str = "") -> None:
         self.calibrate_button.setEnabled(False)
-        self.times = [0.0 for _ in range(8)]
+        self.gains = [0.0 for _ in range(2)]
         try:
-            self.iterations = abs(int(self.iterations_line_edit.text()))
-            if self.iterations > 0:
-                self.iterations_line_edit.setStyleSheet(
+            self.duration = abs(int(self.duration_line_edit.text()))
+            if self.duration > 0:
+                self.duration_line_edit.setStyleSheet(
                     "QLineEdit {border: 1px solid black;}"
                 )
             else:
-                self.iterations_line_edit.setStyleSheet("")
+                self.duration_line_edit.setStyleSheet("")
         except Exception:
-            self.iterations = 0
-            self.iterations_line_edit.setStyleSheet("")
+            self.duration = 0
+            self.duration_line_edit.setStyleSheet("")
 
-        for i in range(8):
-            time = self.time_line_edits[i].text()
+        for i in range(2):
+            gain = self.gain_line_edits[i].text()
             try:
-                time_float = float(time)
-                self.times[i] = time_float
-                if time_float > 0:
-                    self.time_line_edits[i].setStyleSheet(
+                gain_float = float(gain)
+                self.gains[i] = gain_float
+                if gain_float > 0:
+                    self.gain_line_edits[i].setStyleSheet(
                         "QLineEdit {border: 1px solid black;}"
                     )
                 else:
-                    self.time_line_edits[i].setStyleSheet("")
+                    self.gain_line_edits[i].setStyleSheet("")
             except Exception:
-                self.time_line_edits[i].setStyleSheet("")
-                time = "0"
+                self.gain_line_edits[i].setStyleSheet("")
+                gain = "0"
 
-            if time != "0" and self.iterations != 0:
+            if gain != "0" and self.duration != 0:
                 self.calibrate_button.setEnabled(True)
                 manager.changing_settings = True
                 self.update_status_label_buttons()
 
     def test_changed(self, value: str = "", key: str = "") -> None:
         self.test_button.setEnabled(False)
-        self.water2 = [0.0 for _ in range(8)]
+        self.dB_expected2 = [0.0 for _ in range(2)]
 
         try:
-            self.iterations2 = abs(int(self.iterations_line_edit2.text()))
-            if self.iterations2 > 0:
-                self.iterations_line_edit2.setStyleSheet(
+            self.duration2 = abs(int(self.duration_line_edit2.text()))
+            if self.duration2 > 0:
+                self.duration_line_edit2.setStyleSheet(
                     "QLineEdit {border: 1px solid black;}"
                 )
             else:
-                self.iterations_line_edit2.setStyleSheet("")
+                self.duration_line_edit2.setStyleSheet("")
         except Exception:
-            self.iterations2 = 0
-            self.iterations_line_edit2.setStyleSheet("")
+            self.duration2 = 0
+            self.duration_line_edit2.setStyleSheet("")
 
-        for i in range(8):
-            water = self.water_line_edits2[i].text()
+        for i in range(2):
+            dB = self.dB_expected_line_edits2[i].text()
             try:
-                water_float = float(water)
-                self.water2[i] = water_float
-                if water_float > 0:
-                    self.water_line_edits2[i].setStyleSheet(
+                dB_float = float(dB)
+                self.dB_expected2[i] = dB_float
+                if dB_float > 0:
+                    self.dB_expected_line_edits2[i].setStyleSheet(
                         "QLineEdit {border: 1px solid black;}"
                     )
                 else:
-                    self.water_line_edits2[i].setStyleSheet("")
+                    self.dB_expected_line_edits2[i].setStyleSheet("")
             except Exception:
-                water = "0"
-                self.water_line_edits2[i].setStyleSheet("")
+                dB = "0"
+                self.dB_expected_line_edits2[i].setStyleSheet("")
 
-            if water != "0" and self.iterations2 != 0:
+            if dB != "0" and self.duration2 != 0:
                 self.test_button.setEnabled(True)
                 manager.changing_settings = True
                 self.update_status_label_buttons()
@@ -403,41 +404,37 @@ class WaterCalibrationLayout(Layout):
     def calibrate_button_clicked(self) -> None:
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
-        self.indices = [i for i, val in enumerate(self.times) if val != 0]
+        self.indices = [i for i, val in enumerate(self.gains) if val != 0]
         manager.state = State.RUN_MANUAL
-        manager.task = WaterCalibration()
-        manager.task.indices = self.indices
-        manager.task.times = [self.times[i] for i in self.indices]
-        manager.task.maximum_number_of_trials = self.iterations
-        manager.task.settings.maximum_duration = 1000
-        for line_edit in self.time_line_edits:
+        task = SoundCalibration(self.speaker, self.gain, self.freq, self.duration)
+        for line_edit in self.gain_line_edits:
             line_edit.setDisabled(True)
-        self.iterations_line_edit.setDisabled(True)
+        self.duration_line_edit.setDisabled(True)
         self.calibration_initiated = True
-        log.start(task=manager.task.name, subject="None")
-        manager.run_task_in_thread()
+        log.start(task="SoundCalibration", subject="None")
+        task.run_in_thread()
 
     def test_button_clicked(self) -> None:
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
-        self.indices2 = [i for i, val in enumerate(self.water2) if val != 0]
+        self.indices2 = [i for i, val in enumerate(self.dB_expected2) if val != 0]
         self.indices2_cleared = []
         errors: list[int] = []
         ok = 0
-        for i in range(len(self.water2)):
+        for i in range(len(self.dB_expected2)):
             if i not in self.indices2:
-                self.times2[i] = 0
+                self.gains2[i] = 0
             else:
                 try:
-                    self.times2[i] = manager.water_calibration.get_valve_time(
-                        i + 1, self.water2[i]
+                    self.gains2[i] = manager.water_calibration.get_valve_time(
+                        i, self.dB_expected2[i]
                     )
                     ok += 1
                 except Exception:
-                    self.water2[i] = 0
-                    self.water_line_edits2[i].setText("0")
-                    self.water_line_edits2[i].setStyleSheet("")
-                    errors.append(i + 1)
+                    self.dB_expected2[i] = 0
+                    self.dB_expected_line_edits2[i].setText("0")
+                    self.dB_expected_line_edits2[i].setStyleSheet("")
+                    errors.append(i)
                     self.indices2.remove(i)
 
         if errors:
@@ -452,21 +449,16 @@ class WaterCalibrationLayout(Layout):
 
         if ok > 0:
             manager.state = State.RUN_MANUAL
-            manager.task = WaterCalibration()
-            manager.task.indices = self.indices2
-            manager.task.times = [self.times2[i] for i in self.indices2]
-            manager.task.maximum_number_of_trials = self.iterations2
-            manager.task.settings.maximum_duration = 1000
-            for line_edit in self.water_line_edits2:
+            task = SoundCalibration(self.speaker, self.gain, self.freq, self.duration)
+            for line_edit in self.dB_expected_line_edits2:
                 line_edit.setDisabled(True)
-            self.iterations_line_edit2.setDisabled(True)
+            self.duration_line_edit2.setDisabled(True)
             self.calibration_initiated = True
-            print(manager.task.name)
-            log.start(task=manager.task.name, subject="None")
-            manager.run_task_in_thread()
+            log.start(task="SoundCalibration", subject="None")
+            task.run_in_thread()
             self.test_initiated = True
         else:
-            self.iterations_line_edit2.setStyleSheet("")
+            self.duration_line_edit2.setStyleSheet("")
 
     def save_button_clicked(self) -> None:
         counts = self.df["port_number"].value_counts()
@@ -514,28 +506,28 @@ class WaterCalibrationLayout(Layout):
         if manager.state == State.WAIT and self.calibration_initiated:
             self.calibration_initiated = False
             self.calibrate_button.setDisabled(True)
-            for index in range(len(self.total_weight_line_edits)):
+            for index in range(len(self.dB_obtained_line_edits)):
                 if index in self.indices:
-                    self.total_weight_line_edits[index].setEnabled(True)
-                    self.total_weight_line_edits[index].setStyleSheet(
+                    self.dB_obtained_line_edits[index].setEnabled(True)
+                    self.dB_obtained_line_edits[index].setStyleSheet(
                         "QLineEdit {border: 1px solid black;}"
                     )
                 else:
-                    self.total_weight_line_edits[index].setStyleSheet("")
+                    self.dB_obtained_line_edits[index].setStyleSheet("")
 
         if manager.state == State.WAIT and self.test_initiated:
             self.test_initiated = False
             self.test_button.setDisabled(True)
-            for index in range(len(self.total_weight_line_edits2)):
+            for index in range(len(self.dB_obtained_line_edits2)):
                 if index in self.indices2:
-                    self.total_weight_line_edits2[index].setEnabled(True)
-                    self.total_weight_line_edits2[index].setStyleSheet(
+                    self.dB_obtained_line_edits2[index].setEnabled(True)
+                    self.dB_obtained_line_edits2[index].setStyleSheet(
                         "QLineEdit {border: 1px solid black;}"
                     )
                 else:
-                    self.total_weight_line_edits2[index].setStyleSheet("")
+                    self.dB_obtained_line_edits2[index].setStyleSheet("")
 
-        for line_edit in self.water_delivered_labels:
+        for line_edit in self.dB_obtained_labels:
             if line_edit.text() != "0":
                 self.add_button.setEnabled(True)
 
@@ -570,12 +562,12 @@ class WaterCalibrationLayout(Layout):
             self.indices2 = []
             self.indices2_cleared = []
 
-            for line_edit in self.water_line_edits2:
+            for line_edit in self.dB_expected_line_edits2:
                 line_edit.setText("0")
                 line_edit.setEnabled(True)
-                self.iterations_line_edit2.setEnabled(True)
+                self.duration_line_edit2.setEnabled(True)
 
-            for line_edit in self.total_weight_line_edits2:
+            for line_edit in self.dB_obtained_line_edits2:
                 line_edit.setText("0")
                 line_edit.setDisabled(True)
                 line_edit.setStyleSheet("")
@@ -587,35 +579,39 @@ class WaterCalibrationLayout(Layout):
     def select_port(self, value: str, index: int) -> None:
         pass
 
-    def calibration_weighted(self, value: str = "", key: str = "") -> None:
-        self.water_delivered = [0.0 for _ in range(8)]
-        for line_edit in self.water_delivered_labels:
+    def calibration_measured(self, value: str = "", key: str = "") -> None:
+        self.dB_obtained = [0.0 for _ in range(2)]
+        for line_edit in self.dB_obtained_labels:
             line_edit.setText("0")
         try:
             for index in self.indices:
-                line_edit = self.total_weight_line_edits[index]
-                result = round((float(line_edit.text()) / self.iterations * 1000), 4)
+                line_edit = self.dB_obtained_line_edits[index]
+                result = round((float(line_edit.text()) / self.duration * 1000), 4)
                 if result > 0:
-                    self.water_delivered[index] = result
-                    self.water_delivered_labels[index].setText(str(result))
+                    self.dB_obtained[index] = result
+                    self.dB_obtained_labels[index].setText(str(result))
         except Exception:
             pass
 
-    def test_weighted(self, value: str = "", key: str = "") -> None:
-        self.water_delivered2 = [0.0 for _ in range(8)]
-        for line_edit in self.water_delivered_labels2:
+    def test_measured(self, value: str = "", key: str = "") -> None:
+        self.dB_obtained2 = [0.0 for _ in range(2)]
+        for line_edit in self.error_labels2:
             line_edit.setText("0")
         try:
             for index in self.indices2:
-                line_edit = self.total_weight_line_edits2[index]
-                result = round((float(line_edit.text()) / self.iterations2 * 1000), 4)
+                line_edit = self.dB_obtained_line_edits2[index]
+                result = round((float(line_edit.text()) / self.duration2 * 1000), 4)
                 if result > 0:
-                    self.water_delivered2[index] = result
-                    error = abs(result - self.water2[index]) / self.water2[index] * 100
+                    self.dB_obtained2[index] = result
+                    error = (
+                        abs(result - self.dB_expected2[index])
+                        / self.dB_expected2[index]
+                        * 100
+                    )
                     error = round(error, 4)
                     self.errors2[index] = error
                     text = str(result) + " (" + str(error) + "% error)"
-                    self.water_delivered_labels2[index].setText(text)
+                    self.error_labels2[index].setText(text)
                     self.ok_buttons2[index].setEnabled(True)
                     self.add_buttons2[index].setEnabled(True)
         except Exception:
@@ -635,9 +631,9 @@ class WaterCalibrationLayout(Layout):
         for i in self.indices:
             row_dict = {
                 "date": self.date,
-                "port_number": i + 1,
-                "time(s)": self.times[i],
-                "water_delivered(ul)": self.water_delivered[i],
+                "port_number": i,
+                "time(s)": self.gains[i],
+                "water_delivered(ul)": self.dB_obtained[i],
                 "calibration_number": self.calibration_number,
                 "water_expected(ul)": np.nan,
                 "error(%)": np.nan,
@@ -647,11 +643,11 @@ class WaterCalibrationLayout(Layout):
             self.df = pd.concat([self.df, df], ignore_index=True)
             self.calibration_points.append(row_dict)
 
-        for line_edit in self.time_line_edits:
+        for line_edit in self.gain_line_edits:
             line_edit.setEnabled(True)
-            self.iterations_line_edit.setEnabled(True)
+            self.duration_line_edit.setEnabled(True)
 
-        for line_edit in self.total_weight_line_edits:
+        for line_edit in self.dB_obtained_line_edits:
             line_edit.setText("0")
             line_edit.setDisabled(True)
             line_edit.setStyleSheet("")
@@ -671,10 +667,10 @@ class WaterCalibrationLayout(Layout):
         row_dict = {
             "date": self.date,
             "port_number": index + 1,
-            "time(s)": self.times2[index],
-            "water_delivered(ul)": self.water_delivered2[index],
+            "time(s)": self.gains2[index],
+            "water_delivered(ul)": self.dB_obtained2[index],
             "calibration_number": np.nan,
-            "water_expected(ul)": self.water_delivered2[index],
+            "water_expected(ul)": self.dB_obtained2[index],
             "error(%)": self.errors2[index],
         }
 
@@ -696,10 +692,10 @@ class WaterCalibrationLayout(Layout):
         row_dict = {
             "date": self.date,
             "port_number": index + 1,
-            "time(s)": self.times2[index],
-            "water_delivered(ul)": self.water_delivered2[index],
+            "time(s)": self.gains2[index],
+            "water_delivered(ul)": self.dB_obtained2[index],
             "calibration_number": np.nan,
-            "water_expected(ul)": self.water_delivered2[index],
+            "water_expected(ul)": self.dB_obtained2[index],
             "error(%)": self.errors2[index],
         }
 
@@ -716,20 +712,20 @@ class WaterCalibrationLayout(Layout):
             manager.state = State.SAVE_MANUAL
         elif manager.state.can_go_to_wait():
             manager.state = State.WAIT
-        for line_edit in self.time_line_edits:
+        for line_edit in self.gain_line_edits:
             line_edit.setEnabled(True)
             line_edit.setStyleSheet("")
             line_edit.setText("0")
-        self.times = [0.0 for _ in range(8)]
-        self.iterations_line_edit.setEnabled(True)
-        self.iterations_line_edit.setStyleSheet("")
-        for line_edit in self.water_line_edits2:
+        self.gains = [0.0 for _ in range(2)]
+        self.duration_line_edit.setEnabled(True)
+        self.duration_line_edit.setStyleSheet("")
+        for line_edit in self.dB_expected_line_edits2:
             line_edit.setEnabled(True)
             line_edit.setStyleSheet("")
             line_edit.setText("0")
-        self.water2 = [0.0 for _ in range(8)]
-        self.iterations_line_edit2.setEnabled(True)
-        self.iterations_line_edit2.setStyleSheet("")
+        self.dB_expected2 = [0.0 for _ in range(2)]
+        self.duration_line_edit2.setEnabled(True)
+        self.duration_line_edit2.setStyleSheet("")
         self.update_gui()
 
 
@@ -739,7 +735,7 @@ class CalibrationPlotLayout(Layout):
         window: GuiWindow,
         rows: int,
         columns: int,
-        parent_layout: WaterCalibrationLayout,
+        parent_layout: SoundCalibrationLayout,
     ) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows
@@ -763,7 +759,7 @@ class CalibrationPlotLayout(Layout):
     def update(self, df: pd.DataFrame) -> None:
         pixmap = QPixmap()
         try:
-            figure = water_calibration_plot(
+            figure = sound_calibration_plot(
                 df.copy(),
                 self.plot_width,
                 self.plot_height,
@@ -787,7 +783,7 @@ class InfoLayout(Layout):
         window: GuiWindow,
         rows: int,
         columns: int,
-        parent_layout: WaterCalibrationLayout,
+        parent_layout: SoundCalibrationLayout,
     ) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows

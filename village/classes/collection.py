@@ -142,6 +142,46 @@ class Collection(EventProtocol):
             """
             raise ValueError(text)
 
+    def get_sound_gain(self, speaker: int, freq: int, dB: float) -> float:
+        try:
+            calibration_df = self.df[self.df["speaker"] == speaker]
+            calibration_df = calibration_df[calibration_df["frequency"] == freq]
+            max_calibration = calibration_df["calibration_number"].max()
+            calibration_df = calibration_df[
+                calibration_df["calibration_number"] == max_calibration
+            ]
+
+            x = calibration_df["gain"].values
+            y = calibration_df["dB_obtained"].values
+
+            if len(x) == 2:
+                coeffs = np.polyfit(x, y, 1)
+                a, b = coeffs
+                c = 0
+            else:
+                coeffs = np.polyfit(x, y, 2)
+                a, b, c = coeffs
+
+            coeffs_for_root = [a, b, c - dB]
+            roots = np.roots(coeffs_for_root)
+
+            valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
+
+            if valid_roots:
+                return round(float(np.min(valid_roots)), 4)
+            else:
+                raise Exception
+        except Exception:
+            text = f"""
+            \n\n\t--> SOUND CALIBRATION PROBLEM !!!!!!\n
+            It is not possible to provide a valid gain value
+            for a target dB of {dB} for the speaker {speaker} and frequency {freq}.\n
+            1. Make sure you have calibrated the frequencies you are using.\n
+            2. Make sure the dB you want to obtain is within calibration range.\n
+            3. Ultimately, check sound_calibration.csv in 'data'.\n
+            """
+            raise ValueError(text)
+
     def save_from_df(self, training: Training = Training()) -> None:
         new_df = self.df_from_df(self.df, training)
         new_df.to_csv(self.path, index=False, sep=";")

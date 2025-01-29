@@ -9,6 +9,7 @@ from village.gui.data_layout import DataLayout
 from village.gui.main_layout import MainLayout
 from village.gui.monitor_layout import MonitorLayout
 from village.gui.settings_layout import SettingsLayout
+from village.gui.sound_calibration_layout import SoundCalibrationLayout
 from village.gui.tasks_layout import TasksLayout
 from village.gui.water_calibration_layout import WaterCalibrationLayout
 from village.scripts import time_utils, utils
@@ -72,6 +73,12 @@ class GuiWindow(QWidget):
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = WaterCalibrationLayout(self)
+        self.setLayout(self.layout)
+
+    def create_sound_calibration_layout(self) -> None:
+        utils.delete_all_elements_from_layout(self.layout)
+        QObjectCleanupHandler().add(self.layout)
+        self.layout = SoundCalibrationLayout(self)
         self.setLayout(self.layout)
 
     def create_settings_layout(self) -> None:

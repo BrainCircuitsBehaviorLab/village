@@ -33,25 +33,34 @@ class SoundDevice:
         self.playing = Value("i", 0)
         self.process = Process(target=self._play_sound_background, daemon=True)
 
-    def load(self, v1, v2=None) -> None:
-        if v2 is None:
-            v2 = v1
-        if len(v1) != len(v2):
-            raise ValueError(
-                "Sound: The length of the vectors v1 and v2 has to be the same."
-            )
-        try:
-            self.stop()
-        except AttributeError:
-            pass
+    def load(self, left: np.array | None, right: np.array | None) -> None:
+        if left is None and right is not None:
+            left = np.zeros(len(right))
+        elif right is None and left is not None:
+            right = np.zeros(len(left))
+        elif left is None and right is None:
+            raise ValueError("Sound error: Both vectors left and right are None.")
 
-        self.sound = self.create_sound_vec(v1, v2)
-        self.stream.close()
-        self.stream = sd.OutputStream(dtype="float32")
-        self.stream.start()
-        self.playing.value = 0  # type: ignore
-        self.process = Process(target=self._play_sound_background, daemon=True)
-        self.process.start()
+        if left is not None and right is not None:
+            if len(left) != len(right):
+                raise ValueError(
+                    """
+                    Sound error: The length of the vectors left and right
+                    has to be the same.
+                    """
+                )
+            try:
+                self.stop()
+            except AttributeError:
+                pass
+
+            self.sound = self.create_sound_vec(left, right)
+            self.stream.close()
+            self.stream = sd.OutputStream(dtype="float32")
+            self.stream.start()
+            self.playing.value = 0  # type: ignore
+            self.process = Process(target=self._play_sound_background, daemon=True)
+            self.process.start()
 
     def play(self) -> None:
         if self.sound.size == 0:
@@ -84,8 +93,8 @@ class SoundDevice:
                 break
 
     @staticmethod
-    def create_sound_vec(v1, v2) -> np.ndarray[np.float32]:
-        sound = np.array([v1, v2])  # left and right channel
+    def create_sound_vec(left: np.ndarray, right: np.ndarray) -> np.ndarray[np.float32]:
+        sound = np.array([left, right])
         return np.ascontiguousarray(sound.T, dtype=np.float32)
 
 
@@ -95,7 +104,7 @@ def tone_generator(
     frequency: float,
     ramp_time: float,
     samplerate: int,
-) -> np.ndarray[Any, np.dtype[np.floating[Any]]]:
+) -> np.ndarray:
     """
     Generate a single tone with ramping
     Args:

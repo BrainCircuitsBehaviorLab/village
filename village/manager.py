@@ -139,7 +139,16 @@ class Manager:
         )
         self.sound_calibration = Collection(
             "sound_calibration",
-            ["date", "speaker", "target(dB)", "first_volume(dB)", "volume(dB)", "amp"],
+            [
+                "date",
+                "speaker",
+                "frequency",
+                "gain",
+                "dB_obtained",
+                "calibration_number",
+                "dB_expected",
+                "error(%)",
+            ],
             [str, str, float, float, float, float],
         )
         self.temperatures = Collection(

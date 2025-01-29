@@ -270,7 +270,7 @@ class Layout(QGridLayout):
             5 * size,
             size,
             2,
-            self.water_calibration_button_clicked,
+            self.sound_calibration_button_clicked,
             "Go to the sound calibration menu",
         )
 
@@ -425,18 +425,18 @@ class Layout(QGridLayout):
                     text,
                 )
 
-    def sync_button_clicked(self) -> None:
+    def sound_calibration_button_clicked(self) -> None:
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
-                self.window.create_water_calibration_layout()
+                self.window.create_sound_calibration_layout()
             else:
-                text = """Synchronization is not available if there is a subject in the
-                box or a detection in progress"""
+                text = """Calibration is not available if there is a subject in the box
+                or a detection in progress"""
                 QMessageBox.information(
                     self.window,
-                    "SYNC",
+                    "CALIBRATION",
                     text,
                 )
 
