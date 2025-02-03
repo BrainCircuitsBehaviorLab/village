@@ -109,17 +109,17 @@ class SettingsLayout(Layout):
                 row += 2
 
         if all:
-            row = 14
+            row = 16
             name = "SCREEN SETTINGS"
             label = self.create_and_add_label(name, row, 44, 30, 2, "black")
-            row = 16
+            row = 18
             s = settings.screen_settings[0]
             self.create_label_and_value(row, 44, s, "")
 
         if (
             all and settings.get("USE_SCREEN") != ScreenActive.OFF
         ) or modify == "SCREEN SETTINGS":
-            row = 18
+            row = 20
             name = "SCREEN SETTINGS"
             for s in settings.screen_settings[1:]:
                 self.create_label_and_value(row, 44, s, name)
@@ -128,14 +128,14 @@ class SettingsLayout(Layout):
         if (
             all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
         ) or modify == "TOUCHSCREEN SETTINGS":
-            row = 22
+            row = 24
             name = "TOUCHSCREEN SETTINGS"
             for s in settings.touchscreen_settings:
                 self.create_label_and_value(row, 44, s, name)
                 row += 2
 
         if all or modify == "BPOD SETTINGS":
-            row = 26
+            row = 30
             name = "BPOD SETTINGS"
             label = self.create_and_add_label(name, row, 44, 30, 2, "black")
             label.setProperty("type", name)
@@ -486,13 +486,14 @@ class SettingsLayout(Layout):
             )
             self.project_directory_combobox.blockSignals(False)
         else:
+            text = (
+                "Are you sure you want to change the project directory? The system "
+                + "will restart."
+            )
             reply = QMessageBox.question(
                 self.window,
                 "Change project directory",
-                """
-                Are you sure you want to change the project directory?
-                The system will restart.
-                """,
+                text,
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No,
             )

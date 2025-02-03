@@ -330,12 +330,11 @@ class Layout(QGridLayout):
             self.online_plots_button.setEnabled(True)
         elif manager.state.can_go_to_wait():
             self.stop_button.setText("GO TO WAIT STATE")
-            self.stop_button.setToolTip(
-                """
-                If the systems thinks there is a subject in the corridor or the box,
-                but there isn't, you can force going to the WAIT state.
-                """
+            text = (
+                "If the systems thinks there is a subject in the corridor or the "
+                + "box, but there isn't, you can force going to the WAIT state."
             )
+            self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
         else:
             self.stop_button.setText("STOP TASK")
@@ -395,8 +394,10 @@ class Layout(QGridLayout):
                 manager.reset_subject_task_training()
                 self.window.create_tasks_layout()
             else:
-                text = """Tasks can not be launched if there is a subject in the box
-                or a detection in progress"""
+                text = (
+                    "Tasks can not be launched if there is a subject in the box "
+                    + "or a detection in progress"
+                )
                 QMessageBox.information(
                     self.window,
                     "SETTINGS",
@@ -417,8 +418,10 @@ class Layout(QGridLayout):
                 manager.reset_subject_task_training()
                 self.window.create_water_calibration_layout()
             else:
-                text = """Calibration is not available if there is a subject in the box
-                or a detection in progress"""
+                text = (
+                    "Calibration is not available if there is a subject in the box "
+                    + "or a detection in progress"
+                )
                 QMessageBox.information(
                     self.window,
                     "CALIBRATION",
@@ -432,8 +435,10 @@ class Layout(QGridLayout):
                 manager.reset_subject_task_training()
                 self.window.create_sound_calibration_layout()
             else:
-                text = """Calibration is not available if there is a subject in the box
-                or a detection in progress"""
+                text = (
+                    "Calibration is not available if there is a subject in the box "
+                    + "or a detection in progress"
+                )
                 QMessageBox.information(
                     self.window,
                     "CALIBRATION",
@@ -447,8 +452,10 @@ class Layout(QGridLayout):
                 manager.reset_subject_task_training()
                 self.window.create_settings_layout()
             else:
-                text = """Settings can not be changed if there is a subject in the box
-                or a detection in progress"""
+                text = (
+                    "Settings can not be changed if there is a subject in the box "
+                    + "or a detection in progress"
+                )
                 QMessageBox.information(
                     self.window,
                     "SETTINGS",

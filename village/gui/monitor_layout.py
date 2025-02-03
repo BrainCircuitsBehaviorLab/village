@@ -337,6 +337,10 @@ class MonitorLayout(Layout):
         key = "ACTIONS"
         possible_values = Actions.values()
         index = Actions.get_index_from_value(manager.actions)
+        text = (
+            "Perform actions on the corridor, in the behavior ports or run "
+            + "user-defined python functions."
+        )
         self.actions_button = self.create_and_add_toggle_button(
             key,
             11,
@@ -346,10 +350,7 @@ class MonitorLayout(Layout):
             possible_values,
             index,
             self.toggle_actions_button,
-            """
-            Perform actions on the corridor, in the behavior ports or run
-            user-defined python functions.
-            """,
+            text,
             color="white",
         )
 

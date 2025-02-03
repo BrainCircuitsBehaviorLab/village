@@ -453,7 +453,7 @@ class DataLayout(Layout):
         elif manager.table == DataTable.WATER_CALIBRATION:
             try:
                 figure = water_calibration_plot(
-                    manager.water_calibration.df.copy(), width, height
+                    manager.water_calibration.df.copy(), width, height, None
                 )
                 pixmap = create_pixmap(figure)
             except Exception:
@@ -464,7 +464,7 @@ class DataLayout(Layout):
         elif manager.table == DataTable.SOUND_CALIBRATION:
             try:
                 figure = sound_calibration_plot(
-                    manager.sound_calibration.df.copy(), width, height
+                    manager.sound_calibration.df.copy(), width, height, None
                 )
                 pixmap = create_pixmap(figure)
             except Exception:
@@ -958,16 +958,22 @@ class DfLayout(Layout):
         if selected_indexes:
             if manager.state.can_edit_data():
                 if manager.table == DataTable.SUBJECTS:
-                    text = """Do you want to delete the selected subject?
-                    This action cannot be undone."""
+                    text = (
+                        "Do you want to delete the selected subject? "
+                        + "This action cannot be undone."
+                    )
                 elif manager.table == DataTable.SESSIONS_SUMMARY:
-                    text = """Do you want to delete the selected session?
-                    The session data and the video will be deleted.
-                    The session will be removed from the sessions_summary.
-                    This action cannot be undone."""
+                    text = (
+                        "Do you want to delete the selected session? "
+                        + "The session data and the video will be deleted. "
+                        + "The session will be removed from the sessions_summary. "
+                        + "This action cannot be undone."
+                    )
                 else:
-                    text = """Do you want to delete the selected row?
-                    This action cannot be undone."""
+                    text = (
+                        "Do you want to delete the selected row? "
+                        + "This action cannot be undone."
+                    )
                 reply = QMessageBox.question(
                     self.window,
                     "Delete",

@@ -68,12 +68,16 @@
 #     print(parse_input_to_tuple_override(item))
 #     print("")
 
+import serial
 
-from village.manager import manager
+port = "/dev/ttyAMA0"
+baudrate = 9600
 
-port = 1
-target_water = 2
-
-time = manager.water_calibration.get_valve_time(port, target_water)
-
-print(time)
+try:
+    s = serial.Serial(port, baudrate, timeout=1)  # Timeout para evitar bloqueos
+    if s.is_open:
+        print(f"El puerto {port} está abierto y listo para recibir datos.")
+    else:
+        print(f"No se pudo abrir el puerto {port}.")
+except serial.SerialException as e:
+    print(f"Error al acceder al puerto {port}: {e}")

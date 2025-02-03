@@ -5,9 +5,9 @@
 """
 
 from village.scripts.backup_to_cluster import main as backup_to_cluster
-from village.settings import settings
 
-class AfterSessionRun():
+
+class AfterSessionRun:
     def __init__(self):
         # self.data_dir = settings["DATA_DIRECTORY"]
         self.data_dir = "/home/hmv/village/resources"
@@ -22,10 +22,11 @@ class AfterSessionRun():
             destination=self.destination_dir,
             remote_user=self.remote_user,
             remote_host=self.remote_host,
-            port=self.port
+            port=self.port,
         )
         # TODO: deal with deleted data
         # TODO: make reports
+
 
 if __name__ == "__main__":
     after_session_run = AfterSessionRun()

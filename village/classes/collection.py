@@ -116,8 +116,8 @@ class Collection(EventProtocol):
 
             if len(x) == 2:
                 coeffs = np.polyfit(x, y, 1)
-                a, b = coeffs
-                c = 0
+                a = 0
+                b, c = coeffs
             else:
                 coeffs = np.polyfit(x, y, 2)
                 a, b, c = coeffs
@@ -142,7 +142,7 @@ class Collection(EventProtocol):
             """
             raise ValueError(text)
 
-    def get_sound_gain(self, speaker: int, freq: int, dB: float) -> float:
+    def get_sound_gain(self, speaker: int, dB: float, freq: int = 0) -> float:
         try:
             calibration_df = self.df[self.df["speaker"] == speaker]
             calibration_df = calibration_df[calibration_df["frequency"] == freq]
@@ -156,8 +156,8 @@ class Collection(EventProtocol):
 
             if len(x) == 2:
                 coeffs = np.polyfit(x, y, 1)
-                a, b = coeffs
-                c = 0
+                a = 0
+                b, c = coeffs
             else:
                 coeffs = np.polyfit(x, y, 2)
                 a, b, c = coeffs

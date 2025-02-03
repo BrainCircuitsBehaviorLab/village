@@ -22,7 +22,6 @@ class WaterCalibration(Task):
         ]
 
     def create_trial(self):
-
         for i in range(len(self.states) - 1):
             self.bpod.add_state(
                 state_name=self.states[i],

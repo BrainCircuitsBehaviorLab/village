@@ -2,8 +2,10 @@ from typing import TYPE_CHECKING, Any, Callable
 
 from PyQt5.QtWidgets import QWidget
 
+from village.classes.enums import Active
 from village.pybpodapi.session import Session
 from village.scripts import time_utils
+from village.settings import settings
 
 if TYPE_CHECKING:
     from village.pybpodapi.session import Session
@@ -77,7 +79,7 @@ class PyBpodProtocol:
 
 
 class TelegramBotProtocol:
-    error: str = "Error connecting to the telegram bot "
+    error: str = "Error connecting to the telegram_bot "
 
     def alarm(self, message: str) -> None:
         return
@@ -103,13 +105,31 @@ class ScaleProtocol:
 
 
 class TempSensorProtocol:
-    error: str = "Error connecting to the temp sensor "
+    error: str = "Error connecting to the temp_sensor "
 
     def start(self) -> None:
         return
 
     def get_temperature(self) -> tuple[float, float, str]:
         return 0.0, 0.0, ""
+
+
+class SoundDeviceProtocol:
+    samplerate: int = 0
+    error: str = (
+        ""
+        if settings.get("USE_SOUNDCARD") == Active.OFF
+        else "Error connecting to the sound_device "
+    )
+
+    def load(self, sound1: Any, sound2: Any) -> None:
+        return
+
+    def play(self) -> None:
+        return
+
+    def stop(self) -> None:
+        return
 
 
 class EventProtocol:

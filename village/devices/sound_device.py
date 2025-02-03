@@ -1,9 +1,13 @@
+import traceback
 from multiprocessing import Process, Value
 from typing import Any
 
 import numpy as np
 import sounddevice as sd
 
+from village.classes.enums import Active
+from village.classes.protocols import SoundDeviceProtocol
+from village.log import log
 from village.settings import settings
 
 
@@ -13,19 +17,20 @@ def get_sound_devices() -> list[str]:
     return devices_str
 
 
-class SoundDevice:
-    def __init__(self, samplerate, channels=2, latency="high") -> None:
-        self.samplerate = samplerate
-        self.channels = channels
-        self.latency = latency
+class SoundDevice(SoundDeviceProtocol):
+    def __init__(self) -> None:
+        self.samplerate = int(settings.get("SAMPLERATE"))
+        self.channels = 2
+        self.latency = "high"
         devices = get_sound_devices()
         device = settings.get("SOUND_DEVICE")
         self.index = devices.index(device) if device in devices else 0
+        self.error = ""
 
         sd.default.device = device
-        sd.default.samplerate = samplerate
-        sd.default.channels = channels
-        sd.default.latency = latency
+        sd.default.samplerate = self.samplerate
+        sd.default.channels = self.channels
+        sd.default.latency = self.latency
 
         self.stream = sd.OutputStream(dtype="float32")
         self.stream.close()
@@ -33,7 +38,7 @@ class SoundDevice:
         self.playing = Value("i", 0)
         self.process = Process(target=self._play_sound_background, daemon=True)
 
-    def load(self, left: np.array | None, right: np.array | None) -> None:
+    def load(self, left: Any, right: Any) -> None:
         if left is None and right is not None:
             left = np.zeros(len(right))
         elif right is None and left is not None:
@@ -43,12 +48,11 @@ class SoundDevice:
 
         if left is not None and right is not None:
             if len(left) != len(right):
-                raise ValueError(
-                    """
-                    Sound error: The length of the vectors left and right
-                    has to be the same.
-                    """
+                text = (
+                    "Sound error: The length of the vectors left and right "
+                    + "has to be the same."
                 )
+                raise ValueError(text)
             try:
                 self.stop()
             except AttributeError:
@@ -152,19 +156,19 @@ def whitenoise_generator(
     return noise
 
 
-samplerate = settings.get("SAMPLERATE")
+def get_sound_device() -> SoundDeviceProtocol:
+    if settings.get("USE_SOUNDCARD") == Active.OFF:
+        return SoundDeviceProtocol()
+    else:
+        try:
+            sound_device = SoundDevice()
+            log.info("Sound device successfully initialized")
+            return sound_device
+        except Exception:
+            log.error(
+                "Could not initialize sound device", exception=traceback.format_exc()
+            )
+            return SoundDeviceProtocol()
 
-# duration = 3
-# ramp = 0.005
-# amplitude = 0.01
-# frequency = 6000
 
-
-sound_device = SoundDevice(samplerate=samplerate)
-
-# sound = tone_generator(duration, amplitude, frequency, ramp, samplerate)
-# # sound = whitenoise_generator(duration, amplitude, samplerate)
-# sound_device.load(sound)
-# sound_device.play()
-# import time
-# time.sleep(duration + 1)
+sound_device = get_sound_device()

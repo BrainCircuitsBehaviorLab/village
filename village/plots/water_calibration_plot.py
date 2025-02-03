@@ -5,10 +5,15 @@ import seaborn as sns
 from matplotlib.figure import Figure
 
 
-def water_calibration_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
+def water_calibration_plot(
+    df: pd.DataFrame,
+    width: float,
+    height: float,
+    point: tuple[float, float] | None,
+) -> Figure:
     fig, ax = plt.subplots(figsize=(width, height))
 
-    ports = df["port_number"].unique()
+    ports = sorted(df["port_number"].unique())
     colors = sns.color_palette("tab10", 8)
     colors = [colors[0]] + colors
 
@@ -22,12 +27,9 @@ def water_calibration_plot(df: pd.DataFrame, width: float, height: float) -> Fig
         if len(x) == 2:
             coeffs = np.polyfit(x, y, 1)
             poly = np.poly1d(coeffs)
-            b, a = coeffs
-            c = 0
         elif len(x) > 2:
             coeffs = np.polyfit(x, y, 2)
             poly = np.poly1d(coeffs)
-            c, b, a = coeffs
         else:
             continue
 
@@ -39,8 +41,10 @@ def water_calibration_plot(df: pd.DataFrame, width: float, height: float) -> Fig
             [],
             linestyle="None",
             marker="None",
-            label=f"a={a:.2f}, b={b:.2f}, c={c:.2f}",
         )
+
+    if point is not None:
+        ax.plot(point[0], point[1], marker="x", color="red", markersize=10)
 
     ax.set_xlabel("Time (s)", fontsize=7)
     ax.set_ylabel("Water Delivered (ul)", fontsize=7)

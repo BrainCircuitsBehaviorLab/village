@@ -8,11 +8,12 @@ import numpy as np
 import pandas as pd
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QLabel, QMessageBox, QPushButton, QScrollArea, QWidget
+from PyQt5.QtWidgets import QLabel, QMessageBox, QScrollArea, QWidget
 
 from village.calibration.sound_calibration import SoundCalibration
 from village.classes.enums import State
-from village.gui.layout import Label, Layout, LineEdit
+from village.classes.task import Task
+from village.gui.layout import Layout
 from village.log import log
 from village.manager import manager
 from village.plots.create_pixmap import create_pixmap
@@ -34,117 +35,148 @@ class SoundCalibrationLayout(Layout):
     def draw(self) -> None:
         self.df = pd.DataFrame()
         self.date = ""
-        self.calibration_number = 0
+        self.calibration_number = -1
         self.delete_row = -1
         self.calibration_points: list[dict] = []
+        self.allow_test = False
+        self.calibration_denied = False
+        self.test_denied = False
         self.calibration_initiated = False
         self.test_initiated = False
         self.update_plot = False
-        self.gain_line_edits: list[LineEdit] = []
-        self.dB_obtained_line_edits: list[LineEdit] = []
-        self.dB_obtained_labels: list[Label] = []
+        self.speaker = 0
+        self.gain = 0.0
+        self.freq = 0
+        self.duration = 0
+        self.dB_obtained = 0.0
+        self.dB_expected2 = 0.0
+        self.speaker2 = 0
+        self.gain2 = 0.0
+        self.freq2 = 0
+        self.duration2 = 0
+        self.error2 = 0.0
+        self.dB_obtained2 = 0.0
 
-        self.dB_expected_line_edits2: list[LineEdit] = []
-        self.dB_obtained_line_edits2: list[LineEdit] = []
-        self.error_labels2: list[Label] = []
-
-        self.ok_buttons2: list[QPushButton] = []
-        self.add_buttons2: list[QPushButton] = []
-
-        self.indices: list[int] = []
-        self.gains = [0.0 for _ in range(2)]
-        self.dB_obtained = [0.0 for _ in range(2)]
-        self.indices2: list[int] = []
-        self.indices2_cleared: list[int] = []
-        self.dB_expected2 = [0.0 for _ in range(2)]
-        self.gains2 = [0.0 for _ in range(2)]
-        self.errors2 = [0.0 for _ in range(2)]
-        self.dB_obtained2 = [0.0 for _ in range(2)]
+        self.test_point: tuple[float, float] | None = None
 
         # speakers
-        self.create_and_add_label("speaker left(0)", 11, 1, 8, 2, "black", bold=False)
-        self.create_and_add_label("speaker right(1)", 13, 1, 8, 2, "black", bold=False)
+        self.speaker_label = self.create_and_add_label(
+            "SPEAKER", 7, 1, 12, 2, "black", bold=False
+        )
+        self.speaker_combo = self.create_and_add_combo_box(
+            "speaker", 9, 1, 10, 2, ["left(0)", "right(1)"], 0, self.calibration
+        )
 
-        self.create_and_add_label("speaker left(0)", 34, 1, 8, 2, "black", bold=False)
-        self.create_and_add_label("speaker right(1)", 36, 1, 8, 2, "black", bold=False)
+        self.speaker_label2 = self.create_and_add_label(
+            "SPEAKER", 32, 1, 12, 2, "black", bold=False
+        )
+        self.speaker_combo2 = self.create_and_add_combo_box(
+            "speaker", 34, 1, 10, 2, ["left(0)", "right(1)"], 0, self.select_speaker2
+        )
 
         # input
         self.calibration_input_label = self.create_and_add_label(
             "CALIBRATION INPUT",
             5,
-            5,
+            1,
             20,
             2,
             "black",
+            description=(
+                "Enter a gain value(0-1) and the sound duration and frequency "
+                + "to calibrate the speakers. If the frequency is set to 0, "
+                + "the calibration will be done using a white-noise sound "
+                + "for all frequencies."
+            ),
         )
 
         self.calibration_input_label = self.create_and_add_label(
             "TEST INPUT",
             30,
-            5,
+            1,
             20,
             2,
             "black",
+            description=(
+                "Enter the expected dB you want to get and the sound duration "
+                + "and frequency to test the speakers. If the frequency is set to 0, "
+                + "the test will be done using a white-noise sound "
+                + "for all frequencies."
+            ),
         )
 
         # first input variable
         self.gain_label = self.create_and_add_label(
-            "GAIN", 7, 7, 12, 2, "black", bold=False
+            "GAIN(0-1)",
+            12,
+            12,
+            12,
+            2,
+            "black",
+            bold=False,
+            description="Gain value between 0 and 1",
         )
-        for i in range(2):
-            line_edit = self.create_and_add_line_edit(
-                "0", 9 + 2 * i, 7, 8, 2, self.calibration_changed
-            )
-            self.gain_line_edits.append(line_edit)
+        self.gain_line_edit = self.create_and_add_line_edit(
+            "0", 14, 12, 8, 2, self.calibration_changed
+        )
 
         self.dB_expected_label2 = self.create_and_add_label(
-            "dB EXPECTED", 32, 5, 20, 2, "black", bold=False
+            "dB EXPECTED",
+            37,
+            10,
+            20,
+            2,
+            "black",
+            bold=False,
+            description="The expected dB value",
         )
-        for i in range(2):
-            line_edit = self.create_and_add_line_edit(
-                "0", 34 + 2 * i, 7, 8, 2, self.test_changed
-            )
-            self.dB_expected_line_edits2.append(line_edit)
+
+        self.dB_expected_line_edit2 = self.create_and_add_line_edit(
+            "0", 39, 12, 8, 2, self.test_changed
+        )
 
         # second input variable
-        self.freq_label = self.create_and_add_label(
-            "FREQ", 7, 18, 12, 2, "black", bold=False
+        text = (
+            "Frequency of the sound in Hz. The system will play a simple "
+            + "sinusoidal tone of that frequency. Set to 0 for white noise."
         )
-        for i in range(2):
-            line_edit = self.create_and_add_line_edit(
-                "0", 9 + 2 * i, 18, 8, 2, self.calibration_changed
-            )
-            self.freq_line_edits.append(line_edit)
+        self.freq_label = self.create_and_add_label(
+            "FREQ", 12, 1, 12, 2, "black", bold=False, description=text
+        )
+
+        self.freq_line_edit = self.create_and_add_line_edit(
+            "0", 14, 1, 8, 2, self.calibration_changed
+        )
 
         self.freq_label2 = self.create_and_add_label(
-            "FREQ", 32, 18, 20, 2, "black", bold=False
+            "FREQ", 37, 1, 20, 2, "black", bold=False, description=text
         )
-        for i in range(2):
-            line_edit = self.create_and_add_line_edit(
-                "0", 34 + 2 * i, 18, 8, 2, self.test_changed
-            )
-            self.freq_line_edits2.append(line_edit)
+
+        self.freq_line_edit2 = self.create_and_add_line_edit(
+            "0", 39, 1, 8, 2, self.test_changed
+        )
 
         # duration
+        text = "The duration of the sound in seconds."
         self.duration_label = self.create_and_add_label(
-            "DURATION(s)", 7, 28, 12, 2, "black", bold=False
+            "DURATION(s)", 12, 23, 12, 2, "black", bold=False, description=text
         )
         self.duration_line_edit = self.create_and_add_line_edit(
-            "1", 9, 19, 28, 2, self.calibration_changed
+            "1", 14, 24, 8, 2, self.calibration_changed
         )
 
         self.duration_label2 = self.create_and_add_label(
-            "DURATION(s)", 32, 28, 12, 2, "black", bold=False
+            "DURATION(s)", 37, 23, 12, 2, "black", bold=False, description=text
         )
         self.duration_line_edit2 = self.create_and_add_line_edit(
-            "1", 34, 28, 8, 2, self.test_changed
+            "1", 39, 24, 8, 2, self.test_changed
         )
 
         # first button
         self.calibrate_button = self.create_and_add_button(
             "CALIBRATE ->",
-            11,
-            28,
+            14,
+            35,
             12,
             2,
             self.calibrate_button_clicked,
@@ -155,8 +187,8 @@ class SoundCalibrationLayout(Layout):
 
         self.test_button = self.create_and_add_button(
             "TEST ->",
-            36,
-            28,
+            39,
+            35,
             12,
             2,
             self.test_button_clicked,
@@ -169,95 +201,87 @@ class SoundCalibrationLayout(Layout):
         self.calibration_output_label = self.create_and_add_label(
             "CALIBRATION OUTPUT",
             5,
-            45,
+            50,
             20,
             2,
             "black",
+            description="Enter the measured dB.",
         )
 
         self.calibration_output_label = self.create_and_add_label(
-            "TEST OUTPUT",
-            30,
-            45,
-            20,
-            2,
-            "black",
+            "TEST OUTPUT", 30, 50, 20, 2, "black", description="Enter the measured dB."
         )
 
         # output dB obtained
         self.dB_obtained_label = self.create_and_add_label(
-            "dB OBTAINED", 7, 45, 17, 2, "black", bold=False
+            "dB OBTAINED", 12, 50, 17, 2, "black", bold=False, description="Measured dB"
         )
-        for i in range(2):
-            line_edit = self.create_and_add_line_edit(
-                "0", 9 + 2 * i, 45, 8, 2, self.calibration_measured
-            )
-            line_edit.setDisabled(True)
-            self.dB_obtained_line_edits.append(line_edit)
+        self.dB_obtained_line_edit = self.create_and_add_line_edit(
+            "0", 14, 50, 8, 2, self.calibration_measured
+        )
+        self.dB_obtained_line_edit.setDisabled(True)
 
         self.dB_obtained_label2 = self.create_and_add_label(
-            "dB OBTAINED", 32, 45, 17, 2, "black", bold=False
+            "dB OBTAINED", 37, 50, 17, 2, "black", bold=False, description="Measured dB"
         )
-        for i in range(2):
-            line_edit = self.create_and_add_line_edit(
-                "0", 34 + 2 * i, 45, 8, 2, self.test_measured
-            )
-            line_edit.setDisabled(True)
-            self.dB_obtained_line_edits2.append(line_edit)
+        self.dB_obtained_line_edit2 = self.create_and_add_line_edit(
+            "0", 39, 50, 8, 2, self.test_measured
+        )
+        self.dB_obtained_line_edit2.setDisabled(True)
 
         # error
-        for i in range(2):
-            label = self.create_and_add_label(
-                "", 34 + 2 * i, 45, 18, 2, "black", bold=False
-            )
-            label.setAlignment(Qt.AlignCenter)
-            self.error_labels2.append(label)
+        self.error_label2 = self.create_and_add_label(
+            "", 41, 50, 18, 2, "black", bold=False
+        )
 
-        # buttons
+        # calibrate add button
         self.add_button = self.create_and_add_button(
             "ADD ->",
-            16,
-            66,
+            14,
+            69,
             15,
             2,
             self.add_button_clicked,
-            "Add the values of the calibration points",
+            "Add this point to the list of calibration points",
             "powderblue",
         )
         self.add_button.setDisabled(True)
 
         # ok and add buttons
-        for i in range(2):
-            button = self.create_and_add_button(
-                "OK",
-                34 + 2 * i,
-                66,
-                7,
-                2,
-                partial(self.ok_button_clicked, i),
-                """The value of this test is correct.
-                The error is within the acceptable limit.
-                Save the test result in sound_calibration.csv.""",
-                "powderblue",
-            )
-            button.setDisabled(True)
-            self.ok_buttons2.append(button)
+        text = (
+            "The value of this test is correct. "
+            + "The error is within the acceptable limit. "
+            + "Save the test result in sound_calibration.csv."
+        )
+        self.ok_button2 = self.create_and_add_button(
+            "OK",
+            39,
+            69,
+            7,
+            2,
+            self.ok_button2_clicked,
+            text,
+            "powderblue",
+        )
+        self.ok_button2.setDisabled(True)
 
-        for i in range(2):
-            button = self.create_and_add_button(
-                "ADD ->",
-                34 + 2 * i,
-                73,
-                8,
-                2,
-                partial(self.add_button2_clicked, i),
-                """The value of this test is not correct.
-                The error too large.
-                Use the test result as a new calibration point.""",
-                "lightcoral",
-            )
-            button.setDisabled(True)
-            self.add_buttons2.append(button)
+        text = (
+            "The value of this test is not correct. "
+            + "The error too large. "
+            + "Use the test result as a new calibration point."
+        )
+
+        self.add_button2 = self.create_and_add_button(
+            "FAIL ->",
+            39,
+            76,
+            8,
+            2,
+            self.add_button2_clicked,
+            text,
+            "lightcoral",
+        )
+        self.add_button2.setDisabled(True)
 
         # extra buttons
         self.save_button = self.create_and_add_button(
@@ -331,150 +355,205 @@ class SoundCalibrationLayout(Layout):
             return True
 
     def calibration_changed(self, value: str = "", key: str = "") -> None:
-        self.calibrate_button.setEnabled(False)
-        self.gains = [0.0 for _ in range(2)]
+        self.calibrate_button.setDisabled(True)
+        self.test_button.setDisabled(True)
+        self.gain = 0
+        self.duration = 0
+        self.freq = -1
         try:
-            self.duration = abs(int(self.duration_line_edit.text()))
-            if self.duration > 0:
+            duration = int(self.duration_line_edit.text())
+            if duration > 0:
+                self.duration = duration
                 self.duration_line_edit.setStyleSheet(
                     "QLineEdit {border: 1px solid black;}"
                 )
             else:
                 self.duration_line_edit.setStyleSheet("")
         except Exception:
-            self.duration = 0
             self.duration_line_edit.setStyleSheet("")
 
-        for i in range(2):
-            gain = self.gain_line_edits[i].text()
-            try:
-                gain_float = float(gain)
-                self.gains[i] = gain_float
-                if gain_float > 0:
-                    self.gain_line_edits[i].setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
-                else:
-                    self.gain_line_edits[i].setStyleSheet("")
-            except Exception:
-                self.gain_line_edits[i].setStyleSheet("")
-                gain = "0"
-
-            if gain != "0" and self.duration != 0:
-                self.calibrate_button.setEnabled(True)
-                manager.changing_settings = True
-                self.update_status_label_buttons()
-
-    def test_changed(self, value: str = "", key: str = "") -> None:
-        self.test_button.setEnabled(False)
-        self.dB_expected2 = [0.0 for _ in range(2)]
+        try:
+            gain = float(self.gain_line_edit.text())
+            if gain > 0 and gain <= 1:
+                self.gain = gain
+                self.gain_line_edit.setStyleSheet(
+                    "QLineEdit {border: 1px solid black;}"
+                )
+            else:
+                self.gain_line_edit.setStyleSheet("")
+        except Exception:
+            self.gain_line_edit.setStyleSheet("")
 
         try:
-            self.duration2 = abs(int(self.duration_line_edit2.text()))
-            if self.duration2 > 0:
+            freq = int(self.freq_line_edit.text())
+            if freq >= 0:
+                self.freq = freq
+                self.freq_line_edit.setStyleSheet(
+                    "QLineEdit {border: 1px solid black;}"
+                )
+            else:
+                self.freq_line_edit.setStyleSheet("")
+        except Exception:
+            self.freq_line_edit.setStyleSheet("")
+
+        if self.gain > 0 and self.duration > 0 and self.freq >= 0:
+            self.calibrate_button.setEnabled(True)
+            manager.changing_settings = True
+            self.update_status_label_buttons()
+
+    def test_changed(self, value: str = "", key: str = "") -> None:
+        self.test_button.setDisabled(True)
+        self.calibrate_button.setDisabled(True)
+        self.dB_expected2 = 0
+        self.duration2 = 0
+        self.freq2 = -1
+
+        try:
+            duration2 = int(self.duration_line_edit2.text())
+            if duration2 > 0:
+                self.duration2 = duration2
                 self.duration_line_edit2.setStyleSheet(
                     "QLineEdit {border: 1px solid black;}"
                 )
             else:
                 self.duration_line_edit2.setStyleSheet("")
         except Exception:
-            self.duration2 = 0
             self.duration_line_edit2.setStyleSheet("")
 
-        for i in range(2):
-            dB = self.dB_expected_line_edits2[i].text()
-            try:
-                dB_float = float(dB)
-                self.dB_expected2[i] = dB_float
-                if dB_float > 0:
-                    self.dB_expected_line_edits2[i].setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
-                else:
-                    self.dB_expected_line_edits2[i].setStyleSheet("")
-            except Exception:
-                dB = "0"
-                self.dB_expected_line_edits2[i].setStyleSheet("")
+        try:
+            dB_expected2 = float(self.dB_expected_line_edit2.text())
+            if dB_expected2 > 0:
+                self.dB_expected2 = dB_expected2
+                self.dB_expected_line_edit2.setStyleSheet(
+                    "QLineEdit {border: 1px solid black;}"
+                )
+            else:
+                self.dB_expected_line_edit2.setStyleSheet("")
+        except Exception:
+            self.dB_expected_line_edit2.setStyleSheet("")
 
-            if dB != "0" and self.duration2 != 0:
-                self.test_button.setEnabled(True)
-                manager.changing_settings = True
-                self.update_status_label_buttons()
+        try:
+            freq2 = int(self.freq_line_edit2.text())
+            if freq2 >= 0:
+                self.freq2 = freq2
+                self.freq_line_edit2.setStyleSheet(
+                    "QLineEdit {border: 1px solid black;}"
+                )
+            else:
+                self.freq_line_edit2.setStyleSheet("")
+        except Exception:
+            self.freq_line_edit2.setStyleSheet("")
+
+        if self.dB_expected2 > 0 and self.duration2 > 0 and self.freq2 >= 0:
+            self.test_button.setEnabled(True)
+            manager.changing_settings = True
+            self.update_status_label_buttons()
 
     def calibrate_button_clicked(self) -> None:
+        if self.calibration_denied:
+            QMessageBox().information(
+                self.window,
+                "Warning",
+                "You need to mark the test as correct or incorrect first.",
+            )
+            return
+        self.test_denied = True
+
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
-        self.indices = [i for i, val in enumerate(self.gains) if val != 0]
         manager.state = State.RUN_MANUAL
         task = SoundCalibration(self.speaker, self.gain, self.freq, self.duration)
-        for line_edit in self.gain_line_edits:
-            line_edit.setDisabled(True)
+        manager.task = Task()
+        manager.task.settings.maximum_duration = self.duration + 3
+        self.speaker_combo.setDisabled(True)
+        self.gain_line_edit.setDisabled(True)
+        self.freq_line_edit.setDisabled(True)
         self.duration_line_edit.setDisabled(True)
         self.calibration_initiated = True
         log.start(task="SoundCalibration", subject="None")
         task.run_in_thread()
 
     def test_button_clicked(self) -> None:
+        if self.test_denied:
+            QMessageBox().information(
+                self.window,
+                "Warning",
+                "You need to save or delete the current calibration first.",
+            )
+            return
+        self.calibration_denied = True
+
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
-        self.indices2 = [i for i, val in enumerate(self.dB_expected2) if val != 0]
-        self.indices2_cleared = []
-        errors: list[int] = []
-        ok = 0
-        for i in range(len(self.dB_expected2)):
-            if i not in self.indices2:
-                self.gains2[i] = 0
-            else:
-                try:
-                    self.gains2[i] = manager.water_calibration.get_valve_time(
-                        i, self.dB_expected2[i]
-                    )
-                    ok += 1
-                except Exception:
-                    self.dB_expected2[i] = 0
-                    self.dB_expected_line_edits2[i].setText("0")
-                    self.dB_expected_line_edits2[i].setStyleSheet("")
-                    errors.append(i)
-                    self.indices2.remove(i)
+        ok = False
 
-        if errors:
-            text = "The following ports can not be tested: "
-            text += ", ".join([str(error) for error in errors])
-            text += ". \nYou need to calibrate them first."
+        try:
+            self.gain2 = manager.sound_calibration.get_sound_gain(
+                self.speaker2, self.dB_expected2, freq=self.freq2
+            )
+            ok = True
+        except Exception:
+            self.dB_expected2 = 0
+            self.dB_expected_line_edit2.setText("0")
+            self.dB_expected_line_edit2.setStyleSheet("")
+            self.duration_line_edit2.setStyleSheet("")
+
+            text = "Using a frequency value of: "
+            text += str(self.freq2)
+            text += ". \nThe following speaker can not be tested: "
+            text += str(self.speaker2)
+            text += ". \nYou need to calibrate it first."
             QMessageBox().information(
                 self.window,
                 "Warning",
                 text,
             )
 
-        if ok > 0:
+        if ok:
             manager.state = State.RUN_MANUAL
-            task = SoundCalibration(self.speaker, self.gain, self.freq, self.duration)
-            for line_edit in self.dB_expected_line_edits2:
-                line_edit.setDisabled(True)
+            task = SoundCalibration(
+                self.speaker2, self.gain2, self.freq2, self.duration2
+            )
+            manager.task = Task()
+            manager.task.settings.maximum_duration = self.duration2 + 3
+            self.dB_expected_line_edit2.setDisabled(True)
             self.duration_line_edit2.setDisabled(True)
-            self.calibration_initiated = True
+            self.freq_line_edit2.setDisabled(True)
+            self.speaker_combo2.setDisabled(True)
+            self.test_initiated = True
             log.start(task="SoundCalibration", subject="None")
             task.run_in_thread()
-            self.test_initiated = True
-        else:
-            self.duration_line_edit2.setStyleSheet("")
 
     def save_button_clicked(self) -> None:
-        counts = self.df["port_number"].value_counts()
-        valid_ports = counts[counts >= 2].index
-        removed_ports = counts[counts < 2].index.tolist()
-        filtered_df = self.df[self.df["port_number"].isin(valid_ports)]
 
-        manager.water_calibration.df = pd.concat(
-            [manager.water_calibration.df, filtered_df], ignore_index=True
+        removed_list: list[str] = []
+        filtered_df = self.df.copy()
+
+        for freq, group in self.df.groupby("frequency"):
+            counts = group["speaker"].value_counts()
+
+            removed_speakers = counts[counts < 2].index
+
+            removed_list.extend(
+                [f"speaker {spk}, freq {freq}" for spk in removed_speakers]
+            )
+
+            filtered_df = filtered_df[
+                ~(
+                    (filtered_df["frequency"] == freq)
+                    & (filtered_df["speaker"].isin(removed_speakers))
+                )
+            ]
+
+        manager.sound_calibration.df = pd.concat(
+            [manager.sound_calibration.df, filtered_df], ignore_index=True
         )
-        manager.water_calibration.save_from_df()
+        manager.sound_calibration.save_from_df()
 
-        if len(removed_ports) > 0:
-            text = "The following ports had only one calibration point and were"
-            text += "therefore removed from the calibration: "
-            text += ", ".join([str(port) for port in removed_ports])
+        if len(removed_list) > 0:
+            text = "The following speaker and frequency had only one calibration point "
+            text += "and was therefore removed from the calibration: "
+            text += "; ".join(removed_list)
             QMessageBox().information(
                 self.window,
                 "Warning",
@@ -487,7 +566,7 @@ class SoundCalibrationLayout(Layout):
                 "Success",
                 text,
             )
-        self.window.create_water_calibration_layout()
+        self.window.create_sound_calibration_layout()
 
     def delete_button_clicked(self) -> None:
         reply = QMessageBox.question(
@@ -499,212 +578,204 @@ class SoundCalibrationLayout(Layout):
         )
 
         if reply == QMessageBox.Yes:
-            self.window.create_water_calibration_layout()
+            self.window.create_sound_calibration_layout()
 
     def update_gui(self) -> None:
         self.update_status_label_buttons()
         if manager.state == State.WAIT and self.calibration_initiated:
             self.calibration_initiated = False
             self.calibrate_button.setDisabled(True)
-            for index in range(len(self.dB_obtained_line_edits)):
-                if index in self.indices:
-                    self.dB_obtained_line_edits[index].setEnabled(True)
-                    self.dB_obtained_line_edits[index].setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
-                else:
-                    self.dB_obtained_line_edits[index].setStyleSheet("")
+            self.test_button.setDisabled(True)
+            self.dB_obtained_line_edit.setEnabled(True)
+            self.dB_obtained_line_edit.setStyleSheet(
+                "QLineEdit {border: 1px solid black;}"
+            )
 
         if manager.state == State.WAIT and self.test_initiated:
             self.test_initiated = False
+            self.calibrate_button.setDisabled(True)
             self.test_button.setDisabled(True)
-            for index in range(len(self.dB_obtained_line_edits2)):
-                if index in self.indices2:
-                    self.dB_obtained_line_edits2[index].setEnabled(True)
-                    self.dB_obtained_line_edits2[index].setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
-                else:
-                    self.dB_obtained_line_edits2[index].setStyleSheet("")
-
-        for line_edit in self.dB_obtained_labels:
-            if line_edit.text() != "0":
-                self.add_button.setEnabled(True)
+            self.dB_obtained_line_edit2.setEnabled(True)
+            self.dB_obtained_line_edit2.setStyleSheet(
+                "QLineEdit {border: 1px solid black;}"
+            )
 
         if self.update_plot:
             if self.delete_row != -1:
                 self.df = self.df.drop(index=self.delete_row)
                 self.df = self.df.reset_index(drop=True)
                 self.delete_row = -1
-            self.plot_layout.update(self.df)
+            self.plot_layout.update(self.df, self.test_point)
             self.update_plot = False
 
-        def some_port_has_two_values() -> bool:
-            port_counts = []
+        def some_speaker_has_two_values() -> bool:
+            speaker_counts = []
             for point in self.calibration_points:
-                port = point.get("port_number")
-                if port in port_counts:
+                speaker = point.get("speaker")
+                if speaker in speaker_counts:
                     return True
                 else:
-                    port_counts.append(port)
+                    speaker_counts.append(speaker)
             return False
 
         if len(self.calibration_points) > 0:
             self.delete_button.setEnabled(True)
         else:
             self.delete_button.setDisabled(True)
-        if some_port_has_two_values():
+            if self.allow_test and self.gain_line_edit.isEnabled():
+                self.allow_test = False
+                self.test_denied = False
+        if some_speaker_has_two_values():
             self.save_button.setEnabled(True)
         else:
             self.save_button.setDisabled(True)
 
-        if len(self.indices2) == len(self.indices2_cleared) and len(self.indices2) > 0:
-            self.indices2 = []
-            self.indices2_cleared = []
+    def select_speaker(self, value: str, key: int) -> None:
+        self.speaker = 0 if value == "left(0)" else 1
 
-            for line_edit in self.dB_expected_line_edits2:
-                line_edit.setText("0")
-                line_edit.setEnabled(True)
-                self.duration_line_edit2.setEnabled(True)
-
-            for line_edit in self.dB_obtained_line_edits2:
-                line_edit.setText("0")
-                line_edit.setDisabled(True)
-                line_edit.setStyleSheet("")
-            self.calibrate_button.setEnabled(True)
-            self.test_button.setEnabled(True)
-            # self.plot_layout.update(self.df)
-            self.info_layout.update()
-
-    def select_port(self, value: str, index: int) -> None:
-        pass
+    def select_speaker2(self, value: str, key: int) -> None:
+        self.speaker2 = 0 if value == "left(0)" else 1
 
     def calibration_measured(self, value: str = "", key: str = "") -> None:
-        self.dB_obtained = [0.0 for _ in range(2)]
-        for line_edit in self.dB_obtained_labels:
-            line_edit.setText("0")
+        self.dB_obtained = 0
         try:
-            for index in self.indices:
-                line_edit = self.dB_obtained_line_edits[index]
-                result = round((float(line_edit.text()) / self.duration * 1000), 4)
-                if result > 0:
-                    self.dB_obtained[index] = result
-                    self.dB_obtained_labels[index].setText(str(result))
+            result = round(float(self.dB_obtained_line_edit.text()), 4)
+            if result > 0:
+                self.dB_obtained = result
+                self.add_button.setEnabled(True)
         except Exception:
             pass
 
     def test_measured(self, value: str = "", key: str = "") -> None:
-        self.dB_obtained2 = [0.0 for _ in range(2)]
-        for line_edit in self.error_labels2:
-            line_edit.setText("0")
+        self.dB_obtained2 = 0
+        self.error_label2.setText("0")
         try:
-            for index in self.indices2:
-                line_edit = self.dB_obtained_line_edits2[index]
-                result = round((float(line_edit.text()) / self.duration2 * 1000), 4)
-                if result > 0:
-                    self.dB_obtained2[index] = result
-                    error = (
-                        abs(result - self.dB_expected2[index])
-                        / self.dB_expected2[index]
-                        * 100
-                    )
-                    error = round(error, 4)
-                    self.errors2[index] = error
-                    text = str(result) + " (" + str(error) + "% error)"
-                    self.error_labels2[index].setText(text)
-                    self.ok_buttons2[index].setEnabled(True)
-                    self.add_buttons2[index].setEnabled(True)
+            result = round(float(self.dB_obtained_line_edit2.text()), 4)
+            if result > 0:
+                self.dB_obtained2 = result
+                error = abs(result - self.dB_expected2) / self.dB_expected2 * 100
+                error = round(error, 4)
+                self.error2 = error
+                text = str(error) + "% error"
+                self.error_label2.setText(text)
+                self.ok_button2.setEnabled(True)
+                self.add_button2.setEnabled(True)
         except Exception:
             pass
 
     def add_button_clicked(self) -> None:
         if self.date == "":
             self.date = time_utils.now_string()
-        if self.calibration_number == 0:
+        if self.calibration_number < 0:
             try:
-                self.calibration_number = (
-                    manager.water_calibration.df["calibration_number"].max() + 1
-                )
+                max_value = manager.sound_calibration.df["calibration_number"].max()
+                if pd.notna(max_value):
+                    self.calibration_number = max_value + 1
+                else:
+                    self.calibration_number = 1
             except Exception:
                 self.calibration_number = 1
 
-        for i in self.indices:
-            row_dict = {
-                "date": self.date,
-                "port_number": i,
-                "time(s)": self.gains[i],
-                "water_delivered(ul)": self.dB_obtained[i],
-                "calibration_number": self.calibration_number,
-                "water_expected(ul)": np.nan,
-                "error(%)": np.nan,
-            }
-
-            df = pd.DataFrame([row_dict])
-            self.df = pd.concat([self.df, df], ignore_index=True)
-            self.calibration_points.append(row_dict)
-
-        for line_edit in self.gain_line_edits:
-            line_edit.setEnabled(True)
-            self.duration_line_edit.setEnabled(True)
-
-        for line_edit in self.dB_obtained_line_edits:
-            line_edit.setText("0")
-            line_edit.setDisabled(True)
-            line_edit.setStyleSheet("")
-        self.add_button.setDisabled(True)
-        self.calibrate_button.setEnabled(True)
-        self.test_button.setEnabled(True)
-        self.plot_layout.update(self.df)
-        self.info_layout.update()
-
-    def ok_button_clicked(self, index: int) -> None:
-        self.ok_buttons2[index].setDisabled(True)
-        self.add_buttons2[index].setDisabled(True)
-
-        if self.date == "":
-            self.date = time_utils.now_string()
-        self.calibration_number = np.nan
         row_dict = {
             "date": self.date,
-            "port_number": index + 1,
-            "time(s)": self.gains2[index],
-            "water_delivered(ul)": self.dB_obtained2[index],
-            "calibration_number": np.nan,
-            "water_expected(ul)": self.dB_obtained2[index],
-            "error(%)": self.errors2[index],
+            "speaker": self.speaker,
+            "frequency": self.freq,
+            "gain": self.gain,
+            "dB_obtained": self.dB_obtained,
+            "calibration_number": self.calibration_number,
+            "dB_expected": np.nan,
+            "error(%)": np.nan,
         }
-
-        self.indices2_cleared.append(index)
 
         df = pd.DataFrame([row_dict])
-        manager.water_calibration.df = pd.concat(
-            [manager.water_calibration.df, df], ignore_index=True
-        )
-        manager.water_calibration.save_from_df()
+        self.df = pd.concat([self.df, df], ignore_index=True)
+        self.calibration_points.append(row_dict)
 
-    def add_button2_clicked(self, index: int) -> None:
-        self.ok_buttons2[index].setDisabled(True)
-        self.add_buttons2[index].setDisabled(True)
+        self.speaker_combo.setEnabled(True)
+        self.gain_line_edit.setEnabled(True)
+        self.freq_line_edit.setEnabled(True)
+        self.duration_line_edit.setEnabled(True)
 
+        self.dB_obtained_line_edit.setText("0")
+        self.dB_obtained_line_edit.setDisabled(True)
+        self.dB_obtained_line_edit.setStyleSheet("")
+
+        self.add_button.setDisabled(True)
+        self.plot_layout.update(self.df, self.test_point)
+        self.info_layout.update()
+
+    def ok_button2_clicked(self) -> None:
         if self.date == "":
             self.date = time_utils.now_string()
-        self.calibration_number = np.nan
+
         row_dict = {
             "date": self.date,
-            "port_number": index + 1,
-            "time(s)": self.gains2[index],
-            "water_delivered(ul)": self.dB_obtained2[index],
-            "calibration_number": np.nan,
-            "water_expected(ul)": self.dB_obtained2[index],
-            "error(%)": self.errors2[index],
+            "speaker": self.speaker2,
+            "frequency": self.freq2,
+            "gain": self.gain2,
+            "dB_obtained": self.dB_obtained2,
+            "calibration_number": -1,
+            "dB_expected": self.dB_expected2,
+            "error(%)": self.error2,
         }
 
-        self.indices2_cleared.append(index)
+        df = pd.DataFrame([row_dict])
+        manager.sound_calibration.df = pd.concat(
+            [manager.sound_calibration.df, df], ignore_index=True
+        )
+        manager.sound_calibration.save_from_df()
+
+        self.reset_values_after_ok_or_add2()
+
+    def reset_values_after_ok_or_add2(self) -> None:
+        self.calibration_denied = False
+        self.speaker_combo2.setEnabled(True)
+        self.dB_expected_line_edit2.setEnabled(True)
+        self.freq_line_edit2.setEnabled(True)
+        self.duration_line_edit2.setEnabled(True)
+
+        self.ok_button2.setDisabled(True)
+        self.add_button2.setDisabled(True)
+        self.dB_expected_line_edit2.setText("0")
+        self.dB_expected_line_edit2.setEnabled(True)
+        self.duration_line_edit2.setEnabled(True)
+
+        self.dB_obtained_line_edit2.setText("0")
+        self.dB_obtained_line_edit2.setDisabled(True)
+        self.dB_obtained_line_edit2.setStyleSheet("")
+        self.info_layout.update()
+
+    def add_button2_clicked(self) -> None:
+        self.ok_button2_clicked()
+        self.test_denied = True
+
+        if self.calibration_number < 0:
+            try:
+                max_value = manager.sound_calibration.df["calibration_number"].max()
+                if pd.notna(max_value):
+                    self.calibration_number = max_value + 1
+                else:
+                    self.calibration_number = 1
+            except Exception:
+                self.calibration_number = 1
+
+        row_dict = {
+            "date": self.date,
+            "speaker": self.speaker2,
+            "frequency": self.freq2,
+            "gain": self.gain2,
+            "dB_obtained": self.dB_obtained2,
+            "calibration_number": self.calibration_number,
+            "dB_expected": np.nan,
+            "error(%)": np.nan,
+        }
 
         df = pd.DataFrame([row_dict])
         self.df = pd.concat([self.df, df], ignore_index=True)
         self.calibration_points.append(row_dict)
         self.update_plot = True
+
+        self.reset_values_after_ok_or_add2()
 
     def stop_button_clicked(self) -> None:
         if manager.state.can_stop_task():
@@ -712,18 +783,19 @@ class SoundCalibrationLayout(Layout):
             manager.state = State.SAVE_MANUAL
         elif manager.state.can_go_to_wait():
             manager.state = State.WAIT
-        for line_edit in self.gain_line_edits:
-            line_edit.setEnabled(True)
-            line_edit.setStyleSheet("")
-            line_edit.setText("0")
-        self.gains = [0.0 for _ in range(2)]
+        self.gain_line_edit.setEnabled(True)
+        self.gain_line_edit.setStyleSheet("")
+        self.gain_line_edit.setText("0")
+        self.freq_line_edit.setEnabled(True)
+        self.freq_line_edit.setStyleSheet("")
+        self.freq_line_edit.setText("0")
+        self.gain = 0.0
         self.duration_line_edit.setEnabled(True)
         self.duration_line_edit.setStyleSheet("")
-        for line_edit in self.dB_expected_line_edits2:
-            line_edit.setEnabled(True)
-            line_edit.setStyleSheet("")
-            line_edit.setText("0")
-        self.dB_expected2 = [0.0 for _ in range(2)]
+        self.dB_expected_line_edit2.setEnabled(True)
+        self.dB_expected_line_edit2.setStyleSheet("")
+        self.dB_expected_line_edit2.setText("0")
+        self.dB_expected2 = 0.0
         self.duration_line_edit2.setEnabled(True)
         self.duration_line_edit2.setStyleSheet("")
         self.update_gui()
@@ -756,18 +828,19 @@ class CalibrationPlotLayout(Layout):
         self.plot_width = (self.columns * self.column_width - 10) / dpi
         self.plot_height = (self.rows * self.row_height - 5) / dpi
 
-    def update(self, df: pd.DataFrame) -> None:
+    def update(self, df: pd.DataFrame, test_point: tuple[float, float] | None) -> None:
         pixmap = QPixmap()
         try:
             figure = sound_calibration_plot(
                 df.copy(),
                 self.plot_width,
                 self.plot_height,
+                test_point,
             )
             pixmap = create_pixmap(figure)
         except Exception:
             log.error(
-                "Can not create water calibration plot",
+                "Can not create sound calibration plot",
                 exception=traceback.format_exc(),
             )
 
@@ -795,23 +868,28 @@ class InfoLayout(Layout):
         self.title = self.create_and_add_label(
             "CALIBRATION POINTS", 0, 0, 40, 2, "black", bold=False
         )
-        self.port_label = self.create_and_add_label(
-            "Port", 2, 0, 8, 2, "black", bold=False
+        self.speaker_label = self.create_and_add_label(
+            "Speaker", 2, 0, 8, 2, "black", bold=False
         )
-        self.time_label = self.create_and_add_label(
-            "Time(s)", 2, 6, 8, 2, "black", bold=False
+        self.freq_label = self.create_and_add_label(
+            "Freq", 2, 8, 8, 2, "black", bold=False
         )
-        self.water_label = self.create_and_add_label(
-            "Water delivered(ul)", 2, 14, 24, 2, "black", bold=False
+        self.gain_label = self.create_and_add_label(
+            "Gain", 2, 14, 8, 2, "black", bold=False
+        )
+        self.dB_label = self.create_and_add_label(
+            "dB_obtained", 2, 21, 24, 2, "black", bold=False
         )
 
         for i, point in enumerate(self.parent_layout.calibration_points):
-            text = str(point["port_number"])
+            text = str(point["speaker"])
             self.create_and_add_label(text, 4 + 2 * i, 0, 8, 2, "black", bold=False)
-            text = str(point["time(s)"])
+            text = str(point["frequency"])
             self.create_and_add_label(text, 4 + 2 * i, 8, 8, 2, "black", bold=False)
-            text = str(point["water_delivered(ul)"])
-            self.create_and_add_label(text, 4 + 2 * i, 16, 14, 2, "black", bold=False)
+            text = str(point["gain"])
+            self.create_and_add_label(text, 4 + 2 * i, 14, 8, 2, "black", bold=False)
+            text = str(point["dB_obtained"])
+            self.create_and_add_label(text, 4 + 2 * i, 21, 14, 2, "black", bold=False)
             self.create_and_add_button(
                 "-",
                 4 + 2 * i,
@@ -826,6 +904,8 @@ class InfoLayout(Layout):
     def delete_point(self, i: int) -> None:
         utils.delete_all_elements_from_layout(self)
         self.parent_layout.calibration_points.pop(i)
+        if len(self.parent_layout.calibration_points) == 0:
+            self.parent_layout.allow_test = True
         self.parent_layout.delete_row = i
         self.parent_layout.update_plot = True
         self.update()

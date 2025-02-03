@@ -149,7 +149,7 @@ class Manager:
                 "dB_expected",
                 "error(%)",
             ],
-            [str, str, float, float, float, float],
+            [str, int, int, float, float, int, float, float],
         )
         self.temperatures = Collection(
             "temperatures",
