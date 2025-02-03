@@ -285,7 +285,7 @@ class Task:
                 )
 
                 self.session_df["session"] = [
-                    (int(self.subject_df["session"].iloc[-1]) + 1)
+                    int(self.subject_df["session"].iloc[-1]) + 1
                 ] * self.session_df.shape[0]
                 self.subject_df = pd.concat(
                     [self.subject_df, self.session_df], sort=True
