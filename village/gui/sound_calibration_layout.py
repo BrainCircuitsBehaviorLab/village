@@ -33,6 +33,7 @@ class SoundCalibrationLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
+        self.sound_calibration_button.setDisabled(True)
         self.df = pd.DataFrame()
         self.date = ""
         self.calibration_number = -1
@@ -64,14 +65,14 @@ class SoundCalibrationLayout(Layout):
             "SPEAKER", 7, 1, 12, 2, "black", bold=False
         )
         self.speaker_combo = self.create_and_add_combo_box(
-            "speaker", 9, 1, 10, 2, ["left(0)", "right(1)"], 0, self.calibration
+            "speaker", 9, 1, 10, 2, ["left(0)", "right(1)"], 0, self.calibration_changed
         )
 
         self.speaker_label2 = self.create_and_add_label(
             "SPEAKER", 32, 1, 12, 2, "black", bold=False
         )
         self.speaker_combo2 = self.create_and_add_combo_box(
-            "speaker", 34, 1, 10, 2, ["left(0)", "right(1)"], 0, self.select_speaker2
+            "speaker", 34, 1, 10, 2, ["left(0)", "right(1)"], 0, self.test_changed
         )
 
         # input
@@ -360,6 +361,7 @@ class SoundCalibrationLayout(Layout):
         self.gain = 0
         self.duration = 0
         self.freq = -1
+        self.speaker = self.speaker_combo.currentIndex()
         try:
             duration = int(self.duration_line_edit.text())
             if duration > 0:
@@ -407,7 +409,7 @@ class SoundCalibrationLayout(Layout):
         self.dB_expected2 = 0
         self.duration2 = 0
         self.freq2 = -1
-
+        self.speaker2 = self.speaker_combo2.currentIndex()
         try:
             duration2 = int(self.duration_line_edit2.text())
             if duration2 > 0:
@@ -469,6 +471,10 @@ class SoundCalibrationLayout(Layout):
         self.gain_line_edit.setDisabled(True)
         self.freq_line_edit.setDisabled(True)
         self.duration_line_edit.setDisabled(True)
+        self.dB_expected_line_edit2.setDisabled(True)
+        self.duration_line_edit2.setDisabled(True)
+        self.freq_line_edit2.setDisabled(True)
+        self.speaker_combo2.setDisabled(True)
         self.calibration_initiated = True
         log.start(task="SoundCalibration", subject="None")
         task.run_in_thread()
@@ -516,6 +522,10 @@ class SoundCalibrationLayout(Layout):
             )
             manager.task = Task()
             manager.task.settings.maximum_duration = self.duration2 + 3
+            self.speaker_combo.setDisabled(True)
+            self.gain_line_edit.setDisabled(True)
+            self.freq_line_edit.setDisabled(True)
+            self.duration_line_edit.setDisabled(True)
             self.dB_expected_line_edit2.setDisabled(True)
             self.duration_line_edit2.setDisabled(True)
             self.freq_line_edit2.setDisabled(True)
@@ -630,12 +640,6 @@ class SoundCalibrationLayout(Layout):
         else:
             self.save_button.setDisabled(True)
 
-    def select_speaker(self, value: str, key: int) -> None:
-        self.speaker = 0 if value == "left(0)" else 1
-
-    def select_speaker2(self, value: str, key: int) -> None:
-        self.speaker2 = 0 if value == "left(0)" else 1
-
     def calibration_measured(self, value: str = "", key: str = "") -> None:
         self.dB_obtained = 0
         try:
@@ -648,7 +652,7 @@ class SoundCalibrationLayout(Layout):
 
     def test_measured(self, value: str = "", key: str = "") -> None:
         self.dB_obtained2 = 0
-        self.error_label2.setText("0")
+        self.error_label2.setText("")
         try:
             result = round(float(self.dB_obtained_line_edit2.text()), 4)
             if result > 0:
@@ -660,6 +664,15 @@ class SoundCalibrationLayout(Layout):
                 self.error_label2.setText(text)
                 self.ok_button2.setEnabled(True)
                 self.add_button2.setEnabled(True)
+
+                df = manager.sound_calibration.df.copy()
+
+                df = df[df["speaker"] == self.speaker2]
+                df = df[df["frequency"] == self.freq2]
+                max_calibration = df["calibration_number"].max()
+                self.df = df[df["calibration_number"] == max_calibration]
+                self.test_point = (self.gain2, result)
+                self.update_plot = True
         except Exception:
             pass
 
@@ -728,22 +741,32 @@ class SoundCalibrationLayout(Layout):
         self.reset_values_after_ok_or_add2()
 
     def reset_values_after_ok_or_add2(self) -> None:
+        self.df = pd.DataFrame()
+        self.test_point = None
+
         self.calibration_denied = False
+        self.speaker_combo.setEnabled(True)
         self.speaker_combo2.setEnabled(True)
+        self.gain_line_edit.setEnabled(True)
         self.dB_expected_line_edit2.setEnabled(True)
+        self.dB_expected_line_edit2.setStyleSheet("")
+        self.dB_expected_line_edit2.setText("0")
+        self.freq_line_edit.setEnabled(True)
         self.freq_line_edit2.setEnabled(True)
+        self.freq_line_edit2.setStyleSheet("")
+        self.freq_line_edit2.setText("0")
+        self.duration_line_edit.setEnabled(True)
         self.duration_line_edit2.setEnabled(True)
+        self.duration_line_edit2.setStyleSheet("")
 
         self.ok_button2.setDisabled(True)
         self.add_button2.setDisabled(True)
-        self.dB_expected_line_edit2.setText("0")
-        self.dB_expected_line_edit2.setEnabled(True)
-        self.duration_line_edit2.setEnabled(True)
 
         self.dB_obtained_line_edit2.setText("0")
         self.dB_obtained_line_edit2.setDisabled(True)
         self.dB_obtained_line_edit2.setStyleSheet("")
         self.info_layout.update()
+        self.update_plot = True
 
     def add_button2_clicked(self) -> None:
         self.ok_button2_clicked()
@@ -830,24 +853,25 @@ class CalibrationPlotLayout(Layout):
 
     def update(self, df: pd.DataFrame, test_point: tuple[float, float] | None) -> None:
         pixmap = QPixmap()
-        try:
-            figure = sound_calibration_plot(
-                df.copy(),
-                self.plot_width,
-                self.plot_height,
-                test_point,
-            )
-            pixmap = create_pixmap(figure)
-        except Exception:
-            log.error(
-                "Can not create sound calibration plot",
-                exception=traceback.format_exc(),
-            )
+        if not df.empty:
+            try:
+                figure = sound_calibration_plot(
+                    df.copy(),
+                    self.plot_width,
+                    self.plot_height,
+                    test_point,
+                )
+                pixmap = create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create sound calibration plot",
+                    exception=traceback.format_exc(),
+                )
 
         if not pixmap.isNull():
             self.plot_label.setPixmap(pixmap)
         else:
-            self.plot_label.setText("Plot could not be generated")
+            self.plot_label.setText("")
 
 
 class InfoLayout(Layout):

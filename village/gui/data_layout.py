@@ -452,9 +452,8 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.WATER_CALIBRATION:
             try:
-                figure = water_calibration_plot(
-                    manager.water_calibration.df.copy(), width, height, None
-                )
+                df = manager.water_calibration.get_last_water_df()
+                figure = water_calibration_plot(df, width, height, None)
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -463,9 +462,8 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.SOUND_CALIBRATION:
             try:
-                figure = sound_calibration_plot(
-                    manager.sound_calibration.df.copy(), width, height, None
-                )
+                df = manager.sound_calibration.get_last_sound_df()
+                figure = sound_calibration_plot(df, width, height, None)
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(

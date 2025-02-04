@@ -103,6 +103,28 @@ class Collection(EventProtocol):
             entry = [date, type, subject, description]
             self.add_entry(entry)
 
+    def get_last_water_df(self) -> pd.DataFrame:
+        """
+        Returns a DataFrame that contains, for each unique value in the 'port_number'
+        column, all rows where 'calibration_number' is maximum.
+        """
+        df = self.df[self.df["calibration_number"] != -1].copy()
+        max_values = df.groupby(["port_number"])["calibration_number"].transform("max")
+        df = df[df["calibration_number"] == max_values]
+        return df
+
+    def get_last_sound_df(self) -> pd.DataFrame:
+        """
+        Returns a DataFrame that contains, for each unique combination of 'speaker' and
+        'frequency', all rows where 'calibration_number' is maximum.
+        """
+        df = self.df[self.df["calibration_number"] != -1].copy()
+        max_values = df.groupby(["speaker", "frequency"])[
+            "calibration_number"
+        ].transform("max")
+        df = df[df["calibration_number"] == max_values]
+        return df
+
     def get_valve_time(self, port: int, water: float) -> float:
         try:
             calibration_df = self.df[self.df["port_number"] == port]
