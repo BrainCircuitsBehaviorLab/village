@@ -653,10 +653,12 @@ class PortsLayout(Layout):
             self.buttons.append(button2)
 
     def led_clicked(self, i=0) -> None:
-        print("LED clicked " + str(i))
+        manager.task.bpod.reconnect(manager.functions)
+        manager.task.bpod.led(i)
 
     def water_clicked(self, i=0) -> None:
-        print("water clicked " + str(i))
+        manager.task.bpod.reconnect(manager.functions)
+        manager.task.bpod.water(i)
 
 
 class FunctionsLayout(Layout):

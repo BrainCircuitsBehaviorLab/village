@@ -186,10 +186,6 @@ class Task:
             try:
                 duration, trials, water = self.save_csv(run_mode=run_mode)
                 settings_str = self.save_json(run_mode)
-                self.training.df = self.subject_df
-                self.training.subject = self.subject
-                self.training.last_task = self.name
-                self.training.settings = self.settings
                 save = True
             except Exception:
                 log.alarm(
@@ -197,15 +193,20 @@ class Task:
                     subject=self.subject,
                     exception=traceback.format_exc(),
                 )
-            try:
-                self.training.update_training_settings()
-
-            except Exception:
-                log.alarm(
-                    "Error updating the training settings for task: " + self.name,
-                    subject=self.subject,
-                    exception=traceback.format_exc(),
-                )
+            if save:
+                try:
+                    self.training.df = self.subject_df
+                    self.training.subject = self.subject
+                    self.training.last_task = self.name
+                    self.training.settings = self.settings
+                    self.training.update_training_settings()
+                except Exception:
+                    save = False
+                    log.alarm(
+                        "Error updating the training settings for task: " + self.name,
+                        subject=self.subject,
+                        exception=traceback.format_exc(),
+                    )
         self.bpod.close()
         return save, duration, trials, water, settings_str
 

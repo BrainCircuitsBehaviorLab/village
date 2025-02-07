@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
 )
 
+from village.classes.enums import DataTable
 from village.log import log
 from village.manager import manager
 from village.settings import settings
@@ -343,6 +344,15 @@ class Layout(QGridLayout):
             self.online_plots_button.setEnabled(False)
 
     def exit_button_clicked(self) -> None:
+        if manager.table == DataTable.SUBJECTS:
+            try:
+                if self.page1Layout.df["name"].duplicated().any():
+                    text = "There are repeated names in the subjects table."
+                    QMessageBox.information(self.window, "WARNING", text)
+                    return
+            except Exception:
+                pass
+
         if manager.state.can_exit():
             old_state = manager.state
             manager.state = State.EXIT_GUI

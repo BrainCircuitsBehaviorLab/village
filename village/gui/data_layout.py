@@ -12,6 +12,7 @@ from pandas import DataFrame
 from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, QTimer, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import (
+    QAbstractItemView,
     QAbstractScrollArea,
     QCheckBox,
     QDateTimeEdit,
@@ -48,6 +49,7 @@ class TableView(QTableView):
         super().__init__()
         self.setModel(model)
         self.model_parent = model
+        self.setEditTriggers(QAbstractItemView.DoubleClicked)
 
     def mouseDoubleClickEvent(self, event) -> None:
         index: QModelIndex = self.indexAt(event.pos())
@@ -85,6 +87,7 @@ class TableView(QTableView):
                     else:
                         manager.state = State.MANUAL_MODE
                         super().mouseDoubleClickEvent(event)
+                        self.save_changes_in_df()
                 elif flags & Qt.ItemIsEditable:
                     text = "Wait until the box is empty before editing the tables."
                     QMessageBox.information(self, "EDIT", text)
@@ -417,6 +420,12 @@ class DataLayout(Layout):
         self.page2Layout.start_video(path)
 
     def change_to_plot(self, path: str) -> None:
+        if manager.table == DataTable.SUBJECTS:
+            if self.page1Layout.df["name"].duplicated().any():
+                text = "There are repeated names in the subjects table."
+                QMessageBox.information(self.window, "WARNING", text)
+                return
+
         self.central_layout.setCurrentWidget(self.page3)
         pixmap = QPixmap()
 
@@ -530,6 +539,17 @@ class DataLayout(Layout):
         elif self.central_layout.currentIndex() == 2:
             self.page3Layout.update_gui()
 
+    def change_layout(self, auto: bool = False) -> bool:
+        if manager.table == DataTable.SUBJECTS:
+            if self.page1Layout.df["name"].duplicated().any():
+                text = "There are repeated names in the subjects table."
+                QMessageBox.information(self.window, "WARNING", text)
+                return False
+            else:
+                return True
+        else:
+            return True
+
 
 class DfLayout(Layout):
     plot_change_requested = pyqtSignal(str)
@@ -539,6 +559,7 @@ class DfLayout(Layout):
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.df = DataFrame()
         self.complete_df = DataFrame()
+        self.video_selected_path: str = ""
         self.draw()
 
     def draw(self) -> None:
@@ -668,6 +689,12 @@ class DfLayout(Layout):
         return model
 
     def change_data_table(self, value: str, key: str) -> None:
+        if manager.table == DataTable.SUBJECTS:
+            if self.df["name"].duplicated().any():
+                text = "There are repeated names in the subjects table."
+                QMessageBox.information(self.window, "WARNING", text)
+                return
+
         if value != "":
             if manager.table != DataTable(value):
                 manager.table = DataTable(value)
@@ -792,7 +819,7 @@ class DfLayout(Layout):
                 self.connect_button_to_add(self.third_button)
                 self.connect_button_to_delete(self.fourth_button)
                 self.connect_button_to_plot(self.fifth_button)
-                self.second_button.setEnabled(True)
+                self.third_button.setEnabled(True)
                 if selected_indexes:
                     self.fourth_button.setEnabled(True)
                     self.fifth_button.setEnabled(True)
@@ -839,6 +866,8 @@ class DfLayout(Layout):
     def data_button_clicked(self) -> None:
         p0 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[0]
         p1 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[1]
+        p3 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[3]
+        self.video_selected_path = p3
         message = "Can not read file: " + p0
         try:
             manager.old_session_df = pd.read_csv(p0, sep=";")
@@ -851,6 +880,8 @@ class DfLayout(Layout):
     def data_raw_button_clicked(self) -> None:
         p0 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[0]
         p1 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[1]
+        p3 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[3]
+        self.video_selected_path = p3
         message = "Can not read file: " + p0
         try:
             manager.old_session_df = pd.read_csv(p0, sep=";")
@@ -917,6 +948,17 @@ class DfLayout(Layout):
                 path = self.get_path_from_events_row(selected_row)
             elif manager.table == DataTable.SESSIONS_SUMMARY:
                 path = self.get_paths_from_sessions_summary_row(selected_row)[3]
+            elif manager.table == DataTable.OLD_SESSION:
+                # TODO add the timing of the row
+                path = self.video_selected_path
+            elif manager.table == DataTable.OLD_SESSION_RAW:
+                # TODO add the timing of the row
+                path = self.video_selected_path
+        else:
+            if manager.table == DataTable.OLD_SESSION:
+                path = self.video_selected_path
+            elif manager.table == DataTable.OLD_SESSION_RAW:
+                path = self.video_selected_path
         self.video_change_requested.emit(path)
 
     def plot_button_clicked(self) -> None:

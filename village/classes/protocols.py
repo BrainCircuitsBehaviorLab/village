@@ -77,6 +77,12 @@ class PyBpodProtocol:
     def send_softcode(self, idx: int) -> None:
         return
 
+    def led(self, i: int) -> None:
+        return
+
+    def water(self, i: int) -> None:
+        return
+
 
 class TelegramBotProtocol:
     error: str = "Error connecting to the telegram_bot "

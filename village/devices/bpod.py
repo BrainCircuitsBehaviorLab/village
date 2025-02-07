@@ -1,4 +1,5 @@
 import socket
+import threading
 import time
 import traceback
 from typing import Any, Callable
@@ -128,8 +129,6 @@ class PyBpod(PyBpodProtocol):
     def manual_override_input(self, message: str) -> None:
         channel_name, channel_number, value = parse_input_to_tuple_override(message)
 
-        print(channel_name, channel_number, value)
-
         self.bpod.manual_override(
             channel_type=Bpod.ChannelTypes.INPUT,
             channel_name=channel_name,
@@ -139,8 +138,6 @@ class PyBpod(PyBpodProtocol):
 
     def manual_override_output(self, message: str | tuple) -> None:
         channel_name, channel_number, value = parse_output_to_tuple_override(message)
-
-        print(channel_name, channel_number, value)
 
         self.bpod.manual_override(
             channel_type=Bpod.ChannelTypes.OUTPUT,
@@ -162,6 +159,27 @@ class PyBpod(PyBpodProtocol):
         self.connected = True
         self.functions = functions
         self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
+
+    def led(self, i: int) -> None:
+        thread = threading.Thread(target=self.led_thread, args=(i,))
+        thread.start()
+
+    def led_thread(self, i: int) -> None:
+        port = f"PWM{i}"
+        self.manual_override_output((port, 255))
+        time.sleep(1)
+        self.manual_override_output((port, 0))
+        self.close()
+
+    def water(self, i: int) -> None:
+        thread = threading.Thread(target=self.water_thread, args=(i,))
+        thread.start()
+
+    def water_thread(self, i: int) -> None:
+        self.manual_override_output("Valve" + str(i))
+        time.sleep(1)
+        self.manual_override_output("Valve" + str(i) + "Off")
+        self.close()
 
     def clean(self) -> None:
         self.add_state(

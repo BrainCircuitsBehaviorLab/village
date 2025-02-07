@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import traceback
 from functools import partial
+from pathlib import Path
 from typing import TYPE_CHECKING, Type, Union
 
 import pandas as pd
@@ -21,6 +23,7 @@ from village.classes.task import Task
 from village.gui.layout import Layout
 from village.log import log
 from village.manager import manager
+from village.settings import settings
 
 if TYPE_CHECKING:
     from village.classes.task import Task
@@ -163,11 +166,12 @@ class TasksLayout(Layout):
                 line_edit.setEnabled(False)
         elif self.testing_training:
             self.run_task_button.setText("TEST TRAINING")
-            self.run_task_button.setEnabled(True)
-            for button in self.task_buttons:
-                button.setEnabled(True)
-            for line_edit in self.line_edits.values():
-                line_edit.setEnabled(True)
+            self.right_layout_general.delete_optional_widgets("optional2")
+            if self.subject_index != 0:
+                self.run_task_button.setEnabled(True)
+            else:
+                self.run_task_button.setEnabled(False)
+
         elif self.selected != "":
             self.run_task_button.setText("RUN TASK")
             self.run_task_button.setEnabled(True)
@@ -329,27 +333,56 @@ class TasksLayout(Layout):
 
     def run_task_button_clicked(self) -> None:
         wrong_keys = self.change_properties()
-        if len(wrong_keys) == 0:
-            manager.task.settings = manager.training.settings
-            manager.task.training = manager.training
-            if self.testing_training:
+        if self.testing_training:
+            if len(wrong_keys) <= 2:
+                manager.task.settings = manager.training.settings
+                manager.task.training = manager.training
                 try:
-                    manager.task.training.df = pd.read_csv(
-                        manager.task.subject_path, sep=";"
+                    subject = manager.task.subject
+                    sessions_directory = settings.get("SESSIONS_DIRECTORY")
+                    subject_path = str(
+                        Path(sessions_directory, subject, subject + ".csv")
                     )
+                    manager.task.training.df = pd.read_csv(subject_path, sep=";")
+                    manager.task.training.subject = manager.task.subject
+                    last_task = manager.task.training.df["task"].iloc[-1]
+                    manager.task.training.last_task = last_task
                     manager.task.training.update_training_settings()
+                    manager.training = manager.task.training
+
+                    text = ""
+                    manager.training.settings = manager.task.settings
+                    settings_dict = manager.training.get_dict(exclude=["observations"])
+
+                    for key, value in settings_dict.items():
+                        text += f"{key}: {value}\n"
+                    QMessageBox.information(self.window, "Next settings", text)
+
                 except Exception:
-                    pass
+                    text = log.clean_text(
+                        traceback.format_exc(), "Error updating the training settings"
+                    )
+                    text = text.replace("  |  ", "\n")
+                    QMessageBox.information(self.window, "ERROR", text)
             else:
+                QMessageBox.information(
+                    self.window,
+                    "ERROR",
+                    "The following settings are wrong:\n" + "\n".join(wrong_keys),
+                )
+        else:
+            if len(wrong_keys) == 0:
+                manager.task.settings = manager.training.settings
+                manager.task.training = manager.training
                 manager.state = State.LAUNCH_MANUAL
                 self.monitor_button_clicked()
                 self.update_gui()
-        else:
-            QMessageBox.information(
-                self.window,
-                "ERROR",
-                "The following settings are wrong:\n" + "\n".join(wrong_keys),
-            )
+            else:
+                QMessageBox.information(
+                    self.window,
+                    "ERROR",
+                    "The following settings are wrong:\n" + "\n".join(wrong_keys),
+                )
 
     def create_label_and_value(
         self,

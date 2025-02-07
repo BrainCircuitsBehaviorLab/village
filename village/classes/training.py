@@ -93,10 +93,10 @@ class Training:
     #             types[name] = type(value)
     #     return types
 
-    def get_dict(self) -> dict[str, Any]:
+    def get_dict(self, exclude: list[str] = []) -> dict[str, Any]:
         properties = {}
         for name in self.get_settings_names():
-            if hasattr(self.settings, name):
+            if hasattr(self.settings, name) and name not in exclude:
                 value = getattr(self.settings, name)
                 properties[name] = value
         return properties
@@ -109,8 +109,8 @@ class Training:
                 properties[name] = value
         return properties
 
-    def get_jsonstring(self) -> str:
-        return json.dumps(self.get_dict())
+    def get_jsonstring(self, exclude: list[str] = []) -> str:
+        return json.dumps(self.get_dict(exclude=exclude))
 
     def load_settings_from_dict(self, current_dict: dict[str, Any]) -> list[str]:
         wrong_keys, current_dict = self.correct_types_in_dict(current_dict)

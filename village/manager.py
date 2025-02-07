@@ -469,7 +469,6 @@ class Manager:
         return self.raw_session_df
 
     def get_both_sessions_dfs(self) -> list[pd.DataFrame]:
-        # TODO
         df = self.update_session_df()
         return [df, self.task.session_df]
 
@@ -479,8 +478,25 @@ class Manager:
         )
         if save:
             self.save_to_sessions_summary(duration, trials, water, settings_str)
+            try:
+                self.save_to_subjects()
+            except Exception:
+                log.alarm(
+                    "Error updating the training settings for task: " + self.task.name,
+                    subject=self.subject.name,
+                    exception=traceback.format_exc(),
+                )
+
         log.end(task=self.task.name, subject=self.subject.name)
         manager.sessions.add_timestamp()
+
+    def save_to_subjects(self) -> None:
+        df = self.subjects.df.copy()
+        self.training.settings = self.task.settings
+        next_settings = self.training.get_jsonstring(exclude=["observations"])
+        df.loc[df["name"] == manager.subject.name, "next_settings"] = next_settings
+        self.subjects.df = df
+        self.subjects.save_from_df(self.training)
 
     def save_to_sessions_summary(
         self, duration: float, trials: int, water: int, settings_used_str: str
