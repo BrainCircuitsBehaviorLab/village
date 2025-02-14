@@ -669,10 +669,6 @@ class DfLayout(Layout):
     ) -> Table:
 
         model = Table(df, self, editable)
-        # model.table_view.setFixedSize(
-        #     width * self.column_width, height * self.row_height
-        # )
-
         model.table_view.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         model.table_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         model.table_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)

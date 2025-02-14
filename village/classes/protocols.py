@@ -16,13 +16,13 @@ class PyBpodProtocol:
     session: Session | Any
     connected: bool = False
 
-    def reconnect(self, functions: list[Callable]) -> None:
+    def connect(self, functions: list[Callable]) -> None:
         return
 
     def add_state(
         self,
         state_name: Any,
-        state_timer: int = 0,
+        state_timer: float = 0,
         state_change_conditions: Any = {},
         output_actions: Any = (),
     ) -> None:
@@ -77,10 +77,13 @@ class PyBpodProtocol:
     def send_softcode(self, idx: int) -> None:
         return
 
-    def led(self, i: int) -> None:
+    def led(self, i: int, close: bool) -> None:
         return
 
-    def water(self, i: int) -> None:
+    def water(self, i: int, close: bool) -> None:
+        return
+
+    def poke(self, i: int, close: bool) -> None:
         return
 
 

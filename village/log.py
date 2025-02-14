@@ -90,14 +90,5 @@ class Log:
 
         return description
 
-    # def clean_text(self, exception: str | None, description: str) -> str:
-    #     if exception is not None:
-    #         exception = exception.replace(";", " ")
-    #         exception = exception.replace("Traceback (most recent call last):", "")
-    #         exception = "  |  ".join(exception.splitlines())
-    #         exception = re.sub(r"\^+", "", exception)
-    #         description += "  |  " + exception
-    #     return description
-
 
 log = Log()

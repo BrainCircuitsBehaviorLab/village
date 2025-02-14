@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from village.classes.enums import Actions, Active, Cycle, Info
+from village.classes.enums import Actions, Active, Cycle, Info, ScreenActive
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.scale import scale
@@ -272,31 +272,37 @@ class MonitorLayout(Layout):
         self.page3_layout.addWidget(self.scroll_area)
         self.page3.setLayout(self.page3_layout)
 
+        self.page4 = QWidget(self.central_widget)
+        self.page4.setStyleSheet("background-color:white")
+        self.page4Layout = VirtualMouseLayout(self.window, 16, 36)
+        self.page4.setLayout(self.page4Layout)
+
         self.central_layout.addWidget(self.page1)
         self.central_layout.addWidget(self.page2)
         self.central_layout.addWidget(self.page3)
+        self.central_layout.addWidget(self.page4)
 
         self.bottom_layout = QStackedLayout()
         self.addLayout(self.bottom_layout, 34, 0, 16, 212)
 
-        self.page4 = QWidget(self.bottom_widget)
-        self.page4.setStyleSheet("background-color:white")
-        self.page4Layout = InfoLayout(self.window, 16, 212)
-        self.page4.setLayout(self.page4Layout)
-
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
-        self.page5Layout = CorridorLayout(self.window, 16, 212)
+        self.page5Layout = InfoLayout(self.window, 16, 212)
         self.page5.setLayout(self.page5Layout)
 
         self.page6 = QWidget(self.bottom_widget)
         self.page6.setStyleSheet("background-color:white")
-        self.page6Layout = CorridorPlotLayout(self.window, 16, 212)
+        self.page6Layout = CorridorLayout(self.window, 16, 212)
         self.page6.setLayout(self.page6Layout)
 
-        self.bottom_layout.addWidget(self.page4)
+        self.page7 = QWidget(self.bottom_widget)
+        self.page7.setStyleSheet("background-color:white")
+        self.page7Layout = CorridorPlotLayout(self.window, 16, 212)
+        self.page7.setLayout(self.page7Layout)
+
         self.bottom_layout.addWidget(self.page5)
         self.bottom_layout.addWidget(self.page6)
+        self.bottom_layout.addWidget(self.page7)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
             "RFID reader: ", 5, 90, 12, 2, "black"
@@ -410,13 +416,13 @@ class MonitorLayout(Layout):
         self.update_status_label_buttons()
         match manager.info:
             case manager.info.SYSTEM_INFO:
-                self.page4Layout.update_gui()
-            case manager.info.DETECTION_SETTINGS:
                 self.page5Layout.update_gui()
+            case manager.info.DETECTION_SETTINGS:
+                self.page6Layout.update_gui()
             case manager.info.DETECTION_PLOT:
                 if manager.detection_change:
                     manager.detection_change = False
-                    self.page6Layout.update_gui()
+                    self.page7Layout.update_gui()
 
     def change_layout(self, auto: bool = False) -> bool:
         cam_corridor.stop_preview_window()
@@ -653,12 +659,108 @@ class PortsLayout(Layout):
             self.buttons.append(button2)
 
     def led_clicked(self, i=0) -> None:
-        manager.task.bpod.reconnect(manager.functions)
-        manager.task.bpod.led(i)
+        if not manager.task.bpod.connected:
+            manager.task.bpod.connect(manager.functions)
+            close = True
+        else:
+            close = False
+        manager.task.bpod.led(i, close)
 
     def water_clicked(self, i=0) -> None:
-        manager.task.bpod.reconnect(manager.functions)
-        manager.task.bpod.water(i)
+        if not manager.task.bpod.connected:
+            manager.task.bpod.connect(manager.functions)
+            close = True
+        else:
+            close = False
+        manager.task.bpod.water(i, close)
+
+
+class VirtualMouseLayout(Layout):
+    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self.lbs: list[LabelButtons] = []
+        self.buttons: list[QPushButton] = []
+        self.draw()
+
+    def draw(self) -> None:
+        for i in range(8):
+            button = self.create_and_add_button(
+                "POKE" + str(i + 1),
+                i * 2,
+                0,
+                16,
+                2,
+                partial(self.poke_clicked, i + 1),
+                "Virtual mouse poke in port" + str(i),
+            )
+            self.buttons.append(button)
+
+        self.x_label = self.create_and_add_label(
+            "X coordinate",
+            1,
+            22,
+            12,
+            2,
+            "black",
+            description="X coordinate of the touch screen",
+        )
+
+        self.y_label = self.create_and_add_label(
+            "Y coordinate",
+            5,
+            22,
+            12,
+            2,
+            "black",
+            description="Y coordinate of the touch screen",
+        )
+
+        self.x_line_edit = self.create_and_add_line_edit(
+            "0", 3, 23, 8, 2, self.coordinates_changed
+        )
+        self.y_line_edit = self.create_and_add_line_edit(
+            "0", 7, 23, 8, 2, self.coordinates_changed
+        )
+        self.touch = self.create_and_add_button(
+            "TOUCH SCREEN",
+            10,
+            18,
+            16,
+            2,
+            self.touch_clicked,
+            "Deliver water for 0.1 seconds" + str(i),
+        )
+
+        if settings.get("USE_SCREEN") != ScreenActive.TOUCHSCREEN:
+            self.x_label.hide()
+            self.y_label.hide()
+            self.x_line_edit.hide()
+            self.y_line_edit.hide()
+            self.touch.hide()
+
+    def coordinates_changed(self) -> None:
+        return
+
+    def poke_clicked(self, i=0) -> None:
+        if not manager.task.bpod.connected:
+            manager.task.bpod.connect(manager.functions)
+            close = True
+        else:
+            close = False
+        manager.task.bpod.poke(i, close)
+
+    def touch_clicked(self) -> None:
+        x = self.x_line_edit.text()
+        y = self.y_line_edit.text()
+        try:
+            x = int(x)
+            y = int(y)
+            if x >= 0 and y >= 0:
+                print(x, y)
+                # TODO touch screen
+        except Exception:
+            self.x_line_edit.setText("0")
+            self.y_line_edit.setText("0")
 
 
 class FunctionsLayout(Layout):

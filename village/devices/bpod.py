@@ -50,14 +50,14 @@ class PyBpod(PyBpodProtocol):
         self.sma = StateMachine(self.bpod)
         self.softcode = SoftCode()
         self.session = self.bpod.session
-        self.connected = True
+        self.connected = False
         self.error = ""
         self.functions: list[Callable] = []
 
     def add_state(
         self,
         state_name: Any,
-        state_timer: int = 0,
+        state_timer: float = 0,
         state_change_conditions: Any = {},
         output_actions: Any = (),
     ) -> None:
@@ -150,9 +150,8 @@ class PyBpod(PyBpodProtocol):
         if 1 <= data <= 99:
             self.functions[data]()
 
-    def reconnect(self, functions: list[Callable]) -> None:
-        if not self.connected:
-            self.bpod = Bpod()
+    def connect(self, functions: list[Callable]) -> None:
+        self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
         self.softcode = SoftCode()
         self.session = self.bpod.session
@@ -160,26 +159,57 @@ class PyBpod(PyBpodProtocol):
         self.functions = functions
         self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
 
-    def led(self, i: int) -> None:
-        thread = threading.Thread(target=self.led_thread, args=(i,))
+    def led(self, i: int, close: bool) -> None:
+        thread = threading.Thread(
+            target=self.led_thread,
+            args=(
+                i,
+                close,
+            ),
+        )
         thread.start()
 
-    def led_thread(self, i: int) -> None:
-        port = f"PWM{i}"
+    def led_thread(self, i: int, close: bool) -> None:
+        port = "PWM" + str(i)
         self.manual_override_output((port, 255))
         time.sleep(1)
         self.manual_override_output((port, 0))
-        self.close()
+        if close:
+            self.close()
 
-    def water(self, i: int) -> None:
-        thread = threading.Thread(target=self.water_thread, args=(i,))
+    def water(self, i: int, close: bool) -> None:
+        thread = threading.Thread(
+            target=self.water_thread,
+            args=(
+                i,
+                close,
+            ),
+        )
         thread.start()
 
-    def water_thread(self, i: int) -> None:
+    def water_thread(self, i: int, close: bool) -> None:
         self.manual_override_output("Valve" + str(i))
         time.sleep(1)
         self.manual_override_output("Valve" + str(i) + "Off")
-        self.close()
+        if close:
+            self.close()
+
+    def poke(self, i: int, close: bool) -> None:
+        thread = threading.Thread(
+            target=self.poke_thread,
+            args=(
+                i,
+                close,
+            ),
+        )
+        thread.start()
+
+    def poke_thread(self, i: int, close: bool) -> None:
+        self.manual_override_input("Port" + str(i) + "In")
+        time.sleep(0.1)
+        self.manual_override_input("Port" + str(i) + "Out")
+        if close:
+            self.close()
 
     def clean(self) -> None:
         self.add_state(
@@ -207,6 +237,7 @@ def get_bpod() -> PyBpodProtocol:
     try:
         bpod = PyBpod()
         log.info("Bpod successfully initialized")
+        bpod.close()
         return bpod
     except Exception:
         log.error("Could not initialize bpod", exception=traceback.format_exc())

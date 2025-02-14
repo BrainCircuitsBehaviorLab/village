@@ -428,7 +428,7 @@ class Manager:
 
     def run_task(self) -> None:
         try:
-            self.task.bpod.reconnect(self.functions)
+            self.task.bpod.connect(self.functions)
             self.task.run()
         except Exception:
             if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:

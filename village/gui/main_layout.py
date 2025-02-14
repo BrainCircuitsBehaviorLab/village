@@ -11,21 +11,6 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 
-# from PyQt5.QtCore import (
-#     qInstallMessageHandler,
-# )
-
-# def qt_message_handler(mode, context, message) -> None:
-#     pass
-#     # if mode == QtWarningMsg:
-#     # if True:
-#     #     print(f"Qt Warning: {message}")
-#     #     print(f"  File: {context.file}")
-#     #     print(f"  Line: {context.line}")
-
-# qInstallMessageHandler(qt_message_handler)
-
-
 class MainLayout(Layout):
     def __init__(self, window: GuiWindow, first_draw: bool = False) -> None:
         super().__init__(window)

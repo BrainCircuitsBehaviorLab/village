@@ -85,14 +85,6 @@ class Training:
 
         return properties
 
-    # def get_types(self) -> dict[str, Any]:
-    #     types = {}
-    #     for name in self.get_settings_names():
-    #         if hasattr(self.settings, name):
-    #             value = getattr(self.settings, name)
-    #             types[name] = type(value)
-    #     return types
-
     def get_dict(self, exclude: list[str] = []) -> dict[str, Any]:
         properties = {}
         for name in self.get_settings_names():

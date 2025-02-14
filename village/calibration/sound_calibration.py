@@ -16,7 +16,6 @@ class SoundCalibration:
         self.duration = duration
 
     def run(self) -> None:
-
         if self.freq == 0:
             sound = whitenoise_generator(
                 duration=self.duration,

@@ -119,12 +119,11 @@ Then, you need to configure the system to recognize a screen even if none is phy
 ```
 sudo nano /boot/firmware/cmdline.txt
 ```
-5. Add the following text: `vc4.fvc4.force_hotplug=1` if you are using only one screen,
- or `vc4.fvc4.force_hotplug=3` if you are using two screens.
+5. Add the following text: `vc4.force_hotplug=1 video=HDMI-A-1:1280x720@60D` if you are using only one screen, or `vc4.force_hotplug=3 video=HDMI-A-1:1280x720@60D video=HDMI-A-2:1280x720@60D` if you are using two screens.
 
-Explanation of values: (1 makes the system operate as if a screen is connected to HDMI 1). (2 makes the system operate as if a screen is connected to HDMI 2). (3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2).
+Explanation of values: (=1 makes the system operate as if a screen is connected to HDMI 1). (=2 makes the system operate as if a screen is connected to HDMI 2). (=3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2). HDMI-A-1 and HDMI-A-2 are used to specify the desired resolution.
 
-6. Change the resolution of the screen (or screens) to 1280 x 720: `Preferences` ->
+6. After every reboot, the system will recognize two screens at the specified resolution. You can change the screen resolution (or resolutions) at any time in: `Preferences` ->
  `Screen Configuration`.
 
 

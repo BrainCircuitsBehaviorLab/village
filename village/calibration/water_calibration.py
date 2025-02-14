@@ -4,24 +4,16 @@ from village.classes.task import Event, Task
 class WaterCalibration(Task):
     def __init__(self) -> None:
         super().__init__()
-
-        self.info = """
-
-        Water Calibration Task
-        -------------------
-
-        Deliver water to each valve for a specified time.
-        """
         self.indices: list[int] = []
         self.times: list[float] = []
 
-    def start(self):
+    def start(self) -> None:
         self.states = ["valve" + str(i + 1) for i in self.indices] + ["wait"]
         self.outputs = [
             [("PWM" + str(i + 1), 255), "Valve" + str(i + 1)] for i in self.indices
         ]
 
-    def create_trial(self):
+    def create_trial(self) -> None:
         for i in range(len(self.states) - 1):
             self.bpod.add_state(
                 state_name=self.states[i],
@@ -37,8 +29,8 @@ class WaterCalibration(Task):
             output_actions=[],
         )
 
-    def after_trial(self):
+    def after_trial(self) -> None:
         pass
 
-    def close(self):
+    def close(self) -> None:
         pass

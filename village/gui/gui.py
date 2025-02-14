@@ -52,7 +52,6 @@ class Gui:
         log.end("VILLAGE")
         cam_corridor.stop_record()
         cam_box.stop_record()
-        # bpod.close()
         self.q_app.quit()
         sys.exit()
 
@@ -60,7 +59,6 @@ class Gui:
         log.end("VILLAGE")
         cam_corridor.stop_record()
         cam_box.stop_record()
-        # bpod.close()
         settings.sync()
         self.q_app.quit()
         python = sys.executable

@@ -125,7 +125,7 @@ class Collection(EventProtocol):
         df = df[df["calibration_number"] == max_values]
         return df
 
-    def get_valve_time(self, port: int, water: float) -> float:
+    def get_valve_time(self, port: int, volume: float) -> float:
         try:
             calibration_df = self.df[self.df["port_number"] == port]
             max_calibration = calibration_df["calibration_number"].max()
@@ -144,7 +144,7 @@ class Collection(EventProtocol):
                 coeffs = np.polyfit(x, y, 2)
                 a, b, c = coeffs
 
-            coeffs_for_root = [a, b, c - water]
+            coeffs_for_root = [a, b, c - volume]
             roots = np.roots(coeffs_for_root)
 
             valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
@@ -157,7 +157,7 @@ class Collection(EventProtocol):
             text = f"""
             \n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n
             It is not possible to provide a valid time value
-            for a water delivery of {water} ul for the port {port}.\n
+            for a water delivery of {volume} ul for the port {port}.\n
             1. Make sure you have calibrated the valves/pumps you are using.\n
             2. Make sure the water you want to give is within calibration range.\n
             3. Ultimately, check water_calibration.csv in 'data'.\n

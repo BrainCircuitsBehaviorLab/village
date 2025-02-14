@@ -23,6 +23,7 @@ class SettingsLayout(Layout):
         super().__init__(window)
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
+        self.critical_changes = False
         self.draw(all=True, modify="")
 
     def draw(self, all: bool, modify) -> None:
@@ -203,8 +204,26 @@ class SettingsLayout(Layout):
         self.save_button.setDisabled(True)
         manager.changing_settings = False
 
+        critical_keys = [
+            "SOUND_DEVICE",
+            "SAMPLERATE",
+            "SCREEN_SIZE_MM",
+            "SCREEN_RESOLUTION",
+            "BPOD_SERIAL_PORT",
+            "BPOD_NET_PORT",
+            "BPOD_BAUDRATE",
+            "BPOD_SYNC_CHANNEL",
+            "BPOD_SYNC_MODE",
+            "TELEGRAM_TOKEN",
+            "TELEGRAM_CHAT",
+            "TELEGRAM_USERS",
+        ]
+
         for i, line_edit in enumerate(self.line_edits):
             s = self.line_edits_settings[i]
+
+            if s.key in critical_keys and line_edit.text() != str(settings.get(s.key)):
+                self.critical_changes = True
 
             if s.value_type == str:
                 value = line_edit.text()
@@ -262,6 +281,22 @@ class SettingsLayout(Layout):
 
         cam_corridor.change = True
         cam_box.change = True
+
+        if self.critical_changes:
+            text = (
+                "Some of the setting changes require a system restart to take effect."
+            )
+            reply = QMessageBox.question(
+                self.window,
+                "Restart",
+                text,
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes,
+            )
+            if reply == QMessageBox.Yes:
+                self.window.reload_app()
+
+        self.critical_changes = False
 
     def restore_button_clicked(self) -> None:
         reply = QMessageBox.question(
@@ -448,6 +483,8 @@ class SettingsLayout(Layout):
 
     def toggle_button_changed(self, value: str, key: str) -> None:
         modify = ""
+        if key in ("USE_SCREEN", "USE_SOUNDCARD"):
+            self.critical_changes = True
         if value == "OFF" and key == "USE_SOUNDCARD":
             self.delete_optional_widgets("SOUND SETTINGS")
         elif value == "ON":

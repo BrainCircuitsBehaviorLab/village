@@ -111,6 +111,7 @@ class Actions(SuperEnum):
     CORRIDOR = "CORRIDOR"
     PORTS = "PORTS"
     FUNCTIONS = "FUNCTIONS"
+    VIRTUAL_MOUSE = "VIRTUAL_MOUSE"
 
 
 class Info(SuperEnum):

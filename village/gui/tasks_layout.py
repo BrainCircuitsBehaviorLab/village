@@ -399,7 +399,18 @@ class TasksLayout(Layout):
         label.setProperty("type", "optional2")
         if name in manager.training.gui_tabs_restricted:
             optional_values = list(map(str, manager.training.gui_tabs_restricted[name]))
-            default_index = optional_values.index(value)
+            try:
+                default_index = optional_values.index(value)
+            except Exception:
+                try:
+                    default_index = optional_values.index(str(int(float(value))))
+                except Exception:
+                    default_index = 0
+                    text = "The value for the property " + name + " (" + value + ")"
+                    text += " is not in the list of possible values "
+                    text += str(optional_values)
+                    log.error(text)
+                    QMessageBox.information(self.window, "ERROR", text)
             line_edit = layout.create_and_add_combo_box(
                 name,
                 row,
