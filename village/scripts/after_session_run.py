@@ -10,6 +10,7 @@ from village.settings import settings
 
 class AfterSessionRun:
     def __init__(self):
+        # TODO: get all this from settings
         self.data_dir = settings["DATA_DIRECTORY"]
         self.destination_dir = "/archive/training_village"
         self.remote_user = "training_village"
