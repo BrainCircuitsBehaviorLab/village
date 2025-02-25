@@ -5,14 +5,14 @@
 """
 
 from village.scripts.backup_to_cluster import main as backup_to_cluster
+from village.settings import settings
 
 
 class AfterSessionRun:
     def __init__(self):
-        # self.data_dir = settings["DATA_DIRECTORY"]
-        self.data_dir = "/home/hmv/village/resources"
-        self.destination_dir = "/archive/data/behavioral_data"
-        self.remote_user = "hvergara"
+        self.data_dir = settings["DATA_DIRECTORY"]
+        self.destination_dir = "/archive/training_village"
+        self.remote_user = "training_village"
         self.remote_host = "cluster"
         self.port = 4022
 
