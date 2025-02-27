@@ -31,7 +31,7 @@ class Rfid:
         while self.running:
             try:
                 line = self.s.readline().decode("utf-8").strip()
-                if len(line) == 9:
+                if len(line) > 8:
                     self.id_history.append((self.id, time_utils.now()))
                     self.clean_old_ids()
                     self.update_multiple()

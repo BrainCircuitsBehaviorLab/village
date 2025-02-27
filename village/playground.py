@@ -67,28 +67,3 @@
 #     print(item)
 #     print(parse_input_to_tuple_override(item))
 #     print("")
-
-import serial
-
-port = "/dev/ttyAMA0"
-baudrate = 9600
-
-try:
-    s = serial.Serial(port, baudrate, timeout=1)  # Timeout para evitar bloqueos
-    if s.is_open:
-        print(f"El puerto {port} está abierto y listo para recibir datos.")
-    else:
-        print(f"No se pudo abrir el puerto {port}.")
-except serial.SerialException as e:
-    print(f"Error al acceder al puerto {port}: {e}")
-
-
-while True:
-    try:
-        line = s.readline().decode("utf-8").strip()
-        if len(line) == 9:
-            print(line)
-        else:
-            print("No se recibió nada.")
-    except UnicodeDecodeError:
-        break
