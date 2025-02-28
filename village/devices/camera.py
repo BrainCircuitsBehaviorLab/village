@@ -563,5 +563,5 @@ def get_camera(index: int, name: str) -> CameraProtocol:
         return CameraProtocol()
 
 
-cam_corridor = get_camera(0, "CORRIDOR")
-cam_box = get_camera(1, "BOX")
+cam_corridor = get_camera(1, "CORRIDOR")
+cam_box = get_camera(0, "BOX")

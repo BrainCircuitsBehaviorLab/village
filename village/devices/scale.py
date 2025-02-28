@@ -10,7 +10,6 @@ import smbus2
 
 from village.classes.protocols import ScaleProtocol
 from village.log import log
-from village.scripts import time_utils
 from village.settings import settings
 
 
@@ -21,8 +20,8 @@ class Scale(ScaleProtocol):
         self.REG_DATA_GET_RAM_DATA = 0x66  # Get sensor raw data
         self.rxbuf = [0, 0, 0, 0]
         self.bus = 1
-        self.calibration: float = settings.get("SCALE_CALIBRATION_VALUE")
-        self.ratio: float = settings.get("WEIGHT_DEVIATION_RATIO")
+        self.calibration: float = float(settings.get("SCALE_CALIBRATION_VALUE"))
+        self.ratio: float = float(settings.get("WEIGHT_DEVIATION_RATIO"))
         self.offset = 0.0
         self.i2cbus = smbus2.SMBus(self.bus)
         self.error = ""
@@ -44,6 +43,8 @@ class Scale(ScaleProtocol):
             new_calibration = raw_value / weight
             self.calibration = new_calibration
             settings.set("SCALE_CALIBRATION_VALUE", new_calibration)
+            settings.set("SCALE_WEIGHT_TO_CALIBRATE", weight)
+
         except Exception:
             log.error("Error calibrating scale", exception=traceback.format_exc())
 
@@ -54,11 +55,11 @@ class Scale(ScaleProtocol):
     def get_weight_subject(self) -> float:
         return 0.0
 
-    @time_utils.measure_time
     def get_weight(self) -> float:
         try:
             value, correct = self.average(5)
             if correct:
+                print(value, self.offset, self.calibration)
                 return abs((value - self.offset) / self.calibration)
             else:
                 return 0.0

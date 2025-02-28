@@ -372,10 +372,24 @@ extra_settings = [
         "The github repository to download.",
     ),
     Setting(
-        "SCALE_CALIBRATION_VALUE",
+        "SCALE_WEIGHT_TO_CALIBRATE",
         20,
-        int,
+        float,
         "Weight in grams used to calibrate the scale.",
+    ),
+    Setting(
+        "SCALE_CALIBRATION_VALUE",
+        1,
+        float,
+        "Factor to transform electric signal to grams.",
+    ),
+    Setting(
+        "WEIGHT_DEVIATION_RATIO",
+        0.25,
+        float,
+        """The standard deviation / mean ratio of the weight to consider it as correct.
+If the ratio is greater than this value, the weight is considered an outlier probably
+because the animal is moving or it is not completely on the scale.""",
     ),
     Setting("COLOR_AREA1", (0, 136, 0), tuple, "The color of the first area."),
     Setting("COLOR_AREA2", (204, 51, 170), tuple, "The color of the second area."),
@@ -418,14 +432,6 @@ wait before sending the same alarm again.""",
         int,
         """If the alarms 2 subjects in box or Subject in prohibited area are triggered,
 the minimum time in seconds to wait before sending the same alarm again.""",
-    ),
-    Setting(
-        "WEIGHT_DEVIATION_RATIO",
-        0.25,
-        float,
-        """The standard deviation / mean ratio of the weight to consider it as correct.
-If the ratio is greater than this value, the weight is considered an outlier probably
-because the animal is moving or it is not completely on the scale.""",
     ),
     Setting(
         "MATPLOTLIB_DPI",

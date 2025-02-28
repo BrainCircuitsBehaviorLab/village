@@ -131,7 +131,7 @@ class SoundDeviceProtocol:
         else "Error connecting to the sound_device "
     )
 
-    def load(self, sound1: Any, sound2: Any) -> None:
+    def load(self, left: Any, right: Any) -> None:
         return
 
     def play(self) -> None:

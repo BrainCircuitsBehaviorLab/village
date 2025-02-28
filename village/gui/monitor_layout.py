@@ -197,7 +197,7 @@ class LabelButtons:
         self.timer_increase2.stop()
         self.timer_decrease2.stop()
 
-        if self.name == "SCALE_CALIBRATION_VALUE":
+        if self.name == "SCALE_WEIGHT_TO_CALIBRATE":
             settings.set(self.name, self.label_value)
         else:
             coords = settings.get(self.name)
@@ -579,7 +579,7 @@ class MotorLayout(Layout):
             motor2.close_angle = val4
 
     def calibrate_scale_clicked(self) -> None:
-        val = settings.get("SCALE_CALIBRATION_VALUE")
+        val = settings.get("SCALE_WEIGHT_TO_CALIBRATE")
         self.reply = QDialog()
         self.reply.setWindowTitle("Calibrate scale")
         x = self.column_width * 90
@@ -606,7 +606,10 @@ class MotorLayout(Layout):
 
         if self.reply.exec_():
             try:
-                val = float(self.lineEdit.text())
+                if self.lineEdit.text() == "":
+                    val = float(self.lineEdit.placeholderText())
+                else:
+                    val = float(self.lineEdit.text())
                 if val > 0.1:
                     scale.calibrate(val)
                     log.info("Scale calibrated")

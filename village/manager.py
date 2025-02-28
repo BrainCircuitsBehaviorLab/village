@@ -200,6 +200,9 @@ class Manager:
                 module = importlib.import_module(module_name)
                 clsmembers = inspect.getmembers(module, inspect.isclass)
                 for _, cls in clsmembers:
+                    if cls.__module__ != module_name:
+                        continue
+
                     if issubclass(cls, Task) and cls != Task:
                         name = cls.__name__
                         _ = cls()

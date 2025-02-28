@@ -103,7 +103,8 @@ class Settings:
 
     def replace_extra_settings(self) -> None:
         for s in self.extra_settings:
-            self.saved_settings.setValue(s.key, s.value)
+            if self.saved_settings.value(s.key) is None:
+                self.saved_settings.setValue(s.key, s.value)
 
     def create_factory_settings_if_first_launch(self) -> None:
         if self.get("FIRST_LAUNCH") is None:
