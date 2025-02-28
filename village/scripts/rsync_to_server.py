@@ -39,6 +39,10 @@ def run_rsync(source_path, destination, remote_user, remote_host, port=22):
     # Ensure source path ends with / to copy contents
     source_path = os.path.join(source_path, "")
 
+    # Ensure the destination directory exists
+    destination_dir = os.path.dirname(destination)
+    subprocess.run(["ssh", "-p", str(port), f"{remote_user}@{remote_host}", f"mkdir -p {destination_dir}"])
+
     # Construct the rsync command with safe options
     rsync_cmd = [
         "rsync",

@@ -195,7 +195,7 @@ cluster_settings = [
     Setting("CLUSTER_USER", "training_village", str, "The cluster user."),
     Setting("CLUSTER_HOST", "cluster", str, "The cluster hostname."),
     Setting("CLUSTER_PORT", 4022, int, "The cluster port."),
-    Setting("CLUSTER_DESTINATION", "/archive/training_village", str, "The cluster destination."),
+    Setting("CLUSTER_DESTINATION", "/archive/training_village/", str, "The cluster destination."),
 ]
 
 bpod_settings = [
