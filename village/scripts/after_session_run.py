@@ -4,22 +4,23 @@
 2. It generates reports and plots (TODO: implement this).
 """
 
+from pathlib import Path
+
 from village.scripts.rsync_to_server import main as rsync_script
 from village.settings import settings
-from pathlib import Path
 
 
 class AfterSessionRun:
     def __init__(self):
-        self.data_dir = settings["DATA_DIRECTORY"]
-        self.destination_dir = settings["CLUSTER_DESTINATION"]
-        self.remote_user = settings["CLUSTER_USER"]
-        self.remote_host = settings["CLUSTER_HOST"]
-        self.port = settings["CLUSTER_PORT"]
+        self.data_dir = settings.get("DATA_DIRECTORY")
+        self.destination_dir = settings.get("CLUSTER_DESTINATION")
+        self.remote_user = settings.get("CLUSTER_USER")
+        self.remote_host = settings.get("CLUSTER_HOST")
+        self.port = settings.get("CLUSTER_PORT")
 
     def backup_to_server(self):
         # define the destination folder
-        project_folder = Path(self.data_dir).parent + "_data"
+        project_folder = str(Path(self.data_dir).parent.name) + "_data"
         rsync_script(
             source=self.data_dir,
             destination=f"{self.destination_dir}/{project_folder}",
