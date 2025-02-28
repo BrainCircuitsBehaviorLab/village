@@ -93,6 +93,16 @@ class SettingsLayout(Layout):
                 row += 2
 
         if all:
+            row += 4
+            name = "CLUSTER SETTINGS"
+            label = self.create_and_add_label(name, row, 128, 30, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.cluster_settings:
+                self.create_label_and_value(row, 128, s, name, width=20)
+                row += 2
+
+        if all:
             row = 6
             name = "SOUND SETTINGS"
             label = self.create_and_add_label(name, row, 44, 30, 2, "black")

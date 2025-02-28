@@ -191,6 +191,13 @@ telegram_settings = [
     ),
 ]
 
+cluster_settings = [
+    Setting("CLUSTER_USER", "training_village", str, "The cluster user."),
+    Setting("CLUSTER_HOST", "cluster", str, "The cluster hostname."),
+    Setting("CLUSTER_PORT", 4022, int, "The cluster port."),
+    Setting("CLUSTER_DESTINATION", "/archive/training_village", str, "The cluster destination."),
+]
+
 bpod_settings = [
     Setting(
         "BPOD_TARGET_FIRMWARE",
@@ -451,6 +458,7 @@ settings = Settings(
     screen_settings,
     touchscreen_settings,
     telegram_settings,
+    cluster_settings,
     bpod_settings,
     camera_settings,
     motor_settings,

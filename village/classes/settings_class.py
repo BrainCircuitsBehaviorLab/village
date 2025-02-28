@@ -50,6 +50,7 @@ class Settings:
         screen_settings: list[Setting],
         touchscreen_settings: list[Setting],
         telegram_settings: list[Setting],
+        cluster_settings: list[Setting],
         bpod_settings: list[Setting],
         camera_settings: list[Setting],
         motor_settings: list[Setting],
@@ -64,6 +65,7 @@ class Settings:
         self.screen_settings = screen_settings
         self.touchscreen_settings = touchscreen_settings
         self.telegram_settings = telegram_settings
+        self.cluster_settings = cluster_settings
         self.bpod_settings = bpod_settings
         self.camera_settings = camera_settings
         self.motor_settings = motor_settings
@@ -85,6 +87,7 @@ class Settings:
         self.all_settings = (
             self.restorable_settings
             + telegram_settings
+            + cluster_settings
             + camera_settings
             + motor_settings
             + extra_settings
