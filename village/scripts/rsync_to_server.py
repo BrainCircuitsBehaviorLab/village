@@ -8,7 +8,7 @@ import fire
 
 def setup_logging():
     """Configure logging to both file and console"""
-    logs_dir = "backup_to_cluster_logs"
+    logs_dir = "backup_to_server_logs"
     # Create logs directory if it doesn't exist
     if not os.path.exists(logs_dir):
         os.makedirs(logs_dir)
@@ -98,7 +98,7 @@ def run_rsync(source_path, destination, remote_user, remote_host, port=22):
 
 def main(source, destination, remote_user, remote_host, port=22):
     """
-    Main function to sync data to remote cluster using rsync
+    Main function to sync data to remote server using rsync
 
     Parameters:
     - source: Source directory path

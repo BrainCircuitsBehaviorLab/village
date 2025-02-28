@@ -94,11 +94,11 @@ class SettingsLayout(Layout):
 
         if all:
             row += 4
-            name = "CLUSTER SETTINGS"
+            name = "SERVER SETTINGS"
             label = self.create_and_add_label(name, row, 128, 30, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.cluster_settings:
+            for s in settings.server_settings:
                 self.create_label_and_value(row, 128, s, name, width=20)
                 row += 2
 

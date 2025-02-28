@@ -1,6 +1,6 @@
 # runs at the end of each session
 """
-1. It backs up the session data to a remote cluster using rsync.
+1. It backs up the session data to a remote server using rsync.
 2. It generates reports and plots (TODO: implement this).
 """
 
@@ -13,10 +13,10 @@ from village.settings import settings
 class AfterSessionRun:
     def __init__(self):
         self.data_dir = settings.get("DATA_DIRECTORY")
-        self.destination_dir = settings.get("CLUSTER_DESTINATION")
-        self.remote_user = settings.get("CLUSTER_USER")
-        self.remote_host = settings.get("CLUSTER_HOST")
-        self.port = settings.get("CLUSTER_PORT")
+        self.destination_dir = settings.get("SERVER_DESTINATION")
+        self.remote_user = settings.get("SERVER_USER")
+        self.remote_host = settings.get("SERVER_HOST")
+        self.port = settings.get("SERVER_PORT")
 
     def backup_to_server(self):
         # define the destination folder

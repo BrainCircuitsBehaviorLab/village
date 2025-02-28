@@ -23,8 +23,8 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-backup_to_cluster_logs/
-backup_to_cluster_logs/*
+backup_to_server_logs/
+backup_to_server_logs/*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
