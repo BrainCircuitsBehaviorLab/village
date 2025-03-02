@@ -50,7 +50,7 @@ class Rfid:
 
     def update_multiple(self) -> None:
         unique_ids = set(id for id, _ in self.id_history)
-        self.multiple = len(unique_ids) >= 2
+        self.multiple = len(unique_ids) > 1
 
     def stop(self) -> None:
         self.running = False

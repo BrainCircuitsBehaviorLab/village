@@ -47,7 +47,7 @@ corridor_settings = [
         0.5,
         float,
         """To allow access, after a detection, the pixel detection must remain within
-limits for this duration.""",
+limits for this duration (in seconds).""",
     ),
     Setting(
         "TIME_BETWEEN_DETECTIONS",
@@ -195,7 +195,12 @@ server_settings = [
     Setting("SERVER_USER", "training_village", str, "The server user."),
     Setting("SERVER_HOST", "server", str, "The server hostname."),
     Setting("SERVER_PORT", 4022, int, "The server port."),
-    Setting("SERVER_DESTINATION", "/archive/training_village/", str, "The server destination."),
+    Setting(
+        "SERVER_DESTINATION",
+        "/archive/training_village/",
+        str,
+        "The server destination.",
+    ),
 ]
 
 bpod_settings = [
@@ -379,6 +384,12 @@ extra_settings = [
         "The github repository to download.",
     ),
     Setting(
+        "DEFAULT_CODE_DIRECTORY",
+        default_project_directory + "/code",
+        str,
+        "The default directory of the user code.",
+    ),
+    Setting(
         "SCALE_WEIGHT_TO_CALIBRATE",
         20,
         float,
@@ -390,6 +401,14 @@ extra_settings = [
         float,
         "Factor to transform electric signal to grams.",
     ),
+    Setting("RFID_READER", "ON", Active, "The RFID reader status."),
+    Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)."),
+    Setting("INFO", "SYSTEM_INFO", Info, "The information status."),
+    Setting("ACTIONS", "CORRIDOR", Actions, "The actions status."),
+]
+
+
+modificable_settings = [
     Setting(
         "WEIGHT_DEVIATION_RATIO",
         0.25,
@@ -402,10 +421,6 @@ because the animal is moving or it is not completely on the scale.""",
     Setting("COLOR_AREA2", (204, 51, 170), tuple, "The color of the second area."),
     Setting("COLOR_AREA3", (51, 119, 204), tuple, "The color of the third area."),
     Setting("COLOR_AREA4", (221, 51, 0), tuple, "The color of the fourth area."),
-    Setting("RFID_READER", "ON", Active, "The RFID reader status."),
-    Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)."),
-    Setting("INFO", "SYSTEM_INFO", Info, "The information status."),
-    Setting("ACTIONS", "CORRIDOR", Actions, "The actions status."),
     Setting(
         "UPDATE_TIME_MS", 2000, int, "The update time in ms for the tables and plots."
     ),
@@ -420,12 +435,6 @@ because the animal is moving or it is not completely on the scale.""",
     Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2."),
     Setting("SCALE_ADDRESS", "0x64", str, "The address of the scale."),
     Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
-    Setting(
-        "DEFAULT_CODE_DIRECTORY",
-        default_project_directory + "/code",
-        str,
-        "The default directory of the user code.",
-    ),
     Setting(
         "ALARM_AREA4_TIME",
         3600,
@@ -463,9 +472,8 @@ settings = Settings(
     camera_settings,
     motor_settings,
     extra_settings,
+    modificable_settings,
 )
 
 
 # settings.print()
-# settings.create_factory_settings()
-# settings.restore_factory_settings()

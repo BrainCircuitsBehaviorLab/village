@@ -55,6 +55,7 @@ class Settings:
         camera_settings: list[Setting],
         motor_settings: list[Setting],
         extra_settings: list[Setting],
+        modificable_settings: list[Setting],
     ) -> None:
 
         self.main_settings = main_settings
@@ -70,6 +71,7 @@ class Settings:
         self.camera_settings = camera_settings
         self.motor_settings = motor_settings
         self.extra_settings = extra_settings
+        self.modificable_settings = modificable_settings
 
         self.saved_settings = QSettings("village", "village")
 
@@ -91,10 +93,10 @@ class Settings:
             + camera_settings
             + motor_settings
             + extra_settings
+            + modificable_settings
         )
 
-        self.create_factory_settings_if_first_launch()
-        self.replace_extra_settings()
+        self.check_settings()
 
     def restore_factory_settings(self) -> None:
         for s in self.restorable_settings:
@@ -104,14 +106,21 @@ class Settings:
         for s in self.all_settings:
             self.saved_settings.setValue(s.key, s.value)
 
-    def replace_extra_settings(self) -> None:
-        for s in self.extra_settings:
-            if self.saved_settings.value(s.key) is None:
+    def add_new_settings(self) -> None:
+        for s in self.all_settings:
+            if s.key not in self.saved_settings.allKeys():
                 self.saved_settings.setValue(s.key, s.value)
 
-    def create_factory_settings_if_first_launch(self) -> None:
+    def modify_modificable_settings(self) -> None:
+        for s in self.modificable_settings:
+            self.saved_settings.setValue(s.key, s.value)
+
+    def check_settings(self) -> None:
         if self.get("FIRST_LAUNCH") is None:
             self.create_factory_settings()
+        else:
+            self.add_new_settings()
+            self.modify_modificable_settings()
 
     def get(self, key: str) -> Any:
         """Get the value of a setting."""

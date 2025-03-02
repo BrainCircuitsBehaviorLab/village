@@ -61,11 +61,13 @@ def system_run(bevavior_window: QWidget) -> None:
     i = 0
     id = ""
     multiple = False
+    checking_subject_requirements = True
     trial = 0
     hour_change_detector = time_utils.HourChangeDetector()
     cycle_change_detector = time_utils.CycleChangeDetector(
         settings.get("DAYTIME"), settings.get("NIGHTTIME")
     )
+    detection_timer = time_utils.Timer(settings.get("DETECTION_DURATION"))
 
     cam_corridor.start_record()
 
@@ -110,20 +112,29 @@ def system_run(bevavior_window: QWidget) -> None:
                 if id != "":
                     log.info("Tag detected: " + id)
                     manager.detection_change = True
+                    checking_subject_requirements = True
                     manager.state = State.DETECTION
             case State.DETECTION:
                 # Gathering subject data, checking requirements to enter
-                manager.detections.add_timestamp()
-                if (
-                    manager.get_subject_from_tag(id)
-                    and manager.subject.create_from_subject_series(auto=True)
-                    and manager.subject.minimum_time_ok()
-                    and cam_corridor.areas_corridor_ok()
-                    and not manager.multiple_detections(multiple)
-                ):
-                    manager.state = State.ACCESS
+                if checking_subject_requirements:
+                    manager.detections.add_timestamp()
+                    if (
+                        manager.get_subject_from_tag(id)
+                        and manager.subject.create_from_subject_series(auto=True)
+                        and manager.subject.minimum_time_ok()
+                        and not cam_corridor.areas_corridor_ok()
+                        and not manager.multiple_detections(multiple)
+                    ):
+                        checking_subject_requirements = False
+                        detection_timer.reset()
+                    else:
+                        manager.state = State.WAIT
                 else:
-                    manager.state = State.WAIT
+                    if detection_timer.has_elapsed():
+                        manager.state = State.ACCESS
+                    else:
+                        if not cam_corridor.areas_corridor_ok():
+                            manager.state = State.WAIT
 
             case State.ACCESS:
                 # Closing door1, opening door2

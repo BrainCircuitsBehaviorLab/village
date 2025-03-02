@@ -310,7 +310,7 @@ class MonitorLayout(Layout):
         key = "RFID_READER"
         possible_values = Active.values()
         index = Active.get_index_from_value(manager.rfid_reader)
-        self.cycle_button = self.create_and_add_toggle_button(
+        self.rfid_reader_button = self.create_and_add_toggle_button(
             key,
             5,
             102,
@@ -392,6 +392,7 @@ class MonitorLayout(Layout):
         manager.cycle = Cycle[value]
         settings.set(key, value)
         self.update_status_label_buttons()
+        cam_corridor.change = True
 
     def toggle_rfid_reader_button(self, value: str, key: str) -> None:
         manager.rfid_reader = Active[value]

@@ -211,7 +211,7 @@ nano ~/.bashrc
 ```
 2. Add the following line to create an alias:
 ```
-alias run_village='/home/raspberry/.env/bin/python /home/raspberry/village/village/main.py'
+alias village='/home/raspberry/.env/bin/python /home/raspberry/village/village/main.py'
 ```
 3. Reload the .bahsrc:
 ```
@@ -219,7 +219,7 @@ source ~/.bashrc
 ```
 4. Run Training village:
 ```
-run_village
+village
 ```
 
 [OS]: https://www.raspberrypi.com/software/

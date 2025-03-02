@@ -215,6 +215,9 @@ class SettingsLayout(Layout):
         manager.changing_settings = False
 
         critical_keys = [
+            "USE_SOUNDCARD",
+            "USE_SCREEN",
+            "USE_TOUCHSCREEN",
             "SOUND_DEVICE",
             "SAMPLERATE",
             "SCREEN_SIZE_MM",
@@ -262,11 +265,22 @@ class SettingsLayout(Layout):
         for i, toggle_button in enumerate(self.toggle_buttons):
             s = self.toggle_buttons_settings[i]
 
+            if (
+                s.key in critical_keys
+                and toggle_button.text() != settings.get(s.key).name
+            ):
+                self.critical_changes = True
+
             value = toggle_button.text()
             settings.set(s.key, value)
 
         for i, list_line in enumerate(self.list_of_line_edits):
             s = self.list_of_line_edits_settings[i]
+
+            if s.key in critical_keys:
+                for j in range(len(list_line)):
+                    if list_line[j].text() != str(settings.get(s.key)[j]):
+                        self.critical_changes = True
 
             if s.value_type == list[int]:
                 values = [field.text() for field in list_line]
@@ -283,11 +297,10 @@ class SettingsLayout(Layout):
             values = [field.text() for field in list_toggle]
             settings.set(s.key, values)
 
-        try:
-            val = self.sound_device_combobox.currentText()
-            settings.set("SOUND_DEVICE", val)
-        except AttributeError:
-            pass
+        val = self.sound_device_combobox.currentText()
+        if val != settings.get("SOUND_DEVICE"):
+            self.critical_changes = True
+        settings.set("SOUND_DEVICE", val)
 
         cam_corridor.change = True
         cam_box.change = True
@@ -493,8 +506,6 @@ class SettingsLayout(Layout):
 
     def toggle_button_changed(self, value: str, key: str) -> None:
         modify = ""
-        if key in ("USE_SCREEN", "USE_SOUNDCARD"):
-            self.critical_changes = True
         if value == "OFF" and key == "USE_SOUNDCARD":
             self.delete_optional_widgets("SOUND SETTINGS")
         elif value == "ON":
