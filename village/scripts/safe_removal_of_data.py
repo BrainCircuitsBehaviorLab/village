@@ -6,7 +6,9 @@ from datetime import datetime, timedelta
 from village.scripts.utils import setup_logging
 
 
-def check_files_for_backup(files, backup_dir, remote_user, remote_host, port=22):
+def check_files_for_backup(
+    files, directory, backup_dir, remote_user, remote_host, port=22
+):
     files_to_remove = []
     # Create a single SSH connection to the remote server
     ssh_command = (
@@ -14,14 +16,16 @@ def check_files_for_backup(files, backup_dir, remote_user, remote_host, port=22)
         f"'for file in {' '.join([os.path.join(backup_dir, f) for f in files])}; do "
         f"if [ -e $file ]; then echo $file; fi; done'"
     )
-    result = subprocess.run(ssh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    backed_up_files = result.stdout.decode().strip().split('\n')
-    
+    result = subprocess.run(
+        ssh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    backed_up_files = result.stdout.decode().strip().split("\n")
+
     for file in files:
-        backup_path = os.path.join(backup_dir, os.path.relpath(file))
+        backup_path = os.path.join(backup_dir, file)
         if backup_path in backed_up_files:
-            files_to_remove.append(file)
-    
+            files_to_remove.append(os.path.join(directory, file))
+
     return files_to_remove
 
 
@@ -56,9 +60,11 @@ def remove_old_data(
                     files_to_check.append(relative_file_path)
                 else:
                     removed_count = remove_file(file_path, removed_count)
-    
+
     if backup_dir:
-        files_to_remove = check_files_for_backup(files_to_check, backup_dir, remote_user, remote_host, port)
+        files_to_remove = check_files_for_backup(
+            files_to_check, directory, backup_dir, remote_user, remote_host, port
+        )
         for file in files_to_remove:
             removed_count = remove_file(file, removed_count)
 
@@ -90,8 +96,8 @@ if __name__ == "__main__":
     # fire.Fire(main)
     main(
         directory="/home/pi/village_projects/COT_test/data/videos",
-        days=30,
-        backup_dir="/archive/training_village/COT_test_data",
+        days=8,
+        backup_dir="/archive/training_village/COT_test_data/videos",
         remote_user="training_village",
         remote_host="cluster",
         port=4022,
