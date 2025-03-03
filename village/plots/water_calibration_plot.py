@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.figure import Figure
+from numpy.polynomial import Polynomial
 
 
 def water_calibration_plot(
@@ -25,11 +26,9 @@ def water_calibration_plot(
         ax.plot(x, y, marker="o", linestyle="None", color=colors[port], label=f"{port}")
 
         if len(x) == 2:
-            coeffs = np.polyfit(x, y, 1)
-            poly = np.poly1d(coeffs)
+            poly = Polynomial.fit(x, y, 1).convert()
         elif len(x) > 2:
-            coeffs = np.polyfit(x, y, 2)
-            poly = np.poly1d(coeffs)
+            poly = Polynomial.fit(x, y, 2).convert()
         else:
             continue
 

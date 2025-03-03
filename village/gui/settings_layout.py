@@ -45,7 +45,7 @@ class SettingsLayout(Layout):
             self.list_of_toggle_buttons: list[list[ToggleButton]] = []
             self.list_of_toggle_buttons_settings: list[Setting] = []
 
-            row = 6
+            row = 5
             name = "MAIN SETTINGS"
             label = self.create_and_add_label(name, row, 0, 30, 2, "black")
             label.setProperty("type", name)
@@ -73,7 +73,7 @@ class SettingsLayout(Layout):
                 row += 2
 
         if all or modify == "DIRECTORY SETTINGS":
-            row = 6
+            row = 5
             name = "DIRECTORY SETTINGS"
             label = self.create_and_add_label(name, row, 128, 30, 2, "black")
             label.setProperty("type", name)
@@ -103,7 +103,7 @@ class SettingsLayout(Layout):
                 row += 2
 
         if all:
-            row = 6
+            row = 5
             name = "SOUND SETTINGS"
             label = self.create_and_add_label(name, row, 44, 30, 2, "black")
             row = 8
@@ -158,8 +158,8 @@ class SettingsLayout(Layout):
         if all:
             self.save_button = self.create_and_add_button(
                 "SAVE THE SETTINGS",
-                44,
-                186,
+                48,
+                155,
                 26,
                 2,
                 self.save_button_clicked,
@@ -415,7 +415,13 @@ class SettingsLayout(Layout):
                 line_edit = self.create_and_add_line_edit(
                     new_value, row, column + width, 64, 2, self.settings_changed
                 )
-            elif s.key == "APP_DIRECTORY":
+            elif s.key in [
+                "APP_DIRECTORY",
+                "SERVER_USER",
+                "SERVER_HOST",
+                "SERVER_PORT",
+                "SERVER_DESTINATION",
+            ]:
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width, 64, 2, self.settings_changed
                 )

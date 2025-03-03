@@ -737,6 +737,7 @@ class SoundCalibrationLayout(Layout):
             [manager.sound_calibration.df, df], ignore_index=True
         )
         manager.sound_calibration.save_from_df()
+        manager.changing_settings = False
 
         self.reset_values_after_ok_or_add2()
 

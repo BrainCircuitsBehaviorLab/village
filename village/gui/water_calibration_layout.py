@@ -709,6 +709,7 @@ class WaterCalibrationLayout(Layout):
         self.test_row_dicts = []
         self.update_plot = True
         self.info_layout.update()
+        manager.changing_settings = False
 
     def select_port(self, value: str, index: int) -> None:
         pass

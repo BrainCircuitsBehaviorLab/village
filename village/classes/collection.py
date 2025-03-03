@@ -6,6 +6,7 @@ from typing import Any, Type, Union
 
 import numpy as np
 import pandas as pd
+from numpy.polynomial import Polynomial
 
 from village.classes.protocols import EventProtocol
 from village.classes.training import Training
@@ -137,15 +138,15 @@ class Collection(EventProtocol):
             y = calibration_df["water_delivered(ul)"].values
 
             if len(x) == 2:
-                coeffs = np.polyfit(x, y, 1)
-                a = 0
-                b, c = coeffs
+                poly = Polynomial.fit(x, y, 1).convert()
+                a, b = poly.coef
+                c = 0
             else:
-                coeffs = np.polyfit(x, y, 2)
-                a, b, c = coeffs
+                poly = Polynomial.fit(x, y, 2).convert()
+                a, b, c = poly.coef
 
-            coeffs_for_root = [a, b, c - volume]
-            roots = np.roots(coeffs_for_root)
+            coeffs_for_root = [a - volume, b, c]
+            roots = Polynomial(coeffs_for_root).roots()
 
             valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
 
@@ -177,15 +178,15 @@ class Collection(EventProtocol):
             y = calibration_df["dB_obtained"].values
 
             if len(x) == 2:
-                coeffs = np.polyfit(x, y, 1)
-                a = 0
-                b, c = coeffs
+                poly = Polynomial.fit(x, y, 1).convert()
+                a, b = poly.coef
+                c = 0
             else:
-                coeffs = np.polyfit(x, y, 2)
-                a, b, c = coeffs
+                poly = Polynomial.fit(x, y, 2).convert()
+                a, b, c = poly.coef
 
-            coeffs_for_root = [a, b, c - dB]
-            roots = np.roots(coeffs_for_root)
+            coeffs_for_root = [a - dB, b, c]
+            roots = Polynomial(coeffs_for_root).roots()
 
             valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
 

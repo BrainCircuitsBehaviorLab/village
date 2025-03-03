@@ -99,12 +99,12 @@ class Camera(CameraProtocol):
         self.origin_rectangle = (0, 0)
         self.end_rectangle = (640, 40)
 
-        self.origin_timestamps = (20, 15)
-        self.origin_trial = (175, 15)
-        self.origin_state = (240, 15)
+        self.origin_timestamps = (3, 15)
+        self.origin_trial = (160, 15)
+        self.origin_state = (230, 15)
 
-        self.origin_frame_number = (3, 30)
-        self.origin_timings = (120, 30)
+        self.origin_timings = (3, 30)
+        self.origin_frame_number = (120, 30)
         origin_area1 = (240, 30)
         origin_area2 = (340, 30)
         origin_area3 = (440, 30)
@@ -436,7 +436,7 @@ class Camera(CameraProtocol):
 
         cv2.putText(
             self.frame,
-            "ms: " + str(self.timing),
+            time_utils.format_duration(self.timing),
             self.origin_timings,
             self.font,
             self.scale,

@@ -129,6 +129,14 @@ def find_closest_file(directory: str, prefix: str, date: datetime) -> str:
     return path
 
 
+def format_duration(milliseconds) -> str:
+    hours = milliseconds // 3600000
+    minutes = (milliseconds % 3600000) // 60000
+    seconds = (milliseconds % 60000) // 1000
+    millis = milliseconds % 1000
+    return f"{hours:02}:{minutes:02}:{seconds:02}.{millis:03}"
+
+
 class Chrono:
     def __init__(self) -> None:
         self.init_time = datetime.now()
