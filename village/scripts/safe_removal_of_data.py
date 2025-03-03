@@ -6,19 +6,23 @@ from datetime import datetime, timedelta
 from village.scripts.utils import setup_logging
 
 
-def is_backed_up(file_path, backup_dir, remote_user, remote_host, port):
-    # Implement your backup check logic here
-    backup_path = os.path.join(backup_dir, os.path.relpath(file_path))
-    # Use ssh command to check if the file exists on the remote server
+def check_files_for_backup(files, backup_dir, remote_user, remote_host, port=22):
+    files_to_remove = []
+    # Create a single SSH connection to the remote server
     ssh_command = (
         f"ssh -p {port} {remote_user}@{remote_host} "
-        f"'test -e {backup_path} && echo exists'"
+        f"'for file in {' '.join([os.path.join(backup_dir, os.path.relpath(f)) for f in files])}; do "
+        f"if [ -e $file ]; then echo $file; fi; done'"
     )
-    result = subprocess.run(
-        ssh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-
-    return result.stdout.decode().strip() == "exists"
+    result = subprocess.run(ssh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    backed_up_files = result.stdout.decode().strip().split('\n')
+    
+    for file in files:
+        backup_path = os.path.join(backup_dir, os.path.relpath(file))
+        if backup_path in backed_up_files:
+            files_to_remove.append(file)
+    
+    return files_to_remove
 
 
 def parse_timestamp_from_filename(filename):
@@ -34,6 +38,7 @@ def remove_old_data(
     directory, days, backup_dir=None, remote_user=None, remote_host=None, port=None
 ):
     removed_count = 0
+    files_to_remove_if_backup = []
     now = datetime.now()
     cutoff = now - timedelta(days=days)
 
@@ -47,14 +52,14 @@ def remove_old_data(
                 if file.startswith("CORRIDOR_"):
                     removed_count = remove_file(file_path, removed_count)
                 elif backup_dir:
-                    if is_backed_up(
-                        file_path, backup_dir, remote_user, remote_host, port
-                    ):
-                        removed_count = remove_file(file_path, removed_count)
-                    else:
-                        logging.warning(f"Skipping {file_path}, not backed up")
+                    files_to_remove_if_backup.append(file_path)
                 else:
                     removed_count = remove_file(file_path, removed_count)
+    
+    if backup_dir:
+        files_to_remove = check_files_for_backup(files_to_remove_if_backup, backup_dir, remote_user, remote_host, port)
+        for file in files_to_remove:
+            removed_count = remove_file(file, removed_count)
 
     if removed_count == 0:
         logging.info(f"No files removed from {directory}")
