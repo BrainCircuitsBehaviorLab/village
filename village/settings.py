@@ -39,6 +39,19 @@ nighttime begins.""",
 pixels against a white background. If the animals are lighter than the
 background, the system detects white pixels against a black background.""",
     ),
+    Setting(
+        "DAYS_OF_VIDEO_STORAGE",
+        7,
+        int,
+        "Number of days to store video data before deleting it.",
+    ),
+    Setting(
+        "DELETE_IF_NOT_BACKED_UP",
+        False,
+        bool,
+        """If True, the system deletes video data if it has not been backed up to a
+remote server. If False, the system keeps the data until it is backed up.""",
+    ),
 ]
 
 corridor_settings = [

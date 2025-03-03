@@ -2,6 +2,7 @@ import logging
 import os
 import subprocess
 from datetime import datetime, timedelta
+import fire
 
 from village.scripts.utils import setup_logging
 
@@ -93,12 +94,12 @@ def main(directory, days, backup_dir, remote_user=None, remote_host=None, port=N
 
 
 if __name__ == "__main__":
-    # fire.Fire(main)
-    main(
-        directory="/home/pi/village_projects/COT_test/data/videos",
-        days=8,
-        backup_dir="/archive/training_village/COT_test_data/videos",
-        remote_user="training_village",
-        remote_host="cluster",
-        port=4022,
-    )
+    fire.Fire(main)
+    # main(
+    #     directory="/home/pi/village_projects/COT_test/data/videos",
+    #     days=8,
+    #     backup_dir="/archive/training_village/COT_test_data/videos",
+    #     remote_user="training_village",
+    #     remote_host="cluster",
+    #     port=4022,
+    # )
