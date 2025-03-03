@@ -103,6 +103,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
         if cycle_change_detector.has_cycle_changed():
             manager.cycle_checks()
+            # TODO: delete data
 
         match manager.state:
             case State.WAIT:

@@ -8,6 +8,7 @@ from pathlib import Path
 
 from village.scripts.rsync_to_server import main as rsync_script
 from village.settings import settings
+# TODO: should we get these from manager????
 
 
 class AfterSessionRun:
@@ -31,7 +32,7 @@ class AfterSessionRun:
 
     def run(self):
         self.backup_to_server()
-        # TODO: delete data
+        # TODO: delete data here?
         # TODO: deal with deleted data
         # TODO: make reports
 
