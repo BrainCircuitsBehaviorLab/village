@@ -38,14 +38,14 @@ def remove_old_data(
     directory, days, backup_dir=None, remote_user=None, remote_host=None, port=None
 ):
     removed_count = 0
-    files_to_remove_if_backup = []
+    files_to_check = []
     now = datetime.now()
     cutoff = now - timedelta(days=days)
 
     for root, dirs, files in os.walk(directory):
         for file in files:
             file_path = os.path.join(root, file)
-            relative_file_path = os.path.join(dirs, file)
+            relative_file_path = os.path.relpath(file_path, directory)
             file_timestamp = parse_timestamp_from_filename(file)
 
             if file_timestamp and file_timestamp < cutoff:
@@ -53,12 +53,12 @@ def remove_old_data(
                 if file.startswith("CORRIDOR_"):
                     removed_count = remove_file(file_path, removed_count)
                 elif backup_dir:
-                    files_to_remove_if_backup.append(relative_file_path)
+                    files_to_check.append(relative_file_path)
                 else:
                     removed_count = remove_file(file_path, removed_count)
     
     if backup_dir:
-        files_to_remove = check_files_for_backup(files_to_remove_if_backup, backup_dir, remote_user, remote_host, port)
+        files_to_remove = check_files_for_backup(files_to_check, backup_dir, remote_user, remote_host, port)
         for file in files_to_remove:
             removed_count = remove_file(file, removed_count)
 
