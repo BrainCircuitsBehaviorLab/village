@@ -1,10 +1,10 @@
 import logging
 import os
 import subprocess
-from datetime import datetime
-from village.scripts.utils import setup_logging
 
 import fire
+
+from village.scripts.utils import setup_logging
 
 
 def run_rsync(source_path, destination, remote_user, remote_host, port=22):
@@ -23,7 +23,15 @@ def run_rsync(source_path, destination, remote_user, remote_host, port=22):
 
     # Ensure the destination directory exists
     destination_dir = os.path.dirname(destination)
-    subprocess.run(["ssh", "-p", str(port), f"{remote_user}@{remote_host}", f"mkdir -p {destination_dir}"])
+    subprocess.run(
+        [
+            "ssh",
+            "-p",
+            str(port),
+            f"{remote_user}@{remote_host}",
+            f"mkdir -p {destination_dir}",
+        ]
+    )
 
     # Construct the rsync command with safe options
     rsync_cmd = [

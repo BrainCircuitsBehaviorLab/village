@@ -1,6 +1,8 @@
+import logging
 import os
 import subprocess
 import traceback
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -11,8 +13,6 @@ from PyQt5.QtWidgets import QLayout
 from village.log import log
 from village.scripts import time_utils
 from village.settings import settings
-import logging
-from datetime import datetime
 
 
 def change_directory_settings(new_path: str) -> None:
