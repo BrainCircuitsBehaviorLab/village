@@ -11,7 +11,7 @@ def check_files_for_backup(files, backup_dir, remote_user, remote_host, port=22)
     # Create a single SSH connection to the remote server
     ssh_command = (
         f"ssh -p {port} {remote_user}@{remote_host} "
-        f"'for file in {' '.join([os.path.join(backup_dir, os.path.relpath(f)) for f in files])}; do "
+        f"'for file in {' '.join([os.path.join(backup_dir, f) for f in files])}; do "
         f"if [ -e $file ]; then echo $file; fi; done'"
     )
     result = subprocess.run(ssh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -45,6 +45,7 @@ def remove_old_data(
     for root, dirs, files in os.walk(directory):
         for file in files:
             file_path = os.path.join(root, file)
+            relative_file_path = os.path.join(dirs, file)
             file_timestamp = parse_timestamp_from_filename(file)
 
             if file_timestamp and file_timestamp < cutoff:
@@ -52,7 +53,7 @@ def remove_old_data(
                 if file.startswith("CORRIDOR_"):
                     removed_count = remove_file(file_path, removed_count)
                 elif backup_dir:
-                    files_to_remove_if_backup.append(file_path)
+                    files_to_remove_if_backup.append(relative_file_path)
                 else:
                     removed_count = remove_file(file_path, removed_count)
     
@@ -90,7 +91,7 @@ if __name__ == "__main__":
     main(
         directory="/home/pi/village_projects/COT_test/data/videos",
         days=30,
-        backup_dir="/archive/training_village/",
+        backup_dir="/archive/training_village/COT_test_data",
         remote_user="training_village",
         remote_host="cluster",
         port=4022,
