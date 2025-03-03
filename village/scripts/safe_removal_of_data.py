@@ -1,8 +1,8 @@
-import os
-from datetime import datetime, timedelta
-import fire
 import logging
+import os
 import subprocess
+from datetime import datetime, timedelta
+
 from village.scripts.utils import setup_logging
 
 
@@ -10,22 +10,29 @@ def is_backed_up(file_path, backup_dir, remote_user, remote_host, port):
     # Implement your backup check logic here
     backup_path = os.path.join(backup_dir, os.path.relpath(file_path))
     # Use ssh command to check if the file exists on the remote server
-    ssh_command = f"ssh -p {port} {remote_user}@{remote_host} 'test -e {backup_path} && echo exists'"
-    result = subprocess.run(ssh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    
-    return result.stdout.decode().strip() == 'exists'
+    ssh_command = (
+        f"ssh -p {port} {remote_user}@{remote_host} "
+        f"'test -e {backup_path} && echo exists'"
+    )
+    result = subprocess.run(
+        ssh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+
+    return result.stdout.decode().strip() == "exists"
 
 
 def parse_timestamp_from_filename(filename):
     # Assuming the timestamp is in the format ..._..._YYYYMMDD_HHMMSS.something
     try:
-        timestamp_str = filename.split('_')[-2] + filename.split('_')[-1].split('.')[0]
+        timestamp_str = filename.split("_")[-2] + filename.split("_")[-1].split(".")[0]
         return datetime.strptime(timestamp_str, "%Y%m%d%H%M%S")
     except ValueError:
         return None
 
 
-def remove_old_data(directory, days, backup_dir=None, remote_user=None, remote_host=None, port=None):
+def remove_old_data(
+    directory, days, backup_dir=None, remote_user=None, remote_host=None, port=None
+):
     removed_count = 0
     now = datetime.now()
     cutoff = now - timedelta(days=days)
@@ -38,19 +45,23 @@ def remove_old_data(directory, days, backup_dir=None, remote_user=None, remote_h
             if file_timestamp and file_timestamp < cutoff:
                 # if file starts with CORRIDOR_, remove it
                 if file.startswith("CORRIDOR_"):
-                    removed_count = remove_file(file_path)
-                if backup_dir:
-                    if is_backed_up(file_path, backup_dir, remote_user, remote_host, port):
-                        removed_count = remove_file(file_path)
+                    removed_count = remove_file(file_path, removed_count)
+                elif backup_dir:
+                    if is_backed_up(
+                        file_path, backup_dir, remote_user, remote_host, port
+                    ):
+                        removed_count = remove_file(file_path, removed_count)
                     else:
                         logging.warning(f"Skipping {file_path}, not backed up")
                 else:
-                    removed_count = remove_file(file_path)
-    
+                    removed_count = remove_file(file_path, removed_count)
+
     if removed_count == 0:
         logging.info(f"No files removed from {directory}")
     else:
-        logging.info(f"Removed {removed_count} files older than {days} days from {directory}")
+        logging.info(
+            f"Removed {removed_count} files older than {days} days from {directory}"
+        )
 
 
 def remove_file(file_path, removed_count):
@@ -72,10 +83,10 @@ def main(directory, days, backup_dir, remote_user=None, remote_host=None, port=N
 if __name__ == "__main__":
     # fire.Fire(main)
     main(
-        directory="/path/to/data/directory",
+        directory="/home/pi/village_projects/COT_test/data/videos",
         days=30,
         backup_dir="/archive/training_village/",
         remote_user="training_village",
         remote_host="cluster",
-        port=4022
+        port=4022,
     )
