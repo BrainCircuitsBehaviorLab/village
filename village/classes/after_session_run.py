@@ -32,9 +32,8 @@ class AfterSessionRun:
 
     def run(self):
         self.backup_to_server()
-        # TODO: delete data here?
         # TODO: deal with deleted data
-        # TODO: make reports
+        # TODO: make reports?
 
 
 if __name__ == "__main__":
