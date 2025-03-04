@@ -8,6 +8,7 @@ from pathlib import Path
 
 from village.scripts.rsync_to_server import main as rsync_script
 from village.settings import settings
+# TODO: should we get these from manager????
 
 
 class AfterSessionRun:
@@ -20,7 +21,7 @@ class AfterSessionRun:
 
     def backup_to_server(self):
         # define the destination folder
-        project_folder = str(Path(self.data_dir).parent.name) + "_data"
+        project_folder = f"{Path(self.data_dir).parent.name}_data"
         rsync_script(
             source=self.data_dir,
             destination=f"{self.destination_dir}/{project_folder}",
@@ -31,9 +32,8 @@ class AfterSessionRun:
 
     def run(self):
         self.backup_to_server()
-        # TODO: delete data
         # TODO: deal with deleted data
-        # TODO: make reports
+        # TODO: make reports?
 
 
 if __name__ == "__main__":

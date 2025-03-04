@@ -2,27 +2,9 @@ import logging
 import os
 import subprocess
 from datetime import datetime
+from village.scripts.utils import setup_logging
 
 import fire
-
-
-def setup_logging():
-    """Configure logging to both file and console"""
-    logs_dir = "backup_to_server_logs"
-    # Create logs directory if it doesn't exist
-    if not os.path.exists(logs_dir):
-        os.makedirs(logs_dir)
-
-    # Setup logging with timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = os.path.join(logs_dir, f"{timestamp}.log")
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[logging.FileHandler(log_filename), logging.StreamHandler()],
-    )
-    return log_filename
 
 
 def run_rsync(source_path, destination, remote_user, remote_host, port=22):
@@ -53,6 +35,8 @@ def run_rsync(source_path, destination, remote_user, remote_host, port=22):
         f"ssh -p {port}",  # specify ssh port
         "--exclude",
         "*.tmp",  # exclude temporary files
+        "--exclude",
+        "CORRIDOR*",  # exclude CORRIDOR videos and data
         "--exclude",
         ".git/",  # exclude git directory
         source_path,
@@ -108,7 +92,8 @@ def main(source, destination, remote_user, remote_host, port=22):
     - port: SSH port (default: 22)
     """
     # Setup logging
-    log_file = setup_logging()
+    log_file = setup_logging(logs_subdirectory="rsync_logs")
+    logging.info(f"Logging to file: {log_file}")
 
     # Log start of sync
     logging.info(f"Starting sync from {source} to {remote_host}")

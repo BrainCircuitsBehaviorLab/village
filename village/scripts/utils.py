@@ -11,6 +11,8 @@ from PyQt5.QtWidgets import QLayout
 from village.log import log
 from village.scripts import time_utils
 from village.settings import settings
+import logging
+from datetime import datetime
 
 
 def change_directory_settings(new_path: str) -> None:
@@ -320,3 +322,23 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
     df4 = df4[new_list]
 
     return df4
+
+
+def setup_logging(logs_subdirectory: str) -> str:
+    """Configure logging to both file and console"""
+    data_dir = settings.get("DATA_DIRECTORY")
+    logs_dir = os.path.join(data_dir, logs_subdirectory)
+    # Create logs directory if it doesn't exist
+    if not os.path.exists(logs_dir):
+        os.makedirs(logs_dir)
+
+    # Setup logging with timestamp
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_filename = os.path.join(logs_dir, f"{timestamp}.log")
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=[logging.FileHandler(log_filename), logging.StreamHandler()],
+    )
+    return log_filename
