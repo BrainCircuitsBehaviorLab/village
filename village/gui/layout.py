@@ -641,6 +641,12 @@ class Layout(QGridLayout):
     def update_gui(self) -> None:
         pass
 
+    def check_errors(self) -> None:
+        if manager.error_in_manual_task:
+            text = "Error in manual task"
+            QMessageBox.information(self.window, "ERROR", text)
+            manager.error_in_manual_task = False
+
 
 class OnlinePlotDialog(QDialog):
     def __init__(self):

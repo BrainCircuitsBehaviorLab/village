@@ -55,6 +55,17 @@ def date_from_setting_string(string: str) -> datetime:
     return datetime.strptime(string, "%H:%M")
 
 
+def date_from_path(path: str) -> datetime:
+    print(path)
+    filename = path.split("/")[-1]
+    print(filename)
+    filename = filename[:-4]
+    print(filename)
+    date_str = "_".join(filename.split("_")[-2:])
+    print(date_str)
+    return datetime.strptime(date_str, "%Y%m%d_%H%M%S")
+
+
 def one_week_ago_init_times(
     first: datetime, second: datetime
 ) -> tuple[datetime, datetime]:
@@ -105,7 +116,9 @@ def measure_time(func) -> Any:
     return wrapper
 
 
-def find_closest_file(directory: str, prefix: str, date: datetime) -> str:
+def find_closest_file_and_seconds(
+    directory: str, prefix: str, date: datetime
+) -> tuple[str, int]:
     closest_file = None
     closest_time = None
     path = ""
@@ -123,10 +136,12 @@ def find_closest_file(directory: str, prefix: str, date: datetime) -> str:
             except ValueError:
                 continue
 
-    if closest_file is not None:
+    if closest_file is not None and closest_time is not None:
         path = os.path.join(directory, closest_file)
+        time = date - closest_time
+        time_seconds = int(time.total_seconds() - 30)
 
-    return path
+    return path, time_seconds
 
 
 def format_duration(milliseconds) -> str:

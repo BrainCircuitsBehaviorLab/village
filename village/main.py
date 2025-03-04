@@ -76,7 +76,7 @@ def system_run(bevavior_window: QWidget) -> None:
         time.sleep(0.001)
 
         # if i == 2000:
-        #     bpod.send_softcode(1)
+        #     bpod.receive_softcode(1)
         #     log.alarm("Alarma de prueba", subject="RAFA")
         #     behavior_window.toggle_animation()
 
@@ -308,7 +308,8 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.detection_change = True
                     manager.state = State.RUN_MANUAL
                 else:
-                    pass
+                    manager.detection_change = True
+                    manager.state = State.WAIT
 
             case State.RUN_MANUAL:
                 # Task running manually

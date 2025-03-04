@@ -1035,4 +1035,3 @@ class CorridorPlotLayout(Layout):
             self.plot_label.setPixmap(pixmap)
         else:
             self.plot_label.setText("Plot could not be generated")
-            # TODO: should the figure be closed?

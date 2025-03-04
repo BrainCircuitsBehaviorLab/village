@@ -415,9 +415,9 @@ class DataLayout(Layout):
 
         self.update_data()
 
-    def change_to_video(self, path: str) -> None:
+    def change_to_video(self, path: str, seconds: int) -> None:
         self.central_layout.setCurrentWidget(self.page2)
-        self.page2Layout.start_video(path)
+        self.page2Layout.start_video(path, seconds)
 
     def change_to_plot(self, path: str) -> None:
         if manager.table == DataTable.SUBJECTS:
@@ -516,7 +516,6 @@ class DataLayout(Layout):
             self.page3Layout.plot_label.setPixmap(pixmap)
         else:
             self.page3Layout.plot_label.setText("Plot could not be generated")
-            # TODO: should the figure be closed?
 
     def change_to_df(self) -> None:
         self.central_layout.setCurrentWidget(self.page1)
@@ -553,7 +552,7 @@ class DataLayout(Layout):
 
 class DfLayout(Layout):
     plot_change_requested = pyqtSignal(str)
-    video_change_requested = pyqtSignal(str)
+    video_change_requested = pyqtSignal((str, int))
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
@@ -603,7 +602,7 @@ class DfLayout(Layout):
         match manager.table:
             case DataTable.EVENTS:
                 self.complete_df = manager.events.df
-                self.widths = [20, 20, 20, 140]
+                self.widths = [20, 20, 20, 130]
             case DataTable.SESSIONS_SUMMARY:
                 self.complete_df = manager.sessions_summary.df
                 self.widths = [20, 20, 20, 20, 20, 20, 20, 20, 20]
@@ -895,11 +894,13 @@ class DfLayout(Layout):
         else:
             return None
 
-    def get_path_from_events_row(self, row: pd.Series) -> str:
+    def get_path_and_seconds_from_events_row(self, row: pd.Series) -> tuple[str, int]:
         date_str = row["date"]
         date = time_utils.date_from_string(date_str)
         video_directory = settings.get("VIDEOS_DIRECTORY")
-        return time_utils.find_closest_file(video_directory, "CORRIDOR", date)
+        return time_utils.find_closest_file_and_seconds(
+            video_directory, "CORRIDOR", date
+        )
 
     def get_path_from_subjects_row(self, row: pd.Series) -> str:
         subject = row["name"]
@@ -936,26 +937,37 @@ class DfLayout(Layout):
 
         return paths
 
+    def get_seconds_from_session_row(self, path: str, row: pd.Series) -> int:
+        date_str = row["date"]
+        date = time_utils.date_from_string(date_str)
+        file_date = time_utils.date_from_path(path)
+        time = date - file_date
+        time_seconds = int(time.total_seconds() - 30)
+        return time_seconds
+
     def video_button_clicked(self) -> None:
         path = ""
         selected_row = self.get_selected_row_series()
         if selected_row is not None:
             if manager.table == DataTable.EVENTS:
-                path = self.get_path_from_events_row(selected_row)
+                path, seconds = self.get_path_and_seconds_from_events_row(selected_row)
             elif manager.table == DataTable.SESSIONS_SUMMARY:
                 path = self.get_paths_from_sessions_summary_row(selected_row)[3]
+                seconds = 0
             elif manager.table == DataTable.OLD_SESSION:
-                # TODO add the timing of the row
                 path = self.video_selected_path
+                seconds = self.get_seconds_from_session_row(path, selected_row)
             elif manager.table == DataTable.OLD_SESSION_RAW:
-                # TODO add the timing of the row
                 path = self.video_selected_path
+                seconds = self.get_seconds_from_session_row(path, selected_row)
         else:
             if manager.table == DataTable.OLD_SESSION:
                 path = self.video_selected_path
+                seconds = 0
             elif manager.table == DataTable.OLD_SESSION_RAW:
                 path = self.video_selected_path
-        self.video_change_requested.emit(path)
+                seconds = 0
+        self.video_change_requested.emit(path, seconds)
 
     def plot_button_clicked(self) -> None:
         selected_row = self.get_selected_row_series()
@@ -1239,29 +1251,114 @@ class VideoLayout(Layout):
     data_from_video_change_requested = pyqtSignal(str)
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
-        super().__init__(window, stacked=True, rows=rows, columns=columns)
+        super().__init__(window, rows=rows, columns=columns)
         self.draw()
 
     def draw(self) -> None:
         self.video_label = QLabel()
         self.addWidget(self.video_label, 0, 0, 46, 210)
 
+        self.speed = 1
+        self.speed_text = "Speed: x" + str(self.speed)
+
         self.create_and_add_button(
-            "CLOSE", 0, 180, 20, 2, self.close, "Close the video"
+            "CLOSE", 0, 185, 20, 2, self.close, "Close the video"
         )
         self.create_and_add_button(
-            "PLAY/PAUSE", 4, 180, 20, 2, self.play_pause, "Play or pause the video"
+            "PLAY/PAUSE", 8, 178, 20, 2, self.play_pause, "Play or pause the video"
+        )
+        self.speed_label = self.create_and_add_label(
+            self.speed_text, 11, 183, 15, 2, "black"
+        )
+        self.create_and_add_button(
+            "SPEED x 2",
+            14,
+            190,
+            20,
+            2,
+            self.double_speed,
+            "Double the video speed",
+        )
+        self.create_and_add_button(
+            "SPEED / 2",
+            14,
+            165,
+            20,
+            2,
+            self.half_speed,
+            "Halve the video speed",
+        )
+        self.create_and_add_button(
+            "1 FRAME >",
+            17,
+            190,
+            20,
+            2,
+            self.forward_frame,
+            "Skip forward 1 frame",
+        )
+        self.create_and_add_button(
+            "< 1 FRAME",
+            17,
+            165,
+            20,
+            2,
+            self.backward_frame,
+            "Skip backward 1 frame",
+        )
+        self.create_and_add_button(
+            "10 SECONDS >>",
+            20,
+            190,
+            20,
+            2,
+            self.forward_ten_seconds,
+            "Skip forward 10 seconds",
+        )
+        self.create_and_add_button(
+            "<< 10 SECONDS",
+            20,
+            165,
+            20,
+            2,
+            self.backward_ten_seconds,
+            "Skip backward 10 seconds",
+        )
+        self.create_and_add_button(
+            "5 MINUTES >>>",
+            23,
+            190,
+            20,
+            2,
+            self.forward_five_minutes,
+            "Skip forward 5 minutes",
+        )
+        self.create_and_add_button(
+            "<<< 5 MINUTES",
+            23,
+            165,
+            20,
+            2,
+            self.backward_five_minutes,
+            "Skip backward 5 minutes",
         )
 
-    def start_video(self, path: str) -> None:
+    def start_video(self, path: str, seconds: int) -> None:
         try:
             self.cap = cv2.VideoCapture(path)
-            fps = int(self.cap.get(cv2.CAP_PROP_FPS))
+            self.fps = int(self.cap.get(cv2.CAP_PROP_FPS))
+            self.total_frames = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)
+            self.millisecs = int(1000.0 / self.fps / self.speed)
+
+            if seconds > 0:
+                frames_to_skip = int(self.fps * seconds)
+                new_frame_position = min(frames_to_skip, self.total_frames - 60)
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame_position)
+
             self.timer = QTimer()
-            millisecs = int(1000.0 / fps)
             self.timer.setTimerType(Qt.PreciseTimer)
             self.timer.timeout.connect(self.next_frame_slot)
-            self.timer.start(millisecs)
+            self.timer.start(self.millisecs)
         except Exception:
             pass
 
@@ -1271,6 +1368,97 @@ class VideoLayout(Layout):
                 self.timer.stop()
             else:
                 self.timer.start()
+        except Exception:
+            pass
+
+    def double_speed(self) -> None:
+        try:
+            if self.speed < 4:
+                self.speed *= 2
+            self.millisecs = int(1000.0 / self.fps / self.speed)
+            self.speed_text = "Speed: x" + str(self.speed)
+            self.timer.setInterval(self.millisecs)
+            self.speed_label.setText(self.speed_text)
+        except Exception:
+            pass
+
+    def half_speed(self) -> None:
+        try:
+            if self.speed > 0.06:
+                self.speed / 2
+            self.millisecs = int(1000.0 / self.fps / self.speed)
+            self.speed_text = "Speed: x" + str(self.speed)
+            self.timer.setInterval(self.millisecs)
+            self.speed_label.setText(self.speed_text)
+        except Exception:
+            pass
+
+    def forward_frame(self) -> None:
+        try:
+            if self.timer.isActive():
+                self.timer.stop()
+            self.next_frame_slot()
+        except Exception:
+            pass
+
+    def backward_frame(self) -> None:
+        try:
+            if self.timer.isActive():
+                self.timer.stop()
+            if self.cap.isOpened():
+                current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                new_frame_position = max(0, current_frame - 2)
+                print(current_frame, new_frame_position)
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame_position)
+                self.next_frame_slot()
+        except Exception:
+            pass
+
+    def forward_ten_seconds(self) -> None:
+        try:
+            if self.cap.isOpened():
+                current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                frames_to_skip = int(self.fps * 10)
+                new_frame_position = min(
+                    current_frame + frames_to_skip, self.total_frames - 1
+                )
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame_position)
+                self.next_frame_slot()
+        except Exception:
+            pass
+
+    def backward_ten_seconds(self) -> None:
+        try:
+            if self.cap.isOpened():
+                current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                frames_to_skip = int(self.fps * 10)
+                new_frame_position = max(0, current_frame - frames_to_skip)
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame_position)
+                self.next_frame_slot()
+        except Exception:
+            pass
+
+    def forward_five_minutes(self) -> None:
+        try:
+            if self.cap.isOpened():
+                current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                frames_to_skip = int(self.fps * 60 * 5)
+                new_frame_position = min(
+                    current_frame + frames_to_skip, self.total_frames - 1
+                )
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame_position)
+                self.next_frame_slot()
+        except Exception:
+            pass
+
+    def backward_five_minutes(self) -> None:
+        try:
+            if self.cap.isOpened():
+                current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                frames_to_skip = int(self.fps * 60 * 5)
+                new_frame_position = max(0, current_frame - frames_to_skip)
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame_position)
+                self.next_frame_slot()
         except Exception:
             pass
 
@@ -1295,9 +1483,6 @@ class VideoLayout(Layout):
                 frame.strides[0],
                 QImage.Format_BGR888,
             )
-
-            # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            # img = QImage(frame, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
 
             pix = QPixmap.fromImage(img)
             self.video_label.setPixmap(pix)

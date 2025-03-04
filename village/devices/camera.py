@@ -66,13 +66,8 @@ class Camera(CameraProtocol):
         self.path_video = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".mp4")
         self.path_csv = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".csv")
         self.path_picture = os.path.join(settings.get("DATA_DIRECTORY"), name + ".jpg")
-        # self.output = FfmpegOutput(self.path_video)
-        # self.output = FfmpegOutput(
-        #     self.path_video, extra_args=["-thread_queue_size", "1024"]
-        # )
-
-        # self.output = FfmpegOutput(self.path_video + " -thread_queue_size 1024")
         self.output = FfmpegOutput(self.path_video)
+        self.filename = ""
         self.cam.pre_callback = self.pre_process
 
         color_area1 = settings.get("COLOR_AREA1")
@@ -99,12 +94,9 @@ class Camera(CameraProtocol):
         self.origin_rectangle = (0, 0)
         self.end_rectangle = (640, 40)
 
-        self.origin_timestamps = (3, 15)
-        self.origin_trial = (160, 15)
-        self.origin_state = (230, 15)
+        self.origin_text1 = (3, 15)
+        self.origin_text2 = (3, 30)
 
-        self.origin_timings = (3, 30)
-        self.origin_frame_number = (120, 30)
         origin_area1 = (240, 30)
         origin_area2 = (340, 30)
         origin_area3 = (440, 30)
@@ -194,6 +186,7 @@ class Camera(CameraProtocol):
         self.cam.start_preview(Preview.NULL)
 
     def start_record(self, path_video: str = "", path_csv: str = "") -> None:
+        self.filename = os.path.splitext(os.path.basename(path_video))[0]
         time_start = time_utils.now_string_for_filename()
         self.chrono.reset()
         if path_video != "":
@@ -231,6 +224,7 @@ class Camera(CameraProtocol):
         self.frame_number = 0
         self.timestamp = ""
         self.error = ""
+        self.filename = ""
         self.chrono.reset()
 
     def save_csv(self) -> None:
@@ -293,9 +287,7 @@ class Camera(CameraProtocol):
                 self.detect()
                 self.draw_detection()
                 self.draw_rectangles()
-                self.write_frame_number_and_timestamp()
-                self.write_state()
-                self.write_trial()
+                self.write_texts()
                 self.write_pixel_detection()
                 self.write_csv()
                 if self.name == "BOX" and self.is_recording:
@@ -381,43 +373,23 @@ class Camera(CameraProtocol):
                         self.thickness_line,
                     )
 
-    def write_state(self) -> None:
-        if self.state == "":
-            return
-
-        cv2.putText(
-            self.frame,
-            self.state,
-            self.origin_state,
-            self.font,
-            self.scale,
-            self.color_state,
-            self.thickness_text,
-        )
-
-    def write_trial(self) -> None:
-        if self.trial == 0:
-            return
-
-        cv2.putText(
-            self.frame,
-            "trial: " + str(self.trial),
-            self.origin_trial,
-            self.font,
-            self.scale,
-            self.color_text,
-            self.thickness_text,
-        )
-
-    def write_frame_number_and_timestamp(self) -> None:
+    def write_texts(self) -> None:
         if not self.show_time_info:
             self.frame_number = 0
             self.timing = 0
 
+        text_trial = "trial: " + str(self.trial) if self.trial != 0 else ""
+        text_filename = self.filename if self.filename != "" else self.timestamp
+        text_frame = "frame: " + str(self.frame_number)
+        text_timing = time_utils.format_duration(self.timing)
+
+        text1 = text_filename + "  " + text_trial + "  " + self.state
+        text2 = text_timing + "  " + text_frame
+
         cv2.putText(
             self.frame,
-            self.timestamp,
-            self.origin_timestamps,
+            text1,
+            self.origin_text1,
             self.font,
             self.scale,
             self.color_text,
@@ -426,18 +398,8 @@ class Camera(CameraProtocol):
 
         cv2.putText(
             self.frame,
-            "frame: " + str(self.frame_number),
-            self.origin_frame_number,
-            self.font,
-            self.scale,
-            self.color_text,
-            self.thickness_text,
-        )
-
-        cv2.putText(
-            self.frame,
-            time_utils.format_duration(self.timing),
-            self.origin_timings,
+            text2,
+            self.origin_text2,
             self.font,
             self.scale,
             self.color_text,

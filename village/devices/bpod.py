@@ -122,8 +122,7 @@ class PyBpod(PyBpodProtocol):
     def register_value(self, name: str, value: Any) -> None:
         self.bpod.register_value(name, value)
 
-    def send_softcode(self, idx: int) -> None:
-        # TODO: Move outside bpod as this is to receive softcodes in bpod
+    def receive_softcode(self, idx: int) -> None:
         self.softcode.send(idx)
 
     def manual_override_input(self, message: str) -> None:

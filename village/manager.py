@@ -92,6 +92,7 @@ class Manager:
         self.detections = time_utils.TimestampTracker(hours=6)
         self.sessions = time_utils.TimestampTracker(hours=12)
         self.detection_change = True
+        self.error_in_manual_task = False
 
     def create_collections(self) -> None:
         self.events = Collection(
@@ -318,19 +319,6 @@ class Manager:
         rfid_reader_name = self.rfid_reader.name
         cycle_text = self.cycle_text
 
-        # TODO: add the state of the bpod, but this would have to be
-        # implemented in the bpod code, sending a signal to the manager
-        # when the state changes
-        # try:
-        #     bpod_state = (
-        #         "BPOD state: "
-        #         + self.task.bpod.sma.state_names[
-        #               self.task.bpod.sma.current_state
-        #           ]  # type: ignore
-        #     )
-        # except Exception:
-        #     bpod_state = ""
-
         self.text = (
             "     SYSTEM STATE: "
             + state_name
@@ -379,6 +367,7 @@ class Manager:
                 subject=self.subject.name,
                 exception=traceback.format_exc(),
             )
+            self.error_in_manual_task = True
             return False
 
     def launch_task_auto(self, cam: CameraProtocol) -> bool:
@@ -440,6 +429,7 @@ class Manager:
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
+                self.error_in_manual_task = True
                 self.state = State.SAVE_MANUAL
             elif self.state in [
                 State.LAUNCH_AUTO,

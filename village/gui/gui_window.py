@@ -94,6 +94,7 @@ class GuiWindow(QWidget):
         self.gui.reload_app()
 
     def update_gui(self) -> None:
+        self.layout.check_errors()
         self.layout.update_gui()
         self.check_update_chrono()
 

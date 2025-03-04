@@ -74,7 +74,7 @@ class PyBpodProtocol:
     def register_value(self, name: str, value: Any) -> None:
         return
 
-    def send_softcode(self, idx: int) -> None:
+    def receive_softcode(self, idx: int) -> None:
         return
 
     def led(self, i: int, close: bool) -> None:
