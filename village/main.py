@@ -123,7 +123,7 @@ def system_run(bevavior_window: QWidget) -> None:
                         manager.get_subject_from_tag(id)
                         and manager.subject.create_from_subject_series(auto=True)
                         and manager.subject.minimum_time_ok()
-                        and not cam_corridor.areas_corridor_ok()
+                        and cam_corridor.areas_corridor_ok()
                         and not manager.multiple_detections(multiple)
                     ):
                         checking_subject_requirements = False
@@ -154,6 +154,7 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.RUN_FIRST:
                 # Task running, waiting for the corridor to become empty"
                 id, multiple = rfid.get_id()
+                print(id, manager.subject.tag)
                 if id != manager.subject.tag and id != "":
                     log.alarm(
                         "Wrong RFID detection."
@@ -173,7 +174,12 @@ def system_run(bevavior_window: QWidget) -> None:
                     )
                     manager.state = State.OPEN_DOOR2_STOP
 
-                elif cam_corridor.area_3_empty() and cam_corridor.area_4_empty():
+                elif (
+                    cam_corridor.area_2_empty()
+                    and cam_corridor.area_3_empty()
+                    and cam_corridor.area_4_empty()
+                    and manager.task.chrono.get_seconds() > 5
+                ):
                     manager.state = State.CLOSE_DOOR2
 
             case State.CLOSE_DOOR2:

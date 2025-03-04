@@ -17,6 +17,7 @@ class Subject:
         self.subject_series: pd.Series | None = None
 
     def create_from_subject_series(self, auto: bool) -> bool:
+        print("create_from_subject_series")
         if self.subject_series is not None:
             try:
                 self.name = self.subject_series["name"]
@@ -39,6 +40,7 @@ class Subject:
             return False
 
     def minimum_time_ok(self) -> bool:
+        print("minimum_time_ok")
         next_session = time_utils.date_from_string(self.next_session_time)
         now = time_utils.now()
         if not utils.is_active(self.active):

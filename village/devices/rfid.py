@@ -31,13 +31,14 @@ class Rfid:
         while self.running:
             try:
                 line = self.s.readline().decode("utf-8").strip()
-                if len(line) > 8:
-                    self.id_history.append((self.id, time_utils.now()))
-                    self.clean_old_ids()
-                    self.update_multiple()
-                    self.id = line
+                if len(line) < 8:
+                    continue
+                self.id = line[-10:]
+                self.id_history.append((self.id, time_utils.now()))
+                self.clean_old_ids()
+                self.update_multiple()
             except UnicodeDecodeError:
-                line = ""
+                pass
 
     def clean_old_ids(self) -> None:
         current_time = time_utils.now()

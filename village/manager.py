@@ -270,6 +270,7 @@ class Manager:
             log.info(str(number_of_tasks) + " tasks successfully imported")
 
     def get_subject_from_tag(self, tag: str) -> bool:
+        print("get subject from tag")
         subject_series = self.subjects.get_last_entry(column="tag", value=tag)
 
         if subject_series is None:
@@ -339,6 +340,7 @@ class Manager:
         )
 
     def multiple_detections(self, multiple: bool) -> bool:
+        print("multiple detections")
         if multiple:
             log.info(
                 "Multiple tags detected in the last seconds",

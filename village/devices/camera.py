@@ -119,7 +119,7 @@ class Camera(CameraProtocol):
         self.timestamp = ""
 
         self.masks: list[Any] = []
-        self.counts: list[int] = []
+        self.counts: list[int] = [-1, -1, -1, -1]
         self.cropped_frames: list[Any] = []
 
         self.error = ""
@@ -309,29 +309,27 @@ class Camera(CameraProtocol):
 
     def detect_black(self) -> None:
         self.masks = []
-        self.counts = []
         for index, frame in enumerate(self.cropped_frames):
             if self.areas_active[index]:
                 threshold = self.thresholds[index]
                 _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY_INV)
                 self.masks.append(thresh)
-                self.counts.append(cv2.countNonZero(thresh))
+                self.counts[index] = cv2.countNonZero(thresh)
             else:
                 self.masks.append(-1)
-                self.counts.append(-1)
+                self.counts[index] = -1
 
     def detect_white(self) -> None:
         self.masks = []
-        self.counts = []
         for index, frame in enumerate(self.cropped_frames):
             if self.areas_active[index]:
                 threshold = self.thresholds[index]
                 _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY)
                 self.masks.append(thresh)
-                self.counts.append(cv2.countNonZero(thresh))
+                self.counts[index] = cv2.countNonZero(thresh)
             else:
                 self.masks.append(-1)
-                self.counts.append(-1)
+                self.counts[index] = -1
 
     def draw_detection(self) -> None:
         if self.view_detection:
@@ -461,6 +459,7 @@ class Camera(CameraProtocol):
         self.state = text
 
     def areas_corridor_ok(self) -> bool:
+        print("areas_corridor_ok")
         if self.counts[0] > self.zero_or_one_mouse:
             log.info("Detection in area1: " + str(self.counts[0]))
             return False
