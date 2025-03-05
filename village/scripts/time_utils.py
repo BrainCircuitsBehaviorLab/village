@@ -66,13 +66,13 @@ def date_from_path(path: str) -> datetime:
     return datetime.strptime(date_str, "%Y%m%d_%H%M%S")
 
 
-def one_week_ago_init_times(
-    first: datetime, second: datetime
+def days_ago_init_times(
+    first: datetime, second: datetime, days: int
 ) -> tuple[datetime, datetime]:
     if first.time() < datetime.now().time():
-        day = datetime.now() - timedelta(days=6)
+        day = datetime.now() - timedelta(days=days - 1)
     else:
-        day = datetime.now() - timedelta(days=7)
+        day = datetime.now() - timedelta(days=days)
 
     value1 = day.replace(
         hour=first.hour,

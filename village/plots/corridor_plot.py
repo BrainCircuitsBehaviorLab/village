@@ -26,7 +26,7 @@ def corridor_plot(
         color_first = "gray"
         color_second = "white"
 
-    start_first, start_second = time_utils.one_week_ago_init_times(first, second)
+    start_first, start_second = time_utils.days_ago_init_times(first, second, 3)
     end = time_utils.tomorrow_init_time(first)
 
     df["date"] = pd.to_datetime(df["date"])
@@ -37,12 +37,15 @@ def corridor_plot(
         (df["description"] == "Subject detected") & (df["subject"].isin(subjects))
     ]
 
+    print(subjects)
+    print(detections)
+
     fig, ax = plt.subplots(figsize=(width, height))
 
-    starts_firsts = [start_first + timedelta(days=i) for i in range(7)]
-    start_seconds = [start_second + timedelta(days=i) for i in range(7)]
+    starts_firsts = [start_first + timedelta(days=i) for i in range(3)]
+    start_seconds = [start_second + timedelta(days=i) for i in range(3)]
 
-    for i in range(7):
+    for i in range(3):
         # ax.axvspan(starts_firsts[i], end, color=color_second)
         ax.axvspan(starts_firsts[i], start_seconds[i], color=color_first)
 
@@ -51,6 +54,8 @@ def corridor_plot(
     )
 
     y_positions = {subject: i for i, subject in enumerate(subjects)}
+
+    print(y_positions)
 
     for subject in subjects:
         subject_data = df[df["subject"] == subject]
