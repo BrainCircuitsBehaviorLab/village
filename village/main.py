@@ -177,7 +177,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     cam_corridor.area_2_empty()
                     and cam_corridor.area_3_empty()
                     and cam_corridor.area_4_empty()
-                    and manager.task.chrono.get_seconds() > 5
+                    and manager.task.chrono.get_seconds() > 1
                 ):
                     manager.state = State.CLOSE_DOOR2
 
@@ -206,7 +206,7 @@ def system_run(bevavior_window: QWidget) -> None:
                         "Minimum time reached, subject can leave.",
                         subject=manager.subject.name,
                     )
-                    manager.state = State.OPEN_DOOR2_STOP
+                    manager.state = State.OPEN_DOOR2
 
             case State.OPEN_DOOR2:
                 # Opening door2
@@ -234,7 +234,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     )
                     manager.state = State.SAVE_INSIDE
                 else:
-                    weight = scale.get_weight_subject()
+                    weight = scale.get_weight()
                     if weight > settings.get("WEIGHT_THRESHOLD"):
                         log.info(
                             "Weight detected " + str(weight) + " g",
@@ -282,7 +282,7 @@ def system_run(bevavior_window: QWidget) -> None:
                         )
                     log.alarm(text, subject=manager.subject.name)
                     manager.max_time_counter += 1
-                weight = scale.get_weight_subject()
+                weight = scale.get_weight()
                 if weight > settings.get("WEIGHT_THRESHOLD"):
                     log.info(
                         "Weight detected " + str(weight) + " g",

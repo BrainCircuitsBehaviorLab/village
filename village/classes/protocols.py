@@ -106,9 +106,6 @@ class ScaleProtocol:
     def get_weight(self) -> float:
         return 0.0
 
-    def get_weight_subject(self) -> float:
-        return 0.0
-
     def get_weight_string(self) -> str:
         return ""
 

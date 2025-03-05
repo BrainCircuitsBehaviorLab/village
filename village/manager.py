@@ -488,6 +488,12 @@ class Manager:
         self.training.settings = self.task.settings
         next_settings = self.training.get_jsonstring(exclude=["observations"])
         df.loc[df["name"] == manager.subject.name, "next_settings"] = next_settings
+
+        time_val = time_utils.time_in_future_seconds(
+            int(self.training.settings.refractary_period)
+        )
+        time_str = time_utils.string_from_date(time_val)
+        df.loc[df["name"] == manager.subject.name, "next_session_time"] = time_str
         self.subjects.df = df
         self.subjects.save_from_df(self.training)
 

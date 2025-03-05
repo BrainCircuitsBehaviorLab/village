@@ -52,9 +52,6 @@ class Scale(ScaleProtocol):
         weight = self.get_weight()
         return "{:.2f} g".format(weight)
 
-    def get_weight_subject(self) -> float:
-        return 0.0
-
     def get_weight(self) -> float:
         try:
             value, correct = self.average(5)

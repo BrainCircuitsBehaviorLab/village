@@ -8,6 +8,10 @@ def now() -> datetime:
     return datetime.now()
 
 
+def time_in_future_seconds(seconds: int) -> datetime:
+    return datetime.now() + timedelta(seconds=seconds)
+
+
 def hours_ago(hours: int) -> datetime:
     return datetime.now() - timedelta(hours=hours)
 
