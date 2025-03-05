@@ -154,7 +154,6 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.RUN_FIRST:
                 # Task running, waiting for the corridor to become empty"
                 id, multiple = rfid.get_id()
-                print(id, manager.subject.tag)
                 if id != manager.subject.tag and id != "":
                     log.alarm(
                         "Wrong RFID detection."
@@ -302,6 +301,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Opening door2, disconnecting RFID
                 motor2.open()
                 manager.rfid_reader = Active.OFF
+                manager.rfid_changed = True
                 manager.state = State.SAVE_INSIDE
 
             case State.MANUAL_MODE:
@@ -311,7 +311,6 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.LAUNCH_MANUAL:
                 # Manually launching the task
                 if manager.launch_task_manual(cam_box):
-                    # manager.task.cam_box = cam_box
                     manager.detection_change = True
                     manager.state = State.RUN_MANUAL
                 else:

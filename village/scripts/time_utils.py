@@ -56,13 +56,9 @@ def date_from_setting_string(string: str) -> datetime:
 
 
 def date_from_path(path: str) -> datetime:
-    print(path)
     filename = path.split("/")[-1]
-    print(filename)
     filename = filename[:-4]
-    print(filename)
     date_str = "_".join(filename.split("_")[-2:])
-    print(date_str)
     return datetime.strptime(date_str, "%Y%m%d_%H%M%S")
 
 
@@ -139,7 +135,7 @@ def find_closest_file_and_seconds(
     if closest_file is not None and closest_time is not None:
         path = os.path.join(directory, closest_file)
         time = date - closest_time
-        time_seconds = int(time.total_seconds() - 30)
+        time_seconds = int(time.total_seconds() - 10)
 
     return path, time_seconds
 

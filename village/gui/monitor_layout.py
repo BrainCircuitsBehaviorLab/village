@@ -415,6 +415,9 @@ class MonitorLayout(Layout):
 
     def update_gui(self) -> None:
         self.update_status_label_buttons()
+        if manager.rfid_changed:
+            manager.rfid_changed = False
+            self.rfid_reader_button.on_pressed_no_action()
         match manager.info:
             case manager.info.SYSTEM_INFO:
                 self.page5Layout.update_gui()

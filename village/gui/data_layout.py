@@ -888,11 +888,32 @@ class DfLayout(Layout):
 
     def get_selected_row_series(self) -> pd.Series | None:
         selected_indexes = self.model.table_view.selectionModel().selectedRows()
-        if selected_indexes:
-            index = selected_indexes[0]
-            return self.model.df.iloc[index.row()]
-        else:
+        if not selected_indexes:
             return None
+        index = selected_indexes[0]
+        return self.model.df.iloc[index.row()]
+
+    def get_seconds_from_session_row(self) -> int:
+        try:
+            selected_indexes = self.model.table_view.selectionModel().selectedRows()
+            if not selected_indexes:
+                return 0
+            index = selected_indexes[0].row()
+            if "TRIAL_START" in self.model.df.columns:
+                init_time = self.model.df.iloc[0]["TRIAL_START"]
+                row_time = self.model.df.iloc[index]["TRIAL_START"]
+                return int(row_time - init_time)
+            else:
+                init_time = self.model.df.iloc[0]["START"]
+                while index >= 0:
+                    row = self.model.df.iloc[index]
+                    if not pd.isna(row["START"]):
+                        row_time = row["START"]
+                        return int(row_time - init_time)
+                    index -= 1
+                return 0
+        except Exception:
+            return 0
 
     def get_path_and_seconds_from_events_row(self, row: pd.Series) -> tuple[str, int]:
         date_str = row["date"]
@@ -937,14 +958,6 @@ class DfLayout(Layout):
 
         return paths
 
-    def get_seconds_from_session_row(self, path: str, row: pd.Series) -> int:
-        date_str = row["date"]
-        date = time_utils.date_from_string(date_str)
-        file_date = time_utils.date_from_path(path)
-        time = date - file_date
-        time_seconds = int(time.total_seconds() - 30)
-        return time_seconds
-
     def video_button_clicked(self) -> None:
         path = ""
         selected_row = self.get_selected_row_series()
@@ -956,10 +969,10 @@ class DfLayout(Layout):
                 seconds = 0
             elif manager.table == DataTable.OLD_SESSION:
                 path = self.video_selected_path
-                seconds = self.get_seconds_from_session_row(path, selected_row)
+                seconds = self.get_seconds_from_session_row()
             elif manager.table == DataTable.OLD_SESSION_RAW:
                 path = self.video_selected_path
-                seconds = self.get_seconds_from_session_row(path, selected_row)
+                seconds = self.get_seconds_from_session_row()
         else:
             if manager.table == DataTable.OLD_SESSION:
                 path = self.video_selected_path
@@ -1408,7 +1421,6 @@ class VideoLayout(Layout):
             if self.cap.isOpened():
                 current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
                 new_frame_position = max(0, current_frame - 2)
-                print(current_frame, new_frame_position)
                 self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame_position)
                 self.next_frame_slot()
         except Exception:

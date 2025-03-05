@@ -93,6 +93,7 @@ class Manager:
         self.sessions = time_utils.TimestampTracker(hours=12)
         self.detection_change = True
         self.error_in_manual_task = False
+        self.rfid_changed = False
 
     def create_collections(self) -> None:
         self.events = Collection(
@@ -270,7 +271,6 @@ class Manager:
             log.info(str(number_of_tasks) + " tasks successfully imported")
 
     def get_subject_from_tag(self, tag: str) -> bool:
-        print("get subject from tag")
         subject_series = self.subjects.get_last_entry(column="tag", value=tag)
 
         if subject_series is None:
@@ -340,7 +340,6 @@ class Manager:
         )
 
     def multiple_detections(self, multiple: bool) -> bool:
-        print("multiple detections")
         if multiple:
             log.info(
                 "Multiple tags detected in the last seconds",
@@ -373,12 +372,6 @@ class Manager:
             return False
 
     def launch_task_auto(self, cam: CameraProtocol) -> bool:
-        self.task.create_paths()
-        if self.subject != "None":
-            self.task.cam_box = cam
-            self.task.cam_box.start_record(
-                self.task.video_path, self.task.video_data_path
-            )
         try:
             self.weight = np.nan
             self.training.load_settings_from_jsonstring(self.subject.next_settings)
@@ -397,6 +390,11 @@ class Manager:
                 self.task.subject = self.subject.name
                 self.task.settings = self.training.settings
                 self.task.training = self.training
+                self.task.create_paths()
+                self.task.cam_box = cam
+                self.task.cam_box.start_record(
+                    self.task.video_path, self.task.video_data_path
+                )
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True

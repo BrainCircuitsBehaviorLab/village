@@ -21,7 +21,6 @@ class RTPlots:
         plotting.start()
 
     def plot_thread(self) -> None:
-        print("create the plots")
         self.running = False
 
 

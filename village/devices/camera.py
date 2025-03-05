@@ -118,7 +118,7 @@ class Camera(CameraProtocol):
         self.chrono = time_utils.Chrono()
         self.timestamp = ""
 
-        self.masks: list[Any] = []
+        self.masks: list[Any] = [-1, -1, -1, -1]
         self.counts: list[int] = [-1, -1, -1, -1]
         self.cropped_frames: list[Any] = []
 
@@ -297,9 +297,9 @@ class Camera(CameraProtocol):
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
     def crop_areas(self) -> None:
-        self.cropped_frames = []
-        for f in self.areas:
-            self.cropped_frames.append(self.gray_frame[f[1] : f[3], f[0] : f[2]])
+        self.cropped_frames = [
+            self.gray_frame[f[1] : f[3], f[0] : f[2]] for f in self.areas
+        ]
 
     def detect(self) -> None:
         if self.color == Color.BLACK:
@@ -308,27 +308,25 @@ class Camera(CameraProtocol):
             self.detect_white()
 
     def detect_black(self) -> None:
-        self.masks = []
         for index, frame in enumerate(self.cropped_frames):
             if self.areas_active[index]:
                 threshold = self.thresholds[index]
                 _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY_INV)
-                self.masks.append(thresh)
+                self.masks[index] = thresh
                 self.counts[index] = cv2.countNonZero(thresh)
             else:
-                self.masks.append(-1)
+                self.masks[index] = -1
                 self.counts[index] = -1
 
     def detect_white(self) -> None:
-        self.masks = []
         for index, frame in enumerate(self.cropped_frames):
             if self.areas_active[index]:
                 threshold = self.thresholds[index]
                 _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY)
-                self.masks.append(thresh)
+                self.masks[index] = thresh
                 self.counts[index] = cv2.countNonZero(thresh)
             else:
-                self.masks.append(-1)
+                self.masks[index] = -1
                 self.counts[index] = -1
 
     def draw_detection(self) -> None:

@@ -59,7 +59,6 @@ class Scale(ScaleProtocol):
         try:
             value, correct = self.average(5)
             if correct:
-                print(value, self.offset, self.calibration)
                 return abs((value - self.offset) / self.calibration)
             else:
                 return 0.0
