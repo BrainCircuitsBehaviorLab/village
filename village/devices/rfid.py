@@ -58,21 +58,14 @@ class Rfid:
         self.s.close()
         self.thread.join()
 
-    # def get_id(self) -> tuple[str, bool]:
-    #     if manager.rfid_reader == Active.ON:
-    #         value = (self.id, self.multiple)
-    #         self.id = ""
-    #         self.multiple = False
-    #         return value
-    #     else:
-    #         return ("", False)
-
     def get_id(self) -> tuple[str, bool]:
         if manager.rfid_reader == Active.ON:
-            return ("", False)
+            value = (self.id, self.multiple)
+            self.id = ""
+            self.multiple = False
+            return value
         else:
-            manager.rfid_reader = Active.ON
-            return ("abcd", False)
+            return ("", False)
 
 
 rfid = Rfid()
