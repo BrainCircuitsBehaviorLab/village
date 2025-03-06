@@ -68,7 +68,7 @@ def system_run(bevavior_window: QWidget) -> None:
         settings.get("DAYTIME"), settings.get("NIGHTTIME")
     )
     detection_timer = time_utils.Timer(settings.get("DETECTION_DURATION"))
-    tare_timer = time_utils.Timer(600)
+    tare_timer = time_utils.Timer(settings.get("REPEAT_TARE_TIME"))
 
     cam_corridor.start_record()
 

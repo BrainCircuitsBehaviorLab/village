@@ -41,14 +41,14 @@ def print_info_about_the_connected_cameras() -> None:
 
 # the camera class
 class Camera(CameraProtocol):
-    def __init__(self, index: int, name: str) -> None:
+    def __init__(self, index: int, frame_duration: int, name: str) -> None:
 
         # camera settings
         cam_raw = {"size": (2304, 1296)}
         cam_main = {"size": (640, 480)}
         cam_controls = {
             "NoiseReductionMode": controls.draft.NoiseReductionModeEnum.Fast,
-            "FrameDurationLimits": (33333, 33333),
+            "FrameDurationLimits": (frame_duration, frame_duration),
             "AfMode": controls.AfModeEnum.Manual,
             "LensPosition": 0.0,
         }
@@ -513,9 +513,9 @@ class Camera(CameraProtocol):
         self.cam.capture_file(self.path_picture)
 
 
-def get_camera(index: int, name: str) -> CameraProtocol:
+def get_camera(index: int, frame_duration: int, name: str) -> CameraProtocol:
     try:
-        cam = Camera(index, name)
+        cam = Camera(index, frame_duration, name)
         log.info("Cam " + name + " successfully initialized")
         return cam
     except Exception:
@@ -523,5 +523,11 @@ def get_camera(index: int, name: str) -> CameraProtocol:
         return CameraProtocol()
 
 
-cam_corridor = get_camera(1, "CORRIDOR")
-cam_box = get_camera(0, "BOX")
+cam_corridor = get_camera(
+    settings.get("CAMERA_CORRIDOR_INDEX"),
+    settings.get("CAMERA_CORRIDOR_FRAME_DURATION"),
+    "CORRIDOR",
+)
+cam_box = get_camera(
+    settings.get("CAMERA_BOX_INDEX"), settings.get("CAMERA_BOX_FRAME_DURATION"), "BOX"
+)

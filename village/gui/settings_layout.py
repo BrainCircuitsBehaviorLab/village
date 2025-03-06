@@ -514,14 +514,14 @@ class SettingsLayout(Layout):
         modify = ""
         if value == "OFF" and key == "USE_SOUNDCARD":
             self.delete_optional_widgets("SOUND SETTINGS")
-        elif value == "ON":
+        elif value == "ON" and key == "USE_SOUNDCARD":
             modify = "SOUND SETTINGS"
-        elif value == "OFF":
+        elif value == "OFF" and key == "USE_SCREEN":
             self.delete_optional_widgets("SCREEN SETTINGS")
             self.delete_optional_widgets("TOUCHSCREEN SETTINGS")
-        elif value == "SCREEN":
+        elif value == "SCREEN" and key == "USE_SCREEN":
             modify = "SCREEN SETTINGS"
-        elif value == "TOUCHSCREEN":
+        elif value == "TOUCHSCREEN" and key == "USE_SCREEN":
             modify = "TOUCHSCREEN SETTINGS"
 
         self.settings_changed(value, key)

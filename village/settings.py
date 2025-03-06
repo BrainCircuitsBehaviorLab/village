@@ -32,6 +32,22 @@ detection thresholds accordingly. This setting defines the hour at which
 nighttime begins.""",
     ),
     Setting(
+        "DAYS_OF_VIDEO_STORAGE",
+        7,
+        int,
+        "Number of days to store video data before deleting it.",
+    ),
+    Setting(
+        "DELETE_IF_NOT_BACKED_UP",
+        "OFF",
+        Active,
+        """If ON, the system deletes video data if it has not been backed up
+to a remote server. If ON, the system keeps the data until it is backed up.""",
+    ),
+]
+
+corridor_settings = [
+    Setting(
         "DETECTION_COLOR",
         "BLACK",
         Color,
@@ -39,22 +55,6 @@ nighttime begins.""",
 pixels against a white background. If the animals are lighter than the
 background, the system detects white pixels against a black background.""",
     ),
-    #     Setting(
-    #         "DAYS_OF_VIDEO_STORAGE",
-    #         7,
-    #         int,
-    #         "Number of days to store video data before deleting it.",
-    #     ),
-    #     Setting(
-    #         "DELETE_IF_NOT_BACKED_UP",
-    #         False,
-    #         bool,
-    #         """If True, the system deletes video data if it has not been backed up
-    # to a remote server. If False, the system keeps the data until it is backed up.""",
-    #     ),
-]
-
-corridor_settings = [
     Setting(
         "DETECTION_DURATION",
         0.5,
@@ -68,19 +68,6 @@ limits for this duration (in seconds).""",
         float,
         """To allow access, no other animals can have been detected within this number
 of seconds prior to a detection.""",
-    ),
-    Setting(
-        "CORRIDOR_VIDEOS_DURATION",
-        1800,
-        int,
-        "Duration of corridor videos (in seconds).",
-    ),
-    Setting(
-        "CORRIDOR_VIDEOS_STORED",
-        100,
-        int,
-        """Number of corridor videos stored. When the limit is reached, the oldest
-video is deleted each time a new video is recorded.""",
     ),
     Setting(
         "WEIGHT_THRESHOLD",
@@ -421,7 +408,7 @@ extra_settings = [
 ]
 
 
-modificable_settings = [
+advanced_settings = [
     Setting(
         "WEIGHT_DEVIATION_RATIO",
         0.25,
@@ -463,10 +450,40 @@ wait before sending the same alarm again.""",
 the minimum time in seconds to wait before sending the same alarm again.""",
     ),
     Setting(
+        "REPEAT_TARE_TIME",
+        600,
+        int,
+        "The interval in seconds at which the scale is tared.",
+    ),
+    Setting(
         "MATPLOTLIB_DPI",
         100,
         int,
         "The DPI of the matplotlib plots.",
+    ),
+    Setting(
+        "CAMERA_BOX_INDEX",
+        0,
+        int,
+        "The index (0, 1) of the box camera.",
+    ),
+    Setting(
+        "CAMERA_CORRIDOR_INDEX",
+        1,
+        int,
+        "The index (0, 1) of the corridor camera.",
+    ),
+    Setting(
+        "CAMERA_CORRIDOR_FRAME_DURATION",
+        100000,
+        int,
+        "The duration of the frame in ms for the corridor camera.",
+    ),
+    Setting(
+        "CAMERA_BOX_FRAME_DURATION",
+        33333,
+        int,
+        "The duration of the frame in ms for the box camera.",
     ),
 ]
 
@@ -485,8 +502,8 @@ settings = Settings(
     camera_settings,
     motor_settings,
     extra_settings,
-    modificable_settings,
+    advanced_settings,
 )
 
-
+# settings.restore_factory_settings()
 # settings.print()

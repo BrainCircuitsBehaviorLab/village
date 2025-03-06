@@ -918,6 +918,11 @@ class DfLayout(Layout):
     def get_path_and_seconds_from_events_row(self, row: pd.Series) -> tuple[str, int]:
         date_str = row["date"]
         date = time_utils.date_from_string(date_str)
+        time = time_utils.time_since_start(date).total_seconds()
+        if time < settings.get("CORRIDOR_VIDEO_DURATION"):
+            text = "The event is too recent. It is possible that "
+            text += "the video cannot be viewed until it has been fully recorded."
+            QMessageBox.information(self.window, "EDIT", text)
         video_directory = settings.get("VIDEOS_DIRECTORY")
         return time_utils.find_closest_file_and_seconds(
             video_directory, "CORRIDOR", date
@@ -1271,7 +1276,7 @@ class VideoLayout(Layout):
         self.video_label = QLabel()
         self.addWidget(self.video_label, 0, 0, 46, 210)
 
-        self.speed = 1
+        self.speed = 1.0
         self.speed_text = "Speed: x" + str(self.speed)
 
         self.create_and_add_button(
@@ -1386,7 +1391,7 @@ class VideoLayout(Layout):
 
     def double_speed(self) -> None:
         try:
-            if self.speed < 4:
+            if self.speed < 2:
                 self.speed *= 2
             self.millisecs = int(1000.0 / self.fps / self.speed)
             self.speed_text = "Speed: x" + str(self.speed)
@@ -1398,7 +1403,7 @@ class VideoLayout(Layout):
     def half_speed(self) -> None:
         try:
             if self.speed > 0.06:
-                self.speed / 2
+                self.speed /= 2
             self.millisecs = int(1000.0 / self.fps / self.speed)
             self.speed_text = "Speed: x" + str(self.speed)
             self.timer.setInterval(self.millisecs)
