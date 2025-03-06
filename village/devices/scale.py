@@ -36,6 +36,7 @@ class Scale(ScaleProtocol):
 
     def calibrate(self, weight: float) -> None:
         try:
+            self.offset = 0.0
             raw_value: float = self.get_weight() * self.calibration
             if raw_value < 0.01:
                 log.error("Error calibrating scale", exception=traceback.format_exc())
@@ -56,7 +57,7 @@ class Scale(ScaleProtocol):
         try:
             value, correct = self.average(5)
             if correct:
-                return abs((value - self.offset) / self.calibration)
+                return abs((value / self.calibration) - self.offset)
             else:
                 return 0.0
         except Exception:
