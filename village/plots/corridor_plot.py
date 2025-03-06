@@ -42,15 +42,14 @@ def corridor_plot(
 
     fig, ax = plt.subplots(figsize=(width, height))
 
-    starts_firsts = [start_first + timedelta(days=i) for i in range(3)]
-    start_seconds = [start_second + timedelta(days=i) for i in range(3)]
+    starts_first = [start_first + timedelta(days=i) for i in range(3)]
+    starts_second = [start_second + timedelta(days=i) for i in range(3)]
 
     for i in range(3):
-        # ax.axvspan(starts_firsts[i], end, color=color_second)
-        ax.axvspan(starts_firsts[i], start_seconds[i], color=color_first)
+        ax.axvspan(starts_first[i], starts_second[i], color=color_first)
 
     ax.scatter(
-        detections["date"], detections["subject"], s=10, c="blue", label="Detections"
+        detections["date"], detections["subject"], s=4, c="orange", label="Detections"
     )
 
     y_positions = {subject: i for i, subject in enumerate(subjects)}
@@ -69,23 +68,25 @@ def corridor_plot(
                 ax.plot(
                     [active_start, row["date"]],
                     [y_pos, y_pos],
-                    color="orange",
+                    color="blue",
                     linewidth=10,
+                    solid_capstyle="butt",
                 )
                 active_start = None
             elif row["type"] == "START" and active_start:
                 ax.plot(
                     [active_start, active_start + timedelta(minutes=5)],
                     [y_pos, y_pos],
-                    color="orange",
+                    color="blue",
                     linewidth=10,
+                    solid_capstyle="butt",
                 )
                 active_start = row["date"]
 
     ax.set_xlim(start_first, end)
     ax.set_ylim(-0.5, len(subjects) - 0.5)
 
-    ax.set_xticks(start_seconds)
+    ax.set_xticks(starts_second)
     ax.set_yticks(range(len(subjects)))
     ax.set_yticklabels(subjects)
     ax.xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter("%Y-%m-%d"))

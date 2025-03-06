@@ -47,6 +47,7 @@ class Camera(CameraProtocol):
         cam_raw = {"size": (2304, 1296)}
         cam_main = {"size": (640, 480)}
         cam_controls = {
+            "NoiseReductionMode": controls.draft.NoiseReductionModeEnum.Fast,
             "FrameDurationLimits": (33333, 33333),
             "AfMode": controls.AfModeEnum.Manual,
             "LensPosition": 0.0,
