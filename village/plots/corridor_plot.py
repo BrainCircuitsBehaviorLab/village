@@ -12,6 +12,8 @@ def corridor_plot(
     df: pd.DataFrame, subjects: list[str], width: float, height: float
 ) -> Figure:
 
+    subjects = sorted(subjects)
+
     day = time_utils.date_from_setting_string(settings.get("DAYTIME"))
     night = time_utils.date_from_setting_string(settings.get("NIGHTTIME"))
 
@@ -37,8 +39,7 @@ def corridor_plot(
         (df["description"] == "Subject detected") & (df["subject"].isin(subjects))
     ]
 
-    print(subjects)
-    print(detections)
+    detections = detections.sort_values(by="subject")
 
     fig, ax = plt.subplots(figsize=(width, height))
 
@@ -54,16 +55,22 @@ def corridor_plot(
 
     y_positions = {subject: i for i, subject in enumerate(subjects)}
 
-    print(y_positions)
-
     for subject in subjects:
         subject_data = df[df["subject"] == subject]
         active_start = None
         y_pos = y_positions[subject]
 
-        for _, row in subject_data.iterrows():
+        for i, (_, row) in enumerate(subject_data.iterrows()):
             if row["type"] == "START":
                 active_start = row["date"]
+                if i == len(subject_data) - 1:
+                    ax.plot(
+                        [active_start, active_start + timedelta(minutes=5)],
+                        [y_pos, y_pos],
+                        color="blue",
+                        linewidth=10,
+                        solid_capstyle="butt",
+                    )
             elif row["type"] == "END" and active_start:
                 ax.plot(
                     [active_start, row["date"]],
