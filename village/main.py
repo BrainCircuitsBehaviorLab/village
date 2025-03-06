@@ -68,6 +68,7 @@ def system_run(bevavior_window: QWidget) -> None:
         settings.get("DAYTIME"), settings.get("NIGHTTIME")
     )
     detection_timer = time_utils.Timer(settings.get("DETECTION_DURATION"))
+    tare_timer = time_utils.Timer(600)
 
     cam_corridor.start_record()
 
@@ -210,11 +211,21 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.OPEN_DOOR2:
                 # Opening door2
+                scale.tare()
+                tare_timer.reset()
+                time.sleep(0.5)
                 motor2.open()
                 manager.state = State.RUN_OPENED
 
             case State.RUN_OPENED:
                 # task running, the subject can leave
+                if (
+                    tare_timer.has_elapsed()
+                    and cam_corridor.area_2_empty()
+                    and cam_corridor.area_3_empty()
+                ):
+                    scale.tare()
+
                 id, multiple = rfid.get_id()
                 if id != "" and id != manager.subject.tag:
                     log.alarm(
