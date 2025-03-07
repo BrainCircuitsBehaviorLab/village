@@ -583,6 +583,7 @@ class MotorLayout(Layout):
             motor2.close_angle = val4
 
     def calibrate_scale_clicked(self) -> None:
+        scale.tare()
         val = settings.get("SCALE_WEIGHT_TO_CALIBRATE")
         self.reply = QDialog()
         self.reply.setWindowTitle("Calibrate scale")
@@ -592,7 +593,10 @@ class MotorLayout(Layout):
         height = self.row_height * 8
         self.reply.setGeometry(x, y, width, height)
         layout = QVBoxLayout()
-        label = QLabel("Enter the known weight in grams:")
+        text = "The scale has been tared. Make sure there was nothing on it, and now "
+        text += "place an object of known weight on top.\n"
+        text += "Enter the known weight value in grams:"
+        label = QLabel(text)
         layout.addWidget(label)
         self.lineEdit = QLineEdit()
         self.lineEdit.setPlaceholderText(str(val))

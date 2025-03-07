@@ -256,6 +256,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
+                log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()
                 manager.state = State.SAVE_OUTSIDE
@@ -304,12 +305,17 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
+                log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()
                 manager.state = State.WAIT
 
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
+                log.alarm(
+                    "Door2 opened and RFID deactivated, check the system.",
+                    subject=manager.subject.name,
+                )
                 motor2.open()
                 manager.rfid_reader = Active.OFF
                 manager.rfid_changed = True

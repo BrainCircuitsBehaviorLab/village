@@ -31,17 +31,17 @@ class Scale(ScaleProtocol):
     def tare(self) -> None:
         try:
             self.offset = self.average(5)[0]
+            log.info("The scale has been tared.")
         except Exception:
             log.error("Error taring scale", exception=traceback.format_exc())
 
     def calibrate(self, weight: float) -> None:
         try:
-            self.offset = 0.0
-            raw_value: float = self.get_weight() * self.calibration
-            if raw_value < 0.01:
+            raw_value: float = self.average(5)[0]
+            if raw_value < 1:
                 log.error("Error calibrating scale", exception=traceback.format_exc())
                 return
-            new_calibration = raw_value / weight
+            new_calibration = (raw_value - self.offset) / weight
             self.calibration = new_calibration
             settings.set("SCALE_CALIBRATION_VALUE", new_calibration)
             settings.set("SCALE_WEIGHT_TO_CALIBRATE", weight)
@@ -57,7 +57,7 @@ class Scale(ScaleProtocol):
         try:
             value, correct = self.average(5)
             if correct:
-                return abs((value / self.calibration) - self.offset)
+                return abs((value - self.offset) / self.calibration)
             else:
                 return 0.0
         except Exception:
