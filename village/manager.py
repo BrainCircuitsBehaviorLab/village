@@ -473,6 +473,7 @@ class Manager:
             self.save_to_sessions_summary(duration, trials, water, settings_str)
             try:
                 self.save_to_subjects()
+                log.info("Session and video data saved.", subject=self.subject.name)
             except Exception:
                 log.alarm(
                     "Error updating the training settings for task: " + self.task.name,
