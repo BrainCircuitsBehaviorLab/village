@@ -27,6 +27,11 @@ class Scale(ScaleProtocol):
         self.error = ""
         self.tare()
 
+        # open a file to write and leave it open
+        self.f = open("/home/pi/weights_debug.txt", "w")
+        # write headers
+        self.f.write("Weights;Correct\n")
+
     # @time_utils.measure_time
     def tare(self) -> None:
         try:
@@ -84,7 +89,13 @@ class Scale(ScaleProtocol):
         variance = sum([((x - average) ** 2) for x in weights]) / len(weights)
         sd: float = variance**0.5
         correct = (sd / average) < self.ratio
+        average = round(average, 2)
+        self.write_weights(weights, correct)
         return average, correct
+
+    def write_weights(self, weights: list[float], correct: bool) -> None:
+        self.f.write(f"{correct},{weights}\n")
+        self.f.flush()
 
     def read_reg(self, reg: int, len: int) -> list[int]:
         self.i2cbus.write_byte(self.I2C_ADDR, reg)
