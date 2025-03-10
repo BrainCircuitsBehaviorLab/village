@@ -91,6 +91,10 @@ class Manager:
         utils.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
         self.detections = time_utils.TimestampTracker(hours=6)
         self.sessions = time_utils.TimestampTracker(hours=12)
+        self.hour_change_detector = time_utils.HourChangeDetector()
+        self.cycle_change_detector = time_utils.CycleChangeDetector(
+            settings.get("DAYTIME"), settings.get("NIGHTTIME")
+        )
         self.detection_change = True
         self.error_in_manual_task = False
         self.rfid_changed = False
@@ -289,12 +293,8 @@ class Manager:
                 self.cycle_text = "NIGHT"
                 self.day = False
             case self.cycle.AUTO:
-                day = time_utils.date_from_setting_string(
-                    settings.get("DAYTIME")
-                ).time()
-                night = time_utils.date_from_setting_string(
-                    settings.get("NIGHTTIME")
-                ).time()
+                day = time_utils.time_from_setting_string(settings.get("DAYTIME"))
+                night = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
                 now = time_utils.now().time()
 
                 if day < night:
@@ -517,7 +517,7 @@ class Manager:
         )
 
     def cycle_checks(self) -> None:
-        minimum_water = float(settings.get("MINIMUM_WATER"))
+        minimum_water = float(settings.get("MINIMUM_WATER_24"))
         events = self.events.df.copy()
         subjects = self.subjects.df.copy()
         sessions_summary = self.sessions_summary.df.copy()
@@ -549,42 +549,66 @@ class Manager:
         active_hours = utils.calculate_active_hours(subjects)
 
         report_text = "REPORT\n\n"
-        report_text += "subject;detections;sessions;water;weight\n"
+        report_text += "subject,detections,sessions,water,weight\n"
+
+        non_detected_subjects = []
+        non_session_subjects = []
+        low_water_subjects = []
 
         for sub in active_subjects:
-            detections_str = str(subject_detections[sub])
-            sessions_str = str(subject_sessions[sub])
-            water_str = str(subject_water[sub])
-            weight_str = str(subject_weight[sub])
+            try:
+                detections_str = str(subject_detections[sub])
+            except KeyError:
+                detections_str = "0"
+                if active_hours[sub] >= 23:
+                    non_detected_subjects.append(sub)
+            try:
+                sessions_str = str(subject_sessions[sub])
+            except KeyError:
+                sessions_str = "0"
+                if active_hours[sub] >= 23:
+                    non_session_subjects.append(sub)
+            try:
+                water = subject_water[sub]
+                water_str = str(water)
+            except KeyError:
+                water = 0
+                water_str = "0"
+            if active_hours[sub] >= 23 and water < minimum_water:
+                low_water_subjects.append(sub)
+            try:
+                weight_str = str(subject_weight[sub])
+            except KeyError:
+                weight_str = "0"
             report_text += (
                 sub
-                + ";"
+                + ","
                 + detections_str
-                + ";"
+                + ","
                 + sessions_str
-                + ";"
+                + ","
                 + water_str
-                + ";"
+                + ","
                 + weight_str
                 + "\n"
             )
 
         log.alarm(report_text)
 
-        for sub in active_subjects:
-            water = subject_water[sub]
-            if active_hours[sub] >= 24:
-                if subject_detections[sub] == 0:
-                    log.alarm("No detections in the last 24 hours", subject=sub)
-                elif subject_sessions[sub] == 0:
-                    log.alarm("No sessions in the last 24 hours", subject=sub)
-                elif water < minimum_water:
-                    log.alarm(
-                        "Low water consumption ("
-                        + str(water)
-                        + "ml) in the last 24 hours",
-                        subject=sub,
-                    )
+        if len(non_detected_subjects) > 0:
+            log.alarm(
+                "No detections in the last 24 hours: "
+                + ", ".join(non_detected_subjects)
+            )
+        if len(non_session_subjects) > 0:
+            log.alarm(
+                "No sessions in the last 24 hours: " + ", ".join(non_session_subjects)
+            )
+        if len(low_water_subjects) > 0:
+            log.alarm(
+                "Low water consumption in the last 24 hours: "
+                + ", ".join(low_water_subjects)
+            )
 
     def hourly_checks(self) -> None:
         temp, _, temp_string = temp_sensor.get_temperature()
@@ -593,11 +617,11 @@ class Manager:
         elif temp < float(settings.get("MINIMUM_TEMPERATURE")):
             log.alarm("Temperature below minimum: " + temp_string)
 
-        if self.detections.clean_and_count() == 0:
+        if self.detections.trigger_empty():
             value = str(self.detections.hours)
             log.alarm("No subjects detected in the last " + value + " hours")
 
-        if self.sessions.clean_and_count() == 0:
+        if self.sessions.trigger_empty():
             value = str(self.sessions.hours)
             log.alarm("No sessions performed in the last " + value + " hours")
 

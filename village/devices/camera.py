@@ -513,8 +513,9 @@ class Camera(CameraProtocol):
         self.cam.capture_file(self.path_picture)
 
 
-def get_camera(index: int, frame_duration: int, name: str) -> CameraProtocol:
+def get_camera(index: int, framerate: int, name: str) -> CameraProtocol:
     try:
+        frame_duration = int(1000000 / framerate)
         cam = Camera(index, frame_duration, name)
         log.info("Cam " + name + " successfully initialized")
         return cam
@@ -524,10 +525,10 @@ def get_camera(index: int, frame_duration: int, name: str) -> CameraProtocol:
 
 
 cam_corridor = get_camera(
-    settings.get("CAMERA_CORRIDOR_INDEX"),
-    settings.get("CAMERA_CORRIDOR_FRAME_DURATION"),
+    settings.get("CAM_CORRIDOR_INDEX"),
+    settings.get("CAM_CORRIDOR_FRAME_DURATION"),
     "CORRIDOR",
 )
 cam_box = get_camera(
-    settings.get("CAMERA_BOX_INDEX"), settings.get("CAMERA_BOX_FRAME_DURATION"), "BOX"
+    settings.get("CAM_BOX_INDEX"), settings.get("CAM_BOX_FRAMERATE"), "BOX"
 )

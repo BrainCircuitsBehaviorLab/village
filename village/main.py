@@ -63,10 +63,6 @@ def system_run(bevavior_window: QWidget) -> None:
     multiple = False
     checking_subject_requirements = True
     trial = 0
-    hour_change_detector = time_utils.HourChangeDetector()
-    cycle_change_detector = time_utils.CycleChangeDetector(
-        settings.get("DAYTIME"), settings.get("NIGHTTIME")
-    )
     detection_timer = time_utils.Timer(settings.get("DETECTION_DURATION"))
     tare_timer = time_utils.Timer(settings.get("REPEAT_TARE_TIME"))
 
@@ -99,10 +95,10 @@ def system_run(bevavior_window: QWidget) -> None:
         else:
             trial = 0
 
-        if hour_change_detector.has_hour_changed():
+        if manager.hour_change_detector.has_hour_changed():
             manager.hourly_checks()
 
-        if cycle_change_detector.has_cycle_changed():
+        if manager.cycle_change_detector.has_cycle_changed():
             manager.cycle_checks()
             # TODO: delete data
 

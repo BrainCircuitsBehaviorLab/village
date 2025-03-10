@@ -11,7 +11,7 @@ from village.devices.camera import cam_box, cam_corridor
 from village.devices.sound_device import get_sound_devices
 from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
 from village.manager import manager
-from village.scripts import utils
+from village.scripts import time_utils, utils
 from village.settings import Setting, settings
 
 if TYPE_CHECKING:
@@ -45,114 +45,109 @@ class SettingsLayout(Layout):
             self.list_of_toggle_buttons: list[list[ToggleButton]] = []
             self.list_of_toggle_buttons_settings: list[Setting] = []
 
-            row = 5
+            row = 4
             name = "MAIN SETTINGS"
             label = self.create_and_add_label(name, row, 0, 30, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.main_settings:
-                self.create_label_and_value(row, 0, s, name, width=27)
+                self.create_label_and_value(row, 0, s, name, width=26)
                 row += 2
 
-            row += 4
-            name = "CORRIDOR SETTINGS"
-            label = self.create_and_add_label(name, row, 0, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.corridor_settings:
-                self.create_label_and_value(row, 0, s, name, width=27)
-                row += 2
-
-            row += 4
             name = "ALARM SETTINGS"
             label = self.create_and_add_label(name, row, 0, 30, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.alarm_settings:
-                self.create_label_and_value(row, 0, s, name, width=27)
+                self.create_label_and_value(row, 0, s, name, width=26)
                 row += 2
 
-        if all or modify == "DIRECTORY SETTINGS":
-            row = 5
-            name = "DIRECTORY SETTINGS"
-            label = self.create_and_add_label(name, row, 128, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.directory_settings:
-                self.create_label_and_value(row, 128, s, name, width=20)
-                row += 2
-
-        if all:
-            row += 4
-            name = "TELEGRAM SETTINGS"
-            label = self.create_and_add_label(name, row, 128, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.telegram_settings:
-                self.create_label_and_value(row, 128, s, name, width=20)
-                row += 2
-
-        if all:
-            row += 4
-            name = "SERVER SETTINGS"
-            label = self.create_and_add_label(name, row, 128, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.server_settings:
-                self.create_label_and_value(row, 128, s, name, width=20)
-                row += 2
-
-        if all:
-            row = 5
-            name = "SOUND SETTINGS"
-            label = self.create_and_add_label(name, row, 44, 30, 2, "black")
-            row = 8
-            s = settings.sound_settings[0]
-            self.create_label_and_value(row, 44, s, "")
-
-        if (
-            all and settings.get("USE_SOUNDCARD") == Active.ON
-        ) or modify == "SOUND SETTINGS":
-            row = 10
-            name = "SOUND SETTINGS"
-            for s in settings.sound_settings[1:]:
-                self.create_label_and_value(row, 44, s, name)
-                row += 2
-
-        if all:
-            row = 16
             name = "SCREEN SETTINGS"
-            label = self.create_and_add_label(name, row, 44, 30, 2, "black")
-            row = 18
+            label = self.create_and_add_label(name, row, 0, 30, 2, "black")
+            row += 2
             s = settings.screen_settings[0]
-            self.create_label_and_value(row, 44, s, "")
+            self.create_label_and_value(row, 0, s, "", width=26)
 
         if (
             all and settings.get("USE_SCREEN") != ScreenActive.OFF
         ) or modify == "SCREEN SETTINGS":
-            row = 20
+            row = 32
             name = "SCREEN SETTINGS"
             for s in settings.screen_settings[1:]:
-                self.create_label_and_value(row, 44, s, name)
+                self.create_label_and_value(row, 0, s, name, width=26)
                 row += 2
 
         if (
             all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
         ) or modify == "TOUCHSCREEN SETTINGS":
-            row = 24
+            row = 36
             name = "TOUCHSCREEN SETTINGS"
             for s in settings.touchscreen_settings:
-                self.create_label_and_value(row, 44, s, name)
+                self.create_label_and_value(row, 0, s, name, width=26)
                 row += 2
 
-        if all or modify == "BPOD SETTINGS":
-            row = 30
+        if all:
+            row = 42
+            name = "SOUND SETTINGS"
+            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
+            row += 2
+            s = settings.sound_settings[0]
+            self.create_label_and_value(row, 47, s, "", width=20)
+
+        if (
+            all and settings.get("USE_SOUNDCARD") == Active.ON
+        ) or modify == "SOUND SETTINGS":
+            row = 46
+            name = "SOUND SETTINGS"
+            for s in settings.sound_settings[1:]:
+                self.create_label_and_value(row, 47, s, name, width=20)
+                row += 2
+
+        if all:
+            row = 4
+            name = "TELEGRAM SETTINGS"
+            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.telegram_settings:
+                self.create_label_and_value(row, 47, s, name, width=20)
+                row += 2
+
             name = "BPOD SETTINGS"
-            label = self.create_and_add_label(name, row, 44, 30, 2, "black")
+            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.bpod_settings:
-                self.create_label_and_value(row, 44, s, name, width=31)
+                self.create_label_and_value(row, 47, s, name, width=31)
+                row += 2
+
+            name = "DIRECTORY SETTINGS"
+            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.directory_settings:
+                self.create_label_and_value(row, 47, s, name, width=20)
+                row += 2
+
+            name = "SERVER SETTINGS"
+            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.server_settings:
+                self.create_label_and_value(row, 47, s, name, width=20)
+                row += 2
+
+            row = 4
+            name = "ADVANCED SETTINGS"
+            label = self.create_and_add_label(name, row, 134, 30, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.advanced_settings[:16]:
+                self.create_label_and_value(row, 134, s, name, width=26)
+                row += 2
+            row = 6
+            for s in settings.advanced_settings[16:]:
+                self.create_label_and_value(row, 174, s, name, width=26)
                 row += 2
 
         if all:
@@ -232,6 +227,8 @@ class SettingsLayout(Layout):
             "TELEGRAM_USERS",
         ]
 
+        critical_keys += [s.key for s in settings.advanced_settings]
+
         for i, line_edit in enumerate(self.line_edits):
             s = self.line_edits_settings[i]
 
@@ -261,6 +258,9 @@ class SettingsLayout(Layout):
             s = self.time_edits_settings[i]
             value = time_edit.time().toString("HH:mm")
             settings.set(s.key, value)
+            manager.cycle_change_detector = time_utils.CycleChangeDetector(
+                settings.get("DAYTIME"), settings.get("NIGHTTIME")
+            )
 
         for i, toggle_button in enumerate(self.toggle_buttons):
             s = self.toggle_buttons_settings[i]
@@ -297,10 +297,13 @@ class SettingsLayout(Layout):
             values = [field.text() for field in list_toggle]
             settings.set(s.key, values)
 
-        val = self.sound_device_combobox.currentText()
-        if val != settings.get("SOUND_DEVICE"):
-            self.critical_changes = True
-        settings.set("SOUND_DEVICE", val)
+        try:
+            val = self.sound_device_combobox.currentText()
+            if val != settings.get("SOUND_DEVICE"):
+                self.critical_changes = True
+            settings.set("SOUND_DEVICE", val)
+        except Exception:
+            pass
 
         cam_corridor.change = True
         cam_box.change = True
@@ -345,7 +348,7 @@ class SettingsLayout(Layout):
         if s.key in ("DAYTIME", "NIGHTTIME"):
             value = settings.get(s.key)
             time_edit = self.create_and_add_time_edit(
-                value, row, column + width, 13, 2, self.settings_changed
+                value, row, column + width, 14, 2, self.settings_changed
             )
             self.time_edits.append(time_edit)
             self.time_edits_settings.append(s)
@@ -362,8 +365,8 @@ class SettingsLayout(Layout):
             self.project_directory_combobox = self.create_and_add_combo_box(
                 s.key,
                 row,
-                148,
-                64,
+                column + width,
+                60,
                 2,
                 possible_values,
                 index,
@@ -372,7 +375,7 @@ class SettingsLayout(Layout):
         elif s.key == "TELEGRAM_TOKEN":
             value = str(settings.get(s.key))
             line_edit = self.create_and_add_line_edit(
-                value, row, column + width, 64, 2, self.settings_changed
+                value, row, column + width, 60, 2, self.settings_changed
             )
             line_edit.setProperty("type", type)
             self.line_edits.append(line_edit)
@@ -385,7 +388,7 @@ class SettingsLayout(Layout):
                 s.key,
                 row,
                 column + width,
-                48,
+                60,
                 2,
                 possible_values,
                 index,
@@ -398,22 +401,22 @@ class SettingsLayout(Layout):
             if s.key == "DATA_DIRECTORY":
                 new_value = settings.get("PROJECT_DIRECTORY") + "/data"
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, 64, 2, self.settings_changed
+                    new_value, row, column + width, 60, 2, self.settings_changed
                 )
             elif s.key == "VIDEOS_DIRECTORY":
                 new_value = settings.get("PROJECT_DIRECTORY") + "/data/videos"
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, 64, 2, self.settings_changed
+                    new_value, row, column + width, 60, 2, self.settings_changed
                 )
             elif s.key == "SESSIONS_DIRECTORY":
                 new_value = settings.get("PROJECT_DIRECTORY") + "/data/sessions"
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width, 64, 2, self.settings_changed
+                    value, row, column + width, 60, 2, self.settings_changed
                 )
             elif s.key == "CODE_DIRECTORY":
                 new_value = settings.get("PROJECT_DIRECTORY") + "/code"
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, 64, 2, self.settings_changed
+                    new_value, row, column + width, 60, 2, self.settings_changed
                 )
             elif s.key in [
                 "APP_DIRECTORY",
@@ -423,11 +426,22 @@ class SettingsLayout(Layout):
                 "SERVER_DESTINATION",
             ]:
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width, 64, 2, self.settings_changed
+                    value, row, column + width, 60, 2, self.settings_changed
                 )
             else:
+                if (
+                    s in settings.main_settings
+                    or s in settings.alarm_settings
+                    or s in settings.screen_settings
+                    or s in settings.touchscreen_settings
+                    or s in settings.sound_settings
+                    or s in settings.telegram_settings
+                ):
+                    edit_width = 14
+                else:
+                    edit_width = 12
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width, 13, 2, self.settings_changed
+                    value, row, column + width, edit_width, 2, self.settings_changed
                 )
             if s.key in (
                 "BPOD_TARGET_FIRMWARE",
@@ -448,7 +462,7 @@ class SettingsLayout(Layout):
             for i, v in enumerate(values):
                 value = str(v)
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width + 13 * i, 13, 2, self.settings_changed
+                    value, row, column + width + 12 * i, 12, 2, self.settings_changed
                 )
                 line_edit.setProperty("type", type)
                 line_edits.append(line_edit)
@@ -460,7 +474,7 @@ class SettingsLayout(Layout):
             for i, v in enumerate(values):
                 value = str(v)
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width + 8 * i, 8, 2, self.settings_changed
+                    value, row, column + width + 7 * i, 7, 2, self.settings_changed
                 )
                 line_edit.setProperty("type", type)
                 line_edits.append(line_edit)
@@ -495,7 +509,7 @@ class SettingsLayout(Layout):
                 s.key,
                 row,
                 column + width,
-                13,
+                14,
                 2,
                 possible_values,
                 index,

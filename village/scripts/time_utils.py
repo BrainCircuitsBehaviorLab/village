@@ -1,6 +1,6 @@
 import os
-import time
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
+from time import perf_counter
 from typing import Any
 
 
@@ -9,34 +9,40 @@ def now() -> datetime:
 
 
 def time_in_future_seconds(seconds: int) -> datetime:
-    return datetime.now() + timedelta(seconds=seconds)
+    return now() + timedelta(seconds=seconds)
 
 
 def hours_ago(hours: int) -> datetime:
-    return datetime.now() - timedelta(hours=hours)
+    return now() - timedelta(hours=hours)
+
+
+def date_from_previous_weekday(weekday: int) -> datetime:
+    today = now()
+    days = (today.weekday() - weekday) % 7
+    return today - timedelta(days=days)
 
 
 def time_since_day_started() -> timedelta:
-    now = datetime.now()
-    start = datetime(now.year, now.month, now.day)
-    return now - start
+    time_now = now()
+    start = datetime(time_now.year, time_now.month, time_now.day)
+    return time_now - start
 
 
 def time_since_start(start: datetime) -> timedelta:
-    return datetime.now() - start
+    return now() - start
 
 
 def ms_since_start(start: datetime) -> int:
-    timing = datetime.now() - start
+    timing = now() - start
     return int(timing / timedelta(milliseconds=1))
 
 
 def now_string() -> str:
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def now_string_for_filename() -> str:
-    return datetime.now().strftime("%Y%m%d_%H%M%S")
+    return now().strftime("%Y%m%d_%H%M%S")
 
 
 def string_from_date(date: datetime) -> str:
@@ -55,8 +61,8 @@ def date_from_filename_string(string: str) -> datetime:
     return datetime.strptime(string, "%Y%m%d_%H%M%S")
 
 
-def date_from_setting_string(string: str) -> datetime:
-    return datetime.strptime(string, "%H:%M")
+def time_from_setting_string(string: str) -> time:
+    return datetime.strptime(string, "%H:%M").time()
 
 
 def date_from_path(path: str) -> datetime:
@@ -67,12 +73,12 @@ def date_from_path(path: str) -> datetime:
 
 
 def days_ago_init_times(
-    first: datetime, second: datetime, days: int
+    first: time, second: time, days: int
 ) -> tuple[datetime, datetime]:
-    if first.time() < datetime.now().time():
-        day = datetime.now() - timedelta(days=days - 1)
+    if first < now().time():
+        day = now() - timedelta(days=days - 1)
     else:
-        day = datetime.now() - timedelta(days=days)
+        day = now() - timedelta(days=days)
 
     value1 = day.replace(
         hour=first.hour,
@@ -90,11 +96,11 @@ def days_ago_init_times(
     return value1, value2
 
 
-def tomorrow_init_time(first: datetime) -> datetime:
-    if first.time() < datetime.now().time():
-        day = datetime.now() + timedelta(days=1)
+def tomorrow_init_time(first: time) -> datetime:
+    if first < now().time():
+        day = now() + timedelta(days=1)
     else:
-        day = datetime.now()
+        day = now()
     value = day.replace(
         hour=first.hour,
         minute=first.minute,
@@ -104,11 +110,19 @@ def tomorrow_init_time(first: datetime) -> datetime:
     return value
 
 
+def range_24_hours(
+    day_date: datetime, first_init_time: time
+) -> tuple[datetime, datetime]:
+    start_time = datetime.combine(day_date.date(), first_init_time)
+    end_time = start_time + timedelta(hours=24)
+    return start_time, end_time
+
+
 def measure_time(func) -> Any:
     def wrapper(*args, **kwargs) -> Any:
-        start_time = time.perf_counter()
+        start_time = perf_counter()
         result = func(*args, **kwargs)
-        end_time = time.perf_counter()
+        end_time = perf_counter()
         execution_time = (end_time - start_time) * 1000
         print(f"{func.__name__} execution time: {execution_time:.2f} ms")
         return result
@@ -154,13 +168,13 @@ def format_duration(milliseconds) -> str:
 
 class Chrono:
     def __init__(self) -> None:
-        self.init_time = datetime.now()
+        self.init_time = now()
 
     def reset(self) -> None:
-        self.init_time = datetime.now()
+        self.init_time = now()
 
     def get_time(self) -> timedelta:
-        return datetime.now() - self.init_time
+        return now() - self.init_time
 
     def get_seconds(self) -> int:
         return int(self.get_time() / timedelta(seconds=1))
@@ -172,25 +186,25 @@ class Chrono:
 class Timer:
     def __init__(self, seconds: int) -> None:
         self.seconds = seconds
-        self.init_time = datetime.now() - timedelta(seconds=seconds)
+        self.init_time = now() - timedelta(seconds=seconds)
 
     # the first time has_elapsed is true
     def has_elapsed(self) -> bool:
-        value = datetime.now() - self.init_time >= timedelta(seconds=self.seconds)
+        value = now() - self.init_time >= timedelta(seconds=self.seconds)
         if value:
             self.reset()
         return value
 
     def reset(self) -> None:
-        self.init_time = datetime.now()
+        self.init_time = now()
 
 
 class HourChangeDetector:
     def __init__(self) -> None:
-        self.last_hour = datetime.now().hour
+        self.last_hour = now().hour
 
     def has_hour_changed(self) -> bool:
-        current_hour = datetime.now().hour
+        current_hour = now().hour
 
         if current_hour != self.last_hour:
             self.last_hour = current_hour
@@ -200,12 +214,12 @@ class HourChangeDetector:
 
 class CycleChangeDetector:
     def __init__(self, day_time: str, night_time: str) -> None:
-        self.day_time = date_from_setting_string(day_time)
-        self.night_time = date_from_setting_string(night_time)
+        self.day_time = time_from_setting_string(day_time)
+        self.night_time = time_from_setting_string(night_time)
         self.last_state = self._get_current_cycle()
 
     def _get_current_cycle(self) -> str:
-        time_now = now()
+        time_now = now().time()
 
         if self.day_time < self.night_time:
             if self.day_time <= time_now < self.night_time:
@@ -228,13 +242,22 @@ class CycleChangeDetector:
 
 class TimestampTracker:
     def __init__(self, hours: int) -> None:
-        self.timestamps = [datetime.now()]
+        self.timestamps = [now()]
         self.hours = hours
+        self.empty = False
 
     def add_timestamp(self) -> None:
-        self.timestamps.append(datetime.now())
+        self.timestamps.append(now())
 
-    def clean_and_count(self) -> int:
-        hours_ago = datetime.now() - timedelta(hours=self.hours)
+    def trigger_empty(self) -> bool:
+        hours_ago = now() - timedelta(hours=self.hours)
         self.timestamps = [ts for ts in self.timestamps if ts > hours_ago]
-        return len(self.timestamps)
+        count = len(self.timestamps)
+        if count > 0:
+            self.empty = False
+            return False
+        elif self.empty:
+            return False
+        else:
+            self.empty = True
+            return True

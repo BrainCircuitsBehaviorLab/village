@@ -43,7 +43,6 @@ class Settings:
     def __init__(
         self,
         main_settings: list[Setting],
-        corridor_settings: list[Setting],
         sound_settings: list[Setting],
         alarm_settings: list[Setting],
         directory_settings: list[Setting],
@@ -54,12 +53,11 @@ class Settings:
         bpod_settings: list[Setting],
         camera_settings: list[Setting],
         motor_settings: list[Setting],
-        extra_settings: list[Setting],
+        hidden_settings: list[Setting],
         advanced_settings: list[Setting],
     ) -> None:
 
         self.main_settings = main_settings
-        self.corridor_settings = corridor_settings
         self.sound_settings = sound_settings
         self.alarm_settings = alarm_settings
         self.directory_settings = directory_settings
@@ -70,17 +68,15 @@ class Settings:
         self.bpod_settings = bpod_settings
         self.camera_settings = camera_settings
         self.motor_settings = motor_settings
-        self.extra_settings = extra_settings
+        self.hidden_settings = hidden_settings
         self.advanced_settings = advanced_settings
 
         self.saved_settings = QSettings("village", "village")
 
         self.restorable_settings = (
             main_settings
-            + corridor_settings
             + sound_settings
             + alarm_settings
-            + directory_settings
             + screen_settings
             + touchscreen_settings
             + bpod_settings
@@ -90,10 +86,11 @@ class Settings:
 
         self.all_settings = (
             self.restorable_settings
+            + directory_settings
             + telegram_settings
             + camera_settings
             + motor_settings
-            + extra_settings
+            + hidden_settings
         )
 
         self.check_settings()

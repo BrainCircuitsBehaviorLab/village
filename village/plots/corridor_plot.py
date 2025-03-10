@@ -14,8 +14,8 @@ def corridor_plot(
 
     subjects = sorted(subjects)
 
-    day = time_utils.date_from_setting_string(settings.get("DAYTIME"))
-    night = time_utils.date_from_setting_string(settings.get("NIGHTTIME"))
+    day = time_utils.time_from_setting_string(settings.get("DAYTIME"))
+    night = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
 
     if day < night:
         first = day

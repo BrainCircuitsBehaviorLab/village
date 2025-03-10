@@ -1,6 +1,8 @@
+import logging
 import os
 import subprocess
 import traceback
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -11,8 +13,6 @@ from PyQt5.QtWidgets import QLayout
 from village.log import log
 from village.scripts import time_utils
 from village.settings import settings
-import logging
-from datetime import datetime
 
 
 def change_directory_settings(new_path: str) -> None:
@@ -138,7 +138,7 @@ def create_global_csv_for_subject(subject: str, sessions_directory: str) -> None
     final_df.to_csv(final_path, header=True, index=False, sep=";")
 
 
-def is_active(value: str) -> bool:
+def is_active_regular(value: str) -> bool:
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     weekday_number = time_utils.now().weekday()
     today = days[weekday_number]
@@ -149,6 +149,34 @@ def is_active(value: str) -> bool:
         return True
     else:
         return False
+
+
+def is_active(value: str) -> bool:
+    if value == "ON":
+        return True
+    elif value == "OFF":
+        return False
+
+    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    now = time_utils.now()
+    day_init_time = time_utils.time_from_setting_string(settings.get("DAYTIME"))
+    night_init_time = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
+    first_init_time = min([day_init_time, night_init_time])
+
+    active_days = value.split("-")
+    active_time_ranges = []
+
+    for day in active_days:
+        day_index = days.index(day)
+        day_date = time_utils.date_from_previous_weekday(day_index)
+        range_24 = time_utils.range_24_hours(day_date, first_init_time)
+        active_time_ranges.append(range_24)
+
+    for start_time, end_time in active_time_ranges:
+        if start_time <= now <= end_time:
+            return True
+
+    return False
 
 
 def calculate_active_hours(df) -> dict[str, int]:

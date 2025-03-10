@@ -44,9 +44,6 @@ nighttime begins.""",
         """If ON, the system deletes video data if it has not been backed up
 to a remote server. If ON, the system keeps the data until it is backed up.""",
     ),
-]
-
-corridor_settings = [
     Setting(
         "DETECTION_COLOR",
         "BLACK",
@@ -54,20 +51,6 @@ corridor_settings = [
         """If the animals are darker than the background, the system detects black
 pixels against a white background. If the animals are lighter than the
 background, the system detects white pixels against a black background.""",
-    ),
-    Setting(
-        "DETECTION_DURATION",
-        0.5,
-        float,
-        """To allow access, after a detection, the pixel detection must remain within
-limits for this duration (in seconds).""",
-    ),
-    Setting(
-        "TIME_BETWEEN_DETECTIONS",
-        15.0,
-        float,
-        """To allow access, no other animals can have been detected within this number
-of seconds prior to a detection.""",
     ),
     Setting(
         "WEIGHT_THRESHOLD",
@@ -205,13 +188,6 @@ server_settings = [
 
 bpod_settings = [
     Setting(
-        "BPOD_TARGET_FIRMWARE",
-        22,
-        int,
-        """This system is compatible only with this Bpod firmware version. If you have
-a different version, please update it by following the instructions at sanworks.com.""",
-    ),
-    Setting(
         "BPOD_BNC_PORTS_ENABLED",
         ["OFF", "OFF"],
         list[Active],
@@ -223,16 +199,6 @@ a different version, please update it by following the instructions at sanworks.
         list[Active],
         "Enabled behavior ports on the Bpod.",
     ),
-    Setting("BPOD_SERIAL_PORT", "/dev/Bpod", str, "The serial port of the Bpod"),
-    Setting(
-        "BPOD_NET_PORT",
-        36000,
-        int,
-        "The network port of the Bpod (for sending and receiving softcodes).",
-    ),
-    Setting("BPOD_BAUDRATE", 115200, int, "Bpod baudrate."),
-    Setting("BPOD_SYNC_CHANNEL", 255, int, "Bpod sync channel."),
-    Setting("BPOD_SYNC_MODE", 1, int, "Bpod sync mode."),
 ]
 
 
@@ -372,7 +338,7 @@ motor_settings = [
     ),
 ]
 
-extra_settings = [
+hidden_settings = [
     Setting("FIRST_LAUNCH", "OFF", Active, "First launch of the system."),
     Setting(
         "DEFAULT_PROJECT_NAME", default_project_name, str, "The default project name."
@@ -405,10 +371,45 @@ extra_settings = [
     Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)."),
     Setting("INFO", "SYSTEM_INFO", Info, "The information status."),
     Setting("ACTIONS", "CORRIDOR", Actions, "The actions status."),
+    Setting("COLOR_AREA1", (0, 136, 0), tuple, "The color of the first area."),
+    Setting("COLOR_AREA2", (204, 51, 170), tuple, "The color of the second area."),
+    Setting("COLOR_AREA3", (51, 119, 204), tuple, "The color of the third area."),
+    Setting("COLOR_AREA4", (221, 51, 0), tuple, "The color of the fourth area."),
 ]
 
 
 advanced_settings = [
+    Setting(
+        "BPOD_TARGET_FIRMWARE",
+        22,
+        int,
+        """This system is compatible only with this Bpod firmware version. If you have
+a different version, please update it by following the instructions at sanworks.com.""",
+    ),
+    Setting("BPOD_SERIAL_PORT", "/dev/Bpod", str, "The serial port of the Bpod"),
+    Setting(
+        "BPOD_NET_PORT",
+        36000,
+        int,
+        "The network port of the Bpod (for sending and receiving softcodes).",
+    ),
+    Setting("BPOD_BAUDRATE", 115200, int, "Bpod baudrate."),
+    Setting("BPOD_SYNC_CHANNEL", 255, int, "Bpod sync channel."),
+    Setting("BPOD_SYNC_MODE", 1, int, "Bpod sync mode."),
+    Setting(
+        "DETECTION_DURATION",
+        0.5,
+        float,
+        """To allow access, after a detection, the pixel detection must remain within
+limits for this duration (in seconds).""",
+    ),
+    Setting(
+        "TIME_BETWEEN_DETECTIONS",
+        15.0,
+        float,
+        """To allow access, no other animals can have been detected within this number
+of seconds prior to a detection.""",
+    ),
     Setting(
         "WEIGHT_DEVIATION_RATIO",
         0.25,
@@ -417,10 +418,6 @@ advanced_settings = [
 If the ratio is greater than this value, the weight is considered an outlier probably
 because the animal is moving or it is not completely on the scale.""",
     ),
-    Setting("COLOR_AREA1", (0, 136, 0), tuple, "The color of the first area."),
-    Setting("COLOR_AREA2", (204, 51, 170), tuple, "The color of the second area."),
-    Setting("COLOR_AREA3", (51, 119, 204), tuple, "The color of the third area."),
-    Setting("COLOR_AREA4", (221, 51, 0), tuple, "The color of the fourth area."),
     Setting(
         "UPDATE_TIME_MS", 2000, int, "The update time in ms for the tables and plots."
     ),
@@ -462,35 +459,34 @@ the minimum time in seconds to wait before sending the same alarm again.""",
         "The DPI of the matplotlib plots.",
     ),
     Setting(
-        "CAMERA_BOX_INDEX",
+        "CAM_BOX_INDEX",
         0,
         int,
         "The index (0, 1) of the box camera.",
     ),
     Setting(
-        "CAMERA_CORRIDOR_INDEX",
+        "CAM_CORRIDOR_INDEX",
         1,
         int,
         "The index (0, 1) of the corridor camera.",
     ),
     Setting(
-        "CAMERA_CORRIDOR_FRAME_DURATION",
-        100000,
+        "CAM_CORRIDOR_FRAMERATE",
+        10,
         int,
-        "The duration of the frame in ms for the corridor camera.",
+        "The number of frames per second for the corridor camera.",
     ),
     Setting(
-        "CAMERA_BOX_FRAME_DURATION",
-        33333,
+        "CAM_BOX_FRAMERATE",
+        30,
         int,
-        "The duration of the frame in ms for the box camera.",
+        "The number of frames per second for the box camera.",
     ),
 ]
 
 
 settings = Settings(
     main_settings,
-    corridor_settings,
     sound_settings,
     alarm_settings,
     directory_settings,
@@ -501,7 +497,7 @@ settings = Settings(
     bpod_settings,
     camera_settings,
     motor_settings,
-    extra_settings,
+    hidden_settings,
     advanced_settings,
 )
 
