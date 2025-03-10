@@ -526,7 +526,7 @@ def get_camera(index: int, framerate: int, name: str) -> CameraProtocol:
 
 cam_corridor = get_camera(
     settings.get("CAM_CORRIDOR_INDEX"),
-    settings.get("CAM_CORRIDOR_FRAME_DURATION"),
+    settings.get("CAM_CORRIDOR_FRAMERATE"),
     "CORRIDOR",
 )
 cam_box = get_camera(
