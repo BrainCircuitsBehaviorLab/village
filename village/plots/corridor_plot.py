@@ -39,11 +39,15 @@ def corridor_plot(
         (df["description"] == "Subject detected") & (df["subject"].isin(subjects))
     ]
 
-    detections = detections.sort_values(by="subject")
-    detections["subject"] = detections["subject"].astype("category")
-    detections["subject"] = detections["subject"].cat.set_categories(
-        subjects, ordered=True
+    # Convert the 'subject' column to a categorical type with the specified order
+    detections["subject"] = pd.Categorical(
+        detections["subject"], categories=subjects, ordered=True
     )
+
+    # detections["subject"] = detections["subject"].astype("category")
+    # detections["subject"] = detections["subject"].cat.set_categories(
+    #     subjects, ordered=True
+    # )
 
     fig, ax = plt.subplots(figsize=(width, height))
 
