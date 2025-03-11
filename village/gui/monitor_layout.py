@@ -417,7 +417,13 @@ class MonitorLayout(Layout):
         self.update_status_label_buttons()
         if manager.rfid_changed:
             manager.rfid_changed = False
-            self.rfid_reader_button.on_pressed_no_action()
+            self.rfid_reader_button.index = Active.get_index_from_value(
+                manager.rfid_reader
+            )
+            self.rfid_reader_button.value = self.rfid_reader_button.possible_values[
+                self.rfid_reader_button.index
+            ]
+            self.rfid_reader_button.update_style()
         match manager.info:
             case manager.info.SYSTEM_INFO:
                 self.page5Layout.update_gui()

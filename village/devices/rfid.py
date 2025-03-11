@@ -20,6 +20,7 @@ class Rfid:
 
         self.id = ""
         self.id_history: Deque[tuple[str, datetime]] = deque()
+        self.reading = True
 
         self.s = serial.Serial(self.port, self.baudrate, timeout=0.1)
 
@@ -65,6 +66,8 @@ class Rfid:
             self.multiple = False
             return value
         else:
+            self.id = ""
+            self.multiple = False
             return ("", False)
 
 

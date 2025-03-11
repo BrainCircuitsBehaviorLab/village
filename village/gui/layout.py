@@ -134,11 +134,6 @@ class ToggleButton(QPushButton):
         self.update_style()
         self.action(self.value, self.key)
 
-    def on_pressed_no_action(self) -> None:
-        self.index = (self.index + 1) % len(self.possible_values)
-        self.value = self.possible_values[self.index]
-        self.update_style()
-
 
 class ComboBox(QComboBox):
     def __init__(
