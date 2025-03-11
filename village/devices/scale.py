@@ -84,6 +84,10 @@ class Scale(ScaleProtocol):
         variance = sum([((x - average) ** 2) for x in weights]) / len(weights)
         sd: float = variance**0.5
         correct = (sd / average) < self.ratio
+        average = round(average, 2)
+        print(weights)
+        print(self.offset, self.calibration)
+        print(sd, average, sd / average, correct)
         return average, correct
 
     def read_reg(self, reg: int, len: int) -> list[int]:

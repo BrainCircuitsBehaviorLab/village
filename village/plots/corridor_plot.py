@@ -40,6 +40,10 @@ def corridor_plot(
     ]
 
     detections = detections.sort_values(by="subject")
+    detections["subject"] = detections["subject"].astype("category")
+    detections["subject"] = detections["subject"].cat.set_categories(
+        subjects, ordered=True
+    )
 
     fig, ax = plt.subplots(figsize=(width, height))
 
