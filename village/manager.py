@@ -593,7 +593,7 @@ class Manager:
                 + "\n"
             )
 
-        log.alarm(report_text)
+        log.alarm(report_text, report=True)
 
         if len(non_detected_subjects) > 0:
             log.alarm(

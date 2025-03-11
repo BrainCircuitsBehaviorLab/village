@@ -35,20 +35,6 @@ def corridor_plot(
 
     df = df[df["date"] >= start_first]
 
-    detections = df[
-        (df["description"] == "Subject detected") & (df["subject"].isin(subjects))
-    ]
-
-    # Convert the 'subject' column to a categorical type with the specified order
-    detections["subject"] = pd.Categorical(
-        detections["subject"], categories=subjects, ordered=True
-    )
-
-    # detections["subject"] = detections["subject"].astype("category")
-    # detections["subject"] = detections["subject"].cat.set_categories(
-    #     subjects, ordered=True
-    # )
-
     fig, ax = plt.subplots(figsize=(width, height))
 
     starts_first = [start_first + timedelta(days=i) for i in range(3)]
@@ -56,10 +42,6 @@ def corridor_plot(
 
     for i in range(3):
         ax.axvspan(starts_first[i], starts_second[i], color=color_first)
-
-    ax.scatter(
-        detections["date"], detections["subject"], s=4, c="orange", label="Detections"
-    )
 
     y_positions = {subject: i for i, subject in enumerate(subjects)}
 
@@ -69,7 +51,14 @@ def corridor_plot(
         y_pos = y_positions[subject]
 
         for i, (_, row) in enumerate(subject_data.iterrows()):
-            if row["type"] == "START":
+            if df["description"] == "Subject detected":
+                ax.plot(
+                    row["date"],
+                    y_pos,
+                    s=4,
+                    color="orange",
+                )
+            elif row["type"] == "START":
                 active_start = row["date"]
                 if i == len(subject_data) - 1:
                     ax.plot(

@@ -55,6 +55,7 @@ class Log:
         description: str,
         subject: str = "system",
         exception: str | None = None,
+        report: bool = False,
     ) -> None:
         type = "ALARM"
         date = time_utils.now_string()
@@ -65,8 +66,9 @@ class Log:
         print("")
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
-        self.event_protocol.log(date, type, subject, description)
-        self.cam_protocol.log(text)
+        if not report:
+            self.event_protocol.log(date, type, subject, description)
+            self.cam_protocol.log(text)
         print(text.replace("  |  ", "\n"))
 
     def clean_text(self, exception: str | None, description: str) -> str:

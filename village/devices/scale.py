@@ -27,22 +27,17 @@ class Scale(ScaleProtocol):
         self.error = ""
         self.tare()
 
-        # # open a file to write and leave it open
-        # self.f = open("/home/pi/weights_debug.txt", "w")
-        # # write headers
-        # self.f.write("Weights;Correct\n")
-
     # @time_utils.measure_time
     def tare(self) -> None:
         try:
-            self.offset = self.average(5)[0]
+            self.offset = self.get_voltage(5)
             log.info("The scale has been tared.")
         except Exception:
             log.error("Error taring scale", exception=traceback.format_exc())
 
     def calibrate(self, weight: float) -> None:
         try:
-            raw_value: float = self.average(5)[0]
+            raw_value: float = self.get_voltage(5)
             if raw_value < 1:
                 log.error("Error calibrating scale", exception=traceback.format_exc())
                 return
@@ -58,17 +53,6 @@ class Scale(ScaleProtocol):
         weight = self.get_weight()
         return "{:.2f} g".format(weight)
 
-    def get_weight(self) -> float:
-        try:
-            value, correct = self.average(5)
-            if correct:
-                return abs((value - self.offset) / self.calibration)
-            else:
-                return 0.0
-        except Exception:
-            log.error("Error getting weight", exception=traceback.format_exc())
-            return 0.0
-
     def get_value(self) -> int:
         data = self.read_reg(self.REG_DATA_GET_RAM_DATA, 4)
         value = 0
@@ -80,24 +64,34 @@ class Scale(ScaleProtocol):
             return 0
         return value ^ 0x800000
 
-    def average(self, times: int) -> tuple[float, bool]:
+    def get_weight(self) -> float:
+        times = 5
+        try:
+            weights: list[float] = []
+            for i in range(times):
+                value = self.get_value()
+                weight = abs((value - self.offset) / self.calibration)
+                weights.append(weight)
+            weights = [x for x in weights if x != 0]
+            average = sum(weights) / len(weights)
+            variance = sum([((x - average) ** 2) for x in weights]) / len(weights)
+            sd: float = variance**0.5
+            correct = (sd / average) < self.ratio
+            if correct:
+                return average
+            else:
+                return 0.0
+        except Exception:
+            log.error("Error getting weight", exception=traceback.format_exc())
+            return 0.0
+
+    def get_voltage(self, times: int) -> float:
         weights: list[float] = []
         for i in range(times):
             weights.append(self.get_value())
         weights = [x for x in weights if x != 0]
         average = sum(weights) / len(weights)
-        variance = sum([((x - average) ** 2) for x in weights]) / len(weights)
-        sd: float = variance**0.5
-        correct = (sd / average) < self.ratio
-        average = round(average, 2)
-        print(weights)
-        print(self.offset, self.calibration)
-        print(sd, average, sd / average, correct)
-        return average, correct
-
-    # def write_weights(self, weights: list[float], correct: bool) -> None:
-    #     self.f.write(f"{correct},{weights}\n")
-    #     self.f.flush()
+        return average
 
     def read_reg(self, reg: int, len: int) -> list[int]:
         self.i2cbus.write_byte(self.I2C_ADDR, reg)
