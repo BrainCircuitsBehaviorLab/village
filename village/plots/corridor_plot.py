@@ -43,6 +43,18 @@ def corridor_plot(
     for i in range(3):
         ax.axvspan(starts_first[i], starts_second[i], color=color_first)
 
+    min_time = min(starts_first)
+    max_time = max(starts_second)
+    min_time = (min_time + timedelta(hours=1)).replace(
+        minute=0, second=0, microsecond=0
+    )
+    max_time = max_time.replace(minute=0, second=0, microsecond=0)
+
+    hourly_ticks = pd.date_range(start=min_time, end=max_time, freq="H")
+
+    for tick in hourly_ticks:
+        ax.axvline(tick, color="cyan", linestyle="--")
+
     y_positions = {subject: i for i, subject in enumerate(subjects)}
     detections_x = []
     detections_y = []
