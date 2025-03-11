@@ -21,7 +21,7 @@ class Scale(ScaleProtocol):
         self.rxbuf = [0, 0, 0, 0]
         self.bus = 1
         self.calibration: float = float(settings.get("SCALE_CALIBRATION_VALUE"))
-        self.ratio: float = float(settings.get("WEIGHT_DEVIATION_RATIO"))
+        self.deviation: float = float(settings.get("WEIGHT_DEVIATION"))
         self.offset = 0.0
         self.i2cbus = smbus2.SMBus(self.bus)
         self.error = ""
@@ -76,7 +76,7 @@ class Scale(ScaleProtocol):
             average = sum(weights) / len(weights)
             variance = sum([((x - average) ** 2) for x in weights]) / len(weights)
             sd: float = variance**0.5
-            correct = (sd / average) < self.ratio
+            correct = sd < self.deviation
             if correct:
                 return average
             else:

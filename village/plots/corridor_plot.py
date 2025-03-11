@@ -44,6 +44,8 @@ def corridor_plot(
         ax.axvspan(starts_first[i], starts_second[i], color=color_first)
 
     y_positions = {subject: i for i, subject in enumerate(subjects)}
+    detections_x = []
+    detections_y = []
 
     for subject in subjects:
         subject_data = df[df["subject"] == subject]
@@ -51,13 +53,9 @@ def corridor_plot(
         y_pos = y_positions[subject]
 
         for i, (_, row) in enumerate(subject_data.iterrows()):
-            if df["description"] == "Subject detected":
-                ax.plot(
-                    row["date"],
-                    y_pos,
-                    s=4,
-                    color="orange",
-                )
+            if row["description"] == "Subject detected":
+                detections_x.append(row["date"])
+                detections_y.append(y_pos)
             elif row["type"] == "START":
                 active_start = row["date"]
                 if i == len(subject_data) - 1:
@@ -86,6 +84,8 @@ def corridor_plot(
                     solid_capstyle="butt",
                 )
                 active_start = row["date"]
+
+    ax.scatter(detections_x, detections_y, color="orange", s=4)
 
     ax.set_xlim(start_first, end)
     ax.set_ylim(-0.5, len(subjects) - 0.5)

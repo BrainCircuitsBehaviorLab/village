@@ -411,12 +411,13 @@ limits for this duration (in seconds).""",
 of seconds prior to a detection.""",
     ),
     Setting(
-        "WEIGHT_DEVIATION_RATIO",
-        0.25,
+        "WEIGHT_DEVIATION",
+        3,
         float,
-        """The standard deviation / mean ratio of the weight to consider it as correct.
-If the ratio is greater than this value, the weight is considered an outlier probably
-because the animal is moving or it is not completely on the scale.""",
+        """The standard deviation of the weight must be smaller than this value
+to consider it as correct. If the ratio is greater than this value, the weight
+is considered an outlier probably because the animal is moving or it is not
+completely on the scale.""",
     ),
     Setting(
         "UPDATE_TIME_MS", 2000, int, "The update time in ms for the tables and plots."
