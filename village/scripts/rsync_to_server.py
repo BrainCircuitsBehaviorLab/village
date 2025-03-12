@@ -2,11 +2,12 @@ import logging
 import os
 import subprocess
 from village.scripts.utils import setup_logging
+import time
 
 import fire
 
 
-def run_rsync(source_path, destination, remote_user, remote_host, port=22):
+def run_rsync(source_path, destination, remote_user, remote_host, port=22, timeout=120):
     """
     Run rsync command with specified parameters
 
@@ -53,6 +54,9 @@ def run_rsync(source_path, destination, remote_user, remote_host, port=22):
             universal_newlines=True,
         )
 
+        start_time = time.time()
+        last_progress_time = start_time
+
         # Stream output in real-time
         while True:
             output = process.stdout.readline()
@@ -60,7 +64,21 @@ def run_rsync(source_path, destination, remote_user, remote_host, port=22):
                 break
             if output:
                 logging.info(output.strip())
+                last_progress_time = time.time()  # Reset progress timer
 
+        # Check if the process is still running
+            if process.poll() is not None:
+                logging.info("rsync completed.")
+                break  # Success
+
+            # If no progress for the timeout duration, assume it's stuck
+            if time.time() - last_progress_time > timeout:
+                logging.warning("rsync seems stuck! Terminating...")
+                process.terminate()  # Gracefully stop
+                time.sleep(2)
+                process.kill()  # Force stop if necessary
+                break  # Exit loop
+        
         # Get any errors
         stderr = process.stderr.read()
         if stderr:

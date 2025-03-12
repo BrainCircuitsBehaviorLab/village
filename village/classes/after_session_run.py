@@ -27,6 +27,7 @@ class AfterSessionRun:
             remote_user=self.remote_user,
             remote_host=self.remote_host,
             port=self.port,
+            timeout = 120,
         )
 
     def run(self):
