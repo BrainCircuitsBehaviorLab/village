@@ -23,6 +23,7 @@ autodoc_mock_imports: list = [
     "sounddevice",
     "telegram",
     "scipy",
+    "fire",
 ]
 
 # Add the module path to sys.path here.

@@ -59,9 +59,6 @@ class TableView(QTableView):
             column_name = self.model().headerData(column, Qt.Horizontal, Qt.DisplayRole)
             if manager.table == DataTable.SUBJECTS:
                 if flags & Qt.ItemIsEditable and manager.state.can_edit_data():
-                    self.searching = ""
-                    self.model_parent.layout_parent.search_edit.setText("")
-                    self.model_parent.layout_parent.update_gui()
                     if column_name == "next_settings":
                         manager.state = State.MANUAL_MODE
                         current_value = self.model().data(index, Qt.DisplayRole)
@@ -131,21 +128,25 @@ class TableView(QTableView):
         else:
             super().mouseDoubleClickEvent(event)
 
-    def save_changes_in_df(self) -> None:
+    def save_changes_in_df(self, update=True) -> None:
+        if update:
+            self.model_parent.complete_df.loc[self.model_parent.df.index] = (
+                self.model_parent.df
+            )
         if manager.table == DataTable.SUBJECTS:
-            manager.subjects.df = self.model_parent.df
+            manager.subjects.df = self.model_parent.complete_df
             manager.subjects.save_from_df(manager.training)
         elif manager.table == DataTable.TEMPERATURES:
-            manager.temperatures.df = self.model_parent.df
+            manager.temperatures.df = self.model_parent.complete_df
             manager.temperatures.save_from_df()
         elif manager.table == DataTable.WATER_CALIBRATION:
-            manager.water_calibration.df = self.model_parent.df
+            manager.water_calibration.df = self.model_parent.complete_df
             manager.water_calibration.save_from_df()
         elif manager.table == DataTable.SOUND_CALIBRATION:
-            manager.sound_calibration.df = self.model_parent.df
+            manager.sound_calibration.df = self.model_parent.complete_df
             manager.sound_calibration.save_from_df()
         elif manager.table == DataTable.SESSIONS_SUMMARY:
-            manager.sessions_summary.df = self.model_parent.df
+            manager.sessions_summary.df = self.model_parent.complete_df
             manager.sessions_summary.save_from_df()
         manager.state = State.WAIT
 
@@ -706,6 +707,8 @@ class DfLayout(Layout):
         if value != "":
             if manager.table != DataTable(value):
                 manager.table = DataTable(value)
+                self.searching = ""
+                self.search_edit.setText("")
                 self.update_data()
                 self.create_table()
 
@@ -1031,9 +1034,9 @@ class DfLayout(Layout):
             QMessageBox.information(self.window, "EDIT", text)
 
     def delete_button_clicked(self) -> None:
-        self.searching = ""
-        self.search_edit.setText("")
-        self.update_gui()
+        # self.searching = ""
+        # self.search_edit.setText("")
+        # self.update_gui()
         selected_indexes = self.model.table_view.selectionModel().selectedRows()
         if selected_indexes:
             if manager.state.can_edit_data():
@@ -1077,10 +1080,17 @@ class DfLayout(Layout):
                         self.model.beginRemoveRows(
                             QModelIndex(), index.row(), index.row()
                         )
-                        self.model.df.drop(index.row(), inplace=True)
+
+                        position = index.row()
+                        index_to_delete = self.model.df.index[position]
+
+                        self.model.df.drop(index_to_delete, inplace=True)
                         self.model.df.reset_index(drop=True, inplace=True)
+                        self.model.complete_df.drop(index_to_delete, inplace=True)
+                        self.model.complete_df.reset_index(drop=True, inplace=True)
                         self.model.endRemoveRows()
-                self.model.table_view.save_changes_in_df()
+
+                self.model.table_view.save_changes_in_df(update=False)
                 self.model.table_view.selectionModel().clearSelection()
                 self.update_buttons()
             else:
@@ -1179,15 +1189,16 @@ class DfLayout(Layout):
 
         properties = manager.training.get_settings_names()
         for name in properties:
-            value = new_dict.get(name, "")
-            label = QLabel(name + ":")
-            line_edit = QLineEdit()
-            line_edit.setPlaceholderText(str(value))
-            h_layout = QHBoxLayout()
-            h_layout.addWidget(label)
-            h_layout.addWidget(line_edit)
-            content_layout.addLayout(h_layout)
-            self.line_edits.append(line_edit)
+            if name != "observations":
+                value = new_dict.get(name, "")
+                label = QLabel(name + ":")
+                line_edit = QLineEdit()
+                line_edit.setPlaceholderText(str(value))
+                h_layout = QHBoxLayout()
+                h_layout.addWidget(label)
+                h_layout.addWidget(line_edit)
+                content_layout.addLayout(h_layout)
+                self.line_edits.append(line_edit)
 
         btns_layout = QHBoxLayout()
         self.btn_ok = QPushButton("SAVE")
