@@ -479,12 +479,14 @@ class Layout(QGridLayout):
                 manager.state = State.SAVE_MANUAL
             else:
                 log.info(
-                    "Task manually stopped. Disconnectig RFID Reader.",
+                    "Task manually stopped. Disconnecting RFID Reader.",
                     subject=manager.subject.name,
                 )
                 manager.state = State.OPEN_DOOR2_STOP
+                log.info("Going to OPEN_DOOR2_STOP State")
         elif manager.state.can_go_to_wait():
             manager.state = State.WAIT
+            log.info("Going to WAIT State")
         self.update_gui()
 
     def show_online_plots_clicked(self) -> None:

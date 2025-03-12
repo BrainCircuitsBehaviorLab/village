@@ -104,6 +104,11 @@ class Collection(EventProtocol):
             entry = [date, type, subject, description]
             self.add_entry(entry)
 
+    def log_temp(self, date: str, temperature: float, humidity: float) -> None:
+        if self.columns == ["date", "temperature", "humidity"]:
+            entry = [date, temperature, humidity]
+            self.add_entry(entry)
+
     def get_last_water_df(self) -> pd.DataFrame:
         """
         Returns a DataFrame that contains, for each unique value in the 'port_number'

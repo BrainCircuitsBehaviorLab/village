@@ -295,10 +295,15 @@ class DaysSelectionDialog(QDialog):
 class Table(QAbstractTableModel):
 
     def __init__(
-        self, df: pd.DataFrame, layout_parent: DataLayout, editable: bool = False
+        self,
+        df: pd.DataFrame,
+        complete_df: pd.DataFrame,
+        layout_parent: DataLayout,
+        editable: bool = False,
     ) -> None:
         super().__init__()
         self.df = df
+        self.complete_df = complete_df
         self.editable = editable
         self.layout_parent = layout_parent
         self.table_view = TableView(self)
@@ -647,7 +652,14 @@ class DfLayout(Layout):
             else False
         )
         self.model = self.create_and_add_table(
-            self.df, 4, 0, 210, 42, widths=self.widths, editable=editable
+            self.df,
+            self.complete_df,
+            4,
+            0,
+            210,
+            42,
+            widths=self.widths,
+            editable=editable,
         )
         self.model.dataChanged.connect(self.on_data_changed)
 
@@ -659,6 +671,7 @@ class DfLayout(Layout):
     def create_and_add_table(
         self,
         df: pd.DataFrame,
+        complete_df: pd.DataFrame,
         row: int,
         column: int,
         width: int,
@@ -667,7 +680,7 @@ class DfLayout(Layout):
         editable: bool,
     ) -> Table:
 
-        model = Table(df, self, editable)
+        model = Table(df, complete_df, self, editable)
         model.table_view.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         model.table_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         model.table_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
@@ -700,8 +713,9 @@ class DfLayout(Layout):
         if self.searching == "":
             return self.complete_df
         else:
-            return self.complete_df.loc[
-                self.complete_df.apply(
+            new_df = self.complete_df.copy()
+            return new_df[
+                new_df.apply(
                     lambda row: row.astype(str)
                     .str.contains(self.searching, case=False)
                     .any(),

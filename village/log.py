@@ -7,6 +7,7 @@ from village.scripts import time_utils
 class Log:
     def __init__(self) -> None:
         self.event_protocol = EventProtocol()
+        self.temp_protocol = EventProtocol()
         self.cam_protocol = CameraProtocol()
         self.telegram_protocol = TelegramBotProtocol()
 
@@ -17,6 +18,10 @@ class Log:
         self.event_protocol.log(date, type, subject, description)
         self.cam_protocol.log(text)
         print(text)
+
+    def temp(self, temperature: float, humidity: float) -> None:
+        date = time_utils.now_string()
+        self.temp_protocol.log_temp(date, temperature, humidity)
 
     def start(self, task: str, subject: str = "system") -> None:
         type = "START"

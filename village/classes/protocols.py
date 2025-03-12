@@ -142,6 +142,9 @@ class EventProtocol:
     def log(self, date: str, type: str, subject: str, description: str) -> None:
         return
 
+    def log_temp(self, date: str, temperature: float, humidity: float) -> None:
+        return
+
 
 class CameraProtocol:
     area1: list[int] = []

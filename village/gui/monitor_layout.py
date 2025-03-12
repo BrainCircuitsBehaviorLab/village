@@ -641,7 +641,6 @@ class MotorLayout(Layout):
 
     def get_temperature_clicked(self) -> None:
         _, _, temp_str = temp_sensor.get_temperature()
-        log.info("temperature and humidity: " + temp_str)
 
 
 class PortsLayout(Layout):

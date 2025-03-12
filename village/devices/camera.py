@@ -492,10 +492,12 @@ class Camera(CameraProtocol):
 
         if pixels_allowed > self.one_or_two_mice:
             if self.box_alarm_timer.has_elapsed():
-                log.alarm("2 subjects in box")
+                log.alarm("2 subjects in box. Area: " + str(pixels_allowed))
         elif pixels_not_allowed > self.zero_or_one_mouse:
             if self.box_alarm_timer.has_elapsed():
-                log.alarm("1 mouse in prohibited area")
+                log.alarm(
+                    "1 mouse in prohibited area. Area: " + str(pixels_not_allowed)
+                )
 
     def area_1_empty(self) -> bool:
         return self.counts[0] <= self.zero_or_one_mouse

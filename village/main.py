@@ -145,8 +145,10 @@ def system_run(bevavior_window: QWidget) -> None:
                 if manager.launch_task_auto(cam_box):
                     manager.detection_change = True
                     manager.state = State.RUN_FIRST
+                    log.info("Going to RUN_FIRST State")
                 else:
                     manager.state = State.OPEN_DOOR2_STOP
+                    log.info("Going to OPEN_DOOR2_STOP State")
 
             case State.RUN_FIRST:
                 # Task running, waiting for the corridor to become empty"
@@ -155,20 +157,22 @@ def system_run(bevavior_window: QWidget) -> None:
                     log.alarm(
                         "Wrong RFID detection."
                         + " Another subject detected while main subject is in the box."
-                        + " Disconnecting RFID reader.",
+                        + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
+                    log.info("Going to OPEN_DOOR2_STOP State")
                 elif (
                     manager.task.chrono.get_seconds()
                     >= manager.task.settings.minimum_duration
                 ):
                     log.alarm(
                         "Minimum time reached and areas 3 or 4 were never empty."
-                        + " Disconnecting RFID reader.",
+                        + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
+                    log.info("Going to OPEN_DOOR2_STOP State")
 
                 elif (
                     cam_corridor.area_2_empty()
@@ -181,6 +185,7 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.CLOSE_DOOR2:
                 # Closing door2
                 motor2.close()
+                log.info("Going to RUN_CLOSED State")
                 manager.state = State.RUN_CLOSED
 
             case State.RUN_CLOSED:
@@ -191,10 +196,11 @@ def system_run(bevavior_window: QWidget) -> None:
                         "Wrong RFID detection."
                         + " Subject detected in the corridor while main"
                         + " subject should be in the box."
-                        + " Disconnecting RFID reader.",
+                        + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
+                    log.info("Going to OPEN_DOOR2_STOP State")
                 elif (
                     manager.task.chrono.get_seconds()
                     >= manager.task.settings.minimum_duration
@@ -212,6 +218,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 time.sleep(0.5)
                 motor2.open()
                 manager.state = State.RUN_OPENED
+                log.info("Going to RUN_OPENED State")
 
             case State.RUN_OPENED:
                 # task running, the subject can leave
@@ -227,10 +234,11 @@ def system_run(bevavior_window: QWidget) -> None:
                     log.alarm(
                         "Wrong RFID detection."
                         + " Another subject detected while main subject is in the box."
-                        + " Disconnecting RFID reader.",
+                        + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
+                    log.info("Going to OPEN_DOOR2_STOP State")
                 elif (
                     manager.task.chrono.get_seconds()
                     >= manager.task.settings.maximum_duration
@@ -262,12 +270,14 @@ def system_run(bevavior_window: QWidget) -> None:
                 manager.disconnect_and_save("Auto")
                 manager.detection_change = True
                 manager.state = State.WAIT
+                log.info("Going to WAIT State")
 
             case State.SAVE_INSIDE:
                 # Stopping the task, saving the data; the subject is still inside
                 manager.disconnect_and_save("Auto")
                 manager.detection_change = True
                 manager.state = State.WAIT_EXIT
+                log.info("Going to WAIT_EXIT State")
 
             case State.WAIT_EXIT:
                 # Task finished, waiting for the subject to leave
@@ -305,13 +315,10 @@ def system_run(bevavior_window: QWidget) -> None:
                 motor2.close()
                 motor1.open()
                 manager.state = State.WAIT
+                log.info("Going to WAIT State")
 
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
-                log.alarm(
-                    "Door2 opened and RFID deactivated, check the system.",
-                    subject=manager.subject.name,
-                )
                 motor2.open()
                 manager.rfid_reader = Active.OFF
                 manager.rfid_changed = True
@@ -326,9 +333,11 @@ def system_run(bevavior_window: QWidget) -> None:
                 if manager.launch_task_manual(cam_box):
                     manager.detection_change = True
                     manager.state = State.RUN_MANUAL
+                    log.info("Going to RUN_MANUAL State")
                 else:
                     manager.detection_change = True
                     manager.state = State.WAIT
+                    log.info("Going to WAIT State")
 
             case State.RUN_MANUAL:
                 # Task running manually
@@ -344,6 +353,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 manager.disconnect_and_save("Manual")
                 manager.detection_change = True
                 manager.state = State.WAIT
+                log.info("Going to WAIT State")
 
             case State.EXIT_GUI:
                 # In the GUI window, ready to exit the app

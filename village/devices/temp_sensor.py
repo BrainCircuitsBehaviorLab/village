@@ -30,6 +30,9 @@ class TempSensor(TempSensorProtocol):
         RH_string = "{:.2f}%".format(RH)
         temp_RH_string = temp_string + " / " + RH_string
 
+        log.info("temperature and humidity: " + temp_RH_string)
+        log.temp(temp, RH)
+
         return temp, RH, temp_RH_string
 
 

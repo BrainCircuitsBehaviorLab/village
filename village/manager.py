@@ -88,6 +88,7 @@ class Manager:
         utils.create_directories()
         self.create_collections()
         log.event_protocol = self.events
+        log.temp_protocol = self.temperatures
         utils.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
         self.detections = time_utils.TimestampTracker(hours=6)
         self.sessions = time_utils.TimestampTracker(hours=12)
@@ -381,7 +382,7 @@ class Manager:
                 log.alarm(
                     "Error launching task: "
                     + task_name
-                    + " not found. Disconnecting RFID Reader.",
+                    + " not found. Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
                 )
                 return False
@@ -402,13 +403,16 @@ class Manager:
                 log.alarm(
                     "Error launching task: "
                     + task_name
-                    + " is not a subclass of Task. Disconnecting RFID Reader.",
+                    + " is not a subclass of Task."
+                    + " Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
                 )
                 return False
         except Exception:
             log.alarm(
-                "Error launching task: " + task_name + " Disconnecting RFID Reader.",
+                "Error launching task: "
+                + task_name
+                + " Opening door2 and disconnecting RFID reader.",
                 subject=self.subject.name,
                 exception=traceback.format_exc(),
             )
@@ -442,7 +446,7 @@ class Manager:
                 log.alarm(
                     "Error running task "
                     + self.task.name
-                    + " Disconnecting RFID Reader.",
+                    + " Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
                 )
@@ -570,14 +574,14 @@ class Manager:
                     non_session_subjects.append(sub)
             try:
                 water = subject_water[sub]
-                water_str = str(water)
+                water_str = str(int(water))
             except KeyError:
                 water = 0
                 water_str = "0"
             if active_hours[sub] >= 23 and water < minimum_water:
                 low_water_subjects.append(sub)
             try:
-                weight_str = str(subject_weight[sub])
+                weight_str = str(round(subject_weight[sub], 2))
             except KeyError:
                 weight_str = "0"
             report_text += (
