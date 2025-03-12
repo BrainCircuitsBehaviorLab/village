@@ -1,7 +1,6 @@
 import logging
 import os
 import subprocess
-from datetime import datetime
 from village.scripts.utils import setup_logging
 
 import fire

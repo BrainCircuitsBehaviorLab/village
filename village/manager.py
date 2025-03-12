@@ -18,6 +18,7 @@ from village.classes.protocols import CameraProtocol
 from village.classes.subject import Subject
 from village.classes.task import Task
 from village.classes.training import Training
+from village.classes.after_session_run import AfterSessionRun
 from village.devices.temp_sensor import temp_sensor
 from village.log import log
 from village.scripts import time_utils, utils
@@ -62,6 +63,7 @@ class Manager:
         self.online_plot_figure_manager: OnlinePlotFigureManager = (
             OnlinePlotFigureManager()
         )
+        self.after_session_run: AfterSessionRun = AfterSessionRun()
         self.state: State = State.WAIT
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
@@ -174,6 +176,7 @@ class Manager:
         session_plot_found = 0
         subject_plot_found = 0
         online_plot_found = 0
+        after_session_run_found = 0
         functions_path = ""
 
         for root, _, files in os.walk(directory):
@@ -239,6 +242,15 @@ class Manager:
                         if online_plot_found == 1:
                             o = cls()
                             self.online_plot_figure_manager = o
+                    elif (
+                        issubclass(cls, AfterSessionRun)
+                        and cls != AfterSessionRun
+                    ):
+                        after_session_run_found += 1
+                        if after_session_run_found == 1:
+                            a = cls()
+                            self.after_session_run = a
+
             except Exception:
                 log.error(
                     "Couldn't import " + module_name, exception=traceback.format_exc()
@@ -268,6 +280,12 @@ class Manager:
             log.info("Custom Online plot successfully imported")
         else:
             log.error("Multiple online plots found")
+        if after_session_run_found == 0:
+            log.error("Custom After Session Run not found, using default")
+        elif after_session_run_found == 1:
+            log.info("Custom After Session Run successfully imported")
+        else:
+            log.error("Multiple After Session Run found")
         self.tasks = dict(sorted(tasks.items()))
         number_of_tasks = len(tasks)
         if number_of_tasks == 1:
