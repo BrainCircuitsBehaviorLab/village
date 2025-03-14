@@ -38,11 +38,12 @@ nighttime begins.""",
         "Number of days to store video data before deleting it.",
     ),
     Setting(
-        "DELETE_IF_NOT_BACKED_UP",
-        "OFF",
+        "SAFE_DELETE",
+        "ON",
         Active,
-        """If ON, the system deletes video data if it has not been backed up
-to a remote server. If ON, the system keeps the data until it is backed up.""",
+        """If ON, the system deletes old video data only if it has been backed up
+to a remote server. If OFF, the system deletes old video data even if no backup
+is found.""",
     ),
     Setting(
         "DETECTION_COLOR",
@@ -91,9 +92,15 @@ an alarm is triggered.""",
 ]
 
 default_project_name = "demo_project"
-default_project_directory = (
-    "/home/" + getpass.getuser() + "/village_projects/" + default_project_name
+default_project_directory = str(
+    Path("/home", getpass.getuser(), "village_projects", default_project_name)
 )
+
+default_server_destination = "/server_destination"
+default_server_directory = str(
+    Path(default_server_destination, default_project_name + "_data")
+)
+
 
 directory_settings = [
     Setting(
@@ -104,25 +111,25 @@ directory_settings = [
     ),
     Setting(
         "DATA_DIRECTORY",
-        default_project_directory + "/data",
+        str(Path(default_project_directory, "data")),
         str,
         "The data directory.",
     ),
     Setting(
         "SESSIONS_DIRECTORY",
-        default_project_directory + "/data/sessions",
+        str(Path(default_project_directory, "data", "sessions")),
         str,
         "The sessions directory.",
     ),
     Setting(
         "VIDEOS_DIRECTORY",
-        default_project_directory + "/data/videos",
+        str(Path(default_project_directory, "data", "videos")),
         str,
         "The videos directory.",
     ),
     Setting(
         "CODE_DIRECTORY",
-        default_project_directory + "/code",
+        str(Path(default_project_directory, "code")),
         str,
         "The user code directory.",
     ),
@@ -180,9 +187,15 @@ server_settings = [
     Setting("SERVER_PORT", 4022, int, "The server port."),
     Setting(
         "SERVER_DESTINATION",
-        "/archive/training_village/",
+        default_server_destination,
         str,
         "The server destination.",
+    ),
+    Setting(
+        "SERVER_DIRECTORY",
+        default_server_directory,
+        str,
+        "The server directory.",
     ),
 ]
 
@@ -351,7 +364,7 @@ hidden_settings = [
     ),
     Setting(
         "DEFAULT_CODE_DIRECTORY",
-        default_project_directory + "/code",
+        str(Path(default_project_directory, "code")),
         str,
         "The default directory of the user code.",
     ),

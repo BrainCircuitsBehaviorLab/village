@@ -129,6 +129,9 @@ class Camera(CameraProtocol):
         self.is_recording = False
         self.show_time_info = False
 
+        self.two_mice_detections = 0
+        self.prohibited_detections = 0
+
         self.area4_alarm_timer = time_utils.Timer(settings.get("ALARM_AREA4_TIME"))
         self.box_alarm_timer = time_utils.Timer(settings.get("ALARM_BOX_TIME"))
 
@@ -491,13 +494,22 @@ class Camera(CameraProtocol):
         )
 
         if pixels_allowed > self.one_or_two_mice:
-            if self.box_alarm_timer.has_elapsed():
-                log.alarm("2 subjects in box. Area: " + str(pixels_allowed))
+            if self.box_alarm_timer.ten_seconds_elapsed():
+                self.two_mice_detections += 1
+            if self.two_mice_detections >= 3:
+                self.two_mice_detections = 0
+                if self.box_alarm_timer.has_elapsed():
+                    log.alarm("2 subjects in box. Area: " + str(pixels_allowed))
+
         elif pixels_not_allowed > self.zero_or_one_mouse:
-            if self.box_alarm_timer.has_elapsed():
-                log.alarm(
-                    "1 mouse in prohibited area. Area: " + str(pixels_not_allowed)
-                )
+            if self.box_alarm_timer.ten_seconds_elapsed():
+                self.prohibited_detections += 1
+            if self.prohibited_detections >= 3:
+                self.prohibited_detections = 0
+                if self.box_alarm_timer.has_elapsed():
+                    log.alarm(
+                        "1 mouse in prohibited area. Area: " + str(pixels_not_allowed)
+                    )
 
     def area_1_empty(self) -> bool:
         return self.counts[0] <= self.zero_or_one_mouse

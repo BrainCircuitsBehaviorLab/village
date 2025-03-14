@@ -606,6 +606,7 @@ class WaterCalibrationLayout(Layout):
                 "Success",
                 text,
             )
+        log.info("Water calibration saved.")
         self.window.create_water_calibration_layout()
 
     def delete_button_clicked(self) -> None:

@@ -1,38 +1,32 @@
-# runs at the end of each session
+# runs at the end of each session when the animal is back home
 """
 1. It backs up the session data to a remote server using rsync.
 2. It generates reports and plots (TODO: implement this).
+3. You can override this class in your project code to implement custom behavior.
 """
-
-from pathlib import Path
 
 from village.scripts.rsync_to_server import main as rsync_script
 from village.settings import settings
 
 
 class AfterSessionRun:
-    def __init__(self):
+    def __init__(self) -> None:
         self.data_dir = settings.get("DATA_DIRECTORY")
-        self.destination_dir = settings.get("SERVER_DESTINATION")
+        self.server_directory = settings.get("SERVER_DIRECTORY")
         self.remote_user = settings.get("SERVER_USER")
         self.remote_host = settings.get("SERVER_HOST")
         self.port = settings.get("SERVER_PORT")
+        self.timeout = 120
 
-    def backup_to_server(self):
-        # define the destination folder
-        project_folder = f"{Path(self.data_dir).parent.name}_data"
+    def run(self) -> None:
         rsync_script(
             source=self.data_dir,
-            destination=f"{self.destination_dir}/{project_folder}",
+            destination=self.server_directory,
             remote_user=self.remote_user,
             remote_host=self.remote_host,
             port=self.port,
-            timeout = 120,
+            timeout=self.timeout,
         )
-
-    def run(self):
-        self.backup_to_server()
-        # deal with deleted data in a different class (change of cycle)
         # TODO: make reports?
 
 

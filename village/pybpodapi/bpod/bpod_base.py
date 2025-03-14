@@ -128,7 +128,19 @@ class BpodBase(object):
 
         self._bpodcom_connect(self.serial_port, self.baudrate)
 
-        if not self._bpodcom_handshake():
+        try:
+            val = self._bpodcom_handshake()
+        except Exception:
+            time.sleep(0.1)
+            try:
+                val = self._bpodcom_handshake()
+            except Exception:
+                raise BpodErrorException(
+                    """Error: Bpod failed to confirm connectivity.
+                    Please reset Bpod and try again."""
+                )
+
+        if not val:
             raise BpodErrorException(
                 """Error: Bpod failed to confirm connectivity.
                 Please reset Bpod and try again."""

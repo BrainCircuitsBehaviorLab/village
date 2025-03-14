@@ -10,6 +10,7 @@ from village.classes.enums import Active, ScreenActive, State
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.sound_device import get_sound_devices
 from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
+from village.log import log
 from village.manager import manager
 from village.scripts import time_utils, utils
 from village.settings import Setting, settings
@@ -62,6 +63,23 @@ class SettingsLayout(Layout):
                 self.create_label_and_value(row, 0, s, name, width=26)
                 row += 2
 
+            name = "SOUND SETTINGS"
+            label = self.create_and_add_label(name, row, 0, 30, 2, "black")
+            row += 2
+            s = settings.sound_settings[0]
+            self.create_label_and_value(row, 0, s, "", width=26)
+
+        if (
+            all and settings.get("USE_SOUNDCARD") == Active.ON
+        ) or modify == "SOUND SETTINGS":
+            row = 32
+            name = "SOUND SETTINGS"
+            for s in settings.sound_settings[1:]:
+                self.create_label_and_value(row, 0, s, name, width=26)
+                row += 2
+
+        if all:
+            row = 36
             name = "SCREEN SETTINGS"
             label = self.create_and_add_label(name, row, 0, 30, 2, "black")
             row += 2
@@ -71,7 +89,7 @@ class SettingsLayout(Layout):
         if (
             all and settings.get("USE_SCREEN") != ScreenActive.OFF
         ) or modify == "SCREEN SETTINGS":
-            row = 32
+            row = 40
             name = "SCREEN SETTINGS"
             for s in settings.screen_settings[1:]:
                 self.create_label_and_value(row, 0, s, name, width=26)
@@ -80,27 +98,10 @@ class SettingsLayout(Layout):
         if (
             all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
         ) or modify == "TOUCHSCREEN SETTINGS":
-            row = 36
+            row = 44
             name = "TOUCHSCREEN SETTINGS"
             for s in settings.touchscreen_settings:
                 self.create_label_and_value(row, 0, s, name, width=26)
-                row += 2
-
-        if all:
-            row = 42
-            name = "SOUND SETTINGS"
-            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
-            row += 2
-            s = settings.sound_settings[0]
-            self.create_label_and_value(row, 47, s, "", width=20)
-
-        if (
-            all and settings.get("USE_SOUNDCARD") == Active.ON
-        ) or modify == "SOUND SETTINGS":
-            row = 46
-            name = "SOUND SETTINGS"
-            for s in settings.sound_settings[1:]:
-                self.create_label_and_value(row, 47, s, name, width=20)
                 row += 2
 
         if all:
@@ -206,6 +207,8 @@ class SettingsLayout(Layout):
         self.save_button.setEnabled(True)
 
     def save_button_clicked(self) -> None:
+        server_directory = self.create_server_directory()
+
         self.save_button.setDisabled(True)
         manager.changing_settings = False
 
@@ -231,6 +234,9 @@ class SettingsLayout(Layout):
 
         for i, line_edit in enumerate(self.line_edits):
             s = self.line_edits_settings[i]
+
+            if s.key == "SERVER_DIRECTORY":
+                line_edit.setText(server_directory)
 
             if s.key in critical_keys and line_edit.text() != str(settings.get(s.key)):
                 self.critical_changes = True
@@ -308,6 +314,8 @@ class SettingsLayout(Layout):
         cam_corridor.change = True
         cam_box.change = True
 
+        log.info("Settings modified.")
+
         if self.critical_changes:
             text = (
                 "Some of the setting changes require a system restart to take effect."
@@ -334,6 +342,7 @@ class SettingsLayout(Layout):
         )
 
         if reply == QMessageBox.Yes:
+            log.info("Restoring factory settings.")
             settings.restore_factory_settings()
             self.window.create_settings_layout()
 
@@ -388,7 +397,7 @@ class SettingsLayout(Layout):
                 s.key,
                 row,
                 column + width,
-                60,
+                14,
                 2,
                 possible_values,
                 index,
@@ -399,25 +408,35 @@ class SettingsLayout(Layout):
         elif s.value_type in (str, int, float):
             value = str(settings.get(s.key))
             if s.key == "DATA_DIRECTORY":
-                new_value = settings.get("PROJECT_DIRECTORY") + "/data"
+                new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "data")
                 line_edit = self.create_and_add_line_edit(
                     new_value, row, column + width, 60, 2, self.settings_changed
                 )
             elif s.key == "VIDEOS_DIRECTORY":
-                new_value = settings.get("PROJECT_DIRECTORY") + "/data/videos"
+                new_value = os.path.join(
+                    settings.get("PROJECT_DIRECTORY"), "data", "videos"
+                )
                 line_edit = self.create_and_add_line_edit(
                     new_value, row, column + width, 60, 2, self.settings_changed
                 )
             elif s.key == "SESSIONS_DIRECTORY":
-                new_value = settings.get("PROJECT_DIRECTORY") + "/data/sessions"
+                new_value = os.path.join(
+                    settings.get("PROJECT_DIRECTORY"), "data", "sessions"
+                )
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width, 60, 2, self.settings_changed
                 )
             elif s.key == "CODE_DIRECTORY":
-                new_value = settings.get("PROJECT_DIRECTORY") + "/code"
+                new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "code")
                 line_edit = self.create_and_add_line_edit(
                     new_value, row, column + width, 60, 2, self.settings_changed
                 )
+            elif s.key == "SERVER_DIRECTORY":
+                new_value = self.create_server_directory()
+                line_edit = self.create_and_add_line_edit(
+                    new_value, row, column + width, 60, 2, self.settings_changed
+                )
+
             elif s.key in [
                 "APP_DIRECTORY",
                 "SERVER_USER",
@@ -450,6 +469,7 @@ class SettingsLayout(Layout):
                 "VIDEOS_DIRECTORY",
                 "SESSIONS_DIRECTORY",
                 "CODE_DIRECTORY",
+                "SERVER_DIRECTORY",
             ):
                 line_edit.setReadOnly(True)
                 line_edit.setDisabled(True)
@@ -520,6 +540,20 @@ class SettingsLayout(Layout):
             toggle_button.setProperty("type", type)
             self.toggle_buttons.append(toggle_button)
             self.toggle_buttons_settings.append(s)
+
+    def create_server_directory(self) -> str:
+        directory = os.path.basename(settings.get("PROJECT_DIRECTORY"))
+        index = next(
+            (
+                i
+                for i, item in enumerate(self.line_edits_settings)
+                if item.key == "SERVER_DESTINATION"
+            ),
+            0,
+        )
+        server_destination = self.line_edits[index].text()
+        new_value = os.path.join(server_destination, directory + "_data")
+        return new_value
 
     def change_sound_device(self, value: str, key: str) -> None:
         self.settings_changed(value, key)

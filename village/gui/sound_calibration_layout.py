@@ -576,6 +576,7 @@ class SoundCalibrationLayout(Layout):
                 "Success",
                 text,
             )
+        log.info("Sound calibration saved.")
         self.window.create_sound_calibration_layout()
 
     def delete_button_clicked(self) -> None:

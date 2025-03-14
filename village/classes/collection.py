@@ -68,17 +68,18 @@ class Collection(EventProtocol):
         return df
 
     def check_split_csv(self) -> None:
-        if len(self.df) > 11000:
-            first_100000: pd.DataFrame = self.df.head(10000)
+        max_size = 60000
+        file_size = 50000
+        if len(self.df) > max_size:
+            first_rows: pd.DataFrame = self.df.head(file_size)
             date_str: str = time_utils.now_string_for_filename()
             new_filename: str = self.name + "_" + date_str + ".csv"
-            directory: str = settings.get("DATA_DIRECTORY")
-            new_path: str = os.path.join(directory, new_filename)
-            first_100000.to_csv(new_path, index=False, sep=";")
-
-            last: pd.DataFrame = self.df.tail(len(self.df) - 10000)
+            directory = Path(settings.get("DATA_DIRECTORY"), "old_events")
+            new_path = Path(directory, new_filename)
+            directory.mkdir(parents=True, exist_ok=True)
+            first_rows.to_csv(new_path, index=False, sep=";")
+            last: pd.DataFrame = self.df.tail(len(self.df) - file_size)
             last.to_csv(self.path, index=False, sep=";")
-
             self.df = last
 
     def get_last_entry(self, column: str, value: str) -> Union[pd.Series, None]:

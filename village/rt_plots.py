@@ -10,10 +10,6 @@ class RTPlots:
         self.days = 3
         self.plot_path = os.path.join(settings.get("DATA_DIRECTORY"), "plot.png")
 
-    def telegram_data(self, hours) -> str:
-        self.hours = hours
-        return "TODO: Implement me!"
-
     def plot(self, days) -> None:
         self.days = days
         plotting = threading.Thread(target=self.plot_thread, daemon=True)

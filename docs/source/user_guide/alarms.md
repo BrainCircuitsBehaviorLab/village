@@ -4,10 +4,9 @@
 You can use various commands to retrieve information from the system. Simply type these commands in a private chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
 All commands start with the / symbol:
 
-- `/status ‘hours’`: Provides a summary of the behavioral box activity during the last specified hours (default is 24 hours).
+- `/report ‘hours’`: Provides a summary of the behavioral box activity during the last specified hours (default is 24 hours).
 - `/cam`: Sends a screenshot from both cameras.
 - `/plot ‘days’`: Displays a plot of entrances and attempts over the last specified days (default is 3 days).
-- `/report ‘hours days’`: Combines status, cam, and plot into a single report.
 
 
 

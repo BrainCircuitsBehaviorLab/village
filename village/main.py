@@ -100,7 +100,6 @@ def system_run(bevavior_window: QWidget) -> None:
 
         if manager.cycle_change_detector.has_cycle_changed():
             manager.cycle_checks()
-            # TODO: delete data
 
         match manager.state:
             case State.WAIT:
@@ -269,8 +268,8 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Stopping the task, saving the data; the subject is already outside
                 manager.disconnect_and_save("Auto")
                 manager.detection_change = True
-                manager.state = State.WAIT
-                log.info("Going to WAIT State")
+                manager.state = State.SYNC
+                log.info("Going to SYNC State")
 
             case State.SAVE_INSIDE:
                 # Stopping the task, saving the data; the subject is still inside
@@ -314,8 +313,8 @@ def system_run(bevavior_window: QWidget) -> None:
                 log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()
-                manager.state = State.WAIT
-                log.info("Going to WAIT State")
+                manager.state = State.SYNC
+                log.info("Going to SYNC State")
 
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
@@ -352,12 +351,22 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Stopping the task, saving the data; the task was manually stopped
                 manager.disconnect_and_save("Manual")
                 manager.detection_change = True
-                manager.state = State.WAIT
-                log.info("Going to WAIT State")
+                manager.state = State.SYNC
+                log.info("Going to SYNC State")
 
             case State.EXIT_GUI:
                 # In the GUI window, ready to exit the app
                 pass
+
+            case State.SYNC:
+                # Synchronizing data with the server or doing user-defined tasks
+                if manager.after_session_run_flag:
+                    manager.after_session_run_flag = False
+                    # manager.after_session_run.run()
+                if manager.change_cycle_run_flag:
+                    manager.change_cycle_run_flag = False
+                    # manager.change_cycle_run.run()
+                manager.state = State.WAIT
 
 
 # create the GUI that will run in the main thread

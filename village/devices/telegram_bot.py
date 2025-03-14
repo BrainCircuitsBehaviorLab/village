@@ -10,6 +10,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from village.classes.protocols import TelegramBotProtocol
 from village.devices.camera import cam_box, cam_corridor
 from village.log import log
+from village.manager import manager
 from village.rt_plots import rt_plots
 from village.scripts import time_utils
 from village.settings import settings
@@ -30,7 +31,8 @@ class TelegramBot(TelegramBotProtocol):
         self.thread.start()
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        await update.message.reply_text("Hi! Use /status <hours> to see the status.")
+        text = "Hi! Use /report <hours> to get a report of the last hours."
+        await update.message.reply_text(text)
 
     def alarm(self, message: str) -> None:
         try:
@@ -40,7 +42,7 @@ class TelegramBot(TelegramBotProtocol):
         except Exception:
             log.error("Telegram error", exception=traceback.format_exc())
 
-    async def status(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
             hours = int(context.args[0])
             if hours < 1:
@@ -55,8 +57,8 @@ class TelegramBot(TelegramBotProtocol):
             if user_id not in self.users:
                 log.error("Telegram User ID not included: " + user_id)
             else:
-                status = rt_plots.telegram_data(hours=hours)
-                await update.message.reply_text(status)
+                report, _, _, _ = manager.create_report(hours)
+                await update.message.reply_text(report)
         except Exception:
             log.error("Telegram error", exception=traceback.format_exc())
 
@@ -102,26 +104,13 @@ class TelegramBot(TelegramBotProtocol):
         except Exception:
             log.error("Telegram error", exception=traceback.format_exc())
 
-    async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        try:
-            user_id = str(update.effective_user.id)
-            if user_id not in self.users:
-                log.error("Telegram User ID not included: " + user_id)
-            else:
-                await self.status(update, context)
-                await self.cam(update, context)
-                await self.plot(update, context)
-        except Exception:
-            log.error("Telegram error", exception=traceback.format_exc())
-
     async def main(self) -> None:
         self.application = ApplicationBuilder().token(self.token).build()
         self.application.add_handler(CommandHandler("start", self.start))
         self.application.add_handler(CommandHandler("help", self.start))
-        self.application.add_handler(CommandHandler("status", self.status))
+        self.application.add_handler(CommandHandler("report", self.report))
         self.application.add_handler(CommandHandler("plot", self.plot))
         self.application.add_handler(CommandHandler("cam", self.cam))
-        self.application.add_handler(CommandHandler("report", self.report))
 
         await self.application.initialize()
         await self.application.updater.start_polling()

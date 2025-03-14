@@ -2,6 +2,7 @@ import logging
 import os
 import subprocess
 from datetime import datetime, timedelta
+
 import fire
 
 from village.scripts.utils import setup_logging
@@ -9,7 +10,7 @@ from village.scripts.utils import setup_logging
 
 def check_files_for_backup(
     files, directory, backup_dir, remote_user, remote_host, port=22
-):
+) -> list:
     files_to_remove = []
     # Create a single SSH connection to the remote server
     ssh_command = (
@@ -30,7 +31,7 @@ def check_files_for_backup(
     return files_to_remove
 
 
-def parse_timestamp_from_filename(filename):
+def parse_timestamp_from_filename(filename) -> datetime | None:
     # Assuming the timestamp is in the format ..._..._YYYYMMDD_HHMMSS.something
     try:
         timestamp_str = filename.split("_")[-2] + filename.split("_")[-1].split(".")[0]
@@ -40,10 +41,17 @@ def parse_timestamp_from_filename(filename):
 
 
 def remove_old_data(
-    directory, days, backup_dir=None, remote_user=None, remote_host=None, port=None
-):
+    directory,
+    days,
+    safe,
+    backup_dir=None,
+    remote_user=None,
+    remote_host=None,
+    port=None,
+) -> None:
     removed_count = 0
     files_to_check = []
+    files_to_remove = []
     now = datetime.now()
     cutoff = now - timedelta(days=days)
 
@@ -62,12 +70,17 @@ def remove_old_data(
                 else:
                     removed_count = remove_file(file_path, removed_count)
 
-    if backup_dir:
-        files_to_remove = check_files_for_backup(
-            files_to_check, directory, backup_dir, remote_user, remote_host, port
-        )
-        for file in files_to_remove:
-            removed_count = remove_file(file, removed_count)
+    if safe:
+        if backup_dir:
+            files_to_remove = check_files_for_backup(
+                files_to_check, directory, backup_dir, remote_user, remote_host, port
+            )
+    else:
+        logging.info("Safe mode is off, skipping backup check")
+        files_to_remove = files_to_check
+
+    for file in files_to_remove:
+        removed_count = remove_file(file, removed_count)
 
     if removed_count == 0:
         logging.info(f"No files removed from {directory}")
@@ -77,17 +90,34 @@ def remove_old_data(
         )
 
 
-def remove_file(file_path, removed_count):
+def remove_file(file_path, removed_count: int) -> int:
     os.remove(file_path)
     logging.info(f"Removed {file_path}")
     return removed_count + 1
 
 
-def main(directory, days, backup_dir, remote_user=None, remote_host=None, port=None):
+def main(
+    directory, days, safe, backup_dir, remote_user=None, remote_host=None, port=None
+) -> None:
+    """
+    Main function to remove old data files from a directory
+
+    Parameters:
+    - directory: Directory to remove files from
+    - days: Number of days to keep files
+    - safe: If True, will check for backup files before removing
+    - backup_dir: Directory to check for backup files
+    - remote_user: Username on remote system
+    - remote_host: Remote hostname or IP
+    - port: SSH port
+    """
+
     log_filename = setup_logging(logs_subdirectory="data_removal_logs")
     logging.info(f"Logging to file: {log_filename}")
     try:
-        remove_old_data(directory, days, backup_dir, remote_user, remote_host, port)
+        remove_old_data(
+            directory, days, safe, backup_dir, remote_user, remote_host, port
+        )
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")
     logging.info("Data removal script completed")
@@ -98,6 +128,7 @@ if __name__ == "__main__":
     # main(
     #     directory="/home/pi/village_projects/COT_test/data/videos",
     #     days=8,
+    #     safe=True,
     #     backup_dir="/archive/training_village/COT_test_data/videos",
     #     remote_user="training_village",
     #     remote_host="cluster",

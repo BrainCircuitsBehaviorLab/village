@@ -187,16 +187,53 @@ class Timer:
     def __init__(self, seconds: int) -> None:
         self.seconds = seconds
         self.init_time = now() - timedelta(seconds=seconds)
+        self.ten_seconds_time = now() - timedelta(seconds=10)
 
     # the first time has_elapsed is true
     def has_elapsed(self) -> bool:
         value = now() - self.init_time >= timedelta(seconds=self.seconds)
         if value:
-            self.reset()
+            self.init_time = now()
+            self.ten_seconds_time = now()
+        return value
+
+    # the first time ten_seconds_elapsed is true
+    def ten_seconds_elapsed(self) -> bool:
+        value = now() - self.ten_seconds_time >= timedelta(seconds=10)
+        if value:
+            self.ten_seconds_time = now()
         return value
 
     def reset(self) -> None:
         self.init_time = now()
+        self.ten_seconds_time = now()
+
+
+class Timer2:
+    def __init__(self, seconds: int, number_of_detections_needed: int = 1) -> None:
+        self.seconds = seconds
+        self.number_of_detections_needed = number_of_detections_needed
+        self.occurrences = 0
+        self.last_time_detected = now() - timedelta(seconds=seconds)
+        self.last_time_triggered = now() - timedelta(seconds=seconds)
+
+    # the first time has_elapsed is true
+    def has_elapsed(self) -> bool:
+        value = now() - self.last_time_detected >= timedelta(seconds=10)
+        if value:
+            self.last_time_detected = now()
+            self.occurrences += 1
+        if self.occurrences == self.number_of_detections_needed:
+            self.occurrences = 0
+            value = now() - self.last_time_triggered >= timedelta(seconds=self.seconds)
+            if value:
+                self.reset()
+            return value
+        return False
+
+    def reset(self) -> None:
+        self.last_time_detected = now()
+        self.last_time_triggered = now()
 
 
 class HourChangeDetector:

@@ -11,6 +11,9 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 
+from village.classes.after_session_run import AfterSessionRun
+from village.classes.change_cycle_run import ChangeCycleRun
+from village.classes.change_hour_run import ChangeHourRun
 from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
 from village.classes.plot import OnlinePlotFigureManager, SessionPlot, SubjectPlot
@@ -18,7 +21,6 @@ from village.classes.protocols import CameraProtocol
 from village.classes.subject import Subject
 from village.classes.task import Task
 from village.classes.training import Training
-from village.classes.after_session_run import AfterSessionRun
 from village.devices.temp_sensor import temp_sensor
 from village.log import log
 from village.scripts import time_utils, utils
@@ -64,6 +66,8 @@ class Manager:
             OnlinePlotFigureManager()
         )
         self.after_session_run: AfterSessionRun = AfterSessionRun()
+        self.change_cycle_run: ChangeCycleRun = ChangeCycleRun()
+        self.change_hour_run: ChangeHourRun = ChangeHourRun()
         self.state: State = State.WAIT
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
@@ -101,6 +105,8 @@ class Manager:
         self.detection_change = True
         self.error_in_manual_task = False
         self.rfid_changed = False
+        self.change_cycle_run_flag = False
+        self.after_session_run_flag = False
 
     def create_collections(self) -> None:
         self.events = Collection(
@@ -165,6 +171,13 @@ class Manager:
             ["date", "temperature", "humidity"],
             [str, float, float],
         )
+        self.deleted_sessions = Collection(
+            "deleted_sessions",
+            [
+                "filename",
+            ],
+            [str],
+        )
 
     def import_all_tasks(self) -> None:
         directory = settings.get("CODE_DIRECTORY")
@@ -177,6 +190,8 @@ class Manager:
         subject_plot_found = 0
         online_plot_found = 0
         after_session_run_found = 0
+        change_hour_run_found = 0
+        change_cycle_run_found = 0
         functions_path = ""
 
         for root, _, files in os.walk(directory):
@@ -242,14 +257,21 @@ class Manager:
                         if online_plot_found == 1:
                             o = cls()
                             self.online_plot_figure_manager = o
-                    elif (
-                        issubclass(cls, AfterSessionRun)
-                        and cls != AfterSessionRun
-                    ):
+                    elif issubclass(cls, AfterSessionRun) and cls != AfterSessionRun:
                         after_session_run_found += 1
                         if after_session_run_found == 1:
                             a = cls()
                             self.after_session_run = a
+                    elif issubclass(cls, ChangeHourRun) and cls != ChangeHourRun:
+                        change_hour_run_found += 1
+                        if change_hour_run_found == 1:
+                            c = cls()
+                            self.change_hour_run = c
+                    elif issubclass(cls, ChangeCycleRun) and cls != ChangeCycleRun:
+                        change_cycle_run_found += 1
+                        if change_cycle_run_found == 1:
+                            y = cls()
+                            self.change_cycle_run = y
 
             except Exception:
                 log.error(
@@ -286,6 +308,18 @@ class Manager:
             log.info("Custom After Session Run successfully imported")
         else:
             log.error("Multiple After Session Run found")
+        if change_hour_run_found == 0:
+            log.error("Custom Change Hour Run not found, using default")
+        elif change_hour_run_found == 1:
+            log.info("Custom Change Hour Run successfully imported")
+        else:
+            log.error("Multiple Change Hour Run found")
+        if change_cycle_run_found == 0:
+            log.error("Custom Change Cycle Run not found, using default")
+        elif change_cycle_run_found == 1:
+            log.info("Custom Change Cycle Run successfully imported")
+        else:
+            log.error("Multiple Change Cycle Run found")
         self.tasks = dict(sorted(tasks.items()))
         number_of_tasks = len(tasks)
         if number_of_tasks == 1:
@@ -504,19 +538,20 @@ class Manager:
                 )
 
         log.end(task=self.task.name, subject=self.subject.name)
-        manager.sessions.add_timestamp()
+        self.sessions.add_timestamp()
+        self.after_session_run_flag = True
 
     def save_to_subjects(self) -> None:
         df = self.subjects.df.copy()
         self.training.settings = self.task.settings
         next_settings = self.training.get_jsonstring(exclude=["observations"])
-        df.loc[df["name"] == manager.subject.name, "next_settings"] = next_settings
+        df.loc[df["name"] == self.subject.name, "next_settings"] = next_settings
 
         time_val = time_utils.time_in_future_seconds(
             int(self.training.settings.refractary_period)
         )
         time_str = time_utils.string_from_date(time_val)
-        df.loc[df["name"] == manager.subject.name, "next_session_time"] = time_str
+        df.loc[df["name"] == self.subject.name, "next_session_time"] = time_str
         self.subjects.df = df
         self.subjects.save_from_df(self.training)
 
@@ -539,6 +574,20 @@ class Manager:
         )
 
     def cycle_checks(self) -> None:
+        text, non_det_subs, non_ses_subs, low_water_subs = self.create_report(24)
+        log.alarm(text, report=True)
+        if len(non_det_subs) > 0:
+            log.alarm("No detections in the last 24 hours: " + ", ".join(non_det_subs))
+        if len(non_ses_subs) > 0:
+            log.alarm("No sessions in the last 24 hours: " + ", ".join(non_ses_subs))
+        if len(low_water_subs) > 0:
+            log.alarm(
+                "Low water consumption in the last 24 hours: "
+                + ", ".join(low_water_subs)
+            )
+        self.change_cycle_run_flag = True
+
+    def create_report(self, hours: int) -> tuple[str, list[str], list[str], list[str]]:
         minimum_water = float(settings.get("MINIMUM_WATER_24"))
         events = self.events.df.copy()
         subjects = self.subjects.df.copy()
@@ -547,18 +596,16 @@ class Manager:
         events["date"] = pd.to_datetime(events["date"])
         sessions_summary["date"] = pd.to_datetime(sessions_summary["date"])
 
-        time_24_hours_ago = time_utils.hours_ago(24)
+        time_hours_ago = time_utils.hours_ago(hours)
 
         detections = events[
             (events["description"] == "Subject detected")
-            & (events["date"] >= time_24_hours_ago)
+            & (events["date"] >= time_hours_ago)
         ]
         sessions = events[
-            (events["type"] == "START") & (events["date"] >= time_24_hours_ago)
+            (events["type"] == "START") & (events["date"] >= time_hours_ago)
         ]
-        sessions_summary = sessions_summary[
-            sessions_summary["date"] >= time_24_hours_ago
-        ]
+        sessions_summary = sessions_summary[sessions_summary["date"] >= time_hours_ago]
 
         subject_detections = detections.groupby("subject").size().to_dict()
         subject_sessions = sessions.groupby("subject").size().to_dict()
@@ -571,6 +618,8 @@ class Manager:
         active_hours = utils.calculate_active_hours(subjects)
 
         report_text = "REPORT\n\n"
+        report_text += "state: " + self.state.name + ", subject: " + self.subject.name
+        report_text += "\n\n"
         report_text += "subject,detections,sessions,water,weight\n"
 
         non_detected_subjects = []
@@ -614,23 +663,12 @@ class Manager:
                 + weight_str
                 + "\n"
             )
-
-        log.alarm(report_text, report=True)
-
-        if len(non_detected_subjects) > 0:
-            log.alarm(
-                "No detections in the last 24 hours: "
-                + ", ".join(non_detected_subjects)
-            )
-        if len(non_session_subjects) > 0:
-            log.alarm(
-                "No sessions in the last 24 hours: " + ", ".join(non_session_subjects)
-            )
-        if len(low_water_subjects) > 0:
-            log.alarm(
-                "Low water consumption in the last 24 hours: "
-                + ", ".join(low_water_subjects)
-            )
+        return (
+            report_text,
+            non_detected_subjects,
+            non_session_subjects,
+            low_water_subjects,
+        )
 
     def hourly_checks(self) -> None:
         temp, _, temp_string = temp_sensor.get_temperature()
@@ -646,6 +684,11 @@ class Manager:
         if self.sessions.trigger_empty():
             value = str(self.sessions.hours)
             log.alarm("No sessions performed in the last " + value + " hours")
+
+        if utils.has_low_disk_space():
+            log.alarm("Low disk space (less than 10GB)")
+
+        self.change_hour_run.run()
 
 
 manager = Manager()

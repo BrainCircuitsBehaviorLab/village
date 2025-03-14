@@ -37,7 +37,8 @@ from village.plots.create_pixmap import create_pixmap
 from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.plots.temperatures_plot import temperatures_plot
 from village.plots.water_calibration_plot import water_calibration_plot
-from village.scripts import time_utils, utils
+from village.scripts import time_utils
+from village.scripts.global_csv_for_subject import main as global_csv_for_subject_script
 from village.settings import settings
 
 if TYPE_CHECKING:
@@ -714,7 +715,7 @@ class DfLayout(Layout):
 
     def obtain_searched_df(self) -> DataFrame:
         if self.searching == "":
-            return self.complete_df
+            return self.complete_df.copy()
         else:
             new_df = self.complete_df.copy()
             return new_df[
@@ -951,6 +952,15 @@ class DfLayout(Layout):
         path = os.path.join(sessions_directory, subject, subject + ".csv")
         return path
 
+    def get_filename_from_sessions_summary_row(self, row: pd.Series) -> str:
+        date_str = row["date"]
+        task = row["task"]
+        subject = row["subject"]
+        date = time_utils.date_from_string(date_str)
+        date_str = time_utils.filename_string_from_date(date)
+        filename = subject + "_" + task + "_" + date_str + ".csv"
+        return filename
+
     def get_paths_from_sessions_summary_row(self, row: pd.Series) -> list[str]:
         date_str = row["date"]
         task = row["task"]
@@ -1034,22 +1044,24 @@ class DfLayout(Layout):
             QMessageBox.information(self.window, "EDIT", text)
 
     def delete_button_clicked(self) -> None:
-        # self.searching = ""
-        # self.search_edit.setText("")
-        # self.update_gui()
         selected_indexes = self.model.table_view.selectionModel().selectedRows()
         if selected_indexes:
             if manager.state.can_edit_data():
                 if manager.table == DataTable.SUBJECTS:
                     text = (
                         "Do you want to delete the selected subject? "
+                        + "The data will not be deleted, but the subject will be "
+                        + "removed from the subjects.csv file. "
                         + "This action cannot be undone."
                     )
                 elif manager.table == DataTable.SESSIONS_SUMMARY:
                     text = (
                         "Do you want to delete the selected session? "
-                        + "The session data and the video will be deleted. "
-                        + "The session will be removed from the sessions_summary. "
+                        + "The session files and video will not be deleted, but the"
+                        + "session data will be removed from the sessions_summary.csv "
+                        + "and from the <name_of_subject>.csv file."
+                        + "The session name will be added to the "
+                        + "deleted_sessions.csv file. "
                         + "This action cannot be undone."
                     )
                 else:
@@ -1068,13 +1080,14 @@ class DfLayout(Layout):
                     row = self.get_selected_row_series()
                     if row is not None:
                         if manager.table == DataTable.SESSIONS_SUMMARY:
-                            del_paths = self.get_paths_from_sessions_summary_row(row)
-                            for path in del_paths:
-                                if os.path.exists(path):
-                                    os.remove(path)
+                            deleted = self.get_filename_from_sessions_summary_row(row)
+                            manager.deleted_sessions.add_entry([deleted])
+                            del_sess = manager.deleted_sessions.df["filename"].tolist()
                             subject = row["subject"]
                             directory = str(settings.get("SESSIONS_DIRECTORY"))
-                            utils.create_global_csv_for_subject(subject, directory)
+                            global_csv_for_subject_script(
+                                subject, directory, deleted_sessions=del_sess
+                            )
 
                         index = selected_indexes[0]
                         self.model.beginRemoveRows(
