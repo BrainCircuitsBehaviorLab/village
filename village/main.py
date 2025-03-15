@@ -290,6 +290,7 @@ def system_run(bevavior_window: QWidget) -> None:
                         + str(manager.task.chrono.get_seconds())
                         + " seconds. "
                     )
+                    # TODO: I don't follow the logic here:
                     if manager.max_time_counter == 1:
                         text += "1 hour since the task ended."
                     else:
@@ -307,6 +308,18 @@ def system_run(bevavior_window: QWidget) -> None:
                     )
                     manager.sessions_summary.change_last_entry("weight", weight)
                     manager.state = State.EXIT_SAVED
+                
+                # # get the current time
+                # current_time = time.time()
+                # # for 1 second
+                # while time.time() < current_time + 1:
+                #     # get weight
+                #     weight = scale.get_weight()
+                #     # save to file with current time as the title
+                #     # and time.time() and the weight separated by a comma
+                #     file_name = f'/home/pi/{current_time}.txt'
+                #     with open(file_name, 'w') as f:
+                #         f.write(f'{time.time()},{weight}\n')
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
