@@ -327,7 +327,7 @@ class SoundCalibrationLayout(Layout):
     def change_layout(self, auto: bool = False) -> bool:
         if manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
             if not auto:
-                QMessageBox().information(
+                QMessageBox.information(
                     self.window, "WARNING", "Wait until the task finishes."
                 )
             return False
@@ -453,7 +453,7 @@ class SoundCalibrationLayout(Layout):
 
     def calibrate_button_clicked(self) -> None:
         if self.calibration_denied:
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Warning",
                 "You need to mark the test as correct or incorrect first.",
@@ -481,7 +481,7 @@ class SoundCalibrationLayout(Layout):
 
     def test_button_clicked(self) -> None:
         if self.test_denied:
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Warning",
                 "You need to save or delete the current calibration first.",
@@ -509,7 +509,7 @@ class SoundCalibrationLayout(Layout):
             text += ". \nThe following speaker can not be tested: "
             text += str(self.speaker2)
             text += ". \nYou need to calibrate it first."
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Warning",
                 text,
@@ -564,14 +564,14 @@ class SoundCalibrationLayout(Layout):
             text = "The following speaker and frequency had only one calibration point "
             text += "and was therefore removed from the calibration: "
             text += "; ".join(removed_list)
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Warning",
                 text,
             )
         else:
             text = "The calibration was saved successfully."
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Success",
                 text,

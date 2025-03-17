@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPushButton,
     QScrollArea,
     QStackedLayout,
@@ -513,7 +514,7 @@ class MotorLayout(Layout):
         self.buttons.append(close_door)
 
     def tare_scale_clicked(self) -> None:
-        scale.tare()
+        manager.taring_scale = True
 
     def change_angles_clicked(self) -> None:
         motor1_open_val = settings.get("MOTOR1_VALUES")[0]
@@ -589,6 +590,17 @@ class MotorLayout(Layout):
             motor2.close_angle = val4
 
     def calibrate_scale_clicked(self) -> None:
+        if not manager.state.can_calibrate_scale():
+            text = (
+                "Calibration is not available if there is a subject in the box "
+                + "or a detection in progress"
+            )
+            QMessageBox.information(
+                self.window,
+                "CALIBRATION",
+                text,
+            )
+
         scale.tare()
         val = settings.get("SCALE_WEIGHT_TO_CALIBRATE")
         self.reply = QDialog()
@@ -636,8 +648,12 @@ class MotorLayout(Layout):
         pass
 
     def get_weight_clicked(self) -> None:
-        weight = scale.get_weight_string()
-        log.info("weight: " + weight)
+        if manager.getting_weights:
+            manager.log_weight = True
+        else:
+            weight = scale.get_weight()
+            weight_str = "weight: {:.2f} g".format(weight)
+            log.info(weight_str)
 
     def get_temperature_clicked(self) -> None:
         _, _, temp_str = temp_sensor.get_temperature()

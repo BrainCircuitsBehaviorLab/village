@@ -387,7 +387,7 @@ class WaterCalibrationLayout(Layout):
     def change_layout(self, auto: bool = False) -> bool:
         if manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
             if not auto:
-                QMessageBox().information(
+                QMessageBox.information(
                     self.window, "WARNING", "Wait until the task finishes."
                 )
             return False
@@ -488,7 +488,7 @@ class WaterCalibrationLayout(Layout):
 
     def calibrate_button_clicked(self) -> None:
         if self.calibration_denied:
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Warning",
                 "Finish the current test first.",
@@ -518,7 +518,7 @@ class WaterCalibrationLayout(Layout):
 
     def test_button_clicked(self) -> None:
         if self.test_denied:
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Warning",
                 "Save or delete the current calibration first.",
@@ -552,7 +552,7 @@ class WaterCalibrationLayout(Layout):
             text = "The following ports can not be tested: "
             text += ", ".join([str(error) for error in errors])
             text += ". \nYou need to calibrate them first."
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Warning",
                 text,
@@ -594,14 +594,14 @@ class WaterCalibrationLayout(Layout):
             text = "The following ports had only one calibration point and were"
             text += "therefore removed from the calibration: "
             text += ", ".join([str(port) for port in removed_ports])
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Warning",
                 text,
             )
         else:
             text = "The calibration was saved successfully."
-            QMessageBox().information(
+            QMessageBox.information(
                 self.window,
                 "Success",
                 text,

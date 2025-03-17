@@ -107,6 +107,9 @@ class Manager:
         self.rfid_changed = False
         self.change_cycle_run_flag = False
         self.after_session_run_flag = False
+        self.getting_weights = False
+        self.log_weight = False
+        self.taring_scale = False
 
     def create_collections(self) -> None:
         self.events = Collection(

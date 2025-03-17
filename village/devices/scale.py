@@ -33,6 +33,7 @@ class Scale(ScaleProtocol):
         try:
             self.offset = self.get_voltage(5)
             log.info("The scale has been tared.")
+            time.sleep(0.5)
         except Exception:
             log.error("Error taring scale", exception=traceback.format_exc())
 
@@ -49,10 +50,6 @@ class Scale(ScaleProtocol):
 
         except Exception:
             log.error("Error calibrating scale", exception=traceback.format_exc())
-
-    def get_weight_string(self) -> str:
-        weight = self.get_weight()
-        return "{:.2f} g".format(weight)
 
     def get_value(self) -> int:
         data = self.read_reg(self.REG_DATA_GET_RAM_DATA, 4)
@@ -116,7 +113,6 @@ class Scale(ScaleProtocol):
         for i in range(len):
             time.sleep(0.1)
             self.rxbuf[i] = self.i2cbus.read_byte(self.I2C_ADDR)
-        time.sleep(0.5)
         return self.rxbuf
 
 

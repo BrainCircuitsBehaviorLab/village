@@ -101,6 +101,18 @@ def system_run(bevavior_window: QWidget) -> None:
         if manager.cycle_change_detector.has_cycle_changed():
             manager.cycle_checks()
 
+        if manager.taring_scale:
+            scale.tare()
+            manager.taring_scale = False
+        elif manager.getting_weights:
+            weight = scale.get_weight()
+            if manager.log_weight:
+                weight_str = "weight: {:.2f} g".format(weight)
+                log.info(weight_str)
+                manager.log_weight = False
+        else:
+            weight = 0.0
+
         match manager.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
@@ -220,6 +232,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.RUN_OPENED:
                 # task running, the subject can leave
+                manager.getting_weights = True
                 if cam_corridor.area_2_empty() and cam_corridor.area_3_empty():
                     if tare_timer.has_elapsed():
                         scale.tare()
@@ -244,7 +257,6 @@ def system_run(bevavior_window: QWidget) -> None:
                     )
                     manager.state = State.SAVE_INSIDE
                 else:
-                    weight = scale.get_weight()
                     if weight > settings.get("WEIGHT_THRESHOLD"):
                         log.info(
                             "Weight detected " + str(weight) + " g",
@@ -255,6 +267,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
+                manager.getting_weights = False
                 log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()
@@ -276,6 +289,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.WAIT_EXIT:
                 # Task finished, waiting for the subject to leave
+                manager.getting_weights = True
                 if (
                     manager.task.chrono.get_seconds()
                     > manager.task.settings.maximum_duration
@@ -295,7 +309,6 @@ def system_run(bevavior_window: QWidget) -> None:
                         )
                     log.alarm(text, subject=manager.subject.name)
                     manager.max_time_counter += 1
-                weight = scale.get_weight()
                 if weight > settings.get("WEIGHT_THRESHOLD"):
                     log.info(
                         "Weight detected " + str(weight) + " g",
@@ -306,6 +319,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
+                manager.getting_weights = False
                 log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()

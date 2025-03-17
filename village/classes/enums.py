@@ -84,6 +84,12 @@ class State(SuperEnum):
         else:
             return False
 
+    def can_calibrate_scale(self) -> bool:
+        if self in (State.WAIT, State.MANUAL_MODE):
+            return True
+        else:
+            return False
+
     def can_stop_task(self) -> bool:
         if self in (
             State.RUN_FIRST,

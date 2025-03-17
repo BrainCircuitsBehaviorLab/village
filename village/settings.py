@@ -425,7 +425,7 @@ of seconds prior to a detection.""",
     ),
     Setting(
         "WEIGHT_DEVIATION",
-        3,
+        5,
         float,
         """The standard deviation of the weight must be smaller than this value
 to consider it as correct. If the ratio is greater than this value, the weight
@@ -433,9 +433,9 @@ is considered an outlier probably because the animal is moving or it is not
 completely on the scale.""",
     ),
     Setting(
-        "UPDATE_TIME_MS", 2000, int, "The update time in ms for the tables and plots."
+        "UPDATE_TIME_MS", 1000, int, "The update time in ms for the tables and plots."
     ),
-    Setting("SCREENSAVE_TIME_MS", 300000, int, "The time in ms for the screensave."),
+    Setting("SCREENSAVE_TIME_MS", 60000, int, "The time in ms for the screensave."),
     Setting(
         "CORRIDOR_VIDEO_DURATION",
         1800,
