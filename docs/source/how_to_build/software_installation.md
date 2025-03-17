@@ -26,15 +26,16 @@ Follow the instructions on this page if you prefer a manual installation. The pr
 ### Launch Raspberry Pi OS for the First Time
 
 1. Connect a keyboard, mouse, and screen to the Raspberry Pi.
-2. Connect the Ethernet cable if you are going to use an Ethernet connection.
-3. If your SD card has the OS preinstalled, jump to step 4.
-4. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi OS][OS]
-5. Insert the SD card and start the Raspberry Pi.
-6. Select your country and keyboard language and choose English as the general language.
-7. Type `raspberry` as the username and choose the password you want.
-8. Select your Wi-Fi or Ethernet connection.
-9. Choose your preferred web browser (Chromium).
-10. Select "Yes" when asked to update software (if you have your internet connection ready).
+2. Connect the fan.
+3. Connect the Ethernet cable if you are going to use an Ethernet connection.
+4. If your SD card has the OS preinstalled, jump to step 4.
+5. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi OS][OS]
+6. Insert the SD card and start the Raspberry Pi.
+7. Select your country and keyboard language and choose English as the general language.
+8. Type `pi` as the username and choose the password you want.
+9. Select your Wi-Fi or Ethernet connection.
+10. Choose your preferred web browser (Chromium).
+11. Select "Yes" when asked to update software (if you have your internet connection ready).
 
 
 ### Updating the System
@@ -69,7 +70,7 @@ sudo apt install python3-pyqt5.qtmultimedia
 sudo apt install libqt5multimedia5-plugins
 ```
 
-4. Install VS Code (optional):
+4. Install VS Code:
 
 ```
 sudo apt install code
@@ -138,6 +139,12 @@ sudo raspi-config
 2. Go to `Interface Options` and enable I2C.
 
 
+### Serial Communication
+
+The rfid sensor communicates using the serial port of the Raspberry.
+1. Go to `Preferences` and then `Raspberry Pi Configuration` and check that these options are enabled:
+SPI,I2c, Serial Port. The rest of the options should be disabled.
+
 
 ### Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication
 
@@ -189,7 +196,7 @@ Now, whenever the Bpod device is connected to the specified USB port, it will co
 ```
 source ~/.env/bin/activate
 ```
-2. Clone the repository inside your `/home/raspberry/` directory.
+2. Clone the repository inside your `/home/pi/` directory.
 ```
 git clone https://github.com/BrainCircuitsBehaviorLab/village.git
 ```
@@ -202,7 +209,7 @@ cd /home/raspberry/village
 pip install -e .
 ```
 5. You’re ready to start the system by simply running the `main.py` file.
-```python /home/raspberry/village/village/main.py```
+```python /home/pi/village/village/main.py```
 
 ### Create an Alias and Run the Training Village
 1. Edit the .bashrc file:
@@ -211,7 +218,7 @@ nano ~/.bashrc
 ```
 2. Add the following line to create an alias:
 ```
-alias village='/home/raspberry/.env/bin/python /home/raspberry/village/village/main.py'
+alias village='/home/pi/.env/bin/python /home/raspberry/village/village/main.py'
 ```
 3. Reload the .bahsrc:
 ```

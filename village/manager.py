@@ -503,6 +503,7 @@ class Manager:
                     exception=traceback.format_exc(),
                 )
                 self.state = State.OPEN_DOOR2_STOP
+                log.info("Going to OPEN_DOOR2_STOP State")
 
     def reset_subject_task_training(self) -> None:
         self.task = Task()

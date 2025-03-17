@@ -69,7 +69,8 @@ class OnlinePlotFigureManager:
             self.make_plot(df)
         except Exception:
             self.make_error_plot()
-        self.fig.canvas.draw()
+        if hasattr(self.fig, "canvas") and self.fig.canvas is not None:
+            self.fig.canvas.draw()
 
     def make_plot(self, df: pd.DataFrame) -> None:
         self.ax1.clear()

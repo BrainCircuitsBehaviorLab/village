@@ -214,19 +214,15 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Opening door2
                 scale.tare()
                 tare_timer.reset()
-                time.sleep(0.5)
                 motor2.open()
                 manager.state = State.RUN_OPENED
                 log.info("Going to RUN_OPENED State")
 
             case State.RUN_OPENED:
                 # task running, the subject can leave
-                if (
-                    tare_timer.has_elapsed()
-                    and cam_corridor.area_2_empty()
-                    and cam_corridor.area_3_empty()
-                ):
-                    scale.tare()
+                if cam_corridor.area_2_empty() and cam_corridor.area_3_empty():
+                    if tare_timer.has_elapsed():
+                        scale.tare()
 
                 id, multiple = rfid.get_id()
                 if id != "" and id != manager.subject.tag:
@@ -290,7 +286,6 @@ def system_run(bevavior_window: QWidget) -> None:
                         + str(manager.task.chrono.get_seconds())
                         + " seconds. "
                     )
-                    # TODO: I don't follow the logic here:
                     if manager.max_time_counter == 1:
                         text += "1 hour since the task ended."
                     else:
@@ -308,18 +303,6 @@ def system_run(bevavior_window: QWidget) -> None:
                     )
                     manager.sessions_summary.change_last_entry("weight", weight)
                     manager.state = State.EXIT_SAVED
-                
-                # # get the current time
-                # current_time = time.time()
-                # # for 1 second
-                # while time.time() < current_time + 1:
-                #     # get weight
-                #     weight = scale.get_weight()
-                #     # save to file with current time as the title
-                #     # and time.time() and the weight separated by a comma
-                #     file_name = f'/home/pi/{current_time}.txt'
-                #     with open(file_name, 'w') as f:
-                #         f.write(f'{time.time()},{weight}\n')
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
@@ -375,11 +358,12 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Synchronizing data with the server or doing user-defined tasks
                 if manager.after_session_run_flag:
                     manager.after_session_run_flag = False
-                    # manager.after_session_run.run()
+                    manager.after_session_run.run()
                 if manager.change_cycle_run_flag:
                     manager.change_cycle_run_flag = False
-                    # manager.change_cycle_run.run()
+                    manager.change_cycle_run.run()
                 manager.state = State.WAIT
+                log.info("Going to WAIT State")
 
 
 # create the GUI that will run in the main thread

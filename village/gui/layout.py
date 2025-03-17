@@ -658,6 +658,7 @@ class OnlinePlotDialog(QDialog):
         self.canvas = FigureCanvas(manager.online_plot_figure_manager.fig)
         layout.addWidget(self.canvas)
         self.setLayout(layout)
+        manager.online_plot_figure_manager.fig.canvas.draw()
 
     def closeEvent(self, event):
         # Implement specific actions here

@@ -10,6 +10,7 @@ import smbus2
 
 from village.classes.protocols import ScaleProtocol
 from village.log import log
+from village.scripts import time_utils
 from village.settings import settings
 
 
@@ -72,11 +73,27 @@ class Scale(ScaleProtocol):
                 value = self.get_value()
                 weight = abs((value - self.offset) / self.calibration)
                 weights.append(weight)
+
+            # remove >>
+            file_name = "/home/pi/weights.txt"
+            date = time_utils.now_string()
+            weights_str = ",".join([str(x) for x in weights])
+            # >> remove
+
             weights = [x for x in weights if x != 0]
             average = sum(weights) / len(weights)
             variance = sum([((x - average) ** 2) for x in weights]) / len(weights)
             sd: float = variance**0.5
             correct = sd < self.deviation
+
+            # remove >>
+            if average > 10:
+                with open(file_name, "a") as f:
+                    sd_str = str(sd)
+                    correct_str = "1" if correct else "0"
+                    f.write(f"{date},{weights_str},{average},{sd_str},{correct_str}\n")
+            # >> remove
+
             if correct:
                 return average
             else:
@@ -99,6 +116,7 @@ class Scale(ScaleProtocol):
         for i in range(len):
             time.sleep(0.1)
             self.rxbuf[i] = self.i2cbus.read_byte(self.I2C_ADDR)
+        time.sleep(0.5)
         return self.rxbuf
 
 
