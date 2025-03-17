@@ -50,7 +50,7 @@ def corridor_plot(
     )
     max_time = max_time.replace(minute=0, second=0, microsecond=0)
 
-    hourly_ticks = pd.date_range(start=min_time, end=max_time, freq="H")
+    hourly_ticks = pd.date_range(start=min_time, end=max_time, freq="h")
 
     for tick in hourly_ticks:
         ax.axvline(tick, color="lightgray", linewidth=1)

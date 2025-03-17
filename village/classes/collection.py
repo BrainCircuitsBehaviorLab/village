@@ -95,9 +95,8 @@ class Collection(EventProtocol):
         return None
 
     def change_last_entry(self, column: str, value: Any) -> None:
-        last_entry = self.df.iloc[-1]
-        last_entry[column] = value
-        self.df.iloc[-1] = last_entry
+
+        self.df.loc[self.df.index[-1], column] = value
         self.save_from_df()
 
     def log(self, date: str, type: str, subject: str, description: str) -> None:
