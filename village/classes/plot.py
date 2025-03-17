@@ -53,11 +53,16 @@ class OnlinePlotFigureManager:
     that are part of Task.session_df.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = "Online Plot"
         self.fig = plt.figure(figsize=(10, 8))
         self.ax1 = self.fig.add_subplot(121)
         self.active = False
+
+    def update_canvas(self, df: pd.DataFrame) -> None:
+        self.update_plot(df)
+        if hasattr(self.fig, "canvas") and self.fig.canvas is not None:
+            self.fig.canvas.draw()
 
     def update_plot(self, df: pd.DataFrame) -> None:
         """
@@ -69,8 +74,6 @@ class OnlinePlotFigureManager:
             self.make_plot(df)
         except Exception:
             self.make_error_plot()
-        if hasattr(self.fig, "canvas") and self.fig.canvas is not None:
-            self.fig.canvas.draw()
 
     def make_plot(self, df: pd.DataFrame) -> None:
         self.ax1.clear()

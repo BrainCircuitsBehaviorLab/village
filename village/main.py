@@ -91,7 +91,9 @@ def system_run(bevavior_window: QWidget) -> None:
         if manager.online_plot_figure_manager.active:
             if manager.task.current_trial > trial:
                 trial = manager.task.current_trial
-                manager.online_plot_figure_manager.update_plot(manager.task.session_df)
+                manager.online_plot_figure_manager.update_canvas(
+                    manager.task.session_df
+                )
         else:
             trial = 0
 
