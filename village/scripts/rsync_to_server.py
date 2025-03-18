@@ -124,7 +124,7 @@ def main(source, destination, remote_user, remote_host, port=22, timeout=120) ->
     -timeout: Timeout duration in seconds (default: 120)
     """
     # Setup logging
-    log_file = setup_logging(logs_subdirectory="rsync_logs")
+    log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")
     logging.info(f"Logging to file: {log_file}")
 
     # Log start of sync
@@ -139,6 +139,9 @@ def main(source, destination, remote_user, remote_host, port=22, timeout=120) ->
     else:
         logging.error(f"Sync failed. Check log file for details: {log_file}")
 
+    # Close the log file handler properly
+    logging.getLogger().removeHandler(file_handler)
+    file_handler.close()
     logging.shutdown()
 
 

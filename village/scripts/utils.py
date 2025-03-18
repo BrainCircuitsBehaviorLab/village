@@ -283,27 +283,49 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
     return df4
 
 
-def setup_logging(logs_subdirectory: str) -> str:
+def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
     """Configure logging to both file and console"""
     data_dir = settings.get("DATA_DIRECTORY")
     logs_dir = os.path.join(data_dir, logs_subdirectory)
+
     # Create logs directory if it doesn't exist
-    if not os.path.exists(logs_dir):
-        os.makedirs(logs_dir)
+    os.makedirs(logs_dir, exist_ok=True)
 
     # Setup logging with timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_filename = os.path.join(logs_dir, f"{timestamp}.log")
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[logging.FileHandler(log_filename), logging.StreamHandler()],
+    # Reset root logger to prevent duplicate logs
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
+    # Create File Handler
+    file_handler = logging.FileHandler(log_filename)
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(
+        logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     )
 
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
-    logging.getLogger("requests").setLevel(logging.WARNING)
-    return log_filename
+    # Create Console Handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(
+        logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    )
+
+    # Configure root logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+
+    # Suppress unwanted logs from urllib3 and requests
+    for unwanted_logger in ["urllib3", "requests"]:
+        log = logging.getLogger(unwanted_logger)
+        log.setLevel(logging.WARNING)
+        log.propagate = False  # Prevents logs from bubbling up to the root logger
+
+    return log_filename, file_handler
 
 
 def has_low_disk_space(threshold_gb=10) -> bool:

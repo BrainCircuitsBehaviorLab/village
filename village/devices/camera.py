@@ -461,7 +461,6 @@ class Camera(CameraProtocol):
         self.state = text
 
     def areas_corridor_ok(self) -> bool:
-        print("areas_corridor_ok")
         if self.counts[0] > self.zero_or_one_mouse:
             log.info("Detection in area1: " + str(self.counts[0]))
             return False

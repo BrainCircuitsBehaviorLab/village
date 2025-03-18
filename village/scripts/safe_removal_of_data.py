@@ -89,8 +89,6 @@ def remove_old_data(
             f"Removed {removed_count} files older than {days} days from {directory}"
         )
 
-    logging.shutdown()
-
 
 def remove_file(file_path, removed_count: int) -> int:
     os.remove(file_path)
@@ -114,8 +112,8 @@ def main(
     - port: SSH port
     """
 
-    log_filename = setup_logging(logs_subdirectory="data_removal_logs")
-    logging.info(f"Logging to file: {log_filename}")
+    log_file, file_handler = setup_logging(logs_subdirectory="data_removal_logs")
+    logging.info(f"Logging to file: {log_file}")
     try:
         remove_old_data(
             directory, days, safe, backup_dir, remote_user, remote_host, port
@@ -123,6 +121,11 @@ def main(
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")
     logging.info("Data removal script completed")
+
+    # Close the log file handler properly
+    logging.getLogger().removeHandler(file_handler)
+    file_handler.close()
+    logging.shutdown()
 
 
 if __name__ == "__main__":
