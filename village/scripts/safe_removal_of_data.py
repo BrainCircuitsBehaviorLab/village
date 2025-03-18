@@ -89,6 +89,8 @@ def remove_old_data(
             f"Removed {removed_count} files older than {days} days from {directory}"
         )
 
+    logging.shutdown()
+
 
 def remove_file(file_path, removed_count: int) -> int:
     os.remove(file_path)

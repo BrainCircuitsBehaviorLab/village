@@ -300,6 +300,9 @@ def setup_logging(logs_subdirectory: str) -> str:
         format="%(asctime)s - %(levelname)s - %(message)s",
         handlers=[logging.FileHandler(log_filename), logging.StreamHandler()],
     )
+
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    logging.getLogger("requests").setLevel(logging.WARNING)
     return log_filename
 
 

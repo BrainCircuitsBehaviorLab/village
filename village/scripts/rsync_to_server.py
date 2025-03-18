@@ -139,6 +139,8 @@ def main(source, destination, remote_user, remote_host, port=22, timeout=120) ->
     else:
         logging.error(f"Sync failed. Check log file for details: {log_file}")
 
+    logging.shutdown()
+
 
 if __name__ == "__main__":
     fire.Fire(main)
