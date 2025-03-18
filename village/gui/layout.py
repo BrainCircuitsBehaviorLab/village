@@ -493,21 +493,21 @@ class Layout(QGridLayout):
     def show_online_plots_clicked(self) -> None:
         try:
             # this fails if no trial is finished:
-            # session_dfs = manager.get_both_sessions_dfs()
             manager.online_plot_figure_manager.update_canvas(manager.task.session_df)
         except Exception:
             manager.online_plot_figure_manager.update_canvas(pd.DataFrame())
 
-        manager.online_plot_figure_manager.active = True
-        geom = (
-            self.column_width * 10,
-            self.row_height * 5,
-            self.column_width * 62,
-            self.row_height * 20,
-        )
-        self.reply = OnlinePlotDialog()
-        self.reply.setGeometry(*geom)
-        self.reply.show()
+        if not manager.online_plot_figure_manager.active:
+            manager.online_plot_figure_manager.active = True
+            geom = (
+                self.column_width * 10,
+                self.row_height * 5,
+                self.column_width * 62,
+                self.row_height * 20,
+            )
+            self.reply = OnlinePlotDialog()
+            self.reply.setGeometry(*geom)
+            self.reply.show()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         event.ignore()

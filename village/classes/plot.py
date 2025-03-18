@@ -3,7 +3,7 @@ import pandas as pd
 from matplotlib.figure import Figure
 
 
-class SessionPlot:
+class SessionPlotFigureManager:
     def __init__(self) -> None:
         self.name = "Session Plot"
 
@@ -25,7 +25,7 @@ class SessionPlot:
         return fig
 
 
-class SubjectPlot:
+class SubjectPlotFigureManager:
     def __init__(self) -> None:
         self.name = "Subject Plot"
 

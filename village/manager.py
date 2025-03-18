@@ -16,7 +16,11 @@ from village.classes.change_cycle_run import ChangeCycleRun
 from village.classes.change_hour_run import ChangeHourRun
 from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
-from village.classes.plot import OnlinePlotFigureManager, SessionPlot, SubjectPlot
+from village.classes.plot import (
+    OnlinePlotFigureManager,
+    SessionPlotFigureManager,
+    SubjectPlotFigureManager,
+)
 from village.classes.protocols import CameraProtocol
 from village.classes.subject import Subject
 from village.classes.task import Task
@@ -60,8 +64,8 @@ class Manager:
         self.subject = Subject()
         self.task = Task()
         self.training: Training = Training()
-        self.subject_plot: SubjectPlot = SubjectPlot()
-        self.session_plot: SessionPlot = SessionPlot()
+        self.subject_plot: SubjectPlotFigureManager = SubjectPlotFigureManager()
+        self.session_plot: SessionPlotFigureManager = SessionPlotFigureManager()
         self.online_plot_figure_manager: OnlinePlotFigureManager = (
             OnlinePlotFigureManager()
         )
@@ -242,12 +246,18 @@ class Manager:
                             t = cls()
                             t.copy_settings()
                             self.training = t
-                    elif issubclass(cls, SessionPlot) and cls != SessionPlot:
+                    elif (
+                        issubclass(cls, SessionPlotFigureManager)
+                        and cls != SessionPlotFigureManager
+                    ):
                         session_plot_found += 1
                         if session_plot_found == 1:
                             p = cls()
                             self.session_plot = p
-                    elif issubclass(cls, SubjectPlot) and cls != SubjectPlot:
+                    elif (
+                        issubclass(cls, SubjectPlotFigureManager)
+                        and cls != SubjectPlotFigureManager
+                    ):
                         subject_plot_found += 1
                         if subject_plot_found == 1:
                             s = cls()
@@ -624,7 +634,7 @@ class Manager:
         report_text = "REPORT\n\n"
         report_text += "state: " + self.state.name + ", subject: " + self.subject.name
         report_text += "\n\n"
-        report_text += "subject,detections,sessions,water,weight\n"
+        report_text += "subject, detections, sessions, water, weight\n"
 
         non_detected_subjects = []
         non_session_subjects = []
@@ -657,13 +667,13 @@ class Manager:
                 weight_str = "0"
             report_text += (
                 sub
-                + ","
+                + ", "
                 + detections_str
-                + ","
+                + ", "
                 + sessions_str
-                + ","
+                + ", "
                 + water_str
-                + ","
+                + ", "
                 + weight_str
                 + "\n"
             )
