@@ -326,13 +326,16 @@ class Table(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return None
 
-        if orientation == Qt.Horizontal:
-            return str(self.df.columns[section])
-        elif orientation == Qt.Vertical:
-            if section < len(self.df.index):
-                return str(self.df.index[section])
-            else:
-                return None
+        try:
+            if orientation == Qt.Horizontal:
+                return str(self.df.columns[section])
+            elif orientation == Qt.Vertical:
+                if section < len(self.df.index):
+                    return str(self.df.index[section])
+                else:
+                    return None
+        except Exception:
+            return None
 
     def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
         if role == Qt.EditRole:
@@ -446,8 +449,7 @@ class DataLayout(Layout):
                     self.page1Layout.get_selected_row_series()
                 )
                 df = pd.read_csv(paths[0], sep=";")
-                df_raw = pd.read_csv(paths[1], sep=";")
-                figure = manager.session_plot.create_plot(df, df_raw, width, height)
+                figure = manager.session_plot.create_plot(df, width, height)
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -497,21 +499,10 @@ class DataLayout(Layout):
                     "Can not create temperatures plot",
                     exception=traceback.format_exc(),
                 )
-        elif manager.table == DataTable.SESSION:
-            try:
-                dfs = manager.get_both_sessions_dfs()
-                # TODO: this needs to change to the online plot and
-                # not use the session_plot
-                figure = manager.session_plot.create_plot(dfs[1], dfs[0], width, height)
-                pixmap = create_pixmap(figure)
-            except Exception:
-                log.error(
-                    "Can not create session plot", exception=traceback.format_exc()
-                )
         elif manager.table in (DataTable.OLD_SESSION, DataTable.OLD_SESSION_RAW):
             try:
                 figure = manager.session_plot.create_plot(
-                    manager.old_session_df, manager.old_session_raw_df, width, height
+                    manager.old_session_df, width, height
                 )
                 pixmap = create_pixmap(figure)
             except Exception:
@@ -522,7 +513,9 @@ class DataLayout(Layout):
         if not pixmap.isNull():
             self.page3Layout.plot_label.setPixmap(pixmap)
         else:
-            self.page3Layout.plot_label.setText("Plot could not be generated")
+            self.page3Layout.plot_label.setText(
+                "Plot could not be generated. Check events file."
+            )
 
     def change_to_df(self) -> None:
         self.central_layout.setCurrentWidget(self.page1)
@@ -626,7 +619,10 @@ class DfLayout(Layout):
                 self.complete_df = manager.temperatures.df
                 self.widths = [20, 20, 20]
             case DataTable.SESSION:
-                self.complete_df = manager.update_session_df()
+                self.complete_df = manager.task.session_df
+                self.widths = [20, 20, 20, 20, 20]
+            case DataTable.SESSION_RAW:
+                self.complete_df = manager.update_raw_session_df()
                 self.widths = [20, 20, 20, 70, 70]
             case DataTable.OLD_SESSION:
                 self.complete_df = manager.old_session_df
@@ -854,13 +850,12 @@ class DfLayout(Layout):
                     self.fourth_button.setEnabled(True)
                 else:
                     self.fourth_button.setEnabled(False)
-            case DataTable.SESSION:
+            case DataTable.SESSION | DataTable.SESSION_RAW:
                 self.first_button.hide()
                 self.second_button.hide()
                 self.third_button.hide()
                 self.fourth_button.hide()
-                self.connect_button_to_plot(self.fifth_button)
-                self.fifth_button.setEnabled(True)
+                self.fifth_button.hide()
             case DataTable.OLD_SESSION | DataTable.OLD_SESSION_RAW:
                 self.first_button.hide()
                 self.second_button.hide()
@@ -1019,7 +1014,6 @@ class DfLayout(Layout):
         if selected_row is not None:
             self.plot_change_requested.emit("")
         elif manager.table in [
-            DataTable.SESSION,
             DataTable.OLD_SESSION,
             DataTable.OLD_SESSION_RAW,
             DataTable.WATER_CALIBRATION,

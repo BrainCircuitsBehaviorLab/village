@@ -433,9 +433,20 @@ is considered an outlier probably because the animal is moving or it is not
 completely on the scale.""",
     ),
     Setting(
-        "UPDATE_TIME_MS", 1000, int, "The update time in ms for the tables and plots."
+        "UPDATE_TIME_TABLE",
+        1,
+        int,
+        """Duration in seconds of the update period for the tables displayed
+in DATA. Setting a very low value could result in excessive CPU load.""",
     ),
-    Setting("SCREENSAVE_TIME_MS", 60000, int, "The time in ms for the screensave."),
+    Setting(
+        "SCREENSAVE_TIME",
+        60,
+        int,
+        """The time in seconds after which the system automatically returns to
+the MAIN screen if there is no user interaction. This helps reduce CPU usage by
+preventing unnecessary processing.""",
+    ),
     Setting(
         "CORRIDOR_VIDEO_DURATION",
         1800,
@@ -447,18 +458,14 @@ completely on the scale.""",
     Setting("SCALE_ADDRESS", "0x64", str, "The address of the scale."),
     Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
     Setting(
-        "ALARM_AREA4_TIME",
+        "ALARM_REPEAT_TIME",
         3600,
         int,
-        """If the alarm detection in area4 is triggered, the minimum time in seconds to
-wait before sending the same alarm again.""",
-    ),
-    Setting(
-        "ALARM_BOX_TIME",
-        3600,
-        int,
-        """If the alarms 2 subjects in box or Subject in prohibited area are triggered,
-the minimum time in seconds to wait before sending the same alarm again.""",
+        """Some alarms should be triggered each time an event occurs, while others
+might be continuously triggered by the same ongoing event (e.g., two animals detected
+inside the behavioral box, a malfunctioning scale, etc.). To prevent flooding the
+system with repeated messages, this setting defines a time period during which the
+same type of alarm will not be triggered again..""",
     ),
     Setting(
         "REPEAT_TARE_TIME",

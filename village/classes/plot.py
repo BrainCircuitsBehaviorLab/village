@@ -10,7 +10,6 @@ class SessionPlotFigureManager:
     def create_plot(
         self,
         df: pd.DataFrame,
-        df_raw: pd.DataFrame,
         width: float = 10,
         height: float = 8,
     ) -> Figure:
@@ -61,8 +60,11 @@ class OnlinePlotFigureManager:
 
     def update_canvas(self, df: pd.DataFrame) -> None:
         self.update_plot(df)
-        if hasattr(self.fig, "canvas") and self.fig.canvas is not None:
-            self.fig.canvas.draw()
+        try:
+            if hasattr(self.fig, "canvas") and self.fig.canvas is not None:
+                self.fig.canvas.draw()
+        except Exception:
+            pass
 
     def update_plot(self, df: pd.DataFrame) -> None:
         """
@@ -70,22 +72,5 @@ class OnlinePlotFigureManager:
         data is updated. You should override this method in your
         child class in your code repository.
         """
-        try:
-            self.make_plot(df)
-        except Exception:
-            self.make_error_plot()
-
-    def make_plot(self, df: pd.DataFrame) -> None:
         self.ax1.clear()
         df.plot(kind="scatter", x="TRIAL_START", y="trial", ax=self.ax1)
-
-    def make_error_plot(self) -> None:
-        self.ax1.clear()
-        self.ax1.text(
-            0.5,
-            0.5,
-            "Could not create plot",
-            horizontalalignment="center",
-            verticalalignment="center",
-            transform=self.ax1.transAxes,
-        )

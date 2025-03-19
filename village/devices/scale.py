@@ -26,6 +26,7 @@ class Scale(ScaleProtocol):
         self.offset = 0.0
         self.i2cbus = smbus2.SMBus(self.bus)
         self.error = ""
+        self.error_message_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
         self.tare()
 
     # @time_utils.measure_time
@@ -71,11 +72,11 @@ class Scale(ScaleProtocol):
                 weight = abs((value - self.offset) / self.calibration)
                 weights.append(weight)
 
-            # remove >>
+            # TESTING remove >>
             file_name = "/home/pi/weights.txt"
             date = time_utils.now_string()
             weights_str = ",".join([str(x) for x in weights])
-            # >> remove
+            # >> TESTING remove
 
             weights = [x for x in weights if x != 0]
             average = sum(weights) / len(weights)
@@ -96,7 +97,8 @@ class Scale(ScaleProtocol):
             else:
                 return 0.0
         except Exception:
-            log.error("Error getting weight", exception=traceback.format_exc())
+            if self.error_message_timer.has_elapsed():
+                log.error("Error getting weight", exception=traceback.format_exc())
             return 0.0
 
     def get_voltage(self, times: int) -> float:

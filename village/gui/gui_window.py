@@ -34,7 +34,7 @@ class GuiWindow(QWidget):
         self.setLayout(self.layout)
         self.update_chrono = time_utils.Chrono()
         self.update_timer = QTimer()
-        self.update_timer.setInterval(settings.get("UPDATE_TIME_MS"))
+        self.update_timer.setInterval(settings.get("UPDATE_TIME_TABLE") * 1000)
         self.update_timer.timeout.connect(self.update_gui)
         self.update_timer.start()
         self.gui.q_app.installEventFilter(self)
@@ -99,5 +99,5 @@ class GuiWindow(QWidget):
         self.check_update_chrono()
 
     def check_update_chrono(self) -> None:
-        if self.update_chrono.get_milliseconds() > settings.get("SCREENSAVE_TIME_MS"):
+        if self.update_chrono.get_seconds() > settings.get("SCREENSAVE_TIME"):
             self.layout.main_button_clicked(auto=True)

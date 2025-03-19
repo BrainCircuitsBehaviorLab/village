@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import os
+import traceback
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
-import pandas as pd
 from classes.enums import State
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTime
@@ -288,8 +288,8 @@ class Layout(QGridLayout):
         self.online_plots_button = self.create_and_add_button(
             "ONLINE PLOTS",
             0,
-            170,
-            14,
+            161,
+            17,
             2,
             self.show_online_plots_clicked,
             "Show the online plots when a task is running",
@@ -299,8 +299,8 @@ class Layout(QGridLayout):
         self.stop_button = self.create_and_add_button(
             "",
             0,
-            184,
-            14,
+            178,
+            17,
             2,
             self.stop_button_clicked,
             "Stop a running task",
@@ -310,8 +310,8 @@ class Layout(QGridLayout):
         self.exit_button = self.create_and_add_button(
             "EXIT",
             0,
-            198,
-            14,
+            195,
+            17,
             2,
             self.exit_button_clicked,
             "Exit the application",
@@ -387,6 +387,7 @@ class Layout(QGridLayout):
             if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
+            self.close_online_plot_window()
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
@@ -395,6 +396,7 @@ class Layout(QGridLayout):
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
             manager.detection_change = True
+            self.close_online_plot_window()
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
@@ -402,6 +404,7 @@ class Layout(QGridLayout):
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
+                self.close_online_plot_window()
                 self.window.create_tasks_layout()
             else:
                 text = (
@@ -419,6 +422,7 @@ class Layout(QGridLayout):
             if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()
+            self.close_online_plot_window()
             self.window.create_data_layout()
 
     def water_calibration_button_clicked(self) -> None:
@@ -426,6 +430,7 @@ class Layout(QGridLayout):
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
+                self.close_online_plot_window()
                 self.window.create_water_calibration_layout()
             else:
                 text = (
@@ -443,6 +448,7 @@ class Layout(QGridLayout):
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
+                self.close_online_plot_window()
                 self.window.create_sound_calibration_layout()
             else:
                 text = (
@@ -460,6 +466,7 @@ class Layout(QGridLayout):
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
+                self.close_online_plot_window()
                 self.window.create_settings_layout()
             else:
                 text = (
@@ -490,12 +497,21 @@ class Layout(QGridLayout):
             log.info("Going to WAIT State")
         self.update_gui()
 
+    def close_online_plot_window(self) -> None:
+        try:
+            self.plot_dialog.close()
+        except Exception:
+            pass
+
     def show_online_plots_clicked(self) -> None:
         try:
-            # this fails if no trial is finished:
             manager.online_plot_figure_manager.update_canvas(manager.task.session_df)
         except Exception:
-            manager.online_plot_figure_manager.update_canvas(pd.DataFrame())
+            log.error(
+                "Error in online plot",
+                subject=manager.subject.name,
+                exception=traceback.format_exc(),
+            )
 
         if not manager.online_plot_figure_manager.active:
             manager.online_plot_figure_manager.active = True
@@ -505,9 +521,9 @@ class Layout(QGridLayout):
                 self.column_width * 62,
                 self.row_height * 20,
             )
-            self.reply = OnlinePlotDialog()
-            self.reply.setGeometry(*geom)
-            self.reply.show()
+            self.plot_dialog = OnlinePlotDialog()
+            self.plot_dialog.setGeometry(*geom)
+            self.plot_dialog.show()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         event.ignore()
@@ -652,7 +668,7 @@ class Layout(QGridLayout):
 
 
 class OnlinePlotDialog(QDialog):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("Online Plots")
         layout = QVBoxLayout()
@@ -661,8 +677,6 @@ class OnlinePlotDialog(QDialog):
         self.setLayout(layout)
         manager.online_plot_figure_manager.fig.canvas.draw()
 
-    def closeEvent(self, event):
-        # Implement specific actions here
+    def closeEvent(self, event) -> None:
         manager.online_plot_figure_manager.active = False
-        print("Dialog closed, online plots stopped")
         super().closeEvent(event)

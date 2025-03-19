@@ -65,18 +65,14 @@ def system_run(bevavior_window: QWidget) -> None:
     trial = 0
     detection_timer = time_utils.Timer(settings.get("DETECTION_DURATION"))
     tare_timer = time_utils.Timer(settings.get("REPEAT_TARE_TIME"))
+    plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
 
     cam_corridor.start_record()
 
     while True:
-        i += 1
         time.sleep(0.001)
 
-        # if i == 2000:
-        #     bpod.receive_softcode(1)
-        #     log.alarm("Alarma de prueba", subject="RAFA")
-        #     behavior_window.toggle_animation()
-
+        # if the task is not running, enable garbage collection
         if manager.state == State.WAIT:
             gc.enable()
         else:
@@ -89,11 +85,14 @@ def system_run(bevavior_window: QWidget) -> None:
             cam_corridor.start_record()
 
         if manager.online_plot_figure_manager.active:
-            if manager.task.current_trial > trial:
+            if manager.task.current_trial > trial and plot_timer.has_elapsed():
                 trial = manager.task.current_trial
-                manager.online_plot_figure_manager.update_canvas(
-                    manager.task.session_df
-                )
+                try:
+                    manager.online_plot_figure_manager.update_canvas(
+                        manager.task.session_df
+                    )
+                except Exception:
+                    pass
         else:
             trial = 0
 
@@ -120,6 +119,16 @@ def system_run(bevavior_window: QWidget) -> None:
                 # All subjects are at home, waiting for RFID detection
                 manager.reset_subject_task_training()
                 id, multiple = rfid.get_id()
+
+                # TESTING
+                i += 1
+                if i == 1000:
+                    i = 0
+                    id = "ABCDEF"
+                    multiple = False
+                    # behavior_window.toggle_animation()
+                # TESTING
+
                 if id != "":
                     log.info("Tag detected: " + id)
                     manager.detection_change = True

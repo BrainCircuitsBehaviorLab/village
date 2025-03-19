@@ -461,6 +461,7 @@ class Manager:
                 self.task.cam_box.start_record(
                     self.task.video_path, self.task.video_data_path
                 )
+                self.task.maximum_number_of_trials = 100000000
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -523,17 +524,22 @@ class Manager:
         self.subject = Subject()
         self.training.restore()
         self.max_time_counter = 1
+        self.last_line_raw_df = 0
+        self.raw_session_df = pd.DataFrame()
 
-    def update_session_df(self) -> pd.DataFrame:
+    def update_raw_session_df(self) -> pd.DataFrame:
         try:
-            self.raw_session_df = pd.read_csv(self.rt_session_path, sep=";")
+            self.raw_session_df = pd.read_csv(
+                self.rt_session_path,
+                sep=";",
+            )
         except Exception:
             self.raw_session_df = pd.DataFrame()
         return self.raw_session_df
 
     def get_both_sessions_dfs(self) -> list[pd.DataFrame]:
-        df = self.update_session_df()
-        return [df, self.task.session_df]
+        raw_df = self.update_raw_session_df()
+        return [raw_df, self.task.session_df]
 
     def disconnect_and_save(self, run_mode: str) -> None:
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
@@ -631,7 +637,7 @@ class Manager:
         ].tolist()
         active_hours = utils.calculate_active_hours(subjects)
 
-        report_text = "REPORT\n\n"
+        report_text = "REPORT last " + str(hours) + "h\n\n"
         report_text += "state: " + self.state.name + ", subject: " + self.subject.name
         report_text += "\n\n"
         report_text += "subject, detections, sessions, water, weight\n"

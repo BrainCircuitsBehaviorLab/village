@@ -65,7 +65,7 @@ class Task:
         self.session_df: pd.DataFrame = pd.DataFrame()
         self.subject_df: pd.DataFrame = pd.DataFrame()
         self.force_stop: bool = False
-        self.maximum_number_of_trials: int = 1000
+        self.maximum_number_of_trials: int = 100000000
         self.chrono = time_utils.Chrono()
 
     # OVERWRITE THESE METHODS IN YOUR TASKS

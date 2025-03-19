@@ -132,8 +132,8 @@ class Camera(CameraProtocol):
         self.two_mice_detections = 0
         self.prohibited_detections = 0
 
-        self.area4_alarm_timer = time_utils.Timer(settings.get("ALARM_AREA4_TIME"))
-        self.box_alarm_timer = time_utils.Timer(settings.get("ALARM_BOX_TIME"))
+        self.area4_alarm_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
+        self.box_alarm_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
 
         self.cam.start()
 
