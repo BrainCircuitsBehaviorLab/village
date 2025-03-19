@@ -284,7 +284,7 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
-    """Configure logging to both file and console"""
+    """Configure logging to file"""
     data_dir = settings.get("DATA_DIRECTORY")
     logs_dir = os.path.join(data_dir, logs_subdirectory)
 
@@ -306,21 +306,22 @@ def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
         logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     )
 
-    # Create Console Handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(
-        logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    )
-
     # Configure root logger
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
     logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
 
-    # Suppress unwanted logs from urllib3 and requests
-    for unwanted_logger in ["urllib3", "requests"]:
+    # Suppress unwanted logs from external modules
+    for unwanted_logger in [
+        "urllib3",
+        "requests",
+        "telegram",
+        "telegram.request",
+        "telegram.request.BaseRequest",
+        "telegram.request.HTTPXRequest",
+        "telegram.ext",
+        "httpx",
+    ]:
         log = logging.getLogger(unwanted_logger)
         log.setLevel(logging.WARNING)
         log.propagate = False  # Prevents logs from bubbling up to the root logger
