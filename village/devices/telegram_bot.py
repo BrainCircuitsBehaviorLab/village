@@ -1,9 +1,11 @@
 import asyncio
+import os
 import threading
 import time
 import traceback
 from urllib import parse, request
 
+import matplotlib.pyplot as plt
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
@@ -11,7 +13,7 @@ from village.classes.protocols import TelegramBotProtocol
 from village.devices.camera import cam_box, cam_corridor
 from village.log import log
 from village.manager import manager
-from village.rt_plots import rt_plots
+from village.plots.corridor_plot import corridor_plot
 from village.scripts import time_utils
 from village.settings import settings
 
@@ -40,7 +42,7 @@ class TelegramBot(TelegramBotProtocol):
             data = parse.urlencode({"chat_id": self.chat, "text": message})
             request.urlopen(url, data.encode("utf-8"))
         except Exception:
-            log.error("Telegram error", exception=traceback.format_exc())
+            log.error("Telegram error sending alarm", exception=traceback.format_exc())
 
     async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
@@ -60,7 +62,9 @@ class TelegramBot(TelegramBotProtocol):
                 report, _, _, _ = manager.create_report(hours)
                 await update.message.reply_text(report)
         except Exception:
-            log.error("Telegram error", exception=traceback.format_exc())
+            log.error(
+                "Telegram error creating report", exception=traceback.format_exc()
+            )
 
     async def cam(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
@@ -70,39 +74,36 @@ class TelegramBot(TelegramBotProtocol):
             else:
                 cam_corridor.take_picture()
                 cam_box.take_picture()
-                time.sleep(1)
+                await asyncio.sleep(1)
                 with open(cam_corridor.path_picture, "rb") as picture_corridor:
                     await update.message.reply_photo(photo=picture_corridor)
                 with open(cam_box.path_picture, "rb") as picture_box:
                     await update.message.reply_photo(photo=picture_box)
+                if os.path.exists(cam_corridor.path_picture):
+                    os.remove(cam_corridor.path_picture)
+                if os.path.exists(cam_box.path_picture):
+                    os.remove(cam_box.path_picture)
         except Exception:
-            log.error("Telegram error", exception=traceback.format_exc())
+            log.error("Telegram error sending photos", exception=traceback.format_exc())
 
     async def plot(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        try:
-            days = int(context.args[0])
-            if days < 1:
-                days = 3
-            elif days > 10:
-                days = 10
-        except (ValueError, IndexError, TypeError):
-            days = 3
         try:
             user_id = str(update.effective_user.id)
             if user_id not in self.users:
                 log.error("Telegram User ID not included: " + user_id)
             else:
-                rt_plots.plot(days)
-                chrono = time_utils.Chrono()
-                while rt_plots.running:
-                    time.sleep(1)
-                    if chrono.get_seconds() > 120:
-                        log.error("Plotting time out")
-                        break
-                with open(rt_plots.plot_path, "rb") as picture:
+                path = os.path.join(settings.get("VIDEOS_DIRECTORY"), "PLOT.jpg")
+                subjects = manager.subjects.df["name"].tolist()
+                fig = corridor_plot(manager.events.df.copy(), subjects, 4, 2)
+                fig.savefig(path, format="jpg", dpi=300)
+                plt.close(fig)
+                await asyncio.sleep(1)
+                with open(path, "rb") as picture:
                     await update.message.reply_photo(photo=picture)
+                if os.path.exists(path):
+                    os.remove(path)
         except Exception:
-            log.error("Telegram error", exception=traceback.format_exc())
+            log.error("Telegram error sending plot", exception=traceback.format_exc())
 
     async def main(self) -> None:
         self.application = ApplicationBuilder().token(self.token).build()

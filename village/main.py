@@ -58,7 +58,10 @@ else:
 # create a secondary thread
 def system_run(bevavior_window: QWidget) -> None:
 
-    i = 0
+    # # TESTING
+    # i = 0
+    # # TESTING
+
     id = ""
     multiple = False
     checking_subject_requirements = True
@@ -120,14 +123,14 @@ def system_run(bevavior_window: QWidget) -> None:
                 manager.reset_subject_task_training()
                 id, multiple = rfid.get_id()
 
-                # TESTING
-                i += 1
-                if i == 1000:
-                    i = 0
-                    id = "ABCDEF"
-                    multiple = False
-                    # behavior_window.toggle_animation()
-                # TESTING
+                # # TESTING
+                # i += 1
+                # if i == 1000:
+                #     i = 0
+                #     id = "ABCDEF"
+                #     multiple = False
+                #     # behavior_window.toggle_animation()
+                # # TESTING
 
                 if id != "":
                     log.info("Tag detected: " + id)

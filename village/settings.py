@@ -465,7 +465,7 @@ preventing unnecessary processing.""",
 might be continuously triggered by the same ongoing event (e.g., two animals detected
 inside the behavioral box, a malfunctioning scale, etc.). To prevent flooding the
 system with repeated messages, this setting defines a time period during which the
-same type of alarm will not be triggered again..""",
+same type of alarm will not be triggered again.""",
     ),
     Setting(
         "REPEAT_TARE_TIME",
