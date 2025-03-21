@@ -6,6 +6,7 @@ import traceback
 from typing import TYPE_CHECKING, Any
 
 import cv2
+import numpy as np
 import pandas as pd
 from classes.enums import State
 from pandas import DataFrame
@@ -1031,6 +1032,12 @@ class DfLayout(Layout):
             self.update_buttons()
             row_count = self.model.rowCount()
             self.model.insertRow(row_count)
+            empty_row = pd.DataFrame(
+                [dict.fromkeys(self.model.complete_df.columns, np.nan)]
+            )
+            self.model.complete_df = pd.concat(
+                [self.model.complete_df, empty_row], ignore_index=True
+            )
             self.model.table_view.save_changes_in_df()
             self.update_buttons()
         else:
