@@ -6,6 +6,8 @@
 # For more details, see <http://www.gnu.org/licenses/>.
 
 
+# to debug segfaults uncomment the following lines
+import faulthandler
 import gc
 import threading
 import time
@@ -27,9 +29,7 @@ from village.manager import manager
 from village.scripts import time_utils
 from village.settings import settings
 
-# to debug segfaults uncomment the following lines
-# import faulthandler
-# faulthandler.enable()
+faulthandler.enable()
 
 # automatic garbage collection disabled, we will use it manually when no task is running
 gc.disable()

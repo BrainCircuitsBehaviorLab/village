@@ -131,14 +131,10 @@ class BpodBase(object):
         try:
             val = self._bpodcom_handshake()
         except Exception:
-            time.sleep(0.1)
-            try:
-                val = self._bpodcom_handshake()
-            except Exception:
-                raise BpodErrorException(
-                    """Error: Bpod failed to confirm connectivity.
-                    Please reset Bpod and try again."""
-                )
+            raise BpodErrorException(
+                """Error: Bpod failed to confirm connectivity.
+                Please reset Bpod and try again."""
+            )
 
         if not val:
             raise BpodErrorException(
@@ -152,15 +148,15 @@ class BpodBase(object):
         if firmware_version < settings.get("BPOD_TARGET_FIRMWARE"):
             raise BpodErrorException(
                 """Error: Old firmware detected.
-                Please update Bpod 0.7 + firmware and try again."""
+                Please update Bpod firmware to version 22 and try again."""
             )
 
         if firmware_version > settings.get("BPOD_TARGET_FIRMWARE"):
             print("Firmware version is new: ", firmware_version)
-            # raise BpodErrorException(
-            #     """Error: Future firmware detected.
-            #     Please update the Bpod python software."""
-            # )
+            raise BpodErrorException(
+                """Error: Future firmware detected.
+                Please change Bpod firmware to version 22 and try again."""
+            )
 
         self._hardware.firmware_version = firmware_version
         self._hardware.machine_type = machine_type

@@ -7,6 +7,7 @@ from typing import Any, Callable
 from village.classes.protocols import PyBpodProtocol
 from village.log import log
 from village.pybpodapi.protocol import Bpod, StateMachine
+from village.scripts import time_utils
 from village.scripts.parse_bpod_messages import (
     parse_input_to_tuple_override,
     parse_output_to_tuple_override,
@@ -150,7 +151,20 @@ class PyBpod(PyBpodProtocol):
             self.functions[data]()
 
     def connect(self, functions: list[Callable]) -> None:
-        self.bpod = Bpod()
+        try:
+            self.bpod = Bpod()
+        except Exception:
+            time.sleep(0.1)
+
+            # TESTING remove >>
+            file_name = "/home/pi/bpod_crashes.txt"
+            date = time_utils.now_string()
+            exception_str = traceback.format_exc()
+            with open(file_name, "a") as f:
+                f.write(f"{date},{exception_str}\n")
+            # >> remove
+
+            self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
         self.softcode = SoftCode()
         self.session = self.bpod.session
@@ -239,8 +253,15 @@ def get_bpod() -> PyBpodProtocol:
         bpod.close()
         return bpod
     except Exception:
-        log.error("Could not initialize bpod", exception=traceback.format_exc())
-        return PyBpodProtocol()
+        time.sleep(0.1)
+        try:
+            bpod = PyBpod()
+            log.info("Bpod successfully initialized")
+            bpod.close()
+            return bpod
+        except Exception:
+            log.error("Could not initialize bpod", exception=traceback.format_exc())
+            return PyBpodProtocol()
 
 
 bpod = get_bpod()
