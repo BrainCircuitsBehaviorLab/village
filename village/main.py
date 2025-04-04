@@ -180,7 +180,8 @@ def system_run(bevavior_window: QWidget) -> None:
                 id, multiple = rfid.get_id()
                 if id != manager.subject.tag and id != "":
                     log.alarm(
-                        "Wrong RFID detection."
+                        "Wrong RFID detection: "
+                        + id
                         + " Another subject detected while main subject is in the box."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
@@ -218,7 +219,8 @@ def system_run(bevavior_window: QWidget) -> None:
                 id, multiple = rfid.get_id()
                 if id != "":
                     log.alarm(
-                        "Wrong RFID detection."
+                        "Wrong RFID detection: "
+                        + id
                         + " Subject detected in the corridor while main"
                         + " subject should be in the box."
                         + " Opening door2 and disconnecting RFID reader.",
@@ -252,9 +254,10 @@ def system_run(bevavior_window: QWidget) -> None:
                         scale.tare()
 
                 id, multiple = rfid.get_id()
-                if id != "" and id != manager.subject.tag:
+                if id != manager.subject.tag and id != "":
                     log.alarm(
-                        "Wrong RFID detection."
+                        "Wrong RFID detection: "
+                        + id
                         + " Another subject detected while main subject is in the box."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
