@@ -377,7 +377,8 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Stopping the task, saving the data; the task was manually stopped
                 manager.disconnect_and_save("Manual")
                 manager.detection_change = True
-                manager.state = State.SYNC
+                manager.state = State.WAIT
+                # TODO: so calibration does not jump to sync. Fix for manual tasks
                 log.info("Going to SYNC State")
 
             case State.EXIT_GUI:
