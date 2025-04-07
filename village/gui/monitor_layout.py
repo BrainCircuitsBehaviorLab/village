@@ -691,6 +691,9 @@ class PortsLayout(Layout):
             self.buttons.append(button2)
 
     def led_clicked(self, i=0) -> None:
+        # button.setEnabled(False)
+        # QTimer.singleShot(2000, lambda: button.setEnabled(True))
+
         if not manager.task.bpod.connected:
             manager.task.bpod.connect(manager.functions)
             close = True

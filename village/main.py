@@ -117,11 +117,13 @@ def system_run(bevavior_window: QWidget) -> None:
         else:
             weight = 0.0
 
+        if manager.state != State.DETECTION:
+            id, multiple = rfid.get_id()
+
         match manager.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
                 manager.reset_subject_task_training()
-                id, multiple = rfid.get_id()
 
                 # # TESTING
                 # i += 1
@@ -177,7 +179,6 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.RUN_FIRST:
                 # Task running, waiting for the corridor to become empty"
-                id, multiple = rfid.get_id()
                 if id != manager.subject.tag and id != "":
                     log.alarm(
                         "Wrong RFID detection: "
@@ -216,7 +217,6 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.RUN_CLOSED:
                 # Task running, the subject cannot leave yet
-                id, multiple = rfid.get_id()
                 if id != "":
                     log.alarm(
                         "Wrong RFID detection: "
@@ -253,7 +253,6 @@ def system_run(bevavior_window: QWidget) -> None:
                     if tare_timer.has_elapsed():
                         scale.tare()
 
-                id, multiple = rfid.get_id()
                 if id != manager.subject.tag and id != "":
                     log.alarm(
                         "Wrong RFID detection: "
