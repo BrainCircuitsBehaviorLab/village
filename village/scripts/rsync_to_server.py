@@ -30,8 +30,8 @@ def run_rsync(
     subprocess.run(
         [
             "ssh",
-            "-p",
-            str(port),
+            # "-p",
+            # str(port),
             f"{remote_user}@{remote_host}",
             f"mkdir -p {destination_dir}",
         ]
@@ -43,8 +43,8 @@ def run_rsync(
         "-avzP",  # archive, verbose, compress, show progress
         "--update",  # skip files that are newer on receiver
         "--safe-links",  # ignore symlinks that point outside the tree
-        "-e",
-        f"ssh -p {port}",  # specify ssh port
+        # "-e",
+        # f"ssh -p {port}",  # specify ssh port
         "--exclude",
         "*.tmp",  # exclude temporary files
         "--exclude",
