@@ -123,7 +123,10 @@ def system_run(bevavior_window: QWidget) -> None:
         match manager.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
-                manager.reset_subject_task_training()
+                if manager.state != manager.previous_state:
+                    id, multiple = rfid.get_id()
+                    manager.previous_state = State.WAIT
+                    manager.reset_subject_task_training()
 
                 # # TESTING
                 # i += 1
@@ -272,6 +275,13 @@ def system_run(bevavior_window: QWidget) -> None:
                         subject=manager.subject.name,
                     )
                     manager.state = State.SAVE_INSIDE
+                elif manager.task.force_stop:
+                    manager.task.force_stop = False
+                    log.info(
+                        "Condition to stop the task met, stopping the task.",
+                        subject=manager.subject.name,
+                    )
+                    manager.state = State.SAVE_INSIDE
                 else:
                     if weight > settings.get("WEIGHT_THRESHOLD"):
                         log.info(
@@ -370,6 +380,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.task.current_trial > manager.task.maximum_number_of_trials
                     or manager.task.chrono.get_seconds()
                     >= manager.task.settings.maximum_duration
+                    or manager.task.force_stop
                 ):
                     manager.state = State.SAVE_MANUAL
 
@@ -377,9 +388,13 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Stopping the task, saving the data; the task was manually stopped
                 manager.disconnect_and_save("Manual")
                 manager.detection_change = True
-                manager.state = State.WAIT
-                # TODO: so calibration does not jump to sync. Fix for manual tasks
-                log.info("Going to SYNC State")
+                if manager.calibrating:
+                    manager.calibrating = False
+                    manager.state = State.WAIT
+                    log.info("Going to WAIT State")
+                else:
+                    manager.state = State.SYNC
+                    log.info("Going to SYNC State")
 
             case State.EXIT_GUI:
                 # In the GUI window, ready to exit the app

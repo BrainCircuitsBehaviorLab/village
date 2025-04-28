@@ -36,7 +36,7 @@ class WaterCalibrationLayout(Layout):
         self.df = pd.DataFrame()
         self.date = ""
         self.calibration_number = -1
-        self.delete_row = -1
+        self.delete_rows: list[int] = []
         self.calibration_points: list[dict] = []
         self.allow_test = False
         self.calibration_denied = False
@@ -266,7 +266,7 @@ class WaterCalibrationLayout(Layout):
             2,
             "black",
             bold=False,
-            description="Water delivered in microliters.",
+            description="Water delivered in microliters for each of the iterations.",
         )
         for i in range(8):
             label = self.create_and_add_label(
@@ -283,7 +283,7 @@ class WaterCalibrationLayout(Layout):
             2,
             "black",
             bold=False,
-            description="Water delivered in microliters.",
+            description="Water delivered in microliters for each of the iterations.",
         )
         for i in range(8):
             label = self.create_and_add_label(
@@ -345,6 +345,8 @@ class WaterCalibrationLayout(Layout):
             self.add_buttons2.append(button)
 
         # extra buttons
+        save_text = "Save the calibration. At least two points are "
+        save_text += "needed to build the calibration curve for each port."
         self.save_button = self.create_and_add_button(
             "SAVE CALIBRATION",
             44,
@@ -352,7 +354,7 @@ class WaterCalibrationLayout(Layout):
             20,
             2,
             self.save_button_clicked,
-            "Save the calibration",
+            save_text,
             "powderblue",
         )
         self.save_button.setDisabled(True)
@@ -367,7 +369,6 @@ class WaterCalibrationLayout(Layout):
             "Delete the calibration",
             "lightcoral",
         )
-        self.delete_button.setDisabled(True)
 
         # info layout
         widget = QWidget()
@@ -392,6 +393,7 @@ class WaterCalibrationLayout(Layout):
                 )
             return False
         elif auto:
+            manager.changing_settings = False
             return True
         elif self.save_button.isEnabled():
 
@@ -406,13 +408,16 @@ class WaterCalibrationLayout(Layout):
             if reply == QMessageBox.Save:
                 self.save_button.setDisabled(True)
                 self.save_button_clicked()
+                manager.changing_settings = False
                 return True
             elif reply == QMessageBox.Discard:
                 self.save_button.setDisabled(True)
+                manager.changing_settings = False
                 return True
             else:
                 return False
         else:
+            manager.changing_settings = False
             return True
 
     def calibration_changed(self, value: str = "", key: str = "") -> None:
@@ -500,6 +505,7 @@ class WaterCalibrationLayout(Layout):
         self.test_button.setDisabled(True)
         self.indices = [i for i, val in enumerate(self.times) if val != 0]
         manager.state = State.RUN_MANUAL
+        manager.calibrating = True
         manager.task = WaterCalibration()
         manager.task.indices = self.indices
         manager.task.times = [self.times[i] for i in self.indices]
@@ -560,6 +566,7 @@ class WaterCalibrationLayout(Layout):
 
         if ok > 0:
             manager.state = State.RUN_MANUAL
+            manager.calibrating = True
             manager.task = WaterCalibration()
             manager.task.indices = self.indices2
             manager.task.times = [self.times2[i] for i in self.indices2]
@@ -654,10 +661,11 @@ class WaterCalibrationLayout(Layout):
                 self.add_button.setEnabled(True)
 
         if self.update_plot:
-            if self.delete_row != -1:
-                self.df = self.df.drop(index=self.delete_row)
-                self.df = self.df.reset_index(drop=True)
-                self.delete_row = -1
+            if self.delete_rows:
+                for row in self.delete_rows:
+                    self.df = self.df.drop(index=row)
+                    self.df = self.df.reset_index(drop=True)
+                self.delete_rows = []
             self.plot_layout.update(self.df, self.test_point)
             self.update_plot = False
 
@@ -671,10 +679,7 @@ class WaterCalibrationLayout(Layout):
                     port_counts.append(port)
             return False
 
-        if len(self.calibration_points) > 0:
-            self.delete_button.setEnabled(True)
-        else:
-            self.delete_button.setDisabled(True)
+        if len(self.calibration_points) == 0:
             if self.allow_test and self.water_expected_line_edits2[0].isEnabled():
                 self.allow_test = False
                 self.test_denied = False
@@ -736,33 +741,33 @@ class WaterCalibrationLayout(Layout):
             line_edit.setText("0")
 
         df = manager.water_calibration.df.copy()
-        try:
-            for index in self.indices2:
-                line_edit = self.total_weight_line_edits2[index]
+        for index in self.indices2:
+            line_edit = self.total_weight_line_edits2[index]
+            try:
                 result = round((float(line_edit.text()) / self.iterations2 * 1000), 4)
-                if result > 0:
-                    self.water_delivered2[index] = result
-                    error = (
-                        abs(result - self.water_expected2[index])
-                        / self.water_expected2[index]
-                        * 100
-                    )
-                    error = round(error, 4)
-                    self.errors2[index] = error
-                    text = str(result) + " (" + str(error) + "% error)"
-                    self.water_delivered_labels2[index].setText(text)
-                    self.ok_buttons2[index].setEnabled(True)
-                    self.add_buttons2[index].setEnabled(True)
+            except Exception:
+                result = 0
+            if result > 0:
+                self.water_delivered2[index] = result
+                error = (
+                    abs(result - self.water_expected2[index])
+                    / self.water_expected2[index]
+                    * 100
+                )
+                error = round(error, 4)
+                self.errors2[index] = error
+                text = str(result) + " (" + str(error) + "% error)"
+                self.water_delivered_labels2[index].setText(text)
+                self.ok_buttons2[index].setEnabled(True)
+                self.add_buttons2[index].setEnabled(True)
 
-                    if index == i:
-                        df = df[df["port_number"] == index + 1]
-                        max_calibration = df["calibration_number"].max()
-                        self.df = df[df["calibration_number"] == max_calibration]
-                        self.test_point = (self.times2[index], result)
-                        self.test_index = index
-                        self.update_plot = True
-        except Exception:
-            pass
+            if index == i:
+                df = df[df["port_number"] == index + 1]
+                max_calibration = df["calibration_number"].max()
+                self.df = df[df["calibration_number"] == max_calibration]
+                self.test_point = (self.times2[index], result)
+                self.test_index = index
+                self.update_plot = True
 
     def add_button_clicked(self) -> None:
         if self.date == "":
@@ -925,20 +930,19 @@ class CalibrationPlotLayout(Layout):
 
     def update(self, df: pd.DataFrame, test_point: tuple[float, float] | None) -> None:
         pixmap = QPixmap()
-        if not df.empty:
-            try:
-                figure = water_calibration_plot(
-                    df.copy(),
-                    self.plot_width,
-                    self.plot_height,
-                    test_point,
-                )
-                pixmap = create_pixmap(figure)
-            except Exception:
-                log.error(
-                    "Can not create water calibration plot",
-                    exception=traceback.format_exc(),
-                )
+        try:
+            figure = water_calibration_plot(
+                df.copy(),
+                self.plot_width,
+                self.plot_height,
+                test_point,
+            )
+            pixmap = create_pixmap(figure)
+        except Exception:
+            log.error(
+                "Can not create water calibration plot",
+                exception=traceback.format_exc(),
+            )
 
         if not pixmap.isNull():
             self.plot_label.setPixmap(pixmap)
@@ -997,6 +1001,6 @@ class InfoLayout(Layout):
         self.parent_layout.calibration_points.pop(i)
         if len(self.parent_layout.calibration_points) == 0:
             self.parent_layout.allow_test = True
-        self.parent_layout.delete_row = i
+        self.parent_layout.delete_rows.append(i)
         self.parent_layout.update_plot = True
         self.update()

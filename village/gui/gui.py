@@ -17,6 +17,8 @@ class Gui:
     def __init__(self) -> None:
         self.q_app = QApplication([])
         self.q_app.setStyle("Fusion")
+        self.q_app.setStyleSheet("QLineEdit:disabled {background-color: #f0f0f0;}")
+
         # put a pretty icon
         iconpath = Path(__file__).parent.parent.parent / "resources/favicon.ico"
         self.q_app.setWindowIcon(QIcon(str(iconpath)))  # Set the icon

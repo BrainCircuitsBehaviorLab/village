@@ -103,7 +103,6 @@ class Task:
             and not self.force_stop
         ):
             self.do_trial(send_to_cam=True)
-        self.close()
 
     def do_trial(self, send_to_cam: bool = False) -> None:
         self.bpod.create_state_machine()
@@ -178,6 +177,7 @@ class Task:
         trials: int = 0
         water: int = 0
         settings_str: str = ""
+        self.close()
         sound_device.stop()
         self.bpod.stop()
         self.cam_box.stop_record()

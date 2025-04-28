@@ -102,60 +102,6 @@ class SoundDevice(SoundDeviceProtocol):
         return np.ascontiguousarray(sound.T, dtype=np.float32)
 
 
-def tone_generator(
-    duration: float,
-    amplitude: float,
-    frequency: float,
-    ramp_time: float,
-    samplerate: int,
-) -> np.ndarray:
-    """
-    Generate a single tone with ramping
-    Args:
-        duration (float): Duration (seconds)
-        ramp_time (float): Ramp up/down time (seconds)
-        amplitude (float): Tone amplitude
-        frequency (float): Tone frequency
-        samplerate (int): Samplerate must match the sound device samplerate
-    Returns:
-        np.ndarray: Generated tone
-    """
-
-    time = np.linspace(0, duration, int(samplerate * duration))
-    # If no frequency specified, return zero array
-    if frequency == 0:
-        return np.zeros_like(time)
-    # Generate tone
-    tone = amplitude * np.sin(2 * np.pi * frequency * time)
-    # Calculate ramp points
-    sample_rate = 1 / (time[1] - time[0])
-    ramp_points = int(ramp_time * sample_rate)
-    # Create ramp arrays
-    if ramp_points > 0:
-        ramp_up = np.linspace(0, 1, ramp_points)
-        ramp_down = np.linspace(1, 0, ramp_points)
-        # Apply ramps
-        tone[:ramp_points] *= ramp_up
-        tone[-ramp_points:] *= ramp_down
-    return tone
-
-
-def whitenoise_generator(
-    duration: float,
-    amplitude: float,
-    samplerate: int,
-) -> np.ndarray[Any, np.dtype[np.floating[Any]]]:
-    """
-    Generate white noise with ramping
-    Args:
-        duration (float): Duration (seconds)
-        amplitude (float): Noise amplitude
-        samplerate (int): Samplerate must match the sound device samplerate
-    """
-    noise = amplitude * np.random.uniform(-1, 1, int(samplerate * duration))
-    return noise
-
-
 def get_sound_device() -> SoundDeviceProtocol:
     if settings.get("USE_SOUNDCARD") == Active.OFF:
         return SoundDeviceProtocol()

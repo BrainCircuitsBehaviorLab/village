@@ -24,6 +24,10 @@ class OutputChannel(object):
     Valve2 = "Valve2"
     Valve3 = "Valve3"
     Valve4 = "Valve4"
+    Valve5 = "Valve5"
+    Valve6 = "Valve6"
+    Valve7 = "Valve7"
+    Valve8 = "Valve8"
 
     #: BNC
     BNC1High = "BNC1High"

@@ -74,7 +74,8 @@ def sound_calibration_plot(
 
     ax.tick_params(axis="both", labelsize=6)
 
-    ax.legend(title="Speaker", fontsize=6, title_fontsize=7)
+    if not df.empty:
+        ax.legend(title="Speaker", fontsize=6, title_fontsize=7)
 
     ax.grid(True)
 

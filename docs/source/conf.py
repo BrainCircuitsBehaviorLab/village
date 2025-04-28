@@ -24,6 +24,7 @@ autodoc_mock_imports: list = [
     "telegram",
     "scipy",
     "fire",
+    "calplot",
 ]
 
 # Add the module path to sys.path here.
@@ -184,6 +185,7 @@ html_css_files = ["custom.css"]
 linkcheck_ignore = [
     "https://www.raspberrypi.com/*",
     "https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription",
+    "https://www.gnu.org/licenses/quick-guide-gplv3.pdf",
 ]
 linkcheck_anchors_ignore_for_url = [
     "https://github.com/neuroinformatics-unit/actions/tree/v2/build_sphinx_docs",

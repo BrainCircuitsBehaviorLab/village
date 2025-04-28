@@ -73,6 +73,8 @@ class Manager:
         self.change_cycle_run: ChangeCycleRun = ChangeCycleRun()
         self.change_hour_run: ChangeHourRun = ChangeHourRun()
         self.state: State = State.WAIT
+        self.previous_state: State = State.WAIT
+        self.calibrating: bool = False
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
         self.cycle: Cycle = settings.get("CYCLE")
@@ -430,7 +432,7 @@ class Manager:
             return True
         except Exception:
             log.error(
-                "Error launching task " + self.task.name,
+                "Error running task " + self.task.name,
                 subject=self.subject.name,
                 exception=traceback.format_exc(),
             )
@@ -445,7 +447,7 @@ class Manager:
             cls = self.tasks.get(task_name)
             if cls is None:
                 log.alarm(
-                    "Error launching task: "
+                    "Error running task: "
                     + task_name
                     + " not found. Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
@@ -467,7 +469,7 @@ class Manager:
                 return True
             else:
                 log.alarm(
-                    "Error launching task: "
+                    "Error running task: "
                     + task_name
                     + " is not a subclass of Task."
                     + " Opening door2 and disconnecting RFID reader.",
@@ -476,7 +478,7 @@ class Manager:
                 return False
         except Exception:
             log.alarm(
-                "Error launching task: "
+                "Error running task: "
                 + task_name
                 + " Opening door2 and disconnecting RFID reader.",
                 subject=self.subject.name,
@@ -526,6 +528,8 @@ class Manager:
         self.max_time_counter = 1
         self.last_line_raw_df = 0
         self.raw_session_df = pd.DataFrame()
+        self.calibrating = False
+        self.previous_state = State.WAIT
 
     def update_raw_session_df(self) -> pd.DataFrame:
         try:
