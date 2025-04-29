@@ -123,9 +123,8 @@ def system_run(bevavior_window: QWidget) -> None:
         match manager.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
-                if manager.state != manager.previous_state:
+                if not manager.previous_state_wait:
                     id, multiple = rfid.get_id()
-                    manager.previous_state = State.WAIT
                     manager.reset_subject_task_training()
 
                 # # TESTING
@@ -144,6 +143,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.state = State.DETECTION
             case State.DETECTION:
                 # Gathering subject data, checking requirements to enter
+                manager.previous_state_wait = False
                 if checking_subject_requirements:
                     manager.detections.add_timestamp()
                     if (
@@ -361,7 +361,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.MANUAL_MODE:
                 # Settings are being changed or task is being manually prepared
-                pass
+                manager.previous_state_wait = False
 
             case State.LAUNCH_MANUAL:
                 # Manually launching the task
@@ -398,7 +398,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_GUI:
                 # In the GUI window, ready to exit the app
-                pass
+                manager.previous_state_wait = False
 
             case State.SYNC:
                 # Synchronizing data with the server or doing user-defined tasks

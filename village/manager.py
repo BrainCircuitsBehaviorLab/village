@@ -73,7 +73,7 @@ class Manager:
         self.change_cycle_run: ChangeCycleRun = ChangeCycleRun()
         self.change_hour_run: ChangeHourRun = ChangeHourRun()
         self.state: State = State.WAIT
-        self.previous_state: State = State.WAIT
+        self.previous_state_wait: bool = True
         self.calibrating: bool = False
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
@@ -529,7 +529,7 @@ class Manager:
         self.last_line_raw_df = 0
         self.raw_session_df = pd.DataFrame()
         self.calibrating = False
-        self.previous_state = State.WAIT
+        self.previous_state_wait = True
 
     def update_raw_session_df(self) -> pd.DataFrame:
         try:

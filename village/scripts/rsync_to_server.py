@@ -26,6 +26,9 @@ def run_rsync(
     source_path = os.path.join(source_path, "")
 
     # Ensure the destination directory exists
+    # TODO: this gets stuck 2 minutes if cluster is down
+    # ping the cluster to check if it is up
+
     destination_dir = os.path.dirname(destination)
     subprocess.run(
         [
