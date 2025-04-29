@@ -28,5 +28,5 @@
    :template: custom_module_template.rst
    :recursive:
 
-   behaviour_window
+   behavior_window
 

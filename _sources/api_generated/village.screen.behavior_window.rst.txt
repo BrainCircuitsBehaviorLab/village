@@ -1,7 +1,7 @@
-﻿rt\_plots
-=========
+behavior\_window
+================
 
-.. automodule:: village.rt_plots
+.. automodule:: village.screen.behavior_window
 
    
    
@@ -19,7 +19,7 @@
       :toctree:
       :template: custom_class_template.rst
    
-      RTPlots
+      BehaviorWindow
    
    
 

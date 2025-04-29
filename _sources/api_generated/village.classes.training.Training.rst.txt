@@ -19,12 +19,15 @@ Training
       ~Training.__init__
       ~Training.check_variables
       ~Training.copy_settings
+      ~Training.correct_types_in_dict
       ~Training.default_training_settings
+      ~Training.define_gui_tabs
       ~Training.get_default_dict
       ~Training.get_dict
       ~Training.get_jsonstring
       ~Training.get_jsonstring_from_jsonstring
       ~Training.get_settings_names
+      ~Training.get_string
       ~Training.load_settings_from_dict
       ~Training.load_settings_from_jsonstring
       ~Training.restore

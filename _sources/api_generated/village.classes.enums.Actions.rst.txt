@@ -32,5 +32,6 @@ Actions
       ~Actions.CORRIDOR
       ~Actions.PORTS
       ~Actions.FUNCTIONS
+      ~Actions.VIRTUAL_MOUSE
    
    

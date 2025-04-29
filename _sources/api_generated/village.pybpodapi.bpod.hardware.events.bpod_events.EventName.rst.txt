@@ -333,9 +333,5 @@ EventName
       ~EventName.SoftCode8
       ~EventName.SoftCode9
       ~EventName.Tup
-      ~EventName.Wire1High
-      ~EventName.Wire1Low
-      ~EventName.Wire2High
-      ~EventName.Wire2Low
    
    

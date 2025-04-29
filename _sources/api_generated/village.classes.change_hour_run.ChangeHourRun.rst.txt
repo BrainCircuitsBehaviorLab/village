@@ -1,9 +1,9 @@
-EventProtocol
+ChangeHourRun
 =============
 
-.. currentmodule:: village.classes.protocols
+.. currentmodule:: village.classes.change_hour_run
 
-.. autoclass:: EventProtocol
+.. autoclass:: ChangeHourRun
    :members:
    :show-inheritance:
    :inherited-members:
@@ -16,8 +16,8 @@ EventProtocol
 
    .. autosummary::
    
-      ~EventProtocol.__init__
-      ~EventProtocol.log
+      ~ChangeHourRun.__init__
+      ~ChangeHourRun.run
    
    
 

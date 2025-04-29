@@ -17,8 +17,9 @@ Settings
    .. autosummary::
    
       ~Settings.__init__
+      ~Settings.add_new_settings
+      ~Settings.check_settings
       ~Settings.create_factory_settings
-      ~Settings.create_factory_settings_if_first_launch
       ~Settings.get
       ~Settings.get_description
       ~Settings.get_index
@@ -27,7 +28,6 @@ Settings
       ~Settings.get_type
       ~Settings.get_values
       ~Settings.print
-      ~Settings.replace_extra_settings
       ~Settings.restore_factory_settings
       ~Settings.set
       ~Settings.sync

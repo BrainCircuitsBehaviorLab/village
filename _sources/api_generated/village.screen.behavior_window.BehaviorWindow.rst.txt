@@ -1,0 +1,29 @@
+BehaviorWindow
+==============
+
+.. currentmodule:: village.screen.behavior_window
+
+.. autoclass:: BehaviorWindow
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BehaviorWindow.__init__
+      ~BehaviorWindow.animate
+      ~BehaviorWindow.closeEvent
+      ~BehaviorWindow.paintEvent
+      ~BehaviorWindow.toggle_animation
+   
+   
+
+   
+   
+   

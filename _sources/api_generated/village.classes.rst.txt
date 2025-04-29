@@ -28,8 +28,12 @@
    :template: custom_module_template.rst
    :recursive:
 
+   after_session_run
+   change_cycle_run
+   change_hour_run
    collection
    enums
+   plot
    protocols
    settings_class
    subject

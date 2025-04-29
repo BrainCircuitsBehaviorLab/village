@@ -31,5 +31,6 @@ Info
    
       ~Info.SYSTEM_INFO
       ~Info.DETECTION_SETTINGS
+      ~Info.DETECTION_PLOT
    
    

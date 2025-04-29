@@ -1,7 +1,7 @@
-subject
-=======
+change\_hour\_run
+=================
 
-.. automodule:: village.classes.subject
+.. automodule:: village.classes.change_hour_run
 
    
    
@@ -19,7 +19,7 @@ subject
       :toctree:
       :template: custom_class_template.rst
    
-      Subject
+      ChangeHourRun
    
    
 

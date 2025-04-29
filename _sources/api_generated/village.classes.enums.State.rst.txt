@@ -21,7 +21,8 @@ State
       ~State.get_index_from_value
       ~State.get_index_from_string
       ~State.can_exit
-      ~State.can_edit_subjects
+      ~State.can_edit_data
+      ~State.can_calibrate_scale
       ~State.can_stop_task
       ~State.can_go_to_wait
       ~State.__init__
@@ -53,6 +54,7 @@ State
       ~State.LAUNCH_MANUAL
       ~State.RUN_MANUAL
       ~State.SAVE_MANUAL
+      ~State.SYNC
       ~State.EXIT_GUI
    
    

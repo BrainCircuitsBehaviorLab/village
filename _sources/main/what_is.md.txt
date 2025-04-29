@@ -61,7 +61,7 @@ Contact: [marinraf@gmail.com](mailto:marinraf@gmail.com)
 
 [SANWORKS]: https://sanworks.io
 [GPL]: https://www.gnu.org/licenses/quick-guide-gplv3.pdf
-[OSHW]: https://www.oshwa.org/definition/
+[OSHW]: https://oshwa.org/resources/open-source-hardware-definition/
 [ECO]: https://elifesciences.org/articles/19532
 [LAB]: https://braincircuitsbehavior.org
 [RAT]: https://www.uab.cat/en/incuab/fx-animalmindslab-en
