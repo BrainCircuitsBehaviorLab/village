@@ -202,17 +202,37 @@ class Manager:
         change_hour_run_found = 0
         change_cycle_run_found = 0
         functions_path = ""
+        sound_path = ""
 
         for root, _, files in os.walk(directory):
             for file in files:
                 if file == "softcode_functions.py":
                     functions_path = os.path.join(root, file)
+                if file == "sound_functions.py":
+                    sound_path = os.path.join(root, file)
                 if file.endswith(".py"):
                     python_files.append(os.path.join(root, file))
 
         if os.path.exists(functions_path):
             module_name = "custom_module"
             spec = importlib.util.spec_from_file_location(module_name, functions_path)
+            if spec and spec.loader:
+                module = importlib.util.module_from_spec(spec)
+                try:
+                    spec.loader.exec_module(module)
+                    for i in range(1, 100):
+                        func_name = f"function{i}"
+                        if hasattr(module, func_name):
+                            self.functions[i] = getattr(module, func_name)
+                except Exception:
+                    log.error(
+                        "Couldn't import user functions",
+                        exception=traceback.format_exc(),
+                    )
+
+        if os.path.exists(sound_path):
+            module_name = "custom_module2"
+            spec = importlib.util.spec_from_file_location(module_name, sound_path)
             if spec and spec.loader:
                 module = importlib.util.module_from_spec(spec)
                 try:
