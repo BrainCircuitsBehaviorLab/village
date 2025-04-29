@@ -15,15 +15,35 @@ on:
   workflow_dispatch:
 
 
+# jobs:
+#   build_sphinx_docs:
+#     name: Build Sphinx Docs
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: neuroinformatics-unit/actions/build_sphinx_docs@v2
+#         with:
+#           python-version: 3.11
+
 jobs:
   build_sphinx_docs:
     name: Build Sphinx Docs
     runs-on: ubuntu-latest
     steps:
-      - uses: neuroinformatics-unit/actions/build_sphinx_docs@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: 3.11
-          sphinx-opts: "-b html docs/source docs/build"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build Sphinx HTML
+        run: sphinx-build -b html docs/source docs/build
 
   deploy_sphinx_docs:
     name: Deploy Sphinx Docs
