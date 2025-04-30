@@ -89,6 +89,8 @@ class Manager:
         self.errors: str = ""
         self.max_time_counter: int = 1
         self.functions: list[Callable] = [lambda: None for _ in range(99)]
+        self.sound_calibration_functions: list[Callable] = []
+        self.sound_calibration_error: bool = False
         self.raw_session_df = pd.DataFrame()
         self.old_session_df = pd.DataFrame()
         self.old_session_raw_df = pd.DataFrame()
@@ -166,7 +168,7 @@ class Manager:
             [
                 "date",
                 "speaker",
-                "frequency",
+                "sound_name",
                 "gain",
                 "dB_obtained",
                 "calibration_number",
@@ -237,13 +239,15 @@ class Manager:
                 module = importlib.util.module_from_spec(spec)
                 try:
                     spec.loader.exec_module(module)
-                    for i in range(1, 100):
-                        func_name = f"function{i}"
-                        if hasattr(module, func_name):
-                            self.functions[i] = getattr(module, func_name)
+                    if hasattr(module, "sound_calibration_functions"):
+                        self.sound_calibration_functions = getattr(
+                            module, "sound_calibration_functions"
+                        )
+                        print("sound_calibration_functions")
+                        print(self.sound_calibration_functions)
                 except Exception:
                     log.error(
-                        "Couldn't import user functions",
+                        "Couldn't import sound calibration functions",
                         exception=traceback.format_exc(),
                     )
 

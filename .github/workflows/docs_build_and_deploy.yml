@@ -24,6 +24,8 @@ on:
 #         with:
 #           python-version: 3.11
 
+# TODO check all the warnings
+
 jobs:
   build_sphinx_docs:
     name: Build Sphinx Docs

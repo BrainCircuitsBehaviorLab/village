@@ -25,6 +25,11 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 
+class DummyTask(Task):
+    def close(self):
+        pass
+
+
 class SoundCalibrationLayout(Layout):
     def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
@@ -47,50 +52,65 @@ class SoundCalibrationLayout(Layout):
         self.update_plot = False
         self.speaker = 0
         self.gain = 0.0
-        self.freq = 0
         self.duration = 0
         self.dB_obtained = 0.0
         self.dB_expected2 = 0.0
         self.speaker2 = 0
         self.gain2 = 0.0
-        self.freq2 = 0
         self.duration2 = 0
         self.error2 = 0.0
         self.dB_obtained2 = 0.0
 
         self.test_point: tuple[float, float] | None = None
 
-        # speakers
-        self.speaker_label = self.create_and_add_label(
-            "SPEAKER", 7, 1, 12, 2, "black", bold=False
-        )
-        self.speaker_combo = self.create_and_add_combo_box(
-            "speaker", 9, 1, 10, 2, ["left(0)", "right(1)"], 0, self.calibration_changed
-        )
+        # input variables
+        text = "You can create functions that generate specific sounds for "
+        text += "calibration. These functions must be defined in "
+        text += "your_script/code/sound_functions.py and included in a list of "
+        text += "functions called sound_calibration_functions in the same file. \n"
+        text += "Each function must take two arguments, gain and duration, "
+        text += "which can be adjusted each time we run a calibration. The function "
+        text += "should return a NumPy array of floats representing the sound "
+        text += "waveform. In this way, the sound will be mono (single-channel) and "
+        text += "can be played through the left or right speaker depending on our "
+        text += "selection."
 
         self.sound_label = self.create_and_add_label(
-            "SOUND", 7, 20, 12, 2, "black", bold=False
+            "SOUND", 7, 1, 12, 2, "black", bold=False, description=text
         )
-        values = ["sinusoidal tone", "white noise", "user-created sound"]
+        values = [f.__name__ for f in manager.sound_calibration_functions]
         self.sound_combo = self.create_and_add_combo_box(
-            "sound", 9, 20, 20, 2, values, 0, self.calibration_changed
-        )
-
-        self.speaker_label2 = self.create_and_add_label(
-            "SPEAKER", 32, 1, 12, 2, "black", bold=False
-        )
-        self.speaker_combo2 = self.create_and_add_combo_box(
-            "speaker", 34, 1, 10, 2, ["left(0)", "right(1)"], 0, self.test_changed
+            "sound", 9, 1, 30, 2, values, 0, self.calibration_changed
         )
 
         self.sound_label2 = self.create_and_add_label(
-            "SOUND", 32, 20, 12, 2, "black", bold=False
+            "SOUND", 32, 1, 12, 2, "black", bold=False, description=text
         )
         self.sound_combo2 = self.create_and_add_combo_box(
-            "sound", 34, 20, 20, 2, values, 0, self.test_changed
+            "sound", 34, 1, 30, 2, values, 0, self.test_changed
         )
 
-        # input
+        self.speaker_label = self.create_and_add_label(
+            "SPEAKER", 12, 1, 12, 2, "black", bold=False
+        )
+        self.speaker_combo = self.create_and_add_combo_box(
+            "speaker",
+            14,
+            1,
+            10,
+            2,
+            ["left(0)", "right(1)"],
+            0,
+            self.calibration_changed,
+        )
+
+        self.speaker_label2 = self.create_and_add_label(
+            "SPEAKER", 37, 1, 12, 2, "black", bold=False
+        )
+        self.speaker_combo2 = self.create_and_add_combo_box(
+            "speaker", 39, 1, 10, 2, ["left(0)", "right(1)"], 0, self.test_changed
+        )
+
         self.calibration_input_label = self.create_and_add_label(
             "CALIBRATION INPUT",
             5,
@@ -121,7 +141,7 @@ class SoundCalibrationLayout(Layout):
         self.gain_label = self.create_and_add_label(
             "GAIN(0-1)",
             12,
-            12,
+            13,
             12,
             2,
             "black",
@@ -129,7 +149,7 @@ class SoundCalibrationLayout(Layout):
             description="Gain value between 0 and 1",
         )
         self.gain_line_edit = self.create_and_add_line_edit(
-            "0", 14, 12, 8, 2, self.calibration_changed
+            "0", 14, 13, 8, 2, self.calibration_changed
         )
 
         self.dB_expected_label2 = self.create_and_add_label(
@@ -144,37 +164,7 @@ class SoundCalibrationLayout(Layout):
         )
 
         self.dB_expected_line_edit2 = self.create_and_add_line_edit(
-            "0", 39, 12, 8, 2, self.test_changed
-        )
-
-        # second input variable
-        self.freq_text_label = (
-            "Frequency of the sound in Hz. The system will play a simple "
-            + "sinusoidal tone of that frequency."
-        )
-        self.freq_text_noise = "The system will play a simple white noise sound."
-        self.freq_text_function = (
-            "Create a function named function# (# is a number between 1 and 98) "
-            + "in: path_to_your_project/code/softcode_functions.py \n"
-            + "Inside the function, play a sound of your choice. \n"
-            + "The system will automatically call that numbered function and "
-            + "the corresponding sound will be played."
-        )
-
-        self.freq_label = self.create_and_add_label(
-            "FREQ", 12, 1, 12, 2, "black", bold=False, description=self.freq_text_label
-        )
-
-        self.freq_line_edit = self.create_and_add_line_edit(
-            "0", 14, 1, 8, 2, self.calibration_changed
-        )
-
-        self.freq_label2 = self.create_and_add_label(
-            "FREQ", 37, 1, 20, 2, "black", bold=False, description=self.freq_text_label
-        )
-
-        self.freq_line_edit2 = self.create_and_add_line_edit(
-            "0", 39, 1, 8, 2, self.test_changed
+            "0", 39, 13, 8, 2, self.test_changed
         )
 
         # duration
@@ -385,25 +375,9 @@ class SoundCalibrationLayout(Layout):
         self.test_button.setDisabled(True)
         self.gain = 0
         self.duration = 0
-        self.freq = -1
         self.speaker = self.speaker_combo.currentIndex()
-        self.sound = self.sound_combo.currentIndex()
-
-        if self.sound == 0:  # sinusoidal tone
-            self.freq_label.setText("FREQ")
-            self.freq_label.setToolTip(self.freq_text_label)
-            self.freq_line_edit.setText("0")
-            self.freq_line_edit.setEnabled(True)
-        elif self.sound == 1:  # white noise
-            self.freq_label.setText("NOISE")
-            self.freq_label.setToolTip(self.freq_text_noise)
-            self.freq_line_edit.setText("noise")
-            self.freq_line_edit.setDisabled(True)
-        else:  # user-created sound
-            self.freq_label.setText("FUNCTION")
-            self.freq_label.setToolTip(self.freq_text_function)
-            self.freq_line_edit.setText("0")
-            self.freq_line_edit.setEnabled(True)
+        self.sound_index = self.sound_combo.currentIndex()
+        self.sound = manager.sound_calibration_functions[self.sound_index].__name__
 
         try:
             duration = int(self.duration_line_edit.text())
@@ -429,25 +403,7 @@ class SoundCalibrationLayout(Layout):
         except Exception:
             self.gain_line_edit.setStyleSheet("")
 
-        correct_value = False
-        if self.sound == 1:  # white noise
-            self.freq = 0
-            correct_value = True
-        else:
-            try:
-                freq = int(self.freq_line_edit.text())
-                if freq > 0:
-                    self.freq = freq
-                    self.freq_line_edit.setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
-                    correct_value = True
-                else:
-                    self.freq_line_edit.setStyleSheet("")
-            except Exception:
-                self.freq_line_edit.setStyleSheet("")
-
-        if self.gain > 0 and self.duration > 0 and correct_value:
+        if self.gain > 0 and self.duration > 0:
             self.calibrate_button.setEnabled(True)
             manager.changing_settings = True
             self.update_status_label_buttons()
@@ -457,25 +413,9 @@ class SoundCalibrationLayout(Layout):
         self.calibrate_button.setDisabled(True)
         self.dB_expected2 = 0
         self.duration2 = 0
-        self.freq2 = -1
         self.speaker2 = self.speaker_combo2.currentIndex()
-        self.sound2 = self.sound_combo2.currentIndex()
-
-        if self.sound2 == 0:  # sinusoidal tone
-            self.freq_label2.setText("FREQ")
-            self.freq_label2.setToolTip(self.freq_text_label)
-            self.freq_line_edit2.setText("0")
-            self.freq_line_edit2.setEnabled(True)
-        elif self.sound2 == 1:  # white noise
-            self.freq_label2.setText("NOISE")
-            self.freq_label2.setToolTip(self.freq_text_noise)
-            self.freq_line_edit2.setText("noise")
-            self.freq_line_edit2.setDisabled(True)
-        else:  # user-created sound
-            self.freq_label2.setText("FUNCTION")
-            self.freq_label2.setToolTip(self.freq_text_function)
-            self.freq_line_edit2.setText("0")
-            self.freq_line_edit2.setEnabled(True)
+        self.sound_index2 = self.sound_combo2.currentIndex()
+        self.sound2 = manager.sound_calibration_functions[self.sound_index2].__name__
 
         try:
             duration2 = int(self.duration_line_edit2.text())
@@ -501,25 +441,7 @@ class SoundCalibrationLayout(Layout):
         except Exception:
             self.dB_expected_line_edit2.setStyleSheet("")
 
-        correct_value = False
-        if self.sound2 == 1:  # white noise
-            self.freq2 = 0
-            correct_value = True
-        else:
-            try:
-                freq2 = int(self.freq_line_edit2.text())
-                if freq2 > 0:
-                    self.freq2 = freq2
-                    self.freq_line_edit2.setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
-                    correct_value = True
-                else:
-                    self.freq_line_edit2.setStyleSheet("")
-            except Exception:
-                self.freq_line_edit2.setStyleSheet("")
-
-        if self.dB_expected2 > 0 and self.duration2 > 0 and correct_value:
+        if self.dB_expected2 > 0 and self.duration2 > 0:
             self.test_button.setEnabled(True)
             manager.changing_settings = True
             self.update_status_label_buttons()
@@ -539,17 +461,15 @@ class SoundCalibrationLayout(Layout):
         manager.state = State.RUN_MANUAL
         manager.calibrating = True
         task = SoundCalibration(
-            self.speaker, self.gain, self.sound, self.freq, self.duration
+            self.speaker, self.gain, self.sound_index, self.duration
         )
-        manager.task = Task()
+        manager.task = DummyTask()
         manager.task.settings.maximum_duration = self.duration + 3
         self.speaker_combo.setDisabled(True)
         self.gain_line_edit.setDisabled(True)
-        self.freq_line_edit.setDisabled(True)
         self.duration_line_edit.setDisabled(True)
         self.dB_expected_line_edit2.setDisabled(True)
         self.duration_line_edit2.setDisabled(True)
-        self.freq_line_edit2.setDisabled(True)
         self.speaker_combo2.setDisabled(True)
         self.calibration_initiated = True
         log.start(task="SoundCalibration", subject="None")
@@ -571,7 +491,7 @@ class SoundCalibrationLayout(Layout):
 
         try:
             self.gain2 = manager.sound_calibration.get_sound_gain(
-                self.speaker2, self.dB_expected2, freq=self.freq2
+                self.speaker2, self.dB_expected2, sound_name=self.sound2
             )
             ok = True
         except Exception:
@@ -580,8 +500,8 @@ class SoundCalibrationLayout(Layout):
             self.dB_expected_line_edit2.setStyleSheet("")
             self.duration_line_edit2.setStyleSheet("")
 
-            text = "Using a frequency value of: "
-            text += str(self.freq2)
+            text = "Using the sound: "
+            text += str(self.sound2)
             text += ". \nThe following speaker can not be tested: "
             text += str(self.speaker2)
             text += ". \nYou need to calibrate it first."
@@ -595,17 +515,15 @@ class SoundCalibrationLayout(Layout):
             manager.state = State.RUN_MANUAL
             manager.calibrating = True
             task = SoundCalibration(
-                self.speaker2, self.gain2, self.sound2, self.freq2, self.duration2
+                self.speaker2, self.gain2, self.sound2, self.duration2
             )
-            manager.task = Task()
+            manager.task = DummyTask()
             manager.task.settings.maximum_duration = self.duration2 + 3
             self.speaker_combo.setDisabled(True)
             self.gain_line_edit.setDisabled(True)
-            self.freq_line_edit.setDisabled(True)
             self.duration_line_edit.setDisabled(True)
             self.dB_expected_line_edit2.setDisabled(True)
             self.duration_line_edit2.setDisabled(True)
-            self.freq_line_edit2.setDisabled(True)
             self.speaker_combo2.setDisabled(True)
             self.test_initiated = True
             log.start(task="SoundCalibration", subject="None")
@@ -616,18 +534,18 @@ class SoundCalibrationLayout(Layout):
         removed_list: list[str] = []
         filtered_df = self.df.copy()
 
-        for freq, group in self.df.groupby("frequency"):
+        for sound, group in self.df.groupby("sound_name"):
             counts = group["speaker"].value_counts()
 
             removed_speakers = counts[counts < 2].index
 
             removed_list.extend(
-                [f"speaker {spk}, freq {freq}" for spk in removed_speakers]
+                [f"speaker {spk}, sound {sound}" for spk in removed_speakers]
             )
 
             filtered_df = filtered_df[
                 ~(
-                    (filtered_df["frequency"] == freq)
+                    (filtered_df["sound_name"] == sound)
                     & (filtered_df["speaker"].isin(removed_speakers))
                 )
             ]
@@ -638,7 +556,7 @@ class SoundCalibrationLayout(Layout):
         manager.sound_calibration.save_from_df()
 
         if len(removed_list) > 0:
-            text = "The following speaker and frequency had only one calibration point "
+            text = "The following speaker and sound had only one calibration point "
             text += "and was therefore removed from the calibration: "
             text += "; ".join(removed_list)
             QMessageBox.information(
@@ -672,21 +590,40 @@ class SoundCalibrationLayout(Layout):
         self.update_status_label_buttons()
         if manager.state == State.WAIT and self.calibration_initiated:
             self.calibration_initiated = False
-            self.calibrate_button.setDisabled(True)
-            self.test_button.setDisabled(True)
-            self.dB_obtained_line_edit.setEnabled(True)
-            self.dB_obtained_line_edit.setStyleSheet(
-                "QLineEdit {border: 1px solid black;}"
-            )
+            if not manager.sound_calibration_error:
+                self.calibrate_button.setDisabled(True)
+                self.test_button.setDisabled(True)
+                self.dB_obtained_line_edit.setEnabled(True)
+                self.dB_obtained_line_edit.setStyleSheet(
+                    "QLineEdit {border: 1px solid black;}"
+                )
+            else:
+                manager.sound_calibration_error = False
+                text = "It was not possible to play the calibration sound. "
+                text += "Check the events for more information about the error."
+                QMessageBox.information(self.window, "ERROR", text)
+                self.speaker_combo.setEnabled(True)
+                self.gain_line_edit.setEnabled(True)
+                self.duration_line_edit.setEnabled(True)
+                self.dB_obtained_line_edit.setText("0")
+                self.dB_obtained_line_edit.setDisabled(True)
+                self.dB_obtained_line_edit.setStyleSheet("")
 
         if manager.state == State.WAIT and self.test_initiated:
             self.test_initiated = False
-            self.calibrate_button.setDisabled(True)
-            self.test_button.setDisabled(True)
-            self.dB_obtained_line_edit2.setEnabled(True)
-            self.dB_obtained_line_edit2.setStyleSheet(
-                "QLineEdit {border: 1px solid black;}"
-            )
+            if not manager.sound_calibration_error:
+                self.calibrate_button.setDisabled(True)
+                self.test_button.setDisabled(True)
+                self.dB_obtained_line_edit2.setEnabled(True)
+                self.dB_obtained_line_edit2.setStyleSheet(
+                    "QLineEdit {border: 1px solid black;}"
+                )
+            else:
+                manager.sound_calibration_error = False
+                text = "It was not possible to play the calibration sound. "
+                text += "Check the events for more information about the error."
+                QMessageBox.information(self.window, "ERROR", text)
+                self.reset_values_after_ok_or_add2()
 
         if self.update_plot:
             if self.delete_rows:
@@ -744,7 +681,7 @@ class SoundCalibrationLayout(Layout):
                 df = manager.sound_calibration.df.copy()
 
                 df = df[df["speaker"] == self.speaker2]
-                df = df[df["frequency"] == self.freq2]
+                df = df[df["sound_name"] == self.sound2]
                 max_calibration = df["calibration_number"].max()
                 self.df = df[df["calibration_number"] == max_calibration]
                 self.test_point = (self.gain2, result)
@@ -768,7 +705,7 @@ class SoundCalibrationLayout(Layout):
         row_dict = {
             "date": self.date,
             "speaker": self.speaker,
-            "frequency": self.freq,
+            "sound_name": self.sound,
             "gain": self.gain,
             "dB_obtained": self.dB_obtained,
             "calibration_number": self.calibration_number,
@@ -782,7 +719,6 @@ class SoundCalibrationLayout(Layout):
 
         self.speaker_combo.setEnabled(True)
         self.gain_line_edit.setEnabled(True)
-        self.freq_line_edit.setEnabled(True)
         self.duration_line_edit.setEnabled(True)
 
         self.dB_obtained_line_edit.setText("0")
@@ -800,7 +736,7 @@ class SoundCalibrationLayout(Layout):
         row_dict = {
             "date": self.date,
             "speaker": self.speaker2,
-            "frequency": self.freq2,
+            "sound_name": self.sound_name2,
             "gain": self.gain2,
             "dB_obtained": self.dB_obtained2,
             "calibration_number": -1,
@@ -828,10 +764,6 @@ class SoundCalibrationLayout(Layout):
         self.dB_expected_line_edit2.setEnabled(True)
         self.dB_expected_line_edit2.setStyleSheet("")
         self.dB_expected_line_edit2.setText("0")
-        self.freq_line_edit.setEnabled(True)
-        self.freq_line_edit2.setEnabled(True)
-        self.freq_line_edit2.setStyleSheet("")
-        self.freq_line_edit2.setText("0")
         self.duration_line_edit.setEnabled(True)
         self.duration_line_edit2.setEnabled(True)
         self.duration_line_edit2.setStyleSheet("")
@@ -862,7 +794,7 @@ class SoundCalibrationLayout(Layout):
         row_dict = {
             "date": self.date,
             "speaker": self.speaker2,
-            "frequency": self.freq2,
+            "sound_name": self.sound2,
             "gain": self.gain2,
             "dB_obtained": self.dB_obtained2,
             "calibration_number": self.calibration_number,
@@ -886,9 +818,6 @@ class SoundCalibrationLayout(Layout):
         self.gain_line_edit.setEnabled(True)
         self.gain_line_edit.setStyleSheet("")
         self.gain_line_edit.setText("0")
-        self.freq_line_edit.setEnabled(True)
-        self.freq_line_edit.setStyleSheet("")
-        self.freq_line_edit.setText("0")
         self.gain = 0.0
         self.duration_line_edit.setEnabled(True)
         self.duration_line_edit.setStyleSheet("")
@@ -971,9 +900,6 @@ class InfoLayout(Layout):
         self.speaker_label = self.create_and_add_label(
             "Speaker", 2, 0, 8, 2, "black", bold=False
         )
-        self.freq_label = self.create_and_add_label(
-            "Freq", 2, 8, 8, 2, "black", bold=False
-        )
         self.gain_label = self.create_and_add_label(
             "Gain", 2, 14, 8, 2, "black", bold=False
         )
@@ -984,7 +910,7 @@ class InfoLayout(Layout):
         for i, point in enumerate(self.parent_layout.calibration_points):
             text = str(point["speaker"])
             self.create_and_add_label(text, 4 + 2 * i, 0, 8, 2, "black", bold=False)
-            text = str(point["frequency"])
+            text = str(point["sound_name"])
             self.create_and_add_label(text, 4 + 2 * i, 8, 8, 2, "black", bold=False)
             text = str(point["gain"])
             self.create_and_add_label(text, 4 + 2 * i, 14, 8, 2, "black", bold=False)

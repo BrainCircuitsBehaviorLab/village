@@ -15,30 +15,23 @@ def sound_calibration_plot(
     fig, ax = plt.subplots(figsize=(width, height))
 
     speakers = sorted(df["speaker"].unique())
-    freqs = sorted(df["frequency"].unique())
+    sounds = sorted(df["sound_name"].unique())
 
-    colors_left = sns.light_palette("green", len(freqs) + 1, reverse=True)[:-1]
-    colors_right = sns.light_palette("purple", len(freqs) + 1, reverse=True)[:-1]
+    colors_left = sns.light_palette("green", len(sounds) + 1, reverse=True)[:-1]
+    colors_right = sns.light_palette("purple", len(sounds) + 1, reverse=True)[:-1]
 
     for speaker in speakers:
         subset = df[df["speaker"] == speaker]
-        for index, freq in enumerate(freqs):
-            subset2 = subset[subset["frequency"] == freq]
+        for index, sound in enumerate(sounds):
+            subset2 = subset[subset["sound_name"] == sound]
             x = subset2["gain"].values
             y = subset2["dB_obtained"].values
+            label = sound
 
             if speaker == 0:
                 color = colors_left[index]
-                if freq == 0:
-                    label = "left white noise"
-                else:
-                    label = "left " + str(freq) + "Hz"
             else:
                 color = colors_right[index]
-                if freq == 0:
-                    label = "right white noise"
-                else:
-                    label = "right " + str(freq) + "Hz"
 
             ax.plot(
                 x,

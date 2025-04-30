@@ -122,10 +122,10 @@ class Collection(EventProtocol):
     def get_last_sound_df(self) -> pd.DataFrame:
         """
         Returns a DataFrame that contains, for each unique combination of 'speaker' and
-        'frequency', all rows where 'calibration_number' is maximum.
+        'sound_name', all rows where 'calibration_number' is maximum.
         """
         df = self.df[self.df["calibration_number"] != -1].copy()
-        max_values = df.groupby(["speaker", "frequency"])[
+        max_values = df.groupby(["speaker", "sound_number"])[
             "calibration_number"
         ].transform("max")
         df = df[df["calibration_number"] == max_values]
@@ -170,10 +170,10 @@ class Collection(EventProtocol):
             """
             raise ValueError(text)
 
-    def get_sound_gain(self, speaker: int, dB: float, freq: int = 0) -> float:
+    def get_sound_gain(self, speaker: int, dB: float, sound_name: str) -> float:
         try:
             calibration_df = self.df[self.df["speaker"] == speaker]
-            calibration_df = calibration_df[calibration_df["frequency"] == freq]
+            calibration_df = calibration_df[calibration_df["sound_name"] == sound_name]
             max_calibration = calibration_df["calibration_number"].max()
             calibration_df = calibration_df[
                 calibration_df["calibration_number"] == max_calibration
@@ -203,8 +203,8 @@ class Collection(EventProtocol):
             text = f"""
             \n\n\t--> SOUND CALIBRATION PROBLEM !!!!!!\n
             It is not possible to provide a valid gain value
-            for a target dB of {dB} for the speaker {speaker} and frequency {freq}.\n
-            1. Make sure you have calibrated the frequencies you are using.\n
+            for a target dB of {dB} for the speaker {speaker} and sound {sound_name}.\n
+            1. Make sure you have calibrated the sound you are using.\n
             2. Make sure the dB you want to obtain is within calibration range.\n
             3. Ultimately, check sound_calibration.csv in 'data'.\n
             """

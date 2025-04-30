@@ -1,52 +1,42 @@
+import time
+import traceback
 from threading import Thread
+
+from village.devices.sound_device import sound_device
+from village.log import log
+from village.manager import manager
 
 
 class SoundCalibration:
     def __init__(
-        self, speaker: int, gain: float, sound: int, freq: int, duration: float
+        self, speaker: int, gain: float, sound_index: int, duration: float
     ) -> None:
         self.speaker = speaker
         self.gain = gain
-        self.sound = sound
-        self.freq = freq
+        self.sound_index = sound_index
         self.duration = duration
 
     def run(self) -> None:
+        try:
+            generator = manager.sound_calibration_functions[self.sound_index]
+            sound = generator(duration=self.duration, gain=self.gain)
 
-        pass
+            if self.speaker == 0:
+                sound_device.load(sound, None)
+            else:
+                sound_device.load(None, sound)
 
-    #         if self.sound == 0: # sinusoidal
-    #             sound = tone_generator(
-    #                 duration=self.duration,
-    #                 amplitude=self.gain,
-    #                 frequency=self.freq,
-    #                 ramp_time=0.005,
-    #                 samplerate=sound_device.samplerate,
-    #             )
-    #         elif self.sound == 1: # white noise
-    #             sound = whitenoise_generator(
-    #                 duration=self.duration,
-    #                 amplitude=self.gain,
-    #                 samplerate=sound_device.samplerate,
-    #             )
-    #         else:
-    #             sound = None
-
-    #         if self.speaker == 0:
-    #             sound_device.load(sound, None)
-    #         else:
-    #             sound_device.load(None, sound)
-
-    #         sound_device.play()
-    #         time.sleep(self.duration + 1)
-    #         sound_device.stop()
+            sound_device.play()
+            time.sleep(self.duration + 1)
+            sound_device.stop()
+        except Exception:
+            log.error("Error calibrating sound", exception=traceback.format_exc())
+            manager.sound_calibration_error = True
 
     def run_in_thread(self, daemon=True) -> None:
         self.process = Thread(target=self.run, daemon=daemon)
         self.process.start()
         return
 
-
-# sound = tone_generator(
-#     duration=0.1, amplitude=0.01, frequency=6000, ramp_time=0.005, samplerate=44100
-# )
+    def close(self) -> None:
+        return
