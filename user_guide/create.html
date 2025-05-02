@@ -7,7 +7,7 @@
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/user_guide/create.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.svg"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>Create a New Training Protocol - Training village</title>
+        <title>Training Village: Creating a Training Protocol - Training village</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
@@ -212,7 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="corridor.html">Calibrate and Test Corridor Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="detection.html">Calibrate and Test Animal Detection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="use.html">Use an Existing Training Protocol</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Create a New Training Protocol</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Training Village: Creating a Training Protocol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="test.html">Test a Training Protocol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plots.html">Create Real-Time Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html">Saved Data</a></li>
@@ -565,72 +565,629 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="create-a-new-training-protocol">
-<h1>Create a New Training Protocol</h1>
-<p>For training animals, the code and data are organized into projects. A project’s structure is automatically created when a new project is started.</p>
-<p>A folder is created for the project:
-/village/village_projects/name_of_the_project/</p>
-<p>Within this folder, there are two subfolders: /data and /code</p>
-<p>The first time you run training village, it will automatically create a project called ‘demo_project’. It will also clone the
-<a class="reference external" href="https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task">follow-the-light-task</a> repository, which contains a working example for a simple project. You can use it as a base to start creating your own tasks. (If you are code-savvy, you can dive right into it to explore the logic).</p>
-<p>Let’s first explore how the code is organized:</p>
-<section id="code">
-<h2>Code</h2>
-<p>The training protocol consists of one or more Python scripts, each representing a task that the animals can perform. In addition to these scripts, a training script is required (called ‘training_protocol.py’). The training script is run every time a subject finishes a task and contains the logic to either advance or regress the subject in their training based on their performance. This could involve changing the animal to a different task and/or modifying the parameters used in the task.</p>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Example 1</span></div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>code/
+          <section class="tex2jax_ignore mathjax_ignore" id="training-village-creating-a-training-protocol">
+<h1>Training Village: Creating a Training Protocol</h1>
+<section id="project-structure">
+<h2>Project Structure</h2>
+<p>For training animals, the code and data are organized into projects. A project’s
+structure is
+automatically created when a new project is started.</p>
+<p>A folder is created for the project:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">village</span><span class="o">/</span><span class="n">village_projects</span><span class="o">/</span><span class="n">name_of_the_project</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>Within this folder, there are two subfolders:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">data</span>    <span class="c1"># Stores all experimental data</span>
+<span class="o">/</span><span class="n">code</span>    <span class="c1"># Contains all task scripts and the training protocol</span>
+</pre></div>
+</div>
+<p>The first time you run Training Village, it will automatically create a project called ‘demo_project’.
+It will also clone the <a class="reference external" href="https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task">follow-the-light-task</a> repository,
+which contains a working example for a simple project. You can use it as a base to start creating your own tasks.</p>
+</section>
+<section id="code-organization">
+<h2>Code Organization</h2>
+<p>A training protocol consists of one or more Python scripts, each representing a task that the animals can perform. In addition to
+these scripts, a training script is required (called ‘training_protocol.py’).</p>
+<p>The training script is run every time a subject finishes a task and contains the logic to either advance or regress the subject in
+their training based on their performance. This could involve changing the animal to a different task and/or modifying the
+parameters used in the task.</p>
+<section id="examples-of-code-structure">
+<h3>Examples of Code Structure</h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Example 1: Multiple sequential tasks
+code/
 ├── habituation.py
 ├── lick_teaching.py
-├── task_simple.py
+├── simple_task.py
 ├── final_task.py
 ├── training_protocol.py
 </pre></div>
 </div>
-</div>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">Example 2</span></div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>code/
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Example 2: One task with progressive difficulty
+code/
 ├── follow_the_light.py
 ├── training_protocol.py
 </pre></div>
 </div>
-</div>
-<p>In Example 1, there are several tasks corresponding to different training stages. For examples, animals start with ‘habituation’, a simple task that helps them get used to the behavioral box. After one or two sessions, they move on to ‘lick_teaching’, where they learn to lick the behavioral ports. Once they have completed a sufficient number of trials, they progress to ‘simple_task’, a simplified version of the final task. When performance reaches an adequate level, they transition to ‘final_task’. The logic governing task progression is written in ‘training_protocol.py’.</p>
-<p>In Example 2, there is only one task, follow_the_light, but each time a subject finishes a session, ‘training_protocol.py’ adjusts variables to increase the task’s difficulty.</p>
+<p>In Example 1, there are several tasks corresponding to different training stages:</p>
+<ol class="arabic simple">
+<li><p>Animals start with ‘habituation’, a simple task that helps them get used to the behavioral box</p></li>
+<li><p>After one or two sessions, they move on to ‘lick_teaching’, where they learn to lick the behavioral ports</p></li>
+<li><p>Once they have completed a sufficient number of trials, they progress to ‘simple_task’, a simplified version of the final task</p></li>
+<li><p>When performance reaches an adequate level, they transition to ‘final_task’</p></li>
+</ol>
+<p>In Example 2, there is only one task, ‘follow_the_light’, but each time a subject finishes a session, ‘training_protocol.py’ adjusts
+variables to increase the task’s difficulty.</p>
 <p>The user can choose either approach—or a combination of both—to organize the training as needed.</p>
 </section>
+<section id="training-protocol">
+<h3>Training Protocol</h3>
+<p>The training protocol must be in a file named <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code> inside your code folder. The structure of the
+training protocol is the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">Training</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TrainingProtocol</span><span class="p">(</span><span class="n">Training</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines the training protocol for animal behavior experiments.</span>
+
+<span class="sd">    The training protocol is run every time a task is finished and it determines:</span>
+<span class="sd">    1. Which new task is scheduled for the subject</span>
+<span class="sd">    2. How training variables change based on performance metrics</span>
+
+
+<span class="sd">    Required methods to implement:</span>
+<span class="sd">    - __init__: Initialize the training protocol</span>
+<span class="sd">    - default_training_settings: Define initial parameters. It is called when creating a new subject.</span>
+<span class="sd">    - update_training_settings: Update parameters after each session.</span>
+
+<span class="sd">    Optional method:</span>
+<span class="sd">    - gui_tabs: Organize the variables in custom GUI tabs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the training protocol.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>First we import the class Training which our custom class TrainingProtocol will depend on.
+We initialize the class and call the super().<strong>init</strong>()</p>
+</section>
+<section id="the-default-training-settings-method">
+<h3>The <code class="docutils literal notranslate"><span class="pre">default_training_settings()</span></code> Method</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">default_training_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Define all initial training parameters for new subjects.</span>
+
+<span class="sd">        This method is called when creating a new subject, and these parameters</span>
+<span class="sd">        are saved as the initial values for that subject.</span>
+
+<span class="sd">        Required parameters:</span>
+<span class="sd">        - next_task (str): Name of the next task to run</span>
+<span class="sd">        - refractary_period (int): Waiting time in seconds between sessions</span>
+<span class="sd">        - minimum_duration (int): Minimum time in seconds for the task before door2 opens</span>
+<span class="sd">        - maximum_duration (int): Maximum time in seconds before task stops automatically</span>
+
+<span class="sd">        Additional parameters:</span>
+<span class="sd">        You can define any additional parameters needed for your specific tasks.</span>
+<span class="sd">        These can be modified between sessions based on subject performance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Required parameters for any training protocol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">&quot;Habituation&quot;</span>  <span class="c1"># Next task to run</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractary_period</span> <span class="o">=</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mi">4</span>  <span class="c1"># 4 hours between sessions of the same subject</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">600</span>  <span class="c1"># Minimum duration of 10 min</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">900</span>  <span class="c1"># Maximum duration of 15 min</span>
+
+        <span class="c1"># Task-specific parameters</span>
+        <span class="c1"># (can be modified between sessions or set when the task is run manually)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span> <span class="o">=</span> <span class="mf">0.08</span>  <span class="c1"># Reward volume in milliliters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Current training stage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_high</span> <span class="o">=</span> <span class="mi">255</span> <span class="c1"># High light intensity in the port (0-255)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_low</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># Low light intensity in the port (0-255)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">trial_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;left_easy&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;right_easy&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;left_hard&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;right_hard&quot;</span><span class="p">]</span>  <span class="c1"># Possible trial types</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">punishment_time</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Time in seconds for punishment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Inter-trial interval in seconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">response_time</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Time in seconds to respond before timeout</span>
+</pre></div>
+</div>
+<p>We set the value of next_task to “Habituation” so this would be the first task that the
+subject will perform.
+The refractary period is the time a subject needs to wait until be allowed to enter the
+behavioral box again. This period is important to prevent some animals monipolize the
+use of the behavioral box. It can be changed depending on the number of subjects in
+the systems and the duration of the tasks.
+When the minimum_duration is reached door2 is opened so is a choice of the animal if it
+continues performing the tasks of it goes out. When the maximum duration is reached,
+the tasks stops and the system waits for the animal to come back home. (Door2 is already
+open as maximum_duration must be larger or equal to minimum_duration).</p>
+<section id="the-update-training-settings-method">
+<h4>The <code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code> Method</h4>
+<p>This method is essential for training progression. It runs every time a session finishes
+and determines how the subject should progress through the training protocol.</p>
+<p>Here’s an example implementation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">update_training_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update training parameters after each session.</span>
+
+<span class="sd">        This method is called when a session finishes and determines how</span>
+<span class="sd">        the subject progresses through the training protocol.</span>
+
+<span class="sd">        Available data for decision-making:</span>
+<span class="sd">        - self.subject (str): Name of the current subject</span>
+<span class="sd">        - self.last_task (str): Name of the task that just finished</span>
+<span class="sd">        - self.df (pd.DataFrame): DataFrame with all sessions data for this subject</span>
+
+<span class="sd">        Example logic:</span>
+<span class="sd">        - Progress from Habituation to FollowTheLight after 2 sessions with &gt;100 trials</span>
+<span class="sd">        - Reduce reward amount as training progresses</span>
+<span class="sd">        - Advance to stage 2 after two consecutive sessions in FollowTheLight with &gt;85% performance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span> <span class="o">==</span> <span class="s2">&quot;Habituation&quot;</span><span class="p">:</span>
+            <span class="c1"># Get all Habituation sessions from the dataframe</span>
+            <span class="n">df_habituation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;task&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Habituation&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Check if the animal completed at least 2 Habituation sessions</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_habituation</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># Get data from the last session</span>
+                <span class="n">df_last_session</span> <span class="o">=</span> <span class="n">df_habituation</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">trials_last_session</span> <span class="o">=</span> <span class="n">df_last_session</span><span class="p">[</span><span class="s2">&quot;trial&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="c1"># Progress to next task if criteria met (&gt;100 trials)</span>
+                <span class="k">if</span> <span class="n">trials_last_session</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">&quot;FollowTheLight&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span> <span class="o">=</span> <span class="mf">0.07</span>  <span class="c1"># Decrease reward</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span> <span class="o">==</span> <span class="s2">&quot;FollowTheLight&quot;</span><span class="p">:</span>
+            <span class="c1"># Get all FollowTheLight sessions</span>
+            <span class="n">df_follow_the_light</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;task&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;FollowTheLight&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Check if at least 2 sessions completed</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_follow_the_light</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># Get data from the last two sessions</span>
+                <span class="n">df_last_session</span> <span class="o">=</span> <span class="n">df_follow_the_light</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">df_previous_session</span> <span class="o">=</span> <span class="n">df_follow_the_light</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="c1"># Calculate performance metrics</span>
+                <span class="n">performance_last_session</span> <span class="o">=</span> <span class="n">df_last_session</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="n">performance_previous_session</span> <span class="o">=</span> <span class="n">df_previous_session</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="n">trials_last_session</span> <span class="o">=</span> <span class="n">df_last_session</span><span class="p">[</span><span class="s2">&quot;trial&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">trials_previous_session</span> <span class="o">=</span> <span class="n">df_previous_session</span><span class="p">[</span><span class="s2">&quot;trial&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="c1"># Advance to stage 2 if criteria met</span>
+                <span class="c1"># (&gt;85% correct in two sessions with &gt;100 trials each)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">performance_last_session</span> <span class="o">&gt;=</span> <span class="mf">0.85</span> <span class="ow">and</span>
+                    <span class="n">performance_previous_session</span> <span class="o">&gt;=</span> <span class="mf">0.85</span> <span class="ow">and</span>
+                    <span class="n">trials_last_session</span> <span class="o">&gt;=</span> <span class="mi">100</span> <span class="ow">and</span>
+                    <span class="n">trials_previous_session</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="mi">2</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># Decrease reward</span>
+</pre></div>
+</div>
+</section>
+<section id="the-optional-gui-tabs-method">
+<h4>The optional <code class="docutils literal notranslate"><span class="pre">gui_tabs()</span></code> Method</h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">gui_tabs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        It is used to define the organization of the settings in the GUI.</span>
+<span class="sd">        Whatever that is not defined here will be placed in the &quot;General&quot; tab.</span>
+
+<span class="sd">        They need to have the same name as your settings variables.</span>
+<span class="sd">        You can use the &#39;Hide&#39; tab to hide a setting from the GUI.</span>
+
+<span class="sd">        Items in the lists need to have the same name as your settings variables.</span>
+
+<span class="sd">        You can also restrict the possible values for each setting.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gui_tabs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Port_variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;reward_amount_ml&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;light_intensity_high&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;light_intensity_low&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;Other_variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;stage&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;trial_types&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;punishment_time&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;iti_time&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;response_time&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+
+
+        <span class="c1"># define possible values for each variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gui_tabs_restricted</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;trial_types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;left_easy&quot;</span><span class="p">,</span> <span class="s2">&quot;right_easy&quot;</span><span class="p">,</span> <span class="s2">&quot;left_hard&quot;</span><span class="p">,</span> <span class="s2">&quot;right_hard&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>If you have a lot of variables in your settings, you may want to organize them in tabs
+when they appear in the GUI when you are going to run the task manually.
+Also in this case we are restricting the possible values for trial_types, so when
+we run the task from the GUI, if we want to change this value, a dropbox menu with
+those 4 options will appear.</p>
+</section>
+</section>
+<section id="customizing-your-training-protocol">
+<h3>Customizing Your Training Protocol</h3>
+<p>When creating your own training protocol, you can fully customize:</p>
+<ol class="arabic simple">
+<li><p><strong>Progression between tasks</strong>: Define when an animal should move to the next task or
+return to a simpler one.</p></li>
+<li><p><strong>Parameter adjustment</strong>: Modify parameters such as reward amount, session duration,
+or task difficulty.</p></li>
+<li><p><strong>Advancement criteria</strong>: Set performance metrics (accuracy, number of trials, etc.)
+to determine when an animal is ready to advance.</p></li>
+</ol>
+<p>Remember that you must always implement at least the three required methods (<code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">default_training_settings</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">update_training_settings</span></code>) in your <code class="docutils literal notranslate"><span class="pre">TrainingProtocol</span></code> class.</p>
+</section>
 <section id="tasks">
-<h2>Tasks</h2>
-<p>To create a task, create a Python file, and within it, a class with the task’s name, inheriting functionality from the generic <code class="docutils literal notranslate"><span class="pre">Task</span></code> class. This process is straightforward. Let’s look at an example:</p>
-<p>Within the folder: village/village_projects/demo_project/code/, we have created the file simple_task.py with the following code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+<h3>Tasks</h3>
+<p>To create a task, create a Python file, and within it, a class with the task’s name,
+inheriting functionality from the generic <code class="docutils literal notranslate"><span class="pre">Task</span></code> class. This process is straightforward.
+Let’s look at an example:</p>
+<p>Let’s explore the task <code class="docutils literal notranslate"><span class="pre">habituation.py</span></code> inside your code folder. The structure of the
+task is the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">village.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">manager</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Habituation</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines the task.</span>
+
+<span class="sd">    Required methods to implement:</span>
+<span class="sd">    - __init__: Initialize the task</span>
+<span class="sd">    - start: Called when the task starts.</span>
+<span class="sd">    - create_trial: Called once per trial to create the state machine.</span>
+<span class="sd">    - after_trial: Called once after each trial to register the values in the .csv file.</span>
+<span class="sd">    - close: Called when the task is finished.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the training protocol. The text in the self.info variable</span>
+<span class="sd">        will be shown when the task is selected in the GUI to be run manually.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">        Habituation Task</span>
+<span class="s2">        -------------------</span>
+
+<span class="s2">        This task is a simple visual task where the mouse has</span>
+<span class="s2">        to poke in illuminated ports.</span>
+<span class="s2">        The center port illuminates when a trial starts.</span>
+<span class="s2">        After the center port is poked,</span>
+<span class="s2">        both side ports are illuminated and give reward.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
 </pre></div>
 </div>
-<p>The task is named SimpleTask. It is initialized with <strong>init</strong>, and we acquire all the properties of the generic Task class using super().<strong>init</strong>(). The naming conventions follow Python standards: CamelCase for class names and lower_case for filenames and function names.
-If you try to run this task as-is, you will encounter an error indicating that certain methods must be implemented in your class. These methods are:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">create_trial</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">after_trial</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">close</span></code></p></li>
-</ul>
-<p>We can implement these methods for now, even if they don’t perform any actions:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+<p>The task is named Habituation. It is initialized with <strong>init</strong>, and we acquire all the properties of the generic Task class using super().<strong>init</strong>(). The naming conventions follow Python standards: CamelCase for class names and lower_case for filenames and function names.
+Certain methods must be implemented in your class. These methods are:</p>
+</section>
+<section id="the-start-method">
+<h3>The <code class="docutils literal notranslate"><span class="pre">start()</span></code> Method</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is called when the task starts.</span>
+<span class="sd">        It is used to calculate values needed for the task.</span>
+<span class="sd">        The following variables are accessible by default:</span>
+<span class="sd">        - self.bpod: (Bpod object)</span>
+<span class="sd">        - self.name: (str) the name of the task</span>
+<span class="sd">                (it is the name of the class, in this case Habituation)</span>
+<span class="sd">        - self.subject: (str) the name of the subject performing the task</span>
+<span class="sd">        - self.current_trial: (int) the current trial number starting from 1</span>
+<span class="sd">        - self.system_name: (str) the name of the system as defined in the</span>
+<span class="sd">                                tab settings of the GUI</span>
+<span class="sd">        - self.settings: (Settings object) the settings defined in training_protocol.py</span>
+<span class="sd">        - self.trial_data: (dict) information about the current trial</span>
+<span class="sd">        - self.force_stop: (bool) if made true the task will stop</span>
+
+<span class="sd">        Al the variables created in training_protocol.py are accessible.</span>
+<span class="sd">        - self.settings.reward_amount_ml: reward volume</span>
+<span class="sd">        - self.settings.stage: current training stage</span>
+<span class="sd">        - self.settings.light_intensity_high: high light intensity</span>
+<span class="sd">        - self.settings.light_intensity_low: low light intensity</span>
+<span class="sd">        - self.settings.trial_types: possible trial types</span>
+<span class="sd">        - self.settings.punishment_time: punishment duration</span>
+<span class="sd">        - self.settings.iti_time: inter-trial interval</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># First we calculate the time that the valves (or pumps) need to open to deliver</span>
+        <span class="c1"># the reward amount</span>
+        <span class="c1"># Make sure to calibrate the valves before using this function, otherwise</span>
+        <span class="c1"># it will return an Exception</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_valve_opening_time</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_valve_opening_time</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="the-create-trial-method">
+<h3>The <code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> Method</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is called once per trial, first it modifies variables and then</span>
+<span class="sd">        sends the state machine to the bpod that will run the trial.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># &#39;ready_to_initiate&#39;: state that turns on the central port light and</span>
+        <span class="c1"># waits for a poke in the central port (Port2)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;ready_to_initiate&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">Event</span><span class="o">.</span><span class="n">Port2In</span><span class="p">:</span> <span class="s2">&quot;stimulus_state&quot;</span><span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="p">[(</span><span class="n">Output</span><span class="o">.</span><span class="n">PWM2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_high</span><span class="p">)],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># &#39;stimulus_state&#39;: state that turns on the side ports and</span>
+        <span class="c1"># waits for a poke in one of the side ports (Port1 or Port3)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;stimulus_state&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">Event</span><span class="o">.</span><span class="n">Port1In</span><span class="p">:</span> <span class="s2">&quot;reward_state_left&quot;</span><span class="p">,</span>
+                <span class="n">Event</span><span class="o">.</span><span class="n">Port3In</span><span class="p">:</span> <span class="s2">&quot;reward_state_right&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">(</span><span class="n">Output</span><span class="o">.</span><span class="n">PWM1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_high</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">Output</span><span class="o">.</span><span class="n">PWM3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_high</span><span class="p">),</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># &#39;reward_state_left&#39; and &#39;reward_state_right&#39;: states that deliver the reward</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;reward_state_left&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">left_valve_opening_time</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">Event</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">&quot;exit&quot;</span><span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="n">Output</span><span class="o">.</span><span class="n">Valve1</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;reward_state_right&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">right_valve_opening_time</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">Event</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">&quot;exit&quot;</span><span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="n">Output</span><span class="o">.</span><span class="n">Valve3</span><span class="p">],</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="the-after-trial-method">
+<h3>The <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> Method</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Here you can register all the values you need to save for each trial.</span>
+<span class="sd">        It is essential to always include a variable named water, which stores the</span>
+<span class="sd">        amount of water consumed during each trial.</span>
+<span class="sd">        The system will calculate the total water consumption in each session</span>
+<span class="sd">        by summing this variable.</span>
+<span class="sd">        If the total water consumption falls below a certain threshold,</span>
+<span class="sd">        an alarm will be triggered.</span>
+<span class="sd">        This threshold can be adjusted in the Settings tab of the GUI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;water&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="the-close-method">
+<h3>The <code class="docutils literal notranslate"><span class="pre">close()</span></code> Method</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Here you can perform any actions you want to take once the task is completed,</span>
+<span class="sd">        such as sending a message via email or Slack, creating a plot, and more.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<section id="the-followthelight-task">
+<h3>The FollowTheLight Task</h3>
+<p>Now you can explore the more complex FollowTheLight Task, where we use other variables that
+were created in the settings training_protocol.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">village.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">manager</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FollowTheLight</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">        Follow The Light Task</span>
+<span class="s2">        -------------------</span>
+
+<span class="s2">        This task is a simple visual task where the mouse has</span>
+<span class="s2">        to poke the center port to start a trial.</span>
+<span class="s2">        After the center port is poked,</span>
+<span class="s2">        one of the two side ports will be illuminated.</span>
+<span class="s2">        If the mouse licks the correct side port, it receives a reward.</span>
+<span class="s2">        If the mouse licks the wrong side port, it receives a punishment.</span>
+
+<span class="s2">        It contains 2 training stages:</span>
+<span class="s2">        - Training stage 1: Only one side port is illuminated and gives reward.</span>
+<span class="s2">                            No punishment is given, and the mouse can choose again.</span>
+<span class="s2">        - Training stage 2: Both ports are illuminated with different intensity.</span>
+<span class="s2">                            Brighter port gives reward, the other one gives punishment.</span>
+
+<span class="s2">        The progression through the stages is defined in the training_settings.py file.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Al the variables created in training_protocol.py are accessible.</span>
+<span class="sd">        - self.settings.reward_amount_ml: reward volume</span>
+<span class="sd">        - self.settings.stage: current training stage</span>
+<span class="sd">        - self.settings.light_intensity_high: high light intensity</span>
+<span class="sd">        - self.settings.light_intensity_low: low light intensity</span>
+<span class="sd">        - self.settings.trial_types: possible trial types</span>
+<span class="sd">        - self.settings.punishment_time: punishment duration</span>
+<span class="sd">        - self.settings.iti_time: inter-trial interval</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># First we calculate the time that the valves (or pumps) need to open to deliver</span>
+        <span class="c1"># the reward amount</span>
+        <span class="c1"># Make sure to calibrate the valves before using this function, otherwise</span>
+        <span class="c1"># it will return an Exception</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_valve_opening_time</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_valve_opening_time</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span>
+        <span class="p">)</span>
+
+        <span class="c1"># determine if punishment will be used depending on stage</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># no punishment is used, let the mouse choose again</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">punish_condition</span> <span class="o">=</span> <span class="s2">&quot;stimulus_state&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># punishment is used</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">punish_condition</span> <span class="o">=</span> <span class="s2">&quot;punish_state&quot;</span>
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span>
+        <span class="c1"># Pick a trial type at random</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">this_trial_type</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">trial_types</span><span class="p">)</span>
+
+        <span class="c1"># Set the variables for the stimulus states and the possible choices</span>
+        <span class="c1"># based on the trial type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_state_output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;left&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_trial_type</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_state_output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Output</span><span class="o">.</span><span class="n">PWM1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_high</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;hard&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_trial_type</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_state_output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">Output</span><span class="o">.</span><span class="n">PWM3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_low</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_poke_action</span> <span class="o">=</span> <span class="s2">&quot;reward_state&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">valve_to_open</span> <span class="o">=</span> <span class="n">Output</span><span class="o">.</span><span class="n">Valve1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">valve_opening_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_valve_opening_time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">right_poke_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">punish_condition</span>
+
+        <span class="k">elif</span> <span class="s2">&quot;right&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_trial_type</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_state_output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Output</span><span class="o">.</span><span class="n">PWM3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_high</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;hard&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_trial_type</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_state_output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">Output</span><span class="o">.</span><span class="n">PWM1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_low</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_poke_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">punish_condition</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">right_poke_action</span> <span class="o">=</span> <span class="s2">&quot;reward_state&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">valve_to_open</span> <span class="o">=</span> <span class="n">Output</span><span class="o">.</span><span class="n">Valve3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">valve_opening_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_valve_opening_time</span>
+
+
+        <span class="c1"># &#39;ready_to_initiate&#39; state that waits for the poke in the middle port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;ready_to_initiate&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">Event</span><span class="o">.</span><span class="n">Port2In</span><span class="p">:</span> <span class="s2">&quot;stimulus_state&quot;</span><span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="p">[(</span><span class="n">Output</span><span class="o">.</span><span class="n">PWM2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">light_intensity_high</span><span class="p">)],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># &#39;stimulus_state&#39; lights the side ports</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;stimulus_state&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timer_for_response</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">Event</span><span class="o">.</span><span class="n">Port1In</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_poke_action</span><span class="p">,</span>
+                <span class="n">Event</span><span class="o">.</span><span class="n">Port3In</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_poke_action</span><span class="p">,</span>
+                <span class="n">Event</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">&quot;exit&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus_state_output</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># &#39;reward_state&#39; delivers the reward</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;reward_state&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">valve_opening_time</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">Event</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">&quot;iti_state&quot;</span><span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">valve_to_open</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># &#39;punish_state&#39; waits during the punishment time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;punish_state&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">punishment_time</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">Event</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">&quot;iti_state&quot;</span><span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># &#39;iti_state&#39; waits for certain time before starting the next trial</span>
+        <span class="c1"># (inter-trial interval)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="s2">&quot;iti_state&quot;</span><span class="p">,</span>
+            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span><span class="p">,</span>
+            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">Event</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">&quot;exit&quot;</span><span class="p">},</span>
+            <span class="n">output_actions</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span>
+        <span class="c1"># First, we calculates the performance of a trial, comparing the trial type</span>
+        <span class="c1"># to the first port that the mouse poked.</span>
+        <span class="c1"># We can access the trial information in self.trial_data</span>
+
+        <span class="c1"># get the side port that the mouse poked first</span>
+        <span class="n">first_poke</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_first_occurrence</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">&quot;ordered_list_of_events&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Port1In&quot;</span><span class="p">,</span> <span class="s2">&quot;Port3In&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="c1"># check if the mouse poked the correct port</span>
+        <span class="k">if</span> <span class="n">first_poke</span> <span class="o">==</span> <span class="s2">&quot;Port1In&quot;</span> <span class="ow">and</span> <span class="s2">&quot;left&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_trial_type</span><span class="p">:</span>
+            <span class="n">correct</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">first_poke</span> <span class="o">==</span> <span class="s2">&quot;Port3In&quot;</span> <span class="ow">and</span> <span class="s2">&quot;right&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_trial_type</span><span class="p">:</span>
+            <span class="n">correct</span> <span class="o">=</span>  <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">correct</span> <span class="o">=</span>  <span class="kc">False</span>
+
+        <span class="c1"># register the amount of water given to the mouse in this trial</span>
+        <span class="c1"># (this is always mandatory)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;water&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_amount_ml</span><span class="p">)</span>
+
+        <span class="c1"># we will also record the trial type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;trial_type&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_trial_type</span><span class="p">)</span>
+
+        <span class="c1"># we will also record if the trial was correct or not</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">,</span> <span class="n">correct</span><span class="p">)</span>
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span>
+        <span class="k">pass</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_first_occurrence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_list</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to find the first occurrence of any target event in the list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_list: List of events</span>
+<span class="sd">            targets: List of target events to look for</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The first target event found, or &quot;NaN&quot; if none are found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">event_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">event</span>
+        <span class="k">return</span> <span class="s2">&quot;NaN&quot;</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 
@@ -689,9 +1246,25 @@ If you try to run this task as-is, you will encounter an error indicating that c
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Create a New Training Protocol</a><ul>
-<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#">Training Village: Creating a Training Protocol</a><ul>
+<li><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li><a class="reference internal" href="#code-organization">Code Organization</a><ul>
+<li><a class="reference internal" href="#examples-of-code-structure">Examples of Code Structure</a></li>
+<li><a class="reference internal" href="#training-protocol">Training Protocol</a></li>
+<li><a class="reference internal" href="#the-default-training-settings-method">The <code class="docutils literal notranslate"><span class="pre">default_training_settings()</span></code> Method</a><ul>
+<li><a class="reference internal" href="#the-update-training-settings-method">The <code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code> Method</a></li>
+<li><a class="reference internal" href="#the-optional-gui-tabs-method">The optional <code class="docutils literal notranslate"><span class="pre">gui_tabs()</span></code> Method</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#customizing-your-training-protocol">Customizing Your Training Protocol</a></li>
 <li><a class="reference internal" href="#tasks">Tasks</a></li>
+<li><a class="reference internal" href="#the-start-method">The <code class="docutils literal notranslate"><span class="pre">start()</span></code> Method</a></li>
+<li><a class="reference internal" href="#the-create-trial-method">The <code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> Method</a></li>
+<li><a class="reference internal" href="#the-after-trial-method">The <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> Method</a></li>
+<li><a class="reference internal" href="#the-close-method">The <code class="docutils literal notranslate"><span class="pre">close()</span></code> Method</a></li>
+<li><a class="reference internal" href="#the-followthelight-task">The FollowTheLight Task</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -703,7 +1276,7 @@ If you try to run this task as-is, you will encounter an error indicating that c
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=afe9986f"></script>
+</div><script src="../_static/documentation_options.js?v=6f42757b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
