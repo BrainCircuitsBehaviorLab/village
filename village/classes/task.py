@@ -86,6 +86,9 @@ class Task:
         raise TaskError("The method close(self) is required")
 
     # DO NOT OVERWRITE THESE METHODS
+    def send_softcode_to_bpod(self, code: int) -> None:
+        self.bpod.receive_softcode(code)
+
     def run_in_thread(self, daemon=True) -> None:
         def test_run():
             self.create_paths()
