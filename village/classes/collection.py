@@ -22,19 +22,21 @@ class Collection(EventProtocol):
         self.types: list[Type] = types
         self.dict = {col: t for col, t in zip(self.columns, self.types)}
         self.path: Path = Path(settings.get("DATA_DIRECTORY")) / (name + ".csv")
+        self.df = pd.DataFrame()
 
-        if not os.path.exists(self.path):
-            with open(self.path, "w", encoding="utf-8") as file:
-                columns_str: str = ";".join(self.columns) + "\n"
-                file.write(columns_str)
-        try:
-            self.df = pd.read_csv(self.path, dtype=self.dict, sep=";")
-        except Exception:
-            log.error(
-                "error reading from: " + str(self.path),
-                exception=traceback.format_exc(),
-            )
-            sys.exit()
+        if name != "":
+            if not os.path.exists(self.path):
+                with open(self.path, "w", encoding="utf-8") as file:
+                    columns_str: str = ";".join(self.columns) + "\n"
+                    file.write(columns_str)
+            try:
+                self.df = pd.read_csv(self.path, dtype=self.dict, sep=";")
+            except Exception:
+                log.error(
+                    "error reading from: " + str(self.path),
+                    exception=traceback.format_exc(),
+                )
+                sys.exit()
 
     def add_entry(self, entry: list) -> None:
         entry_str = [

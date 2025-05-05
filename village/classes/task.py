@@ -7,6 +7,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from village.classes.collection import Collection
 from village.classes.protocols import CameraProtocol, PyBpodProtocol
 from village.classes.training import Settings, Training
 from village.devices.bpod import bpod
@@ -67,6 +68,9 @@ class Task:
         self.force_stop: bool = False
         self.maximum_number_of_trials: int = 100000000
         self.chrono = time_utils.Chrono()
+
+        self.sound_calibration: Collection = Collection("", [], [])
+        self.water_calibration: Collection = Collection("", [], [])
 
     # OVERWRITE THESE METHODS IN YOUR TASKS
     def start(self) -> None:

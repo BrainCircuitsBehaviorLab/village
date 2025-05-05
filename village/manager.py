@@ -175,7 +175,7 @@ class Manager:
                 "dB_expected",
                 "error(%)",
             ],
-            [str, int, int, float, float, int, float, float],
+            [str, int, str, float, float, int, float, float],
         )
         self.temperatures = Collection(
             "temperatures",
@@ -443,6 +443,8 @@ class Manager:
     def launch_task_manual(self, cam: CameraProtocol) -> bool:
         self.task.create_paths()
         self.task.cam_box = cam
+        self.task.water_calibration = self.water_calibration
+        self.task.sound_calibration = self.sound_calibration
         if self.subject.name != "None":
             self.task.cam_box.start_record(
                 self.task.video_path, self.task.video_data_path
@@ -488,6 +490,8 @@ class Manager:
                     self.task.video_path, self.task.video_data_path
                 )
                 self.task.maximum_number_of_trials = 100000000
+                self.task.water_calibration = self.water_calibration
+                self.task.sound_calibration = self.sound_calibration
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -740,3 +744,7 @@ class Manager:
 
 
 manager = Manager()
+
+
+def get_task() -> Task:
+    return manager.task

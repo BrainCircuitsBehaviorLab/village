@@ -1,4 +1,4 @@
-# Training Village: Creating a Training Protocol
+# Create a Training Protocol
 
 ## Project Structure
 
@@ -17,14 +17,14 @@ Within this folder, there are two subfolders:
 /code    # Contains all task scripts and the training protocol
 ```
 
-The first time you run Training Village, it will automatically create a project called 'demo_project'.
+The first time you run Training Village, it will automatically create a project called `demo_project`.
 It will also clone the [follow-the-light-task](https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task) repository,
 which contains a working example for a simple project. You can use it as a base to start creating your own tasks.
 
 ## Code Organization
 
 A training protocol consists of one or more Python scripts, each representing a task that the animals can perform. In addition to
-these scripts, a training script is required (called 'training_protocol.py').
+these scripts, a training script is required (called `training_protocol.py`).
 
 The training script is run every time a subject finishes a task and contains the logic to either advance or regress the subject in
 their training based on their performance. This could involve changing the animal to a different task and/or modifying the
@@ -45,20 +45,39 @@ code/
 ```
 # Example 2: One task with progressive difficulty
 code/
-├── follow_the_light.py
+├── behavioral_task.py
 ├── training_protocol.py
 ```
 
 In Example 1, there are several tasks corresponding to different training stages:
-1. Animals start with 'habituation', a simple task that helps them get used to the behavioral box
-2. After one or two sessions, they move on to 'lick_teaching', where they learn to lick the behavioral ports
-3. Once they have completed a sufficient number of trials, they progress to 'simple_task', a simplified version of the final task
-4. When performance reaches an adequate level, they transition to 'final_task'
+1. Animals start with `habituation`, a simple task that helps them get used to the behavioral box
+2. After one or two sessions, they move on to `lick_teaching`, where they learn to lick the behavioral ports
+3. Once they have completed a sufficient number of trials, they progress to `simple_task`, a simplified version of the final task
+4. When performance reaches an adequate level, they transition to `final_task`
 
-In Example 2, there is only one task, 'follow_the_light', but each time a subject finishes a session, 'training_protocol.py' adjusts
+In Example 2, there is only one task, `behavioral_task`, but each time a subject finishes a session, `training_protocol.py` adjusts
 variables to increase the task's difficulty.
 
-The user can choose either approach—or a combination of both—to organize the training as needed.
+The user can choose either approach to organize the training as needed. In our example we
+use a combination of both approaches, we have 2 tasks: `habituation` and `follow_the_light` and some
+variables change in the later of them.
+Apart from the task and the training protocol, there are other files in the `code` repository
+(for creating sounds and plots and other helper files, we will talk about them later).
+
+```
+code/
+├── __init__.py
+├── habituation.py
+├── follow_the_light.py
+├── training_protocol.py
+├── session_plot.py
+├── subject_plot.py
+├── online_plot.py
+├── softcode_functions.py
+├── sound_functions.py
+├── LICENSE
+├── README.md
+```
 
 ### Training Protocol
 

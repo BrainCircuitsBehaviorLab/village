@@ -898,28 +898,31 @@ class InfoLayout(Layout):
             "CALIBRATION POINTS", 0, 0, 40, 2, "black", bold=False
         )
         self.speaker_label = self.create_and_add_label(
-            "Speaker", 2, 0, 8, 2, "black", bold=False
+            "Speaker", 2, 0, 7, 2, "black", bold=False
+        )
+        self.speaker_label = self.create_and_add_label(
+            "Sound_name", 2, 7, 11, 2, "black", bold=False
         )
         self.gain_label = self.create_and_add_label(
-            "Gain", 2, 14, 8, 2, "black", bold=False
+            "Gain", 2, 18, 4, 2, "black", bold=False
         )
         self.dB_label = self.create_and_add_label(
-            "dB_obtained", 2, 21, 24, 2, "black", bold=False
+            "dB_obtained", 2, 22, 24, 2, "black", bold=False
         )
 
         for i, point in enumerate(self.parent_layout.calibration_points):
             text = str(point["speaker"])
-            self.create_and_add_label(text, 4 + 2 * i, 0, 8, 2, "black", bold=False)
+            self.create_and_add_label(text, 4 + 2 * i, 0, 4, 2, "black", bold=False)
             text = str(point["sound_name"])
-            self.create_and_add_label(text, 4 + 2 * i, 8, 8, 2, "black", bold=False)
+            self.create_and_add_label(text, 4 + 2 * i, 6, 12, 2, "black", bold=False)
             text = str(point["gain"])
-            self.create_and_add_label(text, 4 + 2 * i, 14, 8, 2, "black", bold=False)
+            self.create_and_add_label(text, 4 + 2 * i, 18, 5, 2, "black", bold=False)
             text = str(point["dB_obtained"])
-            self.create_and_add_label(text, 4 + 2 * i, 21, 14, 2, "black", bold=False)
+            self.create_and_add_label(text, 4 + 2 * i, 24, 14, 2, "black", bold=False)
             self.create_and_add_button(
                 "-",
                 4 + 2 * i,
-                30,
+                32,
                 5,
                 2,
                 partial(self.delete_point, i),
