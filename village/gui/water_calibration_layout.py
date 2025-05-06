@@ -504,13 +504,13 @@ class WaterCalibrationLayout(Layout):
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
         self.indices = [i for i, val in enumerate(self.times) if val != 0]
-        manager.state = State.RUN_MANUAL
-        manager.calibrating = True
         manager.task = WaterCalibration()
         manager.task.indices = self.indices
         manager.task.times = [self.times[i] for i in self.indices]
         manager.task.maximum_number_of_trials = self.iterations
         manager.task.settings.maximum_duration = 1000
+        manager.state = State.RUN_MANUAL
+        manager.calibrating = True
 
         for line_edit in self.time_line_edits:
             line_edit.setDisabled(True)

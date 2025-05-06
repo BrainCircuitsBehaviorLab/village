@@ -95,7 +95,6 @@ class Task:
             self.start()
             while self.current_trial <= self.maximum_number_of_trials:
                 self.do_trial()
-            self.close()
             self.disconnect_and_save("Manual")
 
         self.process = Thread(target=test_run, daemon=daemon)

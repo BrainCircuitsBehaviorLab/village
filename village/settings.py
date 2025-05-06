@@ -441,7 +441,7 @@ in DATA. Setting a very low value could result in excessive CPU load.""",
     ),
     Setting(
         "SCREENSAVE_TIME",
-        60,
+        300,
         int,
         """The time in seconds after which the system automatically returns to
 the MAIN screen if there is no user interaction. This helps reduce CPU usage by
