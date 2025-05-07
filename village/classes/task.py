@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from village.classes.collection import Collection
+from village.classes.enums import Save
 from village.classes.protocols import CameraProtocol, PyBpodProtocol
 from village.classes.training import Settings, Training
 from village.devices.bpod import bpod
@@ -17,7 +18,6 @@ from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
 from village.scripts import time_utils
 from village.settings import settings
-from village.classes.enums import Save
 
 
 class TaskError(Exception):
@@ -178,7 +178,7 @@ class Task:
 
         self.bpod.register_value("TRIAL", None)
 
-    def disconnect_and_save(self, run_mode: str) -> tuple[bool, float, int, int, str]:
+    def disconnect_and_save(self, run_mode: str) -> tuple[Save, float, int, int, str]:
         save: Save = Save.NO
         duration: float = 0.0
         trials: int = 0
@@ -338,8 +338,6 @@ class Task:
             )
 
             return 0.0, 0, 0, False
-
-        
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
 

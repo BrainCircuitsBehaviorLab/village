@@ -15,7 +15,7 @@ from village.classes.after_session_run import AfterSessionRun
 from village.classes.change_cycle_run import ChangeCycleRun
 from village.classes.change_hour_run import ChangeHourRun
 from village.classes.collection import Collection
-from village.classes.enums import Actions, Active, Cycle, DataTable, Info, State
+from village.classes.enums import Actions, Active, Cycle, DataTable, Info, Save, State
 from village.classes.plot import (
     OnlinePlotFigureManager,
     SessionPlotFigureManager,
@@ -29,7 +29,6 @@ from village.devices.temp_sensor import temp_sensor
 from village.log import log
 from village.scripts import time_utils, utils
 from village.settings import settings
-from village.classes.enums import Save
 
 
 class Manager:
@@ -586,7 +585,8 @@ class Manager:
                     log.info("Session and video data saved.", subject=self.subject.name)
                 except Exception:
                     log.alarm(
-                        "Error updating the training settings for task: " + self.task.name,
+                        "Error updating the training settings for task: "
+                        + self.task.name,
                         subject=self.subject.name,
                         exception=traceback.format_exc(),
                     )
@@ -595,7 +595,8 @@ class Manager:
                     self.save_refractory_to_subjects()
                 except Exception:
                     log.alarm(
-                        "Error updating the training settings for task: " + self.task.name,
+                        "Error updating the training settings for task: "
+                        + self.task.name,
                         subject=self.subject.name,
                         exception=traceback.format_exc(),
                     )
