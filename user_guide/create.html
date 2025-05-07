@@ -250,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.State.html">State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
@@ -683,7 +684,7 @@ We initialize the class and call the super().<strong>init</strong>()</p>
 
 <span class="sd">        Required parameters:</span>
 <span class="sd">        - next_task (str): Name of the next task to run</span>
-<span class="sd">        - refractary_period (int): Waiting time in seconds between sessions</span>
+<span class="sd">        - refractory_period (int): Waiting time in seconds between sessions</span>
 <span class="sd">        - minimum_duration (int): Minimum time in seconds for the task before door2 opens</span>
 <span class="sd">        - maximum_duration (int): Maximum time in seconds before task stops automatically</span>
 
@@ -694,7 +695,7 @@ We initialize the class and call the super().<strong>init</strong>()</p>
 
         <span class="c1"># Required parameters for any training protocol</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">&quot;Habituation&quot;</span>  <span class="c1"># Next task to run</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractary_period</span> <span class="o">=</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mi">4</span>  <span class="c1"># 4 hours between sessions of the same subject</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span> <span class="o">=</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mi">4</span>  <span class="c1"># 4 hours between sessions of the same subject</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">600</span>  <span class="c1"># Minimum duration of 10 min</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">900</span>  <span class="c1"># Maximum duration of 15 min</span>
 
@@ -715,7 +716,7 @@ We initialize the class and call the super().<strong>init</strong>()</p>
 </div>
 <p>We set the value of next_task to “Habituation” so this would be the first task that the
 subject will perform.
-The refractary period is the time a subject needs to wait until be allowed to enter the
+The refractory period is the time a subject needs to wait until be allowed to enter the
 behavioral box again. This period is important to prevent some animals monipolize the
 use of the behavioral box. It can be changed depending on the number of subjects in
 the systems and the duration of the tasks.
@@ -1294,7 +1295,7 @@ were created in the settings training_protocol.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=f63df6d9"></script>
+</div><script src="../_static/documentation_options.js?v=17b45f5a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

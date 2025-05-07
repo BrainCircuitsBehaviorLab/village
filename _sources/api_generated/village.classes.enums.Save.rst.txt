@@ -1,0 +1,37 @@
+Save
+====
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: Save
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Save.keys
+      ~Save.values
+      ~Save.get_index_from_value
+      ~Save.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Save.YES
+      ~Save.NO
+      ~Save.ZERO
+      ~Save.ERROR
+   
+   

@@ -26,6 +26,7 @@ enums
       Cycle
       DataTable
       Info
+      Save
       ScreenActive
       State
       SuperEnum

@@ -128,7 +128,7 @@ We initialize the class and call the super().__init__()
 
         Required parameters:
         - next_task (str): Name of the next task to run
-        - refractary_period (int): Waiting time in seconds between sessions
+        - refractory_period (int): Waiting time in seconds between sessions
         - minimum_duration (int): Minimum time in seconds for the task before door2 opens
         - maximum_duration (int): Maximum time in seconds before task stops automatically
 
@@ -139,7 +139,7 @@ We initialize the class and call the super().__init__()
 
         # Required parameters for any training protocol
         self.settings.next_task = "Habituation"  # Next task to run
-        self.settings.refractary_period = 3600 * 4  # 4 hours between sessions of the same subject
+        self.settings.refractory_period = 3600 * 4  # 4 hours between sessions of the same subject
         self.settings.minimum_duration = 600  # Minimum duration of 10 min
         self.settings.maximum_duration = 900  # Maximum duration of 15 min
 
@@ -160,7 +160,7 @@ We initialize the class and call the super().__init__()
 
 We set the value of next_task to "Habituation" so this would be the first task that the
 subject will perform.
-The refractary period is the time a subject needs to wait until be allowed to enter the
+The refractory period is the time a subject needs to wait until be allowed to enter the
 behavioral box again. This period is important to prevent some animals monipolize the
 use of the behavioral box. It can be changed depending on the number of subjects in
 the systems and the duration of the tasks.

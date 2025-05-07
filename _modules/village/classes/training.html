@@ -249,6 +249,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.State.html">State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
@@ -580,7 +581,7 @@
 <a class="viewcode-back" href="../../../api_generated/village.classes.training.Settings.html#village.classes.training.Settings.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">&quot;-1&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">refractary_period</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refractory_period</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minimum_duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maximum_duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
@@ -605,15 +606,15 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">check_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractary_period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractary_period</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">==</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TrainingError</span><span class="p">(</span><span class="s2">&quot;The variable next_task is required (must be a string)&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractary_period</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TrainingError</span><span class="p">(</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">                The variable refractary_period is required (must be a positive integer)</span>
+<span class="sd">                The variable refractory_period is required (must be a positive integer)</span>
 <span class="sd">                &quot;&quot;&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -648,7 +649,7 @@
             <span class="s2">&quot;next_task&quot;</span><span class="p">,</span>
             <span class="s2">&quot;minimum_duration&quot;</span><span class="p">,</span>
             <span class="s2">&quot;maximum_duration&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;refractary_period&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;refractory_period&quot;</span><span class="p">,</span>
         <span class="p">]</span>
         <span class="n">observations</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;observations&quot;</span><span class="p">]</span>
         <span class="n">extra_properties</span> <span class="o">=</span> <span class="p">[</span>
@@ -774,7 +775,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=f63df6d9"></script>
+</div><script src="../../../_static/documentation_options.js?v=17b45f5a"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
