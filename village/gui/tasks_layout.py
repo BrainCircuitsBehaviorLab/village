@@ -252,7 +252,7 @@ class TasksLayout(Layout):
             "next_task",
             "maximum_duration",
             "minimum_duration",
-            "refractary_period",
+            "refractory_period",
         ]
         properties = {
             k: v
@@ -435,7 +435,7 @@ class TasksLayout(Layout):
             "next_task",
             "maximum_duration",
             "minimum_duration",
-            "refractary_period",
+            "refractory_period",
         ]
         properties = {k: v for k, v in properties.items() if k not in remove_names}
         new_dict = {}

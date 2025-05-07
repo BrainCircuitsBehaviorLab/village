@@ -1086,9 +1086,15 @@ class DfLayout(Layout):
                             del_sess = manager.deleted_sessions.df["filename"].tolist()
                             subject = row["subject"]
                             directory = str(settings.get("SESSIONS_DIRECTORY"))
-                            global_csv_for_subject_script(
-                                subject, directory, deleted_sessions=del_sess
-                            )
+                            try:
+                                global_csv_for_subject_script(
+                                    subject, directory, deleted_sessions=del_sess
+                                )
+                            except Exception:
+                                log.error(
+                                    "Session data for this subject was already deleted.",
+                                    exception=traceback.format_exc(),
+                                )
 
                         index = selected_indexes[0]
                         self.model.beginRemoveRows(

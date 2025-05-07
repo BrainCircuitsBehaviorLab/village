@@ -29,6 +29,7 @@ from village.devices.temp_sensor import temp_sensor
 from village.log import log
 from village.scripts import time_utils, utils
 from village.settings import settings
+from village.classes.enums import Save
 
 
 class Manager:
@@ -577,17 +578,27 @@ class Manager:
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
             run_mode
         )
-        if save:
+        if save != Save.NO:
             self.save_to_sessions_summary(duration, trials, water, settings_str)
-            try:
-                self.save_to_subjects()
-                log.info("Session and video data saved.", subject=self.subject.name)
-            except Exception:
-                log.alarm(
-                    "Error updating the training settings for task: " + self.task.name,
-                    subject=self.subject.name,
-                    exception=traceback.format_exc(),
-                )
+            if save == Save.YES:
+                try:
+                    self.save_to_subjects()
+                    log.info("Session and video data saved.", subject=self.subject.name)
+                except Exception:
+                    log.alarm(
+                        "Error updating the training settings for task: " + self.task.name,
+                        subject=self.subject.name,
+                        exception=traceback.format_exc(),
+                    )
+            else:
+                try:
+                    self.save_refractory_to_subjects()
+                except Exception:
+                    log.alarm(
+                        "Error updating the training settings for task: " + self.task.name,
+                        subject=self.subject.name,
+                        exception=traceback.format_exc(),
+                    )
 
         log.end(task=self.task.name, subject=self.subject.name)
         self.sessions.add_timestamp()
@@ -600,7 +611,17 @@ class Manager:
         df.loc[df["name"] == self.subject.name, "next_settings"] = next_settings
 
         time_val = time_utils.time_in_future_seconds(
-            int(self.training.settings.refractary_period)
+            int(self.training.settings.refractory_period)
+        )
+        time_str = time_utils.string_from_date(time_val)
+        df.loc[df["name"] == self.subject.name, "next_session_time"] = time_str
+        self.subjects.df = df
+        self.subjects.save_from_df(self.training)
+
+    def save_refractory_to_subjects(self) -> None:
+        df = self.subjects.df.copy()
+        time_val = time_utils.time_in_future_seconds(
+            int(self.training.settings.refractory_period)
         )
         time_str = time_utils.string_from_date(time_val)
         df.loc[df["name"] == self.subject.name, "next_session_time"] = time_str
