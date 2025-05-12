@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from village.classes.collection import Collection
+from village.classes.enums import Save
 from village.classes.protocols import CameraProtocol, PyBpodProtocol
 from village.classes.training import Settings, Training
 from village.devices.bpod import bpod
@@ -95,7 +96,6 @@ class Task:
             self.start()
             while self.current_trial <= self.maximum_number_of_trials:
                 self.do_trial()
-            self.close()
             self.disconnect_and_save("Manual")
 
         self.process = Thread(target=test_run, daemon=daemon)
@@ -178,8 +178,8 @@ class Task:
 
         self.bpod.register_value("TRIAL", None)
 
-    def disconnect_and_save(self, run_mode: str) -> tuple[bool, float, int, int, str]:
-        save: bool = False
+    def disconnect_and_save(self, run_mode: str) -> tuple[Save, float, int, int, str]:
+        save: Save = Save.NO
         duration: float = 0.0
         trials: int = 0
         water: int = 0
@@ -191,16 +191,20 @@ class Task:
         # TODO kill the screen
         if self.subject != "None":
             try:
-                duration, trials, water = self.save_csv(run_mode=run_mode)
-                settings_str = self.save_json(run_mode)
-                save = True
+                duration, trials, water, ok = self.save_csv(run_mode=run_mode)
+                if ok:
+                    settings_str = self.save_json(run_mode)
+                    save = Save.YES
+                else:
+                    save = Save.ZERO
             except Exception:
                 log.alarm(
                     "Error saving the task: " + self.name,
                     subject=self.subject,
                     exception=traceback.format_exc(),
                 )
-            if save:
+                save == Save.ERROR
+            if save == Save.YES:
                 try:
                     self.training.df = self.subject_df
                     self.training.subject = self.subject
@@ -208,7 +212,7 @@ class Task:
                     self.training.settings = self.settings
                     self.training.update_training_settings()
                 except Exception:
-                    save = False
+                    save = Save.ERROR
                     log.alarm(
                         "Error updating the training settings for task: " + self.name,
                         subject=self.subject,
@@ -224,7 +228,7 @@ class Task:
         default_properties_to_save = ["minimum_duration", "maximum_duration"]
         default_properties_to_not_save = [
             "next_task",
-            "refractary_period",
+            "refractory_period",
             "observations",
         ]
         default_properties = default_properties_to_save + default_properties_to_not_save
@@ -247,7 +251,7 @@ class Task:
 
         return json_string
 
-    def save_csv(self, run_mode: str) -> tuple[float, int, int]:
+    def save_csv(self, run_mode: str) -> tuple[float, int, int, bool]:
 
         duration: float = 0.0
         trials: int = 0
@@ -264,7 +268,7 @@ class Task:
 
         trials = self.raw_df["TRIAL"].iloc[-1]
 
-        if trials > 0:
+        if trials > 1:
             non_nan_values = self.raw_df["START"].dropna()
 
             if not non_nan_values.empty:
@@ -326,12 +330,14 @@ class Task:
                     return series
 
             self.subject_df = self.subject_df.apply(safe_to_numeric)
+
+            return duration, trials, water, True
         else:
             log.alarm(
                 "No trials were recorded in task: " + self.name, subject=self.subject
             )
 
-        return duration, trials, water
+            return 0.0, 0, 0, False
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
 

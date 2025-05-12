@@ -436,6 +436,10 @@ class DataLayout(Layout):
                 text = "There are repeated names in the subjects table."
                 QMessageBox.information(self.window, "WARNING", text)
                 return
+            elif self.page1Layout.df["name"].str.strip().eq("").any():
+                text = "There are empty names in the subjects table."
+                QMessageBox.information(self.window, "WARNING", text)
+                return
 
         self.central_layout.setCurrentWidget(self.page3)
         pixmap = QPixmap()
@@ -543,6 +547,10 @@ class DataLayout(Layout):
         if manager.table == DataTable.SUBJECTS:
             if self.page1Layout.df["name"].duplicated().any():
                 text = "There are repeated names in the subjects table."
+                QMessageBox.information(self.window, "WARNING", text)
+                return False
+            elif self.page1Layout.df["name"].str.strip().eq("").any():
+                text = "There are empty names in the subjects table."
                 QMessageBox.information(self.window, "WARNING", text)
                 return False
             else:
@@ -699,6 +707,10 @@ class DfLayout(Layout):
         if manager.table == DataTable.SUBJECTS:
             if self.df["name"].duplicated().any():
                 text = "There are repeated names in the subjects table."
+                QMessageBox.information(self.window, "WARNING", text)
+                return
+            elif self.df["name"].str.strip().eq("").any():
+                text = "There are empty names in the subjects table."
                 QMessageBox.information(self.window, "WARNING", text)
                 return
 
@@ -1086,9 +1098,15 @@ class DfLayout(Layout):
                             del_sess = manager.deleted_sessions.df["filename"].tolist()
                             subject = row["subject"]
                             directory = str(settings.get("SESSIONS_DIRECTORY"))
-                            global_csv_for_subject_script(
-                                subject, directory, deleted_sessions=del_sess
-                            )
+                            try:
+                                global_csv_for_subject_script(
+                                    subject, directory, deleted_sessions=del_sess
+                                )
+                            except Exception:
+                                log.error(
+                                    "Session data for this subject was already deleted",
+                                    exception=traceback.format_exc(),
+                                )
 
                         index = selected_indexes[0]
                         self.model.beginRemoveRows(

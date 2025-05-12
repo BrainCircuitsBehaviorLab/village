@@ -12,7 +12,7 @@ class TrainingError(Exception):
 class Settings:
     def __init__(self) -> None:
         self.next_task = "-1"
-        self.refractary_period = -1
+        self.refractory_period = -1
         self.minimum_duration: float = -1
         self.maximum_duration: float = -1
         self.observations: str = ""
@@ -30,15 +30,15 @@ class Training:
         self.define_gui_tabs()
 
     def check_variables(self) -> None:
-        self.settings.refractary_period = int(self.settings.refractary_period)
+        self.settings.refractory_period = int(self.settings.refractory_period)
         self.settings.minimum_duration = float(self.settings.minimum_duration)
         self.settings.maximum_duration = float(self.settings.maximum_duration)
         if self.settings.next_task == "-1":
             raise TrainingError("The variable next_task is required (must be a string)")
-        if self.settings.refractary_period < 0:
+        if self.settings.refractory_period < 0:
             raise TrainingError(
                 """
-                The variable refractary_period is required (must be a positive integer)
+                The variable refractory_period is required (must be a positive integer)
                 """
             )
         if self.settings.minimum_duration < 0:
@@ -73,7 +73,7 @@ class Training:
             "next_task",
             "minimum_duration",
             "maximum_duration",
-            "refractary_period",
+            "refractory_period",
         ]
         observations = ["observations"]
         extra_properties = [

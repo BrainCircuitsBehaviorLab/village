@@ -350,6 +350,10 @@ class Layout(QGridLayout):
                     text = "There are repeated names in the subjects table."
                     QMessageBox.information(self.window, "WARNING", text)
                     return
+                elif self.page1Layout.df["name"].str.strip().eq("").any():
+                    text = "There are empty names in the subjects table."
+                    QMessageBox.information(self.window, "WARNING", text)
+                    return
             except Exception:
                 pass
 

@@ -236,7 +236,12 @@ class TasksLayout(Layout):
         )
         self.subject_label.setProperty("type", "optional")
 
-        self.possible_subjects = ["None"] + manager.subjects.df["name"].tolist()
+        mylist = ["None"] + manager.subjects.df["name"].tolist()
+        self.possible_subjects = [
+            x
+            for x in mylist
+            if not pd.isna(x) and not (isinstance(x, str) and x.strip() == "")
+        ]
         self.subject_combo = self.right_layout_general.create_and_add_combo_box(
             "subject",
             0,
@@ -252,7 +257,7 @@ class TasksLayout(Layout):
             "next_task",
             "maximum_duration",
             "minimum_duration",
-            "refractary_period",
+            "refractory_period",
         ]
         properties = {
             k: v
@@ -435,7 +440,7 @@ class TasksLayout(Layout):
             "next_task",
             "maximum_duration",
             "minimum_duration",
-            "refractary_period",
+            "refractory_period",
         ]
         properties = {k: v for k, v in properties.items() if k not in remove_names}
         new_dict = {}

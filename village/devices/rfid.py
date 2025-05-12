@@ -32,6 +32,7 @@ class Rfid:
         while self.running:
             try:
                 line = self.s.readline().decode("utf-8").strip()
+                line = "".join(char for char in line if char.isprintable())
                 if len(line) < 8:
                     continue
                 self.id = line[-10:]
