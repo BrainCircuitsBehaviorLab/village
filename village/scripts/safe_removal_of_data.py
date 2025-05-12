@@ -9,12 +9,12 @@ from village.scripts.utils import setup_logging
 
 
 def check_files_for_backup(
-    files, directory, backup_dir, remote_user, remote_host, port=22
+    files, directory, backup_dir, remote_user, remote_host, port=None
 ) -> list:
     files_to_remove = []
     # Create a single SSH connection to the remote server
     ssh_command = (
-        f"ssh -p {port} {remote_user}@{remote_host} "
+        f"ssh {remote_user}@{remote_host} "
         f"'for file in {' '.join([os.path.join(backup_dir, f) for f in files])}; do "
         f"if [ -e $file ]; then echo $file; fi; done'"
     )
@@ -131,11 +131,11 @@ def main(
 if __name__ == "__main__":
     fire.Fire(main)
     # main(
-    #     directory="/home/pi/village_projects/COT_test/data/videos",
+    #     directory="/home/pi/village_projects/visual_and_COT/data/videos",
     #     days=8,
     #     safe=True,
-    #     backup_dir="/archive/training_village/COT_test_data/videos",
+    #     backup_dir="/archive/training_village/visual_and_COT_data/videos",
     #     remote_user="training_village",
     #     remote_host="cluster",
-    #     port=4022,
+    #     # port=4022,
     # )
