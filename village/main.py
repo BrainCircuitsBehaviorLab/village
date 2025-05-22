@@ -288,12 +288,12 @@ def system_run(bevavior_window: QWidget) -> None:
                             "Weight detected " + str(weight) + " g",
                             subject=manager.subject.name,
                         )
+                        manager.getting_weights = False
                         manager.weight = weight
                         manager.state = State.EXIT_UNSAVED
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
-                manager.getting_weights = False
                 log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()
@@ -340,12 +340,12 @@ def system_run(bevavior_window: QWidget) -> None:
                         "Weight detected " + str(weight) + " g",
                         subject=manager.subject.name,
                     )
+                    manager.getting_weights = False
                     manager.sessions_summary.change_last_entry("weight", weight)
                     manager.state = State.EXIT_SAVED
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
-                manager.getting_weights = False
                 log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()
