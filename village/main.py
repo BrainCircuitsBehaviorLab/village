@@ -341,7 +341,7 @@ def system_run(bevavior_window: QWidget) -> None:
                         subject=manager.subject.name,
                     )
                     manager.getting_weights = False
-                    manager.sessions_summary.change_last_entry("weight", weight)
+                    manager.weight = weight
                     manager.state = State.EXIT_SAVED
 
             case State.EXIT_SAVED:
@@ -349,6 +349,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()
+                manager.sessions_summary.change_last_entry("weight", manager.weight)
                 manager.state = State.SYNC
                 log.info("Going to SYNC State")
 
