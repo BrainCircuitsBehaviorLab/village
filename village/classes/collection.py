@@ -174,6 +174,8 @@ class Collection(EventProtocol):
 
     def get_sound_gain(self, speaker: int, dB: float, sound_name: str) -> float:
         try:
+            if dB == 0:
+                return 0.0
             calibration_df = self.df[self.df["speaker"] == speaker]
             calibration_df = calibration_df[calibration_df["sound_name"] == sound_name]
             max_calibration = calibration_df["calibration_number"].max()
