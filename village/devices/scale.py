@@ -92,8 +92,8 @@ class Scale(ScaleProtocol):
                     f.write(f"{date},{weights_str},{average},{sd_str},{correct_str}\n")
             # >> remove
 
-            # TODO remove the < 40 condition
-            if correct and average < 40:
+            # TODO remove the < 35 condition
+            if correct and average < 35:
                 return average
             else:
                 return 0.0
