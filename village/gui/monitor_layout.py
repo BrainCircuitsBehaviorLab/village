@@ -450,7 +450,7 @@ class MotorLayout(Layout):
 
     def draw(self) -> None:
         self.draw_motor_buttons("MOTOR1", 0, 0, motor1)
-        self.draw_motor_buttons("MOTOR2", 2, 0, motor2)
+        self.draw_motor_buttons("MOTOR2", 0, 18, motor2)
 
         self.change_angles: PushButton = self.create_and_add_button(
             "CHANGE MOTOR ANGLES",
@@ -507,7 +507,7 @@ class MotorLayout(Layout):
         )
         close_name: str = "CLOSE " + name
         close_door: PushButton = self.create_and_add_button(
-            close_name, row, column + 18, 16, 2, motor.close, "Close the door"
+            close_name, row + 2, column, 16, 2, motor.close, "Close the door"
         )
 
         self.buttons.append(open_door)
