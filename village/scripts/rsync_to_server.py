@@ -30,15 +30,37 @@ def run_rsync(
     # ping the cluster to check if it is up
 
     destination_dir = os.path.dirname(destination)
-    subprocess.run(
-        [
-            "ssh",
-            # "-p",
-            # str(port),
-            f"{remote_user}@{remote_host}",
-            f"mkdir -p {destination_dir}",
-        ]
-    )
+
+    try:
+        subprocess.run(
+            [
+                "ssh",
+                # "-p",
+                # str(port),
+                f"{remote_user}@{remote_host}",
+                f"mkdir -p {destination_dir}",
+            ],
+            timeout=30,
+            check=True,
+        )
+    except subprocess.TimeoutExpired:
+        logging.error(
+            "SSH connection timed out (mkdir). Remote host may be unreachable."
+        )
+        return False
+    except subprocess.CalledProcessError as e:
+        logging.error(f"SSH command failed: {e}")
+        return False
+
+    # subprocess.run(
+    #     [
+    #         "ssh",
+    #         # "-p",
+    #         # str(port),
+    #         f"{remote_user}@{remote_host}",
+    #         f"mkdir -p {destination_dir}",
+    #     ]
+    # )
 
     # Construct the rsync command with safe options
     rsync_cmd = [

@@ -192,17 +192,17 @@ def system_run(bevavior_window: QWidget) -> None:
                     )
                     manager.state = State.OPEN_DOOR2_STOP
                     log.info("Going to OPEN_DOOR2_STOP State")
-                elif (
-                    manager.task.chrono.get_seconds()
-                    >= manager.task.settings.minimum_duration
-                ):
-                    log.alarm(
-                        "Minimum time reached and areas 3 or 4 were never empty."
-                        + " Opening door2 and disconnecting RFID reader.",
-                        subject=manager.subject.name,
-                    )
-                    manager.state = State.OPEN_DOOR2_STOP
-                    log.info("Going to OPEN_DOOR2_STOP State")
+                # elif (
+                #     manager.task.chrono.get_seconds()
+                #     >= manager.task.settings.minimum_duration
+                # ):
+                #     log.alarm(
+                #         "Minimum time reached and areas 3 or 4 were never empty."
+                #         + " Opening door2 and disconnecting RFID reader.",
+                #         subject=manager.subject.name,
+                #     )
+                #     manager.state = State.OPEN_DOOR2_STOP
+                #     log.info("Going to OPEN_DOOR2_STOP State")
 
                 elif (
                     cam_corridor.area_2_empty()

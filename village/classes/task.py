@@ -333,7 +333,8 @@ class Task:
 
             return duration, trials, water, True
         else:
-            log.alarm(
+            # TODO: deactivated alarm for now
+            log.info(
                 "No trials were recorded in task: " + self.name, subject=self.subject
             )
 
