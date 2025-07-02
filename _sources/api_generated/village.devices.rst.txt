@@ -33,7 +33,7 @@
    motor
    rfid
    scale
-   scale_new
+   scale_old
    sound_device
    telegram_bot
    temp_sensor
