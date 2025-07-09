@@ -9,7 +9,8 @@ from village.settings import settings
 
 
 def corridor_plot(
-    df: pd.DataFrame, subjects: list[str], width: float, height: float, ndays: int = 3
+    df: pd.DataFrame, subjects: list[str], width: float, height: float,
+    ndays: int = 3, from_date: str = None,
 ) -> Figure:
 
     subjects = sorted(subjects)
@@ -28,8 +29,18 @@ def corridor_plot(
         color_first = "gray"
         color_second = "white"
 
-    start_first, start_second = time_utils.days_ago_init_times(first, second, ndays)
-    end = time_utils.tomorrow_init_time(first)
+    if from_date is None:
+        from_date = time_utils.now()
+        end = time_utils.tomorrow_init_time(first)
+    else:
+        from_date = time_utils.date_from_string(from_date)
+        end = from_date.replace(
+            hour=first.hour,
+            minute=first.minute,
+            second=first.second,
+            microsecond=first.microsecond,
+        )
+    start_first, start_second = time_utils.days_ago_init_times(first, second, ndays, time_to_end=from_date)
 
     df["date"] = pd.to_datetime(df["date"])
 

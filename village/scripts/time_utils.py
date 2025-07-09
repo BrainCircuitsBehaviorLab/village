@@ -73,12 +73,13 @@ def date_from_path(path: str) -> datetime:
 
 
 def days_ago_init_times(
-    first: time, second: time, days: int
+    first: time, second: time, days: int, time_to_end: datetime = now()
 ) -> tuple[datetime, datetime]:
-    if first < now().time():
-        day = now() - timedelta(days=days - 1)
+        
+    if first < time_to_end.time():
+        day = time_to_end - timedelta(days=days - 1)
     else:
-        day = now() - timedelta(days=days)
+        day = time_to_end - timedelta(days=days)
 
     value1 = day.replace(
         hour=first.hour,
