@@ -9,7 +9,7 @@ from village.settings import settings
 
 
 def corridor_plot(
-    df: pd.DataFrame, subjects: list[str], width: float, height: float
+    df: pd.DataFrame, subjects: list[str], width: float, height: float, ndays: int = 3
 ) -> Figure:
 
     subjects = sorted(subjects)
@@ -28,7 +28,7 @@ def corridor_plot(
         color_first = "gray"
         color_second = "white"
 
-    start_first, start_second = time_utils.days_ago_init_times(first, second, 3)
+    start_first, start_second = time_utils.days_ago_init_times(first, second, ndays)
     end = time_utils.tomorrow_init_time(first)
 
     df["date"] = pd.to_datetime(df["date"])
@@ -37,14 +37,14 @@ def corridor_plot(
 
     fig, ax = plt.subplots(figsize=(width, height))
 
-    starts_first = [start_first + timedelta(days=i) for i in range(3)]
-    starts_second = [start_second + timedelta(days=i) for i in range(3)]
+    starts_first = [start_first + timedelta(days=i) for i in range(ndays)]
+    starts_second = [start_second + timedelta(days=i) for i in range(ndays)]
 
-    for i in range(3):
+    for i in range(ndays):
         ax.axvspan(starts_first[i], starts_second[i], color=color_first)
 
     min_time = start_first
-    max_time = start_first + timedelta(days=4)
+    max_time = start_first + timedelta(days=ndays + 1)
     min_time = (min_time + timedelta(hours=1)).replace(
         minute=0, second=0, microsecond=0
     )
