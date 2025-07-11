@@ -270,6 +270,8 @@ class Task:
 
         if trials > 1:
             non_nan_values = self.raw_df["START"].dropna()
+            # sort it
+            non_nan_values = non_nan_values.sort_values(ascending=True)
 
             if not non_nan_values.empty:
                 duration = float(non_nan_values.iloc[-1] - non_nan_values.iloc[0])
