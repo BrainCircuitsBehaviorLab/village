@@ -1,4 +1,5 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+from typing import Union
 
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -9,8 +10,12 @@ from village.settings import settings
 
 
 def corridor_plot(
-    df: pd.DataFrame, subjects: list[str], width: float, height: float,
-    ndays: int = 3, from_date: str = None,
+    df: pd.DataFrame,
+    subjects: list[str],
+    width: float,
+    height: float,
+    ndays: int = 3,
+    from_date: Union[str, None, datetime] = None,
 ) -> Figure:
 
     subjects = sorted(subjects)
@@ -33,14 +38,17 @@ def corridor_plot(
         from_date = time_utils.now()
         end = time_utils.tomorrow_init_time(first)
     else:
-        from_date = time_utils.date_from_string(from_date)
+        if isinstance(from_date, str):
+            from_date = time_utils.date_from_string(from_date)
         end = from_date.replace(
             hour=first.hour,
             minute=first.minute,
             second=first.second,
             microsecond=first.microsecond,
         )
-    start_first, start_second = time_utils.days_ago_init_times(first, second, ndays, time_to_end=from_date)
+    start_first, start_second = time_utils.days_ago_init_times(
+        first, second, ndays, time_to_end=from_date
+    )
 
     df["date"] = pd.to_datetime(df["date"])
 

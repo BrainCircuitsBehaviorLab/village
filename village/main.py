@@ -288,6 +288,20 @@ def system_run(bevavior_window: QWidget) -> None:
                             "Weight detected " + str(weight) + " g",
                             subject=manager.subject.name,
                         )
+                        # write weight in file
+                        file_name = "/home/pi/weights.txt"
+                        weight_now = weight
+                        # during the next 3 seconds, get weight and write every 100 ms
+                        with open(file_name, "a") as f:
+                            for _ in range(30):
+                                date = time_utils.now_string()
+                                # write in file
+                                f.write(f"{date};{manager.subject.name};{weight_now}\n")
+                                # wait 100 ms
+                                time.sleep(0.1)
+                                # reset weight
+                                weight_now = scale.get_weight()
+
                         manager.getting_weights = False
                         manager.weight = weight
                         manager.state = State.EXIT_UNSAVED

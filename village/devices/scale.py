@@ -57,6 +57,10 @@ class Scale(ScaleProtocol):
 
     def get_weight(self) -> float:
         try:
+            print("------")
+            print(self.get_value())
+            print(self.offset)
+            print(self.calibration)
             value = (self.get_value() - self.offset) / self.calibration
             return value if value >= 0 else 0.0
 

@@ -139,6 +139,7 @@ class DataTable(SuperEnum):
     OLD_SESSION = "OLD_SESSION"
     OLD_SESSION_RAW = "OLD_SESSION_RAW"
 
+
 class Save(SuperEnum):
     YES = "YES"
     NO = "NO"
