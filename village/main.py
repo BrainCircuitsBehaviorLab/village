@@ -19,7 +19,7 @@ from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
-from village.devices.scale import scale
+from village.devices.scale import scale, real_weight_inference
 from village.devices.sound_device import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
@@ -28,6 +28,7 @@ from village.log import log
 from village.manager import manager
 from village.scripts import time_utils
 from village.settings import settings
+import numpy as np
 
 faulthandler.enable()
 
@@ -284,27 +285,22 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.state = State.SAVE_INSIDE
                 else:
                     if weight > settings.get("WEIGHT_THRESHOLD"):
-                        log.info(
-                            "Weight detected " + str(weight) + " g",
-                            subject=manager.subject.name,
-                        )
-                        # write weight in file
-                        file_name = "/home/pi/weights.txt"
-                        weight_now = weight
-                        # during the next 3 seconds, get weight and write every 100 ms
-                        with open(file_name, "a") as f:
-                            for _ in range(30):
-                                date = time_utils.now_string()
-                                # write in file
-                                f.write(f"{date};{manager.subject.name};{weight_now}\n")
-                                # wait 100 ms
-                                time.sleep(0.1)
-                                # reset weight
-                                weight_now = scale.get_weight()
-
-                        manager.getting_weights = False
-                        manager.weight = weight
-                        manager.state = State.EXIT_UNSAVED
+                        manager.measuring_weight_list.append(weight)
+                        if (real_weight_inference(
+                            manager.measuring_weight_list,
+                            settings.get("WEIGHT_THRESHOLD")) or 
+                            len(manager.measuring_weight_list) >= 100
+                        ):
+                            manager.weight = round(np.median(manager.measuring_weight_list[:-5]), 2)
+                            manager.getting_weights = False
+                            manager.measuring_weight_list = []
+                            manager.state = State.EXIT_UNSAVED
+                            log.info(
+                                "Weight detected " + str(manager.weight) + " g",
+                                subject=manager.subject.name,
+                            )
+                    else:
+                        time.sleep(0.1)
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
