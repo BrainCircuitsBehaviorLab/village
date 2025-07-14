@@ -283,28 +283,28 @@ def system_run(bevavior_window: QWidget) -> None:
                         subject=manager.subject.name,
                     )
                     manager.state = State.SAVE_INSIDE
-                else:
-                    if weight > settings.get("WEIGHT_THRESHOLD"):
-                        manager.measuring_weight_list.append(weight)
-                        if (
-                            real_weight_inference(
-                                manager.measuring_weight_list,
-                                settings.get("WEIGHT_THRESHOLD"),
-                            )
-                            or len(manager.measuring_weight_list) >= 100
-                        ):
-                            manager.weight = round(
-                                np.median(manager.measuring_weight_list[:-5]), 2
-                            )
-                            manager.getting_weights = False
-                            manager.measuring_weight_list = []
-                            manager.state = State.EXIT_UNSAVED
-                            log.info(
-                                "Weight detected " + str(manager.weight) + " g",
-                                subject=manager.subject.name,
-                            )
-                        else:
-                            time.sleep(0.1)
+                elif weight > settings.get("WEIGHT_THRESHOLD"):
+                    manager.measuring_weight_list.append(weight)
+                    print(manager.measuring_weight_list)
+                    if (
+                        real_weight_inference(
+                            manager.measuring_weight_list,
+                            settings.get("WEIGHT_THRESHOLD"),
+                        )
+                        or len(manager.measuring_weight_list) >= 100
+                    ):
+                        manager.weight = round(
+                            np.median(manager.measuring_weight_list[-5:]), 2
+                        )
+                        manager.getting_weights = False
+                        manager.measuring_weight_list = []
+                        manager.state = State.EXIT_UNSAVED
+                        log.info(
+                            "Weight detected " + str(manager.weight) + " g",
+                            subject=manager.subject.name,
+                        )
+                    else:
+                        time.sleep(0.1)
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
