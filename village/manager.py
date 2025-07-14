@@ -116,6 +116,7 @@ class Manager:
         self.change_cycle_run_flag = False
         self.after_session_run_flag = False
         self.getting_weights = False
+        self.measuring_weight_list = []
         self.log_weight = False
         self.taring_scale = False
 
