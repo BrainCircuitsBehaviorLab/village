@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-from village.classes.abstract_classes import TelegramBotBase, TelegramBotNull
+from village.classes.abstract_classes import TelegramBotBase
 from village.devices.camera import cam_box, cam_corridor
 from village.log import log
 from village.manager import manager
@@ -132,13 +132,13 @@ def get_telegram_bot() -> TelegramBotBase:
             log.info("Telegram bot successfully initialized")
             return telegram_bot
         elif telegram_bot.error_running:
-            return TelegramBotNull()
+            return TelegramBotBase()
         else:
             log.error("Could not initialize telegram bot, time expired")
-            return TelegramBotNull()
+            return TelegramBotBase()
     except Exception:
         log.error("Could not initialize telegram bot", exception=traceback.format_exc())
-        return TelegramBotNull()
+        return TelegramBotBase()
 
 
 telegram_bot = get_telegram_bot()

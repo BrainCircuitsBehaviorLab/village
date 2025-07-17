@@ -19,7 +19,7 @@ except Exception:
 
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.abstract_classes import CameraBase, CameraNull
+from village.classes.abstract_classes import CameraBase
 from village.log import log
 from village.manager import manager
 from village.scripts import time_utils
@@ -549,7 +549,7 @@ def get_camera(index: int, framerate: int, name: str) -> CameraBase:
         return cam
     except Exception:
         log.error("Could not initialize cam " + name, exception=traceback.format_exc())
-        return CameraNull()
+        return CameraBase()
 
 
 cam_corridor = get_camera(

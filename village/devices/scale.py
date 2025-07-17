@@ -8,7 +8,7 @@ import traceback
 import numpy as np
 import smbus2
 
-from village.classes.abstract_classes import ScaleBase, ScaleNull
+from village.classes.abstract_classes import ScaleBase
 from village.log import log
 from village.scripts import time_utils
 from village.settings import settings
@@ -78,7 +78,7 @@ def get_scale(address: str) -> ScaleBase:
         return scale
     except Exception:
         log.error("Could not initialize scale", exception=traceback.format_exc())
-        return ScaleNull()
+        return ScaleBase()
 
 
 scale = get_scale(settings.get("SCALE_ADDRESS"))

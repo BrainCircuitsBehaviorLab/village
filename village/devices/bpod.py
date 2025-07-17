@@ -4,7 +4,7 @@ import time
 import traceback
 from typing import Any, Callable
 
-from village.classes.abstract_classes import PyBpodBase, PyBpodNull
+from village.classes.abstract_classes import PyBpodBase
 from village.log import log
 from village.pybpodapi.protocol import Bpod, StateMachine
 from village.scripts import time_utils
@@ -261,7 +261,7 @@ def get_bpod() -> PyBpodBase:
             return bpod
         except Exception:
             log.error("Could not initialize bpod", exception=traceback.format_exc())
-            return PyBpodNull()
+            return PyBpodBase()
 
 
 bpod = get_bpod()

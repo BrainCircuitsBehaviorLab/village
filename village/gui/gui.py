@@ -5,7 +5,7 @@ from pathlib import Path
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
-from village.classes.abstract_classes import BehaviorWindowBase, BehaviorWindowNull
+from village.classes.abstract_classes import BehaviorWindowBase
 from village.classes.enums import ScreenActive
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
@@ -33,7 +33,7 @@ class Gui:
         self.primary_height = availableGeometry.height() - 30
 
         self.gui_window = GuiWindow(self)
-        self.behavior_window: BehaviorWindowBase = BehaviorWindowNull()
+        self.behavior_window = BehaviorWindowBase()
 
         # self.shared_context = QOpenGLContext()
         # self.shared_context.setFormat(QSurfaceFormat.defaultFormat())

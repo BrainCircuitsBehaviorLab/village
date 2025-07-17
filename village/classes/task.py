@@ -7,7 +7,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from village.classes.abstract_classes import CameraBase, CameraNull, PyBpodBase
+from village.classes.abstract_classes import CameraBase, PyBpodBase
 from village.classes.collection import Collection
 from village.classes.enums import Save
 from village.classes.training import Settings, Training
@@ -44,7 +44,7 @@ class Task:
         self.system_name: str = settings.get("SYSTEM_NAME")
         self.date: str = time_utils.now_string()
 
-        self.cam_box: CameraBase = CameraNull()
+        self.cam_box = CameraBase()
 
         self.info: str = ""
 

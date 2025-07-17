@@ -11,11 +11,7 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 
-from village.classes.abstract_classes import (
-    BehaviorWindowBase,
-    BehaviorWindowNull,
-    CameraBase,
-)
+from village.classes.abstract_classes import BehaviorWindowBase, CameraBase
 from village.classes.after_session_run import AfterSessionRun
 from village.classes.change_cycle_run import ChangeCycleRun
 from village.classes.change_hour_run import ChangeHourRun
@@ -127,7 +123,7 @@ class Manager:
         self.stimulus_timing: float = 0.0
         self.stimulus_frame = 0
 
-        self.behavior_window: BehaviorWindowBase = BehaviorWindowNull()
+        self.behavior_window = BehaviorWindowBase()
 
     def create_collections(self) -> None:
         self.events = Collection(

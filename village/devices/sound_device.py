@@ -8,7 +8,7 @@ import numpy as np
 import sounddevice as sd
 from scipy.io import wavfile
 
-from village.classes.abstract_classes import SoundDeviceBase, SoundDeviceNull
+from village.classes.abstract_classes import SoundDeviceBase
 from village.classes.enums import Active
 from village.log import log
 from village.settings import settings
@@ -129,7 +129,7 @@ class SoundDevice(SoundDeviceBase):
 
 def get_sound_device() -> SoundDeviceBase:
     if settings.get("USE_SOUNDCARD") == Active.OFF:
-        return SoundDeviceNull()
+        return SoundDeviceBase()
     else:
         try:
             sound_device = SoundDevice()
@@ -139,7 +139,7 @@ def get_sound_device() -> SoundDeviceBase:
             log.error(
                 "Could not initialize sound device", exception=traceback.format_exc()
             )
-            return SoundDeviceNull()
+            return SoundDeviceBase()
 
 
 sound_device = get_sound_device()

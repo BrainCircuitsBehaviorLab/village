@@ -2,7 +2,7 @@ import traceback
 
 import smbus2
 
-from village.classes.abstract_classes import TempSensorBase, TempSensorNull
+from village.classes.abstract_classes import TempSensorBase
 from village.log import log
 from village.settings import settings
 
@@ -43,7 +43,7 @@ def get_temp_sensor(address: str) -> TempSensorBase:
         return temp_sensor
     except Exception:
         log.error("Could not initialize temp sensor", exception=traceback.format_exc())
-        return TempSensorNull()
+        return TempSensorBase()
 
 
 temp_sensor = get_temp_sensor(address=settings.get("TEMP_SENSOR_ADDRESS"))

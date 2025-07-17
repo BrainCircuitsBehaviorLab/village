@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from typing import Any, Callable
 
 from PyQt5.QtWidgets import QWidget
@@ -9,68 +8,7 @@ from village.scripts import time_utils
 from village.settings import settings
 
 
-class PyBpodBase(ABC):
-    error: str
-    session: Session | Any
-    connected: bool
-
-    @abstractmethod
-    def connect(self, functions: list[Callable]) -> None: ...
-    @abstractmethod
-    def add_state(
-        self,
-        state_name: Any,
-        state_timer: float = 0,
-        state_change_conditions: Any = {},
-        output_actions: Any = (),
-    ) -> None: ...
-    @abstractmethod
-    def set_global_timer(
-        self,
-        timer_id: Any,
-        timer_duration: Any,
-        on_set_delay: int = 0,
-        channel: Any | None = None,
-        on_message: int = 1,
-        off_message: int = 0,
-        loop_mode: int = 0,
-        loop_intervals: int = 0,
-        send_events: int = 1,
-        oneset_triggers: Any | None = None,
-    ) -> None: ...
-    @abstractmethod
-    def set_condition(
-        self, condition_number: Any, condition_channel: Any, channel_value: Any
-    ) -> None: ...
-    @abstractmethod
-    def set_global_counter(
-        self, counter_number: Any, target_event: Any, threshold: Any
-    ) -> None: ...
-    @abstractmethod
-    def create_state_machine(self) -> None: ...
-    @abstractmethod
-    def send_and_run_state_machine(self) -> None: ...
-    @abstractmethod
-    def close(self) -> None: ...
-    @abstractmethod
-    def stop(self) -> None: ...
-    @abstractmethod
-    def manual_override_input(self, message: str) -> None: ...
-    @abstractmethod
-    def manual_override_output(self, message: str | tuple) -> None: ...
-    @abstractmethod
-    def register_value(self, name: str, value: Any) -> None: ...
-    @abstractmethod
-    def receive_softcode(self, idx: int) -> None: ...
-    @abstractmethod
-    def led(self, i: int, close: bool) -> None: ...
-    @abstractmethod
-    def water(self, i: int, close: bool) -> None: ...
-    @abstractmethod
-    def poke(self, i: int, close: bool) -> None: ...
-
-
-class PyBpodNull(PyBpodBase):
+class PyBpodBase:
     error: str = "Error connecting to the bpod "
     session: Session | Any = None
     connected: bool = False
@@ -146,32 +84,14 @@ class PyBpodNull(PyBpodBase):
         return
 
 
-class TelegramBotBase(ABC):
-    error: str
-
-    @abstractmethod
-    def alarm(self, message: str) -> None: ...
-
-
-class TelegramBotNull(TelegramBotBase):
+class TelegramBotBase:
     error: str = "Error connecting to the telegram_bot "
 
     def alarm(self, message: str) -> None:
         return
 
 
-class ScaleBase(ABC):
-    error: str
-
-    @abstractmethod
-    def tare(self) -> None: ...
-    @abstractmethod
-    def calibrate(self, weight: float) -> None: ...
-    @abstractmethod
-    def get_weight(self) -> float: ...
-
-
-class ScaleNull(ScaleBase):
+class ScaleBase:
     error: str = "Error connecting to the scale "
 
     def tare(self) -> None:
@@ -184,16 +104,7 @@ class ScaleNull(ScaleBase):
         return 0.0
 
 
-class TempSensorBase(ABC):
-    error: str
-
-    @abstractmethod
-    def start(self) -> None: ...
-    @abstractmethod
-    def get_temperature(self) -> tuple[float, float, str]: ...
-
-
-class TempSensorNull(TempSensorBase):
+class TempSensorBase:
     error: str = "Error connecting to the temp_sensor "
 
     def start(self) -> None:
@@ -203,19 +114,7 @@ class TempSensorNull(TempSensorBase):
         return 0.0, 0.0, ""
 
 
-class SoundDeviceBase(ABC):
-    samplerate: int
-    error: str
-
-    @abstractmethod
-    def load(self, left: Any, right: Any) -> None: ...
-    @abstractmethod
-    def play(self) -> None: ...
-    @abstractmethod
-    def stop(self) -> None: ...
-
-
-class SoundDeviceNull(SoundDeviceBase):
+class SoundDeviceBase:
     samplerate: int = 0
     error: str = (
         ""
@@ -233,14 +132,7 @@ class SoundDeviceNull(SoundDeviceBase):
         return
 
 
-class EventBase(ABC):
-    @abstractmethod
-    def log(self, date: str, type: str, subject: str, description: str) -> None: ...
-    @abstractmethod
-    def log_temp(self, date: str, temperature: float, humidity: float) -> None: ...
-
-
-class EventNull(EventBase):
+class EventBase:
     def log(self, date: str, type: str, subject: str, description: str) -> None:
         return
 
@@ -248,58 +140,7 @@ class EventNull(EventBase):
         return
 
 
-class CameraBase(ABC):
-    area1: list[int]
-    area2: list[int]
-    area3: list[int]
-    area4: list[int]
-    areas: list[list[int]]
-    change: bool
-    state: str
-    path_picture: str
-    error: str
-    trial: int
-    is_recording: bool
-    show_time_info: bool
-    chrono: Any
-
-    @abstractmethod
-    def start_camera(self) -> None: ...
-    @abstractmethod
-    def start_preview_window(self) -> QWidget: ...
-    @abstractmethod
-    def stop_preview_window(self) -> None: ...
-    @abstractmethod
-    def start_record(self, path_video: str = "", path_csv: str = "") -> None: ...
-    @abstractmethod
-    def stop_record(self) -> None: ...
-    @abstractmethod
-    def stop(self) -> None: ...
-    @abstractmethod
-    def change_focus(self, lensposition) -> None: ...
-    @abstractmethod
-    def change_framerate(self, framerate) -> None: ...
-    @abstractmethod
-    def print_info_about_config(self) -> None: ...
-    @abstractmethod
-    def pre_process(self, request) -> None: ...
-    @abstractmethod
-    def log(self, text: str) -> None: ...
-    @abstractmethod
-    def areas_corridor_ok(self) -> bool: ...
-    @abstractmethod
-    def area_1_empty(self) -> bool: ...
-    @abstractmethod
-    def area_2_empty(self) -> bool: ...
-    @abstractmethod
-    def area_3_empty(self) -> bool: ...
-    @abstractmethod
-    def area_4_empty(self) -> bool: ...
-    @abstractmethod
-    def take_picture(self) -> None: ...
-
-
-class CameraNull(CameraBase):
+class CameraBase:
     area1: list[int] = []
     area2: list[int] = []
     area3: list[int] = []
@@ -367,13 +208,6 @@ class CameraNull(CameraBase):
 
 
 class BehaviorWindowBase(QWidget):
-    @abstractmethod
-    def set_active(self, value: bool) -> None: ...
-    @abstractmethod
-    def set_draw_function(self, draw_fn: Callable) -> None: ...
-
-
-class BehaviorWindowNull(BehaviorWindowBase):
     def set_active(self, value: bool) -> None:
         return
 

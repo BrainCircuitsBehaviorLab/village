@@ -2,21 +2,18 @@ import re
 
 from village.classes.abstract_classes import (
     CameraBase,
-    CameraNull,
     EventBase,
-    EventNull,
     TelegramBotBase,
-    TelegramBotNull,
 )
 from village.scripts import time_utils
 
 
 class Log:
     def __init__(self) -> None:
-        self.event: EventBase = EventNull()
-        self.temp: EventBase = EventNull()
-        self.cam: CameraBase = CameraNull()
-        self.telegram_bot: TelegramBotBase = TelegramBotNull()
+        self.event = EventBase()
+        self.temp = EventBase()
+        self.cam = CameraBase()
+        self.telegram_bot = TelegramBotBase()
 
     def info(self, description: str, subject: str = "system") -> None:
         type = "INFO"
