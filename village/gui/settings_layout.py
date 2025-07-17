@@ -227,7 +227,6 @@ class SettingsLayout(Layout):
             "BPOD_SYNC_MODE",
             "TELEGRAM_TOKEN",
             "TELEGRAM_CHAT",
-            "TELEGRAM_USERS",
         ]
 
         critical_keys += [s.key for s in settings.advanced_settings]
@@ -431,6 +430,11 @@ class SettingsLayout(Layout):
                 line_edit = self.create_and_add_line_edit(
                     new_value, row, column + width, 60, 2, self.settings_changed
                 )
+            elif s.key == "MEDIA_DIRECTORY":
+                new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "media")
+                line_edit = self.create_and_add_line_edit(
+                    new_value, row, column + width, 60, 2, self.settings_changed
+                )
             elif s.key == "SERVER_DIRECTORY":
                 new_value = self.create_server_directory()
                 line_edit = self.create_and_add_line_edit(
@@ -469,6 +473,7 @@ class SettingsLayout(Layout):
                 "VIDEOS_DIRECTORY",
                 "SESSIONS_DIRECTORY",
                 "CODE_DIRECTORY",
+                "MEDIA_DIRECTORY",
                 "SERVER_DIRECTORY",
             ):
                 line_edit.setReadOnly(True)
@@ -476,18 +481,6 @@ class SettingsLayout(Layout):
             line_edit.setProperty("type", type)
             self.line_edits.append(line_edit)
             self.line_edits_settings.append(s)
-        elif s.key == "TELEGRAM_USERS":
-            values = settings.get(s.key)
-            line_edits = []
-            for i, v in enumerate(values):
-                value = str(v)
-                line_edit = self.create_and_add_line_edit(
-                    value, row, column + width + 12 * i, 12, 2, self.settings_changed
-                )
-                line_edit.setProperty("type", type)
-                line_edits.append(line_edit)
-            self.list_of_line_edits.append(line_edits)
-            self.list_of_line_edits_settings.append(s)
         elif s.value_type == list[int]:
             values = settings.get(s.key)
             line_edits = []
@@ -496,6 +489,9 @@ class SettingsLayout(Layout):
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width + 7 * i, 7, 2, self.settings_changed
                 )
+                if s.key == "SCREEN_RESOLUTION":
+                    line_edit.setReadOnly(True)
+                    line_edit.setDisabled(True)
                 line_edit.setProperty("type", type)
                 line_edits.append(line_edit)
             self.list_of_line_edits.append(line_edits)

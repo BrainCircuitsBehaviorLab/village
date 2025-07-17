@@ -13,13 +13,13 @@ try:
     from picamera2 import MappedArray, Picamera2, Preview
     from picamera2.encoders import H264Encoder, Quality
     from picamera2.outputs import FfmpegOutput
-    from picamera2.previews.qt import QGlPicamera2
+    from picamera2.previews.qt import QPicamera2
 except Exception:
     pass
 
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.protocols import CameraProtocol
+from village.classes.abstract_classes import CameraBase, CameraNull
 from village.log import log
 from village.manager import manager
 from village.scripts import time_utils
@@ -39,9 +39,25 @@ def print_info_about_the_connected_cameras() -> None:
     print()
 
 
+# the preview class
+class LowFreqQPicamera2(QPicamera2):
+    def __init__(self, picam2, *args, framerate, **kwargs) -> None:
+        super().__init__(picam2, *args, **kwargs)
+        self._frame_counter = 0
+        self._good_frame = framerate // int(settings.get("CAMS_PREVIEW_FRAMERATE"))
+
+    def render_request(self, completed_request) -> None:
+        self._frame_counter += 1
+        if self._frame_counter == self._good_frame:
+            self._frame_counter = 0
+            super().render_request(completed_request)
+
+
 # the camera class
-class Camera(CameraProtocol):
-    def __init__(self, index: int, frame_duration: int, name: str) -> None:
+class Camera(CameraBase):
+    def __init__(self, index: int, framerate: int, name: str) -> None:
+
+        frame_duration = int(1000000 / framerate)
 
         # camera settings
         cam_raw = {"size": (2304, 1296)}
@@ -56,6 +72,7 @@ class Camera(CameraProtocol):
 
         self.index = index
         self.name = name
+        self.framerate = framerate
         self.encoder_quality = encoder_quality
         self.encoder = H264Encoder()
         self.cam = Picamera2(index)
@@ -453,8 +470,7 @@ class Camera(CameraProtocol):
     def start_preview_window(self) -> QWidget:
         if self.cam._preview is not None:
             self.cam.stop_preview()
-        self.window = QGlPicamera2(self.cam)
-        # self.window.context().setShareContext(shared_context)
+        self.window = LowFreqQPicamera2(picam2=self.cam, framerate=self.framerate)
         return self.window
 
     def log(self, text: str) -> None:
@@ -526,15 +542,14 @@ class Camera(CameraProtocol):
         self.cam.capture_file(self.path_picture)
 
 
-def get_camera(index: int, framerate: int, name: str) -> CameraProtocol:
+def get_camera(index: int, framerate: int, name: str) -> CameraBase:
     try:
-        frame_duration = int(1000000 / framerate)
-        cam = Camera(index, frame_duration, name)
+        cam = Camera(index, framerate, name)
         log.info("Cam " + name + " successfully initialized")
         return cam
     except Exception:
         log.error("Could not initialize cam " + name, exception=traceback.format_exc())
-        return CameraProtocol()
+        return CameraNull()
 
 
 cam_corridor = get_camera(

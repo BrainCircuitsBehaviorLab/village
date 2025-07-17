@@ -134,6 +134,12 @@ directory_settings = [
         "The user code directory.",
     ),
     Setting(
+        "MEDIA_DIRECTORY",
+        str(Path(default_project_directory, "media")),
+        str,
+        "The user media directory (e.g., images, videos, sounds, etc.).",
+    ),
+    Setting(
         "APP_DIRECTORY",
         str(Path(__file__).parent.parent),
         str,
@@ -143,13 +149,18 @@ directory_settings = [
 
 screen_settings = [
     Setting("USE_SCREEN", "OFF", ScreenActive, "Use of a regular or touch screen."),
-    Setting("SCREEN_SIZE_MM", [400, 200], list[int], "Screen size (in mm)."),
+    Setting(
+        "SCREEN_SIZE_MM",
+        [400, 200],
+        list[int],
+        """Physical screen size in millimeters. Useful when positioning stimuli
+using real-world units instead of pixels.""",
+    ),
     Setting(
         "SCREEN_RESOLUTION",
         [1024, 768],
         list[int],
-        """Screen resolution.
-TODO. If this is a fixed value or not.""",
+        "Screen resolution.",
     ),
 ]
 
@@ -173,12 +184,6 @@ excessive number of touches per second.""",
 telegram_settings = [
     Setting("TELEGRAM_TOKEN", "", str, "Telegram bot token."),
     Setting("TELEGRAM_CHAT", "", str, "Telegram chat ID."),
-    Setting(
-        "TELEGRAM_USERS",
-        ["", "", "", "", ""],
-        list[str],
-        "Users authorized to use the Telegram bot.",
-    ),
 ]
 
 server_settings = [
@@ -495,13 +500,26 @@ same type of alarm will not be triggered again.""",
         "CAM_CORRIDOR_FRAMERATE",
         10,
         int,
-        "The number of frames per second for the corridor camera.",
+        """The number of frames per second at which the corridor camera
+videos are saved. The recommended value is 10 fps, which provides reliable detection
+while keeping the video file size low.""",
     ),
     Setting(
         "CAM_BOX_FRAMERATE",
         30,
         int,
-        "The number of frames per second for the box camera.",
+        """The number of frames per second at which the box camera
+videos are saved. The recommended value is 30 fps. If higher precision is needed for
+video analysis, the frame rate can be increased up to 60 fps, but keep in mind that
+this will significantly increase the file size.""",
+    ),
+    Setting(
+        "CAMS_PREVIEW_FRAMERATE",
+        5,
+        int,
+        """The number of frames per second for the camera preview. This setting does
+not affect the frame rate at which videos are recorded. The recommended value is 5 fps,
+which provides a clear view of the system activity while keeping CPU usage low.""",
     ),
 ]
 

@@ -7,9 +7,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from village.classes.abstract_classes import CameraBase, CameraNull, PyBpodBase
 from village.classes.collection import Collection
 from village.classes.enums import Save
-from village.classes.protocols import CameraProtocol, PyBpodProtocol
 from village.classes.training import Settings, Training
 from village.devices.bpod import bpod
 from village.devices.sound_device import sound_device
@@ -35,7 +35,7 @@ class Output(OutputChannel):
 
 class Task:
     def __init__(self) -> None:
-        self.bpod: PyBpodProtocol = bpod
+        self.bpod: PyBpodBase = bpod
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.current_trial: int = 1
@@ -44,7 +44,7 @@ class Task:
         self.system_name: str = settings.get("SYSTEM_NAME")
         self.date: str = time_utils.now_string()
 
-        self.cam_box = CameraProtocol()
+        self.cam_box: CameraBase = CameraNull()
 
         self.info: str = ""
 
@@ -300,7 +300,7 @@ class Task:
                 )
 
                 self.session_df["session"] = [
-                    (int(self.subject_df["session"].iloc[-1]) + 1)
+                    int(self.subject_df["session"].iloc[-1]) + 1
                 ] * self.session_df.shape[0]
                 self.subject_df = pd.concat(
                     [self.subject_df, self.session_df], sort=True

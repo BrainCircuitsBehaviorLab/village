@@ -8,14 +8,14 @@ import numpy as np
 import pandas as pd
 from numpy.polynomial import Polynomial
 
-from village.classes.protocols import EventProtocol
+from village.classes.abstract_classes import EventBase
 from village.classes.training import Training
 from village.log import log
 from village.scripts import time_utils
 from village.settings import settings
 
 
-class Collection(EventProtocol):
+class Collection(EventBase):
     def __init__(self, name: str, columns: list[str], types: list[Type]) -> None:
         self.name: str = name
         self.columns: list[str] = columns

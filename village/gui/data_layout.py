@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import traceback
 from typing import TYPE_CHECKING, Any
 
@@ -1327,6 +1328,8 @@ class VideoLayout(Layout):
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, rows=rows, columns=columns)
+        self.deltas: list[float] = []
+        self.now = time.time()
         self.draw()
 
     def draw(self) -> None:
@@ -1546,8 +1549,16 @@ class VideoLayout(Layout):
     def close(self) -> None:
         self.stop_button_clicked()
         self.data_from_video_change_requested.emit("")
+        with open("deltas.txt", "w") as f:
+            for delta in self.deltas:
+                f.write(f"{delta}\n")
 
     def next_frame_slot(self) -> None:
+        last = self.now
+        self.now = time.time()
+        delta = int((self.now - last) * 1000)
+        self.deltas.append(delta)
+
         ret, frame = self.cap.read()
         if ret:
             img = QImage(

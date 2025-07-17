@@ -1,35 +1,42 @@
 import re
 
-from village.classes.protocols import CameraProtocol, EventProtocol, TelegramBotProtocol
+from village.classes.abstract_classes import (
+    CameraBase,
+    CameraNull,
+    EventBase,
+    EventNull,
+    TelegramBotBase,
+    TelegramBotNull,
+)
 from village.scripts import time_utils
 
 
 class Log:
     def __init__(self) -> None:
-        self.event_protocol = EventProtocol()
-        self.temp_protocol = EventProtocol()
-        self.cam_protocol = CameraProtocol()
-        self.telegram_protocol = TelegramBotProtocol()
+        self.event: EventBase = EventNull()
+        self.temp: EventBase = EventNull()
+        self.cam: CameraBase = CameraNull()
+        self.telegram_bot: TelegramBotBase = TelegramBotNull()
 
     def info(self, description: str, subject: str = "system") -> None:
         type = "INFO"
         date = time_utils.now_string()
         text = date + "  " + type + "  " + subject + "  " + description
-        self.event_protocol.log(date, type, subject, description)
-        self.cam_protocol.log(text)
+        self.event.log(date, type, subject, description)
+        self.cam.log(text)
         print(text)
 
-    def temp(self, temperature: float, humidity: float) -> None:
+    def temperature(self, temperature: float, humidity: float) -> None:
         date = time_utils.now_string()
-        self.temp_protocol.log_temp(date, temperature, humidity)
+        self.temp.log_temp(date, temperature, humidity)
 
     def start(self, task: str, subject: str = "system") -> None:
         type = "START"
         date = time_utils.now_string()
         description = task + " started"
         text = date + "  " + type + " " + subject + "  " + description
-        self.event_protocol.log(date, type, subject, description)
-        self.cam_protocol.log(text)
+        self.event.log(date, type, subject, description)
+        self.cam.log(text)
         print(text)
 
     def end(self, task: str, subject: str = "system") -> None:
@@ -37,8 +44,8 @@ class Log:
         date = time_utils.now_string()
         description = task + " ended"
         text = date + "  " + type + " " + subject + "  " + description
-        self.event_protocol.log(date, type, subject, description)
-        self.cam_protocol.log(text)
+        self.event.log(date, type, subject, description)
+        self.cam.log(text)
         print(text)
 
     def error(
@@ -51,8 +58,8 @@ class Log:
         date = time_utils.now_string()
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
-        self.event_protocol.log(date, type, subject, description)
-        self.cam_protocol.log(text)
+        self.event.log(date, type, subject, description)
+        self.cam.log(text)
         print(text.replace("  |  ", "\n"))
 
     def alarm(
@@ -65,15 +72,15 @@ class Log:
         type = "ALARM"
         date = time_utils.now_string()
         message = description if subject == "system" else description + " " + subject
-        self.telegram_protocol.alarm(message)
+        self.telegram_bot.alarm(message)
         print("")
         print(exception)
         print("")
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
         if not report:
-            self.event_protocol.log(date, type, subject, description)
-            self.cam_protocol.log(text)
+            self.event.log(date, type, subject, description)
+            self.cam.log(text)
         print(text.replace("  |  ", "\n"))
 
     def clean_text(self, exception: str | None, description: str) -> str:

@@ -22,6 +22,7 @@ def change_directory_settings(new_path: str) -> None:
     settings.set("SESSIONS_DIRECTORY", str(Path(new_path, "data", "sessions")))
     settings.set("VIDEOS_DIRECTORY", str(Path(new_path, "data", "videos")))
     settings.set("CODE_DIRECTORY", str(Path(new_path, "code")))
+    settings.set("MEDIA_DIRECTORY", str(Path(new_path, "media")))
 
 
 def create_directories() -> None:
@@ -34,6 +35,8 @@ def create_directories() -> None:
     directory = Path(settings.get("VIDEOS_DIRECTORY"))
     directory.mkdir(parents=True, exist_ok=True)
     directory = Path(settings.get("CODE_DIRECTORY"))
+    directory.mkdir(parents=True, exist_ok=True)
+    directory = Path(settings.get("MEDIA_DIRECTORY"))
     directory.mkdir(parents=True, exist_ok=True)
 
 

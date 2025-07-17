@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-from village.classes.protocols import TelegramBotProtocol
+from village.classes.abstract_classes import TelegramBotBase, TelegramBotNull
 from village.devices.camera import cam_box, cam_corridor
 from village.log import log
 from village.manager import manager
@@ -18,12 +18,10 @@ from village.scripts import time_utils
 from village.settings import settings
 
 
-class TelegramBot(TelegramBotProtocol):
+class TelegramBot(TelegramBotBase):
     def __init__(self) -> None:
         self.token = settings.get("TELEGRAM_TOKEN")
-        self.users = settings.get("TELEGRAM_USERS")
         self.chat = settings.get("TELEGRAM_CHAT")
-        self.user = ""
         self.message = ""
         self.connected = False
         self.error_running = False
@@ -55,12 +53,8 @@ class TelegramBot(TelegramBotProtocol):
             hours = 24
 
         try:
-            user_id = str(update.effective_user.id)
-            if user_id not in self.users:
-                log.error("Telegram User ID not included: " + user_id)
-            else:
-                report, _, _, _ = manager.create_report(hours)
-                await update.message.reply_text(report)
+            report, _, _, _ = manager.create_report(hours)
+            await update.message.reply_text(report)
         except Exception:
             log.error(
                 "Telegram error creating report", exception=traceback.format_exc()
@@ -68,40 +62,32 @@ class TelegramBot(TelegramBotProtocol):
 
     async def cam(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
-            user_id = str(update.effective_user.id)
-            if user_id not in self.users:
-                log.error("Telegram User ID not included: " + user_id)
-            else:
-                cam_corridor.take_picture()
-                cam_box.take_picture()
-                await asyncio.sleep(1)
-                with open(cam_corridor.path_picture, "rb") as picture_corridor:
-                    await update.message.reply_photo(photo=picture_corridor)
-                with open(cam_box.path_picture, "rb") as picture_box:
-                    await update.message.reply_photo(photo=picture_box)
-                if os.path.exists(cam_corridor.path_picture):
-                    os.remove(cam_corridor.path_picture)
-                if os.path.exists(cam_box.path_picture):
-                    os.remove(cam_box.path_picture)
+            cam_corridor.take_picture()
+            cam_box.take_picture()
+            await asyncio.sleep(1)
+            with open(cam_corridor.path_picture, "rb") as picture_corridor:
+                await update.message.reply_photo(photo=picture_corridor)
+            with open(cam_box.path_picture, "rb") as picture_box:
+                await update.message.reply_photo(photo=picture_box)
+            if os.path.exists(cam_corridor.path_picture):
+                os.remove(cam_corridor.path_picture)
+            if os.path.exists(cam_box.path_picture):
+                os.remove(cam_box.path_picture)
         except Exception:
             log.error("Telegram error sending photos", exception=traceback.format_exc())
 
     async def plot(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
-            user_id = str(update.effective_user.id)
-            if user_id not in self.users:
-                log.error("Telegram User ID not included: " + user_id)
-            else:
-                path = os.path.join(settings.get("VIDEOS_DIRECTORY"), "PLOT.jpg")
-                subjects = manager.subjects.df["name"].tolist()
-                fig = corridor_plot(manager.events.df.copy(), subjects, 4, 2)
-                fig.savefig(path, format="jpg", dpi=300)
-                plt.close(fig)
-                await asyncio.sleep(1)
-                with open(path, "rb") as picture:
-                    await update.message.reply_photo(photo=picture)
-                if os.path.exists(path):
-                    os.remove(path)
+            path = os.path.join(settings.get("VIDEOS_DIRECTORY"), "PLOT.jpg")
+            subjects = manager.subjects.df["name"].tolist()
+            fig = corridor_plot(manager.events.df.copy(), subjects, 4, 2)
+            fig.savefig(path, format="jpg", dpi=300)
+            plt.close(fig)
+            await asyncio.sleep(1)
+            with open(path, "rb") as picture:
+                await update.message.reply_photo(photo=picture)
+            if os.path.exists(path):
+                os.remove(path)
         except Exception:
             log.error("Telegram error sending plot", exception=traceback.format_exc())
 
@@ -132,7 +118,7 @@ class TelegramBot(TelegramBotProtocol):
             log.error("Telegram error", exception=traceback.format_exc())
 
 
-def get_telegram_bot() -> TelegramBotProtocol:
+def get_telegram_bot() -> TelegramBotBase:
     try:
         telegram_bot = TelegramBot()
         chrono = time_utils.Chrono()
@@ -146,13 +132,13 @@ def get_telegram_bot() -> TelegramBotProtocol:
             log.info("Telegram bot successfully initialized")
             return telegram_bot
         elif telegram_bot.error_running:
-            return TelegramBotProtocol()
+            return TelegramBotNull()
         else:
             log.error("Could not initialize telegram bot, time expired")
-            return TelegramBotProtocol()
+            return TelegramBotNull()
     except Exception:
         log.error("Could not initialize telegram bot", exception=traceback.format_exc())
-        return TelegramBotProtocol()
+        return TelegramBotNull()
 
 
 telegram_bot = get_telegram_bot()

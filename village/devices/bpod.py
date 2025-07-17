@@ -4,7 +4,7 @@ import time
 import traceback
 from typing import Any, Callable
 
-from village.classes.protocols import PyBpodProtocol
+from village.classes.abstract_classes import PyBpodBase, PyBpodNull
 from village.log import log
 from village.pybpodapi.protocol import Bpod, StateMachine
 from village.scripts import time_utils
@@ -45,7 +45,7 @@ class SoftCode:
         self.client_socket.close()
 
 
-class PyBpod(PyBpodProtocol):
+class PyBpod(PyBpodBase):
     def __init__(self) -> None:
         self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
@@ -246,7 +246,7 @@ class PyBpod(PyBpodProtocol):
             pass
 
 
-def get_bpod() -> PyBpodProtocol:
+def get_bpod() -> PyBpodBase:
     try:
         bpod = PyBpod()
         log.info("Bpod successfully initialized")
@@ -261,7 +261,7 @@ def get_bpod() -> PyBpodProtocol:
             return bpod
         except Exception:
             log.error("Could not initialize bpod", exception=traceback.format_exc())
-            return PyBpodProtocol()
+            return PyBpodNull()
 
 
 bpod = get_bpod()

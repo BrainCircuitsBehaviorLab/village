@@ -3,8 +3,9 @@ import sys
 from pathlib import Path
 
 from PyQt5.QtGui import QGuiApplication, QIcon
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication
 
+from village.classes.abstract_classes import BehaviorWindowBase, BehaviorWindowNull
 from village.classes.enums import ScreenActive
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
@@ -32,7 +33,7 @@ class Gui:
         self.primary_height = availableGeometry.height() - 30
 
         self.gui_window = GuiWindow(self)
-        self.behavior_window: QWidget = QWidget()
+        self.behavior_window: BehaviorWindowBase = BehaviorWindowNull()
 
         # self.shared_context = QOpenGLContext()
         # self.shared_context.setFormat(QSurfaceFormat.defaultFormat())
@@ -44,10 +45,11 @@ class Gui:
     def create_behavior_window(self) -> None:
         # get the resolution of the secondary monitor
         screen = QGuiApplication.screens()[1]
-        availableGeometry = screen.availableGeometry()
-        self.secondary_width = availableGeometry.width()
-        self.secondary_height = availableGeometry.height()
+        geometry = screen.geometry()
+        self.secondary_width = geometry.width()
+        self.secondary_height = geometry.height()
         self.behavior_window = BehaviorWindow(self)
+        settings.set("SCREEN_RESOLUTION", (self.secondary_width, self.secondary_height))
         # self.behavior_window.context().setShareContext(self.shared_context)
 
     def exit_app(self) -> None:

@@ -1,3 +1,4 @@
+import os
 import threading
 import time
 import traceback
@@ -5,9 +6,10 @@ from typing import Any
 
 import numpy as np
 import sounddevice as sd
+from scipy.io import wavfile
 
+from village.classes.abstract_classes import SoundDeviceBase, SoundDeviceNull
 from village.classes.enums import Active
-from village.classes.protocols import SoundDeviceProtocol
 from village.log import log
 from village.settings import settings
 
@@ -18,7 +20,7 @@ def get_sound_devices() -> list[str]:
     return devices_str
 
 
-class SoundDevice(SoundDeviceProtocol):
+class SoundDevice(SoundDeviceBase):
     def __init__(self) -> None:
         self.samplerate = int(settings.get("SAMPLERATE"))
         self.channels = 2
@@ -64,6 +66,33 @@ class SoundDevice(SoundDeviceProtocol):
         self.thread_running = True
         self.thread.start()
 
+    def load_wav(self, path: str) -> None:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"File '{path}' does not exist.")
+
+        samplerate, data = wavfile.read(path)
+        if samplerate != self.samplerate:
+            raise ValueError(
+                f"Expected samplerate {self.samplerate}, but got {samplerate}."
+            )
+
+        # Normalize to float32 in range [-1.0, 1.0] if needed
+        if data.dtype != np.float32:
+            if np.issubdtype(data.dtype, np.integer):
+                max_val = np.iinfo(data.dtype).max
+                data = data.astype(np.float32) / max_val
+            else:
+                data = data.astype(np.float32)
+
+        if data.ndim == 1:
+            left = right = data
+        elif data.shape[1] == 2:
+            left, right = data[:, 0], data[:, 1]
+        else:
+            raise ValueError("Unsupported number of channels in WAV file.")
+
+        self.load(left, right)
+
     def play(self) -> None:
         if self.sound.size == 0:
             raise ValueError("SoundR: No sound loaded. Please, use the method load().")
@@ -98,9 +127,9 @@ class SoundDevice(SoundDeviceProtocol):
         return np.ascontiguousarray(sound.T, dtype=np.float32)
 
 
-def get_sound_device() -> SoundDeviceProtocol:
+def get_sound_device() -> SoundDeviceBase:
     if settings.get("USE_SOUNDCARD") == Active.OFF:
-        return SoundDeviceProtocol()
+        return SoundDeviceNull()
     else:
         try:
             sound_device = SoundDevice()
@@ -110,7 +139,7 @@ def get_sound_device() -> SoundDeviceProtocol:
             log.error(
                 "Could not initialize sound device", exception=traceback.format_exc()
             )
-            return SoundDeviceProtocol()
+            return SoundDeviceNull()
 
 
 sound_device = get_sound_device()

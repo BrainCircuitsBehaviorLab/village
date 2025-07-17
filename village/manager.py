@@ -11,6 +11,11 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 
+from village.classes.abstract_classes import (
+    BehaviorWindowBase,
+    BehaviorWindowNull,
+    CameraBase,
+)
 from village.classes.after_session_run import AfterSessionRun
 from village.classes.change_cycle_run import ChangeCycleRun
 from village.classes.change_hour_run import ChangeHourRun
@@ -21,7 +26,6 @@ from village.classes.plot import (
     SessionPlotFigureManager,
     SubjectPlotFigureManager,
 )
-from village.classes.protocols import CameraProtocol
 from village.classes.subject import Subject
 from village.classes.task import Task
 from village.classes.training import Training
@@ -101,8 +105,8 @@ class Manager:
         self.update_cycle()
         utils.create_directories()
         self.create_collections()
-        log.event_protocol = self.events
-        log.temp_protocol = self.temperatures
+        log.event = self.events
+        log.temp = self.temperatures
         utils.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
         self.detections = time_utils.TimestampTracker(hours=6)
         self.sessions = time_utils.TimestampTracker(hours=12)
@@ -119,6 +123,11 @@ class Manager:
         self.measuring_weight_list: list[float] = []
         self.log_weight = False
         self.taring_scale = False
+
+        self.stimulus_timing: float = 0.0
+        self.stimulus_frame = 0
+
+        self.behavior_window: BehaviorWindowBase = BehaviorWindowNull()
 
     def create_collections(self) -> None:
         self.events = Collection(
@@ -441,7 +450,7 @@ class Manager:
             return True
         return False
 
-    def launch_task_manual(self, cam: CameraProtocol) -> bool:
+    def launch_task_manual(self, cam: CameraBase) -> bool:
         self.task.create_paths()
         self.task.cam_box = cam
         self.task.water_calibration = self.water_calibration
@@ -466,7 +475,7 @@ class Manager:
             self.error_in_manual_task = True
             return False
 
-    def launch_task_auto(self, cam: CameraProtocol) -> bool:
+    def launch_task_auto(self, cam: CameraBase) -> bool:
         try:
             self.weight = np.nan
             self.training.load_settings_from_jsonstring(self.subject.next_settings)
@@ -767,7 +776,3 @@ class Manager:
 
 
 manager = Manager()
-
-
-def get_task() -> Task:
-    return manager.task

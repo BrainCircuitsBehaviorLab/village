@@ -7,12 +7,12 @@
 
 
 # to debug segfaults uncomment the following lines
-import faulthandler
 import gc
 import threading
 import time
 
 import numpy as np
+from PyQt5.QtGui import QSurfaceFormat
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
@@ -30,15 +30,28 @@ from village.manager import manager
 from village.scripts import time_utils
 from village.settings import settings
 
-faulthandler.enable()
+fmt = QSurfaceFormat()
+fmt.setSwapInterval(1)  # try 0
+fmt.setVersion(2, 0)  # OpenGL ES 3.1
+fmt.setRenderableType(QSurfaceFormat.OpenGL)
+
+fmt.setDepthBufferSize(0)
+fmt.setStencilBufferSize(0)
+fmt.setSamples(0)
+fmt.setAlphaBufferSize(0)
+
+QSurfaceFormat.setDefaultFormat(fmt)
+
+
+# faulthandler.enable()
 
 # automatic garbage collection disabled, we will use it manually when no task is running
 gc.disable()
 
 # init
 manager.task.bpod = bpod
-log.telegram_protocol = telegram_bot
-log.cam_protocol = cam_corridor
+log.telegram_bot = telegram_bot
+log.cam = cam_corridor
 manager.import_all_tasks()
 manager.errors = (
     bpod.error
@@ -59,9 +72,9 @@ else:
 # create a secondary thread
 def system_run(bevavior_window: QWidget) -> None:
 
-    # # TESTING
+    # TESTING
     # i = 0
-    # # TESTING
+    # TESTING
 
     id = ""
     multiple = False
@@ -128,14 +141,14 @@ def system_run(bevavior_window: QWidget) -> None:
                     id, multiple = rfid.get_id()
                     manager.reset_subject_task_training()
 
-                # # TESTING
+                # TESTING
                 # i += 1
-                # if i == 1000:
+                # if i == 10000:
+                #     manager.behavior_window.set_active(True)
+                # elif i == 20000:
                 #     i = 0
-                #     id = "ABCDEF"
-                #     multiple = False
-                #     # behavior_window.toggle_animation()
-                # # TESTING
+                #     manager.behavior_window.set_active(False)
+                # TESTING
 
                 if id != "":
                     log.info("Tag detected: " + id)
@@ -429,10 +442,12 @@ def system_run(bevavior_window: QWidget) -> None:
 
 # create the GUI that will run in the main thread
 gui = Gui()
-behavior_window = gui.behavior_window
+manager.behavior_window = gui.behavior_window
 
 # start the secondary thread (control of the system)
-system_state = threading.Thread(target=system_run, args=(behavior_window,), daemon=True)
+system_state = threading.Thread(
+    target=system_run, args=(manager.behavior_window,), daemon=True
+)
 system_state.start()
 
 # start the GUI

@@ -5,16 +5,16 @@ https://github.com/DFRobot/DFRobot_HX711_I2C
 
 import traceback
 
+import numpy as np
 import smbus2
 
-from village.classes.protocols import ScaleProtocol
+from village.classes.abstract_classes import ScaleBase, ScaleNull
 from village.log import log
 from village.scripts import time_utils
 from village.settings import settings
-import numpy as np
 
 
-class Scale(ScaleProtocol):
+class Scale(ScaleBase):
     def __init__(self, address: str) -> None:
         self.I2C_ADDR = int(address, 16)
         self.REG_DATA_GET_RAM_DATA = 0x00  # Get sensor raw data
@@ -71,14 +71,14 @@ class Scale(ScaleProtocol):
             return 0.0
 
 
-def get_scale(address: str) -> ScaleProtocol:
+def get_scale(address: str) -> ScaleBase:
     try:
         scale = Scale(address=address)
         log.info("Scale successfully initialized")
         return scale
     except Exception:
         log.error("Could not initialize scale", exception=traceback.format_exc())
-        return ScaleProtocol()
+        return ScaleNull()
 
 
 scale = get_scale(settings.get("SCALE_ADDRESS"))
@@ -94,10 +94,10 @@ def real_weight_inference(weight_array, threshold):
     """
     if len(weight_array) < 5:
         return False
-    
+
     median_weight = np.median(weight_array[-5:])
     std_weight = np.std(weight_array[-3:])
-    
+
     if median_weight > threshold and std_weight < 0.1 * threshold:
         return True
     else:

@@ -386,6 +386,9 @@ class MonitorLayout(Layout):
         self.qpicamera2_corridor = cam_corridor.start_preview_window()
         self.qpicamera2_box = cam_box.start_preview_window()
 
+        self.qpicamera2_corridor.setFixedSize(640, 480)
+        self.qpicamera2_box.setFixedSize(640, 480)
+
         self.addWidget(self.qpicamera2_corridor, 4, 0, 30, 88)
         self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
 
