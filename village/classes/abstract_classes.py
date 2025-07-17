@@ -366,7 +366,7 @@ class CameraNull(CameraBase):
         return
 
 
-class BehaviorWindowBase(QWidget, ABC):
+class BehaviorWindowBase(QWidget):
     @abstractmethod
     def set_active(self, value: bool) -> None: ...
     @abstractmethod
