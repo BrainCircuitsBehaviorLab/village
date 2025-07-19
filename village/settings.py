@@ -19,31 +19,19 @@ main_settings = [
         "DAYTIME",
         "08:00",
         str,
-        """If lighting differs between day and night, the system needs to adjust
-detection thresholds accordingly. This setting defines the hour at which
-daytime begins.""",
+        """This setting defines when the daytime cycle begins. At the start of each
+cycle, the system performs various checks. The entry plot for the behavioral box uses
+this value to distinguish between day and night periods. If lighting conditions differ
+between day and night, the system will adjust detection thresholds accordingly.""",
     ),
     Setting(
         "NIGHTTIME",
         "20:00",
         str,
-        """If lighting differs between day and night, the system needs to adjust
-detection thresholds accordingly. This setting defines the hour at which
-nighttime begins.""",
-    ),
-    Setting(
-        "DAYS_OF_VIDEO_STORAGE",
-        7,
-        int,
-        "Number of days to store video data before deleting it.",
-    ),
-    Setting(
-        "SAFE_DELETE",
-        "ON",
-        Active,
-        """If ON, the system deletes old video data only if it has been backed up
-to a remote server. If OFF, the system deletes old video data even if no backup
-is found.""",
+        """This setting defines when the nighttime cycle begins. At the start of each
+cycle, the system performs various checks. The entry plot for the behavioral box uses
+this value to distinguish between day and night periods. If lighting conditions differ
+between day and night, the system will adjust detection thresholds accordingly.""",
     ),
     Setting(
         "DETECTION_COLOR",
@@ -53,12 +41,6 @@ is found.""",
 pixels against a white background. If the animals are lighter than the
 background, the system detects white pixels against a black background.""",
     ),
-    Setting(
-        "WEIGHT_THRESHOLD",
-        10.0,
-        float,
-        "The minimum weight in grams to consider that the animal is on the scale.",
-    ),
 ]
 
 sound_settings = [
@@ -67,29 +49,65 @@ sound_settings = [
     Setting("SAMPLERATE", 192000, int, "The samplerate of the sound device."),
 ]
 
-alarm_settings = [
+screen_settings = [
+    Setting("USE_SCREEN", "OFF", ScreenActive, "Use of a regular or touch screen."),
     Setting(
-        "MINIMUM_WATER_24",
-        400,
-        int,
-        """Minimum water intake in ml over 24 hours. If the animal drinks less than
-this amount, an alarm is triggered.""",
+        "SCREEN_SIZE_MM",
+        [400, 200],
+        list[int],
+        """Physical screen size in millimeters. Useful when positioning stimuli
+using real-world units instead of pixels.""",
     ),
     Setting(
-        "MINIMUM_TEMPERATURE",
-        19,
-        int,
-        """Minimum temperature (in Celsius). If the temperature falls below this level,
-an alarm is triggered.""",
-    ),
-    Setting(
-        "MAXIMUM_TEMPERATURE",
-        27,
-        int,
-        """Maximum temperature (in Celsius). If the temperature exceeds this level,
-an alarm is triggered.""",
+        "SCREEN_RESOLUTION",
+        [1600, 900],
+        list[int],
+        "Screen resolution.",
     ),
 ]
+
+touchscreen_settings = [
+    Setting(
+        "TOUCH_RESOLUTION",
+        [4096, 4096],
+        list[int],
+        """Touch screen reading resolution. This value is typically different from the
+screen's display resolution.""",
+    ),
+    Setting(
+        "TIME_BETWEEN_TOUCHES",
+        0.5,
+        float,
+        """Refractory period after a touch (in seconds) to prevent recording an
+excessive number of touches per second.""",
+    ),
+]
+
+telegram_settings = [
+    Setting("TELEGRAM_TOKEN", "", str, "The telegram bot token."),
+    Setting(
+        "TELEGRAM_CHAT",
+        "",
+        str,
+        "The Telegram chat ID where alarm messages will be sent.",
+    ),
+]
+
+bpod_settings = [
+    Setting(
+        "BPOD_BNC_PORTS_ENABLED",
+        ["OFF", "OFF"],
+        list[Active],
+        "Enabled BNC ports on the Bpod.",
+    ),
+    Setting(
+        "BPOD_BEHAVIOR_PORTS_ENABLED",
+        ["ON", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"],
+        list[Active],
+        "Enabled behavior ports on the Bpod.",
+    ),
+]
+
 
 default_project_name = "demo_project"
 default_project_directory = str(
@@ -147,46 +165,24 @@ directory_settings = [
     ),
 ]
 
-screen_settings = [
-    Setting("USE_SCREEN", "OFF", ScreenActive, "Use of a regular or touch screen."),
-    Setting(
-        "SCREEN_SIZE_MM",
-        [400, 200],
-        list[int],
-        """Physical screen size in millimeters. Useful when positioning stimuli
-using real-world units instead of pixels.""",
-    ),
-    Setting(
-        "SCREEN_RESOLUTION",
-        [1024, 768],
-        list[int],
-        "Screen resolution.",
-    ),
-]
 
-touchscreen_settings = [
+sync_settings = [
     Setting(
-        "TOUCH_RESOLUTION",
-        [4096, 4096],
-        list[int],
-        """Touch screen reading resolution. This value is typically different from the
-screen's display resolution.""",
+        "SAFE_DELETE",
+        "ON",
+        Active,
+        """If ON, the system deletes old video data only if it has been backed up
+to a remote server. If OFF, the system deletes old video data even if no backup
+is found.""",
     ),
     Setting(
-        "TIME_BETWEEN_TOUCHES",
-        0.5,
-        float,
-        """Refractory period after a touch (in seconds) to prevent recording an
-excessive number of touches per second.""",
+        "MAXIMUM_SYNC_TIME",
+        600,
+        int,
+        """Maximum time allowed (in seconds) to sync data. If synchronization is
+not completed within this time, the process will stop to allow other animals to access
+the behavioral box.""",
     ),
-]
-
-telegram_settings = [
-    Setting("TELEGRAM_TOKEN", "", str, "Telegram bot token."),
-    Setting("TELEGRAM_CHAT", "", str, "Telegram chat ID."),
-]
-
-server_settings = [
     Setting("SERVER_USER", "training_village", str, "The server user."),
     Setting("SERVER_HOST", "server", str, "The server hostname."),
     Setting("SERVER_PORT", 4022, int, "The server port."),
@@ -204,19 +200,212 @@ server_settings = [
     ),
 ]
 
-bpod_settings = [
+device_settings = [
+    Setting("BPOD_SERIAL_PORT", "/dev/Bpod", str, "The serial port of the Bpod"),
+    Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1."),
+    Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2."),
+    Setting("SCALE_ADDRESS", "0x64", str, "The address of the scale."),
+    Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
     Setting(
-        "BPOD_BNC_PORTS_ENABLED",
-        ["OFF", "OFF"],
-        list[Active],
-        "Enabled BNC ports on the Bpod.",
+        "CAM_BOX_INDEX",
+        0,
+        int,
+        "The index (0, 1) of the box camera.",
     ),
     Setting(
-        "BPOD_BEHAVIOR_PORTS_ENABLED",
-        ["ON", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"],
-        list[Active],
-        "Enabled behavior ports on the Bpod.",
+        "CAM_CORRIDOR_INDEX",
+        1,
+        int,
+        "The index (0, 1) of the corridor camera.",
     ),
+]
+
+
+hourly_alarm_settings = [
+    Setting(
+        "MINIMUM_TEMPERATURE",
+        19,
+        int,
+        """Checked hourly. Minimum temperature (in Celsius). If the temperature falls
+below this level, an alarm is triggered.""",
+    ),
+    Setting(
+        "MAXIMUM_TEMPERATURE",
+        27,
+        int,
+        """Checked hourly. Maximum temperature (in Celsius). If the temperature
+exceeds this level, an alarm is triggered.""",
+    ),
+    Setting(
+        "NO_DETECTION_HOURS",
+        6,
+        int,
+        """Checked hourly. This alarm is triggered if no detections occur within a
+specified number of hours.""",
+    ),
+    Setting(
+        "NO_SESSION_HOURS",
+        6,
+        int,
+        """Checked hourly. This alarm is triggered if no session is performed in the
+behavioral box within a specified number of hours.""",
+    ),
+]
+
+cycle_alarm_settings = [
+    Setting(
+        "NO_DETECTION_SUBJECT_24H",
+        "ON",
+        Active,
+        """This check is performed every time the system switches between day and night.
+If any animal has not been detected over a 24-hour period, an alarm is triggered.""",
+    ),
+    Setting(
+        "NO_SESSION_SUBJECT_24H",
+        "ON",
+        Active,
+        """This check is performed every time the system switches between day and night.
+If any animal has not completed any task over a 24-hour period, an alarm is
+triggered.""",
+    ),
+    Setting(
+        "MINIMUM_WATER_SUBJECT_24H",
+        400,
+        int,
+        """This check is performed every time the system switches between day and night.
+If any animal drinks less than the specified minimum water intake (in mL) over a 24-hour
+period, an alarm is triggered.""",
+    ),
+]
+
+session_alarm_settings = [
+    Setting(
+        "NO_WATER_DRUNK",
+        "ON",
+        Active,
+        """At the end of a session, an alarm is triggered if the animal has not
+consumed any water.""",
+    ),
+    Setting(
+        "NO_TRIALS_PERFORMED",
+        "ON",
+        Active,
+        """At the end of a session, an alarm is triggered if the animal has not
+completed any trials.""",
+    ),
+]
+
+cam_framerate_settings = [
+    Setting(
+        "CAM_CORRIDOR_FRAMERATE",
+        10,
+        int,
+        """The number of frames per second at which the corridor camera
+videos are saved. The recommended value is 10 fps, which provides reliable detection
+while keeping the video file size low.""",
+    ),
+    Setting(
+        "CAM_BOX_FRAMERATE",
+        30,
+        int,
+        """The number of frames per second at which the box camera
+videos are saved. The recommended value is 30 fps. If higher precision is needed for
+video analysis, the frame rate can be increased up to 60 fps, but keep in mind that
+this will significantly increase the file size.""",
+    ),
+    Setting(
+        "CAMS_PREVIEW_FRAMERATE",
+        5,
+        int,
+        """The number of frames per second for the camera preview. This setting does
+not affect the frame rate at which videos are recorded. The recommended value is 5 fps,
+which provides a clear view of the system activity while keeping CPU usage low.""",
+    ),
+]
+
+
+corridor_settings = [
+    Setting(
+        "DETECTION_DURATION",
+        0.5,
+        float,
+        """To allow access, after a detection, the pixel detection must remain within
+limits for this duration (in seconds).""",
+    ),
+    Setting(
+        "TIME_BETWEEN_DETECTIONS",
+        15.0,
+        float,
+        """To allow access, no other animals can have been detected within this number
+of seconds prior to a detection.""",
+    ),
+    Setting(
+        "WEIGHT_THRESHOLD",
+        10.0,
+        float,
+        "The minimum weight in grams to consider that the animal is on the scale.",
+    ),
+    Setting(
+        "REPEAT_TARE_TIME",
+        600,
+        int,
+        "The interval in seconds at which the scale is tared.",
+    ),
+]
+
+extra_settings = [
+    Setting(
+        "UPDATE_TIME_TABLE",
+        1,
+        int,
+        """Duration in seconds of the update period for the tables displayed
+in DATA. Setting a very low value could result in excessive CPU load.""",
+    ),
+    Setting(
+        "SCREENSAVE_TIME",
+        300,
+        int,
+        """The time in seconds after which the system automatically returns to
+the MAIN screen if there is no user interaction. This helps reduce CPU usage by
+preventing unnecessary processing.""",
+    ),
+    Setting(
+        "CORRIDOR_VIDEO_DURATION",
+        1800,
+        int,
+        "The duration of the corridor videos in seconds.",
+    ),
+    Setting(
+        "DAYS_OF_VIDEO_STORAGE",
+        7,
+        int,
+        "Number of days to store video data before deleting it.",
+    ),
+    Setting(
+        "MATPLOTLIB_DPI",
+        100,
+        int,
+        "The DPI of the matplotlib plots.",
+    ),
+]
+
+bpod_advanced_settings = [
+    Setting(
+        "BPOD_TARGET_FIRMWARE",
+        22,
+        int,
+        """This system is compatible only with this Bpod firmware version. If you have
+a different version, please update it by following the instructions at sanworks.com.""",
+    ),
+    Setting(
+        "BPOD_NET_PORT",
+        36000,
+        int,
+        "The network port of the Bpod (for sending and receiving softcodes).",
+    ),
+    Setting("BPOD_BAUDRATE", 115200, int, "Bpod baudrate."),
+    Setting("BPOD_SYNC_CHANNEL", 255, int, "Bpod sync channel."),
+    Setting("BPOD_SYNC_MODE", 1, int, "Bpod sync mode."),
 ]
 
 
@@ -396,148 +585,26 @@ hidden_settings = [
 ]
 
 
-advanced_settings = [
-    Setting(
-        "BPOD_TARGET_FIRMWARE",
-        22,
-        int,
-        """This system is compatible only with this Bpod firmware version. If you have
-a different version, please update it by following the instructions at sanworks.com.""",
-    ),
-    Setting("BPOD_SERIAL_PORT", "/dev/Bpod", str, "The serial port of the Bpod"),
-    Setting(
-        "BPOD_NET_PORT",
-        36000,
-        int,
-        "The network port of the Bpod (for sending and receiving softcodes).",
-    ),
-    Setting("BPOD_BAUDRATE", 115200, int, "Bpod baudrate."),
-    Setting("BPOD_SYNC_CHANNEL", 255, int, "Bpod sync channel."),
-    Setting("BPOD_SYNC_MODE", 1, int, "Bpod sync mode."),
-    Setting(
-        "DETECTION_DURATION",
-        0.5,
-        float,
-        """To allow access, after a detection, the pixel detection must remain within
-limits for this duration (in seconds).""",
-    ),
-    Setting(
-        "TIME_BETWEEN_DETECTIONS",
-        15.0,
-        float,
-        """To allow access, no other animals can have been detected within this number
-of seconds prior to a detection.""",
-    ),
-    Setting(
-        "WEIGHT_DEVIATION",
-        5,
-        float,
-        """The standard deviation of the weight must be smaller than this value
-to consider it as correct. If the ratio is greater than this value, the weight
-is considered an outlier probably because the animal is moving or it is not
-completely on the scale.""",
-    ),
-    Setting(
-        "UPDATE_TIME_TABLE",
-        1,
-        int,
-        """Duration in seconds of the update period for the tables displayed
-in DATA. Setting a very low value could result in excessive CPU load.""",
-    ),
-    Setting(
-        "SCREENSAVE_TIME",
-        300,
-        int,
-        """The time in seconds after which the system automatically returns to
-the MAIN screen if there is no user interaction. This helps reduce CPU usage by
-preventing unnecessary processing.""",
-    ),
-    Setting(
-        "CORRIDOR_VIDEO_DURATION",
-        1800,
-        int,
-        "The duration of the corridor videos in seconds.",
-    ),
-    Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1."),
-    Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2."),
-    Setting("SCALE_ADDRESS", "0x64", str, "The address of the scale."),
-    Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
-    Setting(
-        "ALARM_REPEAT_TIME",
-        3600,
-        int,
-        """Some alarms should be triggered each time an event occurs, while others
-might be continuously triggered by the same ongoing event (e.g., two animals detected
-inside the behavioral box, a malfunctioning scale, etc.). To prevent flooding the
-system with repeated messages, this setting defines a time period during which the
-same type of alarm will not be triggered again.""",
-    ),
-    Setting(
-        "REPEAT_TARE_TIME",
-        600,
-        int,
-        "The interval in seconds at which the scale is tared.",
-    ),
-    Setting(
-        "MATPLOTLIB_DPI",
-        100,
-        int,
-        "The DPI of the matplotlib plots.",
-    ),
-    Setting(
-        "CAM_BOX_INDEX",
-        0,
-        int,
-        "The index (0, 1) of the box camera.",
-    ),
-    Setting(
-        "CAM_CORRIDOR_INDEX",
-        1,
-        int,
-        "The index (0, 1) of the corridor camera.",
-    ),
-    Setting(
-        "CAM_CORRIDOR_FRAMERATE",
-        10,
-        int,
-        """The number of frames per second at which the corridor camera
-videos are saved. The recommended value is 10 fps, which provides reliable detection
-while keeping the video file size low.""",
-    ),
-    Setting(
-        "CAM_BOX_FRAMERATE",
-        30,
-        int,
-        """The number of frames per second at which the box camera
-videos are saved. The recommended value is 30 fps. If higher precision is needed for
-video analysis, the frame rate can be increased up to 60 fps, but keep in mind that
-this will significantly increase the file size.""",
-    ),
-    Setting(
-        "CAMS_PREVIEW_FRAMERATE",
-        5,
-        int,
-        """The number of frames per second for the camera preview. This setting does
-not affect the frame rate at which videos are recorded. The recommended value is 5 fps,
-which provides a clear view of the system activity while keeping CPU usage low.""",
-    ),
-]
-
-
 settings = Settings(
     main_settings,
     sound_settings,
-    alarm_settings,
-    directory_settings,
     screen_settings,
     touchscreen_settings,
     telegram_settings,
-    server_settings,
     bpod_settings,
+    directory_settings,
+    sync_settings,
+    device_settings,
+    hourly_alarm_settings,
+    cycle_alarm_settings,
+    session_alarm_settings,
+    cam_framerate_settings,
+    corridor_settings,
+    extra_settings,
+    bpod_advanced_settings,
     camera_settings,
     motor_settings,
     hidden_settings,
-    advanced_settings,
 )
 
 # settings.restore_factory_settings()

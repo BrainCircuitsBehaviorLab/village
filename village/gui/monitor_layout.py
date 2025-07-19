@@ -235,7 +235,7 @@ class MonitorLayout(Layout):
     def draw(self) -> None:
         rectangle = QWidget()
         rectangle.setStyleSheet("background-color: lightgray;")
-        self.addWidget(rectangle, 4, 88, 28, 36)
+        self.addWidget(rectangle, 4, 80, 29, 39)
 
         self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
@@ -245,16 +245,16 @@ class MonitorLayout(Layout):
         self.central_widget = QWidget(self.window)
         self.bottom_widget = QWidget(self.window)
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 13, 88, 16, 36)
+        self.addLayout(self.central_layout, 13, 80, 16, 39)
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = MotorLayout(self.window, 16, 36)
+        self.page1Layout = MotorLayout(self.window, 16, 39)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = PortsLayout(self.window, 16, 36)
+        self.page2Layout = PortsLayout(self.window, 16, 39)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
@@ -275,7 +275,7 @@ class MonitorLayout(Layout):
 
         self.page4 = QWidget(self.central_widget)
         self.page4.setStyleSheet("background-color:white")
-        self.page4Layout = VirtualMouseLayout(self.window, 16, 36)
+        self.page4Layout = VirtualMouseLayout(self.window, 16, 39)
         self.page4.setLayout(self.page4Layout)
 
         self.central_layout.addWidget(self.page1)
@@ -284,21 +284,21 @@ class MonitorLayout(Layout):
         self.central_layout.addWidget(self.page4)
 
         self.bottom_layout = QStackedLayout()
-        self.addLayout(self.bottom_layout, 34, 0, 16, 212)
+        self.addLayout(self.bottom_layout, 33, 0, 18, 199)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
-        self.page5Layout = InfoLayout(self.window, 16, 212)
+        self.page5Layout = InfoLayout(self.window, 18, 199)
         self.page5.setLayout(self.page5Layout)
 
         self.page6 = QWidget(self.bottom_widget)
         self.page6.setStyleSheet("background-color:white")
-        self.page6Layout = CorridorLayout(self.window, 16, 212)
+        self.page6Layout = CorridorLayout(self.window, 18, 199)
         self.page6.setLayout(self.page6Layout)
 
         self.page7 = QWidget(self.bottom_widget)
         self.page7.setStyleSheet("background-color:white")
-        self.page7Layout = CorridorPlotLayout(self.window, 16, 212)
+        self.page7Layout = CorridorPlotLayout(self.window, 18, 199)
         self.page7.setLayout(self.page7Layout)
 
         self.bottom_layout.addWidget(self.page5)
@@ -306,7 +306,7 @@ class MonitorLayout(Layout):
         self.bottom_layout.addWidget(self.page7)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID reader: ", 5, 90, 12, 2, "black"
+            "RFID reader: ", 5, 82, 12, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
@@ -314,7 +314,7 @@ class MonitorLayout(Layout):
         self.rfid_reader_button = self.create_and_add_toggle_button(
             key,
             5,
-            102,
+            94,
             20,
             2,
             possible_values,
@@ -324,7 +324,7 @@ class MonitorLayout(Layout):
         )
 
         self.cycle_label: Label = self.create_and_add_label(
-            "Cycle: ", 7, 90, 12, 2, "black"
+            "Cycle: ", 7, 82, 12, 2, "black"
         )
         key = "CYCLE"
         possible_values = Cycle.values()
@@ -332,7 +332,7 @@ class MonitorLayout(Layout):
         self.cycle_button = self.create_and_add_toggle_button(
             key,
             7,
-            102,
+            94,
             20,
             2,
             possible_values,
@@ -351,8 +351,8 @@ class MonitorLayout(Layout):
         self.actions_button = self.create_and_add_toggle_button(
             key,
             11,
-            88,
-            36,
+            80,
+            39,
             2,
             possible_values,
             index,
@@ -367,8 +367,8 @@ class MonitorLayout(Layout):
         self.info_button = self.create_and_add_toggle_button(
             key,
             32,
-            88,
-            36,
+            80,
+            39,
             2,
             possible_values,
             index,
@@ -389,8 +389,8 @@ class MonitorLayout(Layout):
         self.qpicamera2_corridor.setFixedSize(640, 480)
         self.qpicamera2_box.setFixedSize(640, 480)
 
-        self.addWidget(self.qpicamera2_corridor, 4, 0, 30, 88)
-        self.addWidget(self.qpicamera2_box, 4, 124, 30, 88)
+        self.addWidget(self.qpicamera2_corridor, 4, 0, 29, 80)
+        self.addWidget(self.qpicamera2_box, 4, 119, 29, 80)
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
         manager.cycle = Cycle[value]

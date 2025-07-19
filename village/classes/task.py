@@ -9,7 +9,7 @@ import pandas as pd
 
 from village.classes.abstract_classes import CameraBase, PyBpodBase
 from village.classes.collection import Collection
-from village.classes.enums import Save
+from village.classes.enums import Active, Save
 from village.classes.training import Settings, Training
 from village.devices.bpod import bpod
 from village.devices.sound_device import sound_device
@@ -286,7 +286,7 @@ class Task:
             except Exception:
                 water = 0
 
-            if water == 0:
+            if water == 0 and settings.get("NO_WATER_DRUNK") == Active.ON:
                 log.alarm(
                     "No water was drunk in task: " + self.name, subject=self.subject
                 )
@@ -335,11 +335,11 @@ class Task:
 
             return duration, trials, water, True
         else:
-            # TODO: deactivated alarm for now
-            log.info(
-                "No trials were recorded in task: " + self.name, subject=self.subject
-            )
-
+            if settings.get("NO_TRIALS_PERFORMED") == Active.ON:
+                log.alarm(
+                    "No trials were recorded in task: " + self.name,
+                    subject=self.subject,
+                )
             return 0.0, 0, 0, False
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:

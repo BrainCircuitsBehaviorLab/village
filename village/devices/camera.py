@@ -149,8 +149,8 @@ class Camera(CameraBase):
         self.two_mice_detections = 0
         self.prohibited_detections = 0
 
-        self.area4_alarm_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
-        self.box_alarm_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
+        self.area4_alarm_timer = time_utils.Timer(3600)
+        self.box_alarm_timer = time_utils.Timer(3600)
 
         self.cam.start()
 
@@ -478,20 +478,29 @@ class Camera(CameraBase):
 
     def areas_corridor_ok(self) -> bool:
         if self.counts[0] > self.zero_or_one_mouse:
-            log.info("Detection in area1: " + str(self.counts[0]))
+            log.info(
+                "Detection in area1: " + str(self.counts[0]),
+                subject=manager.subject.name,
+            )
             return False
         elif self.counts[1] > self.zero_or_one_mouse:
-            log.info("Detection in area2: " + str(self.counts[1]))
+            log.info(
+                "Detection in area2: " + str(self.counts[1]),
+                subject=manager.subject.name,
+            )
             return False
         elif self.counts[2] > self.one_or_two_mice:
-            log.info("Large detection in area3: " + str(self.counts[2]))
+            log.info(
+                "Large detection in area3: " + str(self.counts[2]),
+                subject=manager.subject.name,
+            )
             return False
         elif self.counts[3] > self.zero_or_one_mouse:
             text = "Detection in area4 when it should be empty: " + str(self.counts[3])
             if self.area4_alarm_timer.has_elapsed():
-                log.alarm(text)
+                log.alarm(text, subject=manager.subject.name)
             else:
-                log.info(text)
+                log.info(text, subject=manager.subject.name)
 
             return False
         else:

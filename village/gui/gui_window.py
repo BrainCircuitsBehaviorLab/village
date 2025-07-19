@@ -32,6 +32,7 @@ class GuiWindow(QWidget):
         self.setWindowTitle("Village")
         self.layout: Layout = MainLayout(self, first_draw=True)
         self.setLayout(self.layout)
+        self.screensave_time: int = int(settings.get("SCREENSAVE_TIME"))
         self.update_chrono = time_utils.Chrono()
         self.update_timer = QTimer()
         self.update_timer.setInterval(settings.get("UPDATE_TIME_TABLE") * 1000)
@@ -99,5 +100,5 @@ class GuiWindow(QWidget):
         self.check_update_chrono()
 
     def check_update_chrono(self) -> None:
-        if self.update_chrono.get_seconds() > settings.get("SCREENSAVE_TIME"):
+        if self.update_chrono.get_seconds() > self.screensave_time:
             self.layout.main_button_clicked(auto=True)

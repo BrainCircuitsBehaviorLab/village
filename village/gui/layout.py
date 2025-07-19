@@ -174,16 +174,16 @@ class Layout(QGridLayout):
         self,
         window: GuiWindow,
         stacked: bool = False,
-        rows: int = 50,
-        columns: int = 212,
+        rows: int = 51,
+        columns: int = 199,
     ) -> None:
         super().__init__()
         self.window = window
         self.stacked = stacked
 
         if stacked:
-            self.width = int(window.window_width / 212 * columns)
-            self.height = int(window.window_height / 50 * rows)
+            self.width = int(window.window_width / 199 * columns)
+            self.height = int(window.window_height / 51 * rows)
             self.num_of_columns = columns
             self.num_of_rows = rows
         else:
@@ -209,11 +209,11 @@ class Layout(QGridLayout):
 
     def create_common_elements(self) -> None:
         self.status_label = self.create_and_add_label(
-            "", 2, 0, 210, 2, "white", background="black"
+            "", 2, 0, 198, 2, "white", background="black"
         )
         # self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
-        size = 20
+        size = 18
 
         self.main_button = self.create_and_add_button(
             "MAIN",
@@ -288,8 +288,8 @@ class Layout(QGridLayout):
         self.online_plots_button = self.create_and_add_button(
             "ONLINE PLOTS",
             0,
-            161,
-            17,
+            156,
+            14,
             2,
             self.show_online_plots_clicked,
             "Show the online plots when a task is running",
@@ -299,8 +299,8 @@ class Layout(QGridLayout):
         self.stop_button = self.create_and_add_button(
             "",
             0,
-            178,
-            17,
+            170,
+            14,
             2,
             self.stop_button_clicked,
             "Stop a running task",
@@ -310,8 +310,8 @@ class Layout(QGridLayout):
         self.exit_button = self.create_and_add_button(
             "EXIT",
             0,
-            195,
-            17,
+            184,
+            14,
             2,
             self.exit_button_clicked,
             "Exit the application",

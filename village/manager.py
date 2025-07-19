@@ -104,8 +104,12 @@ class Manager:
         log.event = self.events
         log.temp = self.temperatures
         utils.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
-        self.detections = time_utils.TimestampTracker(hours=6)
-        self.sessions = time_utils.TimestampTracker(hours=12)
+        self.detections = time_utils.TimestampTracker(
+            hours=int(settings.get("NO_DETECTION_HOURS"))
+        )
+        self.sessions = time_utils.TimestampTracker(
+            hours=int(settings.get("NO_SESSION_HOURS"))
+        )
         self.hour_change_detector = time_utils.HourChangeDetector()
         self.cycle_change_detector = time_utils.CycleChangeDetector(
             settings.get("DAYTIME"), settings.get("NIGHTTIME")
@@ -656,9 +660,15 @@ class Manager:
     def cycle_checks(self) -> None:
         text, non_det_subs, non_ses_subs, low_water_subs = self.create_report(24)
         log.alarm(text, report=True)
-        if len(non_det_subs) > 0:
+        if (
+            len(non_det_subs) > 0
+            and settings.get("NO_DETECTION_SUBJECT_24H") == Active.ON
+        ):
             log.alarm("No detections in the last 24 hours: " + ", ".join(non_det_subs))
-        if len(non_ses_subs) > 0:
+        if (
+            len(non_ses_subs) > 0
+            and settings.get("NO_SESSION_SUBJECT_24H") == Active.ON
+        ):
             log.alarm("No sessions in the last 24 hours: " + ", ".join(non_ses_subs))
         if len(low_water_subs) > 0:
             log.alarm(
@@ -668,7 +678,7 @@ class Manager:
         self.change_cycle_run_flag = True
 
     def create_report(self, hours: int) -> tuple[str, list[str], list[str], list[str]]:
-        minimum_water = float(settings.get("MINIMUM_WATER_24"))
+        minimum_water = float(settings.get("MINIMUM_WATER_SUBJECT_24H"))
         events = self.events.df.copy()
         subjects = self.subjects.df.copy()
         sessions_summary = self.sessions_summary.df.copy()

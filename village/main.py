@@ -86,6 +86,9 @@ def system_run(bevavior_window: QWidget) -> None:
 
     cam_corridor.start_record()
 
+    corridor_video_duration = float(settings.get("CORRIDOR_VIDEO_DURATION"))
+    weight_threshold = float(settings.get("WEIGHT_THRESHOLD"))
+
     while True:
         time.sleep(0.001)
 
@@ -95,9 +98,7 @@ def system_run(bevavior_window: QWidget) -> None:
         else:
             gc.disable()
 
-        if cam_corridor.chrono.get_seconds() > float(
-            settings.get("CORRIDOR_VIDEO_DURATION")
-        ):
+        if cam_corridor.chrono.get_seconds() > corridor_video_duration:
             cam_corridor.stop_record()
             cam_corridor.start_record()
 
@@ -162,7 +163,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.detections.add_timestamp()
                     if (
                         manager.get_subject_from_tag(id)
-                        and manager.subject.create_from_subject_series(auto=True)
+                        and manager.subject.create_from_subject_series(id)
                         and manager.subject.minimum_time_ok()
                         and cam_corridor.areas_corridor_ok()
                         and not manager.multiple_detections(multiple)
@@ -206,18 +207,6 @@ def system_run(bevavior_window: QWidget) -> None:
                     )
                     manager.state = State.OPEN_DOOR2_STOP
                     log.info("Going to OPEN_DOOR2_STOP State")
-                # elif (
-                #     manager.task.chrono.get_seconds()
-                #     >= manager.task.settings.minimum_duration
-                # ):
-                #     log.alarm(
-                #         "Minimum time reached and areas 3 or 4 were never empty."
-                #         + " Opening door2 and disconnecting RFID reader.",
-                #         subject=manager.subject.name,
-                #     )
-                #     manager.state = State.OPEN_DOOR2_STOP
-                #     log.info("Going to OPEN_DOOR2_STOP State")
-
                 elif (
                     cam_corridor.area_2_empty()
                     and cam_corridor.area_3_empty()
@@ -296,13 +285,13 @@ def system_run(bevavior_window: QWidget) -> None:
                         subject=manager.subject.name,
                     )
                     manager.state = State.SAVE_INSIDE
-                elif weight > settings.get("WEIGHT_THRESHOLD"):
+                elif weight > weight_threshold:
                     manager.measuring_weight_list.append(weight)
                     print(manager.measuring_weight_list)
                     if (
                         real_weight_inference(
                             manager.measuring_weight_list,
-                            settings.get("WEIGHT_THRESHOLD"),
+                            weight_threshold,
                         )
                         or len(manager.measuring_weight_list) >= 100
                     ):
@@ -313,7 +302,7 @@ def system_run(bevavior_window: QWidget) -> None:
                         manager.measuring_weight_list = []
                         manager.state = State.EXIT_UNSAVED
                         log.info(
-                            "Weight detected " + str(manager.weight) + " g",
+                            "Subject back home: " + str(manager.weight) + " g",
                             subject=manager.subject.name,
                         )
                     else:
@@ -321,7 +310,6 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
-                log.info("The subject has returned home.", subject=manager.subject.name)
                 motor2.close()
                 motor1.open()
                 manager.state = State.SAVE_OUTSIDE
@@ -362,7 +350,7 @@ def system_run(bevavior_window: QWidget) -> None:
                         )
                     log.alarm(text, subject=manager.subject.name)
                     manager.max_time_counter += 1
-                if weight > settings.get("WEIGHT_THRESHOLD"):
+                if weight > weight_threshold:
                     log.info(
                         "Weight detected " + str(weight) + " g",
                         subject=manager.subject.name,

@@ -16,7 +16,7 @@ class Subject:
         self.next_settings: str = ""
         self.subject_series: pd.Series | None = None
 
-    def create_from_subject_series(self, auto: bool) -> bool:
+    def create_from_subject_series(self, tag: str = "") -> bool:
         if self.subject_series is not None:
             try:
                 self.name = self.subject_series["name"]
@@ -25,14 +25,13 @@ class Subject:
                 self.active = self.subject_series["active"]
                 self.next_session_time = self.subject_series["next_session_time"]
                 self.next_settings = self.subject_series["next_settings"]
-                if auto:
-                    log.info("Subject detected", subject=self.name)
                 return True
             except Exception:
-                log.alarm(
-                    "Invalid data in subjects.csv",
-                    exception=traceback.format_exc(),
-                )
+                if tag == "":
+                    text = "Invalid data in subjects.csv"
+                else:
+                    text = "Invalid data in subjects.csv for tag: " + tag
+                log.alarm(text, exception=traceback.format_exc())
                 return False
         else:
             log.alarm("Invalid data in subjects.csv")

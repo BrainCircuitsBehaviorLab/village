@@ -44,50 +44,67 @@ class Settings:
         self,
         main_settings: list[Setting],
         sound_settings: list[Setting],
-        alarm_settings: list[Setting],
-        directory_settings: list[Setting],
         screen_settings: list[Setting],
         touchscreen_settings: list[Setting],
         telegram_settings: list[Setting],
-        server_settings: list[Setting],
         bpod_settings: list[Setting],
+        directory_settings: list[Setting],
+        sync_settings: list[Setting],
+        device_settings: list[Setting],
+        hourly_alarm_settings: list[Setting],
+        cycle_alarm_settings: list[Setting],
+        session_alarm_settings: list[Setting],
+        cam_framerate_settings: list[Setting],
+        corridor_settings: list[Setting],
+        extra_settings: list[Setting],
+        bpod_advanced_settings: list[Setting],
         camera_settings: list[Setting],
         motor_settings: list[Setting],
         hidden_settings: list[Setting],
-        advanced_settings: list[Setting],
     ) -> None:
 
         self.main_settings = main_settings
         self.sound_settings = sound_settings
-        self.alarm_settings = alarm_settings
-        self.directory_settings = directory_settings
         self.screen_settings = screen_settings
         self.touchscreen_settings = touchscreen_settings
         self.telegram_settings = telegram_settings
-        self.server_settings = server_settings
         self.bpod_settings = bpod_settings
+        self.directory_settings = directory_settings
+        self.sync_settings = sync_settings
+        self.device_settings = device_settings
+        self.hourly_alarm_settings = hourly_alarm_settings
+        self.cycle_alarm_settings = cycle_alarm_settings
+        self.session_alarm_settings = session_alarm_settings
+        self.cam_framerate_settings = cam_framerate_settings
+        self.corridor_settings = corridor_settings
+        self.extra_settings = extra_settings
+        self.bpod_advanced_settings = bpod_advanced_settings
         self.camera_settings = camera_settings
         self.motor_settings = motor_settings
         self.hidden_settings = hidden_settings
-        self.advanced_settings = advanced_settings
-
         self.saved_settings = QSettings("village", "village")
 
         self.restorable_settings = (
             main_settings
             + sound_settings
-            + alarm_settings
             + screen_settings
             + touchscreen_settings
             + bpod_settings
-            + server_settings
-            + advanced_settings
+            + sync_settings
+            + device_settings
+            + hourly_alarm_settings
+            + cycle_alarm_settings
+            + session_alarm_settings
+            + cam_framerate_settings
+            + corridor_settings
+            + extra_settings
+            + bpod_advanced_settings
         )
 
         self.all_settings = (
             self.restorable_settings
-            + directory_settings
             + telegram_settings
+            + directory_settings
             + camera_settings
             + motor_settings
             + hidden_settings

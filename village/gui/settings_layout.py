@@ -46,117 +46,166 @@ class SettingsLayout(Layout):
             self.list_of_toggle_buttons: list[list[ToggleButton]] = []
             self.list_of_toggle_buttons_settings: list[Setting] = []
 
+            # first column
             row = 4
             name = "MAIN SETTINGS"
-            label = self.create_and_add_label(name, row, 0, 30, 2, "black")
+            label = self.create_and_add_label(name, row, 0, 24, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.main_settings:
-                self.create_label_and_value(row, 0, s, name, width=26)
-                row += 2
-
-            name = "ALARM SETTINGS"
-            label = self.create_and_add_label(name, row, 0, 30, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.alarm_settings:
-                self.create_label_and_value(row, 0, s, name, width=26)
+                self.create_label_and_value(row, 0, s, name, width=16)
                 row += 2
 
             name = "SOUND SETTINGS"
-            label = self.create_and_add_label(name, row, 0, 30, 2, "black")
+            label = self.create_and_add_label(name, row, 0, 24, 2, "black")
             row += 2
             s = settings.sound_settings[0]
-            self.create_label_and_value(row, 0, s, "", width=26)
+            self.create_label_and_value(row, 0, s, "", width=16)
 
         if (
             all and settings.get("USE_SOUNDCARD") == Active.ON
         ) or modify == "SOUND SETTINGS":
-            row = 32
+            row = 18
             name = "SOUND SETTINGS"
             for s in settings.sound_settings[1:]:
-                self.create_label_and_value(row, 0, s, name, width=26)
+                self.create_label_and_value(row, 0, s, name, width=16)
                 row += 2
 
         if all:
-            row = 36
+            row = 24
             name = "SCREEN SETTINGS"
-            label = self.create_and_add_label(name, row, 0, 30, 2, "black")
+            label = self.create_and_add_label(name, row, 0, 24, 2, "black")
             row += 2
             s = settings.screen_settings[0]
-            self.create_label_and_value(row, 0, s, "", width=26)
+            self.create_label_and_value(row, 0, s, "", width=16)
 
         if (
             all and settings.get("USE_SCREEN") != ScreenActive.OFF
         ) or modify == "SCREEN SETTINGS":
-            row = 40
+            row = 28
             name = "SCREEN SETTINGS"
             for s in settings.screen_settings[1:]:
-                self.create_label_and_value(row, 0, s, name, width=26)
+                self.create_label_and_value(row, 0, s, name, width=16)
                 row += 2
 
         if (
             all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
         ) or modify == "TOUCHSCREEN SETTINGS":
-            row = 44
+            row = 30
             name = "TOUCHSCREEN SETTINGS"
             for s in settings.touchscreen_settings:
-                self.create_label_and_value(row, 0, s, name, width=26)
+                self.create_label_and_value(row, 0, s, name, width=16)
                 row += 2
 
         if all:
+            # second column
             row = 4
             name = "TELEGRAM SETTINGS"
-            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
+            label = self.create_and_add_label(name, row, 35, 24, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.telegram_settings:
-                self.create_label_and_value(row, 47, s, name, width=20)
+                self.create_label_and_value(row, 35, s, name, width=24)
                 row += 2
 
             name = "BPOD SETTINGS"
-            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
+            label = self.create_and_add_label(name, row, 35, 24, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.bpod_settings:
-                self.create_label_and_value(row, 47, s, name, width=31)
+                self.create_label_and_value(row, 35, s, name, width=24)
                 row += 2
 
             name = "DIRECTORY SETTINGS"
-            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
+            label = self.create_and_add_label(name, row, 35, 24, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.directory_settings:
-                self.create_label_and_value(row, 47, s, name, width=20)
+                self.create_label_and_value(row, 35, s, name, width=24)
                 row += 2
 
-            name = "SERVER SETTINGS"
-            label = self.create_and_add_label(name, row, 47, 30, 2, "black")
+            name = "SYNC SETTINGS"
+            label = self.create_and_add_label(name, row, 35, 24, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.server_settings:
-                self.create_label_and_value(row, 47, s, name, width=20)
+            for s in settings.sync_settings:
+                self.create_label_and_value(row, 35, s, name, width=24)
                 row += 2
 
+            # third column
             row = 4
-            name = "ADVANCED SETTINGS"
-            label = self.create_and_add_label(name, row, 134, 30, 2, "black")
+            name = "DEVICE ADDRESSES"
+            label = self.create_and_add_label(name, row, 120, 24, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.advanced_settings[:16]:
-                self.create_label_and_value(row, 134, s, name, width=26)
+            for s in settings.device_settings:
+                self.create_label_and_value(row, 120, s, name, width=24)
                 row += 2
-            row = 6
-            for s in settings.advanced_settings[16:]:
-                self.create_label_and_value(row, 174, s, name, width=26)
+
+            name = "HOURLY CHECKS"
+            label = self.create_and_add_label(name, row, 120, 24, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.hourly_alarm_settings:
+                self.create_label_and_value(row, 120, s, name, width=24)
+                row += 2
+
+            name = "TWICE-DAILY CHECKS"
+            label = self.create_and_add_label(name, row, 120, 24, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.cycle_alarm_settings:
+                self.create_label_and_value(row, 120, s, name, width=24)
+                row += 2
+
+            name = "END-SESSION CHECKS"
+            label = self.create_and_add_label(name, row, 120, 24, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.session_alarm_settings:
+                self.create_label_and_value(row, 120, s, name, width=24)
+                row += 2
+
+            # fourth column
+            row = 4
+            name = "CAM FRAMERATES"
+            label = self.create_and_add_label(name, row, 162, 24, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.cam_framerate_settings:
+                self.create_label_and_value(row, 162, s, name, width=22)
+                row += 2
+
+            name = "CORRIDOR SETTINGS"
+            label = self.create_and_add_label(name, row, 162, 24, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.corridor_settings:
+                self.create_label_and_value(row, 162, s, name, width=22)
+                row += 2
+
+            name = "EXTRA SETTINGS"
+            label = self.create_and_add_label(name, row, 162, 24, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.extra_settings:
+                self.create_label_and_value(row, 162, s, name, width=22)
+                row += 2
+
+            name = "BPOD ADVANCED SETTINGS"
+            label = self.create_and_add_label(name, row, 162, 24, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.bpod_advanced_settings:
+                self.create_label_and_value(row, 162, s, name, width=22)
                 row += 2
 
         if all:
             self.save_button = self.create_and_add_button(
                 "SAVE THE SETTINGS",
                 48,
-                155,
-                26,
+                154,
+                22,
                 2,
                 self.save_button_clicked,
                 "Apply and save the settings",
@@ -167,8 +216,8 @@ class SettingsLayout(Layout):
             self.restore_button = self.create_and_add_button(
                 "RESTORE FACTORY SETTINGS",
                 48,
-                186,
-                26,
+                176,
+                22,
                 2,
                 self.restore_button_clicked,
                 "Restore the factory settings",
@@ -214,22 +263,39 @@ class SettingsLayout(Layout):
 
         critical_keys = [
             "USE_SOUNDCARD",
-            "USE_SCREEN",
-            "USE_TOUCHSCREEN",
             "SOUND_DEVICE",
             "SAMPLERATE",
+            "USE_SCREEN",
             "SCREEN_SIZE_MM",
-            "SCREEN_RESOLUTION",
+            "TOUCH_RESOLUTION",
+            "TIME_BETWEEN_TOUCHES",
+            "TELEGRAM_TOKEN",
+            "TELEGRAM_CHAT",
+            "PROJECT_DIRECTORY",
             "BPOD_SERIAL_PORT",
+            "MOTOR1_PIN",
+            "MOTOR2_PIN",
+            "SCALE_ADDRESS",
+            "TEMP_SENSOR_ADDRESS",
+            "CAM_BOX_INDEX",
+            "CAM_CORRIDOR_INDEX",
+            "NO_DETECTION_HOURS",
+            "NO_SESSION_HOURS",
+            "CAM_CORRIDOR_FRAMERATE",
+            "CAM_BOX_FRAMERATE",
+            "CAMS_PREVIEW_FRAMERATE",
+            "DETECTION_DURATION",
+            "TIME_BETWEEN_DETECTIONS",
+            "WEIGHT_THRESHOLD",
+            "REPEAT_TARE_TIME",
+            "UPDATE_TIME_TABLE",
+            "SCREENSAVE_TIME",
+            "CORRIDOR_VIDEO_DURATION",
             "BPOD_NET_PORT",
             "BPOD_BAUDRATE",
             "BPOD_SYNC_CHANNEL",
             "BPOD_SYNC_MODE",
-            "TELEGRAM_TOKEN",
-            "TELEGRAM_CHAT",
         ]
-
-        critical_keys += [s.key for s in settings.advanced_settings]
 
         for i, line_edit in enumerate(self.line_edits):
             s = self.line_edits_settings[i]
@@ -346,10 +412,10 @@ class SettingsLayout(Layout):
             self.window.create_settings_layout()
 
     def create_label_and_value(
-        self, row: int, column: int, s: Setting, type: Any, width: int = 30
+        self, row: int, column: int, s: Setting, type: Any, width: int = 24
     ) -> None:
         label = self.create_and_add_label(
-            s.key, row, column, 30, 2, "black", bold=False, description=s.description
+            s.key, row, column, 24, 2, "black", bold=False, description=s.description
         )
         label.setProperty("type", type)
 
@@ -374,7 +440,7 @@ class SettingsLayout(Layout):
                 s.key,
                 row,
                 column + width,
-                60,
+                56,
                 2,
                 possible_values,
                 index,
@@ -383,7 +449,7 @@ class SettingsLayout(Layout):
         elif s.key == "TELEGRAM_TOKEN":
             value = str(settings.get(s.key))
             line_edit = self.create_and_add_line_edit(
-                value, row, column + width, 60, 2, self.settings_changed
+                value, row, column + width, 56, 2, self.settings_changed
             )
             line_edit.setProperty("type", type)
             self.line_edits.append(line_edit)
@@ -409,36 +475,36 @@ class SettingsLayout(Layout):
             if s.key == "DATA_DIRECTORY":
                 new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "data")
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, 60, 2, self.settings_changed
+                    new_value, row, column + width, 56, 2, self.settings_changed
                 )
             elif s.key == "VIDEOS_DIRECTORY":
                 new_value = os.path.join(
                     settings.get("PROJECT_DIRECTORY"), "data", "videos"
                 )
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, 60, 2, self.settings_changed
+                    new_value, row, column + width, 56, 2, self.settings_changed
                 )
             elif s.key == "SESSIONS_DIRECTORY":
                 new_value = os.path.join(
                     settings.get("PROJECT_DIRECTORY"), "data", "sessions"
                 )
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width, 60, 2, self.settings_changed
+                    value, row, column + width, 56, 2, self.settings_changed
                 )
             elif s.key == "CODE_DIRECTORY":
                 new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "code")
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, 60, 2, self.settings_changed
+                    new_value, row, column + width, 56, 2, self.settings_changed
                 )
             elif s.key == "MEDIA_DIRECTORY":
                 new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "media")
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, 60, 2, self.settings_changed
+                    new_value, row, column + width, 56, 2, self.settings_changed
                 )
             elif s.key == "SERVER_DIRECTORY":
                 new_value = self.create_server_directory()
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, 60, 2, self.settings_changed
+                    new_value, row, column + width, 56, 2, self.settings_changed
                 )
 
             elif s.key in [
@@ -449,20 +515,10 @@ class SettingsLayout(Layout):
                 "SERVER_DESTINATION",
             ]:
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width, 60, 2, self.settings_changed
+                    value, row, column + width, 56, 2, self.settings_changed
                 )
             else:
-                if (
-                    s in settings.main_settings
-                    or s in settings.alarm_settings
-                    or s in settings.screen_settings
-                    or s in settings.touchscreen_settings
-                    or s in settings.sound_settings
-                    or s in settings.telegram_settings
-                ):
-                    edit_width = 14
-                else:
-                    edit_width = 12
+                edit_width = 14
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width, edit_width, 2, self.settings_changed
                 )

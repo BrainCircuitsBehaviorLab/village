@@ -20,7 +20,7 @@ class MainLayout(Layout):
     def draw(self) -> None:
         self.main_button.setDisabled(True)
 
-        self.image = self.create_and_add_image(10, 10, 192, 30, "village.png")
+        self.image = self.create_and_add_image(10, 6, 180, 30, "village.png")
 
         text = "Error initializing the system, please check the logs. "
         text += "System running in debug mode. "

@@ -21,7 +21,7 @@ class BehaviorWindow(QOpenGLWidget):
             QRect(self.x_displacement, 0, self.window_width, self.window_height)
         )
         self.setFixedSize(self.window_width, self.window_height)
-        self.setWindowTitle("Village2")
+        self.setWindowTitle("Village_Box")
         self.setStyleSheet("background-color: black")
         self.active: int = 0  # 0 inactive, 1 active, 2 cleaning
         self.draw_function: Optional[Callable] = None

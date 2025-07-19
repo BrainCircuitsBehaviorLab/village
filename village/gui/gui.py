@@ -32,15 +32,12 @@ class Gui:
         self.primary_width = availableGeometry.width()
         self.primary_height = availableGeometry.height() - 30
 
-        self.gui_window = GuiWindow(self)
-        self.behavior_window = BehaviorWindowBase()
-
-        # self.shared_context = QOpenGLContext()
-        # self.shared_context.setFormat(QSurfaceFormat.defaultFormat())
-        # self.shared_context.create()
-
         if settings.get("USE_SCREEN") != ScreenActive.OFF:
             self.create_behavior_window()
+        else:
+            self.behavior_window = BehaviorWindowBase()
+
+        self.gui_window = GuiWindow(self)
 
     def create_behavior_window(self) -> None:
         # get the resolution of the secondary monitor
@@ -50,7 +47,6 @@ class Gui:
         self.secondary_height = geometry.height()
         self.behavior_window = BehaviorWindow(self)
         settings.set("SCREEN_RESOLUTION", (self.secondary_width, self.secondary_height))
-        # self.behavior_window.context().setShareContext(self.shared_context)
 
     def exit_app(self) -> None:
         log.end("VILLAGE")

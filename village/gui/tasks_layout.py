@@ -323,7 +323,7 @@ class TasksLayout(Layout):
             manager.subject.subject_series = manager.subjects.get_last_entry(
                 "name", value
             )
-            if manager.subject.create_from_subject_series(auto=False):
+            if manager.subject.create_from_subject_series():
                 manager.task.subject = value
             if manager.subject.subject_series is not None:
                 try:

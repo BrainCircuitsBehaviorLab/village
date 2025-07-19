@@ -70,8 +70,8 @@ class Collection(EventBase):
         return df
 
     def check_split_csv(self) -> None:
-        max_size = 60000
-        file_size = 50000
+        max_size = 50000
+        file_size = 40000
         if len(self.df) > max_size:
             first_rows: pd.DataFrame = self.df.head(file_size)
             date_str: str = time_utils.now_string_for_filename()

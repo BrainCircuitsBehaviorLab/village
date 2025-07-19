@@ -20,11 +20,10 @@ class Scale(ScaleBase):
         self.REG_DATA_GET_RAM_DATA = 0x00  # Get sensor raw data
         self.bus = 1
         self.calibration: float = float(settings.get("SCALE_CALIBRATION_VALUE"))
-        self.deviation: float = float(settings.get("WEIGHT_DEVIATION"))
         self.offset = 0.0
         self.i2cbus = smbus2.SMBus(self.bus)
         self.error = ""
-        self.error_message_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
+        self.error_message_timer = time_utils.Timer(3600)
         self.i2cbus.write_i2c_block_data(self.I2C_ADDR, 0x01, [0x8C, 0x03])
         self.tare()
 
