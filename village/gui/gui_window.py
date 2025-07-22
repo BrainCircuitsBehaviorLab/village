@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from PyQt5.QtCore import QEvent, QObjectCleanupHandler, QRect, QSize, QTimer
+from PyQt5.QtCore import QEvent, QObjectCleanupHandler, QTimer
 from PyQt5.QtWidgets import QWidget
 
 from village.gui.data_layout import DataLayout
@@ -24,11 +24,10 @@ class GuiWindow(QWidget):
     def __init__(self, gui: Gui) -> None:
         super().__init__()
         self.gui = gui
-        self.window_width: int = gui.primary_width
-        self.window_height: int = gui.primary_height
-        rect = QRect(0, 0, self.window_width, self.window_height)
-        self.setGeometry(rect)
-        self.setFixedSize(QSize(self.window_width, self.window_height))
+        self.window_width: int = gui.geometry.width()
+        self.window_height: int = gui.geometry.height() - 33
+        self.setGeometry(0, 0, self.window_width, self.window_height)
+        self.setFixedSize(self.window_width, self.window_height)
         self.setWindowTitle("Village")
         self.layout: Layout = MainLayout(self, first_draw=True)
         self.setLayout(self.layout)

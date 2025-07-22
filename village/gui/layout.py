@@ -175,22 +175,25 @@ class Layout(QGridLayout):
         window: GuiWindow,
         stacked: bool = False,
         rows: int = 51,
-        columns: int = 199,
+        columns: int = 200,
     ) -> None:
         super().__init__()
         self.window = window
         self.stacked = stacked
 
         if stacked:
-            self.width = int(window.window_width / 199 * columns)
-            self.height = int(window.window_height / 51 * rows)
+            self.width = int(window.window_width / 200 * columns)  # 1600 / 200 = 8
+            self.height = int(window.window_height / 51 * rows)  # 867 / 51 = 17
             self.num_of_columns = columns
             self.num_of_rows = rows
+
         else:
             self.width = window.window_width
             self.height = window.window_height
             self.num_of_columns = columns
             self.num_of_rows = rows
+
+        self.setContentsMargins(0, 0, 0, 0)
 
         self.column_width = int(self.width / self.num_of_columns)
         self.row_height = int(self.height / self.num_of_rows)
@@ -209,7 +212,7 @@ class Layout(QGridLayout):
 
     def create_common_elements(self) -> None:
         self.status_label = self.create_and_add_label(
-            "", 2, 0, 198, 2, "white", background="black"
+            "", 3, 0, 200, 2, "white", background="black"
         )
         # self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
@@ -217,7 +220,7 @@ class Layout(QGridLayout):
 
         self.main_button = self.create_and_add_button(
             "MAIN",
-            0,
+            1,
             0,
             size,
             2,
@@ -227,7 +230,7 @@ class Layout(QGridLayout):
 
         self.monitor_button = self.create_and_add_button(
             "MONITOR",
-            0,
+            1,
             size,
             size,
             2,
@@ -237,7 +240,7 @@ class Layout(QGridLayout):
 
         self.tasks_button = self.create_and_add_button(
             "TASKS",
-            0,
+            1,
             2 * size,
             size,
             2,
@@ -247,7 +250,7 @@ class Layout(QGridLayout):
 
         self.data_button = self.create_and_add_button(
             "DATA",
-            0,
+            1,
             3 * size,
             size,
             2,
@@ -257,7 +260,7 @@ class Layout(QGridLayout):
 
         self.water_calibration_button = self.create_and_add_button(
             "WATER CALIBRATION",
-            0,
+            1,
             4 * size,
             size,
             2,
@@ -267,7 +270,7 @@ class Layout(QGridLayout):
 
         self.sound_calibration_button = self.create_and_add_button(
             "SOUND CALIBRATION",
-            0,
+            1,
             5 * size,
             size,
             2,
@@ -277,7 +280,7 @@ class Layout(QGridLayout):
 
         self.settings_button = self.create_and_add_button(
             "SETTINGS",
-            0,
+            1,
             6 * size,
             size,
             2,
@@ -287,8 +290,8 @@ class Layout(QGridLayout):
 
         self.online_plots_button = self.create_and_add_button(
             "ONLINE PLOTS",
-            0,
-            156,
+            1,
+            158,
             14,
             2,
             self.show_online_plots_clicked,
@@ -298,8 +301,8 @@ class Layout(QGridLayout):
 
         self.stop_button = self.create_and_add_button(
             "",
-            0,
-            170,
+            1,
+            172,
             14,
             2,
             self.stop_button_clicked,
@@ -309,8 +312,8 @@ class Layout(QGridLayout):
 
         self.exit_button = self.create_and_add_button(
             "EXIT",
-            0,
-            184,
+            1,
+            186,
             14,
             2,
             self.exit_button_clicked,

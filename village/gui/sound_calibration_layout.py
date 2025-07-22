@@ -76,27 +76,27 @@ class SoundCalibrationLayout(Layout):
         text += "selection."
 
         self.sound_label = self.create_and_add_label(
-            "SOUND", 7, 1, 12, 2, "black", bold=False, description=text
+            "SOUND", 8, 2, 12, 2, "black", bold=False, description=text
         )
         values = [f.__name__ for f in manager.sound_calibration_functions]
         self.sound_combo = self.create_and_add_combo_box(
-            "sound", 9, 1, 30, 2, values, 0, self.calibration_changed
+            "sound", 10, 2, 30, 2, values, 0, self.calibration_changed
         )
 
         self.sound_label2 = self.create_and_add_label(
-            "SOUND", 32, 1, 12, 2, "black", bold=False, description=text
+            "SOUND", 32, 2, 12, 2, "black", bold=False, description=text
         )
         self.sound_combo2 = self.create_and_add_combo_box(
-            "sound", 34, 1, 30, 2, values, 0, self.test_changed
+            "sound", 34, 2, 30, 2, values, 0, self.test_changed
         )
 
         self.speaker_label = self.create_and_add_label(
-            "SPEAKER", 12, 1, 12, 2, "black", bold=False
+            "SPEAKER", 13, 2, 12, 2, "black", bold=False
         )
         self.speaker_combo = self.create_and_add_combo_box(
             "speaker",
-            14,
-            1,
+            15,
+            2,
             10,
             2,
             ["left(0)", "right(1)"],
@@ -105,16 +105,16 @@ class SoundCalibrationLayout(Layout):
         )
 
         self.speaker_label2 = self.create_and_add_label(
-            "SPEAKER", 37, 1, 12, 2, "black", bold=False
+            "SPEAKER", 37, 2, 12, 2, "black", bold=False
         )
         self.speaker_combo2 = self.create_and_add_combo_box(
-            "speaker", 39, 1, 10, 2, ["left(0)", "right(1)"], 0, self.test_changed
+            "speaker", 39, 2, 10, 2, ["left(0)", "right(1)"], 0, self.test_changed
         )
 
         self.calibration_input_label = self.create_and_add_label(
             "CALIBRATION INPUT",
-            5,
-            1,
+            6,
+            2,
             20,
             2,
             "black",
@@ -127,7 +127,7 @@ class SoundCalibrationLayout(Layout):
         self.calibration_input_label = self.create_and_add_label(
             "TEST INPUT",
             30,
-            1,
+            2,
             20,
             2,
             "black",
@@ -140,8 +140,8 @@ class SoundCalibrationLayout(Layout):
         # first input variable
         self.gain_label = self.create_and_add_label(
             "GAIN(0-1)",
-            12,
             13,
+            14,
             12,
             2,
             "black",
@@ -149,13 +149,13 @@ class SoundCalibrationLayout(Layout):
             description="Gain value between 0 and 1",
         )
         self.gain_line_edit = self.create_and_add_line_edit(
-            "0", 14, 13, 8, 2, self.calibration_changed
+            "0", 15, 14, 8, 2, self.calibration_changed
         )
 
         self.dB_expected_label2 = self.create_and_add_label(
             "dB EXPECTED",
             37,
-            10,
+            13,
             20,
             2,
             "black",
@@ -164,30 +164,30 @@ class SoundCalibrationLayout(Layout):
         )
 
         self.dB_expected_line_edit2 = self.create_and_add_line_edit(
-            "0", 39, 13, 8, 2, self.test_changed
+            "0", 39, 14, 8, 2, self.test_changed
         )
 
         # duration
         text = "The duration of the sound in seconds."
         self.duration_label = self.create_and_add_label(
-            "DURATION(s)", 12, 23, 12, 2, "black", bold=False, description=text
+            "DURATION(s)", 13, 23, 12, 2, "black", bold=False, description=text
         )
         self.duration_line_edit = self.create_and_add_line_edit(
-            "1", 14, 24, 8, 2, self.calibration_changed
+            "1", 15, 24, 8, 2, self.calibration_changed
         )
 
         self.duration_label2 = self.create_and_add_label(
-            "DURATION(s)", 37, 23, 12, 2, "black", bold=False, description=text
+            "DURATION(s)", 37, 24, 12, 2, "black", bold=False, description=text
         )
         self.duration_line_edit2 = self.create_and_add_line_edit(
-            "1", 39, 24, 8, 2, self.test_changed
+            "1", 39, 25, 8, 2, self.test_changed
         )
 
         # first button
         self.calibrate_button = self.create_and_add_button(
             "CALIBRATE ->",
-            14,
-            35,
+            15,
+            36,
             12,
             2,
             self.calibrate_button_clicked,
@@ -199,7 +199,7 @@ class SoundCalibrationLayout(Layout):
         self.test_button = self.create_and_add_button(
             "TEST ->",
             39,
-            35,
+            36,
             12,
             2,
             self.test_button_clicked,
@@ -211,8 +211,8 @@ class SoundCalibrationLayout(Layout):
         # output
         self.calibration_output_label = self.create_and_add_label(
             "CALIBRATION OUTPUT",
-            5,
-            50,
+            6,
+            51,
             20,
             2,
             "black",
@@ -220,36 +220,36 @@ class SoundCalibrationLayout(Layout):
         )
 
         self.calibration_output_label = self.create_and_add_label(
-            "TEST OUTPUT", 30, 50, 20, 2, "black", description="Enter the measured dB."
+            "TEST OUTPUT", 30, 51, 20, 2, "black", description="Enter the measured dB."
         )
 
         # output dB obtained
         self.dB_obtained_label = self.create_and_add_label(
-            "dB OBTAINED", 12, 50, 17, 2, "black", bold=False, description="Measured dB"
+            "dB OBTAINED", 13, 51, 17, 2, "black", bold=False, description="Measured dB"
         )
         self.dB_obtained_line_edit = self.create_and_add_line_edit(
-            "0", 14, 50, 8, 2, self.calibration_measured
+            "0", 15, 51, 8, 2, self.calibration_measured
         )
         self.dB_obtained_line_edit.setDisabled(True)
 
         self.dB_obtained_label2 = self.create_and_add_label(
-            "dB OBTAINED", 37, 50, 17, 2, "black", bold=False, description="Measured dB"
+            "dB OBTAINED", 37, 51, 17, 2, "black", bold=False, description="Measured dB"
         )
         self.dB_obtained_line_edit2 = self.create_and_add_line_edit(
-            "0", 39, 50, 8, 2, self.test_measured
+            "0", 39, 51, 8, 2, self.test_measured
         )
         self.dB_obtained_line_edit2.setDisabled(True)
 
         # error
         self.error_label2 = self.create_and_add_label(
-            "", 41, 50, 18, 2, "black", bold=False
+            "", 41, 51, 18, 2, "black", bold=False
         )
 
         # calibrate add button
         self.add_button = self.create_and_add_button(
             "ADD ->",
-            14,
-            69,
+            15,
+            66,
             15,
             2,
             self.add_button_clicked,
@@ -267,7 +267,7 @@ class SoundCalibrationLayout(Layout):
         self.ok_button2 = self.create_and_add_button(
             "OK",
             39,
-            69,
+            66,
             7,
             2,
             self.ok_button2_clicked,
@@ -285,7 +285,7 @@ class SoundCalibrationLayout(Layout):
         self.add_button2 = self.create_and_add_button(
             "FAIL ->",
             39,
-            76,
+            73,
             8,
             2,
             self.add_button2_clicked,
@@ -299,8 +299,8 @@ class SoundCalibrationLayout(Layout):
         save_text += "needed to build the calibration curve for each sound."
         self.save_button = self.create_and_add_button(
             "SAVE CALIBRATION",
-            44,
-            192,
+            45,
+            177,
             20,
             2,
             self.save_button_clicked,
@@ -312,7 +312,7 @@ class SoundCalibrationLayout(Layout):
         self.delete_button = self.create_and_add_button(
             "DELETE CALIBRATION",
             48,
-            192,
+            177,
             20,
             2,
             self.delete_button_clicked,
@@ -323,17 +323,17 @@ class SoundCalibrationLayout(Layout):
         # info layout
         widget = QWidget()
         widget.setStyleSheet("background-color: #E0E0E0;")
-        self.info_layout = InfoLayout(self.window, 40, 40, self)
+        self.info_layout = InfoLayout(self.window, 40, 32, self)
         widget.setLayout(self.info_layout)
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidget(widget)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.addWidget(self.scroll_area, 4, 85, 46, 40)
+        self.addWidget(self.scroll_area, 5, 85, 46, 36)
 
         # plot layout
         self.plot_layout = CalibrationPlotLayout(self.window, 36, 87, self)
-        self.addLayout(self.plot_layout, 4, 125, 38, 87)
+        self.addLayout(self.plot_layout, 5, 121, 38, 79)
 
     def change_layout(self, auto: bool = False) -> bool:
         if manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
@@ -895,13 +895,13 @@ class InfoLayout(Layout):
 
     def update(self) -> None:
         self.title = self.create_and_add_label(
-            "CALIBRATION POINTS", 0, 0, 40, 2, "black", bold=False
+            "CALIBRATION POINTS", 0, 1, 40, 2, "black", bold=False
         )
         self.speaker_label = self.create_and_add_label(
-            "Speaker", 2, 0, 7, 2, "black", bold=False
+            "Speaker", 2, 1, 7, 2, "black", bold=False
         )
         self.speaker_label = self.create_and_add_label(
-            "Sound_name", 2, 7, 11, 2, "black", bold=False
+            "Sound_name", 2, 8, 11, 2, "black", bold=False
         )
         self.gain_label = self.create_and_add_label(
             "Gain", 2, 18, 4, 2, "black", bold=False
@@ -912,9 +912,9 @@ class InfoLayout(Layout):
 
         for i, point in enumerate(self.parent_layout.calibration_points):
             text = str(point["speaker"])
-            self.create_and_add_label(text, 4 + 2 * i, 0, 4, 2, "black", bold=False)
+            self.create_and_add_label(text, 4 + 2 * i, 1, 4, 2, "black", bold=False)
             text = str(point["sound_name"])
-            self.create_and_add_label(text, 4 + 2 * i, 6, 12, 2, "black", bold=False)
+            self.create_and_add_label(text, 4 + 2 * i, 7, 12, 2, "black", bold=False)
             text = str(point["gain"])
             self.create_and_add_label(text, 4 + 2 * i, 18, 5, 2, "black", bold=False)
             text = str(point["dB_obtained"])
@@ -922,7 +922,7 @@ class InfoLayout(Layout):
             self.create_and_add_button(
                 "-",
                 4 + 2 * i,
-                32,
+                28,
                 5,
                 2,
                 partial(self.delete_point, i),

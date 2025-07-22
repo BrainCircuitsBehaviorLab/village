@@ -5,8 +5,11 @@
 # See the LICENSE.md file in the root of this repository for full license text.
 # For more details, see <http://www.gnu.org/licenses/>.
 
+import os
 
-# to debug segfaults uncomment the following lines
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
+os.environ["QT_SCALE_FACTOR"] = "1"
+
 import gc
 import threading
 import time
@@ -30,6 +33,11 @@ from village.manager import manager
 from village.scripts import time_utils
 from village.settings import settings
 
+# to debug segfaults uncomment the following lines
+# import faulthandler
+# faulthandler.enable()
+
+
 fmt = QSurfaceFormat()
 fmt.setSwapInterval(1)  # try 0
 fmt.setVersion(2, 0)  # OpenGL ES 3.1
@@ -41,9 +49,6 @@ fmt.setSamples(0)
 fmt.setAlphaBufferSize(0)
 
 QSurfaceFormat.setDefaultFormat(fmt)
-
-
-# faulthandler.enable()
 
 # automatic garbage collection disabled, we will use it manually when no task is running
 gc.disable()

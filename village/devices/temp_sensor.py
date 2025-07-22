@@ -25,6 +25,8 @@ class TempSensor(TempSensorBase):
         rawR = ((data[3]) << 8) | (data[4])
         temp = -45 + rawT * 175 / 65535
         RH = 100 * rawR / 65535
+        temp = round(temp, 2)
+        RH = round(RH, 2)
 
         temp_string = "{:.2f}ºC".format(temp)
         RH_string = "{:.2f}%".format(RH)

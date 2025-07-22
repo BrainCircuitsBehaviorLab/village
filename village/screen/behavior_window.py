@@ -11,16 +11,10 @@ from village.manager import manager
 
 
 class BehaviorWindow(QOpenGLWidget):
-    def __init__(self, gui) -> None:
+    def __init__(self, geometry: QRect) -> None:
         super().__init__()
-        self.gui = gui
-        self.x_displacement = gui.primary_width
-        self.window_width = gui.secondary_width
-        self.window_height = gui.secondary_height
-        self.setGeometry(
-            QRect(self.x_displacement, 0, self.window_width, self.window_height)
-        )
-        self.setFixedSize(self.window_width, self.window_height)
+        self.setGeometry(geometry)
+        self.setFixedSize(geometry.width(), geometry.height())
         self.setWindowTitle("Village_Box")
         self.setStyleSheet("background-color: black")
         self.active: int = 0  # 0 inactive, 1 active, 2 cleaning

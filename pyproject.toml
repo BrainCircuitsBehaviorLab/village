@@ -98,6 +98,7 @@ line-length = 88
 exclude = ["__init__.py","build",".eggs"]
 lint.select = ["I", "E", "F"]
 fix = true
+lint.ignore = ["E402"]
 
 [tool.tox]
 legacy_tox_ini = """

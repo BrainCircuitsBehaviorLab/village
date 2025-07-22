@@ -52,7 +52,7 @@ class TasksLayout(Layout):
         self.run_task_button = self.create_and_add_button(
             "RUN TASK",
             6,
-            98,
+            92,
             16,
             2,
             self.run_task_button_clicked,
@@ -62,7 +62,7 @@ class TasksLayout(Layout):
 
         self.task_buttons: list[PushButton] = []
 
-        row = 5
+        row = 6
         self.create_and_add_label("TRAINING PROTOCOL", row, 4, 20, 2, "black")
         row += 2
         self.training_button = self.create_and_add_button(
@@ -79,10 +79,10 @@ class TasksLayout(Layout):
         self.addLayout(self.left_layout, 10, 2, 40, 38)
 
         self.central_layout = QVBoxLayout()
-        self.addLayout(self.central_layout, 10, 45, 40, 70)
+        self.addLayout(self.central_layout, 10, 45, 40, 65)
 
         self.right_layout = QVBoxLayout()
-        self.addLayout(self.right_layout, 11, 120, 39, 90)
+        self.addLayout(self.right_layout, 11, 110, 39, 85)
 
         self.left_scroll = QScrollArea()
         self.left_scroll.setStyleSheet("border: 0px;")
@@ -99,7 +99,7 @@ class TasksLayout(Layout):
         self.central_sub_widget = QWidget()
 
         self.left_sub_layout = ExtraLayout(self.window, 36, 32)
-        self.central_sub_layout = ExtraLayout(self.window, 36, 64)
+        self.central_sub_layout = ExtraLayout(self.window, 36, 59)
 
         # Create a QTabWidget
         self.right_tabs = QTabWidget()
@@ -111,13 +111,13 @@ class TasksLayout(Layout):
         self.restart_tab_panel()
 
         row = 0
-        self.left_sub_layout.create_and_add_label("TASKS", row, 0, 20, 2, "black")
+        self.left_sub_layout.create_and_add_label("TASKS", row, 2, 20, 2, "black")
         row += 2
         for key, value in manager.tasks.items():
             button = self.left_sub_layout.create_and_add_button(
                 key,
                 row,
-                0,
+                2,
                 30,
                 2,
                 partial(self.select_task, value, key),
@@ -154,7 +154,7 @@ class TasksLayout(Layout):
 
     def restart_tab_panel(self) -> None:
         self.right_tabs.clear()
-        self.right_layout_general = ExtraLayout(self.window, 30, 84)
+        self.right_layout_general = ExtraLayout(self.window, 30, 79)
         self.create_tab_with_scroll_area("General", self.right_layout_general)
 
     def check_buttons(self) -> None:
@@ -267,7 +267,7 @@ class TasksLayout(Layout):
         # sort the properties into the tabs
         for tab_name, properties_list in manager.training.gui_tabs.items():
             # create a tab
-            tab_layout = ExtraLayout(self.window, 30, 84)
+            tab_layout = ExtraLayout(self.window, 30, 79)
             self.create_tab_with_scroll_area(tab_name, tab_layout)
             row = 0
             for property in properties_list:
@@ -396,7 +396,7 @@ class TasksLayout(Layout):
         column: int,
         name: str,
         value: str,
-        width: int = 28,
+        width: int = 23,
     ) -> None:
         label = layout.create_and_add_label(
             name, row, column, width, 2, "black", bold=True

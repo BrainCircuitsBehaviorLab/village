@@ -400,18 +400,18 @@ class DataLayout(Layout):
         self.data_button.setDisabled(True)
 
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 4, 0, 46, 210)
+        self.addLayout(self.central_layout, 5, 0, 45, 200)
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = DfLayout(self.window, 46, 210)
+        self.page1Layout = DfLayout(self.window, 45, 200)
         self.page1.setLayout(self.page1Layout)
         self.page2 = QWidget()
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = VideoLayout(self.window, 46, 210)
+        self.page2Layout = VideoLayout(self.window, 45, 200)
         self.page2.setLayout(self.page2Layout)
         self.page3 = QWidget()
         self.page3.setStyleSheet("background-color:white")
-        self.page3Layout = PlotLayout(self.window, 46, 210)
+        self.page3Layout = PlotLayout(self.window, 45, 200)
         self.page3.setLayout(self.page3Layout)
 
         self.central_layout.addWidget(self.page1)
@@ -446,8 +446,8 @@ class DataLayout(Layout):
         pixmap = QPixmap()
 
         dpi = int(settings.get("MATPLOTLIB_DPI"))
-        width = 210 * self.column_width / dpi
-        height = 46 * self.row_height / dpi
+        width = 200 * self.column_width / dpi
+        height = 45 * self.row_height / dpi
 
         if manager.table == DataTable.SESSIONS_SUMMARY:
             try:
@@ -581,31 +581,31 @@ class DfLayout(Layout):
         index = DataTable.get_index_from_value(manager.table)
 
         self.title = self.create_and_add_combo_box(
-            "title", 0, 5, 35, 2, possible_values, index, self.change_data_table
+            "title", 1, 3, 35, 2, possible_values, index, self.change_data_table
         )
 
         self.back_button = self.create_and_add_button(
-            "<-- BACK", 0, 5, 35, 2, self.back_button_clicked, "back"
+            "<-- BACK", 1, 3, 35, 2, self.back_button_clicked, "back"
         )
         self.back_button.hide()
 
-        self.search_label = self.create_and_add_label("search", 0, 45, 10, 2, "Search")
-        self.search_edit = self.create_and_add_line_edit("", 0, 55, 25, 2, self.search)
+        self.search_label = self.create_and_add_label("search", 1, 45, 10, 2, "Search")
+        self.search_edit = self.create_and_add_line_edit("", 1, 55, 25, 2, self.search)
 
         self.first_button = self.create_and_add_button(
-            "FIRST", 0, 85, 20, 2, self.button_clicked, "first"
+            "FIRST", 1, 97, 20, 2, self.button_clicked, "first"
         )
         self.second_button = self.create_and_add_button(
-            "SECOND", 0, 110, 20, 2, self.button_clicked, "second"
+            "SECOND", 1, 117, 20, 2, self.button_clicked, "second"
         )
         self.third_button = self.create_and_add_button(
-            "THIRD", 0, 135, 20, 2, self.button_clicked, "third"
+            "THIRD", 1, 137, 20, 2, self.button_clicked, "third"
         )
         self.fourth_button = self.create_and_add_button(
-            "FOURTH", 0, 160, 20, 2, self.button_clicked, "fourth"
+            "FOURTH", 1, 157, 20, 2, self.button_clicked, "fourth"
         )
         self.fifth_button = self.create_and_add_button(
-            "FIFTH", 0, 185, 20, 2, self.button_clicked, "fifth"
+            "FIFTH", 1, 177, 20, 2, self.button_clicked, "fifth"
         )
 
     def update_data(self) -> None:
@@ -618,7 +618,7 @@ class DfLayout(Layout):
                 self.widths = [20, 20, 20, 20, 20, 20, 20, 20, 20]
             case DataTable.SUBJECTS:
                 self.complete_df = manager.subjects.df
-                self.widths = [20, 20, 20, 20, 20, 100]
+                self.widths = [20, 20, 20, 20, 20, 90]
             case DataTable.WATER_CALIBRATION:
                 self.complete_df = manager.water_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
@@ -633,7 +633,7 @@ class DfLayout(Layout):
                 self.widths = [20, 20, 20, 20, 20]
             case DataTable.SESSION_RAW:
                 self.complete_df = manager.update_raw_session_df()
-                self.widths = [20, 20, 20, 70, 70]
+                self.widths = [20, 20, 20, 65, 65]
             case DataTable.OLD_SESSION:
                 self.complete_df = manager.old_session_df
                 self.widths = [20, 20, 20, 20, 20, 20]
@@ -662,9 +662,9 @@ class DfLayout(Layout):
         self.model = self.create_and_add_table(
             self.df,
             self.complete_df,
-            4,
+            5,
             0,
-            210,
+            200,
             42,
             widths=self.widths,
             editable=editable,
@@ -1312,9 +1312,9 @@ class PlotLayout(Layout):
 
     def draw(self) -> None:
         self.plot_label = QLabel()
-        self.addWidget(self.plot_label, 0, 0, 46, 210)
+        self.addWidget(self.plot_label, 0, 0, 45, 200)
 
-        self.create_and_add_button("CLOSE", 0, 180, 20, 2, self.close, "Close the plot")
+        self.create_and_add_button("CLOSE", 1, 177, 20, 2, self.close, "Close the plot")
 
     def update_data(self) -> None:
         pass
@@ -1334,25 +1334,25 @@ class VideoLayout(Layout):
 
     def draw(self) -> None:
         self.video_label = QLabel()
-        self.addWidget(self.video_label, 0, 0, 46, 210)
+        self.addWidget(self.video_label, 0, 0, 45, 200)
 
         self.speed = 1.0
         self.speed_text = "Speed: x" + str(self.speed)
 
         self.create_and_add_button(
-            "CLOSE", 0, 185, 20, 2, self.close, "Close the video"
+            "CLOSE", 1, 177, 20, 2, self.close, "Close the video"
         )
         self.create_and_add_button(
-            "PLAY/PAUSE", 8, 178, 20, 2, self.play_pause, "Play or pause the video"
+            "PLAY/PAUSE", 8, 160, 20, 2, self.play_pause, "Play or pause the video"
         )
         self.speed_label = self.create_and_add_label(
-            self.speed_text, 11, 183, 15, 2, "black"
+            self.speed_text, 11, 166, 15, 2, "black"
         )
         self.create_and_add_button(
             "SPEED x 2",
             14,
-            190,
-            20,
+            170,
+            15,
             2,
             self.double_speed,
             "Double the video speed",
@@ -1360,8 +1360,8 @@ class VideoLayout(Layout):
         self.create_and_add_button(
             "SPEED / 2",
             14,
-            165,
-            20,
+            155,
+            15,
             2,
             self.half_speed,
             "Halve the video speed",
@@ -1369,8 +1369,8 @@ class VideoLayout(Layout):
         self.create_and_add_button(
             "1 FRAME >",
             17,
-            190,
-            20,
+            170,
+            15,
             2,
             self.forward_frame,
             "Skip forward 1 frame",
@@ -1378,8 +1378,8 @@ class VideoLayout(Layout):
         self.create_and_add_button(
             "< 1 FRAME",
             17,
-            165,
-            20,
+            155,
+            15,
             2,
             self.backward_frame,
             "Skip backward 1 frame",
@@ -1387,8 +1387,8 @@ class VideoLayout(Layout):
         self.create_and_add_button(
             "10 SECONDS >>",
             20,
-            190,
-            20,
+            170,
+            15,
             2,
             self.forward_ten_seconds,
             "Skip forward 10 seconds",
@@ -1396,8 +1396,8 @@ class VideoLayout(Layout):
         self.create_and_add_button(
             "<< 10 SECONDS",
             20,
-            165,
-            20,
+            155,
+            15,
             2,
             self.backward_ten_seconds,
             "Skip backward 10 seconds",
@@ -1405,8 +1405,8 @@ class VideoLayout(Layout):
         self.create_and_add_button(
             "5 MINUTES >>>",
             23,
-            190,
-            20,
+            170,
+            15,
             2,
             self.forward_five_minutes,
             "Skip forward 5 minutes",
@@ -1414,8 +1414,8 @@ class VideoLayout(Layout):
         self.create_and_add_button(
             "<<< 5 MINUTES",
             23,
-            165,
-            20,
+            155,
+            15,
             2,
             self.backward_five_minutes,
             "Skip backward 5 minutes",

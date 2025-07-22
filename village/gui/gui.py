@@ -26,11 +26,11 @@ class Gui:
 
         # get the resolution of the primary monitor
         screen = QGuiApplication.screens()[0]
-        availableGeometry = screen.availableGeometry()
-        # use the available geometry but subtract some pixels for the border
-        # and the top menu bar
-        self.primary_width = availableGeometry.width()
-        self.primary_height = availableGeometry.height() - 30
+        self.geometry = screen.geometry()
+
+        print(screen.availableGeometry())
+        print(screen.geometry())
+        print(QGuiApplication.primaryScreen().devicePixelRatio())
 
         if settings.get("USE_SCREEN") != ScreenActive.OFF:
             self.create_behavior_window()
@@ -43,10 +43,11 @@ class Gui:
         # get the resolution of the secondary monitor
         screen = QGuiApplication.screens()[1]
         geometry = screen.geometry()
-        self.secondary_width = geometry.width()
-        self.secondary_height = geometry.height()
-        self.behavior_window = BehaviorWindow(self)
-        settings.set("SCREEN_RESOLUTION", (self.secondary_width, self.secondary_height))
+
+        print(screen.availableGeometry())
+        print(screen.geometry())
+        self.behavior_window = BehaviorWindow(geometry)
+        settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
 
     def exit_app(self) -> None:
         log.end("VILLAGE")

@@ -121,7 +121,7 @@ class LabelButtons:
 
         regular_buttons = ["left", "right", "top", "bottom"]
 
-        val = 6 if self.direction in regular_buttons else 8
+        val = 5 if self.direction in regular_buttons else 7
         column += val
         self.btn_decrease = layout.create_and_add_button(
             self.decrease, row, column, 2, 2, self.start_decreasing, ""
@@ -235,7 +235,7 @@ class MonitorLayout(Layout):
     def draw(self) -> None:
         rectangle = QWidget()
         rectangle.setStyleSheet("background-color: lightgray;")
-        self.addWidget(rectangle, 4, 80, 29, 39)
+        self.addWidget(rectangle, 5, 0, 30, 200)
 
         self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
@@ -245,16 +245,16 @@ class MonitorLayout(Layout):
         self.central_widget = QWidget(self.window)
         self.bottom_widget = QWidget(self.window)
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 13, 80, 16, 39)
+        self.addLayout(self.central_layout, 12, 83, 19, 34)
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = MotorLayout(self.window, 16, 39)
+        self.page1Layout = MotorLayout(self.window, 19, 34)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = PortsLayout(self.window, 16, 39)
+        self.page2Layout = PortsLayout(self.window, 19, 34)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
@@ -265,7 +265,7 @@ class MonitorLayout(Layout):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.page3_sub_widget = QWidget()
-        self.page3_sub_layout = FunctionsLayout(self.window, 14, 26)
+        self.page3_sub_layout = FunctionsLayout(self.window, 16, 26)
         self.page3_sub_widget.setLayout(self.page3_sub_layout)
 
         self.scroll_area.setWidget(self.page3_sub_widget)
@@ -275,7 +275,7 @@ class MonitorLayout(Layout):
 
         self.page4 = QWidget(self.central_widget)
         self.page4.setStyleSheet("background-color:white")
-        self.page4Layout = VirtualMouseLayout(self.window, 16, 39)
+        self.page4Layout = VirtualMouseLayout(self.window, 19, 34)
         self.page4.setLayout(self.page4Layout)
 
         self.central_layout.addWidget(self.page1)
@@ -284,21 +284,21 @@ class MonitorLayout(Layout):
         self.central_layout.addWidget(self.page4)
 
         self.bottom_layout = QStackedLayout()
-        self.addLayout(self.bottom_layout, 33, 0, 18, 199)
+        self.addLayout(self.bottom_layout, 34, 0, 17, 200)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
-        self.page5Layout = InfoLayout(self.window, 18, 199)
+        self.page5Layout = InfoLayout(self.window, 17, 200)
         self.page5.setLayout(self.page5Layout)
 
         self.page6 = QWidget(self.bottom_widget)
         self.page6.setStyleSheet("background-color:white")
-        self.page6Layout = CorridorLayout(self.window, 18, 199)
+        self.page6Layout = CorridorLayout(self.window, 17, 200)
         self.page6.setLayout(self.page6Layout)
 
         self.page7 = QWidget(self.bottom_widget)
         self.page7.setStyleSheet("background-color:white")
-        self.page7Layout = CorridorPlotLayout(self.window, 18, 199)
+        self.page7Layout = CorridorPlotLayout(self.window, 17, 200)
         self.page7.setLayout(self.page7Layout)
 
         self.bottom_layout.addWidget(self.page5)
@@ -306,14 +306,14 @@ class MonitorLayout(Layout):
         self.bottom_layout.addWidget(self.page7)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID reader: ", 5, 82, 12, 2, "black"
+            "RFID reader: ", 6, 84, 12, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
         index = Active.get_index_from_value(manager.rfid_reader)
         self.rfid_reader_button = self.create_and_add_toggle_button(
             key,
-            5,
+            6,
             94,
             20,
             2,
@@ -324,14 +324,14 @@ class MonitorLayout(Layout):
         )
 
         self.cycle_label: Label = self.create_and_add_label(
-            "Cycle: ", 7, 82, 12, 2, "black"
+            "Cycle: ", 8, 84, 12, 2, "black"
         )
         key = "CYCLE"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(manager.cycle)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
-            7,
+            8,
             94,
             20,
             2,
@@ -351,8 +351,8 @@ class MonitorLayout(Layout):
         self.actions_button = self.create_and_add_toggle_button(
             key,
             11,
-            80,
-            39,
+            87,
+            26,
             2,
             possible_values,
             index,
@@ -366,9 +366,9 @@ class MonitorLayout(Layout):
         index = Info.get_index_from_value(manager.info)
         self.info_button = self.create_and_add_toggle_button(
             key,
-            32,
-            80,
-            39,
+            33,
+            87,
+            26,
             2,
             possible_values,
             index,
@@ -389,8 +389,8 @@ class MonitorLayout(Layout):
         self.qpicamera2_corridor.setFixedSize(640, 480)
         self.qpicamera2_box.setFixedSize(640, 480)
 
-        self.addWidget(self.qpicamera2_corridor, 4, 0, 29, 80)
-        self.addWidget(self.qpicamera2_box, 4, 119, 29, 80)
+        self.addWidget(self.qpicamera2_corridor, 5, 0, 28, 80)
+        self.addWidget(self.qpicamera2_box, 5, 120, 28, 80)
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
         manager.cycle = Cycle[value]
@@ -408,6 +408,7 @@ class MonitorLayout(Layout):
         settings.set(key, value)
         index = Actions.get_index_from_string(value)
         self.central_layout.setCurrentIndex(index)
+        self.actions_button.raise_()
         self.update_gui()
 
     def toggle_info_button(self, value: str, key: str) -> None:
@@ -415,6 +416,7 @@ class MonitorLayout(Layout):
         settings.set(key, value)
         index = Info.get_index_from_string(value)
         self.bottom_layout.setCurrentIndex(index)
+        self.info_button.raise_()
         self.update_gui()
 
     def update_gui(self) -> None:
@@ -452,12 +454,12 @@ class MotorLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        self.draw_motor_buttons("MOTOR1", 0, 0, motor1)
-        self.draw_motor_buttons("MOTOR2", 0, 18, motor2)
+        self.draw_motor_buttons("MOTOR1", 2, 2, motor1)
+        self.draw_motor_buttons("MOTOR2", 2, 18, motor2)
 
         self.change_angles: PushButton = self.create_and_add_button(
             "CHANGE MOTOR ANGLES",
-            4,
+            6,
             6,
             22,
             2,
@@ -466,7 +468,7 @@ class MotorLayout(Layout):
         )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            7,
+            9,
             6,
             22,
             2,
@@ -475,7 +477,7 @@ class MotorLayout(Layout):
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            9,
+            11,
             6,
             22,
             2,
@@ -484,7 +486,7 @@ class MotorLayout(Layout):
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            11,
+            13,
             6,
             22,
             2,
@@ -493,7 +495,7 @@ class MotorLayout(Layout):
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            14,
+            16,
             6,
             22,
             2,
@@ -506,11 +508,11 @@ class MotorLayout(Layout):
     ) -> None:
         open_name: str = "OPEN " + name
         open_door: PushButton = self.create_and_add_button(
-            open_name, row, column, 16, 2, motor.open, "Open the door"
+            open_name, row, column, 14, 2, motor.open, "Open the door"
         )
         close_name: str = "CLOSE " + name
         close_door: PushButton = self.create_and_add_button(
-            close_name, row + 2, column, 16, 2, motor.close, "Close the door"
+            close_name, row + 2, column, 14, 2, motor.close, "Close the door"
         )
 
         self.buttons.append(open_door)
@@ -526,8 +528,8 @@ class MotorLayout(Layout):
         motor2_close_val = settings.get("MOTOR2_VALUES")[1]
         self.reply = QDialog()
         self.reply.setWindowTitle("Motor angles")
-        x = self.column_width * 90
-        y = self.row_height * 20
+        x = self.column_width * 83
+        y = self.row_height * 19
         width = self.column_width * 32
         height = self.row_height * 12
         self.reply.setGeometry(x, y, width, height)
@@ -608,8 +610,8 @@ class MotorLayout(Layout):
         val = settings.get("SCALE_WEIGHT_TO_CALIBRATE")
         self.reply = QDialog()
         self.reply.setWindowTitle("Calibrate scale")
-        x = self.column_width * 90
-        y = self.row_height * 25
+        x = self.column_width * 65
+        y = self.row_height * 22
         width = self.column_width * 32
         height = self.row_height * 8
         self.reply.setGeometry(x, y, width, height)
@@ -673,9 +675,9 @@ class PortsLayout(Layout):
         for i in range(8):
             button1 = self.create_and_add_button(
                 "LED" + str(i + 1),
-                i * 2,
-                0,
-                16,
+                i * 2 + 2,
+                2,
+                14,
                 2,
                 partial(self.led_clicked, i + 1),
                 "Light the LED" + str(i),
@@ -684,9 +686,9 @@ class PortsLayout(Layout):
 
             button2 = self.create_and_add_button(
                 "WATER" + str(i + 1),
-                i * 2,
+                i * 2 + 2,
                 18,
-                16,
+                14,
                 2,
                 partial(self.water_clicked, i + 1),
                 "Deliver water for 0.1 seconds" + str(i),
@@ -724,9 +726,9 @@ class VirtualMouseLayout(Layout):
         for i in range(8):
             button = self.create_and_add_button(
                 "POKE" + str(i + 1),
-                i * 2,
-                0,
-                16,
+                i * 2 + 2,
+                2,
+                14,
                 2,
                 partial(self.poke_clicked, i + 1),
                 "Virtual mouse poke in port" + str(i),
@@ -735,7 +737,7 @@ class VirtualMouseLayout(Layout):
 
         self.x_label = self.create_and_add_label(
             "X coordinate",
-            1,
+            2,
             22,
             12,
             2,
@@ -745,7 +747,7 @@ class VirtualMouseLayout(Layout):
 
         self.y_label = self.create_and_add_label(
             "Y coordinate",
-            5,
+            6,
             22,
             12,
             2,
@@ -754,16 +756,16 @@ class VirtualMouseLayout(Layout):
         )
 
         self.x_line_edit = self.create_and_add_line_edit(
-            "0", 3, 23, 8, 2, self.coordinates_changed
+            "0", 4, 21, 8, 2, self.coordinates_changed
         )
         self.y_line_edit = self.create_and_add_line_edit(
-            "0", 7, 23, 8, 2, self.coordinates_changed
+            "0", 8, 21, 8, 2, self.coordinates_changed
         )
         self.touch = self.create_and_add_button(
             "TOUCH SCREEN",
-            10,
+            11,
             18,
-            16,
+            14,
             2,
             self.touch_clicked,
             "Deliver water for 0.1 seconds" + str(i),
@@ -810,8 +812,8 @@ class FunctionsLayout(Layout):
 
     def draw(self) -> None:
         for i in range(98):
-            row = i // 2 * 2
-            column = 0 if i % 2 == 0 else 13
+            row = i // 2 * 2 + 1
+            column = 2 if i % 2 == 0 else 14
             button = self.create_and_add_button(
                 "FUNCTION" + str(i + 1),
                 row,
@@ -843,18 +845,18 @@ class CorridorLayout(Layout):
         self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
 
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 0)
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 124)
+        self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
+        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 121)
 
-        self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 0, self.color_area1_str)
-        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 26, self.color_area2_str)
-        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 52, self.color_area3_str)
-        self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 78, self.color_area4_str)
+        self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 2, self.color_area1_str)
+        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 22, self.color_area2_str)
+        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 42, self.color_area3_str)
+        self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 62, self.color_area4_str)
 
-        self.draw_area_buttons_box("AREA1_BOX", 2, 126, self.color_area1_str)
-        self.draw_area_buttons_box("AREA2_BOX", 2, 149, self.color_area2_str)
-        self.draw_area_buttons_box("AREA3_BOX", 2, 172, self.color_area3_str)
-        self.draw_area_buttons_box("AREA4_BOX", 2, 195, self.color_area4_str)
+        self.draw_area_buttons_box("AREA1_BOX", 2, 121, self.color_area1_str)
+        self.draw_area_buttons_box("AREA2_BOX", 2, 141, self.color_area2_str)
+        self.draw_area_buttons_box("AREA3_BOX", 2, 161, self.color_area3_str)
+        self.draw_area_buttons_box("AREA4_BOX", 2, 181, self.color_area4_str)
 
         key = "USAGE1_BOX"
         possible_values = settings.get_values(key)
@@ -862,8 +864,8 @@ class CorridorLayout(Layout):
         self.area1_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            125,
-            20,
+            120,
+            19,
             2,
             possible_values,
             index,
@@ -877,8 +879,8 @@ class CorridorLayout(Layout):
         self.area2_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            148,
-            20,
+            140,
+            19,
             2,
             possible_values,
             index,
@@ -892,8 +894,8 @@ class CorridorLayout(Layout):
         self.area3_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            171,
-            20,
+            160,
+            19,
             2,
             possible_values,
             index,
@@ -907,8 +909,8 @@ class CorridorLayout(Layout):
         self.area4_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            194,
-            20,
+            180,
+            19,
             2,
             possible_values,
             index,
@@ -922,8 +924,8 @@ class CorridorLayout(Layout):
         self.button_corridor = self.create_and_add_toggle_button(
             key,
             0,
-            58,
-            30,
+            55,
+            25,
             2,
             possible_values,
             index,
@@ -938,8 +940,8 @@ class CorridorLayout(Layout):
         self.button_box = self.create_and_add_toggle_button(
             key,
             0,
-            184,
-            30,
+            175,
+            25,
             2,
             possible_values,
             index,
@@ -952,12 +954,11 @@ class CorridorLayout(Layout):
         return
 
     def draw_mice_buttons(self, name: str, row: int, column: int) -> None:
-        width = 14
+        width = 9
         for direction in ("empty_limit", "subject_limit"):
             lb = LabelButtons(name, direction, row, column, width, "black", self)
             self.lbs.append(lb)
             column += 26
-            width += 5
 
     def draw_area_buttons_corridor(
         self, name: str, row: int, column: int, color: str
@@ -972,7 +973,7 @@ class CorridorLayout(Layout):
             "threshold_day",
             "threshold_night",
         ):
-            lb = LabelButtons(name, direction, row, column, 14, color, self)
+            lb = LabelButtons(name, direction, row, column, 9, color, self)
             self.lbs.append(lb)
             row += 2
 
@@ -988,7 +989,7 @@ class CorridorLayout(Layout):
             "bottom",
             "threshold",
         ):
-            lb = LabelButtons(name, direction, row, column, 8, color, self)
+            lb = LabelButtons(name, direction, row, column, 9, color, self)
             self.lbs.append(lb)
             row += 2
 
@@ -1023,11 +1024,11 @@ class InfoLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
-        self.events_text = self.create_and_add_label(text, 0, 0, 209, 16, "black")
+        text = manager.events.df.tail(16).to_csv(sep="\t", index=False, header=False)
+        self.events_text = self.create_and_add_label(text, 0, 2, 198, 17, "black")
 
     def update_gui(self) -> None:
-        text = manager.events.df.tail(12).to_csv(sep="\t", index=False, header=False)
+        text = manager.events.df.tail(16).to_csv(sep="\t", index=False, header=False)
         self.events_text.setText(text)
 
 
@@ -1046,8 +1047,8 @@ class CorridorPlotLayout(Layout):
         self.pixmap = QPixmap()
 
         self.subjects = manager.subjects.df["name"].tolist()
-        self.plot_width = (self.columns * self.column_width - 10) / dpi
-        self.plot_height = (self.rows * self.row_height - 5) / dpi
+        self.plot_width = (self.columns * self.column_width) / dpi
+        self.plot_height = (self.rows * self.row_height) / dpi
 
     def update_gui(self) -> None:
         pixmap = QPixmap()
