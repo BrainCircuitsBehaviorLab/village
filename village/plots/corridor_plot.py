@@ -121,7 +121,14 @@ def corridor_plot(
     ax.set_xlim(start_first, end)
     ax.set_ylim(-0.5, len(subjects) - 0.5)
 
-    ax.set_xticks(starts_second)
+    # get the unique days in the plot
+    unique_days = pd.date_range(start=start_first, end=end, freq="D")
+    # make them at midnight
+    unique_days = unique_days.map(lambda x: x.replace(hour=0, minute=0, second=0, microsecond=0))
+    # remove the first
+    unique_days = unique_days[unique_days >= start_first]
+    # put the ticks there
+    ax.set_xticks(unique_days)
     ax.set_yticks(range(len(subjects)))
     ax.set_yticklabels(subjects)
     ax.xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter("%Y-%m-%d"))
