@@ -137,6 +137,7 @@ def find_closest_file_and_seconds(
     closest_file = None
     closest_time = None
     path = ""
+    time_seconds = 0
 
     for filename in os.listdir(directory):
         if filename.startswith(prefix) and filename.endswith(".mp4"):

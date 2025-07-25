@@ -1,0 +1,262 @@
+import logging
+import os
+import signal
+import subprocess
+import threading
+import time
+
+import fire
+
+from village.scripts.utils import setup_logging
+
+
+def run_rsync(
+    source_path, destination, remote_user, remote_host, port, timeout
+) -> bool:
+    """
+    Run rsync command with specified parameters
+
+    Parameters:
+    - source_path: Local path to sync
+    - destination: Remote destination path
+    - remote_user: Username on remote system
+    - remote_host: Remote hostname or IP
+    - port: SSH port
+    - timeout: Timeout duration in seconds
+    """
+    # Ensure source path ends with / to copy contents
+    source_path = os.path.join(source_path, "")
+    destination_dir = os.path.dirname(destination)
+
+    try:
+        if port is None:
+            subprocess.run(
+                [
+                    "ssh",
+                    "-o",
+                    "ConnectTimeout=10",
+                    f"{remote_user}@{remote_host}",
+                    f"mkdir -p {destination_dir}",
+                ],
+                timeout=30,
+                check=True,
+            )
+        else:
+            subprocess.run(
+                [
+                    "ssh",
+                    "-p",
+                    str(port),
+                    "-o",
+                    "ConnectTimeout=10",
+                    f"{remote_user}@{remote_host}",
+                    f"mkdir -p {destination_dir}",
+                ],
+                timeout=30,
+                check=True,
+            )
+    except subprocess.TimeoutExpired:
+        logging.error(
+            "SSH connection timed out (mkdir). Remote host may be unreachable."
+        )
+        return False
+    except subprocess.CalledProcessError as e:
+        logging.error(f"SSH command failed: {e}")
+        return False
+
+    # Construct the rsync command with safe options
+    if port is None:
+        rsync_cmd = [
+            "rsync",
+            "-avzP",  # archive, verbose, compress, show progress
+            "--update",  # skip files that are newer on receiver
+            "--safe-links",  # ignore symlinks that point outside the tree
+            "--timeout=30",  # I/O timeout for rsync
+            "--exclude",
+            "*.tmp",  # exclude temporary files
+            "--exclude",
+            "CORRIDOR*",  # exclude CORRIDOR videos and data
+            "--exclude",
+            ".git/",  # exclude git directory
+            source_path,
+            f"{remote_user}@{remote_host}:{destination}",
+        ]
+    else:
+        rsync_cmd = [
+            "rsync",
+            "-avzP",  # archive, verbose, compress, show progress
+            "--update",  # skip files that are newer on receiver
+            "--safe-links",  # ignore symlinks that point outside the tree
+            "--timeout=30",  # I/O timeout for rsync
+            "--exclude",
+            "*.tmp",  # exclude temporary files
+            "--exclude",
+            "CORRIDOR*",  # exclude CORRIDOR videos and data
+            "--exclude",
+            ".git/",  # exclude git directory
+            "-e",
+            f"ssh -p {port}",  # specify ssh port
+            source_path,
+            f"{remote_user}@{remote_host}:{destination}",
+        ]
+
+    logging.info(f"Starting rsync with command: {' '.join(rsync_cmd)}")
+
+    try:
+        # Run rsync command and capture output
+        process = subprocess.Popen(
+            rsync_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            preexec_fn=os.setsid,  # new process group for signal handling
+        )
+
+        start_time = time.time()
+        last_progress_time = start_time
+
+        process_running = True
+
+        def check_timeout() -> None:
+            nonlocal process_running
+            time.sleep(timeout)
+            if process_running and process.poll() is None:
+                logging.error(f"Global timeout reached ({timeout}s).Terminating rsync.")
+                try:
+                    os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                except Exception:
+                    process.terminate()
+                process_running = False
+
+        # Launching a thread to check for timeout
+        timeout_thread = threading.Thread(target=check_timeout, daemon=True)
+        timeout_thread.start()
+
+        # Stream output in real-time
+        while process_running:
+            if process.stdout:
+                try:
+                    # Non-blocking read con timeout
+                    output = process.stdout.readline()
+                    if output == "" and process.poll() is not None:
+                        break
+                    if output:
+                        logging.info(output.strip())
+                        last_progress_time = time.time()  # Reset progress timer
+                except Exception:
+                    pass
+
+            # Check if the process is still running
+            if process.poll() is not None:
+                logging.info("rsync completed.")
+                process_running = False
+                break  # Success
+
+            # If no progress for the timeout duration, assume it's stuck
+            if time.time() - last_progress_time > 60:  # 60s no progress
+                logging.warning("rsync seems stuck! Terminating...")
+                try:
+                    # kill process group
+                    os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                except Exception:
+                    process.terminate()  # Gracefully stop
+                time.sleep(2)
+                if process.poll() is None:
+                    try:
+                        os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+                    except Exception:
+                        process.kill()  # Force stop if necessary
+                process_running = False
+                break  # Exit loop
+
+            # small pause to prevent busy CPU
+            time.sleep(0.1)
+
+        # Get any errors
+        if process.stderr:
+            try:
+                stderr = process.stderr.read()
+                if stderr:
+                    logging.error(stderr)
+            except Exception:
+                pass
+
+        # make sure process is terminated
+        if process.poll() is None:
+            try:
+                process.terminate()
+                process.wait(timeout=5)
+            except Exception:
+                try:
+                    os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+                except Exception:
+                    process.kill()
+
+        # Check return code
+        if process.returncode != 0 and process.returncode is not None:
+            logging.error(f"Rsync failed with return code: {process.returncode}")
+            return False
+
+        if process.returncode == 0:
+            logging.info("Rsync completed successfully")
+            return True
+        else:
+            return False
+
+    except Exception as e:
+        logging.error(f"An error occurred: {str(e)}")
+        # try to kill the process if it is still running
+        try:
+            if "process" in locals() and process.poll() is None:
+                os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+        except Exception:
+            pass
+        return False
+    finally:
+        # close streams
+        try:
+            if "process" in locals():
+                if process.stdout:
+                    process.stdout.close()
+                if process.stderr:
+                    process.stderr.close()
+        except Exception:
+            pass
+
+
+def main(source, destination, remote_user, remote_host, port=22, timeout=1800) -> None:
+    """
+    Main function to sync data to remote server using rsync
+
+    Parameters:
+    - source: Source directory path
+    - destination: Destination path on remote system
+    - remote_user: Username on remote system
+    - remote_host: Remote hostname or IP
+    - port: SSH port (default: 22)
+    -timeout: Timeout duration in seconds (default: 1800)
+    """
+    # Setup logging
+    log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")
+    logging.info(f"Logging to file: {log_file}")
+
+    # Log start of sync
+    logging.info(f"Starting sync from {source} to {remote_host}")
+
+    # Run rsync
+    success = run_rsync(source, destination, remote_user, remote_host, port, timeout)
+
+    # Log completion
+    if success:
+        logging.info(f"Sync completed successfully. Log file: {log_file}")
+    else:
+        logging.error(f"Sync failed. Check log file for details: {log_file}")
+
+    # Close the log file handler properly
+    logging.getLogger().removeHandler(file_handler)
+    file_handler.close()
+    logging.shutdown()
+
+
+if __name__ == "__main__":
+    fire.Fire(main)

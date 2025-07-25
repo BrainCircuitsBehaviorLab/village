@@ -7,6 +7,14 @@
 
 import os
 
+try:
+    os.nice(-20)
+except PermissionError:
+    print("No permission to change nice value.")
+    print("Write this in the terminal:")
+    print("sudo setcap cap_sys_nice=eip /usr/bin/python3.11")
+    raise
+
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
@@ -50,8 +58,6 @@ fmt.setAlphaBufferSize(0)
 
 QSurfaceFormat.setDefaultFormat(fmt)
 
-# automatic garbage collection disabled, we will use it manually when no task is running
-gc.disable()
 
 # init
 manager.task.bpod = bpod
@@ -76,11 +82,6 @@ else:
 
 # create a secondary thread
 def system_run(bevavior_window: QWidget) -> None:
-
-    # TESTING
-    # i = 0
-    # TESTING
-
     id = ""
     multiple = False
     checking_subject_requirements = True
@@ -94,18 +95,24 @@ def system_run(bevavior_window: QWidget) -> None:
     corridor_video_duration = float(settings.get("CORRIDOR_VIDEO_DURATION"))
     weight_threshold = float(settings.get("WEIGHT_THRESHOLD"))
 
+    def background_checks() -> None:
+        while True:
+            time.sleep(1)
+            if cam_corridor.chrono.get_seconds() > corridor_video_duration:
+                cam_corridor.stop_record()
+                cam_corridor.start_record()
+
+            if manager.hour_change_detector.has_hour_changed():
+                manager.hourly_checks()
+
+            if manager.cycle_change_detector.has_cycle_changed():
+                manager.cycle_checks()
+
+    background_thread = threading.Thread(target=background_checks, daemon=True)
+    background_thread.start()
+
     while True:
-        time.sleep(0.001)
-
-        # if the task is not running, enable garbage collection
-        if manager.state == State.WAIT:
-            gc.enable()
-        else:
-            gc.disable()
-
-        if cam_corridor.chrono.get_seconds() > corridor_video_duration:
-            cam_corridor.stop_record()
-            cam_corridor.start_record()
+        time.sleep(0.01)
 
         if manager.online_plot_figure_manager.active:
             if manager.task.current_trial > trial and plot_timer.has_elapsed():
@@ -118,12 +125,6 @@ def system_run(bevavior_window: QWidget) -> None:
                     pass
         else:
             trial = 0
-
-        if manager.hour_change_detector.has_hour_changed():
-            manager.hourly_checks()
-
-        if manager.cycle_change_detector.has_cycle_changed():
-            manager.cycle_checks()
 
         if manager.taring_scale:
             scale.tare()
@@ -144,17 +145,9 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
                 if not manager.previous_state_wait:
+                    gc.enable()  # we will disable garbage collection in some states
                     id, multiple = rfid.get_id()
                     manager.reset_subject_task_training()
-
-                # TESTING
-                # i += 1
-                # if i == 10000:
-                #     manager.behavior_window.set_active(True)
-                # elif i == 20000:
-                #     i = 0
-                #     manager.behavior_window.set_active(False)
-                # TESTING
 
                 if id != "":
                     log.info("Tag detected: " + id)
@@ -186,6 +179,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.ACCESS:
                 # Closing door1, opening door2
+                gc.disable()
                 motor1.close()
                 motor2.open()
                 manager.state = State.LAUNCH_AUTO
@@ -382,6 +376,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.MANUAL_MODE:
                 # Settings are being changed or task is being manually prepared
+                gc.disable()
                 manager.previous_state_wait = False
 
             case State.LAUNCH_MANUAL:
@@ -423,6 +418,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.SYNC:
                 # Synchronizing data with the server or doing user-defined tasks
+                gc.enable()
                 if manager.after_session_run_flag:
                     manager.after_session_run_flag = False
                     manager.after_session_run.run()

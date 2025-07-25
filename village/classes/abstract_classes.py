@@ -115,7 +115,7 @@ class TempSensorBase:
 
 
 class SoundDeviceBase:
-    samplerate: int = 0
+    samplerate: int = 44100
     error: str = (
         ""
         if settings.get("USE_SOUNDCARD") == Active.OFF

@@ -429,7 +429,11 @@ class DataLayout(Layout):
 
     def change_to_video(self, path: str, seconds: int) -> None:
         self.central_layout.setCurrentWidget(self.page2)
-        self.page2Layout.start_video(path, seconds)
+        if os.path.exists(path):
+            self.page2Layout.start_video(path, seconds)
+        else:
+            t = "The file could not be found. It might be too old and already deleted."
+            QMessageBox.information(self.window, "WARNING", t)
 
     def change_to_plot(self, path: str) -> None:
         if manager.table == DataTable.SUBJECTS:
