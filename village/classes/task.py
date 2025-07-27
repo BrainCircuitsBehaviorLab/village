@@ -188,7 +188,6 @@ class Task:
         sound_device.stop()
         self.bpod.stop()
         self.cam_box.stop_record()
-        # TODO kill the screen
         if self.subject != "None":
             try:
                 duration, trials, water, ok = self.save_csv(run_mode=run_mode)

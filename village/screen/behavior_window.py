@@ -38,7 +38,7 @@ class BehaviorWindow(QOpenGLWidget):
         self.start_timing = time.time()
         self.update()
 
-    def set_draw_function(self, draw_fn: Callable) -> None:
+    def set_draw_function(self, draw_fn: Optional[Callable]) -> None:
         self.draw_function = draw_fn
 
     def paintGL(self) -> None:

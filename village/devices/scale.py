@@ -42,6 +42,9 @@ class Scale(ScaleBase):
                 log.error("Error calibrating scale", exception=traceback.format_exc())
                 return
             new_calibration = (raw_value - self.offset) / weight
+            if new_calibration <= 0:
+                log.error("Error calibrating scale", exception=traceback.format_exc())
+                return
             self.calibration = new_calibration
             settings.set("SCALE_CALIBRATION_VALUE", new_calibration)
             settings.set("SCALE_WEIGHT_TO_CALIBRATE", weight)
@@ -50,6 +53,7 @@ class Scale(ScaleBase):
             log.error("Error calibrating scale", exception=traceback.format_exc())
 
     def get_value(self) -> int:
+        # TODO check with Eric or test changing the scale cables if it is always > 0
         data = self.i2cbus.read_i2c_block_data(
             self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
         )
@@ -57,10 +61,6 @@ class Scale(ScaleBase):
 
     def get_weight(self) -> float:
         try:
-            print("------")
-            print(self.get_value())
-            print(self.offset)
-            print(self.calibration)
             value = (self.get_value() - self.offset) / self.calibration
             return value if value >= 0 else 0.0
 

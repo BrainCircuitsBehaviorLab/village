@@ -19,7 +19,7 @@ class GlobalTimers(object):
 
         # for each state\position has an integer which the bits represents
         # global timers to on set
-        # TODO count the number of timers used on the state machine
+        #  count the number of timers used on the state machine
         self.onset_matrix = [0] * n_global_timers
 
         self.timers = [0] * n_global_timers

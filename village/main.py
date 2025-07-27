@@ -68,6 +68,8 @@ manager.errors = (
     bpod.error
     + cam_corridor.error
     + cam_box.error
+    + motor1.error
+    + motor2.error
     + scale.error
     + temp_sensor.error
     + sound_device.error
@@ -112,7 +114,7 @@ def system_run(bevavior_window: QWidget) -> None:
     background_thread.start()
 
     while True:
-        time.sleep(0.01)
+        time.sleep(0.1)  # TODO : adjust this value to your needs
 
         if manager.online_plot_figure_manager.active:
             if manager.task.current_trial > trial and plot_timer.has_elapsed():
@@ -286,7 +288,6 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.state = State.SAVE_INSIDE
                 elif weight > weight_threshold:
                     manager.measuring_weight_list.append(weight)
-                    print(manager.measuring_weight_list)
                     if (
                         real_weight_inference(
                             manager.measuring_weight_list,
@@ -304,8 +305,6 @@ def system_run(bevavior_window: QWidget) -> None:
                             "Subject back home: " + str(manager.weight) + " g",
                             subject=manager.subject.name,
                         )
-                    else:
-                        time.sleep(0.1)
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
@@ -349,14 +348,26 @@ def system_run(bevavior_window: QWidget) -> None:
                         )
                     log.alarm(text, subject=manager.subject.name)
                     manager.max_time_counter += 1
-                if weight > weight_threshold:
-                    log.info(
-                        "Weight detected " + str(weight) + " g",
-                        subject=manager.subject.name,
-                    )
-                    manager.getting_weights = False
-                    manager.weight = weight
-                    manager.state = State.EXIT_SAVED
+
+                elif weight > weight_threshold:
+                    manager.measuring_weight_list.append(weight)
+                    if (
+                        real_weight_inference(
+                            manager.measuring_weight_list,
+                            weight_threshold,
+                        )
+                        or len(manager.measuring_weight_list) >= 100
+                    ):
+                        manager.weight = round(
+                            np.median(manager.measuring_weight_list[-5:]), 2
+                        )
+                        manager.getting_weights = False
+                        manager.measuring_weight_list = []
+                        manager.state = State.EXIT_SAVED
+                        log.info(
+                            "Subject back home: " + str(manager.weight) + " g",
+                            subject=manager.subject.name,
+                        )
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)

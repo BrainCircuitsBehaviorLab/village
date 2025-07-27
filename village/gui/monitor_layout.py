@@ -31,10 +31,8 @@ from village.plots.corridor_plot import corridor_plot
 from village.plots.create_pixmap import create_pixmap
 from village.settings import settings
 
-# from devices.bpod import bpod
-
 if TYPE_CHECKING:
-    from village.devices.motor import Motor
+    from village.classes.abstract_classes import MotorBase
     from village.gui.gui_window import GuiWindow
 
 
@@ -504,7 +502,7 @@ class MotorLayout(Layout):
         )
 
     def draw_motor_buttons(
-        self, name: str, row: int, column: int, motor: Motor
+        self, name: str, row: int, column: int, motor: MotorBase
     ) -> None:
         open_name: str = "OPEN " + name
         open_door: PushButton = self.create_and_add_button(

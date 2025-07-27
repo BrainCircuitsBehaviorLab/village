@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 from PyQt5.QtWidgets import QWidget
 
@@ -114,6 +114,18 @@ class TempSensorBase:
         return 0.0, 0.0, ""
 
 
+class MotorBase:
+    error: str = "Error connecting to the motor "
+    open_angle: int = 0
+    close_angle: int = 0
+
+    def open(self) -> None:
+        return
+
+    def close(self) -> None:
+        return
+
+
 class SoundDeviceBase:
     samplerate: int = 44100
     error: str = (
@@ -211,5 +223,5 @@ class BehaviorWindowBase(QWidget):
     def set_active(self, value: bool) -> None:
         return
 
-    def set_draw_function(self, draw_fn: Callable) -> None:
+    def set_draw_function(self, draw_fn: Optional[Callable]) -> None:
         return

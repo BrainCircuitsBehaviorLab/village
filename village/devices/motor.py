@@ -1,42 +1,51 @@
 import os
 import time
+import traceback
 
+from village.classes.abstract_classes import MotorBase
 from village.log import log
 from village.settings import settings
 
 
-class Motor:
+def find_pwmchip(target_device="1f00098000.pwm") -> str:
+    for chip in os.listdir("/sys/class/pwm"):
+        if chip.startswith("pwmchip"):
+            devlink = os.path.join("/sys/class/pwm", chip, "device")
+            try:
+                target = os.path.basename(os.readlink(devlink))
+                if target == target_device:
+                    return os.path.join("/sys/class/pwm", chip)
+            except Exception:
+                continue
+    raise RuntimeError("No valid PWM chip found! Update target_device if needed.")
+
+
+class Motor(MotorBase):
 
     def __init__(self, pin: int, angles: list[int]) -> None:
         self.pin = 0
         self.pinIdx = 0
         self.pwmx = [0, 1, 2, 3, 2, 3]
-        self.enableFlag = False
+        self.flag = False
         self.open_angle = angles[0]
         self.close_angle = angles[1]
+        self.error = ""
         pins = [12, 13, 14, 15, 18, 19]
         afunc = ["a0", "a0", "a0", "a0", "a3", "a3"]
+
+        # Detect pwmchip dynamically!
+        self.chip = find_pwmchip()
         if pin in pins:
             self.pin = pin
             self.pinIdx = pins.index(pin)
             # let's set pin ctrl
-            os.system("/usr/bin/pinctrl set {} {}".format(self.pin, afunc[self.pinIdx]))
+            os.system(f"/usr/bin/pinctrl set {self.pin} {afunc[self.pinIdx]}")
             # let export pin
-            if not os.path.exists(
-                "/sys/class/pwm/pwmchip2/pwm{}".format(self.pwmx[self.pinIdx])
-            ):
-                os.system(
-                    "echo {} > /sys/class/pwm/pwmchip2/export".format(
-                        self.pwmx[self.pinIdx]
-                    )
-                )
+            if not os.path.exists(f"{self.chip}/pwm{self.pwmx[self.pinIdx]}"):
+                os.system(f"echo {self.pwmx[self.pinIdx]} > {self.chip}/export")
             # CLOCK AT 1gHZ  let put period to 20ms
             time.sleep(0.2)
-            os.system(
-                "echo 20000000 > /sys/class/pwm/pwmchip2/pwm{}/period".format(
-                    self.pwmx[self.pinIdx]
-                )
-            )
+            os.system(f"echo 20000000 > {self.chip}/pwm{self.pwmx[self.pinIdx]}/period")
             time.sleep(0.1)
             self.enable(False)
         else:
@@ -44,37 +53,28 @@ class Motor:
             log.error("Error Invalid Pin")
 
     def enable(self, flag) -> None:
-        self.enableFlag = flag
+        self.flag = flag
         os.system(
-            "echo {} > /sys/class/pwm/pwmchip2/pwm{}/enable".format(
-                int(self.enableFlag), self.pwmx[self.pinIdx]
-            )
+            f"echo {int(self.flag)} > {self.chip}/pwm{self.pwmx[self.pinIdx]}/enable"
         )
 
     def __del__(self) -> None:
         if self.pin is not None:
             # ok take PWM out
-            os.system(
-                "echo {} > /sys/class/pwm/pwmchip2/unexport".format(
-                    self.pwmx[self.pinIdx]
-                )
-            )
+            os.system(f"echo {self.pwmx[self.pinIdx]} > {self.chip}/unexport")
             # disable PWM Pin
-            os.system("/usr/bin/pinctrl set {} no".format(self.pin))
+            os.system(f"/usr/bin/pinctrl set {self.pin} no")
 
-    def set(self, onTime_us) -> None:
-        if not self.enableFlag:
+    def set(self, on_time_ns) -> None:
+        if not self.flag:
             self.enable(True)
-        self.onTime_ns = onTime_us * 1000
         os.system(
-            "echo {} > /sys/class/pwm/pwmchip2/pwm{}/duty_cycle".format(
-                self.onTime_ns, self.pwmx[self.pinIdx]
-            )
+            f"echo {on_time_ns} > {self.chip}/pwm{self.pwmx[self.pinIdx]}/duty_cycle"
         )
 
     def transform(self, value: int) -> int:
-        # 0 to 180 degrees -> 500 to 2500 us
-        return int(value / 180 * 2000 + 500)
+        # 0 to 180 degrees -> 500000 to 2500000 ns
+        return int(value / 180 * 2000000 + 500000)
 
     def open(self) -> None:
         self.set(self.transform(self.open_angle))
@@ -83,5 +83,15 @@ class Motor:
         self.set(self.transform(self.close_angle))
 
 
-motor1 = Motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
-motor2 = Motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))
+def get_motor(pin: int, angles: list[int]) -> MotorBase:
+    try:
+        motor = Motor(pin=pin, angles=angles)
+        log.info("Motor successfully initialized")
+        return motor
+    except Exception:
+        log.error("Could not initialize motor", exception=traceback.format_exc())
+        return MotorBase()
+
+
+motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
+motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))

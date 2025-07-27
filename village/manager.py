@@ -584,6 +584,9 @@ class Manager:
         return [raw_df, self.task.session_df]
 
     def disconnect_and_save(self, run_mode: str) -> None:
+        # TODO kill the touchscreen reading
+        self.behavior_window.set_draw_function(None)
+        self.behavior_window.set_active(False)
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
             run_mode
         )

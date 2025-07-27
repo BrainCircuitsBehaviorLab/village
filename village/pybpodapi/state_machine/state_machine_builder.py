@@ -362,7 +362,7 @@ class StateMachineBuilder(StateMachineBase):
 
         :rtype: list(float)
         """
-        # TODO find how many global timers are used
+        #  find how many global timers are used
 
         used_timers = range(self.highest_used_global_timer)
         used_counters = range(self.highest_used_global_counter)

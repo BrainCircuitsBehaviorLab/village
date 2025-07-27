@@ -194,6 +194,14 @@ sudo udevadm trigger
 
 Now, whenever the Bpod device is connected to the specified USB port, it will consistently appear with the symbolic link `/dev/Bpod`, regardless of its dynamic ttyACM* designation.
 
+### Grant Permissions for Maximum Process Priority
+
+To allow your Python script to run with the highest priority, you need to grant special permissions to the Python interpreter. Replace python3.11 with the actual Python version you are using if it’s different.
+```
+sudo setcap cap_sys_nice=eip /usr/bin/python3.11
+```
+This command gives Python permission to change its own scheduling priority without needing to run as root.
+
 ### Install Training Village
 
 1. Make sure you are in .env environment.

@@ -394,8 +394,8 @@ class BpodCOMProtocol(BpodBase):
         """
         Sends state machine to Bpod
 
-        :param list(int) message: TODO
-        :param list(int) ThirtyTwoBitMessage: TODO
+        :param list(int) message:
+        :param list(int) ThirtyTwoBitMessage:
         """
         # self.__bpodcom_check_com_ready()
 
@@ -534,7 +534,7 @@ class BpodCOMProtocol(BpodBase):
         """
         Load serial message on channel
 
-        :param TODO
+        :param
         :rtype: bool
         """
         # self.__bpodcom_check_com_ready()

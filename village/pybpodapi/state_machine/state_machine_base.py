@@ -30,17 +30,17 @@ class StateMachineBase(object):
     :ivar list(str) state_names: list that holds state names added to this state machine
     :ivar list(float) state_timers: list that holds state timers
     :ivar int total_states_added: holds all states added, even if name is repeated
-    :ivar list(int) state_timer_matrix: TODO:
+    :ivar list(int) state_timer_matrix: :
     :ivar Conditions conditions: holds conditions
     :ivar GlobalCounters global_counters: holds global timers
     :ivar GlobalTimers global_timers: holds global counters
-    :ivar list(tuple(int)) input_matrix: TODO:
+    :ivar list(tuple(int)) input_matrix: :
     :ivar list(str) manifest: list of states names that have been added to the
     state machine
     :ivar list(str) undeclared: list of states names that have been referenced
     but not yet added
-    :ivar tuple(str) meta_output_names: TODO:
-    :ivar list(tuple(int)) output_matrix: TODO:
+    :ivar tuple(str) meta_output_names: :
+    :ivar list(tuple(int)) output_matrix: :
     :ivar bool is_running: whether this state machine is being run on bpod box
 
     """
@@ -132,7 +132,7 @@ class StateMachineBase(object):
 
         """
 
-        # TODO: WHY DO WE NEED THIS IF-ELSE?
+        # WHY DO WE NEED THIS IF-ELSE?
         if state_name not in self.manifest:
             self.state_names.append(state_name)
             self.manifest.append(state_name)
