@@ -7,10 +7,12 @@ from village.classes.enums import (
     Active,
     AreaActive,
     Color,
+    Controller,
     Cycle,
     Info,
     ScreenActive,
     SuperEnum,
+    SyncMode,
 )
 
 
@@ -47,9 +49,9 @@ class Settings:
         screen_settings: list[Setting],
         touchscreen_settings: list[Setting],
         telegram_settings: list[Setting],
-        bpod_settings: list[Setting],
         directory_settings: list[Setting],
         sync_settings: list[Setting],
+        server_settings: list[Setting],
         device_settings: list[Setting],
         hourly_alarm_settings: list[Setting],
         cycle_alarm_settings: list[Setting],
@@ -57,7 +59,8 @@ class Settings:
         cam_framerate_settings: list[Setting],
         corridor_settings: list[Setting],
         extra_settings: list[Setting],
-        bpod_advanced_settings: list[Setting],
+        controller_settings: list[Setting],
+        bpod_settings: list[Setting],
         camera_settings: list[Setting],
         motor_settings: list[Setting],
         hidden_settings: list[Setting],
@@ -68,9 +71,9 @@ class Settings:
         self.screen_settings = screen_settings
         self.touchscreen_settings = touchscreen_settings
         self.telegram_settings = telegram_settings
-        self.bpod_settings = bpod_settings
         self.directory_settings = directory_settings
         self.sync_settings = sync_settings
+        self.server_settings = server_settings
         self.device_settings = device_settings
         self.hourly_alarm_settings = hourly_alarm_settings
         self.cycle_alarm_settings = cycle_alarm_settings
@@ -78,7 +81,8 @@ class Settings:
         self.cam_framerate_settings = cam_framerate_settings
         self.corridor_settings = corridor_settings
         self.extra_settings = extra_settings
-        self.bpod_advanced_settings = bpod_advanced_settings
+        self.controller_settings = controller_settings
+        self.bpod_settings = bpod_settings
         self.camera_settings = camera_settings
         self.motor_settings = motor_settings
         self.hidden_settings = hidden_settings
@@ -89,8 +93,8 @@ class Settings:
             + sound_settings
             + screen_settings
             + touchscreen_settings
-            + bpod_settings
             + sync_settings
+            + server_settings
             + device_settings
             + hourly_alarm_settings
             + cycle_alarm_settings
@@ -98,7 +102,8 @@ class Settings:
             + cam_framerate_settings
             + corridor_settings
             + extra_settings
-            + bpod_advanced_settings
+            + controller_settings
+            + bpod_settings
         )
 
         self.all_settings = (
@@ -146,6 +151,10 @@ class Settings:
                 return Active(str_value)
             elif type == Color:
                 return Color(str_value)
+            elif type == Controller:
+                return Controller(str_value)
+            elif type == SyncMode:
+                return SyncMode(str_value)
             elif type == Actions:
                 return Actions(str_value)
             elif type == Info:

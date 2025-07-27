@@ -29,9 +29,19 @@ class Active(SuperEnum):
     OFF = "OFF"
 
 
+class SyncMode(SuperEnum):
+    HD = "HD"
+    SERVER = "SERVER"
+
+
 class Color(SuperEnum):
     BLACK = "BLACK"
     WHITE = "WHITE"
+
+
+class Controller(SuperEnum):
+    BPOD = "BPOD"
+    OTHER = "OTHER"
 
 
 class ScreenActive(SuperEnum):

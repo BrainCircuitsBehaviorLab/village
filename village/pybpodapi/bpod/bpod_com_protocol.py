@@ -277,16 +277,14 @@ class BpodCOMProtocol(BpodBase):
         hardware.inputs_enabled = [0] * len(hardware.inputs)
 
         for j, i in enumerate(hardware.bnc_inputports_indexes):
-            hardware.inputs_enabled[i] = (
-                settings.get("BPOD_BNC_PORTS_ENABLED")[j] == Active.ON
-            )
+            hardware.inputs_enabled[i] = settings.get("BPOD_BNC_PORTS")[j] == Active.ON
 
         for j, i in enumerate(hardware.wired_inputports_indexes):
             hardware.inputs_enabled[i] = False
 
         for j, i in enumerate(hardware.behavior_inputports_indexes):
             hardware.inputs_enabled[i] = (
-                settings.get("BPOD_BEHAVIOR_PORTS_ENABLED")[j] == Active.ON
+                settings.get("BPOD_BEHAVIOR_PORTS")[j] == Active.ON
             )
 
         logger.debug("Requesting ports enabling (%s)", SendMessageHeader.ENABLE_PORTS)

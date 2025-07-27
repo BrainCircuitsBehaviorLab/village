@@ -5,6 +5,7 @@
 """
 
 from pathlib import Path
+from typing import Optional
 
 from village.scripts.safe_removal_of_data import main as safe_removal_script
 from village.settings import Active, settings
@@ -15,10 +16,13 @@ class ChangeCycleRun:
         self.directory = settings.get("VIDEOS_DIRECTORY")
         self.days = settings.get("DAYS_OF_VIDEO_STORAGE")
         self.safe = settings.get("SAFE_DELETE") == Active.ON
-        self.backup_dir = str(Path(settings.get("SERVER_DIRECTORY"), "videos"))
+        self.backup_dir = str(Path(settings.get("SYNC_DIRECTORY"), "videos"))
         self.remote_user = settings.get("SERVER_USER")
         self.remote_host = settings.get("SERVER_HOST")
-        self.port = settings.get("SERVER_PORT")
+        try:
+            self.port: Optional[int] = int(settings.get("SERVER_PORT"))
+        except ValueError:
+            self.port = None
 
     def run(self) -> None:
         safe_removal_script(

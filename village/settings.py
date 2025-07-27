@@ -6,11 +6,13 @@ from village.classes.settings_class import (
     Active,
     AreaActive,
     Color,
+    Controller,
     Cycle,
     Info,
     ScreenActive,
     Setting,
     Settings,
+    SyncMode,
 )
 
 main_settings = [
@@ -75,11 +77,12 @@ touchscreen_settings = [
 screen's display resolution.""",
     ),
     Setting(
-        "TIME_BETWEEN_TOUCHES",
+        "TOUCH_INTERVAL",
         0.5,
         float,
-        """Refractory period after a touch (in seconds) to prevent recording an
-excessive number of touches per second.""",
+        """Minimum time (in seconds) after each registered touchscreen touch before
+another touch can be recorded. Prevents multiple rapid detections from a single
+response, ensuring each touch reflects a distinct action.""",
     ),
 ]
 
@@ -93,30 +96,15 @@ telegram_settings = [
     ),
 ]
 
-bpod_settings = [
-    Setting(
-        "BPOD_BNC_PORTS_ENABLED",
-        ["OFF", "OFF"],
-        list[Active],
-        "Enabled BNC ports on the Bpod.",
-    ),
-    Setting(
-        "BPOD_BEHAVIOR_PORTS_ENABLED",
-        ["ON", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"],
-        list[Active],
-        "Enabled behavior ports on the Bpod.",
-    ),
-]
-
 
 default_project_name = "demo_project"
 default_project_directory = str(
     Path("/home", getpass.getuser(), "village_projects", default_project_name)
 )
 
-default_server_destination = "/server_destination"
-default_server_directory = str(
-    Path(default_server_destination, default_project_name + "_data")
+default_sync_destination = "/sync_destination"
+default_sync_directory = str(
+    Path(default_sync_destination, default_project_name + "_data")
 )
 
 
@@ -168,6 +156,17 @@ directory_settings = [
 
 sync_settings = [
     Setting(
+        "SYNC_MODE",
+        "HD",
+        SyncMode,
+        """Choose where to sync session data:
+HD to copy data to a USB hard drive connected to the Raspberry Pi.
+SERVER to sync data to a remote server over SSH.
+This setting determines whether the backup is local (to a directly connected drive)
+or remote (via network).
+""",
+    ),
+    Setting(
         "SAFE_DELETE",
         "ON",
         Active,
@@ -183,25 +182,34 @@ is found.""",
 not completed within this time, the process will stop to allow other animals to access
 the behavioral box.""",
     ),
-    Setting("SERVER_USER", "training_village", str, "The server user."),
-    Setting("SERVER_HOST", "server", str, "The server hostname."),
-    Setting("SERVER_PORT", 4022, int, "The server port."),
     Setting(
-        "SERVER_DESTINATION",
-        default_server_destination,
+        "SYNC_DESTINATION",
+        default_sync_destination,
         str,
-        "The server destination.",
+        "The sync destination.",
     ),
     Setting(
-        "SERVER_DIRECTORY",
-        default_server_directory,
+        "SYNC_DIRECTORY",
+        default_sync_directory,
         str,
-        "The server directory.",
+        """The directory where data will be synced. This path is created inside
+the sync destination, using the project name followed by the suffix _data.""",
+    ),
+]
+
+server_settings = [
+    Setting("SERVER_USER", "training_village", str, "The server user."),
+    Setting("SERVER_HOST", "server", str, "The server hostname."),
+    Setting(
+        "SERVER_PORT",
+        "",
+        str,
+        """The port number used to connect to the remote server. Leave this field empty
+if you don't need to specify a particular port for the SSH connection.""",
     ),
 ]
 
 device_settings = [
-    Setting("BPOD_SERIAL_PORT", "/dev/Bpod", str, "The serial port of the Bpod"),
     Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1."),
     Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2."),
     Setting("SCALE_ADDRESS", "0x64", str, "The address of the scale."),
@@ -389,7 +397,42 @@ preventing unnecessary processing.""",
     ),
 ]
 
-bpod_advanced_settings = [
+controller_settings = [
+    Setting(
+        "BEHAVIOR_CONTROLLER",
+        "BPOD",
+        Controller,
+        """The controller used to run the behavioral box. The options are:
+        BPOD: The Bpod controller. OTHER: A custom controller that can be Arduino based.
+        """,
+    ),
+    Setting(
+        "CONTROLLER_PORT",
+        "/dev/controller",
+        str,
+        """The USB serial port of the controller device
+(e.g., Bpod, Arduino-compatible board...). Set this to the device path in /dev/.
+Note: USB serial device names (e.g., ttyACM0, ttyACM1) may change each time the system
+boots or if multiple devices are connected. To ensure a consistent device name,
+it is recommended to create a symbolic link using udev rules. See the documentation
+section "Udev rules for consistent USB device naming" for detailed instructions.
+""",
+    ),
+]
+
+bpod_settings = [
+    Setting(
+        "BPOD_BNC_PORTS",
+        ["OFF", "OFF"],
+        list[Active],
+        "Enabled BNC ports on the Bpod.",
+    ),
+    Setting(
+        "BPOD_BEHAVIOR_PORTS",
+        ["ON", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"],
+        list[Active],
+        "Enabled behavior ports on the Bpod.",
+    ),
     Setting(
         "BPOD_TARGET_FIRMWARE",
         22,
@@ -403,7 +446,7 @@ a different version, please update it by following the instructions at sanworks.
         int,
         "The network port of the Bpod (for sending and receiving softcodes).",
     ),
-    Setting("BPOD_BAUDRATE", 115200, int, "Bpod baudrate."),
+    Setting("BPOD_BAUDRATE", 256000, int, "Bpod baudrate."),
     Setting("BPOD_SYNC_CHANNEL", 255, int, "Bpod sync channel."),
     Setting("BPOD_SYNC_MODE", 1, int, "Bpod sync mode."),
 ]
@@ -591,9 +634,9 @@ settings = Settings(
     screen_settings,
     touchscreen_settings,
     telegram_settings,
-    bpod_settings,
     directory_settings,
     sync_settings,
+    server_settings,
     device_settings,
     hourly_alarm_settings,
     cycle_alarm_settings,
@@ -601,7 +644,8 @@ settings = Settings(
     cam_framerate_settings,
     corridor_settings,
     extra_settings,
-    bpod_advanced_settings,
+    controller_settings,
+    bpod_settings,
     camera_settings,
     motor_settings,
     hidden_settings,

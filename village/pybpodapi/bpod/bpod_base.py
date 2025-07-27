@@ -58,7 +58,7 @@ class BpodBase(object):
         self._session = self.create_session()
 
         self.serial_port = (
-            serial_port if serial_port is not None else settings.get("BPOD_SERIAL_PORT")
+            serial_port if serial_port is not None else settings.get("CONTROLLER_PORT")
         )
         self.baudrate = settings.get("BPOD_BAUDRATE")
         self.sync_channel = (

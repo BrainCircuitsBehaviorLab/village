@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
-from village.classes.enums import Active, ScreenActive, State
+from village.classes.enums import Active, Controller, ScreenActive, State, SyncMode
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.sound_device import get_sound_devices
 from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
@@ -21,16 +21,21 @@ if TYPE_CHECKING:
 
 row1 = 5
 column1 = 2
-column2 = 39
-column3 = 122
-column4 = 164
-width1 = 18
-width2 = 23
-width3 = 22
-width4 = 20
-length = 24
-size1 = 14
-size2 = 54
+column2 = 28
+column3 = 94
+column4 = 127
+column5 = 161
+width1 = 14
+width2 = 16
+width3 = 21
+width4 = 19
+width5 = 10
+length = 22
+size1 = 10
+size2 = 40
+size3 = 48
+small_box = 5
+mini_box = 3
 
 
 class SettingsLayout(Layout):
@@ -122,14 +127,6 @@ class SettingsLayout(Layout):
                 self.create_label_and_value(row, column2, s, name, width=width2)
                 row += 2
 
-            name = "BPOD SETTINGS"
-            label = self.create_and_add_label(name, row, column2, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.bpod_settings:
-                self.create_label_and_value(row, column2, s, name, width=width2)
-                row += 2
-
             name = "DIRECTORY SETTINGS"
             label = self.create_and_add_label(name, row, column2, length, 2, "black")
             label.setProperty("type", name)
@@ -145,6 +142,14 @@ class SettingsLayout(Layout):
             for s in settings.sync_settings:
                 self.create_label_and_value(row, column2, s, name, width=width2)
                 row += 2
+
+            if (
+                all and settings.get("SYNC_MODE") == SyncMode.SERVER
+            ) or modify == "SERVER SETTINGS":
+                name = "SERVER SETTINGS"
+                for s in settings.server_settings:
+                    self.create_label_and_value(row, column2, s, name, width=width2)
+                    row += 2
 
             # third column
             row = row1
@@ -206,13 +211,23 @@ class SettingsLayout(Layout):
                 self.create_label_and_value(row, column4, s, name, width=width4)
                 row += 2
 
-            name = "BPOD ADVANCED SETTINGS"
-            label = self.create_and_add_label(name, row, column4, length, 2, "black")
+            # fifth column
+            row = 5
+            name = "CONTROLLER SETTINGS"
+            label = self.create_and_add_label(name, row, column5, length, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.bpod_advanced_settings:
-                self.create_label_and_value(row, column4, s, name, width=width4)
+            for s in settings.controller_settings:
+                self.create_label_and_value(row, column5, s, name, width=width5)
                 row += 2
+
+            if (
+                all and settings.get("BEHAVIOR_CONTROLLER") == Controller.BPOD
+            ) or modify == "BPOD SETTINGS":
+                name = "BPOD SETTINGS"
+                for s in settings.bpod_settings:
+                    self.create_label_and_value(row, column5, s, name, width=width5)
+                    row += 2
 
         if all:
             self.save_button = self.create_and_add_button(
@@ -270,7 +285,7 @@ class SettingsLayout(Layout):
         self.save_button.setEnabled(True)
 
     def save_button_clicked(self) -> None:
-        server_directory = self.create_server_directory()
+        sync_directory = self.create_sync_directory()
 
         self.save_button.setDisabled(True)
         manager.changing_settings = False
@@ -282,11 +297,11 @@ class SettingsLayout(Layout):
             "USE_SCREEN",
             "SCREEN_SIZE_MM",
             "TOUCH_RESOLUTION",
-            "TIME_BETWEEN_TOUCHES",
+            "TOUCH_INTERVAL",
             "TELEGRAM_TOKEN",
             "TELEGRAM_CHAT",
             "PROJECT_DIRECTORY",
-            "BPOD_SERIAL_PORT",
+            "CONTROLLER_PORT",
             "MOTOR1_PIN",
             "MOTOR2_PIN",
             "SCALE_ADDRESS",
@@ -314,8 +329,8 @@ class SettingsLayout(Layout):
         for i, line_edit in enumerate(self.line_edits):
             s = self.line_edits_settings[i]
 
-            if s.key == "SERVER_DIRECTORY":
-                line_edit.setText(server_directory)
+            if s.key == "SYNC_DIRECTORY":
+                line_edit.setText(sync_directory)
 
             if s.key in critical_keys and line_edit.text() != str(settings.get(s.key)):
                 self.critical_changes = True
@@ -461,7 +476,7 @@ class SettingsLayout(Layout):
                 s.key,
                 row,
                 column + width,
-                size2,
+                size3,
                 2,
                 possible_values,
                 index,
@@ -496,44 +511,47 @@ class SettingsLayout(Layout):
             if s.key == "DATA_DIRECTORY":
                 new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "data")
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, size2, 2, self.settings_changed
+                    new_value, row, column + width, size3, 2, self.settings_changed
                 )
             elif s.key == "VIDEOS_DIRECTORY":
                 new_value = os.path.join(
                     settings.get("PROJECT_DIRECTORY"), "data", "videos"
                 )
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, size2, 2, self.settings_changed
+                    new_value, row, column + width, size3, 2, self.settings_changed
                 )
             elif s.key == "SESSIONS_DIRECTORY":
                 new_value = os.path.join(
                     settings.get("PROJECT_DIRECTORY"), "data", "sessions"
                 )
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width, size2, 2, self.settings_changed
+                    value, row, column + width, size3, 2, self.settings_changed
                 )
             elif s.key == "CODE_DIRECTORY":
                 new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "code")
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, size2, 2, self.settings_changed
+                    new_value, row, column + width, size3, 2, self.settings_changed
                 )
             elif s.key == "MEDIA_DIRECTORY":
                 new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "media")
                 line_edit = self.create_and_add_line_edit(
-                    new_value, row, column + width, size2, 2, self.settings_changed
+                    new_value, row, column + width, size3, 2, self.settings_changed
                 )
-            elif s.key == "SERVER_DIRECTORY":
-                new_value = self.create_server_directory()
+            elif s.key == "SYNC_DIRECTORY":
+                new_value = self.create_sync_directory()
                 line_edit = self.create_and_add_line_edit(
                     new_value, row, column + width, size2, 2, self.settings_changed
                 )
+            elif s.key == "APP_DIRECTORY":
+                line_edit = self.create_and_add_line_edit(
+                    value, row, column + width, size3, 2, self.settings_changed
+                )
 
             elif s.key in [
-                "APP_DIRECTORY",
                 "SERVER_USER",
                 "SERVER_HOST",
                 "SERVER_PORT",
-                "SERVER_DESTINATION",
+                "SYNC_DESTINATION",
             ]:
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width, size2, 2, self.settings_changed
@@ -550,7 +568,7 @@ class SettingsLayout(Layout):
                 "SESSIONS_DIRECTORY",
                 "CODE_DIRECTORY",
                 "MEDIA_DIRECTORY",
-                "SERVER_DIRECTORY",
+                "SYNC_DIRECTORY",
             ):
                 line_edit.setReadOnly(True)
                 line_edit.setDisabled(True)
@@ -563,7 +581,12 @@ class SettingsLayout(Layout):
             for i, v in enumerate(values):
                 value = str(v)
                 line_edit = self.create_and_add_line_edit(
-                    value, row, column + width + 7 * i, 7, 2, self.settings_changed
+                    value,
+                    row,
+                    column + width + small_box * i,
+                    small_box,
+                    2,
+                    self.settings_changed,
                 )
                 if s.key == "SCREEN_RESOLUTION":
                     line_edit.setReadOnly(True)
@@ -582,8 +605,8 @@ class SettingsLayout(Layout):
                 toggle_button = self.create_and_add_toggle_button(
                     s.key,
                     row,
-                    column + width + 6 * i,
-                    6,
+                    column + width + mini_box * i,
+                    mini_box,
                     2,
                     possible_values,
                     index,
@@ -613,18 +636,18 @@ class SettingsLayout(Layout):
             self.toggle_buttons.append(toggle_button)
             self.toggle_buttons_settings.append(s)
 
-    def create_server_directory(self) -> str:
+    def create_sync_directory(self) -> str:
         directory = os.path.basename(settings.get("PROJECT_DIRECTORY"))
         index = next(
             (
                 i
                 for i, item in enumerate(self.line_edits_settings)
-                if item.key == "SERVER_DESTINATION"
+                if item.key == "SYNC_DESTINATION"
             ),
             0,
         )
-        server_destination = self.line_edits[index].text()
-        new_value = os.path.join(server_destination, directory + "_data")
+        sync_destination = self.line_edits[index].text()
+        new_value = os.path.join(sync_destination, directory + "_data")
         return new_value
 
     def change_sound_device(self, value: str, key: str) -> None:
@@ -643,6 +666,14 @@ class SettingsLayout(Layout):
             modify = "SCREEN SETTINGS"
         elif value == "TOUCHSCREEN" and key == "USE_SCREEN":
             modify = "TOUCHSCREEN SETTINGS"
+        elif value == "OTHER" and key == "CONTROLLER":
+            self.delete_optional_widgets("BPOD SETTINGS")
+        elif value == "BPOD" and key == "CONTROLLER":
+            modify = "BPOD SETTINGS"
+        elif value == "HD" and key == "SYNC_MODE":
+            self.delete_optional_widgets("SERVER SETTINGS")
+        elif value == "SERVER" and key == "SYNC_MODE":
+            modify = "SERVER SETTINGS"
 
         self.settings_changed(value, key)
         if modify != "":

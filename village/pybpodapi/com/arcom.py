@@ -93,7 +93,7 @@ class ArCOM(object):
         """
         # TODO check this value
         # baudrate = 4000000
-        baudrate = 256000
+        # baudrate = 256000
         self.serial_object = serial.Serial(
             serial_port, baudrate=baudrate, timeout=timeout
         )

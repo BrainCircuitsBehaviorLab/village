@@ -13,7 +13,7 @@ from village.settings import settings
 class AfterSessionRun:
     def __init__(self) -> None:
         self.data_dir = settings.get("DATA_DIRECTORY")
-        self.server_directory = settings.get("SERVER_DIRECTORY")
+        self.sync_directory = settings.get("SYNC_DIRECTORY")
         self.remote_user = settings.get("SERVER_USER")
         self.remote_host = settings.get("SERVER_HOST")
         try:
@@ -25,7 +25,7 @@ class AfterSessionRun:
     def run(self) -> None:
         rsync_script(
             source=self.data_dir,
-            destination=self.server_directory,
+            destination=self.sync_directory,
             remote_user=self.remote_user,
             remote_host=self.remote_host,
             port=self.port,
