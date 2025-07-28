@@ -285,7 +285,6 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.state = State.SAVE_INSIDE
                 elif weight > settings.get("WEIGHT_THRESHOLD"):
                     manager.measuring_weight_list.append(weight)
-                    print(manager.measuring_weight_list)
                     if (
                         real_weight_inference(
                             manager.measuring_weight_list,
