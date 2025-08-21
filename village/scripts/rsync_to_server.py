@@ -11,7 +11,7 @@ from village.scripts.utils import setup_logging
 
 
 def run_rsync(
-    source_path, destination, remote_user, remote_host, port, timeout
+    source_path, destination, remote_user, remote_host, port, maximum_sync_time
 ) -> bool:
     """
     Run rsync command with specified parameters
@@ -22,7 +22,7 @@ def run_rsync(
     - remote_user: Username on remote system
     - remote_host: Remote hostname or IP
     - port: SSH port
-    - timeout: Timeout duration in seconds
+    - maximum_sync_time: Maximum_sync_time in seconds
     """
     # Ensure source path ends with / to copy contents
     source_path = os.path.join(source_path, "")
@@ -117,20 +117,22 @@ def run_rsync(
 
         process_running = True
 
-        def check_timeout() -> None:
+        def check_maximum_sync_time() -> None:
             nonlocal process_running
-            time.sleep(timeout)
+            time.sleep(maximum_sync_time)
             if process_running and process.poll() is None:
-                logging.error(f"Global timeout reached ({timeout}s).Terminating rsync.")
+                logging.error(
+                    f"Maximum sync time reached ({maximum_sync_time}s). Terminating."
+                )
                 try:
                     os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                 except Exception:
                     process.terminate()
                 process_running = False
 
-        # Launching a thread to check for timeout
-        timeout_thread = threading.Thread(target=check_timeout, daemon=True)
-        timeout_thread.start()
+        # Launching a thread to check for maximum_sync_time
+        sync_time_thread = threading.Thread(target=check_maximum_sync_time, daemon=True)
+        sync_time_thread.start()
 
         # Stream output in real-time
         while process_running:
@@ -224,7 +226,9 @@ def run_rsync(
             pass
 
 
-def main(source, destination, remote_user, remote_host, port=22, timeout=1800) -> None:
+def main(
+    source, destination, remote_user, remote_host, port=None, maximum_sync_time=1200
+) -> None:
     """
     Main function to sync data to remote server using rsync
 
@@ -233,8 +237,8 @@ def main(source, destination, remote_user, remote_host, port=22, timeout=1800) -
     - destination: Destination path on remote system
     - remote_user: Username on remote system
     - remote_host: Remote hostname or IP
-    - port: SSH port (default: 22)
-    -timeout: Timeout duration in seconds (default: 1800)
+    - port: SSH port (default: None)
+    - maximum_sync_time: Maximum sync time duration in seconds (default: 1200)
     """
     # Setup logging
     log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")
@@ -244,7 +248,9 @@ def main(source, destination, remote_user, remote_host, port=22, timeout=1800) -
     logging.info(f"Starting sync from {source} to {remote_host}")
 
     # Run rsync
-    success = run_rsync(source, destination, remote_user, remote_host, port, timeout)
+    success = run_rsync(
+        source, destination, remote_user, remote_host, port, maximum_sync_time
+    )
 
     # Log completion
     if success:

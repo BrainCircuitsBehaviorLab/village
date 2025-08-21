@@ -29,7 +29,7 @@ class Active(SuperEnum):
     OFF = "OFF"
 
 
-class SyncMode(SuperEnum):
+class SyncType(SuperEnum):
     HD = "HD"
     SERVER = "SERVER"
 

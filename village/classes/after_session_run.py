@@ -12,24 +12,24 @@ from village.settings import settings
 
 class AfterSessionRun:
     def __init__(self) -> None:
-        self.data_dir = settings.get("DATA_DIRECTORY")
+        self.data_directory = settings.get("DATA_DIRECTORY")
         self.sync_directory = settings.get("SYNC_DIRECTORY")
-        self.remote_user = settings.get("SERVER_USER")
-        self.remote_host = settings.get("SERVER_HOST")
+        self.server_user = settings.get("SERVER_USER")
+        self.server_host = settings.get("SERVER_HOST")
+        self.maximum_sync_time = settings.get("MAXIMUM_SYNC_TIME")
         try:
             self.port: Optional[int] = int(settings.get("SERVER_PORT"))
-        except ValueError:
+        except Exception:
             self.port = None
-        self.timeout = 1800
 
     def run(self) -> None:
         rsync_script(
-            source=self.data_dir,
+            source=self.data_directory,
             destination=self.sync_directory,
-            remote_user=self.remote_user,
-            remote_host=self.remote_host,
+            remote_user=self.server_user,
+            remote_host=self.server_host,
             port=self.port,
-            timeout=self.timeout,
+            maximum_sync_time=self.maximum_sync_time,
         )
 
 

@@ -12,7 +12,7 @@ from village.classes.settings_class import (
     ScreenActive,
     Setting,
     Settings,
-    SyncMode,
+    SyncType,
 )
 
 main_settings = [
@@ -156,9 +156,9 @@ directory_settings = [
 
 sync_settings = [
     Setting(
-        "SYNC_MODE",
+        "SYNC_TYPE",
         "HD",
-        SyncMode,
+        SyncType,
         """Choose where to sync session data:
 HD to copy data to a USB hard drive connected to the Raspberry Pi.
 SERVER to sync data to a remote server over SSH.
@@ -176,7 +176,7 @@ is found.""",
     ),
     Setting(
         "MAXIMUM_SYNC_TIME",
-        600,
+        1200,
         int,
         """Maximum time allowed (in seconds) to sync data. If synchronization is
 not completed within this time, the process will stop to allow other animals to access

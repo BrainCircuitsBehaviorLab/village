@@ -10,11 +10,11 @@ from typing import Callable
 
 import numpy as np
 import pandas as pd
+import requests  # type: ignore
 
 from village.classes.abstract_classes import BehaviorWindowBase, CameraBase
 from village.classes.after_session_run import AfterSessionRun
 from village.classes.change_cycle_run import ChangeCycleRun
-from village.classes.change_hour_run import ChangeHourRun
 from village.classes.collection import Collection
 from village.classes.enums import Actions, Active, Cycle, DataTable, Info, Save, State
 from village.classes.plot import (
@@ -71,7 +71,6 @@ class Manager:
         )
         self.after_session_run: AfterSessionRun = AfterSessionRun()
         self.change_cycle_run: ChangeCycleRun = ChangeCycleRun()
-        self.change_hour_run: ChangeHourRun = ChangeHourRun()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
@@ -126,6 +125,8 @@ class Manager:
 
         self.stimulus_timing: float = 0.0
         self.stimulus_frame = 0
+
+        self.remote_url = "https://hc-ping.com/f36a6f98-5506-46ac-8b8f-26cb13415d93"
 
         self.behavior_window = BehaviorWindowBase()
 
@@ -211,7 +212,6 @@ class Manager:
         subject_plot_found = 0
         online_plot_found = 0
         after_session_run_found = 0
-        change_hour_run_found = 0
         change_cycle_run_found = 0
         functions_path = ""
         sound_path = ""
@@ -311,11 +311,6 @@ class Manager:
                         if after_session_run_found == 1:
                             a = cls()
                             self.after_session_run = a
-                    elif issubclass(cls, ChangeHourRun) and cls != ChangeHourRun:
-                        change_hour_run_found += 1
-                        if change_hour_run_found == 1:
-                            c = cls()
-                            self.change_hour_run = c
                     elif issubclass(cls, ChangeCycleRun) and cls != ChangeCycleRun:
                         change_cycle_run_found += 1
                         if change_cycle_run_found == 1:
@@ -357,12 +352,6 @@ class Manager:
             log.info("Custom After Session Run successfully imported")
         else:
             log.error("Multiple After Session Run found")
-        if change_hour_run_found == 0:
-            log.error("Custom Change Hour Run not found, using default")
-        elif change_hour_run_found == 1:
-            log.info("Custom Change Hour Run successfully imported")
-        else:
-            log.error("Multiple Change Hour Run found")
         if change_cycle_run_found == 0:
             log.error("Custom Change Cycle Run not found, using default")
         elif change_cycle_run_found == 1:
@@ -763,6 +752,12 @@ class Manager:
             low_water_subjects,
         )
 
+    def send_heartbeat(self) -> None:
+        try:
+            requests.get(self.remote_url, timeout=10)
+        except Exception:
+            log.alarm("Healthchecks URL not reachable. Impossible to send heartbeat.")
+
     def hourly_checks(self) -> None:
         temp, _, temp_string = temp_sensor.get_temperature()
         if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
@@ -781,7 +776,7 @@ class Manager:
         if utils.has_low_disk_space():
             log.alarm("Low disk space (less than 10GB)")
 
-        self.change_hour_run.run()
+        self.send_heartbeat()
 
 
 manager = Manager()

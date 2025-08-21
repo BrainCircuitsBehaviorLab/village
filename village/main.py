@@ -64,6 +64,7 @@ manager.task.bpod = bpod
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor
 manager.import_all_tasks()
+manager.send_heartbeat()
 manager.errors = (
     bpod.error
     + cam_corridor.error

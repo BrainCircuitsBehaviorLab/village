@@ -11,7 +11,7 @@ from village.scripts.utils import setup_logging
 
 
 def run_rsync_local(
-    source_path, destination, remote_user, remote_host, port, timeout
+    source_path, destination, remote_user, remote_host, port, maximum_sync_time
 ) -> bool:
     """
     Run rsync to sync to a local destination (e.g., external HDD).
@@ -22,7 +22,7 @@ def run_rsync_local(
     - remote_user: Ignored
     - remote_host: Ignored
     - port: Ignored
-    - timeout: Timeout duration in seconds
+    - maximum_sync_time: Maximum_sync_time in seconds
     """
     # Ensure source path ends with /
     source_path = os.path.join(source_path, "")
@@ -67,12 +67,12 @@ def run_rsync_local(
         last_progress_time = start_time
         process_running = True
 
-        def check_timeout() -> None:
+        def check_maximum_sync_time() -> None:
             nonlocal process_running
-            time.sleep(timeout)
+            time.sleep(maximum_sync_time)
             if process_running and process.poll() is None:
                 logging.error(
-                    f"Global timeout reached ({timeout}s). Terminating rsync."
+                    f"Maximum sync time reached ({maximum_sync_time}s). Terminating."
                 )
                 try:
                     os.killpg(os.getpgid(process.pid), signal.SIGTERM)
@@ -80,8 +80,8 @@ def run_rsync_local(
                     process.terminate()
                 process_running = False
 
-        timeout_thread = threading.Thread(target=check_timeout, daemon=True)
-        timeout_thread.start()
+        sync_time_thread = threading.Thread(target=check_maximum_sync_time, daemon=True)
+        sync_time_thread.start()
 
         while process_running:
             if process.stdout:

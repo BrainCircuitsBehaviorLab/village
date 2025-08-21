@@ -12,7 +12,7 @@ from village.classes.enums import (
     Info,
     ScreenActive,
     SuperEnum,
-    SyncMode,
+    SyncType,
 )
 
 
@@ -153,8 +153,8 @@ class Settings:
                 return Color(str_value)
             elif type == Controller:
                 return Controller(str_value)
-            elif type == SyncMode:
-                return SyncMode(str_value)
+            elif type == SyncType:
+                return SyncType(str_value)
             elif type == Actions:
                 return Actions(str_value)
             elif type == Info:
