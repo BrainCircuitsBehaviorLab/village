@@ -93,7 +93,7 @@ def system_run(bevavior_window: QWidget) -> None:
     tare_timer = time_utils.Timer(settings.get("REPEAT_TARE_TIME"))
     plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
 
-    cam_corridor.start_record()
+    cam_corridor.start_recording()
 
     corridor_video_duration = float(settings.get("CORRIDOR_VIDEO_DURATION"))
     weight_threshold = float(settings.get("WEIGHT_THRESHOLD"))
@@ -102,8 +102,8 @@ def system_run(bevavior_window: QWidget) -> None:
         while True:
             time.sleep(1)
             if cam_corridor.chrono.get_seconds() > corridor_video_duration:
-                cam_corridor.stop_record()
-                cam_corridor.start_record()
+                cam_corridor.stop_recording()
+                cam_corridor.start_recording()
 
             if manager.hour_change_detector.has_hour_changed():
                 manager.hourly_checks()

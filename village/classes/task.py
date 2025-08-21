@@ -187,7 +187,7 @@ class Task:
         self.close()
         sound_device.stop()
         self.bpod.stop()
-        self.cam_box.stop_record()
+        self.cam_box.stop_recording()
         if self.subject != "None":
             try:
                 duration, trials, water, ok = self.save_csv(run_mode=run_mode)

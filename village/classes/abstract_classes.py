@@ -179,10 +179,10 @@ class CameraBase:
     def stop_preview_window(self) -> None:
         return
 
-    def start_record(self, path_video: str = "", path_csv: str = "") -> None:
+    def start_recording(self, path_video: str = "", path_csv: str = "") -> None:
         return
 
-    def stop_record(self) -> None:
+    def stop_recording(self) -> None:
         return
 
     def change_focus(self, lensposition) -> None:

@@ -154,7 +154,7 @@ class Camera(CameraBase):
         self.area4_alarm_timer = time_utils.Timer(3600)
         self.box_alarm_timer = time_utils.Timer(3600)
 
-        self.watchdog_timer = QTimer(self)
+        self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
 
@@ -216,7 +216,7 @@ class Camera(CameraBase):
         self.window.cleanup()
         self.cam.start_preview(Preview.NULL)
 
-    def start_record(self, path_video: str = "", path_csv: str = "") -> None:
+    def start_recording(self, path_video: str = "", path_csv: str = "") -> None:
         self.filename = os.path.splitext(os.path.basename(path_video))[0]
         time_start = time_utils.now_string_for_filename()
         self.chrono.reset()
@@ -237,7 +237,7 @@ class Camera(CameraBase):
         self.show_time_info = True
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
-    def stop_record(self) -> None:
+    def stop_recording(self) -> None:
         if self.is_recording:
             self.is_recording = False
             self.cam.stop_encoder()
@@ -302,7 +302,7 @@ class Camera(CameraBase):
         print()
 
     def watchdog_tick(self) -> None:
-        if time.time() - self.last_frame_time > 10:  # 10 seconds without a frame
+        if time.time() - self.last_frame_time < 10:  # 10 seconds without a frame
             self.restart_camera()
 
     def restart_camera(self) -> None:
@@ -318,6 +318,9 @@ class Camera(CameraBase):
         time.sleep(1)
         self.reset_values()
         self.cam.start()
+        self.watchdog_timer.start()
+        if self.name == "CORRIDOR":
+            self.start_recording()
 
     def pre_process(self, request: Any) -> None:
         if self.change:

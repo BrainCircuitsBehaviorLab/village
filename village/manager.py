@@ -445,7 +445,7 @@ class Manager:
         self.task.water_calibration = self.water_calibration
         self.task.sound_calibration = self.sound_calibration
         if self.subject.name != "None":
-            self.task.cam_box.start_record(
+            self.task.cam_box.start_recording(
                 self.task.video_path, self.task.video_data_path
             )
         else:
@@ -485,7 +485,7 @@ class Manager:
                 self.task.training = self.training
                 self.task.create_paths()
                 self.task.cam_box = cam
-                self.task.cam_box.start_record(
+                self.task.cam_box.start_recording(
                     self.task.video_path, self.task.video_data_path
                 )
                 self.task.maximum_number_of_trials = 100000000

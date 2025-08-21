@@ -51,15 +51,15 @@ class Gui:
 
     def exit_app(self) -> None:
         log.end("VILLAGE")
-        cam_corridor.stop_record()
-        cam_box.stop_record()
+        cam_corridor.stop_recording()
+        cam_box.stop_recording()
         self.q_app.quit()
         sys.exit()
 
     def reload_app(self) -> None:
         log.end("VILLAGE")
-        cam_corridor.stop_record()
-        cam_box.stop_record()
+        cam_corridor.stop_recording()
+        cam_box.stop_recording()
         settings.sync()
         self.q_app.quit()
         python = sys.executable
