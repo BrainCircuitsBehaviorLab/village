@@ -1,4 +1,5 @@
 import os
+import time
 import traceback
 from pprint import pprint
 from typing import Any
@@ -300,6 +301,7 @@ class Camera(CameraBase):
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
         self.timestamp = time_utils.now_string()
+        self.last_frame_time = time.time()
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:

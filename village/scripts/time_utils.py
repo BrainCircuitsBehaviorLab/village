@@ -1,40 +1,40 @@
+import datetime
 import os
-from datetime import datetime, time, timedelta
-from time import perf_counter
+import time
 from typing import Any
 
 
-def now() -> datetime:
-    return datetime.now()
+def now() -> datetime.datetime:
+    return datetime.datetime.now()
 
 
-def time_in_future_seconds(seconds: int) -> datetime:
-    return now() + timedelta(seconds=seconds)
+def time_in_future_seconds(seconds: int) -> datetime.datetime:
+    return now() + datetime.timedelta(seconds=seconds)
 
 
-def hours_ago(hours: int) -> datetime:
-    return now() - timedelta(hours=hours)
+def hours_ago(hours: int) -> datetime.datetime:
+    return now() - datetime.timedelta(hours=hours)
 
 
-def date_from_previous_weekday(weekday: int) -> datetime:
+def date_from_previous_weekday(weekday: int) -> datetime.datetime:
     today = now()
     days = (today.weekday() - weekday) % 7
-    return today - timedelta(days=days)
+    return today - datetime.timedelta(days=days)
 
 
-def time_since_day_started() -> timedelta:
+def time_since_day_started() -> datetime.timedelta:
     time_now = now()
-    start = datetime(time_now.year, time_now.month, time_now.day)
+    start = datetime.datetime(time_now.year, time_now.month, time_now.day)
     return time_now - start
 
 
-def time_since_start(start: datetime) -> timedelta:
+def time_since_start(start: datetime.datetime) -> datetime.timedelta:
     return now() - start
 
 
-def ms_since_start(start: datetime) -> int:
+def ms_since_start(start: datetime.datetime) -> int:
     timing = now() - start
-    return int(timing / timedelta(milliseconds=1))
+    return int(timing / datetime.timedelta(milliseconds=1))
 
 
 def now_string() -> str:
@@ -45,41 +45,44 @@ def now_string_for_filename() -> str:
     return now().strftime("%Y%m%d_%H%M%S")
 
 
-def string_from_date(date: datetime) -> str:
+def string_from_date(date: datetime.datetime) -> str:
     return date.strftime("%Y-%m-%d %H:%M:%S")
 
 
-def filename_string_from_date(date: datetime) -> str:
+def filename_string_from_date(date: datetime.datetime) -> str:
     return date.strftime("%Y%m%d_%H%M%S")
 
 
-def date_from_string(string: str) -> datetime:
-    return datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+def date_from_string(string: str) -> datetime.datetime:
+    return datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
 
 
-def date_from_filename_string(string: str) -> datetime:
-    return datetime.strptime(string, "%Y%m%d_%H%M%S")
+def date_from_filename_string(string: str) -> datetime.datetime:
+    return datetime.datetime.strptime(string, "%Y%m%d_%H%M%S")
 
 
-def time_from_setting_string(string: str) -> time:
-    return datetime.strptime(string, "%H:%M").time()
+def time_from_setting_string(string: str) -> datetime.time:
+    return datetime.datetime.strptime(string, "%H:%M").time()
 
 
-def date_from_path(path: str) -> datetime:
+def date_from_path(path: str) -> datetime.datetime:
     filename = path.split("/")[-1]
     filename = filename[:-4]
     date_str = "_".join(filename.split("_")[-2:])
-    return datetime.strptime(date_str, "%Y%m%d_%H%M%S")
+    return datetime.datetime.strptime(date_str, "%Y%m%d_%H%M%S")
 
 
 def days_ago_init_times(
-    first: time, second: time, days: int, time_to_end: datetime = now()
-) -> tuple[datetime, datetime]:
+    first: datetime.time,
+    second: datetime.time,
+    days: int,
+    time_to_end: datetime.datetime = now(),
+) -> tuple[datetime.datetime, datetime.datetime]:
 
     if first < time_to_end.time():
-        day = time_to_end - timedelta(days=days - 1)
+        day = time_to_end - datetime.timedelta(days=days - 1)
     else:
-        day = time_to_end - timedelta(days=days)
+        day = time_to_end - datetime.timedelta(days=days)
 
     value1 = day.replace(
         hour=first.hour,
@@ -97,9 +100,9 @@ def days_ago_init_times(
     return value1, value2
 
 
-def tomorrow_init_time(first: time) -> datetime:
+def tomorrow_init_time(first: datetime.time) -> datetime.datetime:
     if first < now().time():
-        day = now() + timedelta(days=1)
+        day = now() + datetime.timedelta(days=1)
     else:
         day = now()
     value = day.replace(
@@ -112,18 +115,18 @@ def tomorrow_init_time(first: time) -> datetime:
 
 
 def range_24_hours(
-    day_date: datetime, first_init_time: time
-) -> tuple[datetime, datetime]:
-    start_time = datetime.combine(day_date.date(), first_init_time)
-    end_time = start_time + timedelta(hours=24)
+    day_date: datetime.datetime, first_init_time: datetime.time
+) -> tuple[datetime.datetime, datetime.datetime]:
+    start_time = datetime.datetime.combine(day_date.date(), first_init_time)
+    end_time = start_time + datetime.timedelta(hours=24)
     return start_time, end_time
 
 
 def measure_time(func) -> Any:
     def wrapper(*args, **kwargs) -> Any:
-        start_time = perf_counter()
+        start_time = time.perf_counter()
         result = func(*args, **kwargs)
-        end_time = perf_counter()
+        end_time = time.perf_counter()
         execution_time = (end_time - start_time) * 1000
         print(f"{func.__name__} execution time: {execution_time:.2f} ms")
         return result
@@ -132,7 +135,7 @@ def measure_time(func) -> Any:
 
 
 def find_closest_file_and_seconds(
-    directory: str, prefix: str, date: datetime
+    directory: str, prefix: str, date: datetime.datetime
 ) -> tuple[str, int]:
     closest_file = None
     closest_time = None
@@ -143,7 +146,7 @@ def find_closest_file_and_seconds(
         if filename.startswith(prefix) and filename.endswith(".mp4"):
             try:
                 date_str = filename[len(prefix) + 1 : -4]
-                file_date = datetime.strptime(date_str, "%Y%m%d_%H%M%S")
+                file_date = datetime.datetime.strptime(date_str, "%Y%m%d_%H%M%S")
 
                 if file_date < date:
                     if closest_time is None or file_date > closest_time:
@@ -175,67 +178,44 @@ class Chrono:
     def reset(self) -> None:
         self.init_time = now()
 
-    def get_time(self) -> timedelta:
+    def get_time(self) -> datetime.timedelta:
         return now() - self.init_time
 
     def get_seconds(self) -> int:
-        return int(self.get_time() / timedelta(seconds=1))
+        return int(self.get_time() / datetime.timedelta(seconds=1))
 
     def get_milliseconds(self) -> int:
-        return int(self.get_time() / timedelta(milliseconds=1))
+        return int(self.get_time() / datetime.timedelta(milliseconds=1))
 
 
 class Timer:
     def __init__(self, seconds: int) -> None:
         self.seconds = seconds
-        self.init_time = now() - timedelta(seconds=seconds)
-        self.ten_seconds_time = now() - timedelta(seconds=10)
+        now = time.time()
+        self.init_time = now - seconds
+        self.ten_seconds_time = now - 10
 
-    # the first time has_elapsed is true
+    # the first time has_elapsed() is called, it returns True
     def has_elapsed(self) -> bool:
-        value = now() - self.init_time >= timedelta(seconds=self.seconds)
-        if value:
-            self.init_time = now()
-            self.ten_seconds_time = now()
-        return value
+        now = time.time()
+        if now - self.init_time >= self.seconds:
+            self.init_time = now
+            self.ten_seconds_time = now
+            return True
+        return False
 
-    # the first time ten_seconds_elapsed is true
+    # the first time ten_seconds_elapsed() is called, it returns True
     def ten_seconds_elapsed(self) -> bool:
-        value = now() - self.ten_seconds_time >= timedelta(seconds=10)
-        if value:
-            self.ten_seconds_time = now()
-        return value
-
-    def reset(self) -> None:
-        self.init_time = now()
-        self.ten_seconds_time = now()
-
-
-class Timer2:
-    def __init__(self, seconds: int, number_of_detections_needed: int = 1) -> None:
-        self.seconds = seconds
-        self.number_of_detections_needed = number_of_detections_needed
-        self.occurrences = 0
-        self.last_time_detected = now() - timedelta(seconds=seconds)
-        self.last_time_triggered = now() - timedelta(seconds=seconds)
-
-    # the first time has_elapsed is true
-    def has_elapsed(self) -> bool:
-        value = now() - self.last_time_detected >= timedelta(seconds=10)
-        if value:
-            self.last_time_detected = now()
-            self.occurrences += 1
-        if self.occurrences == self.number_of_detections_needed:
-            self.occurrences = 0
-            value = now() - self.last_time_triggered >= timedelta(seconds=self.seconds)
-            if value:
-                self.reset()
-            return value
+        now = time.time()
+        if now - self.ten_seconds_time >= 10:
+            self.ten_seconds_time = now
+            return True
         return False
 
     def reset(self) -> None:
-        self.last_time_detected = now()
-        self.last_time_triggered = now()
+        now = time.time()
+        self.init_time = now
+        self.ten_seconds_time = now
 
 
 class HourChangeDetector:
@@ -281,16 +261,16 @@ class CycleChangeDetector:
 
 class TimestampTracker:
     def __init__(self, hours: int) -> None:
-        self.timestamps = [now()]
+        self.timestamps = [time.time()]
         self.hours = hours
         self.empty = False
 
     def add_timestamp(self) -> None:
-        self.timestamps.append(now())
+        self.timestamps.append(time.time())
 
     def trigger_empty(self) -> bool:
-        hours_ago = now() - timedelta(hours=self.hours)
-        self.timestamps = [ts for ts in self.timestamps if ts > hours_ago]
+        cutoff = time.time() - self.hours * 3600
+        self.timestamps = [ts for ts in self.timestamps if ts > cutoff]
         count = len(self.timestamps)
         if count > 0:
             self.empty = False
