@@ -18,6 +18,7 @@ try:
 except Exception:
     pass
 
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.abstract_classes import CameraBase
@@ -153,7 +154,12 @@ class Camera(CameraBase):
         self.area4_alarm_timer = time_utils.Timer(3600)
         self.box_alarm_timer = time_utils.Timer(3600)
 
+        self.watchdog_timer = QTimer(self)
+        self.watchdog_timer.setInterval(20000)
+        self.watchdog_timer.timeout.connect(self.watchdog_tick)
+
         self.cam.start()
+        self.watchdog_timer.start()
 
     def set_properties(self) -> None:
         # black or white detection setting
@@ -200,6 +206,9 @@ class Camera(CameraBase):
 
     def start_camera(self) -> None:
         self.cam.start()
+
+    def stop_camera(self) -> None:
+        self.cam.stop()
 
     def stop_preview_window(self) -> None:
         if self.cam._preview is not None:
@@ -248,6 +257,7 @@ class Camera(CameraBase):
         self.error = ""
         self.filename = ""
         self.chrono.reset()
+        self.last_frame_time = time.time()
 
     def save_csv(self) -> None:
         if self.path_csv == os.path.join(settings.get("VIDEOS_DIRECTORY"), "BOX.csv"):
@@ -275,9 +285,6 @@ class Camera(CameraBase):
 
         df.to_csv(self.path_csv, index=False, sep=";")
 
-    def stop(self) -> None:
-        self.cam.stop()
-
     def change_focus(self, lensposition: float) -> None:
         assert (
             lensposition <= 10 and lensposition >= 0
@@ -293,6 +300,24 @@ class Camera(CameraBase):
         print("INFO ABOUT THE " + self.name + " CAM CONFIGURATION:")
         pprint(self.config)
         print()
+
+    def watchdog_tick(self) -> None:
+        if time.time() - self.last_frame_time > 10:  # 10 seconds without a frame
+            self.restart_camera()
+
+    def restart_camera(self) -> None:
+        self.watchdog_timer.stop()
+        log.error(
+            "Camera "
+            + self.name
+            + " has not received a frame for "
+            + "10 seconds. Restarting the camera.",
+            subject=manager.subject.name,
+        )
+        self.cam.stop()
+        time.sleep(1)
+        self.reset_values()
+        self.cam.start()
 
     def pre_process(self, request: Any) -> None:
         if self.change:

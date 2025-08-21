@@ -173,19 +173,19 @@ def format_duration(milliseconds) -> str:
 
 class Chrono:
     def __init__(self) -> None:
-        self.init_time = now()
+        self.init_time = time.time()
 
     def reset(self) -> None:
-        self.init_time = now()
+        self.init_time = time.time()
 
-    def get_time(self) -> datetime.timedelta:
-        return now() - self.init_time
+    def get_time(self) -> float:
+        return time.time() - self.init_time
 
     def get_seconds(self) -> int:
-        return int(self.get_time() / datetime.timedelta(seconds=1))
+        return int(self.get_time())
 
     def get_milliseconds(self) -> int:
-        return int(self.get_time() / datetime.timedelta(milliseconds=1))
+        return int(self.get_time() * 1000)
 
 
 class Timer:

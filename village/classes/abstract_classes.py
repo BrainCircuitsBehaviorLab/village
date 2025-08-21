@@ -170,6 +170,9 @@ class CameraBase:
     def start_camera(self) -> None:
         return
 
+    def stop_camera(self) -> None:
+        return
+
     def start_preview_window(self) -> QWidget:
         return QWidget()
 
@@ -180,9 +183,6 @@ class CameraBase:
         return
 
     def stop_record(self) -> None:
-        return
-
-    def stop(self) -> None:
         return
 
     def change_focus(self, lensposition) -> None:
