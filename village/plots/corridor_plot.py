@@ -124,7 +124,9 @@ def corridor_plot(
     # get the unique days in the plot
     unique_days = pd.date_range(start=start_first, end=end, freq="D")
     # make them at midnight
-    unique_days = unique_days.map(lambda x: x.replace(hour=0, minute=0, second=0, microsecond=0))
+    unique_days = unique_days.map(
+        lambda x: x.replace(hour=0, minute=0, second=0, microsecond=0)
+    )
     # remove the first
     unique_days = unique_days[unique_days >= start_first]
     # put the ticks there
