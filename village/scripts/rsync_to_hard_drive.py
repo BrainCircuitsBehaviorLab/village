@@ -7,21 +7,17 @@ import time
 
 import fire
 
+from village.log import log
 from village.scripts.utils import setup_logging
 
 
-def run_rsync_local(
-    source_path, destination, remote_user, remote_host, port, maximum_sync_time
-) -> bool:
+def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
     """
     Run rsync to sync to a local destination (e.g., external HDD).
 
     Parameters (for compatibility; only source_path and destination are used):
     - source_path: Local path to sync
     - destination: Local destination path (e.g., /media/pi/mydisk/backup/)
-    - remote_user: Ignored
-    - remote_host: Ignored
-    - port: Ignored
     - maximum_sync_time: Maximum_sync_time in seconds
     """
     # Ensure source path ends with /
@@ -164,24 +160,28 @@ def run_rsync_local(
             pass
 
 
-def main(source, destination, remote_user, remote_host, port=22, timeout=1800):
+def main(source, destination, maximum_sync_time=1800) -> None:
     """
     Main function to sync data to local disk using rsync.
-    Parameters are kept for compatibility with remote version.
+
+    Parameters:
+    - source: Source directory path
+    - destination: Destination path on remote system
+    - maximum_sync_time: Maximum sync time duration in seconds (default: 1200)
     """
     log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")
     logging.info(f"Logging to file: {log_file}")
 
     logging.info(f"Starting local sync from {source} to {destination}")
 
-    success = run_rsync_local(
-        source, destination, remote_user, remote_host, port, timeout
-    )
+    success = run_rsync_local(source, destination, maximum_sync_time)
 
     if success:
         logging.info(f"Sync completed successfully. Log file: {log_file}")
+        log.info("Sync completed successfully")
     else:
         logging.error(f"Sync failed. Check log file for details: {log_file}")
+        log.error(f"Sync failed. Check log file for details: {log_file}")
 
     logging.getLogger().removeHandler(file_handler)
     file_handler.close()

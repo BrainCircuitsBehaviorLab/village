@@ -16,7 +16,16 @@ from village.classes.abstract_classes import BehaviorWindowBase, CameraBase
 from village.classes.after_session_run import AfterSessionRun
 from village.classes.change_cycle_run import ChangeCycleRun
 from village.classes.collection import Collection
-from village.classes.enums import Actions, Active, Cycle, DataTable, Info, Save, State
+from village.classes.enums import (
+    Actions,
+    Active,
+    Cycle,
+    DataTable,
+    Info,
+    Save,
+    State,
+    SyncType,
+)
 from village.classes.plot import (
     OnlinePlotFigureManager,
     SessionPlotFigureManager,
@@ -126,7 +135,7 @@ class Manager:
         self.stimulus_timing: float = 0.0
         self.stimulus_frame = 0
 
-        self.remote_url = "https://hc-ping.com/f36a6f98-5506-46ac-8b8f-26cb13415d93"
+        self.healthchecks_url = settings.get("HEALTHCHECKS_URL")
 
         self.behavior_window = BehaviorWindowBase()
 
@@ -650,7 +659,7 @@ class Manager:
         )
 
     def cycle_checks(self) -> None:
-        text, non_det_subs, non_ses_subs, low_water_subs = self.create_report(24)
+        text, non_det_subs, non_ses_subs, low_water_subs, sync = self.create_report(24)
         log.alarm(text, report=True)
         if (
             len(non_det_subs) > 0
@@ -667,9 +676,13 @@ class Manager:
                 "Low water consumption in the last 24 hours: "
                 + ", ".join(low_water_subs)
             )
+        if not sync and settings.get("SYNC_TYPE") != SyncType.OFF:
+            log.alarm("No sync in the last 24 hours.")
         self.change_cycle_run_flag = True
 
-    def create_report(self, hours: int) -> tuple[str, list[str], list[str], list[str]]:
+    def create_report(
+        self, hours: int
+    ) -> tuple[str, list[str], list[str], list[str], bool]:
         minimum_water = float(settings.get("MINIMUM_WATER_SUBJECT_24H"))
         events = self.events.df.copy()
         subjects = self.subjects.df.copy()
@@ -687,6 +700,14 @@ class Manager:
         sessions = events[
             (events["type"] == "START") & (events["date"] >= time_hours_ago)
         ]
+        syncs = events[
+            (events["description"] == "Sync completed successfully")
+            & (events["date"] >= time_hours_ago)
+        ]
+        sync = True
+        if len(syncs) == 0 and len(sessions) > 0:
+            sync = False
+
         sessions_summary = sessions_summary[sessions_summary["date"] >= time_hours_ago]
 
         subject_detections = detections.groupby("subject").size().to_dict()
@@ -750,13 +771,16 @@ class Manager:
             non_detected_subjects,
             non_session_subjects,
             low_water_subjects,
+            sync,
         )
 
     def send_heartbeat(self) -> None:
+        if self.healthchecks_url == "":
+            return
         try:
-            requests.get(self.remote_url, timeout=10)
+            requests.get(self.healthchecks_url, timeout=10)
         except Exception:
-            log.alarm("Healthchecks URL not reachable. Impossible to send heartbeat.")
+            pass
 
     def hourly_checks(self) -> None:
         temp, _, temp_string = temp_sensor.get_temperature()

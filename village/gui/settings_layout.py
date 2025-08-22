@@ -141,16 +141,23 @@ class SettingsLayout(Layout):
             row += 1
             name = "SYNC SETTINGS"
             label = self.create_and_add_label(name, row, column2, length, 2, "black")
-            label.setProperty("type", name)
             row += 2
-            for s in settings.sync_settings:
+            s = settings.sync_settings[0]
+            self.create_label_and_value(row, column2, s, "", width=width2)
+
+        if (
+            all and settings.get("SYNC_TYPE") != SyncType.OFF
+        ) or modify == "SYNC SETTINGS":
+            row = row1 + 30
+            name = "SYNC SETTINGS"
+            for s in settings.sync_settings[1:]:
                 self.create_label_and_value(row, column2, s, name, width=width2)
                 row += 2
 
         if (
             all and settings.get("SYNC_TYPE") == SyncType.SERVER
         ) or modify == "SERVER SETTINGS":
-            row = row1 + 36
+            row = row1 + 38
             name = "SERVER SETTINGS"
             for s in settings.server_settings:
                 self.create_label_and_value(row, column2, s, name, width=width2)
@@ -312,6 +319,7 @@ class SettingsLayout(Layout):
             "TOUCH_INTERVAL",
             "TELEGRAM_TOKEN",
             "TELEGRAM_CHAT",
+            "HEALTHCHECKS_URL",
             "PROJECT_DIRECTORY",
             "CONTROLLER_PORT",
             "MOTOR1_PIN",
@@ -337,6 +345,14 @@ class SettingsLayout(Layout):
             "BPOD_SYNC_CHANNEL",
             "BPOD_SYNC_MODE",
             "BEHAVIOR_CONTROLLER",
+            "SYNC_TYPE",
+            "SAFE_DELETE",
+            "MAXIMUM_SYNC_TIME",
+            "SYNC_DESTINATION",
+            "SYNC_DIRECTORY",
+            "SERVER_USER",
+            "SERVER_HOST",
+            "SERVER_PORT",
         ]
 
         for i, line_edit in enumerate(self.line_edits):
@@ -566,6 +582,7 @@ class SettingsLayout(Layout):
                 "SERVER_PORT",
                 "SYNC_DESTINATION",
                 "TELEGRAM_CHAT",
+                "HEALTHCHECKS_URL",
                 "MAXIMUM_SYNC_TIME",
             ]:
                 line_edit = self.create_and_add_line_edit(
@@ -702,9 +719,13 @@ class SettingsLayout(Layout):
         elif value == "BPOD" and key == "BEHAVIOR_CONTROLLER":
             modify = "BPOD SETTINGS"
         elif value == "HD" and key == "SYNC_TYPE":
+            modify = "SYNC SETTINGS"
             self.delete_optional_widgets("SERVER SETTINGS")
         elif value == "SERVER" and key == "SYNC_TYPE":
             modify = "SERVER SETTINGS"
+        elif value == "OFF" and key == "SYNC_TYPE":
+            self.delete_optional_widgets("SYNC SETTINGS")
+            self.delete_optional_widgets("SERVER SETTINGS")
 
         self.settings_changed(value, key)
         if modify != "":

@@ -18,6 +18,7 @@ try:
 except Exception:
     pass
 
+
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
@@ -28,10 +29,15 @@ from village.scripts import time_utils
 from village.settings import Color, settings
 
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
-# configure the logging of libcamera (the C++ library picamera2 uses)
-# '0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
-os.environ["LIBCAMERA_LOG_LEVELS"] = "2"
+
+# to debug errors
 # Picamera2.set_logging(Picamera2.DEBUG)
+# logging.basicConfig(
+#     filename="camera_errors.log",
+#     filemode="a",
+#     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+#     level=logging.DEBUG
+# )
 
 
 # use this function to get info
@@ -154,6 +160,7 @@ class Camera(CameraBase):
         self.area4_alarm_timer = time_utils.Timer(3600)
         self.box_alarm_timer = time_utils.Timer(3600)
 
+        self.last_frame_time = time.time()
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
@@ -302,21 +309,24 @@ class Camera(CameraBase):
         print()
 
     def watchdog_tick(self) -> None:
-        if time.time() - self.last_frame_time < 10:  # 10 seconds without a frame
-            self.restart_camera()
+        if time.time() - self.last_frame_time > 10:  # 10 seconds without a frame
+            try:
+                self.restart_camera()
+            except Exception:
+                pass
 
     def restart_camera(self) -> None:
         self.watchdog_timer.stop()
-        log.error(
+        log.alarm(
             "Camera "
             + self.name
             + " has not received a frame for "
             + "10 seconds. Restarting the camera.",
             subject=manager.subject.name,
         )
+        self.cam.stop_recording()
         self.cam.stop()
         time.sleep(1)
-        self.reset_values()
         self.cam.start()
         self.watchdog_timer.start()
         if self.name == "CORRIDOR":

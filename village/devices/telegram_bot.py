@@ -53,7 +53,7 @@ class TelegramBot(TelegramBotBase):
             hours = 24
 
         try:
-            report, _, _, _ = manager.create_report(hours)
+            report, _, _, _, _ = manager.create_report(hours)
             await update.message.reply_text(report)
         except Exception:
             log.error(

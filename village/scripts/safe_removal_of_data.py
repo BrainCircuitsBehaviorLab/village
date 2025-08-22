@@ -8,19 +8,37 @@ import fire
 from village.scripts.utils import setup_logging
 
 
-def check_files_for_backup(
-    files, directory, backup_dir, remote_user, remote_host, port=None
+def check_files_for_backup_remote(
+    files, directory, backup_dir, remote_user, remote_host, port
 ) -> list:
     files_to_remove = []
     # Create a single SSH connection to the remote server
-    ssh_command = (
-        f"ssh {remote_user}@{remote_host} "
-        f"'for file in {' '.join([os.path.join(backup_dir, f) for f in files])}; do "
-        f"if [ -e $file ]; then echo $file; fi; done'"
-    )
-    result = subprocess.run(
-        ssh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
+    import os
+
+    if port is None:
+        ssh_command = (
+            f"ssh {remote_user}@{remote_host} "
+            f"'for file in {' '.join([os.path.join(backup_dir, f) for f in files])}; do"
+            f" if [ -e $file ]; then echo $file; fi; done'"
+        )
+    else:
+        ssh_command = (
+            f"ssh -p {port} {remote_user}@{remote_host} "
+            f"'for file in {' '.join([os.path.join(backup_dir, f) for f in files])}; do"
+            f" if [ -e $file ]; then echo $file; fi; done'"
+        )
+
+    try:
+        result = subprocess.run(
+            ssh_command,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=120,
+        )
+    except Exception:
+        return []
+
     backed_up_files = result.stdout.decode().strip().split("\n")
 
     for file in files:
@@ -28,6 +46,18 @@ def check_files_for_backup(
         if backup_path in backed_up_files:
             files_to_remove.append(os.path.join(directory, file))
 
+    return files_to_remove
+
+
+def check_files_for_backup_local(files, directory, backup_dir) -> list:
+    files_to_remove = []
+    for file in files:
+        try:
+            backup_path = os.path.join(backup_dir, file)
+            if os.path.exists(backup_path):
+                files_to_remove.append(os.path.join(directory, file))
+        except Exception:
+            pass
     return files_to_remove
 
 
@@ -44,10 +74,11 @@ def remove_old_data(
     directory,
     days,
     safe,
-    backup_dir=None,
-    remote_user=None,
-    remote_host=None,
-    port=None,
+    backup_dir,
+    remote_user,
+    remote_host,
+    port,
+    remote,
 ) -> None:
     removed_count = 0
     files_to_check = []
@@ -71,9 +102,13 @@ def remove_old_data(
                     removed_count = remove_file(file_path, removed_count)
 
     if safe:
-        if backup_dir:
-            files_to_remove = check_files_for_backup(
+        if remote:
+            files_to_remove = check_files_for_backup_remote(
                 files_to_check, directory, backup_dir, remote_user, remote_host, port
+            )
+        else:
+            files_to_remove = check_files_for_backup_local(
+                files_to_check, directory, backup_dir
             )
     else:
         logging.info("Safe mode is off, skipping backup check")
@@ -97,7 +132,14 @@ def remove_file(file_path, removed_count: int) -> int:
 
 
 def main(
-    directory, days, safe, backup_dir, remote_user=None, remote_host=None, port=None
+    directory,
+    days,
+    safe,
+    backup_dir,
+    remote_user=None,
+    remote_host=None,
+    port=None,
+    remote=True,
 ) -> None:
     """
     Main function to remove old data files from a directory
@@ -110,13 +152,14 @@ def main(
     - remote_user: Username on remote system
     - remote_host: Remote hostname or IP
     - port: SSH port
+    - remote: If False, will check for backup files in a locally connected HD
     """
 
     log_file, file_handler = setup_logging(logs_subdirectory="data_removal_logs")
     logging.info(f"Logging to file: {log_file}")
     try:
         remove_old_data(
-            directory, days, safe, backup_dir, remote_user, remote_host, port
+            directory, days, safe, backup_dir, remote_user, remote_host, port, remote
         )
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")

@@ -32,6 +32,7 @@ class Active(SuperEnum):
 class SyncType(SuperEnum):
     HD = "HD"
     SERVER = "SERVER"
+    OFF = "OFF"
 
 
 class Color(SuperEnum):

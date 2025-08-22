@@ -7,6 +7,7 @@ import time
 
 import fire
 
+from village.log import log
 from village.scripts.utils import setup_logging
 
 
@@ -255,8 +256,10 @@ def main(
     # Log completion
     if success:
         logging.info(f"Sync completed successfully. Log file: {log_file}")
+        log.info("Sync completed successfully")
     else:
         logging.error(f"Sync failed. Check log file for details: {log_file}")
+        log.error(f"Sync failed. Check log file for details: {log_file}")
 
     # Close the log file handler properly
     logging.getLogger().removeHandler(file_handler)

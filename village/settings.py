@@ -94,6 +94,12 @@ telegram_settings = [
         str,
         "The Telegram chat ID where alarm messages will be sent.",
     ),
+    Setting(
+        "HEALTHCHECKS_URL",
+        "",
+        str,
+        "The URL of the healthchecks.io endpoint to notify when the system is running.",
+    ),
 ]
 
 
@@ -157,13 +163,12 @@ directory_settings = [
 sync_settings = [
     Setting(
         "SYNC_TYPE",
-        "HD",
+        "OFF",
         SyncType,
         """Choose where to sync session data:
 HD to copy data to a USB hard drive connected to the Raspberry Pi.
 SERVER to sync data to a remote server over SSH.
-This setting determines whether the backup is local (to a directly connected drive)
-or remote (via network).
+OFF to disable synchronization (not recommended).
 """,
     ),
     Setting(
@@ -171,8 +176,8 @@ or remote (via network).
         "ON",
         Active,
         """If ON, the system deletes old video data only if it has been backed up
-to a remote server. If OFF, the system deletes old video data even if no backup
-is found.""",
+to a remote server or connected HD. If OFF, the system deletes old video data even if
+no backup is found.""",
     ),
     Setting(
         "MAXIMUM_SYNC_TIME",

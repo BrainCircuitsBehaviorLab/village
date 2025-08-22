@@ -6,7 +6,9 @@
 
 from typing import Optional
 
-from village.scripts.rsync_to_server import main as rsync_script
+from village.classes.enums import SyncType
+from village.scripts.rsync_to_hard_drive import main as rsync_to_hard_drive
+from village.scripts.rsync_to_server import main as rsync_to_server
 from village.settings import settings
 
 
@@ -17,20 +19,28 @@ class AfterSessionRun:
         self.server_user = settings.get("SERVER_USER")
         self.server_host = settings.get("SERVER_HOST")
         self.maximum_sync_time = settings.get("MAXIMUM_SYNC_TIME")
+        self.sync_type = settings.get("SYNC_TYPE")
         try:
             self.port: Optional[int] = int(settings.get("SERVER_PORT"))
         except Exception:
             self.port = None
 
     def run(self) -> None:
-        rsync_script(
-            source=self.data_directory,
-            destination=self.sync_directory,
-            remote_user=self.server_user,
-            remote_host=self.server_host,
-            port=self.port,
-            maximum_sync_time=self.maximum_sync_time,
-        )
+        if self.sync_type == SyncType.HD:
+            rsync_to_hard_drive(
+                source=self.data_directory,
+                destination=self.sync_directory,
+                maximum_sync_time=self.maximum_sync_time,
+            )
+        elif self.sync_type == SyncType.SERVER:
+            rsync_to_server(
+                source=self.data_directory,
+                destination=self.sync_directory,
+                remote_user=self.server_user,
+                remote_host=self.server_host,
+                port=self.port,
+                maximum_sync_time=self.maximum_sync_time,
+            )
 
 
 if __name__ == "__main__":
