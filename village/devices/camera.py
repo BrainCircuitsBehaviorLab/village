@@ -67,9 +67,17 @@ class Camera(CameraBase):
 
         frame_duration = int(1000000 / framerate)
 
+        if name == "CORRIDOR":
+            resolution = settings.get("CAM_BOX_RESOLUTION")
+        else:
+            resolution = [640, 480]
+
+        self.width = resolution[0]
+        self.height = resolution[1]
+
         # camera settings
         cam_raw = {"size": (2304, 1296)}
-        cam_main = {"size": (640, 480)}
+        cam_main = {"size": (self.width, self.height)}
         cam_controls = {
             "NoiseReductionMode": controls.draft.NoiseReductionModeEnum.Fast,
             "FrameDurationLimits": (frame_duration, frame_duration),
@@ -118,15 +126,15 @@ class Camera(CameraBase):
 
         # labels settings
         self.origin_rectangle = (0, 0)
-        self.end_rectangle = (640, 40)
+        self.end_rectangle = (self.width, int(self.height / 12))
 
-        self.origin_text1 = (3, 15)
-        self.origin_text2 = (3, 30)
+        self.origin_text1 = (3, int(self.height / 32))
+        self.origin_text2 = (3, int(self.height / 15))
 
-        origin_area1 = (240, 30)
-        origin_area2 = (340, 30)
-        origin_area3 = (440, 30)
-        origin_area4 = (540, 30)
+        origin_area1 = (int(self.width * 0.375), int(self.height / 15))
+        origin_area2 = (int(self.width * 0.53125), int(self.height / 15))
+        origin_area3 = (int(self.width * 0.6875), int(self.height / 15))
+        origin_area4 = (int(self.width * 0.84375), int(self.height / 15))
 
         self.origin_areas = [
             origin_area1,
@@ -136,9 +144,12 @@ class Camera(CameraBase):
         ]
 
         self.font = cv2.FONT_HERSHEY_SIMPLEX
-        self.scale = 0.4
+        self.scale = self.width * 0.000625
         self.thickness_line = 2
-        self.thickness_text = 1
+        if self.width <= 640:
+            self.thickness_text = 1
+        else:
+            self.thickness_text = 2
 
         self.frame_number = 0
         self.chrono = time_utils.Chrono()

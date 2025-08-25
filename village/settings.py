@@ -308,7 +308,7 @@ completed any trials.""",
     ),
 ]
 
-cam_framerate_settings = [
+cam_quality_settings = [
     Setting(
         "CAM_CORRIDOR_FRAMERATE",
         10,
@@ -323,8 +323,18 @@ while keeping the video file size low.""",
         int,
         """The number of frames per second at which the box camera
 videos are saved. The recommended value is 30 fps. If higher precision is needed for
-video analysis, the frame rate can be increased up to 60 fps, but keep in mind that
+video analysis, the frame rate can be increased up to 50 fps, but keep in mind that
 this will significantly increase the file size.""",
+    ),
+    Setting(
+        "CAM_BOX_RESOLUTION",
+        [640, 480],
+        list[int],
+        """Camera resolution. Depending on the desired aspect ratio, the recommended
+settings are 640 × 480 or 640 × 360, with a maximum of 1280 × 960 or 1280 × 720. Using
+higher resolutions significantly increases CPU load, which makes it unsuitable for
+running real-time visual stimuli. If auditory stimuli are used instead, latency may
+also be affected and should therefore be measured.""",
     ),
     Setting(
         "CAMS_PREVIEW_FRAMERATE",
@@ -646,7 +656,7 @@ settings = Settings(
     hourly_alarm_settings,
     cycle_alarm_settings,
     session_alarm_settings,
-    cam_framerate_settings,
+    cam_quality_settings,
     corridor_settings,
     extra_settings,
     controller_settings,

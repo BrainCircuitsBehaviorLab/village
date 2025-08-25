@@ -4,7 +4,7 @@ import json
 import os
 import time
 import traceback
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional, cast
 
 import cv2
 import numpy as np
@@ -48,117 +48,122 @@ if TYPE_CHECKING:
 
 
 class TableView(QTableView):
-    def __init__(self, model: Table) -> None:
+    def __init__(self, model: "Table | None" = None) -> None:
         super().__init__()
-        self.setModel(model)
-        self.model_parent = model
+        if model is not None:
+            self.setModel(model)
         self.setEditTriggers(QAbstractItemView.DoubleClicked)
+
+    def _model(self) -> "Table":
+        m = self.model()
+        if not isinstance(m, Table):
+            raise RuntimeError("TableView requires a Table model")
+        return cast(Table, m)
 
     def mouseDoubleClickEvent(self, event) -> None:
         index: QModelIndex = self.indexAt(event.pos())
-        if index.isValid():
-            flags = self.model().flags(index)
-            column = index.column()
-            column_name = self.model().headerData(column, Qt.Horizontal, Qt.DisplayRole)
-            if manager.table == DataTable.SUBJECTS:
-                if flags & Qt.ItemIsEditable and manager.state.can_edit_data():
-                    if column_name == "next_settings":
-                        manager.state = State.MANUAL_MODE
-                        current_value = self.model().data(index, Qt.DisplayRole)
-                        new_value = self.model_parent.layout_parent.edit_next_settings(
-                            current_value
-                        )
-                        self.model().setData(index, new_value, Qt.EditRole)
-                        self.save_changes_in_df()
-                    elif column_name == "next_session_time":
-                        manager.state = State.MANUAL_MODE
-                        current_value = self.model().data(index, Qt.DisplayRole)
-                        new_value = (
-                            self.model_parent.layout_parent.edit_next_session_time(
-                                current_value
-                            )
-                        )
-                        self.model().setData(index, new_value, Qt.EditRole)
-                        self.save_changes_in_df()
-                    elif column_name == "active":
-                        manager.state = State.MANUAL_MODE
-                        current_value = self.model().data(index, Qt.DisplayRole)
-                        self.openDaysSelectionDialog(index, current_value)
-                    else:
-                        manager.state = State.MANUAL_MODE
-                        super().mouseDoubleClickEvent(event)
-                        self.save_changes_in_df()
-                elif flags & Qt.ItemIsEditable:
-                    text = "Wait until the box is empty before editing the tables."
-                    QMessageBox.information(self, "EDIT", text)
-                else:
-                    super().mouseDoubleClickEvent(event)
-
-            elif manager.table == DataTable.SESSIONS_SUMMARY:
-                if flags & Qt.ItemIsEditable:
-                    if column_name == "settings":
-                        manager.state = State.MANUAL_MODE
-                        current_value = self.model().data(index, Qt.DisplayRole)
-                        new_value = self.model_parent.layout_parent.edit_task_settings(
-                            current_value, manager.state.can_edit_data()
-                        )
-                        self.model().setData(index, new_value, Qt.EditRole)
-                        self.save_changes_in_df()
-
-                        parent = self.model_parent.layout_parent
-
-                        paths = parent.get_paths_from_sessions_summary_row(
-                            parent.get_selected_row_series()
-                        )
-
-                        json_path = paths[2]
-                        try:
-                            with open(json_path, "w") as file:
-                                json.dump(current_value, file)
-                        except Exception:
-                            log.error(
-                                "Error trying to modify the json file",
-                                exception=traceback.format_exc(),
-                            )
-                    else:
-                        text = str(index.data())
-                        text = text.replace("  |  ", "\n")
-                        QMessageBox.information(self, "", text)
-            else:
-                text = str(index.data())
-                text = text.replace("  |  ", "\n")
-                QMessageBox.information(self, "", text)
-        else:
+        if not index.isValid():
             super().mouseDoubleClickEvent(event)
+            return
 
-    def save_changes_in_df(self, update=True) -> None:
-        if update:
-            self.model_parent.complete_df.loc[self.model_parent.df.index] = (
-                self.model_parent.df
-            )
+        model = self._model()
+        flags = model.flags(index)
+        column = index.column()
+        column_name = model.headerData(column, Qt.Horizontal, Qt.DisplayRole)
+
         if manager.table == DataTable.SUBJECTS:
-            manager.subjects.df = self.model_parent.complete_df
+            if flags & Qt.ItemIsEditable and manager.state.can_edit_data():
+                if column_name == "next_settings":
+                    manager.state = State.MANUAL_MODE
+                    current_value = model.data(index, Qt.DisplayRole)
+                    new_value = model.layout_parent.edit_next_settings(
+                        cast(str, current_value)
+                    )
+                    model.setData(index, new_value, Qt.EditRole)
+                    self.save_changes_in_df()
+                elif column_name == "next_session_time":
+                    manager.state = State.MANUAL_MODE
+                    current_value = model.data(index, Qt.DisplayRole)
+                    new_value = model.layout_parent.edit_next_session_time(
+                        cast(str, current_value)
+                    )
+                    model.setData(index, new_value, Qt.EditRole)
+                    self.save_changes_in_df()
+                elif column_name == "active":
+                    manager.state = State.MANUAL_MODE
+                    current_value = model.data(index, Qt.DisplayRole)
+                    self.openDaysSelectionDialog(index, current_value)
+                else:
+                    manager.state = State.MANUAL_MODE
+                    super().mouseDoubleClickEvent(event)
+                    self.save_changes_in_df()
+            elif flags & Qt.ItemIsEditable:
+                text = "Wait until the box is empty before editing the tables."
+                QMessageBox.information(self, "EDIT", text)
+            else:
+                super().mouseDoubleClickEvent(event)
+
+        elif manager.table == DataTable.SESSIONS_SUMMARY:
+            if flags & Qt.ItemIsEditable:
+                if column_name == "settings":
+                    manager.state = State.MANUAL_MODE
+                    current_value = model.data(index, Qt.DisplayRole)
+                    new_value = model.layout_parent.edit_task_settings(
+                        cast(str, current_value), manager.state.can_edit_data()
+                    )
+                    model.setData(index, new_value, Qt.EditRole)
+                    self.save_changes_in_df()
+
+                    parent = model.layout_parent
+                    paths = parent.get_paths_from_sessions_summary_row(
+                        cast(pd.Series, parent.get_selected_row_series())
+                    )
+
+                    json_path = paths[2]
+                    try:
+                        with open(json_path, "w") as file:
+                            json.dump(current_value, file)
+                    except Exception:
+                        log.error(
+                            "Error trying to modify the json file",
+                            exception=traceback.format_exc(),
+                        )
+                else:
+                    text = str(index.data())
+                    text = text.replace("  |  ", "\n")
+                    QMessageBox.information(self, "", text)
+        else:
+            text = str(index.data())
+            text = text.replace("  |  ", "\n")
+            QMessageBox.information(self, "", text)
+
+    def save_changes_in_df(self, update: bool = True) -> None:
+        model = self._model()
+        if update:
+            model.complete_df.loc[model.df.index] = model.df
+        if manager.table == DataTable.SUBJECTS:
+            manager.subjects.df = model.complete_df
             manager.subjects.save_from_df(manager.training)
         elif manager.table == DataTable.TEMPERATURES:
-            manager.temperatures.df = self.model_parent.complete_df
+            manager.temperatures.df = model.complete_df
             manager.temperatures.save_from_df()
         elif manager.table == DataTable.WATER_CALIBRATION:
-            manager.water_calibration.df = self.model_parent.complete_df
+            manager.water_calibration.df = model.complete_df
             manager.water_calibration.save_from_df()
         elif manager.table == DataTable.SOUND_CALIBRATION:
-            manager.sound_calibration.df = self.model_parent.complete_df
+            manager.sound_calibration.df = model.complete_df
             manager.sound_calibration.save_from_df()
         elif manager.table == DataTable.SESSIONS_SUMMARY:
-            manager.sessions_summary.df = self.model_parent.complete_df
+            manager.sessions_summary.df = model.complete_df
             manager.sessions_summary.save_from_df()
         manager.state = State.WAIT
 
-    def openDaysSelectionDialog(self, index, current_value) -> None:
+    def openDaysSelectionDialog(self, index: QModelIndex, current_value) -> None:
         dialog = DaysSelectionDialog(self, current_value)
         if dialog.exec_() == QDialog.Accepted:
             selected_days = dialog.getSelection()
             if selected_days:
-                self.model().setData(index, selected_days, Qt.EditRole)
+                self._model().setData(index, selected_days, Qt.EditRole)
                 self.save_changes_in_df()
                 manager.state = State.WAIT
 
@@ -297,12 +302,11 @@ class DaysSelectionDialog(QDialog):
 
 
 class Table(QAbstractTableModel):
-
     def __init__(
         self,
         df: pd.DataFrame,
         complete_df: pd.DataFrame,
-        layout_parent: DataLayout,
+        layout_parent: "DfLayout",
         editable: bool = False,
     ) -> None:
         super().__init__()
@@ -310,7 +314,7 @@ class Table(QAbstractTableModel):
         self.complete_df = complete_df
         self.editable = editable
         self.layout_parent = layout_parent
-        self.table_view = TableView(self)
+        self.table_view: Optional[TableView] = None  # asignada desde DfLayout
 
     def rowCount(self, parent=None) -> int:
         return self.df.shape[0]
@@ -379,10 +383,13 @@ class Table(QAbstractTableModel):
         return True
 
     def add_rows(self, new_df: pd.DataFrame) -> None:
+        if self.table_view is None:
+            self.df = new_df
+            return
         scroll_position = self.table_view.verticalScrollBar().value()
         scroll_max = self.table_view.verticalScrollBar().maximum()
         rows_before = self.rowCount()
-        move_to_bottom = True if scroll_position == scroll_max else False
+        move_to_bottom = bool(scroll_position == scroll_max)
         self.df = new_df
         if self.rowCount() > rows_before:
             self.beginInsertRows(QModelIndex(), rows_before, self.rowCount() - 1)
@@ -456,10 +463,13 @@ class DataLayout(Layout):
         if manager.table == DataTable.SESSIONS_SUMMARY:
             try:
                 paths = self.page1Layout.get_paths_from_sessions_summary_row(
-                    self.page1Layout.get_selected_row_series()
+                    cast(pd.Series, self.page1Layout.get_selected_row_series())
                 )
+                weight = cast(pd.Series, self.page1Layout.get_selected_row_series())[
+                    "weight"
+                ]
                 df = pd.read_csv(paths[0], sep=";")
-                figure = manager.session_plot.create_plot(df, width, height)
+                figure = manager.session_plot.create_plot(df, weight, width, height)
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -467,11 +477,17 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.SUBJECTS:
             path = self.page1Layout.get_path_from_subjects_row(
-                self.page1Layout.get_selected_row_series()
+                cast(pd.Series, self.page1Layout.get_selected_row_series())
             )
             try:
                 df = pd.read_csv(path, sep=";")
-                figure = manager.subject_plot.create_plot(df, width, height)
+                name = cast(pd.Series, self.page1Layout.get_selected_row_series())[
+                    "name"
+                ]
+                summary_df = manager.sessions_summary.df.loc[
+                    manager.sessions_summary.df["subject"] == name
+                ]
+                figure = manager.subject_plot.create_plot(df, summary_df, width, height)
                 pixmap = create_pixmap(figure)
             except Exception:
                 log.error(
@@ -512,7 +528,7 @@ class DataLayout(Layout):
         elif manager.table in (DataTable.OLD_SESSION, DataTable.OLD_SESSION_RAW):
             try:
                 figure = manager.session_plot.create_plot(
-                    manager.old_session_df, width, height
+                    manager.old_session_df, self.page1Layout.weight, width, height
                 )
                 pixmap = create_pixmap(figure)
             except Exception:
@@ -573,6 +589,7 @@ class DfLayout(Layout):
         self.df = DataFrame()
         self.complete_df = DataFrame()
         self.video_selected_path: str = ""
+        self.weight = 0.0
         self.draw()
 
     def draw(self) -> None:
@@ -611,6 +628,17 @@ class DfLayout(Layout):
         self.fifth_button = self.create_and_add_button(
             "FIFTH", 1, 177, 20, 2, self.button_clicked, "fifth"
         )
+
+        # Vista única y persistente
+        self.table_view = TableView(None)
+        self.table_view.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.table_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.table_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.table_view.setSelectionBehavior(QTableView.SelectRows)
+        self.table_view.setSelectionMode(QTableView.SingleSelection)
+        self.table_view.viewport().setAutoFillBackground(True)
+
+        self.addWidget(self.table_view, 5, 0, 42, 200)
 
     def update_data(self) -> None:
         match manager.table:
@@ -658,11 +686,7 @@ class DfLayout(Layout):
         self.title.setCurrentText(DataTable.SESSIONS_SUMMARY.value)
 
     def create_table(self) -> None:
-        editable = (
-            True
-            if manager.table in (DataTable.SUBJECTS, DataTable.SESSIONS_SUMMARY)
-            else False
-        )
+        editable = manager.table in (DataTable.SUBJECTS, DataTable.SESSIONS_SUMMARY)
         self.model = self.create_and_add_table(
             self.df,
             self.complete_df,
@@ -673,12 +697,13 @@ class DfLayout(Layout):
             widths=self.widths,
             editable=editable,
         )
+        # Señales (mínimo cambio)
         self.model.dataChanged.connect(self.on_data_changed)
+        sel_model = self.table_view.selectionModel()
+        if sel_model is not None:
+            sel_model.selectionChanged.connect(self.update_buttons)
 
         self.update_buttons()
-        self.model.table_view.selectionModel().selectionChanged.connect(
-            self.update_buttons
-        )
 
     def create_and_add_table(
         self,
@@ -693,19 +718,32 @@ class DfLayout(Layout):
     ) -> Table:
 
         model = Table(df, complete_df, self, editable)
-        model.table_view.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
-        model.table_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        model.table_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
-        model.table_view.setSelectionBehavior(QTableView.SelectRows)
-        model.table_view.setSelectionMode(QTableView.SingleSelection)
-        for i in range(len(widths)):
-            model.table_view.setColumnWidth(i, widths[i] * self.column_width)
+        old_model = self.table_view.model()
+        if isinstance(old_model, Table):
+            try:
+                old_model.dataChanged.disconnect(self.on_data_changed)
+            except Exception:
+                pass
+        try:
+            sm = self.table_view.selectionModel()
+            if sm is not None:
+                sm.selectionChanged.disconnect(self.update_buttons)
+        except Exception:
+            pass
 
-        model.table_view.scrollToBottom()
+        self.table_view.setUpdatesEnabled(False)
+        self.table_view.setModel(model)
+        self.table_view.clearSelection()
 
-        self.addWidget(model.table_view, row, column, height, width)
+        for i, w in enumerate(widths):
+            self.table_view.setColumnWidth(i, w * self.column_width)
 
+        self.table_view.setUpdatesEnabled(True)
+        self.table_view.viewport().update()
+        self.table_view.scrollToBottom()
+
+        model.table_view = self.table_view
         return model
 
     def change_data_table(self, value: str, key: str) -> None:
@@ -810,7 +848,8 @@ class DfLayout(Layout):
         button.show()
 
     def update_buttons(self) -> None:
-        selected_indexes = self.model.table_view.selectionModel().selectedRows()
+        sel_model = self.table_view.selectionModel()
+        selected_indexes = sel_model.selectedRows() if sel_model else []
         match manager.table:
             case DataTable.EVENTS:
                 self.first_button.hide()
@@ -818,28 +857,19 @@ class DfLayout(Layout):
                 self.third_button.hide()
                 self.fourth_button.hide()
                 self.connect_button_to_video(self.fifth_button)
-                if selected_indexes:
-                    self.fifth_button.setEnabled(True)
-                else:
-                    self.fifth_button.setEnabled(False)
+                self.fifth_button.setEnabled(bool(selected_indexes))
             case DataTable.SESSIONS_SUMMARY:
                 self.connect_button_to_delete(self.first_button)
                 self.connect_button_to_data_raw(self.second_button)
                 self.connect_button_to_data(self.third_button)
                 self.connect_button_to_video(self.fourth_button)
                 self.connect_button_to_plot(self.fifth_button)
-                if selected_indexes:
-                    self.first_button.setEnabled(True)
-                    self.second_button.setEnabled(True)
-                    self.third_button.setEnabled(True)
-                    self.fourth_button.setEnabled(True)
-                    self.fifth_button.setEnabled(True)
-                else:
-                    self.first_button.setEnabled(False)
-                    self.second_button.setEnabled(False)
-                    self.third_button.setEnabled(False)
-                    self.fourth_button.setEnabled(False)
-                    self.fifth_button.setEnabled(False)
+                enabled = bool(selected_indexes)
+                self.first_button.setEnabled(enabled)
+                self.second_button.setEnabled(enabled)
+                self.third_button.setEnabled(enabled)
+                self.fourth_button.setEnabled(enabled)
+                self.fifth_button.setEnabled(enabled)
             case DataTable.SUBJECTS:
                 self.first_button.hide()
                 self.second_button.hide()
@@ -847,12 +877,9 @@ class DfLayout(Layout):
                 self.connect_button_to_delete(self.fourth_button)
                 self.connect_button_to_plot(self.fifth_button)
                 self.third_button.setEnabled(True)
-                if selected_indexes:
-                    self.fourth_button.setEnabled(True)
-                    self.fifth_button.setEnabled(True)
-                else:
-                    self.fourth_button.setEnabled(False)
-                    self.fifth_button.setEnabled(False)
+                enabled = bool(selected_indexes)
+                self.fourth_button.setEnabled(enabled)
+                self.fifth_button.setEnabled(enabled)
             case (
                 DataTable.WATER_CALIBRATION
                 | DataTable.SOUND_CALIBRATION
@@ -864,10 +891,7 @@ class DfLayout(Layout):
                 self.connect_button_to_delete(self.fourth_button)
                 self.connect_button_to_plot(self.fifth_button)
                 self.fifth_button.setEnabled(True)
-                if selected_indexes:
-                    self.fourth_button.setEnabled(True)
-                else:
-                    self.fourth_button.setEnabled(False)
+                self.fourth_button.setEnabled(bool(selected_indexes))
             case DataTable.SESSION | DataTable.SESSION_RAW:
                 self.first_button.hide()
                 self.second_button.hide()
@@ -890,9 +914,12 @@ class DfLayout(Layout):
         pass
 
     def data_button_clicked(self) -> None:
-        p0 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[0]
-        p1 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[1]
-        p3 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[3]
+        series = self.get_selected_row_series()
+        if series is None:
+            return
+        self.weight = series["weight"]
+        paths = self.get_paths_from_sessions_summary_row(series)
+        p0, p1, _, p3, _ = paths
         self.video_selected_path = p3
         message = "Can not read file: " + p0
         try:
@@ -904,9 +931,12 @@ class DfLayout(Layout):
             log.error(message, exception=traceback.format_exc())
 
     def data_raw_button_clicked(self) -> None:
-        p0 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[0]
-        p1 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[1]
-        p3 = self.get_paths_from_sessions_summary_row(self.get_selected_row_series())[3]
+        series = self.get_selected_row_series()
+        if series is None:
+            return
+        self.weight = series["weight"]
+        paths = self.get_paths_from_sessions_summary_row(series)
+        p0, p1, _, p3, _ = paths
         self.video_selected_path = p3
         message = "Can not read file: " + p0
         try:
@@ -918,18 +948,24 @@ class DfLayout(Layout):
             log.error(message, exception=traceback.format_exc())
 
     def get_selected_row_series(self) -> pd.Series | None:
-        selected_indexes = self.model.table_view.selectionModel().selectedRows()
-        if not selected_indexes:
+        sel_model = self.table_view.selectionModel()
+        if not sel_model:
             return None
-        index = selected_indexes[0]
+        selected = sel_model.selectedRows()
+        if not selected:
+            return None
+        index = selected[0]
         return self.model.df.iloc[index.row()]
 
     def get_seconds_from_session_row(self) -> int:
         try:
-            selected_indexes = self.model.table_view.selectionModel().selectedRows()
-            if not selected_indexes:
+            sel_model = self.table_view.selectionModel()
+            if not sel_model:
                 return 0
-            index = selected_indexes[0].row()
+            selected = sel_model.selectedRows()
+            if not selected:
+                return 0
+            index = selected[0].row()
             if "TRIAL_START" in self.model.df.columns:
                 init_time = self.model.df.iloc[0]["TRIAL_START"]
                 row_time = self.model.df.iloc[index]["TRIAL_START"]
@@ -949,8 +985,8 @@ class DfLayout(Layout):
     def get_path_and_seconds_from_events_row(self, row: pd.Series) -> tuple[str, int]:
         date_str = row["date"]
         date = time_utils.date_from_string(date_str)
-        time = time_utils.time_since_start(date).total_seconds()
-        if time < settings.get("CORRIDOR_VIDEO_DURATION"):
+        tsec = time_utils.time_since_start(date).total_seconds()
+        if tsec < settings.get("CORRIDOR_VIDEO_DURATION"):
             text = "The event is too recent. It is possible that "
             text += "the video cannot be viewed until it has been fully recorded."
             QMessageBox.information(self.window, "EDIT", text)
@@ -1005,13 +1041,13 @@ class DfLayout(Layout):
 
     def video_button_clicked(self) -> None:
         path = ""
+        seconds = 0
         selected_row = self.get_selected_row_series()
         if selected_row is not None:
             if manager.table == DataTable.EVENTS:
                 path, seconds = self.get_path_and_seconds_from_events_row(selected_row)
             elif manager.table == DataTable.SESSIONS_SUMMARY:
                 path = self.get_paths_from_sessions_summary_row(selected_row)[3]
-                seconds = 0
             elif manager.table == DataTable.OLD_SESSION:
                 path = self.video_selected_path
                 seconds = self.get_seconds_from_session_row()
@@ -1019,12 +1055,8 @@ class DfLayout(Layout):
                 path = self.video_selected_path
                 seconds = self.get_seconds_from_session_row()
         else:
-            if manager.table == DataTable.OLD_SESSION:
+            if manager.table in (DataTable.OLD_SESSION, DataTable.OLD_SESSION_RAW):
                 path = self.video_selected_path
-                seconds = 0
-            elif manager.table == DataTable.OLD_SESSION_RAW:
-                path = self.video_selected_path
-                seconds = 0
         self.video_change_requested.emit(path, seconds)
 
     def plot_button_clicked(self) -> None:
@@ -1055,14 +1087,15 @@ class DfLayout(Layout):
             self.model.complete_df = pd.concat(
                 [self.model.complete_df, empty_row], ignore_index=True
             )
-            self.model.table_view.save_changes_in_df()
+            self.table_view.save_changes_in_df()
             self.update_buttons()
         else:
             text = "Wait until the box is empty before editing the subjects."
             QMessageBox.information(self.window, "EDIT", text)
 
     def delete_button_clicked(self) -> None:
-        selected_indexes = self.model.table_view.selectionModel().selectedRows()
+        sel_model = self.table_view.selectionModel()
+        selected_indexes = sel_model.selectedRows() if sel_model else []
         if selected_indexes:
             if manager.state.can_edit_data():
                 if manager.table == DataTable.SUBJECTS:
@@ -1127,8 +1160,9 @@ class DfLayout(Layout):
                         self.model.complete_df.reset_index(drop=True, inplace=True)
                         self.model.endRemoveRows()
 
-                self.model.table_view.save_changes_in_df(update=False)
-                self.model.table_view.selectionModel().clearSelection()
+                self.table_view.save_changes_in_df(update=False)
+                if sel_model:
+                    sel_model.clearSelection()
                 self.update_buttons()
             else:
                 text = "Wait until the box is empty before editing the subjects."
@@ -1304,7 +1338,7 @@ class DfLayout(Layout):
             return ""
 
     def on_data_changed(self) -> None:
-        self.model.table_view.save_changes_in_df()
+        self.table_view.save_changes_in_df()
 
 
 class PlotLayout(Layout):

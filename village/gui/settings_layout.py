@@ -175,7 +175,7 @@ class SettingsLayout(Layout):
                 row += 2
 
             row += 1
-            name = "HOURLY CHECKS"
+            name = "HOURLY ALARMS"
             label = self.create_and_add_label(name, row, column3, length, 2, "black")
             label.setProperty("type", name)
             row += 2
@@ -184,7 +184,7 @@ class SettingsLayout(Layout):
                 row += 2
 
             row += 1
-            name = "TWICE-DAILY CHECKS"
+            name = "TWICE-DAILY ALARMS"
             label = self.create_and_add_label(name, row, column3, length, 2, "black")
             label.setProperty("type", name)
             row += 2
@@ -193,7 +193,7 @@ class SettingsLayout(Layout):
                 row += 2
 
             row += 1
-            name = "END-SESSION CHECKS"
+            name = "END-SESSION ALARMS"
             label = self.create_and_add_label(name, row, column3, length, 2, "black")
             label.setProperty("type", name)
             row += 2
@@ -332,6 +332,7 @@ class SettingsLayout(Layout):
             "NO_SESSION_HOURS",
             "CAM_CORRIDOR_FRAMERATE",
             "CAM_BOX_FRAMERATE",
+            "CAM_BOX_RESOLUTION",
             "CAMS_PREVIEW_FRAMERATE",
             "DETECTION_DURATION",
             "TIME_BETWEEN_DETECTIONS",
@@ -622,12 +623,15 @@ class SettingsLayout(Layout):
         elif s.value_type == list[int]:
             values = settings.get(s.key)
             line_edits = []
+            c = column
+            if s.key == "CAM_BOX_RESOLUTION":
+                c = column - 4
             for i, v in enumerate(values):
                 value = str(v)
                 line_edit = self.create_and_add_line_edit(
                     value,
                     row,
-                    column + width + small_box * i,
+                    c + width + small_box * i,
                     small_box,
                     2,
                     self.settings_changed,
