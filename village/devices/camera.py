@@ -145,6 +145,7 @@ class Camera(CameraProtocol):
         self.area4_alarm_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
         self.box_alarm_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
 
+        self.last_frame_time = time.time()
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
