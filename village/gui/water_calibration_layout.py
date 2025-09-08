@@ -565,13 +565,13 @@ class WaterCalibrationLayout(Layout):
             )
 
         if ok > 0:
-            manager.state = State.RUN_MANUAL
-            manager.calibrating = True
             manager.task = WaterCalibration()
             manager.task.indices = self.indices2
             manager.task.times = [self.times2[i] for i in self.indices2]
             manager.task.maximum_number_of_trials = self.iterations2
             manager.task.settings.maximum_duration = 1000
+            manager.state = State.RUN_MANUAL
+            manager.calibrating = True
             for line_edit in self.time_line_edits:
                 line_edit.setDisabled(True)
             self.iterations_line_edit.setDisabled(True)

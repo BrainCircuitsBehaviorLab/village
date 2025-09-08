@@ -1,4 +1,5 @@
 import os
+import time
 import traceback
 from pprint import pprint
 from typing import Any
@@ -17,6 +18,8 @@ try:
 except Exception:
     pass
 
+
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.protocols import CameraProtocol
@@ -29,7 +32,14 @@ from village.settings import Color, settings
 # configure the logging of libcamera (the C++ library picamera2 uses)
 # '0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
 os.environ["LIBCAMERA_LOG_LEVELS"] = "2"
+
 # Picamera2.set_logging(Picamera2.DEBUG)
+# logging.basicConfig(
+#     filename="camera_errors.log",
+#     filemode="a",
+#     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+#     level=logging.DEBUG
+# )
 
 
 # use this function to get info
@@ -135,7 +145,12 @@ class Camera(CameraProtocol):
         self.area4_alarm_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
         self.box_alarm_timer = time_utils.Timer(settings.get("ALARM_REPEAT_TIME"))
 
+        self.watchdog_timer = QTimer()
+        self.watchdog_timer.setInterval(20000)
+        self.watchdog_timer.timeout.connect(self.watchdog_tick)
+
         self.cam.start()
+        self.watchdog_timer.start()
 
     def set_properties(self) -> None:
         # black or white detection setting
@@ -230,6 +245,7 @@ class Camera(CameraProtocol):
         self.error = ""
         self.filename = ""
         self.chrono.reset()
+        self.last_frame_time = time.time()
 
     def save_csv(self) -> None:
         if self.path_csv == os.path.join(settings.get("VIDEOS_DIRECTORY"), "BOX.csv"):
@@ -276,6 +292,30 @@ class Camera(CameraProtocol):
         pprint(self.config)
         print()
 
+    def watchdog_tick(self) -> None:
+        if time.time() - self.last_frame_time > 10:  # 10 seconds without a frame
+            try:
+                self.restart_camera()
+            except Exception:
+                pass
+
+    def restart_camera(self) -> None:
+        self.watchdog_timer.stop()
+        log.alarm(
+            "Camera "
+            + self.name
+            + " has not received a frame for "
+            + "10 seconds. Restarting the camera.",
+            subject=manager.subject.name,
+        )
+        self.cam.stop_recording()
+        self.cam.stop()
+        time.sleep(1)
+        self.cam.start()
+        self.watchdog_timer.start()
+        if self.name == "CORRIDOR":
+            self.cam.start_recording()
+
     def pre_process(self, request: Any) -> None:
         if self.change:
             self.set_properties()
@@ -283,6 +323,7 @@ class Camera(CameraProtocol):
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
         self.timestamp = time_utils.now_string()
+        self.last_frame_time = time.time()
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:

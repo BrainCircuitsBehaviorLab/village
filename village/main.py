@@ -74,7 +74,7 @@ def system_run(bevavior_window: QWidget) -> None:
     cam_corridor.start_record()
 
     while True:
-        time.sleep(0.001)
+        time.sleep(0.1)
 
         # if the task is not running, enable garbage collection
         if manager.state == State.WAIT:
