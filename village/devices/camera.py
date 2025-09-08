@@ -5,6 +5,7 @@ from pprint import pprint
 from typing import Any
 
 import cv2
+import numpy as np
 import pandas as pd
 
 from village.classes.enums import Active, AreaActive
@@ -52,7 +53,7 @@ class LowFreqQPicamera2(QPicamera2):
     def __init__(self, picam2, *args, framerate, **kwargs) -> None:
         super().__init__(picam2, *args, **kwargs)
         self._frame_counter = 0
-        self._good_frame = framerate // int(settings.get("CAMS_PREVIEW_FRAMERATE"))
+        self._good_frame = framerate // int(settings.get("CAM_PREVIEWS_FRAMERATE"))
 
     def render_request(self, completed_request) -> None:
         self._frame_counter += 1
@@ -67,7 +68,7 @@ class Camera(CameraBase):
 
         frame_duration = int(1000000 / framerate)
 
-        if name == "CORRIDOR":
+        if name == "BOX":
             resolution = settings.get("CAM_BOX_RESOLUTION")
         else:
             resolution = [640, 480]
@@ -157,7 +158,6 @@ class Camera(CameraBase):
 
         self.masks: list[Any] = [-1, -1, -1, -1]
         self.counts: list[int] = [-1, -1, -1, -1]
-        self.cropped_frames: list[Any] = []
 
         self.error = ""
         self.error_frame = 0
@@ -221,6 +221,10 @@ class Camera(CameraBase):
         self.zero_or_one_mouse = settings.get("DETECTION_OF_MOUSE_" + self.name)[0]
         self.one_or_two_mice = settings.get("DETECTION_OF_MOUSE_" + self.name)[1]
         self.view_detection = settings.get("VIEW_DETECTION_" + self.name) == Active.ON
+        if self.name == "BOX":
+            self.tracking = settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON
+        else:
+            self.tracking = False
 
     def start_camera(self) -> None:
         self.cam.start()
@@ -355,7 +359,6 @@ class Camera(CameraBase):
             self.frame = m.array
             if self.frame is not None:
                 self.get_gray_frame()
-                self.crop_areas()
                 self.detect()
                 self.draw_detection()
                 self.draw_rectangles()
@@ -368,22 +371,25 @@ class Camera(CameraBase):
     def get_gray_frame(self) -> None:
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
-    def crop_areas(self) -> None:
-        self.cropped_frames = [
-            self.gray_frame[f[1] : f[3], f[0] : f[2]] for f in self.areas
-        ]
-
+    # @time_utils.measure_time
     def detect(self) -> None:
         if self.color == Color.BLACK:
-            self.detect_black()
+            if self.tracking:
+                self.detect_black_position_contours()
+            else:
+                self.detect_black()
         else:
-            self.detect_white()
+            if self.tracking:
+                self.detect_white_position_contours()
+            else:
+                self.detect_white()
 
     def detect_black(self) -> None:
-        for index, frame in enumerate(self.cropped_frames):
+        for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
+                roi = self.gray_frame[y1:y2, x1:x2]
                 threshold = self.thresholds[index]
-                _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY_INV)
+                _, thresh = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
                 self.masks[index] = thresh
                 self.counts[index] = cv2.countNonZero(thresh)
             else:
@@ -391,15 +397,176 @@ class Camera(CameraBase):
                 self.counts[index] = -1
 
     def detect_white(self) -> None:
-        for index, frame in enumerate(self.cropped_frames):
+        for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
+                roi = self.gray_frame[y1:y2, x1:x2]
                 threshold = self.thresholds[index]
-                _, thresh = cv2.threshold(frame, threshold, 255, cv2.THRESH_BINARY)
+                _, thresh = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY)
                 self.masks[index] = thresh
                 self.counts[index] = cv2.countNonZero(thresh)
             else:
                 self.masks[index] = -1
                 self.counts[index] = -1
+
+    def detect_black_position_components(self) -> None:
+        mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
+
+        for index, (x1, y1, x2, y2) in enumerate(self.areas):
+            if self.areas_active[index]:
+                roi = self.gray_frame[y1:y2, x1:x2]
+                threshold = self.thresholds[index]
+                _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
+                sub = mask[y1:y2, x1:x2]
+                np.maximum(sub, roi_bin, out=sub)
+                self.masks[index] = roi_bin
+                self.counts[index] = cv2.countNonZero(roi_bin)
+            else:
+                self.masks[index] = -1
+                self.counts[index] = -1
+
+        num, _, stats, centroids = cv2.connectedComponentsWithStats(
+            mask, connectivity=8
+        )
+        if num > 1:
+            areas = stats[1:, cv2.CC_STAT_AREA]
+            valid = np.where(areas >= self.zero_or_one_mouse)[0]
+
+            if valid.size > 0:
+                index = 1 + valid[np.argmax(areas[valid])]
+                cx, cy = centroids[index]
+                self.x_mean_value = int(cx)
+                self.y_mean_value = int(cy)
+            else:
+                self.x_mean_value = -1
+                self.y_mean_value = -1
+        else:
+            self.x_mean_value = -1
+            self.y_mean_value = -1
+
+    def detect_white_position_components(self) -> None:
+        mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
+
+        for index, (x1, y1, x2, y2) in enumerate(self.areas):
+            if self.areas_active[index]:
+                roi = self.gray_frame[y1:y2, x1:x2]
+                threshold = self.thresholds[index]
+                _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY)
+                sub = mask[y1:y2, x1:x2]
+                np.maximum(sub, roi_bin, out=sub)
+                self.masks[index] = roi_bin
+                self.counts[index] = cv2.countNonZero(roi_bin)
+            else:
+                self.masks[index] = -1
+                self.counts[index] = -1
+
+        num, _, stats, centroids = cv2.connectedComponentsWithStats(
+            mask, connectivity=8
+        )
+        if num > 1:
+            areas = stats[1:, cv2.CC_STAT_AREA]
+            valid = np.where(areas >= self.zero_or_one_mouse)[0]
+
+            if valid.size > 0:
+                index = 1 + valid[np.argmax(areas[valid])]
+                cx, cy = centroids[index]
+                self.x_mean_value = int(cx)
+                self.y_mean_value = int(cy)
+            else:
+                self.x_mean_value = -1
+                self.y_mean_value = -1
+        else:
+            self.x_mean_value = -1
+            self.y_mean_value = -1
+
+    def detect_black_position_contours(self) -> None:
+        mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
+        for index, (x1, y1, x2, y2) in enumerate(self.areas):
+            if self.areas_active[index]:
+                roi = self.gray_frame[y1:y2, x1:x2]
+                threshold = self.thresholds[index]
+                _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
+                sub = mask[y1:y2, x1:x2]
+                np.maximum(sub, roi_bin, out=sub)
+                self.masks[index] = roi_bin
+                self.counts[index] = cv2.countNonZero(roi_bin)
+            else:
+                self.masks[index] = -1
+                self.counts[index] = -1
+
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        if not contours:
+            self.x_mean_value = -1
+            self.y_mean_value = -1
+            return
+
+        best_c = None
+        best_area = 0.0
+        for c in contours:
+            a = cv2.contourArea(c)
+            if a >= self.zero_or_one_mouse and a > best_area:
+                best_area = a
+                best_c = c
+
+        if best_c is None:
+            self.x_mean_value = -1
+            self.y_mean_value = -1
+            return
+
+        M = cv2.moments(best_c)
+        if M["m00"] > 0:
+            cx = int(M["m10"] / M["m00"])
+            cy = int(M["m01"] / M["m00"])
+            self.x_mean_value = cx
+            self.y_mean_value = cy
+        else:
+            self.x_mean_value = -1
+            self.y_mean_value = -1
+
+    def detect_white_position_contours(self) -> None:
+        mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
+        for index, (x1, y1, x2, y2) in enumerate(self.areas):
+            if self.areas_active[index]:
+                roi = self.gray_frame[y1:y2, x1:x2]
+                threshold = self.thresholds[index]
+                _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY)
+                sub = mask[y1:y2, x1:x2]
+                np.maximum(sub, roi_bin, out=sub)
+                self.masks[index] = roi_bin
+                self.counts[index] = cv2.countNonZero(roi_bin)
+            else:
+                self.masks[index] = -1
+                self.counts[index] = -1
+
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        if not contours:
+            self.x_mean_value = -1
+            self.y_mean_value = -1
+            return
+
+        best_c = None
+        best_area = 0.0
+        for c in contours:
+            a = cv2.contourArea(c)
+            if a >= self.zero_or_one_mouse and a > best_area:
+                best_area = a
+                best_c = c
+
+        if best_c is None:
+            self.x_mean_value = -1
+            self.y_mean_value = -1
+            return
+
+        M = cv2.moments(best_c)
+        if M["m00"] > 0:
+            cx = int(M["m10"] / M["m00"])
+            cy = int(M["m01"] / M["m00"])
+            self.x_mean_value = cx
+            self.y_mean_value = cy
+        else:
+            self.x_mean_value = -1
+            self.y_mean_value = -1
 
     def draw_detection(self) -> None:
         if self.view_detection:
@@ -407,6 +574,8 @@ class Camera(CameraBase):
                 self.draw_thresholded_black()
             else:
                 self.draw_thresholded_white()
+            if self.tracking:
+                self.draw_position()
 
     def draw_rectangles(self) -> None:
         cv2.rectangle(
@@ -510,6 +679,16 @@ class Camera(CameraBase):
                     )
                 except Exception:
                     pass
+
+    def draw_position(self) -> None:
+        if self.x_mean_value != -1 and self.y_mean_value != -1:
+            cv2.circle(
+                self.frame,
+                (self.x_mean_value, self.y_mean_value),
+                10,
+                (255, 0, 255),
+                -1,
+            )
 
     def write_csv(self) -> None:
         if self.is_recording:

@@ -220,8 +220,11 @@ class CameraBase:
 
 
 class BehaviorWindowBase(QWidget):
-    def set_active(self, value: bool) -> None:
+    def start_drawing(self) -> None:
         return
 
-    def set_draw_function(self, draw_fn: Optional[Callable]) -> None:
+    def stop_drawing(self) -> None:
+        return
+
+    def load_draw_function(self, draw_fn: Optional[Callable]) -> None:
         return

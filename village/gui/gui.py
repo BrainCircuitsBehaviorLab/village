@@ -4,13 +4,13 @@ from pathlib import Path
 
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
+from screen.behavior_window import BehaviorWindow
 
 from village.classes.abstract_classes import BehaviorWindowBase
 from village.classes.enums import ScreenActive
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
 from village.log import log
-from village.screen.behavior_window import BehaviorWindow
 from village.settings import settings
 
 
@@ -28,9 +28,9 @@ class Gui:
         screen = QGuiApplication.screens()[0]
         self.geometry = screen.geometry()
 
-        print(screen.availableGeometry())
-        print(screen.geometry())
-        print(QGuiApplication.primaryScreen().devicePixelRatio())
+        # print(screen.availableGeometry())
+        # print(screen.geometry())
+        # print(QGuiApplication.primaryScreen().devicePixelRatio())
 
         if settings.get("USE_SCREEN") != ScreenActive.OFF:
             self.create_behavior_window()
@@ -44,8 +44,8 @@ class Gui:
         screen = QGuiApplication.screens()[1]
         geometry = screen.geometry()
 
-        print(screen.availableGeometry())
-        print(screen.geometry())
+        # print(screen.availableGeometry())
+        # print(screen.geometry())
         self.behavior_window = BehaviorWindow(geometry)
         settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
 

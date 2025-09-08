@@ -12,7 +12,7 @@ from village.classes.collection import Collection
 from village.classes.enums import Active, Save
 from village.classes.training import Settings, Training
 from village.devices.bpod import bpod
-from village.devices.sound_device import sound_device
+from village.devices.sound_device_new import sound_device
 from village.log import log
 from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
@@ -72,6 +72,9 @@ class Task:
 
         self.sound_calibration: Collection = Collection("", [], [])
         self.water_calibration: Collection = Collection("", [], [])
+
+        self.stimulus_elapsed_time: float = 0.0
+        self.stimulus_frame = 0
 
     # OVERWRITE THESE METHODS IN YOUR TASKS
     def start(self) -> None:

@@ -46,10 +46,13 @@ class LabelButtons:
         width: int,
         color: str,
         layout: Layout,
+        width_res: int = 640,
+        height_res: int = 480,
     ) -> None:
         self.name = name
         self.direction = direction
         self.short_name = name.split("_")[0]
+
         self.mapping_dict_index = {
             "left": 0,
             "empty_limit": 0,
@@ -63,12 +66,12 @@ class LabelButtons:
             "grams": -1,
         }
         self.mapping_dict_max = {
-            "left": 640,
+            "left": width_res,
             "empty_limit": 1000000,
-            "top": 480,
+            "top": height_res,
             "subject_limit": 1000000,
-            "right": 640,
-            "bottom": 480,
+            "right": width_res,
+            "bottom": height_res,
             "threshold": 255,
             "threshold_day": 255,
             "threshold_night": 255,
@@ -978,6 +981,8 @@ class CorridorLayout(Layout):
     def draw_area_buttons_box(
         self, name: str, row: int, column: int, color: str
     ) -> None:
+        width_res = settings.get("CAM_BOX_RESOLUTION")[0]
+        height_res = settings.get("CAM_BOX_RESOLUTION")[1]
         self.label2: Label = self.create_and_add_label(name, row, column, 16, 2, color)
         row += 2
         for direction in (
@@ -987,7 +992,17 @@ class CorridorLayout(Layout):
             "bottom",
             "threshold",
         ):
-            lb = LabelButtons(name, direction, row, column, 9, color, self)
+            lb = LabelButtons(
+                name,
+                direction,
+                row,
+                column,
+                9,
+                color,
+                self,
+                width_res=width_res,
+                height_res=height_res,
+            )
             self.lbs.append(lb)
             row += 2
 

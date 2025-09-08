@@ -308,7 +308,15 @@ completed any trials.""",
     ),
 ]
 
-cam_quality_settings = [
+cam_fixed_settings = [
+    Setting(
+        "CAM_BOX_TRACKING_POSITION",
+        "ON",
+        Active,
+        """Tracks the animal’s position inside the box. This feature significantly
+increases CPU usage, so we recommend using it at a maximum of 30 fps and a
+resolution of 640×480""",
+    ),
     Setting(
         "CAM_CORRIDOR_FRAMERATE",
         10,
@@ -324,7 +332,7 @@ while keeping the video file size low.""",
         """The number of frames per second at which the box camera
 videos are saved. The recommended value is 30 fps. If higher precision is needed for
 video analysis, the frame rate can be increased up to 50 fps, but keep in mind that
-this will significantly increase the file size.""",
+this will significantly increase the file size and CPU usage.""",
     ),
     Setting(
         "CAM_BOX_RESOLUTION",
@@ -337,10 +345,10 @@ running real-time visual stimuli. If auditory stimuli are used instead, latency 
 also be affected and should therefore be measured.""",
     ),
     Setting(
-        "CAMS_PREVIEW_FRAMERATE",
+        "CAM_PREVIEWS_FRAMERATE",
         5,
         int,
-        """The number of frames per second for the camera preview. This setting does
+        """The number of frames per second for both camera previews. This setting does
 not affect the frame rate at which videos are recorded. The recommended value is 5 fps,
 which provides a clear view of the system activity while keeping CPU usage low.""",
     ),
@@ -656,7 +664,7 @@ settings = Settings(
     hourly_alarm_settings,
     cycle_alarm_settings,
     session_alarm_settings,
-    cam_quality_settings,
+    cam_fixed_settings,
     corridor_settings,
     extra_settings,
     controller_settings,

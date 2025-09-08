@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import (
     QDateTimeEdit,
     QDialog,
     QHBoxLayout,
+    QHeaderView,
     QLabel,
     QLineEdit,
     QMessageBox,
@@ -314,7 +315,8 @@ class Table(QAbstractTableModel):
         self.complete_df = complete_df
         self.editable = editable
         self.layout_parent = layout_parent
-        self.table_view: Optional[TableView] = None  # asignada desde DfLayout
+        self.table_view: Optional[TableView] = None
+        self._display = self.df.astype(str)
 
     def rowCount(self, parent=None) -> int:
         return self.df.shape[0]
@@ -323,12 +325,11 @@ class Table(QAbstractTableModel):
         return self.df.shape[1]
 
     def data(self, index, role=Qt.DisplayRole) -> str | None:
-        if index.isValid():
-            if role == Qt.DisplayRole or role == Qt.EditRole:
-                return str(self.df.iloc[index.row(), index.column()])
+        if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
+            return self._display.iat[index.row(), index.column()]
         return None
 
-    def headerData(self, section, orientation, role=Qt.DisplayRole):
+    def headerData(self, section, orientation, role=Qt.DisplayRole) -> str | None:
         if role != Qt.DisplayRole:
             return None
 
@@ -340,32 +341,35 @@ class Table(QAbstractTableModel):
                     return str(self.df.index[section])
                 else:
                     return None
+            else:
+                return None
         except Exception:
             return None
 
     def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
-        if role == Qt.EditRole:
-            column_dtype = self.df.dtypes.iloc[index.column()]
-            try:
-                if column_dtype == "int64" or column_dtype == "Int64":
-                    value = int(value)
-                elif column_dtype == "float64" or column_dtype == "float32":
-                    value = float(value)
-                elif column_dtype == "bool":
-                    value = bool(value)
-                elif column_dtype == "object" or column_dtype == "string":
-                    value = str(value)
-                elif column_dtype == "datetime64[ns]":
-                    value = pd.to_datetime(value)
-                elif column_dtype == "timedelta64[ns]":
-                    value = pd.to_timedelta(value)
+        if role != Qt.EditRole:
+            return False
+        column_dtype = self.df.dtypes.iloc[index.column()]
+        try:
+            if column_dtype in ("int64", "Int64"):
+                value = int(value)
+            elif column_dtype in ("float64", "float32"):
+                value = float(value)
+            elif column_dtype == "bool":
+                value = bool(value)
+            elif column_dtype in ("object", "string"):
+                value = str(value)
+            elif str(column_dtype) == "datetime64[ns]":
+                value = pd.to_datetime(value)
+            elif str(column_dtype) == "timedelta64[ns]":
+                value = pd.to_timedelta(value)
+        except (ValueError, TypeError):
+            return False
 
-                self.df.iloc[index.row(), index.column()] = value
-                self.dataChanged.emit(index, index, [Qt.DisplayRole])
-                return True
-            except (ValueError, TypeError):
-                return False
-        return False
+        self.df.iat[index.row(), index.column()] = value
+        self._display.iat[index.row(), index.column()] = str(value)
+        self.dataChanged.emit(index, index, [Qt.DisplayRole])
+        return True
 
     def flags(self, index) -> Any:
         if self.editable:
@@ -385,12 +389,14 @@ class Table(QAbstractTableModel):
     def add_rows(self, new_df: pd.DataFrame) -> None:
         if self.table_view is None:
             self.df = new_df
+            self._display = new_df.astype(str)
             return
         scroll_position = self.table_view.verticalScrollBar().value()
         scroll_max = self.table_view.verticalScrollBar().maximum()
         rows_before = self.rowCount()
         move_to_bottom = bool(scroll_position == scroll_max)
         self.df = new_df
+        self._display = new_df.astype(str)
         if self.rowCount() > rows_before:
             self.beginInsertRows(QModelIndex(), rows_before, self.rowCount() - 1)
             self.endInsertRows()
@@ -629,11 +635,16 @@ class DfLayout(Layout):
             "FIFTH", 1, 177, 20, 2, self.button_clicked, "fifth"
         )
 
-        # Vista única y persistente
         self.table_view = TableView(None)
-        self.table_view.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        vh = self.table_view.verticalHeader()
+        vh.setSectionResizeMode(QHeaderView.Fixed)
+        vh.setDefaultSectionSize(24)
+        self.table_view.setWordWrap(False)
+        self.table_view.setSizeAdjustPolicy(QAbstractScrollArea.AdjustIgnored)
+        self.table_view.setAlternatingRowColors(False)
         self.table_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.table_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.table_view.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.table_view.setSelectionBehavior(QTableView.SelectRows)
         self.table_view.setSelectionMode(QTableView.SingleSelection)
         self.table_view.viewport().setAutoFillBackground(True)
@@ -697,7 +708,7 @@ class DfLayout(Layout):
             widths=self.widths,
             editable=editable,
         )
-        # Señales (mínimo cambio)
+
         self.model.dataChanged.connect(self.on_data_changed)
         sel_model = self.table_view.selectionModel()
         if sel_model is not None:
@@ -765,19 +776,33 @@ class DfLayout(Layout):
                 self.update_data()
                 self.create_table()
 
+    # def obtain_searched_df(self) -> DataFrame:
+    #     if self.searching == "":
+    #         return self.complete_df.copy()
+    #     else:
+    #         new_df = self.complete_df.copy()
+    #         return new_df[
+    #             new_df.apply(
+    #                 lambda row: row.astype(str)
+    #                 .str.contains(self.searching, case=False)
+    #                 .any(),
+    #                 axis=1,
+    #             )
+    #         ]
+
     def obtain_searched_df(self) -> DataFrame:
-        if self.searching == "":
-            return self.complete_df.copy()
-        else:
-            new_df = self.complete_df.copy()
-            return new_df[
-                new_df.apply(
-                    lambda row: row.astype(str)
-                    .str.contains(self.searching, case=False)
-                    .any(),
-                    axis=1,
-                )
-            ]
+        term = self.searching
+        df = self.complete_df.copy()
+        if not term:
+            return df
+        masks = []
+        for col in df.columns:
+            s = df[col].astype(str)
+            masks.append(s.str.contains(term, case=False, na=False, regex=False))
+        mask_any = (
+            np.logical_or.reduce(masks) if masks else np.zeros(len(df), dtype=bool)
+        )
+        return df.loc[mask_any]
 
     def update_gui(self) -> None:
         self.update_data()

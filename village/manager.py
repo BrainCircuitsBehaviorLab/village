@@ -132,7 +132,7 @@ class Manager:
         self.log_weight = False
         self.taring_scale = False
 
-        self.stimulus_timing: float = 0.0
+        self.stimulus_elapsed_time: float = 0.0
         self.stimulus_frame = 0
 
         self.healthchecks_url = settings.get("HEALTHCHECKS_URL")
@@ -453,6 +453,8 @@ class Manager:
         self.task.cam_box = cam
         self.task.water_calibration = self.water_calibration
         self.task.sound_calibration = self.sound_calibration
+        self.task.stimulus_elapsed_time = self.stimulus_elapsed_time
+        self.task.stimulus_frame = self.stimulus_frame
         if self.subject.name != "None":
             self.task.cam_box.start_recording(
                 self.task.video_path, self.task.video_data_path
@@ -500,6 +502,8 @@ class Manager:
                 self.task.maximum_number_of_trials = 100000000
                 self.task.water_calibration = self.water_calibration
                 self.task.sound_calibration = self.sound_calibration
+                self.task.stimulus_elapsed_time = self.stimulus_elapsed_time
+                self.task.stimulus_frame = self.stimulus_frame
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -583,8 +587,9 @@ class Manager:
 
     def disconnect_and_save(self, run_mode: str) -> None:
         # TODO kill the touchscreen reading
-        self.behavior_window.set_draw_function(None)
-        self.behavior_window.set_active(False)
+        # TODO clean the screen
+        self.behavior_window.load_draw_function(None)
+        self.behavior_window.stop_drawing()
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
             run_mode
         )

@@ -36,7 +36,7 @@ from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
 from village.devices.scale import real_weight_inference, scale
-from village.devices.sound_device import sound_device
+from village.devices.sound_device_new import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
@@ -51,16 +51,31 @@ from village.settings import settings
 
 
 fmt = QSurfaceFormat()
-fmt.setSwapInterval(1)  # try 0
-fmt.setVersion(2, 0)  # OpenGL ES 3.1
-fmt.setRenderableType(QSurfaceFormat.OpenGL)
+fmt.setSwapInterval(1)  # VSync ON (try with 0 no VSync)
+fmt.setRenderableType(QSurfaceFormat.OpenGLES)
+fmt.setVersion(3, 0)  # GLES 3.0
 
 fmt.setDepthBufferSize(0)
 fmt.setStencilBufferSize(0)
 fmt.setSamples(0)
 fmt.setAlphaBufferSize(0)
 
+fmt.setSwapBehavior(QSurfaceFormat.DoubleBuffer)
+
 QSurfaceFormat.setDefaultFormat(fmt)
+
+
+# fmt = QSurfaceFormat()
+# fmt.setSwapInterval(1)  # try 0
+# fmt.setVersion(2, 0)  # OpenGL ES 3.1
+# fmt.setRenderableType(QSurfaceFormat.OpenGL)
+
+# fmt.setDepthBufferSize(0)
+# fmt.setStencilBufferSize(0)
+# fmt.setSamples(0)
+# fmt.setAlphaBufferSize(0)
+
+# QSurfaceFormat.setDefaultFormat(fmt)
 
 
 # init

@@ -1,13 +1,16 @@
+from __future__ import annotations
+
 import time
 from typing import Callable, Optional
 
 import gpiod
 from gpiod.line import Direction, Value
-from PyQt5.QtCore import QRect
-from PyQt5.QtGui import QColor, QPainter
+from PyQt5.QtCore import QRect, Qt, QThread
+from PyQt5.QtGui import QColor, QImage, QPainter
 from PyQt5.QtWidgets import QOpenGLWidget
 
 from village.manager import manager
+from village.screen.video_worker import VideoWorker
 
 
 class BehaviorWindow(QOpenGLWidget):
@@ -16,61 +19,130 @@ class BehaviorWindow(QOpenGLWidget):
         self.setGeometry(geometry)
         self.setFixedSize(geometry.width(), geometry.height())
         self.setWindowTitle("Village_Box")
-        self.setStyleSheet("background-color: black")
-        self.active: int = 0  # 0 inactive, 1 active, 2 cleaning
-        self.draw_function: Optional[Callable] = None
-
-        # minimum latency OpenGL configuration
+        self.setAttribute(Qt.WA_OpaquePaintEvent, True)
+        self.setAutoFillBackground(False)
         self.setUpdateBehavior(QOpenGLWidget.NoPartialUpdate)
 
-        self.start_timing: float = 0.0
+        self.active: bool = False
+        self._draw_fn: Optional[Callable] = None
+
+        # timing
+        self._start_timing: float = 0.0
+
+        # render loop
+        self._swap_connected: bool = False
+
+        # persistent GPIO
+        self._gpio_request = None
+        self._gpio_line_offset = 26
+        self._init_gpio()
+
+        # video
+        self._video_thread: Optional[QThread] = None
+        self._video_worker: Optional[VideoWorker] = None
 
         self.show()
 
+    def _init_gpio(self) -> None:
+        try:
+            cfg = {
+                self._gpio_line_offset: gpiod.LineSettings(
+                    direction=Direction.OUTPUT, output_value=Value.INACTIVE
+                )
+            }
+            self._gpio_request = gpiod.request_lines(
+                "/dev/gpiochip0", consumer="village_stim", config=cfg
+            )
+        except Exception:
+            self._gpio_request = None
+
     def initializeGL(self) -> None:
+        pass
+
+    def resizeGL(self, width: int, height: int) -> None:
         pass
 
     def closeEvent(self, event) -> None:
         event.ignore()
 
-    def set_active(self, value: bool) -> None:
-        self.active = value
-        self.start_timing = time.time()
+    def load_draw_function(self, draw_fn: Optional[Callable]) -> None:
+        self.stop_drawing()
+        self._draw_fn = draw_fn
+
+    def start_drawing(self) -> None:
+        self.active = True
+        self._start_timing = time.time()
+        if not self._swap_connected:
+            self.frameSwapped.connect(self.update, Qt.ConnectionType.UniqueConnection)
+            self._swap_connected = True
         self.update()
 
-    def set_draw_function(self, draw_fn: Optional[Callable]) -> None:
-        self.draw_function = draw_fn
+    def stop_drawing(self) -> None:
+        self.active = False
+        if self._swap_connected:
+            try:
+                self.frameSwapped.disconnect(self.update)
+            except Exception:
+                pass
+            self._swap_connected = False
+        manager.stimulus_elapsed_time = 0.0
+        manager.stimulus_frame = 0
+        self.update()
+
+    def start_video(self, path: str) -> None:
+        self.stop_video()
+        self._video_thread = QThread()
+        self._video_worker = VideoWorker(path)
+        self._video_worker.moveToThread(self._video_thread)
+        self._video_thread.started.connect(self._video_worker.run)
+        self._video_thread.start()
+
+    def stop_video(self) -> None:
+        if self._video_worker:
+            self._video_worker.stop()
+        if self._video_thread:
+            self._video_thread.quit()
+            self._video_thread.wait(500)
+        self._video_worker = None
+        self._video_thread = None
+
+    def get_video_frame(self) -> Optional[QImage]:
+        if not self._video_worker:
+            return None
+        return self._video_worker.get_latest_qimage()
 
     def paintGL(self) -> None:
-        if not self.active or self.draw_function is None:
+        if not self.active or self._draw_fn is None:
             self.clear_function()
-            manager.stimulus_timing = 0
+            manager.stimulus_elapsed_time = 0.0
             manager.stimulus_frame = 0
-        else:
-            line_offset = 26
-            with gpiod.request_lines(
-                "/dev/gpiochip0",
-                consumer="toggle_value",
-                config={
-                    line_offset: gpiod.LineSettings(
-                        direction=Direction.OUTPUT, output_value=Value.ACTIVE
-                    )
-                },
-            ) as request:
-                request.set_value(line_offset, Value.ACTIVE)
+            return
 
-                current_time = time.time()
-                manager.stimulus_timing = current_time - self.start_timing
-                manager.stimulus_frame += 1
-                self.draw_function()
-                self.update()
+        if self._gpio_request is not None:
+            try:
+                self._gpio_request.set_value(self._gpio_line_offset, Value.ACTIVE)
+            except Exception:
+                pass
 
-                request.set_value(line_offset, Value.INACTIVE)
+        # timing/frame
+        now = time.time()
+        manager.stimulus_elapsed_time = now - self._start_timing
+        manager.stimulus_frame += 1
 
-    def resizeGL(self, width: int, height: int) -> None:
-        pass
+        try:
+            self._draw_fn()
+        except Exception:
+            pass
+
+        if self._gpio_request is not None:
+            try:
+                self._gpio_request.set_value(self._gpio_line_offset, Value.INACTIVE)
+            except Exception:
+                pass
 
     def clear_function(self) -> None:
         with QPainter(self) as painter:
             # clean the window
+            print("to clean")
             painter.fillRect(manager.behavior_window.rect(), QColor("black"))
+            print("cleaned")

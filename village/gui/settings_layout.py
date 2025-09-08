@@ -333,7 +333,6 @@ class SettingsLayout(Layout):
             "CAM_CORRIDOR_FRAMERATE",
             "CAM_BOX_FRAMERATE",
             "CAM_BOX_RESOLUTION",
-            "CAMS_PREVIEW_FRAMERATE",
             "DETECTION_DURATION",
             "TIME_BETWEEN_DETECTIONS",
             "WEIGHT_THRESHOLD",

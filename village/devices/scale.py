@@ -53,7 +53,6 @@ class Scale(ScaleBase):
             log.error("Error calibrating scale", exception=traceback.format_exc())
 
     def get_value(self) -> int:
-        # TODO check with Eric or test changing the scale cables if it is always > 0
         data = self.i2cbus.read_i2c_block_data(
             self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
         )
