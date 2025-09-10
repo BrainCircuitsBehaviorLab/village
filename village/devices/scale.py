@@ -85,16 +85,16 @@ scale = get_scale(settings.get("SCALE_ADDRESS"))
 def real_weight_inference(weight_array, threshold):
     """
     Conditions to call it a real weight:
-     - minimum of 5 measurements
+     - minimum of 8 measurements
      - median larger than threshold
-     - standard deviation of the last 3 measurements is
+     - standard deviation of the last 5 measurements is
         smaller than 10% of the threshold
     """
-    if len(weight_array) < 5:
+    if len(weight_array) < 8:
         return False
 
-    median_weight = np.median(weight_array[-5:])
-    std_weight = np.std(weight_array[-3:])
+    median_weight = np.median(weight_array[-8:])
+    std_weight = np.std(weight_array[-5:])
 
     if median_weight > threshold and std_weight < 0.1 * threshold:
         return True

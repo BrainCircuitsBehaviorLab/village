@@ -134,7 +134,7 @@ def system_run(bevavior_window: QWidget) -> None:
     background_thread.start()
 
     while True:
-        time.sleep(0.1)  # TODO : adjust this value to your needs
+        time.sleep(0.1)
 
         if manager.online_plot_figure_manager.active:
             if manager.task.current_trial > trial and plot_timer.has_elapsed():

@@ -19,7 +19,6 @@ try:
 except Exception:
     pass
 
-
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
@@ -33,6 +32,12 @@ from village.settings import Color, settings
 
 # to debug errors
 # Picamera2.set_logging(Picamera2.DEBUG)
+# logging.basicConfig(
+#     filename="camera_errors.log",
+#     filemode="a",
+#     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+#     level=logging.DEBUG
+# )
 # logging.basicConfig(
 #     filename="camera_errors.log",
 #     filemode="a",
@@ -178,6 +183,7 @@ class Camera(CameraBase):
 
         self.cam.start()
         self.watchdog_timer.start()
+        self.watchdog_timer.start()
 
     def set_properties(self) -> None:
         # black or white detection setting
@@ -280,6 +286,7 @@ class Camera(CameraBase):
         self.filename = ""
         self.chrono.reset()
         self.last_frame_time = time.time()
+        self.last_frame_time = time.time()
 
     def save_csv(self) -> None:
         if self.path_csv == os.path.join(settings.get("VIDEOS_DIRECTORY"), "BOX.csv"):
@@ -354,6 +361,7 @@ class Camera(CameraBase):
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
         self.timestamp = time_utils.now_string()
+        self.last_frame_time = time.time()
         self.last_frame_time = time.time()
         with MappedArray(request, "main") as m:
             self.frame = m.array
