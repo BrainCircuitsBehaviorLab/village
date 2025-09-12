@@ -18,7 +18,7 @@ class Settings:
         self.observations: str = ""
 
 
-class Training:
+class TrainingProtocolBase:
     def __init__(self) -> None:
         self.default_settings = Settings()
         self.settings = Settings()

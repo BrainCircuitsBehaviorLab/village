@@ -12,7 +12,7 @@ from village.scripts.safe_removal_of_data import main as safe_removal_script
 from village.settings import Active, settings
 
 
-class ChangeCycleRun:
+class ChangeCycleBase:
     def __init__(self) -> None:
         self.directory = settings.get("VIDEOS_DIRECTORY")
         self.days = settings.get("DAYS_OF_VIDEO_STORAGE")
@@ -49,5 +49,5 @@ class ChangeCycleRun:
 
 
 if __name__ == "__main__":
-    change_cycle_run = ChangeCycleRun()
+    change_cycle_run = ChangeCycleBase()
     change_cycle_run.run()

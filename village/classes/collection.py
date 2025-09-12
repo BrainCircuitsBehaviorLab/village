@@ -9,7 +9,7 @@ import pandas as pd
 from numpy.polynomial import Polynomial
 
 from village.classes.abstract_classes import EventBase
-from village.classes.training import Training
+from village.classes.training import TrainingProtocolBase
 from village.log import log
 from village.scripts import time_utils
 from village.settings import settings
@@ -214,12 +214,16 @@ class Collection(EventBase):
             """
             raise ValueError(text)
 
-    def save_from_df(self, training: Training = Training()) -> None:
+    def save_from_df(
+        self, training: TrainingProtocolBase = TrainingProtocolBase()
+    ) -> None:
         new_df = self.df_from_df(self.df, training)
         new_df.to_csv(self.path, index=False, sep=";")
         self.df = new_df
 
-    def df_from_df(self, df: pd.DataFrame, training: Training) -> pd.DataFrame:
+    def df_from_df(
+        self, df: pd.DataFrame, training: TrainingProtocolBase
+    ) -> pd.DataFrame:
         new_df = self.convert_df_to_types(df)
 
         if "next_session_time" in new_df.columns:

@@ -3,7 +3,7 @@ import pandas as pd
 from matplotlib.figure import Figure
 
 
-class SessionPlotFigureManager:
+class SessionPlotBase:
     def __init__(self) -> None:
         self.name = "Session Plot"
 
@@ -25,7 +25,7 @@ class SessionPlotFigureManager:
         return fig
 
 
-class SubjectPlotFigureManager:
+class SubjectPlotBase:
     def __init__(self) -> None:
         self.name = "Subject Plot"
 
@@ -51,7 +51,7 @@ class SubjectPlotFigureManager:
         return fig
 
 
-class OnlinePlotFigureManager:
+class OnlinePlotBase:
     """
     Class to handle creation and management of Matplotlib figures
     to monitor behavioral data in real-time.

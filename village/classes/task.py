@@ -10,7 +10,7 @@ import pandas as pd
 from village.classes.abstract_classes import CameraBase, PyBpodBase
 from village.classes.collection import Collection
 from village.classes.enums import Active, Save
-from village.classes.training import Settings, Training
+from village.classes.training import Settings, TrainingProtocolBase
 from village.devices.bpod import bpod
 from village.devices.sound_device_new import sound_device
 from village.log import log
@@ -59,7 +59,7 @@ class Task:
         self.subject_path: str = ""
         self.rt_session_path: str = ""
         self.settings: Settings = Settings()
-        self.training: Training = Training()
+        self.training: TrainingProtocolBase = TrainingProtocolBase()
         self.trial_data: dict = {}
 
         self.process = Thread()

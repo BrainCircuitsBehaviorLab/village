@@ -12,7 +12,7 @@ from village.scripts.rsync_to_server import main as rsync_to_server
 from village.settings import settings
 
 
-class AfterSessionRun:
+class AfterSessionBase:
     def __init__(self) -> None:
         self.data_directory = settings.get("DATA_DIRECTORY")
         self.sync_directory = settings.get("SYNC_DIRECTORY")
@@ -44,5 +44,5 @@ class AfterSessionRun:
 
 
 if __name__ == "__main__":
-    after_session_run = AfterSessionRun()
+    after_session_run = AfterSessionBase()
     after_session_run.run()

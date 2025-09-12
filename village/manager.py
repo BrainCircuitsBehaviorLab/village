@@ -13,8 +13,8 @@ import pandas as pd
 import requests  # type: ignore
 
 from village.classes.abstract_classes import BehaviorWindowBase, CameraBase
-from village.classes.after_session_run import AfterSessionRun
-from village.classes.change_cycle_run import ChangeCycleRun
+from village.classes.after_session import AfterSessionBase
+from village.classes.change_cycle import ChangeCycleBase
 from village.classes.collection import Collection
 from village.classes.enums import (
     Actions,
@@ -27,13 +27,13 @@ from village.classes.enums import (
     SyncType,
 )
 from village.classes.plot import (
-    OnlinePlotFigureManager,
-    SessionPlotFigureManager,
-    SubjectPlotFigureManager,
+    OnlinePlotBase,
+    SessionPlotBase,
+    SubjectPlotBase,
 )
 from village.classes.subject import Subject
 from village.classes.task import Task
-from village.classes.training import Training
+from village.classes.training import TrainingProtocolBase
 from village.devices.temp_sensor import temp_sensor
 from village.log import log
 from village.scripts import time_utils, utils
@@ -72,14 +72,12 @@ class Manager:
     def __init__(self) -> None:
         self.subject = Subject()
         self.task = Task()
-        self.training: Training = Training()
-        self.subject_plot: SubjectPlotFigureManager = SubjectPlotFigureManager()
-        self.session_plot: SessionPlotFigureManager = SessionPlotFigureManager()
-        self.online_plot_figure_manager: OnlinePlotFigureManager = (
-            OnlinePlotFigureManager()
-        )
-        self.after_session_run: AfterSessionRun = AfterSessionRun()
-        self.change_cycle_run: ChangeCycleRun = ChangeCycleRun()
+        self.training: TrainingProtocolBase = TrainingProtocolBase()
+        self.subject_plot: SubjectPlotBase = SubjectPlotBase()
+        self.session_plot: SessionPlotBase = SessionPlotBase()
+        self.online_plot_figure_manager: OnlinePlotBase = OnlinePlotBase()
+        self.after_session_run: AfterSessionBase = AfterSessionBase()
+        self.change_cycle_run: ChangeCycleBase = ChangeCycleBase()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
@@ -285,42 +283,36 @@ class Manager:
                         _ = cls()
                         if name not in tasks:
                             tasks[name] = cls
-                    elif issubclass(cls, Training) and cls != Training:
+                    elif (
+                        issubclass(cls, TrainingProtocolBase)
+                        and cls != TrainingProtocolBase
+                    ):
                         training_found += 1
                         if training_found == 1:
                             t = cls()
                             t.copy_settings()
                             self.training = t
-                    elif (
-                        issubclass(cls, SessionPlotFigureManager)
-                        and cls != SessionPlotFigureManager
-                    ):
+                    elif issubclass(cls, SessionPlotBase) and cls != SessionPlotBase:
                         session_plot_found += 1
                         if session_plot_found == 1:
                             p = cls()
                             self.session_plot = p
-                    elif (
-                        issubclass(cls, SubjectPlotFigureManager)
-                        and cls != SubjectPlotFigureManager
-                    ):
+                    elif issubclass(cls, SubjectPlotBase) and cls != SubjectPlotBase:
                         subject_plot_found += 1
                         if subject_plot_found == 1:
                             s = cls()
                             self.subject_plot = s
-                    elif (
-                        issubclass(cls, OnlinePlotFigureManager)
-                        and cls != OnlinePlotFigureManager
-                    ):
+                    elif issubclass(cls, OnlinePlotBase) and cls != OnlinePlotBase:
                         online_plot_found += 1
                         if online_plot_found == 1:
                             o = cls()
                             self.online_plot_figure_manager = o
-                    elif issubclass(cls, AfterSessionRun) and cls != AfterSessionRun:
+                    elif issubclass(cls, AfterSessionBase) and cls != AfterSessionBase:
                         after_session_run_found += 1
                         if after_session_run_found == 1:
                             a = cls()
                             self.after_session_run = a
-                    elif issubclass(cls, ChangeCycleRun) and cls != ChangeCycleRun:
+                    elif issubclass(cls, ChangeCycleBase) and cls != ChangeCycleBase:
                         change_cycle_run_found += 1
                         if change_cycle_run_found == 1:
                             y = cls()
