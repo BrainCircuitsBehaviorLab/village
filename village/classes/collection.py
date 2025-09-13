@@ -127,7 +127,7 @@ class Collection(EventProtocol):
         'sound_name', all rows where 'calibration_number' is maximum.
         """
         df = self.df[self.df["calibration_number"] != -1].copy()
-        max_values = df.groupby(["speaker", "sound_number"])[
+        max_values = df.groupby(["speaker", "sound_name"])[
             "calibration_number"
         ].transform("max")
         df = df[df["calibration_number"] == max_values]
@@ -185,6 +185,9 @@ class Collection(EventProtocol):
 
             x = calibration_df["gain"].values
             y = calibration_df["dB_obtained"].values
+
+            if dB < min(y) or dB > max(y):
+                raise Exception
 
             if len(x) == 2:
                 poly = Polynomial.fit(x, y, 1).convert()
