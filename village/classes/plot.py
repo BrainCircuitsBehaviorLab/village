@@ -41,9 +41,6 @@ class SubjectPlotBase:
         You can override this method in the child class in
         your code repository in order to create a custom plot.
         """
-
-        print(summary_df)
-
         fig, ax = plt.subplots(figsize=(width, height))
         df.date.value_counts(sort=False).plot(kind="bar", ax=ax)
         ax.set_title("Subject Plot")

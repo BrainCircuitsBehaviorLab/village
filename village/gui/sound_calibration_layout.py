@@ -483,7 +483,6 @@ class SoundCalibrationLayout(Layout):
                 "You need to save or delete the current calibration first.",
             )
             return
-        self.calibration_denied = True
 
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
@@ -493,29 +492,34 @@ class SoundCalibrationLayout(Layout):
             self.gain2 = manager.sound_calibration.get_sound_gain(
                 self.speaker2, self.dB_expected2, sound_name=self.sound2
             )
+            self.calibration_denied = True
             ok = True
         except Exception:
-            self.dB_expected2 = 0
-            self.dB_expected_line_edit2.setText("0")
-            self.dB_expected_line_edit2.setStyleSheet("")
-            self.duration_line_edit2.setStyleSheet("")
-
-            text = "Using the sound: "
-            text += str(self.sound2)
-            text += ". \nThe following speaker can not be tested: "
-            text += str(self.speaker2)
-            text += ". \nYou need to calibrate it first."
+            text = f"""
+            \n\n\t--> SOUND CALIBRATION PROBLEM !!!!!!\n
+            It is not possible to provide a valid gain value
+            for a target dB of {self.dB_expected2} for the speaker {self.speaker2} and
+            sound {self.sound2}.\n
+            1. Make sure you have calibrated the sound you are using.\n
+            2. Make sure the dB you want to obtain is within calibration range.\n
+            3. Ultimately, check sound_calibration.csv in 'data'.\n
+            """
             QMessageBox.information(
                 self.window,
                 "Warning",
                 text,
             )
 
+            self.dB_expected2 = 0
+            self.dB_expected_line_edit2.setText("0")
+            self.dB_expected_line_edit2.setStyleSheet("")
+            self.duration_line_edit2.setStyleSheet("")
+
         if ok:
             manager.state = State.RUN_MANUAL
             manager.calibrating = True
             task = SoundCalibration(
-                self.speaker2, self.gain2, self.sound2, self.duration2
+                self.speaker2, self.gain2, self.sound_index2, self.duration2
             )
             manager.task = DummyTask()
             manager.task.settings.maximum_duration = self.duration2 + 3
@@ -736,7 +740,7 @@ class SoundCalibrationLayout(Layout):
         row_dict = {
             "date": self.date,
             "speaker": self.speaker2,
-            "sound_name": self.sound_name2,
+            "sound_name": self.sound2,
             "gain": self.gain2,
             "dB_obtained": self.dB_obtained2,
             "calibration_number": -1,
@@ -753,8 +757,9 @@ class SoundCalibrationLayout(Layout):
 
         self.reset_values_after_ok_or_add2()
 
-    def reset_values_after_ok_or_add2(self) -> None:
-        self.df = pd.DataFrame()
+    def reset_values_after_ok_or_add2(self, delete_df=True) -> None:
+        if delete_df:
+            self.df = pd.DataFrame()
         self.test_point = None
 
         self.calibration_denied = False
@@ -778,7 +783,6 @@ class SoundCalibrationLayout(Layout):
         self.update_plot = True
 
     def add_button2_clicked(self) -> None:
-        self.ok_button2_clicked()
         self.test_denied = True
 
         if self.calibration_number < 0:
@@ -801,13 +805,11 @@ class SoundCalibrationLayout(Layout):
             "dB_expected": np.nan,
             "error(%)": np.nan,
         }
-
-        df = pd.DataFrame([row_dict])
-        self.df = pd.concat([self.df, df], ignore_index=True)
+        self.df = pd.DataFrame([row_dict])
         self.calibration_points.append(row_dict)
         self.update_plot = True
 
-        self.reset_values_after_ok_or_add2()
+        self.reset_values_after_ok_or_add2(delete_df=False)
 
     def stop_button_clicked(self) -> None:
         if manager.state.can_stop_task():

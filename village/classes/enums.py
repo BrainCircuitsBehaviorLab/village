@@ -156,9 +156,3 @@ class Save(SuperEnum):
     NO = "NO"
     ZERO = "ZERO"
     ERROR = "ERROR"
-
-
-class ThreadState(SuperEnum):
-    RUNNING = "RUNNING"
-    OFF = "OFF"
-    ON = "ON"

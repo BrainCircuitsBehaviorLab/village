@@ -38,12 +38,6 @@ from village.settings import Color, settings
 #     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
 #     level=logging.DEBUG
 # )
-# logging.basicConfig(
-#     filename="camera_errors.log",
-#     filemode="a",
-#     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-#     level=logging.DEBUG
-# )
 
 
 # use this function to get info
@@ -183,7 +177,6 @@ class Camera(CameraBase):
 
         self.cam.start()
         self.watchdog_timer.start()
-        self.watchdog_timer.start()
 
     def set_properties(self) -> None:
         # black or white detection setting
@@ -285,7 +278,6 @@ class Camera(CameraBase):
         self.error = ""
         self.filename = ""
         self.chrono.reset()
-        self.last_frame_time = time.time()
         self.last_frame_time = time.time()
 
     def save_csv(self) -> None:

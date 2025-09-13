@@ -143,6 +143,4 @@ class BehaviorWindow(QOpenGLWidget):
     def clear_function(self) -> None:
         with QPainter(self) as painter:
             # clean the window
-            print("to clean")
             painter.fillRect(manager.behavior_window.rect(), QColor("black"))
-            print("cleaned")
