@@ -40,6 +40,7 @@ from village.plots.create_pixmap import create_pixmap
 from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.plots.temperatures_plot import temperatures_plot
 from village.plots.water_calibration_plot import water_calibration_plot
+from village.plots.weights_plot import weights_plot
 from village.scripts import time_utils
 from village.scripts.global_csv_for_subject import main as global_csv_for_subject_script
 from village.settings import settings
@@ -448,7 +449,7 @@ class DataLayout(Layout):
             t = "The file could not be found. It might be too old and already deleted."
             QMessageBox.information(self.window, "WARNING", t)
 
-    def change_to_plot(self, path: str) -> None:
+    def change_to_plot(self, signal: str) -> None:
         if manager.table == DataTable.SUBJECTS:
             if self.page1Layout.df["name"].duplicated().any():
                 text = "There are repeated names in the subjects table."
@@ -467,20 +468,28 @@ class DataLayout(Layout):
         height = 45 * self.row_height / dpi
 
         if manager.table == DataTable.SESSIONS_SUMMARY:
-            try:
-                paths = self.page1Layout.get_paths_from_sessions_summary_row(
-                    cast(pd.Series, self.page1Layout.get_selected_row_series())
-                )
-                weight = cast(pd.Series, self.page1Layout.get_selected_row_series())[
-                    "weight"
-                ]
-                df = pd.read_csv(paths[0], sep=";")
-                figure = manager.session_plot.create_plot(df, weight, width, height)
-                pixmap = create_pixmap(figure)
-            except Exception:
-                log.error(
-                    "Can not create session plot", exception=traceback.format_exc()
-                )
+            if signal == "weights":
+                try:
+                    df = manager.sessions_summary.df.copy()
+                    figure = weights_plot(df, width, height)
+                    pixmap = create_pixmap(figure)
+                except Exception:
+                    log.error(
+                        "Can not create weights plot", exception=traceback.format_exc()
+                    )
+            else:
+                try:
+                    is_row = self.page1Layout.get_selected_row_series()
+                    row = cast(pd.Series, is_row)
+                    paths = self.page1Layout.get_paths_from_sessions_summary_row(row)
+                    weight = row["weight"]
+                    df = pd.read_csv(paths[0], sep=";")
+                    figure = manager.session_plot.create_plot(df, weight, width, height)
+                    pixmap = create_pixmap(figure)
+                except Exception:
+                    log.error(
+                        "Can not create session plot", exception=traceback.format_exc()
+                    )
         elif manager.table == DataTable.SUBJECTS:
             path = self.page1Layout.get_path_from_subjects_row(
                 cast(pd.Series, self.page1Layout.get_selected_row_series())
@@ -596,6 +605,7 @@ class DfLayout(Layout):
         self.complete_df = DataFrame()
         self.video_selected_path: str = ""
         self.weight = 0.0
+        self.weights = False
         self.draw()
 
     def draw(self) -> None:
@@ -616,23 +626,26 @@ class DfLayout(Layout):
         )
         self.back_button.hide()
 
-        self.search_label = self.create_and_add_label("search", 1, 45, 10, 2, "Search")
-        self.search_edit = self.create_and_add_line_edit("", 1, 55, 25, 2, self.search)
+        self.search_label = self.create_and_add_label("search", 1, 45, 6, 2, "Search")
+        self.search_edit = self.create_and_add_line_edit("", 1, 51, 25, 2, self.search)
 
         self.first_button = self.create_and_add_button(
-            "FIRST", 1, 97, 20, 2, self.button_clicked, "first"
+            "FIRST", 1, 89, 18, 2, self.button_clicked, "first"
         )
         self.second_button = self.create_and_add_button(
-            "SECOND", 1, 117, 20, 2, self.button_clicked, "second"
+            "SECOND", 1, 107, 18, 2, self.button_clicked, "second"
         )
         self.third_button = self.create_and_add_button(
-            "THIRD", 1, 137, 20, 2, self.button_clicked, "third"
+            "THIRD", 1, 125, 18, 2, self.button_clicked, "third"
         )
         self.fourth_button = self.create_and_add_button(
-            "FOURTH", 1, 157, 20, 2, self.button_clicked, "fourth"
+            "FOURTH", 1, 143, 18, 2, self.button_clicked, "fourth"
         )
         self.fifth_button = self.create_and_add_button(
-            "FIFTH", 1, 177, 20, 2, self.button_clicked, "fifth"
+            "FIFTH", 1, 161, 18, 2, self.button_clicked, "fifth"
+        )
+        self.sixth_button = self.create_and_add_button(
+            "SIXTH", 1, 179, 18, 2, self.button_clicked, "sixth"
         )
 
         self.table_view = TableView(None)
@@ -852,14 +865,26 @@ class DfLayout(Layout):
         button.setToolTip("Watch the video")
         button.show()
 
-    def connect_button_to_plot(self, button: QPushButton) -> None:
+    def connect_button_to_plot(self, button: QPushButton, text: str, info: str) -> None:
         try:
             button.clicked.disconnect()
         except TypeError:
             pass
         button.clicked.connect(self.plot_button_clicked)
-        button.setText("PLOT")
-        button.setToolTip("Plot the data")
+        button.setText(text)
+        button.setToolTip(info)
+        button.show()
+
+    def connect_button_to_plot_weights(
+        self, button: QPushButton, text: str, info: str
+    ) -> None:
+        try:
+            button.clicked.disconnect()
+        except TypeError:
+            pass
+        button.clicked.connect(self.plot_weights_button_clicked)
+        button.setText(text)
+        button.setToolTip(info)
         button.show()
 
     def connect_button_to_add(self, button: QPushButton) -> None:
@@ -881,30 +906,42 @@ class DfLayout(Layout):
                 self.second_button.hide()
                 self.third_button.hide()
                 self.fourth_button.hide()
-                self.connect_button_to_video(self.fifth_button)
-                self.fifth_button.setEnabled(bool(selected_indexes))
+                self.fifth_button.hide()
+                self.connect_button_to_video(self.sixth_button)
+                self.sixth_button.setEnabled(bool(selected_indexes))
             case DataTable.SESSIONS_SUMMARY:
                 self.connect_button_to_delete(self.first_button)
                 self.connect_button_to_data_raw(self.second_button)
                 self.connect_button_to_data(self.third_button)
                 self.connect_button_to_video(self.fourth_button)
-                self.connect_button_to_plot(self.fifth_button)
+                self.connect_button_to_plot(
+                    self.fifth_button, "PLOT SESSION", "Plot the selected session"
+                )
+                self.connect_button_to_plot_weights(
+                    self.sixth_button,
+                    "PLOT WEIGHTS",
+                    "Plot the weights of all subjects",
+                )
                 enabled = bool(selected_indexes)
                 self.first_button.setEnabled(enabled)
                 self.second_button.setEnabled(enabled)
                 self.third_button.setEnabled(enabled)
                 self.fourth_button.setEnabled(enabled)
                 self.fifth_button.setEnabled(enabled)
+                self.sixth_button.setEnabled(True)
             case DataTable.SUBJECTS:
                 self.first_button.hide()
                 self.second_button.hide()
-                self.connect_button_to_add(self.third_button)
-                self.connect_button_to_delete(self.fourth_button)
-                self.connect_button_to_plot(self.fifth_button)
-                self.third_button.setEnabled(True)
+                self.third_button.hide()
+                self.connect_button_to_add(self.fourth_button)
+                self.connect_button_to_delete(self.fifth_button)
+                self.connect_button_to_plot(
+                    self.sixth_button, "PLOT SUBJECT", "Plot the selected subject"
+                )
+                self.fourth_button.setEnabled(True)
                 enabled = bool(selected_indexes)
-                self.fourth_button.setEnabled(enabled)
                 self.fifth_button.setEnabled(enabled)
+                self.sixth_button.setEnabled(enabled)
             case (
                 DataTable.WATER_CALIBRATION
                 | DataTable.SOUND_CALIBRATION
@@ -913,24 +950,29 @@ class DfLayout(Layout):
                 self.first_button.hide()
                 self.second_button.hide()
                 self.third_button.hide()
-                self.connect_button_to_delete(self.fourth_button)
-                self.connect_button_to_plot(self.fifth_button)
-                self.fifth_button.setEnabled(True)
-                self.fourth_button.setEnabled(bool(selected_indexes))
+                self.fourth_button.hide()
+                self.connect_button_to_delete(self.fifth_button)
+                self.connect_button_to_plot(self.sixth_button, "PLOT", "Plot the data")
+                self.sixth_button.setEnabled(True)
+                self.fifth_button.setEnabled(bool(selected_indexes))
             case DataTable.SESSION | DataTable.SESSION_RAW:
                 self.first_button.hide()
                 self.second_button.hide()
                 self.third_button.hide()
                 self.fourth_button.hide()
                 self.fifth_button.hide()
+                self.sixth_button.hide()
             case DataTable.OLD_SESSION | DataTable.OLD_SESSION_RAW:
                 self.first_button.hide()
                 self.second_button.hide()
                 self.third_button.hide()
-                self.connect_button_to_video(self.fourth_button)
-                self.connect_button_to_plot(self.fifth_button)
-                self.fourth_button.setEnabled(True)
+                self.fourth_button.hide()
+                self.connect_button_to_video(self.fifth_button)
+                self.connect_button_to_plot(
+                    self.sixth_button, "PLOT SESSION", "Plot the selected session"
+                )
                 self.fifth_button.setEnabled(True)
+                self.sixth_button.setEnabled(True)
 
     def search(self, value: str) -> None:
         self.searching = value
@@ -1096,6 +1138,9 @@ class DfLayout(Layout):
             DataTable.TEMPERATURES,
         ]:
             self.plot_change_requested.emit("")
+
+    def plot_weights_button_clicked(self) -> None:
+        self.plot_change_requested.emit("weights")
 
     def add_button_clicked(self) -> None:
         if manager.state.can_edit_data():
