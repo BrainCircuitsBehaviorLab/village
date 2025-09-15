@@ -6,49 +6,12 @@
 # For more details, see <http://www.gnu.org/licenses/>.
 
 import os
-
-try:
-    os.nice(-20)
-except PermissionError:
-    print("No permission to change nice value.")
-    print("Write this in the terminal:")
-    print("sudo setcap cap_sys_nice=eip /usr/bin/python3.11")
-    raise
+import sys
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
-# configure the logging of libcamera (the C++ library picamera2 uses)
-# '0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
-# os.environ["LIBCAMERA_LOG_LEVELS"] = "3" # TODO does not work
-# os.environ["LIBCAMERA_LOG_FILE"] = "camera_errors2.log" # TODO does not work
 
-import gc
-import threading
-import time
-
-import numpy as np
 from PyQt5.QtGui import QSurfaceFormat
-from PyQt5.QtWidgets import QWidget
-
-from village.classes.enums import Active, State
-from village.devices.bpod import bpod
-from village.devices.camera import cam_box, cam_corridor
-from village.devices.motor import motor1, motor2
-from village.devices.rfid import rfid
-from village.devices.scale import real_weight_inference, scale
-from village.devices.sound_device_new import sound_device
-from village.devices.telegram_bot import telegram_bot
-from village.devices.temp_sensor import temp_sensor
-from village.gui.gui import Gui
-from village.log import log
-from village.manager import manager
-from village.scripts import time_utils
-from village.settings import settings
-
-# to debug segfaults uncomment the following lines
-# import faulthandler
-# faulthandler.enable()
-
 
 fmt = QSurfaceFormat()
 fmt.setSwapInterval(1)  # VSync ON (try with 0 no VSync)
@@ -76,6 +39,52 @@ QSurfaceFormat.setDefaultFormat(fmt)
 # fmt.setAlphaBufferSize(0)
 
 # QSurfaceFormat.setDefaultFormat(fmt)
+
+
+from PyQt5.QtWidgets import QApplication
+
+q_app = QApplication.instance() or QApplication(sys.argv)
+
+import gc
+import threading
+import time
+
+import numpy as np
+from PyQt5.QtWidgets import QWidget
+
+from village.classes.enums import Active, State
+from village.devices.bpod import bpod
+from village.devices.camera import cam_box, cam_corridor
+from village.devices.motor import motor1, motor2
+from village.devices.rfid import rfid
+from village.devices.scale import real_weight_inference, scale
+from village.devices.sound_device_new import sound_device
+from village.devices.telegram_bot import telegram_bot
+from village.devices.temp_sensor import temp_sensor
+from village.gui.gui import Gui
+from village.log import log
+from village.manager import manager
+from village.scripts import time_utils
+from village.settings import settings
+
+try:
+    os.nice(-20)
+except PermissionError:
+    print("No permission to change nice value.")
+    print("Write this in the terminal:")
+    print("sudo setcap cap_sys_nice=eip /usr/bin/python3.11")
+    raise
+
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
+os.environ["QT_SCALE_FACTOR"] = "1"
+# configure the logging of libcamera (the C++ library picamera2 uses)
+# '0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
+# os.environ["LIBCAMERA_LOG_LEVELS"] = "3" # TODO does not work
+# os.environ["LIBCAMERA_LOG_FILE"] = "camera_errors2.log" # TODO does not work
+
+# to debug segfaults uncomment the following lines
+# import faulthandler
+# faulthandler.enable()
 
 
 # init
@@ -136,13 +145,11 @@ def system_run(bevavior_window: QWidget) -> None:
     while True:
         time.sleep(0.1)
 
-        if manager.online_plot_figure_manager.active:
+        if manager.online_plot.active:
             if manager.task.current_trial > trial and plot_timer.has_elapsed():
                 trial = manager.task.current_trial
                 try:
-                    manager.online_plot_figure_manager.update_canvas(
-                        manager.task.session_df
-                    )
+                    manager.online_plot.update_canvas(manager.task.session_df.copy())
                 except Exception:
                     pass
         else:

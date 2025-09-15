@@ -16,7 +16,7 @@ from village.settings import settings
 
 class Gui:
     def __init__(self) -> None:
-        self.q_app = QApplication([])
+        self.q_app = QApplication.instance()
         self.q_app.setStyle("Fusion")
         self.q_app.setStyleSheet("QLineEdit:disabled {background-color: #f0f0f0;}")
 

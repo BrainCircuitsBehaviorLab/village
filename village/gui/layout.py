@@ -512,7 +512,7 @@ class Layout(QGridLayout):
 
     def show_online_plots_clicked(self) -> None:
         try:
-            manager.online_plot_figure_manager.update_canvas(manager.task.session_df)
+            manager.online_plot.update_canvas(manager.task.session_df)
         except Exception:
             log.error(
                 "Error in online plot",
@@ -520,8 +520,8 @@ class Layout(QGridLayout):
                 exception=traceback.format_exc(),
             )
 
-        if not manager.online_plot_figure_manager.active:
-            manager.online_plot_figure_manager.active = True
+        if not manager.online_plot.active:
+            manager.online_plot.active = True
             geom = (
                 self.column_width * 10,
                 self.row_height * 5,
@@ -679,11 +679,15 @@ class OnlinePlotDialog(QDialog):
         super().__init__()
         self.setWindowTitle("Online Plots")
         layout = QVBoxLayout()
-        self.canvas = FigureCanvas(manager.online_plot_figure_manager.fig)
+        self.canvas = FigureCanvas(manager.online_plot.fig)
         layout.addWidget(self.canvas)
         self.setLayout(layout)
-        manager.online_plot_figure_manager.fig.canvas.draw()
+        if (
+            manager.online_plot.fig is not None
+            and manager.online_plot.fig.canvas is not None
+        ):
+            manager.online_plot.fig.canvas.draw()
 
     def closeEvent(self, event) -> None:
-        manager.online_plot_figure_manager.active = False
+        manager.online_plot.close()
         super().closeEvent(event)

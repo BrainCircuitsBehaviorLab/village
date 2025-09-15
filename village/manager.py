@@ -75,7 +75,7 @@ class Manager:
         self.training: TrainingProtocolBase = TrainingProtocolBase()
         self.subject_plot: SubjectPlotBase = SubjectPlotBase()
         self.session_plot: SessionPlotBase = SessionPlotBase()
-        self.online_plot_figure_manager: OnlinePlotBase = OnlinePlotBase()
+        self.online_plot: OnlinePlotBase = OnlinePlotBase()
         self.after_session_run: AfterSessionBase = AfterSessionBase()
         self.change_cycle_run: ChangeCycleBase = ChangeCycleBase()
         self.state: State = State.WAIT
@@ -306,7 +306,7 @@ class Manager:
                         online_plot_found += 1
                         if online_plot_found == 1:
                             o = cls()
-                            self.online_plot_figure_manager = o
+                            self.online_plot = o
                     elif issubclass(cls, AfterSessionBase) and cls != AfterSessionBase:
                         after_session_run_found += 1
                         if after_session_run_found == 1:
