@@ -144,21 +144,20 @@ class Collection(EventBase):
             x = calibration_df["time(s)"].values
             y = calibration_df["water_delivered(ul)"].values
 
+            if volume < min(y) or volume > max(y):
+                raise Exception
+
             if len(x) == 2:
                 poly = Polynomial.fit(x, y, 1).convert()
-                a, b = poly.coef
-                c = 0
             else:
                 poly = Polynomial.fit(x, y, 2).convert()
-                a, b, c = poly.coef
 
-            coeffs_for_root = [a - volume, b, c]
-            roots = Polynomial(coeffs_for_root).roots()
+            roots = (poly - volume).roots()
 
             valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
 
             if valid_roots:
-                return round(float(np.min(valid_roots)), 4)
+                return round(float(np.min(valid_roots)), 6)
             else:
                 raise Exception
         except Exception:
@@ -191,19 +190,15 @@ class Collection(EventBase):
 
             if len(x) == 2:
                 poly = Polynomial.fit(x, y, 1).convert()
-                a, b = poly.coef
-                c = 0
             else:
                 poly = Polynomial.fit(x, y, 2).convert()
-                a, b, c = poly.coef
 
-            coeffs_for_root = [a - dB, b, c]
-            roots = Polynomial(coeffs_for_root).roots()
+            roots = (poly - dB).roots()
 
             valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
 
             if valid_roots:
-                return round(float(np.min(valid_roots)), 4)
+                return round(float(np.min(valid_roots)), 6)
             else:
                 raise Exception
         except Exception:
