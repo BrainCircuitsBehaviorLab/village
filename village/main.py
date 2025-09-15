@@ -128,6 +128,11 @@ def system_run(bevavior_window: QWidget) -> None:
                     id, multiple = rfid.get_id()
                     manager.reset_subject_task_training()
 
+                if manager.change_cycle_run_flag:
+                    log.info("Going to SYNC State")
+                    manager.state = State.SYNC
+                    continue
+                
                 # # TESTING
                 # i += 1
                 # if i == 1000:
