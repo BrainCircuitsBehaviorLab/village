@@ -522,6 +522,7 @@ class Layout(QGridLayout):
 
         if not manager.online_plot.active:
             manager.online_plot.active = True
+            manager.online_plot.update_canvas(manager.task.session_df.copy())
             geom = (
                 self.column_width * 10,
                 self.row_height * 5,
@@ -682,11 +683,11 @@ class OnlinePlotDialog(QDialog):
         self.canvas = FigureCanvas(manager.online_plot.fig)
         layout.addWidget(self.canvas)
         self.setLayout(layout)
-        if (
-            manager.online_plot.fig is not None
-            and manager.online_plot.fig.canvas is not None
-        ):
-            manager.online_plot.fig.canvas.draw()
+        if manager.online_plot.fig is not None and self.canvas is not None:
+            try:
+                self.canvas.draw_idle()
+            except Exception:
+                pass
 
     def closeEvent(self, event) -> None:
         manager.online_plot.close()
