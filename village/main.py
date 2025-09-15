@@ -178,6 +178,11 @@ def system_run(bevavior_window: QWidget) -> None:
                     id, multiple = rfid.get_id()
                     manager.reset_subject_task_training()
 
+                if manager.change_cycle_run_flag:
+                    log.info("Going to SYNC State")
+                    manager.state = State.SYNC
+                    continue
+
                 if id != "":
                     log.info("Tag detected: " + id)
                     manager.detection_change = True
@@ -230,6 +235,17 @@ def system_run(bevavior_window: QWidget) -> None:
                         "Wrong RFID detection: "
                         + id
                         + " Another subject detected while main subject is in the box."
+                        + " Opening door2 and disconnecting RFID reader.",
+                        subject=manager.subject.name,
+                    )
+                    manager.state = State.OPEN_DOOR2_STOP
+                    log.info("Going to OPEN_DOOR2_STOP State")
+                elif (
+                    manager.task.chrono.get_seconds()
+                    > manager.task.settings.maximum_duration
+                ):
+                    log.alarm(
+                        "Maximum time reached and areas 3 or 4 were never empty."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
