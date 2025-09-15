@@ -557,7 +557,8 @@ class WaterCalibrationLayout(Layout):
         if errors:
             text = "The following ports can not be tested: "
             text += ", ".join([str(error) for error in errors])
-            text += ". \nYou need to calibrate them first."
+            text += ". \nYou need to calibrate them first and make sure the value"
+            text += " you entered is within the calibrated range."
             QMessageBox.information(
                 self.window,
                 "Warning",

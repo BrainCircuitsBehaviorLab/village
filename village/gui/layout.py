@@ -613,11 +613,18 @@ class Layout(QGridLayout):
         action: Callable,
         description: str,
         color: str = "lightgray",
+        reference: bool = False,
     ) -> PushButton:
 
-        button = PushButton(text, color, action, description)
-        button.setFixedSize(width * self.column_width, height * self.row_height)
-        self.addWidget(button, row, column, height, width)
+        if reference:
+            button = PushButton(text, color, lambda: None, description)
+            button.setFixedSize(width * self.column_width, height * self.row_height)
+            self.addWidget(button, row, column, height, width)
+            button.clicked.connect(lambda checked=False, b=button: action(b))
+        else:
+            button = PushButton(text, color, action, description)
+            button.setFixedSize(width * self.column_width, height * self.row_height)
+            self.addWidget(button, row, column, height, width)
         return button
 
     def create_and_add_toggle_button(
