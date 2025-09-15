@@ -699,6 +699,7 @@ class WaterCalibrationLayout(Layout):
             line_edit.setEnabled(True)
 
         for line_edit in self.water_expected_line_edits2:
+            line_edit.setStyleSheet("")
             line_edit.setEnabled(True)
 
         self.iterations_line_edit.setEnabled(True)
@@ -929,6 +930,10 @@ class CalibrationPlotLayout(Layout):
         self.plot_height = (self.rows * self.row_height - 5) / dpi
 
     def update(self, df: pd.DataFrame, test_point: tuple[float, float] | None) -> None:
+        if df.empty:
+            self.plot_label.setText("")
+            return
+
         pixmap = QPixmap()
         try:
             figure = water_calibration_plot(
