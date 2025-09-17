@@ -63,7 +63,7 @@ class Scale(ScaleProtocol):
             # print(self.offset)
             # print(self.calibration)
             value = (self.get_value() - self.offset) / self.calibration
-            return value
+            return abs(value)
 
         except Exception:
             if self.error_message_timer.has_elapsed():
