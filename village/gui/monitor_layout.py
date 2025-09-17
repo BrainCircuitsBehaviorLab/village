@@ -682,7 +682,6 @@ class PortsLayout(Layout):
                 2,
                 partial(self.led_clicked, i + 1),
                 "Light the LED" + str(i),
-                reference=True,
             )
             self.buttons.append(button1)
 
@@ -694,16 +693,20 @@ class PortsLayout(Layout):
                 2,
                 partial(self.water_clicked, i + 1),
                 "Deliver water for 0.1 seconds" + str(i),
-                reference=True,
             )
             self.buttons.append(button2)
 
-    def led_clicked(self, i=0, button=None) -> None:
-        if button is not None:
-            button.setEnabled(False)
-            QTimer.singleShot(1500, lambda: button.setEnabled(True))
+    def disable_all(self) -> None:
+        for b in self.buttons:
+            b.setEnabled(False)
 
-        print("led_clicked")
+    def enable_all(self) -> None:
+        for b in self.buttons:
+            b.setEnabled(True)
+
+    def led_clicked(self, i=0) -> None:
+        self.disable_all()
+        QTimer.singleShot(1500, self.enable_all)
 
         if not manager.task.bpod.connected:
             manager.task.bpod.connect(manager.functions)
@@ -712,10 +715,9 @@ class PortsLayout(Layout):
             close = False
         manager.task.bpod.led(i, close)
 
-    def water_clicked(self, i=0, button=None) -> None:
-        if button is not None:
-            button.setEnabled(False)
-            QTimer.singleShot(1500, lambda: button.setEnabled(True))
+    def water_clicked(self, i=0) -> None:
+        self.disable_all()
+        QTimer.singleShot(1500, self.enable_all)
 
         if not manager.task.bpod.connected:
             manager.task.bpod.connect(manager.functions)

@@ -73,9 +73,6 @@ class Task:
         self.sound_calibration: Collection = Collection("", [], [])
         self.water_calibration: Collection = Collection("", [], [])
 
-        self.stimulus_elapsed_time: float = 0.0
-        self.stimulus_frame = 0
-
     # OVERWRITE THESE METHODS IN YOUR TASKS
     def start(self) -> None:
         raise TaskError("The method start(self) is required")

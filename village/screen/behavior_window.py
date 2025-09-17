@@ -41,6 +41,13 @@ class BehaviorWindow(QOpenGLWidget):
         self._video_thread: Optional[QThread] = None
         self._video_worker: Optional[VideoWorker] = None
 
+        # timing
+        self.frame = 0
+        self.elapsed_time = 0.0
+
+        # background color
+        self.background_color = QColor("black")
+
         self.show()
 
     def _init_gpio(self) -> None:
@@ -85,8 +92,8 @@ class BehaviorWindow(QOpenGLWidget):
             except Exception:
                 pass
             self._swap_connected = False
-        manager.stimulus_elapsed_time = 0.0
-        manager.stimulus_frame = 0
+        self.frame = 0
+        self.elapsed_time = 0.0
         self.update()
 
     def start_video(self, path: str) -> None:
@@ -114,8 +121,8 @@ class BehaviorWindow(QOpenGLWidget):
     def paintGL(self) -> None:
         if not self.active or self._draw_fn is None:
             self.clear_function()
-            manager.stimulus_elapsed_time = 0.0
-            manager.stimulus_frame = 0
+            self.frame = 0
+            self.elapsed_time = 0.0
             return
 
         if self._gpio_request is not None:
@@ -126,8 +133,8 @@ class BehaviorWindow(QOpenGLWidget):
 
         # timing/frame
         now = time.time()
-        manager.stimulus_elapsed_time = now - self._start_timing
-        manager.stimulus_frame += 1
+        self.elapsed_time = now - self._start_timing
+        self.frame += 1
 
         try:
             self._draw_fn()
@@ -143,4 +150,4 @@ class BehaviorWindow(QOpenGLWidget):
     def clear_function(self) -> None:
         with QPainter(self) as painter:
             # clean the window
-            painter.fillRect(manager.behavior_window.rect(), QColor("black"))
+            painter.fillRect(manager.behavior_window.rect(), self.background_color)
