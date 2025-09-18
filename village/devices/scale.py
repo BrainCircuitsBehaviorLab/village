@@ -61,7 +61,7 @@ class Scale(ScaleBase):
     def get_weight(self) -> float:
         try:
             value = (self.get_value() - self.offset) / self.calibration
-            return value if value >= 0 else 0.0
+            return value if value >= -1 else -1.0
 
         except Exception:
             if self.error_message_timer.has_elapsed():
