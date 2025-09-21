@@ -76,8 +76,8 @@ class Manager:
         self.subject_plot: SubjectPlotBase = SubjectPlotBase()
         self.session_plot: SessionPlotBase = SessionPlotBase()
         self.online_plot: OnlinePlotBase = OnlinePlotBase()
-        self.after_session_run: AfterSessionBase = AfterSessionBase()
-        self.change_cycle_run: ChangeCycleBase = ChangeCycleBase()
+        self.after_session: AfterSessionBase = AfterSessionBase()
+        self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
@@ -123,8 +123,8 @@ class Manager:
         self.detection_change = True
         self.error_in_manual_task = False
         self.rfid_changed = False
-        self.change_cycle_run_flag = False
-        self.after_session_run_flag = False
+        self.change_cycle_flag = False
+        self.after_session_flag = False
         self.getting_weights = False
         self.measuring_weight_list: list[float] = []
         self.log_weight = False
@@ -215,8 +215,14 @@ class Manager:
         session_plot_found = 0
         subject_plot_found = 0
         online_plot_found = 0
-        after_session_run_found = 0
-        change_cycle_run_found = 0
+        after_session_found = 0
+        change_cycle_found = 0
+        training_correct = False
+        session_plot_correct = False
+        subject_plot_correct = False
+        online_plot_correct = False
+        after_session_correct = False
+        change_cycle_correct = False
         functions_path = ""
         sound_path = ""
 
@@ -287,31 +293,37 @@ class Manager:
                             t = cls()
                             t.copy_settings()
                             self.training = t
+                            training_correct = True
                     elif issubclass(cls, SessionPlotBase) and cls != SessionPlotBase:
                         session_plot_found += 1
                         if session_plot_found == 1:
                             p = cls()
                             self.session_plot = p
+                            session_plot_correct = True
                     elif issubclass(cls, SubjectPlotBase) and cls != SubjectPlotBase:
                         subject_plot_found += 1
                         if subject_plot_found == 1:
                             s = cls()
                             self.subject_plot = s
+                            subject_plot_correct = True
                     elif issubclass(cls, OnlinePlotBase) and cls != OnlinePlotBase:
                         online_plot_found += 1
                         if online_plot_found == 1:
                             o = cls()
                             self.online_plot = o
+                            online_plot_correct = True
                     elif issubclass(cls, AfterSessionBase) and cls != AfterSessionBase:
-                        after_session_run_found += 1
-                        if after_session_run_found == 1:
+                        after_session_found += 1
+                        if after_session_found == 1:
                             a = cls()
-                            self.after_session_run = a
+                            self.after_session = a
+                            after_session_correct = True
                     elif issubclass(cls, ChangeCycleBase) and cls != ChangeCycleBase:
-                        change_cycle_run_found += 1
-                        if change_cycle_run_found == 1:
+                        change_cycle_found += 1
+                        if change_cycle_found == 1:
                             y = cls()
-                            self.change_cycle_run = y
+                            self.change_cycle = y
+                            change_cycle_correct = True
 
             except Exception:
                 log.error(
@@ -320,43 +332,45 @@ class Manager:
                 continue
         if training_found == 0:
             log.error("Training protocol not found")
-        elif training_found == 1:
+        elif training_found == 1 and training_correct:
             log.info("Training protocol successfully imported")
-        else:
+        elif training_found > 1:
             log.error("Multiple training protocols found")
         if session_plot_found == 0:
-            log.error("Custom Session plot not found, using default")
-        elif session_plot_found == 1:
+            log.info("Custom Session plot not found, using default")
+        elif session_plot_found == 1 and session_plot_correct:
             log.info("Custom Session plot successfully imported")
-        else:
+        elif session_plot_found > 1:
             log.error("Multiple session plots found")
         if subject_plot_found == 0:
-            log.error("Custom Subject plot not found, using default")
-        elif subject_plot_found == 1:
+            log.info("Custom Subject plot not found, using default")
+        elif subject_plot_found == 1 and subject_plot_correct:
             log.info("Custom Subject plot successfully imported")
-        else:
+        elif subject_plot_found > 1:
             log.error("Multiple subject plots found")
         if online_plot_found == 0:
-            log.error("Custom Online plot not found, using default")
-        elif online_plot_found == 1:
+            log.info("Custom Online plot not found, using default")
+        elif online_plot_found == 1 and online_plot_correct:
             log.info("Custom Online plot successfully imported")
-        else:
+        elif online_plot_found > 1:
             log.error("Multiple online plots found")
-        if after_session_run_found == 0:
-            log.error("Custom After Session Run not found, using default")
-        elif after_session_run_found == 1:
+        if after_session_found == 0:
+            log.info("Custom After Session Run not found, using default")
+        elif after_session_found == 1 and after_session_correct:
             log.info("Custom After Session Run successfully imported")
-        else:
+        elif after_session_found > 1:
             log.error("Multiple After Session Run found")
-        if change_cycle_run_found == 0:
-            log.error("Custom Change Cycle Run not found, using default")
-        elif change_cycle_run_found == 1:
+        if change_cycle_found == 0:
+            log.info("Custom Change Cycle Run not found, using default")
+        elif change_cycle_found == 1 and change_cycle_correct:
             log.info("Custom Change Cycle Run successfully imported")
-        else:
+        elif change_cycle_found > 1:
             log.error("Multiple Change Cycle Run found")
         self.tasks = dict(sorted(tasks.items()))
         number_of_tasks = len(tasks)
-        if number_of_tasks == 1:
+        if number_of_tasks == 0:
+            log.error("No tasks could be imported")
+        elif number_of_tasks == 1:
             log.info("1 task successfully imported")
         else:
             log.info(str(number_of_tasks) + " tasks successfully imported")
@@ -602,7 +616,7 @@ class Manager:
 
         log.end(task=self.task.name, subject=self.subject.name)
         self.sessions.add_timestamp()
-        self.after_session_run_flag = True
+        self.after_session_flag = True
 
     def save_to_subjects(self) -> None:
         df = self.subjects.df.copy()
@@ -666,7 +680,7 @@ class Manager:
             )
         if not sync and settings.get("SYNC_TYPE") != SyncType.OFF:
             log.alarm("No sync in the last 24 hours.")
-        self.change_cycle_run_flag = True
+        self.change_cycle_flag = True
 
     def create_report(
         self, hours: int

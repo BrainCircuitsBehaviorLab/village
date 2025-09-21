@@ -104,11 +104,9 @@ manager.errors = (
     + sound_device.error
     + telegram_bot.error
 )
-if manager.errors == "":
-    log.start("VILLAGE")
-else:
+if manager.errors != "":
     log.error(manager.errors)
-    log.start("VILLAGE_DEBUG")
+log.start("VILLAGE")
 
 
 # create a secondary thread
@@ -178,7 +176,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     id, multiple = rfid.get_id()
                     manager.reset_subject_task_training()
 
-                if manager.change_cycle_run_flag:
+                if manager.change_cycle_flag:
                     log.info("Going to SYNC State")
                     manager.state = State.SYNC
                     continue
@@ -231,10 +229,13 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.RUN_FIRST:
                 # Task running, waiting for the corridor to become empty"
                 if id != manager.subject.tag and id != "":
+                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
                     log.alarm(
-                        "Wrong RFID detection: "
-                        + id
-                        + " Another subject detected while main subject is in the box."
+                        "Wrong RFID detection. Subject: "
+                        + name
+                        + " Detected while main subject: "
+                        + manager.subject.name
+                        + " is in the box."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
@@ -267,12 +268,24 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.RUN_CLOSED:
                 # Task running, the subject cannot leave yet
-                if id != "":
+                if id != manager.subject.tag and id != "":
+                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
+                    log.alarm(
+                        "Wrong RFID detection. Subject: "
+                        + name
+                        + " Detected while main subject: "
+                        + manager.subject.name
+                        + " is in the box."
+                        + " Opening door2 and disconnecting RFID reader.",
+                        subject=manager.subject.name,
+                    )
+                    manager.state = State.OPEN_DOOR2_STOP
+                    log.info("Going to OPEN_DOOR2_STOP State")
+                elif id == manager.subject.tag and id != "":
                     log.alarm(
                         "Wrong RFID detection: "
-                        + id
-                        + " Subject detected in the corridor while main"
-                        + " subject should be in the box."
+                        + " The main subject was detected in the corridor when it"
+                        + " should have been inside the box."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
@@ -304,10 +317,13 @@ def system_run(bevavior_window: QWidget) -> None:
                         scale.tare()
 
                 if id != manager.subject.tag and id != "":
+                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
                     log.alarm(
-                        "Wrong RFID detection: "
-                        + id
-                        + " Another subject detected while main subject is in the box."
+                        "Wrong RFID detection. Subject: "
+                        + name
+                        + " Detected while main subject: "
+                        + manager.subject.name
+                        + " is in the box."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
@@ -473,12 +489,12 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.SYNC:
                 # Synchronizing data with the server or doing user-defined tasks
                 gc.enable()
-                if manager.after_session_run_flag:
-                    manager.after_session_run_flag = False
-                    manager.after_session_run.run()
-                if manager.change_cycle_run_flag:
-                    manager.change_cycle_run_flag = False
-                    manager.change_cycle_run.run()
+                if manager.after_session_flag:
+                    manager.after_session_flag = False
+                    manager.after_session.run()
+                if manager.change_cycle_flag:
+                    manager.change_cycle_flag = False
+                    manager.change_cycle.run()
                 manager.state = State.WAIT
                 log.info("Going to WAIT State")
 

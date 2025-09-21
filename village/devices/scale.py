@@ -25,6 +25,7 @@ class Scale(ScaleBase):
         self.error = ""
         self.error_message_timer = time_utils.Timer(3600)
         self.i2cbus.write_i2c_block_data(self.I2C_ADDR, 0x01, [0x8C, 0x03])
+        self.alarm_timer = time_utils.Timer(3600)
         self.tare()
 
     # @time_utils.measure_time
@@ -56,7 +57,10 @@ class Scale(ScaleBase):
         data = self.i2cbus.read_i2c_block_data(
             self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
         )
-        return (data[0] << 8) | data[1]
+        value = (data[0] << 8) | data[1]
+        if value == 0 and self.alarm_timer.has_elapsed():
+            log.alarm("The scale is not working, please check the connection.")
+        return value
 
     def get_weight(self) -> float:
         try:

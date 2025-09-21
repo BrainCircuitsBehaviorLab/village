@@ -90,6 +90,18 @@ class Collection(EventBase):
             return column_df.iloc[-1]
         return None
 
+    def get_last_entry_name(self, column: str, value: str) -> str:
+        column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
+        name = value
+        if not column_df.empty:
+            row = column_df.iloc[-1]
+            if row is not None:
+                try:
+                    name = row["name"]
+                except Exception:
+                    pass
+        return name
+
     def get_first_entry(self, column: str, value: str) -> Union[pd.Series, None]:
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
         if not column_df.empty:
