@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import html
 import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import (
     QDialog,
     QHBoxLayout,
@@ -1048,12 +1049,54 @@ class InfoLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        text = manager.events.df.tail(16).to_csv(sep="\t", index=False, header=False)
-        self.events_text = self.create_and_add_label(text, 0, 2, 198, 17, "black")
+        self.events_text: QLabel = self.create_and_add_label("", 0, 2, 198, 17, "black")
+        self.events_text.setTextFormat(Qt.RichText)
+        self.events_text.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.events_text.setWordWrap(False)
+        f = QFont("Monospace")
+        f.setStyleHint(QFont.TypeWriter)
+        self.events_text.setFont(f)
+        self.update_gui()
 
     def update_gui(self) -> None:
-        text = manager.events.df.tail(16).to_csv(sep="\t", index=False, header=False)
-        self.events_text.setText(text)
+        df_tail = manager.events.df.tail(16)
+        html_table = self.events_df_to_html(df_tail)
+        self.events_text.setText(html_table)
+
+    @staticmethod
+    def events_df_to_html(df) -> str:
+        ROW_BG = {
+            "INFO": None,
+            "START": "#e6f2ff",
+            "END": "#e6f2ff",
+            "ERROR": "#ffe6e6",
+            "ALARM": "#ffe6e6",
+        }
+
+        if df.empty:
+            return "<i>No events</i>"
+
+        headers = list(df.columns)
+        rows_html = []
+
+        for _, row in df.iterrows():
+            t = str(row.get("type", "")).upper() if "type" in df.columns else ""
+            bg = ROW_BG.get(t)
+            style = f"background-color:{bg};" if bg else ""
+
+            tds = "".join(
+                f"<td style='padding:2px 6px; white-space:nowrap;'>"
+                f"{html.escape(str(row.get(col, '')))}</td>"
+                for col in headers
+            )
+            rows_html.append(f"<tr style='{style}'>{tds}</tr>")
+
+        table = (
+            "<table cellspacing='0' cellpadding='0' "
+            "style='border-collapse:collapse; font-family:monospace; font-size:12px;'>"
+            f"<tbody>{''.join(rows_html)}</tbody></table>"
+        )
+        return table
 
 
 class CorridorPlotLayout(Layout):

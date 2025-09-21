@@ -11,8 +11,15 @@ import numpy as np
 import pandas as pd
 from classes.enums import State
 from pandas import DataFrame
-from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, QTimer, pyqtSignal
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtCore import (
+    QAbstractTableModel,
+    QModelIndex,
+    Qt,
+    QTimer,
+    QVariant,
+    pyqtSignal,
+)
+from PyQt5.QtGui import QBrush, QColor, QImage, QPixmap
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QAbstractScrollArea,
@@ -324,10 +331,39 @@ class Table(QAbstractTableModel):
     def columnCount(self, parent=None) -> int:
         return self.df.shape[1]
 
-    def data(self, index, role=Qt.DisplayRole) -> str | None:
-        if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
-            return str(self.df.iat[index.row(), index.column()])
-        return None
+    # def data(self, index, role=Qt.DisplayRole) -> str | None:
+    #     if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
+    #         return str(self.df.iat[index.row(), index.column()])
+    #     return None
+
+    def data(
+        self, index: QModelIndex, role: int = Qt.DisplayRole
+    ) -> Any | str | QBrush:
+        if not index.isValid():
+            return QVariant()
+
+        row = index.row()
+        col = index.column()
+
+        if role == Qt.DisplayRole:
+            try:
+                return str(self.df.iat[row, col])
+            except Exception:
+                return QVariant()
+
+        if role == Qt.BackgroundRole:
+            try:
+                if manager.table == DataTable.EVENTS and "type" in self.df.columns:
+                    type_val = str(self.df.at[self.df.index[row], "type"]).upper()
+                    if type_val in ("ERROR", "ALARM"):
+                        return QBrush(QColor("#ffe6e6"))
+                    elif type_val in ("START", "END"):
+                        return QBrush(QColor("#e6f2ff"))
+                    elif type_val == "INFO":
+                        return QVariant()
+            except Exception:
+                return QVariant()
+        return QVariant()
 
     def headerData(self, section, orientation, role=Qt.DisplayRole) -> str | None:
         if role != Qt.DisplayRole:
