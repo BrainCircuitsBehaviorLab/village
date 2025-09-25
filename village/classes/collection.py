@@ -154,7 +154,7 @@ class Collection(EventProtocol):
 
             roots = (poly - volume).roots()
 
-            valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
+            valid_roots = [root for root in roots if np.isreal(root) and min(x) <= root <= max(x)]
 
             if valid_roots:
                 return round(float(np.min(valid_roots)), 6)
