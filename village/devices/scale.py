@@ -3,7 +3,9 @@ inspired by:
 https://github.com/DFRobot/DFRobot_HX711_I2C
 """
 
+import time
 import traceback
+from typing import List
 
 import numpy as np
 import smbus2
@@ -31,14 +33,14 @@ class Scale(ScaleBase):
     # @time_utils.measure_time
     def tare(self) -> None:
         try:
-            self.offset = self.get_value()
+            self.offset = self.get_value(samples=5)
             log.info("The scale has been tared.")
         except Exception:
             log.error("Error taring scale", exception=traceback.format_exc())
 
     def calibrate(self, weight: float) -> None:
         try:
-            raw_value: float = self.get_value()
+            raw_value: float = self.get_value(samples=5)
             if raw_value < 1:
                 log.error("Error calibrating scale", exception=traceback.format_exc())
                 return
@@ -53,14 +55,29 @@ class Scale(ScaleBase):
         except Exception:
             log.error("Error calibrating scale", exception=traceback.format_exc())
 
-    def get_value(self) -> int:
-        data = self.i2cbus.read_i2c_block_data(
-            self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
-        )
-        value = (data[0] << 8) | data[1]
-        if value == 0 and self.alarm_timer.has_elapsed():
+    # def get_value(self) -> int:
+    #     data = self.i2cbus.read_i2c_block_data(
+    #         self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
+    #     )
+    #     value = (data[0] << 8) | data[1]
+    #     if value == 0 and self.alarm_timer.has_elapsed():
+    #         log.alarm("The scale is not working, please check the connection.")
+    #     return value
+
+    def get_value(self, samples: int = 1, interval_s: float = 0.005) -> int:
+        values: List[int] = []
+        for i in range(samples):
+            data = self.i2cbus.read_i2c_block_data(
+                self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
+            )
+            v = (data[0] << 8) | data[1]
+            values.append(v)
+            if interval_s > 0 and i < samples - 1:
+                time.sleep(interval_s)
+        median = np.median(values)
+        if median == 0 and self.alarm_timer.has_elapsed():
             log.alarm("The scale is not working, please check the connection.")
-        return value
+        return median
 
     def get_weight(self) -> float:
         try:
@@ -86,21 +103,19 @@ def get_scale(address: str) -> ScaleBase:
 scale = get_scale(settings.get("SCALE_ADDRESS"))
 
 
-def real_weight_inference(weight_array, threshold):
+def real_weight_inference(weight_array, threshold) -> tuple[bool, float]:
     """
     Conditions to call it a real weight:
-     - minimum of 8 measurements
-     - median larger than threshold
      - standard deviation of the last 5 measurements is
         smaller than 10% of the threshold
     """
     if len(weight_array) < 8:
-        return False
+        return (False, 0.0)
 
-    median_weight = np.median(weight_array[-8:])
+    median_weight = np.median(weight_array[-5:])
     std_weight = np.std(weight_array[-5:])
 
-    if median_weight > threshold and std_weight < 0.1 * threshold:
-        return True
+    if std_weight < 0.1 * threshold or len(weight_array) > 100:
+        return (True, median_weight)
     else:
-        return False
+        return (False, 0.0)

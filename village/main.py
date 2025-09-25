@@ -27,20 +27,6 @@ fmt.setSwapBehavior(QSurfaceFormat.DoubleBuffer)
 
 QSurfaceFormat.setDefaultFormat(fmt)
 
-
-# fmt = QSurfaceFormat()
-# fmt.setSwapInterval(1)  # try 0
-# fmt.setVersion(2, 0)  # OpenGL ES 3.1
-# fmt.setRenderableType(QSurfaceFormat.OpenGL)
-
-# fmt.setDepthBufferSize(0)
-# fmt.setStencilBufferSize(0)
-# fmt.setSamples(0)
-# fmt.setAlphaBufferSize(0)
-
-# QSurfaceFormat.setDefaultFormat(fmt)
-
-
 from PyQt5.QtWidgets import QApplication
 
 q_app = QApplication.instance() or QApplication(sys.argv)
@@ -49,7 +35,6 @@ import gc
 import threading
 import time
 
-import numpy as np
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
@@ -347,16 +332,12 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.state = State.SAVE_INSIDE
                 elif weight > weight_threshold:
                     manager.measuring_weight_list.append(weight)
-                    if (
-                        real_weight_inference(
-                            manager.measuring_weight_list,
-                            weight_threshold,
-                        )
-                        or len(manager.measuring_weight_list) >= 100
-                    ):
-                        manager.weight = round(
-                            np.median(manager.measuring_weight_list[-5:]), 2
-                        )
+                    ok, weight_value = real_weight_inference(
+                        manager.measuring_weight_list,
+                        weight_threshold,
+                    )
+                    if ok:
+                        manager.weight = weight_value
                         manager.getting_weights = False
                         manager.measuring_weight_list = []
                         manager.state = State.EXIT_UNSAVED
@@ -409,24 +390,23 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.max_time_counter += 1
 
                 elif weight > weight_threshold:
-                    manager.measuring_weight_list.append(weight)
-                    if (
-                        real_weight_inference(
+                    if not manager.error_stop or (
+                        cam_corridor.area_3_empty() and cam_corridor.area_4_empty()
+                    ):
+                        manager.measuring_weight_list.append(weight)
+                        ok, weight_value = real_weight_inference(
                             manager.measuring_weight_list,
                             weight_threshold,
                         )
-                        or len(manager.measuring_weight_list) >= 100
-                    ):
-                        manager.weight = round(
-                            np.median(manager.measuring_weight_list[-5:]), 2
-                        )
-                        manager.getting_weights = False
-                        manager.measuring_weight_list = []
-                        manager.state = State.EXIT_SAVED
-                        log.info(
-                            "Subject back home: " + str(manager.weight) + " g",
-                            subject=manager.subject.name,
-                        )
+                        if ok:
+                            manager.weight = weight_value
+                            manager.getting_weights = False
+                            manager.measuring_weight_list = []
+                            manager.state = State.EXIT_SAVED
+                            log.info(
+                                "Subject back home: " + str(manager.weight) + " g",
+                                subject=manager.subject.name,
+                            )
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
@@ -440,6 +420,7 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
                 motor2.open()
+                manager.error_stop = True
                 manager.rfid_reader = Active.OFF
                 manager.rfid_changed = True
                 manager.state = State.SAVE_INSIDE

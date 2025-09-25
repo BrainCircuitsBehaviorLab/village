@@ -80,6 +80,7 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
+        self.error_stop: bool = False
         self.calibrating: bool = False
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
@@ -567,6 +568,7 @@ class Manager:
         self.raw_session_df = pd.DataFrame()
         self.calibrating = False
         self.previous_state_wait = True
+        self.error_stop = False
 
     def update_raw_session_df(self) -> pd.DataFrame:
         try:
@@ -584,7 +586,6 @@ class Manager:
 
     def disconnect_and_save(self, run_mode: str) -> None:
         # TODO kill the touchscreen reading
-        # TODO clean the screen
         self.behavior_window.load_draw_function(None)
         self.behavior_window.stop_drawing()
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
