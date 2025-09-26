@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.figure import Figure
-from numpy.polynomial import Polynomial
+
+from village.scripts.utils import interpolate
 
 
 def sound_calibration_plot(
@@ -42,15 +42,11 @@ def sound_calibration_plot(
                 label=label,
             )
 
-            if len(x) == 2:
-                poly = Polynomial.fit(x, y, 1).convert()
-            elif len(x) > 2:
-                poly = Polynomial.fit(x, y, 2).convert()
-            else:
+            x_fit, y_fit = interpolate(x, y)
+
+            if x_fit is None:
                 continue
 
-            x_fit = np.linspace(min(x), max(x), 100)
-            y_fit = poly(x_fit)
             ax.plot(x_fit, y_fit, linestyle="-", color=color)
             ax.plot(
                 [],

@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.figure import Figure
-from numpy.polynomial import Polynomial
+
+from village.scripts.utils import interpolate
 
 
 def water_calibration_plot(
@@ -25,15 +25,11 @@ def water_calibration_plot(
 
         ax.plot(x, y, marker="o", linestyle="None", color=colors[port], label=f"{port}")
 
-        if len(x) == 2:
-            poly = Polynomial.fit(x, y, 1).convert()
-        elif len(x) > 2:
-            poly = Polynomial.fit(x, y, 2).convert()
-        else:
+        x_fit, y_fit = interpolate(x, y)
+
+        if x_fit is None:
             continue
 
-        x_fit = np.linspace(min(x), max(x), 100)
-        y_fit = poly(x_fit)
         ax.plot(x_fit, y_fit, linestyle="-", color=colors[port])
         ax.plot(
             [],
