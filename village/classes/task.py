@@ -128,36 +128,48 @@ class Task:
         return
 
     def get_trial_data(self) -> None:
-        data = self.bpod.session.current_trial.export()
-        occurrences = self.bpod.session.current_trial.events_occurrences
+        try:
+            data = self.bpod.session.current_trial.export()
+            occurrences = self.bpod.session.current_trial.events_occurrences
 
-        self.trial_data.update(
-            {
-                "date": self.date,
-                "trial": self.current_trial,
-                "subject": self.subject,
-                "task": self.name,
-                "system_name": self.system_name,
-                "TRIAL_START": data["Trial start timestamp"],
-                "TRIAL_END": max(
-                    [
-                        max(timestamps)
-                        for timestamps in data["Events timestamps"].values()
-                    ]
-                ),
-            }
-        )
+            self.trial_data.update(
+                {
+                    "date": self.date,
+                    "trial": self.current_trial,
+                    "subject": self.subject,
+                    "task": self.name,
+                    "system_name": self.system_name,
+                    "TRIAL_START": data["Trial start timestamp"],
+                    "TRIAL_END": max(
+                        [
+                            max(timestamps)
+                            for timestamps in data["Events timestamps"].values()
+                        ]
+                    ),
+                }
+            )
 
-        for event, timestamps in data["Events timestamps"].items():
-            self.trial_data[event] = timestamps
+            for event, timestamps in data["Events timestamps"].items():
+                self.trial_data[event] = timestamps
 
-        for state, intervals in data["States timestamps"].items():
-            starts = [start for start, _ in intervals]
-            ends = [end for _, end in intervals]
-            self.trial_data[f"STATE_{state}_START"] = starts
-            self.trial_data[f"STATE_{state}_END"] = ends
+            for state, intervals in data["States timestamps"].items():
+                starts = [start for start, _ in intervals]
+                ends = [end for _, end in intervals]
+                self.trial_data[f"STATE_{state}_START"] = starts
+                self.trial_data[f"STATE_{state}_END"] = ends
 
-        self.trial_data["ordered_list_of_events"] = [msg.content for msg in occurrences]
+            self.trial_data["ordered_list_of_events"] = [msg.content for msg in occurrences]
+        except Exception:
+            self.trial_data.update(
+                {
+                    "date": self.date,
+                    "trial": self.current_trial,
+                    "subject": self.subject,
+                    "task": self.name,
+                    "system_name": self.system_name,
+                    "TRIAL_START": "FixME",
+                    "TRIAL_END": "FixME",
+                })
 
     def concatenate_trial_data(self) -> None:
         self.row_df = pd.DataFrame([self.trial_data])
