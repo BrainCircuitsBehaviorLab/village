@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import html
 import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import (
     QDialog,
     QHBoxLayout,
@@ -17,6 +18,8 @@ from PyQt5.QtWidgets import (
     QStackedLayout,
     QVBoxLayout,
     QWidget,
+    QWizard,
+    QWizardPage,
 )
 
 from village.classes.enums import Actions, Active, Cycle, Info, ScreenActive
@@ -596,59 +599,75 @@ class MotorLayout(Layout):
             motor2.close_angle = val4
 
     def calibrate_scale_clicked(self) -> None:
+        # Block calibration if the system is busy
         if not manager.state.can_calibrate_scale():
-            text = (
-                "Calibration is not available if there is a subject in the box "
-                + "or a detection in progress"
-            )
             QMessageBox.information(
                 self.window,
                 "CALIBRATION",
-                text,
+                (
+                    "Calibration is not available while a subject is in the box "
+                    "or a detection is in progress."
+                ),
             )
+            return
 
-        scale.tare()
-        val = settings.get("SCALE_WEIGHT_TO_CALIBRATE")
-        self.reply = QDialog()
-        self.reply.setWindowTitle("Calibrate scale")
-        x = self.column_width * 65
-        y = self.row_height * 22
-        width = self.column_width * 32
-        height = self.row_height * 8
-        self.reply.setGeometry(x, y, width, height)
-        layout = QVBoxLayout()
-        text = "The scale has been tared. Make sure there was nothing on it, and now "
-        text += "place an object of known weight on top.\n"
-        text += "Enter the known weight value in grams:"
-        label = QLabel(text)
-        layout.addWidget(label)
-        self.lineEdit = QLineEdit()
-        self.lineEdit.setPlaceholderText(str(val))
-        layout.addWidget(self.lineEdit)
-        btns_layout = QHBoxLayout()
-        self.btn_ok = QPushButton("CALIBRATE")
-        self.btn_cancel = QPushButton("CANCEL")
-        btns_layout.addWidget(self.btn_ok)
-        btns_layout.addWidget(self.btn_cancel)
-        layout.addLayout(btns_layout)
-        self.reply.setLayout(layout)
+        wiz = ScaleCalibrationWizard(self.window)
+        wiz.exec_()
 
-        self.btn_ok.clicked.connect(self.reply.accept)
-        self.btn_cancel.clicked.connect(self.reply.reject)
+    # def calibrate_scale_clicked(self) -> None:
+    #     if not manager.state.can_calibrate_scale():
+    #         text = (
+    #             "Calibration is not available if there is a subject in the box "
+    #             + "or a detection in progress"
+    #         )
+    #         QMessageBox.information(
+    #             self.window,
+    #             "CALIBRATION",
+    #             text,
+    #         )
 
-        if self.reply.exec_():
-            try:
-                if self.lineEdit.text() == "":
-                    val = float(self.lineEdit.placeholderText())
-                else:
-                    val = float(self.lineEdit.text())
-                if val > 0.1:
-                    scale.calibrate(val)
-                    log.info("Scale calibrated")
-                else:
-                    log.error("Invalid value. Scale not calibrated")
-            except ValueError:
-                log.error("Invalid value. Scale not calibrated")
+    #     scale.tare()
+    #     val = settings.get("SCALE_WEIGHT_TO_CALIBRATE")
+    #     self.reply = QDialog()
+    #     self.reply.setWindowTitle("Calibrate scale")
+    #     x = self.column_width * 65
+    #     y = self.row_height * 22
+    #     width = self.column_width * 32
+    #     height = self.row_height * 8
+    #     self.reply.setGeometry(x, y, width, height)
+    #     layout = QVBoxLayout()
+    #     text = "The scale has been tared. Make sure there was nothing on it, and now "
+    #     text += "place an object of known weight on top.\n"
+    #     text += "Enter the known weight value in grams:"
+    #     label = QLabel(text)
+    #     layout.addWidget(label)
+    #     self.lineEdit = QLineEdit()
+    #     self.lineEdit.setPlaceholderText(str(val))
+    #     layout.addWidget(self.lineEdit)
+    #     btns_layout = QHBoxLayout()
+    #     self.btn_ok = QPushButton("CALIBRATE")
+    #     self.btn_cancel = QPushButton("CANCEL")
+    #     btns_layout.addWidget(self.btn_ok)
+    #     btns_layout.addWidget(self.btn_cancel)
+    #     layout.addLayout(btns_layout)
+    #     self.reply.setLayout(layout)
+
+    #     self.btn_ok.clicked.connect(self.reply.accept)
+    #     self.btn_cancel.clicked.connect(self.reply.reject)
+
+    #     if self.reply.exec_():
+    #         try:
+    #             if self.lineEdit.text() == "":
+    #                 val = float(self.lineEdit.placeholderText())
+    #             else:
+    #                 val = float(self.lineEdit.text())
+    #             if val > 0.1:
+    #                 scale.calibrate(val)
+    #                 log.info("Scale calibrated")
+    #             else:
+    #                 log.error("Invalid value. Scale not calibrated")
+    #         except ValueError:
+    #             log.error("Invalid value. Scale not calibrated")
 
     def cancel_calibration(self) -> None:
         pass
@@ -682,7 +701,6 @@ class PortsLayout(Layout):
                 2,
                 partial(self.led_clicked, i + 1),
                 "Light the LED" + str(i),
-                reference=True,
             )
             self.buttons.append(button1)
 
@@ -694,16 +712,20 @@ class PortsLayout(Layout):
                 2,
                 partial(self.water_clicked, i + 1),
                 "Deliver water for 0.1 seconds" + str(i),
-                reference=True,
             )
             self.buttons.append(button2)
 
-    def led_clicked(self, i=0, button=None) -> None:
-        if button is not None:
-            button.setEnabled(False)
-            QTimer.singleShot(1500, lambda: button.setEnabled(True))
+    def disable_all(self) -> None:
+        for b in self.buttons:
+            b.setEnabled(False)
 
-        print("led_clicked")
+    def enable_all(self) -> None:
+        for b in self.buttons:
+            b.setEnabled(True)
+
+    def led_clicked(self, i=0) -> None:
+        self.disable_all()
+        QTimer.singleShot(1500, self.enable_all)
 
         if not manager.task.bpod.connected:
             manager.task.bpod.connect(manager.functions)
@@ -712,10 +734,9 @@ class PortsLayout(Layout):
             close = False
         manager.task.bpod.led(i, close)
 
-    def water_clicked(self, i=0, button=None) -> None:
-        if button is not None:
-            button.setEnabled(False)
-            QTimer.singleShot(1500, lambda: button.setEnabled(True))
+    def water_clicked(self, i=0) -> None:
+        self.disable_all()
+        QTimer.singleShot(1500, self.enable_all)
 
         if not manager.task.bpod.connected:
             manager.task.bpod.connect(manager.functions)
@@ -1046,12 +1067,54 @@ class InfoLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        text = manager.events.df.tail(16).to_csv(sep="\t", index=False, header=False)
-        self.events_text = self.create_and_add_label(text, 0, 2, 198, 17, "black")
+        self.events_text: QLabel = self.create_and_add_label("", 0, 2, 198, 17, "black")
+        self.events_text.setTextFormat(Qt.RichText)
+        self.events_text.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.events_text.setWordWrap(False)
+        f = QFont("Monospace")
+        f.setStyleHint(QFont.TypeWriter)
+        self.events_text.setFont(f)
+        self.update_gui()
 
     def update_gui(self) -> None:
-        text = manager.events.df.tail(16).to_csv(sep="\t", index=False, header=False)
-        self.events_text.setText(text)
+        df_tail = manager.events.df.tail(16)
+        html_table = self.events_df_to_html(df_tail)
+        self.events_text.setText(html_table)
+
+    @staticmethod
+    def events_df_to_html(df) -> str:
+        ROW_BG = {
+            "INFO": None,
+            "START": "#e6f2ff",
+            "END": "#e6f2ff",
+            "ERROR": "#ffe6e6",
+            "ALARM": "#ffe6e6",
+        }
+
+        if df.empty:
+            return "<i>No events</i>"
+
+        headers = list(df.columns)
+        rows_html = []
+
+        for _, row in df.iterrows():
+            t = str(row.get("type", "")).upper() if "type" in df.columns else ""
+            bg = ROW_BG.get(t)
+            style = f"background-color:{bg};" if bg else ""
+
+            tds = "".join(
+                f"<td style='padding:2px 6px; white-space:nowrap;'>"
+                f"{html.escape(str(row.get(col, '')))}</td>"
+                for col in headers
+            )
+            rows_html.append(f"<tr style='{style}'>{tds}</tr>")
+
+        table = (
+            "<table cellspacing='0' cellpadding='0' "
+            "style='border-collapse:collapse; font-family:monospace; font-size:12px;'>"
+            f"<tbody>{''.join(rows_html)}</tbody></table>"
+        )
+        return table
 
 
 class CorridorPlotLayout(Layout):
@@ -1092,3 +1155,217 @@ class CorridorPlotLayout(Layout):
             self.plot_label.setPixmap(pixmap)
         else:
             self.plot_label.setText("Plot could not be generated")
+
+
+class ScaleCalibrationWizard(QWizard):
+    """
+    4-step wizard to calibrate the scale:
+      1) Tare with empty platform
+      2) Place a known weight and enter grams
+      3) Verify reading with the weight on
+      4) Remove weight and verify near-zero reading
+    """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Scale Calibration")
+        self.resize(560, 300)
+
+        # Shared state
+        self.known_weight_g: float | None = None
+        self.default_weight = float(settings.get("SCALE_WEIGHT_TO_CALIBRATE") or 0.0)
+
+        # Pages
+        self.page1 = Step1TarePage()
+        self.page2 = Step2KnownWeightPage(self.default_weight)
+        self.page3 = Step3VerifyWithWeightPage()
+        self.page4 = Step4VerifyNoWeightPage()
+
+        self.addPage(self.page1)
+        self.addPage(self.page2)
+        self.addPage(self.page3)
+        self.addPage(self.page4)
+
+        # Optional: classic wizard look
+        self.setOption(QWizard.NoBackButtonOnStartPage, True)
+
+    # Expose helpers so pages can reuse them
+    def read_scale_grams(self) -> float:
+        """Read weight from your device API (adapt if needed)."""
+        return float(scale.get_weight())
+
+
+class Step1TarePage(QWizardPage):
+    """Step 1: Tare the scale with an empty platform."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.setTitle("Step 1/4 — Tare")
+        lay = QVBoxLayout(self)
+
+        lbl = QLabel(
+            "We are going to calibrate the scale.\n\n"
+            "1) Make sure there is nothing on the platform.\n"
+            "2) Click Next to tare the scale."
+        )
+        lbl.setWordWrap(True)
+        lay.addWidget(lbl)
+
+        self.status = QLabel("")
+        lay.addWidget(self.status)
+        lay.addStretch(1)
+
+    def validatePage(self) -> bool:
+        """Called when Next is pressed. Perform Tare here."""
+        try:
+            scale.tare()
+            self.status.setText("Tare completed successfully.")
+            return True
+        except Exception:
+            self.status.setText("Tare failed. Please try again.")
+            QMessageBox.warning(self, "Calibration", "Tare failed. Try again.")
+            return False
+
+
+class Step2KnownWeightPage(QWizardPage):
+    """Step 2: Place a known weight and enter its value (grams)."""
+
+    def __init__(self, default_weight: float) -> None:
+        super().__init__()
+        self.setTitle("Step 2/4 — Known Weight")
+        lay = QVBoxLayout(self)
+
+        lbl = QLabel(
+            "Place a known weight on the platform now.\n"
+            "Enter its value in grams and click Next.\n\n"
+            "Tip: For better accuracy, use a calibration weight close to your "
+            "animals' body weight."
+        )
+        lbl.setWordWrap(True)
+        lay.addWidget(lbl)
+
+        row = QHBoxLayout()
+        row.addWidget(QLabel("Known weight (g):"))
+        self.edit = QLineEdit()
+        if default_weight > 0:
+            self.edit.setPlaceholderText(str(default_weight))
+        row.addWidget(self.edit)
+        lay.addLayout(row)
+
+        self.status = QLabel("")
+        lay.addWidget(self.status)
+        lay.addStretch(1)
+
+    def _parse_weight(self) -> float | None:
+        text = self.edit.text().strip()
+        if not text and self.edit.placeholderText():
+            text = self.edit.placeholderText()
+        try:
+            val = float(text)
+            return val
+        except Exception:
+            return None
+
+    def validatePage(self) -> bool:
+        """When Next is pressed: validate, store, and calibrate."""
+        wiz: ScaleCalibrationWizard = self.wizard()  # type: ignore
+        val = self._parse_weight()
+        if val is None:
+            self.status.setText("Invalid value. Please enter a number.")
+            QMessageBox.warning(self, "Calibration", "Enter a numeric value in grams.")
+            return False
+        if val <= 0.1:
+            self.status.setText("Invalid value. It must be > 0.1 g.")
+            QMessageBox.warning(
+                self, "Calibration", "Known weight must be greater than 0.1 g."
+            )
+            return False
+
+        try:
+            scale.calibrate(val)
+        except Exception:
+            self.status.setText("Calibration failed. Please try again.")
+            QMessageBox.critical(self, "Calibration", "Calibration failed.")
+            return False
+
+        wiz.known_weight_g = val
+        self.status.setText(f"Calibration factor applied for {val:.2f} g.")
+        return True
+
+
+class Step3VerifyWithWeightPage(QWizardPage):
+    """Step 3: Verify reading with the known weight on the platform."""
+
+    def __init__(self):
+        super().__init__()
+        self.setTitle("Step 3/4 — Verify with Weight")
+        lay = QVBoxLayout(self)
+
+        lbl = QLabel(
+            "The scale has been calibrated.\n"
+            "Click 'Get weight' to verify the reading with the weight on."
+        )
+        lbl.setWordWrap(True)
+        lay.addWidget(lbl)
+
+        btns = QHBoxLayout()
+        self.btn_get = QPushButton("Get weight")
+        self.btn_get.clicked.connect(self._on_get)
+        btns.addWidget(self.btn_get)
+        btns.addStretch(1)
+        lay.addLayout(btns)
+
+        self.status = QLabel("")
+        lay.addWidget(self.status)
+        lay.addStretch(1)
+
+    def _on_get(self):
+        wiz: ScaleCalibrationWizard = self.wizard()  # type: ignore
+        try:
+            grams = wiz.read_scale_grams()
+            kw = wiz.known_weight_g
+            if kw is not None:
+                diff = grams - kw
+                self.status.setText(
+                    f"Reading: {grams:.2f} g  (Δ={diff:+.2f} g vs {kw:.2f} g)."
+                )
+            else:
+                self.status.setText(f"Reading: {grams:.2f} g.")
+        except Exception:
+            self.status.setText("Failed to read the scale. Try again.")
+
+
+class Step4VerifyNoWeightPage(QWizardPage):
+    """Step 4: Remove the weight and verify near-zero reading."""
+
+    def __init__(self):
+        super().__init__()
+        self.setTitle("Step 4/4 — Final Check (No Weight)")
+        lay = QVBoxLayout(self)
+
+        lbl = QLabel(
+            "Remove the weight from the platform.\n"
+            "Click 'Get weight' and check the reading is close to zero.\n\n"
+            "If results are not as expected, restart the calibration process."
+        )
+        lbl.setWordWrap(True)
+        lay.addWidget(lbl)
+
+        btns = QHBoxLayout()
+        self.btn_get = QPushButton("Get weight")
+        self.btn_get.clicked.connect(self._on_get)
+        btns.addWidget(self.btn_get)
+        btns.addStretch(1)
+        lay.addLayout(btns)
+
+        self.status = QLabel("")
+        lay.addWidget(self.status)
+        lay.addStretch(1)
+
+    def _on_get(self):
+        wiz: ScaleCalibrationWizard = self.wizard()  # type: ignore
+        try:
+            grams = wiz.read_scale_grams()
+            self.status.setText(f"Reading: {grams:.2f} g.")
+        except Exception:
+            self.status.setText("Failed to read the scale. Try again.")

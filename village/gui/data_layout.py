@@ -11,8 +11,15 @@ import numpy as np
 import pandas as pd
 from classes.enums import State
 from pandas import DataFrame
-from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, QTimer, pyqtSignal
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtCore import (
+    QAbstractTableModel,
+    QModelIndex,
+    Qt,
+    QTimer,
+    QVariant,
+    pyqtSignal,
+)
+from PyQt5.QtGui import QBrush, QColor, QImage, QPixmap
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QAbstractScrollArea,
@@ -317,7 +324,6 @@ class Table(QAbstractTableModel):
         self.editable = editable
         self.layout_parent = layout_parent
         self.table_view: Optional[TableView] = None
-        self._display = self.df.astype(str)
 
     def rowCount(self, parent=None) -> int:
         return self.df.shape[0]
@@ -325,10 +331,39 @@ class Table(QAbstractTableModel):
     def columnCount(self, parent=None) -> int:
         return self.df.shape[1]
 
-    def data(self, index, role=Qt.DisplayRole) -> str | None:
-        if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
-            return self._display.iat[index.row(), index.column()]
-        return None
+    # def data(self, index, role=Qt.DisplayRole) -> str | None:
+    #     if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
+    #         return str(self.df.iat[index.row(), index.column()])
+    #     return None
+
+    def data(
+        self, index: QModelIndex, role: int = Qt.DisplayRole
+    ) -> Any | str | QBrush:
+        if not index.isValid():
+            return QVariant()
+
+        row = index.row()
+        col = index.column()
+
+        if role == Qt.DisplayRole:
+            try:
+                return str(self.df.iat[row, col])
+            except Exception:
+                return QVariant()
+
+        if role == Qt.BackgroundRole:
+            try:
+                if manager.table == DataTable.EVENTS and "type" in self.df.columns:
+                    type_val = str(self.df.at[self.df.index[row], "type"]).upper()
+                    if type_val in ("ERROR", "ALARM"):
+                        return QBrush(QColor("#ffe6e6"))
+                    elif type_val in ("START", "END"):
+                        return QBrush(QColor("#e6f2ff"))
+                    elif type_val == "INFO":
+                        return QVariant()
+            except Exception:
+                return QVariant()
+        return QVariant()
 
     def headerData(self, section, orientation, role=Qt.DisplayRole) -> str | None:
         if role != Qt.DisplayRole:
@@ -368,7 +403,6 @@ class Table(QAbstractTableModel):
             return False
 
         self.df.iat[index.row(), index.column()] = value
-        self._display.iat[index.row(), index.column()] = str(value)
         self.dataChanged.emit(index, index, [Qt.DisplayRole])
         return True
 
@@ -390,14 +424,12 @@ class Table(QAbstractTableModel):
     def add_rows(self, new_df: pd.DataFrame) -> None:
         if self.table_view is None:
             self.df = new_df
-            self._display = new_df.astype(str)
             return
         scroll_position = self.table_view.verticalScrollBar().value()
         scroll_max = self.table_view.verticalScrollBar().maximum()
         rows_before = self.rowCount()
         move_to_bottom = bool(scroll_position == scroll_max)
         self.df = new_df
-        self._display = new_df.astype(str)
         if self.rowCount() > rows_before:
             self.beginInsertRows(QModelIndex(), rows_before, self.rowCount() - 1)
             self.endInsertRows()
@@ -788,20 +820,6 @@ class DfLayout(Layout):
                 self.search_edit.setText("")
                 self.update_data()
                 self.create_table()
-
-    # def obtain_searched_df(self) -> DataFrame:
-    #     if self.searching == "":
-    #         return self.complete_df.copy()
-    #     else:
-    #         new_df = self.complete_df.copy()
-    #         return new_df[
-    #             new_df.apply(
-    #                 lambda row: row.astype(str)
-    #                 .str.contains(self.searching, case=False)
-    #                 .any(),
-    #                 axis=1,
-    #             )
-    #         ]
 
     def obtain_searched_df(self) -> DataFrame:
         term = self.searching

@@ -220,6 +220,8 @@ class CameraBase:
 
 
 class BehaviorWindowBase(QWidget):
+    background_color = None
+
     def start_drawing(self) -> None:
         return
 

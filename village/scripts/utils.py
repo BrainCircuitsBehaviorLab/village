@@ -10,6 +10,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 from PyQt5.QtWidgets import QLayout
+from scipy.interpolate import PchipInterpolator
 
 from village.log import log
 from village.scripts import time_utils
@@ -336,3 +337,49 @@ def has_low_disk_space(threshold_gb=10) -> bool:
     total, used, free = shutil.disk_usage("/")
     free_gb = free / (1024**3)
     return free_gb < threshold_gb
+
+
+def interpolate(x, y, points=100) -> tuple:
+    x = np.asarray(x)
+    y = np.asarray(y)
+
+    order = np.argsort(x)
+    x_sorted = x[order]
+    y_sorted = y[order]
+
+    x_unique, indices = np.unique(x_sorted, return_inverse=True)
+    y_avg = np.zeros_like(x_unique, dtype=float)
+
+    for i in range(len(x_unique)):
+        y_avg[i] = y_sorted[indices == i].mean()
+
+    if len(x_unique) < 2:
+        return None, None
+
+    f = PchipInterpolator(x_unique, y_avg)
+
+    x_fit = np.linspace(min(x_unique), max(x_unique), points)
+    y_fit = f(x_fit)
+
+    return x_fit, y_fit
+
+
+def get_x_value_interp(x, y, y_target) -> float | None:
+
+    if y_target < np.min(y) or y_target > np.max(y):
+        return None
+
+    points = int((np.max(x) - np.min(x)) * 10000)
+
+    x_fit, y_fit = interpolate(x, y, points=points)
+
+    if x_fit is None:
+        return None
+
+    if y_target < np.min(y_fit) or y_target > np.max(y_fit):
+        return None
+
+    diffs = np.abs(y_fit - y_target)
+    best_idx = int(np.argmin(diffs))
+
+    return round(float(x_fit[best_idx]), 4)

@@ -20,15 +20,15 @@ if TYPE_CHECKING:
 
 
 row1 = 5
-column1 = 2
-column2 = 29
-column3 = 91
-column4 = 121
+column1 = 1
+column2 = 28
+column3 = 90
+column4 = 120
 column5 = 149
 width1 = 15
 width2 = 15
 width3 = 22
-width4 = 20
+width4 = 21
 width5 = 18
 length = 22
 size1 = 6

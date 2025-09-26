@@ -44,5 +44,5 @@ class AfterSessionBase:
 
 
 if __name__ == "__main__":
-    after_session_run = AfterSessionBase()
-    after_session_run.run()
+    after_session = AfterSessionBase()
+    after_session.run()

@@ -6,12 +6,12 @@ from typing import Any, Type, Union
 
 import numpy as np
 import pandas as pd
-from numpy.polynomial import Polynomial
 
 from village.classes.abstract_classes import EventBase
 from village.classes.training import TrainingProtocolBase
 from village.log import log
 from village.scripts import time_utils
+from village.scripts.utils import get_x_value_interp
 from village.settings import settings
 
 
@@ -90,6 +90,18 @@ class Collection(EventBase):
             return column_df.iloc[-1]
         return None
 
+    def get_last_entry_name(self, column: str, value: str) -> str:
+        column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
+        name = value
+        if not column_df.empty:
+            row = column_df.iloc[-1]
+            if row is not None:
+                try:
+                    name = row["name"]
+                except Exception:
+                    pass
+        return name
+
     def get_first_entry(self, column: str, value: str) -> Union[pd.Series, None]:
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
         if not column_df.empty:
@@ -144,22 +156,13 @@ class Collection(EventBase):
             x = calibration_df["time(s)"].values
             y = calibration_df["water_delivered(ul)"].values
 
-            if volume < min(y) or volume > max(y):
+            val = get_x_value_interp(x, y, volume)
+
+            if val is None:
                 raise Exception
-
-            if len(x) == 2:
-                poly = Polynomial.fit(x, y, 1).convert()
             else:
-                poly = Polynomial.fit(x, y, 2).convert()
+                return val
 
-            roots = (poly - volume).roots()
-
-            valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
-
-            if valid_roots:
-                return round(float(np.min(valid_roots)), 6)
-            else:
-                raise Exception
         except Exception:
             text = f"""
             \n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n
@@ -185,22 +188,13 @@ class Collection(EventBase):
             x = calibration_df["gain"].values
             y = calibration_df["dB_obtained"].values
 
-            if dB < min(y) or dB > max(y):
+            val = get_x_value_interp(x, y, dB)
+
+            if val is None:
                 raise Exception
-
-            if len(x) == 2:
-                poly = Polynomial.fit(x, y, 1).convert()
             else:
-                poly = Polynomial.fit(x, y, 2).convert()
+                return val
 
-            roots = (poly - dB).roots()
-
-            valid_roots = [root for root in roots if np.isreal(root) and root >= 0]
-
-            if valid_roots:
-                return round(float(np.min(valid_roots)), 6)
-            else:
-                raise Exception
         except Exception:
             text = f"""
             \n\n\t--> SOUND CALIBRATION PROBLEM !!!!!!\n

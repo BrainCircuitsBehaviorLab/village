@@ -49,5 +49,5 @@ class ChangeCycleBase:
 
 
 if __name__ == "__main__":
-    change_cycle_run = ChangeCycleBase()
-    change_cycle_run.run()
+    change_cycle = ChangeCycleBase()
+    change_cycle.run()
