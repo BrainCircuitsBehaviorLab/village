@@ -295,6 +295,8 @@ class BpodBase(object):
                 if status:
                     # self._session += ValueMessage('GOOD', 'normal')
                     self._new_sma_sent = False
+                    trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
+
                 else:
                     self._session += ValueMessage("BPODCRASH", "waiting 100 ms")
                     time.sleep(0.1)
@@ -304,7 +306,7 @@ class BpodBase(object):
                     self.trial_start_timestamp = (
                         self._bpodcom_get_trial_timestamp_start()
                     )
-            except:  # noqa: E722
+            except Exception:
                 self._session += ValueMessage("BPODCRASH", "waiting 100 ms")
                 time.sleep(0.1)
                 self.send_state_machine(sma)
@@ -312,7 +314,6 @@ class BpodBase(object):
                 self._new_sma_sent = False
                 self.trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
 
-        trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
         self.trial_start_timepc = datetime_now.now()
 
         if self.bpod_start_timestamp is None:

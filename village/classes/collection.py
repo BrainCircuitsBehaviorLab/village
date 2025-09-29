@@ -90,9 +90,9 @@ class Collection(EventBase):
             return column_df.iloc[-1]
         return None
 
-    def get_last_entry_name(self, column: str, value: str) -> str:
+    def get_last_entry_name(self, column: str, value: str) -> str | None:
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
-        name = value
+        name = None
         if not column_df.empty:
             row = column_df.iloc[-1]
             if row is not None:

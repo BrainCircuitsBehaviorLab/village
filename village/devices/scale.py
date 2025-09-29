@@ -1,8 +1,4 @@
-"""
-inspired by:
-https://github.com/DFRobot/DFRobot_HX711_I2C
-"""
-
+import struct
 import time
 import traceback
 from typing import List
@@ -59,7 +55,7 @@ class Scale(ScaleBase):
     #     data = self.i2cbus.read_i2c_block_data(
     #         self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
     #     )
-    #     value = (data[0] << 8) | data[1]
+    #     value = struct.unpack(">h", bytes(data))[0]
     #     if value == 0 and self.alarm_timer.has_elapsed():
     #         log.alarm("The scale is not working, please check the connection.")
     #     return value
@@ -70,7 +66,7 @@ class Scale(ScaleBase):
             data = self.i2cbus.read_i2c_block_data(
                 self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
             )
-            v = (data[0] << 8) | data[1]
+            v = struct.unpack(">h", bytes(data))[0]
             values.append(v)
             if interval_s > 0 and i < samples - 1:
                 time.sleep(interval_s)
@@ -82,8 +78,7 @@ class Scale(ScaleBase):
     def get_weight(self) -> float:
         try:
             value = (self.get_value() - self.offset) / self.calibration
-            return value if value >= -1 else -1.0
-
+            return value
         except Exception:
             if self.error_message_timer.has_elapsed():
                 log.error("Error getting weight", exception=traceback.format_exc())
