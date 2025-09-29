@@ -189,27 +189,19 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.RUN_FIRST:
                 # Task running, waiting for the corridor to become empty"
                 if id != manager.subject.tag and id != "":
-                    log.alarm(
-                        "Wrong RFID detection: "
-                        + id
-                        + " Another subject detected while main subject is in the box."
-                        + " Opening door2 and disconnecting RFID reader.",
-                        subject=manager.subject.name,
-                    )
-                    manager.state = State.OPEN_DOOR2_STOP
-                    log.info("Going to OPEN_DOOR2_STOP State")
-                # elif (
-                #     manager.task.chrono.get_seconds()
-                #     >= manager.task.settings.minimum_duration
-                # ):
-                #     log.alarm(
-                #         "Minimum time reached and areas 3 or 4 were never empty."
-                #         + " Opening door2 and disconnecting RFID reader.",
-                #         subject=manager.subject.name,
-                #     )
-                #     manager.state = State.OPEN_DOOR2_STOP
-                #     log.info("Going to OPEN_DOOR2_STOP State")
-
+                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
+                    if name:
+                        log.alarm(
+                            "Wrong RFID detection. Subject: "
+                            + name
+                            + " Detected while main subject: "
+                            + manager.subject.name
+                            + " is in the box."
+                            + " Opening door2 and disconnecting RFID reader.",
+                            subject=manager.subject.name,
+                        )
+                        manager.state = State.OPEN_DOOR2_STOP
+                        log.info("Going to OPEN_DOOR2_STOP State")
                 elif (
                     cam_corridor.area_2_empty()
                     and cam_corridor.area_3_empty()
@@ -226,12 +218,25 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.RUN_CLOSED:
                 # Task running, the subject cannot leave yet
-                if id != "":
+                if id != manager.subject.tag and id != "":
+                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
+                    if name:
+                        log.alarm(
+                            "Wrong RFID detection. Subject: "
+                            + name
+                            + " Detected while main subject: "
+                            + manager.subject.name
+                            + " is in the box."
+                            + " Opening door2 and disconnecting RFID reader.",
+                            subject=manager.subject.name,
+                        )
+                        manager.state = State.OPEN_DOOR2_STOP
+                        log.info("Going to OPEN_DOOR2_STOP State")
+                elif id == manager.subject.tag and id != "":
                     log.alarm(
                         "Wrong RFID detection: "
-                        + id
-                        + " Subject detected in the corridor while main"
-                        + " subject should be in the box."
+                        + " The main subject was detected in the corridor when it"
+                        + " should have been inside the box."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                     )
@@ -263,15 +268,19 @@ def system_run(bevavior_window: QWidget) -> None:
                         scale.tare()
 
                 if id != manager.subject.tag and id != "":
-                    log.alarm(
-                        "Wrong RFID detection: "
-                        + id
-                        + " Another subject detected while main subject is in the box."
-                        + " Opening door2 and disconnecting RFID reader.",
-                        subject=manager.subject.name,
-                    )
-                    manager.state = State.OPEN_DOOR2_STOP
-                    log.info("Going to OPEN_DOOR2_STOP State")
+                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
+                    if name:
+                        log.alarm(
+                            "Wrong RFID detection. Subject: "
+                            + name
+                            + " Detected while main subject: "
+                            + manager.subject.name
+                            + " is in the box."
+                            + " Opening door2 and disconnecting RFID reader.",
+                            subject=manager.subject.name,
+                        )
+                        manager.state = State.OPEN_DOOR2_STOP
+                        log.info("Going to OPEN_DOOR2_STOP State")
                 elif (
                     manager.task.chrono.get_seconds()
                     >= manager.task.settings.maximum_duration
