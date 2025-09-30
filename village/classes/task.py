@@ -131,8 +131,9 @@ class Task:
             data = self.bpod.session.current_trial.export()
             occurrences = self.bpod.session.current_trial.events_occurrences
         except Exception:
-            data = self.bpod_mock.current_trial
-            occurrences = self.bpod_mock.events_occurrences
+            if hasattr(self, "bpod_mock"):
+                data = self.bpod_mock.current_trial
+                occurrences = self.bpod_mock.events_occurrences
 
         self.trial_data.update(
             {

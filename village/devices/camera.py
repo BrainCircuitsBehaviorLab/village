@@ -279,6 +279,8 @@ class Camera(CameraBase):
         self.trial = 0
         self.frames = []
         self.timings = []
+        self.timestamps = []
+        self.camera_timestamps = []
         self.trials = []
         self.states = []
         self.frame_number = 0
@@ -729,7 +731,6 @@ class Camera(CameraBase):
             self.x_positions.append(self.x_mean_value)
             self.y_positions.append(self.y_mean_value)
             self.camera_timestamps.append(self.camera_timestamp)
-
 
     def start_preview_window(self) -> QWidget:
         if self.cam._preview is not None:
