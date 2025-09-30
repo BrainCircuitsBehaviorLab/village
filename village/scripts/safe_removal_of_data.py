@@ -1,10 +1,11 @@
 import logging
 import os
 import subprocess
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import fire
 
+from village.scripts import time_utils
 from village.scripts.utils import setup_logging
 
 
@@ -83,8 +84,7 @@ def remove_old_data(
     removed_count = 0
     files_to_check = []
     files_to_remove = []
-    now = datetime.now()
-    cutoff = now - timedelta(days=days)
+    cutoff = time_utils.hours_ago(days * 24)
 
     for root, dirs, files in os.walk(directory):
         for file in files:

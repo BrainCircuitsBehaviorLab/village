@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-import time
 import traceback
 from typing import TYPE_CHECKING, Any, Optional, cast
 
@@ -1455,7 +1454,7 @@ class VideoLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, rows=rows, columns=columns)
         self.deltas: list[float] = []
-        self.now = time.time()
+        self.now = time_utils.get_time()
         self.draw()
 
     def draw(self) -> None:
@@ -1681,7 +1680,7 @@ class VideoLayout(Layout):
 
     def next_frame_slot(self) -> None:
         last = self.now
-        self.now = time.time()
+        self.now = time_utils.get_time()
         delta = int((self.now - last) * 1000)
         self.deltas.append(delta)
 

@@ -8,6 +8,10 @@ def now() -> datetime.datetime:
     return datetime.datetime.now()
 
 
+def get_time() -> float:
+    return time.time()
+
+
 def time_in_future_seconds(seconds: int) -> datetime.datetime:
     return now() + datetime.timedelta(seconds=seconds)
 
@@ -51,10 +55,6 @@ def filename_string_from_date(date: datetime.datetime) -> str:
 
 def date_from_string(string: str) -> datetime.datetime:
     return datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
-
-
-def date_from_filename_string(string: str) -> datetime.datetime:
-    return datetime.datetime.strptime(string, "%Y%m%d_%H%M%S")
 
 
 def time_from_setting_string(string: str) -> datetime.time:

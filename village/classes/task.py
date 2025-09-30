@@ -171,6 +171,12 @@ class Task:
         self.bpod.register_value("system_name", self.system_name)
         self.bpod.register_value("date", self.date)
 
+        if hasattr(self.bpod, "bpod"):
+            if hasattr(self.bpod.bpod, "com_error"):
+                if self.bpod.bpod.com_error:
+                    self.bpod.register_value("COM_ERROR", 1)
+                    self.bpod.bpod.com_error = False
+
         # # get all the attributes in self.settings and register them
         # for name in vars(self.settings):
         #     attribute = getattr(self.settings, name)

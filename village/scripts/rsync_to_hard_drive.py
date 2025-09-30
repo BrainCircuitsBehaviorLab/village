@@ -8,6 +8,7 @@ import time
 import fire
 
 from village.log import log
+from village.scripts import time_utils
 from village.scripts.utils import setup_logging
 
 
@@ -59,7 +60,7 @@ def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
             preexec_fn=os.setsid,
         )
 
-        start_time = time.time()
+        start_time = time_utils.get_time()
         last_progress_time = start_time
         process_running = True
 
@@ -87,7 +88,7 @@ def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
                         break
                     if output:
                         logging.info(output.strip())
-                        last_progress_time = time.time()
+                        last_progress_time = time_utils.get_time()
                 except Exception:
                     pass
 
@@ -96,7 +97,7 @@ def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
                 process_running = False
                 break
 
-            if time.time() - last_progress_time > 60:
+            if time_utils.get_time() - last_progress_time > 60:
                 logging.warning("rsync seems stuck! Terminating...")
                 try:
                     os.killpg(os.getpgid(process.pid), signal.SIGTERM)

@@ -1,11 +1,11 @@
 # mypy: ignore-errors
 import logging
 import sys
-from datetime import datetime as datetime_now
 
 from village.pybpodapi.com.messaging.state_occurrence import StateOccurrence
 from village.pybpodapi.com.messaging.trial import Trial
 from village.pybpodapi.utils import csv
+from village.scripts import time_utils
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ class Session(object):
         self.trials = []
         self.firmware_version = None
         self.bpod_version = None
-        self.start_timestamp = datetime_now.now()
+        self.start_timestamp = time_utils.now()
 
         self.csvwriter = None
         self._path = path

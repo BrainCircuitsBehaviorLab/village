@@ -8,6 +8,7 @@ import time
 import fire
 
 from village.log import log
+from village.scripts import time_utils
 from village.scripts.utils import setup_logging
 
 
@@ -113,7 +114,7 @@ def run_rsync(
             preexec_fn=os.setsid,  # new process group for signal handling
         )
 
-        start_time = time.time()
+        start_time = time_utils.get_time()
         last_progress_time = start_time
 
         process_running = True
@@ -145,7 +146,9 @@ def run_rsync(
                         break
                     if output:
                         logging.info(output.strip())
-                        last_progress_time = time.time()  # Reset progress timer
+                        last_progress_time = (
+                            time_utils.get_time()
+                        )  # Reset progress timer
                 except Exception:
                     pass
 
@@ -156,7 +159,7 @@ def run_rsync(
                 break  # Success
 
             # If no progress for the timeout duration, assume it's stuck
-            if time.time() - last_progress_time > 60:  # 60s no progress
+            if time_utils.get_time() - last_progress_time > 60:  # 60s no progress
                 logging.warning("rsync seems stuck! Terminating...")
                 try:
                     # kill process group

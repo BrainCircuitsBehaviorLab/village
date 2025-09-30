@@ -1,6 +1,5 @@
-from datetime import datetime as datetime_now
-
 from village.pybpodapi.utils import date_parser
+from village.scripts import time_utils
 
 
 class BaseMessage(object):
@@ -13,7 +12,7 @@ class BaseMessage(object):
     MESSAGE_COLOR = (200, 200, 200)
 
     def __init__(self, content, host_timestamp=None):
-        self.pc_timestamp = datetime_now.now()
+        self.pc_timestamp = time_utils.now()
         self.host_timestamp = host_timestamp
         self.content = content
 

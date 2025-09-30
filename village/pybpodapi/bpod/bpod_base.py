@@ -3,7 +3,6 @@ import logging
 import math
 import socket
 import time
-from datetime import datetime as datetime_now
 
 from village.pybpodapi.bpod.hardware.channels import ChannelName, ChannelType
 from village.pybpodapi.bpod.hardware.events import EventName
@@ -16,6 +15,7 @@ from village.pybpodapi.com.messaging.trial import Trial
 from village.pybpodapi.com.messaging.value import ValueMessage
 from village.pybpodapi.exceptions.bpod_error import BpodErrorException
 from village.pybpodapi.session import Session
+from village.scripts import time_utils
 from village.settings import settings
 
 from .non_blockingsocketreceive import NonBlockingSocketReceive
@@ -75,7 +75,6 @@ class BpodBase(object):
         self._hardware = Hardware()  # type: Hardware
         self.bpod_modules = None
         self.bpod_start_timestamp = None
-        self.bpod_start_timepc = None
         self.difference = 0
         self._new_sma_sent = False  # type: bool
         self._skip_all_trials = False
@@ -86,6 +85,7 @@ class BpodBase(object):
         self._hardware.sync_mode = (
             self.sync_mode
         )  # 0 = flip logic every trial, 1 = every state
+        self.com_error = False
 
     # PUBLIC METHODS
 
@@ -283,9 +283,8 @@ class BpodBase(object):
 
         logger.info("Running state machine, trial %s", len(self.session.trials))
 
-        self.trial_timestamps = (
-            []
-        )  # Store the trial timestamps in case bpod is using live_timestamps
+        self.trial_timestamps = []
+        # Store the trial timestamps in case bpod is using live_timestamps
 
         self._bpodcom_run_state_machine()
 
@@ -293,36 +292,35 @@ class BpodBase(object):
             try:
                 status = self._bpodcom_state_machine_installation_status()
                 if status:
-                    # self._session += ValueMessage('GOOD', 'normal')
                     self._new_sma_sent = False
                     trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
 
                 else:
-                    self._session += ValueMessage("BPODCRASH", "waiting 100 ms")
-                    time.sleep(0.1)
+                    self._session += ValueMessage("COM_ERROR", "waiting 1000 ms")
+                    self.com_error = True
+                    time.sleep(1)
                     self.send_state_machine(sma)
+                    self.trial_timestamps = []
                     self._bpodcom_run_state_machine()
                     self._new_sma_sent = False
-                    self.trial_start_timestamp = (
-                        self._bpodcom_get_trial_timestamp_start()
-                    )
+                    trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
             except Exception:
-                self._session += ValueMessage("BPODCRASH", "waiting 100 ms")
-                time.sleep(0.1)
+                self._session += ValueMessage("COM_ERROR", "waiting 1000 ms")
+                self.com_error = True
+                time.sleep(1)
                 self.send_state_machine(sma)
+                self.trial_timestamps = []
                 self._bpodcom_run_state_machine()
                 self._new_sma_sent = False
-                self.trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
+                trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
 
-        self.trial_start_timepc = datetime_now.now()
+        self.trial_start_timepc = time_utils.now()
 
         if self.bpod_start_timestamp is None:
             self.bpod_start_timestamp = trial_start_timestamp
-            self.bpod_start_timepc = datetime_now.fromtimestamp(0)
 
-        self.trial_start_timestamp = (
-            self.trial_start_timepc - self.bpod_start_timepc
-        ).total_seconds()
+        self.trial_start_timestamp = self.trial_start_timepc.timestamp()
+
         self.difference = trial_start_timestamp - self.trial_start_timestamp
 
         self._session += StateTransition(sma.state_names[0], self.trial_start_timestamp)

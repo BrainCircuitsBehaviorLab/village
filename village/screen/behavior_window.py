@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import time
 from typing import Callable, Optional
 
 import gpiod
@@ -11,6 +10,7 @@ from PyQt5.QtWidgets import QOpenGLWidget
 
 from village.manager import manager
 from village.screen.video_worker import VideoWorker
+from village.scripts import time_utils
 
 
 class BehaviorWindow(QOpenGLWidget):
@@ -78,7 +78,7 @@ class BehaviorWindow(QOpenGLWidget):
 
     def start_drawing(self) -> None:
         self.active = True
-        self._start_timing = time.time()
+        self._start_timing = time_utils.get_time()
         if not self._swap_connected:
             self.frameSwapped.connect(self.update, Qt.ConnectionType.UniqueConnection)
             self._swap_connected = True
@@ -132,7 +132,7 @@ class BehaviorWindow(QOpenGLWidget):
                 pass
 
         # timing/frame
-        now = time.time()
+        now = time_utils.get_time()
         self.elapsed_time = now - self._start_timing
         self.frame += 1
 

@@ -170,7 +170,7 @@ class Camera(CameraBase):
         self.area4_alarm_timer = time_utils.Timer(3600)
         self.box_alarm_timer = time_utils.Timer(3600)
 
-        self.last_frame_time = time.time()
+        self.last_frame_time = time_utils.get_time()
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
@@ -278,7 +278,7 @@ class Camera(CameraBase):
         self.error = ""
         self.filename = ""
         self.chrono.reset()
-        self.last_frame_time = time.time()
+        self.last_frame_time = time_utils.get_time()
 
     def save_csv(self) -> None:
         if self.path_csv == os.path.join(settings.get("VIDEOS_DIRECTORY"), "BOX.csv"):
@@ -323,7 +323,9 @@ class Camera(CameraBase):
         print()
 
     def watchdog_tick(self) -> None:
-        if time.time() - self.last_frame_time > 10:  # 10 seconds without a frame
+        if (
+            time_utils.get_time() - self.last_frame_time > 10
+        ):  # 10 seconds without a frame
             try:
                 self.restart_camera()
             except Exception:
@@ -353,8 +355,7 @@ class Camera(CameraBase):
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
         self.timestamp = time_utils.now_string()
-        self.last_frame_time = time.time()
-        self.last_frame_time = time.time()
+        self.last_frame_time = time_utils.get_time()
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:
