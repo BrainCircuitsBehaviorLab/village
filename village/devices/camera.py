@@ -115,10 +115,18 @@ class Camera(CameraBase):
         self.change = True
         self.state = ""
         self.trial = 0
+        self.tracking = False
+        self.x_mean_position = -1
+        self.y_mean_position = -1
         self.frames: list[int] = []
         self.timings: list[int] = []
         self.trials: list[int] = []
         self.states: list[str] = []
+        self.timestamps: list[float] = []
+        self.x_positions: list[int] = []
+        self.y_positions: list[int] = []
+        self.camera_timestamps: list[float] = []
+        self.camera_timestamp = 0.0
 
         if self.change:
             self.set_properties()
@@ -304,6 +312,26 @@ class Camera(CameraBase):
             }
         )
 
+        # if tracking is enabled, add timestamps and positions
+        if self.tracking:
+            min_length = min(
+                len(df),
+                len(self.timestamps),
+                len(self.x_positions),
+                len(self.y_positions),
+                len(self.camera_timestamps),
+            )
+            self.timestamps = self.timestamps[:min_length]
+            self.x_positions = self.x_positions[:min_length]
+            self.y_positions = self.y_positions[:min_length]
+            self.camera_timestamps = self.camera_timestamps[:min_length]
+
+            df = df.iloc[:min_length]
+            df["timestamp"] = self.timestamps
+            df["x_position"] = self.x_positions
+            df["y_position"] = self.y_positions
+            df["camera_timestamp"] = self.camera_timestamps
+
         df.to_csv(self.path_csv, index=False, sep=";")
 
     def change_focus(self, lensposition: float) -> None:
@@ -354,10 +382,11 @@ class Camera(CameraBase):
         self.timing = self.chrono.get_milliseconds()
         self.timestamp = time_utils.now_string()
         self.last_frame_time = time.time()
-        self.last_frame_time = time.time()
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:
+                metadata = request.get_metadata()
+                self.camera_timestamp = metadata["SensorTimestamp"] / 1e9
                 self.get_gray_frame()
                 self.detect()
                 self.draw_detection()
@@ -696,6 +725,11 @@ class Camera(CameraBase):
             self.timings.append(self.timing)
             self.trials.append(self.trial)
             self.states.append(self.state)
+            self.timestamps.append(self.last_frame_time)
+            self.x_positions.append(self.x_mean_value)
+            self.y_positions.append(self.y_mean_value)
+            self.camera_timestamps.append(self.camera_timestamp)
+
 
     def start_preview_window(self) -> QWidget:
         if self.cam._preview is not None:
