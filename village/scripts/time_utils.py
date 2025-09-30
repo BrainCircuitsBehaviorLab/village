@@ -28,13 +28,9 @@ def time_since_day_started() -> datetime.timedelta:
     return time_now - start
 
 
-def time_since_start(start: datetime.datetime) -> datetime.timedelta:
-    return now() - start
-
-
-def ms_since_start(start: datetime.datetime) -> int:
-    timing = now() - start
-    return int(timing / datetime.timedelta(milliseconds=1))
+def seconds_since_start(start: datetime.datetime) -> int:
+    time = now() - start
+    return int(time.total_seconds())
 
 
 def now_string() -> str:

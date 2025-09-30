@@ -1,6 +1,8 @@
-from pprint import pprint
+import time
 
-from picamera2 import Picamera2
+from gpiozero import LED
 
-picam2 = Picamera2()
-pprint(picam2.sensor_modes)
+led = LED(18)
+led.on()
+time.sleep(1)
+led.off()

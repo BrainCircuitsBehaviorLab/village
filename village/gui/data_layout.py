@@ -1070,7 +1070,7 @@ class DfLayout(Layout):
     def get_path_and_seconds_from_events_row(self, row: pd.Series) -> tuple[str, int]:
         date_str = row["date"]
         date = time_utils.date_from_string(date_str)
-        tsec = time_utils.time_since_start(date).total_seconds()
+        tsec = time_utils.seconds_since_start(date)
         if tsec < settings.get("CORRIDOR_VIDEO_DURATION"):
             text = "The event is too recent. It is possible that "
             text += "the video cannot be viewed until it has been fully recorded."
