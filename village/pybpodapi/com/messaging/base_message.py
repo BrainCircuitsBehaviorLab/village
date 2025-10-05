@@ -1,5 +1,5 @@
 from village.pybpodapi.utils import date_parser
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 
 
 class BaseMessage(object):

@@ -10,7 +10,7 @@ import pandas as pd
 from village.classes.abstract_classes import EventBase
 from village.classes.training import TrainingProtocolBase
 from village.log import log
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.scripts.utils import get_x_value_interp
 from village.settings import settings
 

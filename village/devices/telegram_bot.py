@@ -14,7 +14,7 @@ from village.devices.camera import cam_box, cam_corridor
 from village.log import log
 from village.manager import manager
 from village.plots.corridor_plot import corridor_plot
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 

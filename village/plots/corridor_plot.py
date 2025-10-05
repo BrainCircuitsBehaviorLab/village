@@ -5,7 +5,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 

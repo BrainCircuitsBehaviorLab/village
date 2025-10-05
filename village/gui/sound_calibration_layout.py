@@ -18,7 +18,8 @@ from village.log import log
 from village.manager import manager
 from village.plots.create_pixmap import create_pixmap
 from village.plots.sound_calibration_plot import sound_calibration_plot
-from village.scripts import time_utils, utils
+from village.scripts import utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 if TYPE_CHECKING:

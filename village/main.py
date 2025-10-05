@@ -49,7 +49,7 @@ from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
 from village.log import log
 from village.manager import manager
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 try:
@@ -474,6 +474,7 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.SYNC:
                 # Synchronizing data with the server or doing user-defined tasks
                 gc.enable()
+                time_utils.sync()
                 if manager.after_session_flag:
                     manager.after_session_flag = False
                     manager.after_session.run()

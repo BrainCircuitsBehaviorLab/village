@@ -3,7 +3,8 @@ import traceback
 import pandas as pd
 
 from village.log import log
-from village.scripts import time_utils, utils
+from village.scripts import utils
+from village.scripts.time_utils import time_utils
 
 
 class Subject:

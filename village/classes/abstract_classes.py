@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
 from village.pybpodapi.session import Session
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 

@@ -5,7 +5,7 @@ from datetime import datetime
 
 import fire
 
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.scripts.utils import setup_logging
 
 

@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QOpenGLWidget
 
 from village.manager import manager
 from village.screen.video_worker import VideoWorker
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 
 
 class BehaviorWindow(QOpenGLWidget):

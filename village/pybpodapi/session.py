@@ -5,7 +5,7 @@ import sys
 from village.pybpodapi.com.messaging.state_occurrence import StateOccurrence
 from village.pybpodapi.com.messaging.trial import Trial
 from village.pybpodapi.utils import csv
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 
 logger = logging.getLogger(__name__)
 

@@ -5,7 +5,7 @@ from village.classes.abstract_classes import (
     EventBase,
     TelegramBotBase,
 )
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 
 
 class Log:

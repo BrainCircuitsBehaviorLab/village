@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QLayout
 from scipy.interpolate import PchipInterpolator
 
 from village.log import log
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 

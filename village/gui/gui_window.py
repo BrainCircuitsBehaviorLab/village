@@ -12,7 +12,8 @@ from village.gui.settings_layout import SettingsLayout
 from village.gui.sound_calibration_layout import SoundCalibrationLayout
 from village.gui.tasks_layout import TasksLayout
 from village.gui.water_calibration_layout import WaterCalibrationLayout
-from village.scripts import time_utils, utils
+from village.scripts import utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 if TYPE_CHECKING:

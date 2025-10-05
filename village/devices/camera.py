@@ -25,7 +25,7 @@ from PyQt5.QtWidgets import QWidget
 from village.classes.abstract_classes import CameraBase
 from village.log import log
 from village.manager import manager
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.settings import Color, settings
 
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf

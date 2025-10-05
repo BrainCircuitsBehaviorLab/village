@@ -47,8 +47,8 @@ from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.plots.temperatures_plot import temperatures_plot
 from village.plots.water_calibration_plot import water_calibration_plot
 from village.plots.weights_plot import weights_plot
-from village.scripts import time_utils
 from village.scripts.global_csv_for_subject import main as global_csv_for_subject_script
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 if TYPE_CHECKING:

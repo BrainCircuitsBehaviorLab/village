@@ -15,7 +15,7 @@ from village.pybpodapi.com.messaging.trial import Trial
 from village.pybpodapi.com.messaging.value import ValueMessage
 from village.pybpodapi.exceptions.bpod_error import BpodErrorException
 from village.pybpodapi.session import Session
-from village.scripts import time_utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 from .non_blockingsocketreceive import NonBlockingSocketReceive

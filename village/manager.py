@@ -36,7 +36,8 @@ from village.classes.task import Task
 from village.classes.training import TrainingProtocolBase
 from village.devices.temp_sensor import temp_sensor
 from village.log import log
-from village.scripts import time_utils, utils
+from village.scripts import utils
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
