@@ -299,6 +299,8 @@ class BpodBase(object):
                     self._session += ValueMessage("COM_ERROR", "waiting 1000 ms")
                     self.com_error = True
                     time.sleep(1)
+                    self._arcom.serial_object.reset_input_buffer()
+                    self._arcom.serial_object.reset_output_buffer()
                     self.send_state_machine(sma)
                     self.trial_timestamps = []
                     self._bpodcom_run_state_machine()
@@ -308,6 +310,8 @@ class BpodBase(object):
                 self._session += ValueMessage("COM_ERROR", "waiting 1000 ms")
                 self.com_error = True
                 time.sleep(1)
+                self._arcom.serial_object.reset_input_buffer()
+                self._arcom.serial_object.reset_output_buffer()
                 self.send_state_machine(sma)
                 self.trial_timestamps = []
                 self._bpodcom_run_state_machine()

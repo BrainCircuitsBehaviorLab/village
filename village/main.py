@@ -163,6 +163,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
                 if manager.change_cycle_flag:
                     log.info("Going to SYNC State")
+                    manager.previous_state_wait = False
                     manager.state = State.SYNC
                     continue
 

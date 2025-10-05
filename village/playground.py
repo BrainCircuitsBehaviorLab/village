@@ -1,8 +1,8 @@
-import time
+# import time
 
-from gpiozero import LED
+# from gpiozero import LED
 
-led = LED(18)
-led.on()
-time.sleep(1)
-led.off()
+# led = LED(18)
+# led.on()
+# time.sleep(1)
+# led.off()

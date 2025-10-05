@@ -125,8 +125,15 @@ class Task:
         return
 
     def get_trial_data(self) -> None:
-        data = self.bpod.session.current_trial.export()
-        occurrences = self.bpod.session.current_trial.events_occurrences
+        # TODO: make this with a better logic
+        # read from bpod if there is one
+        try:
+            data = self.bpod.session.current_trial.export()
+            occurrences = self.bpod.session.current_trial.events_occurrences
+        except Exception:
+            if hasattr(self, "bpod_mock"):
+                data = self.bpod_mock.current_trial
+                occurrences = self.bpod_mock.events_occurrences
 
         self.trial_data.update(
             {
