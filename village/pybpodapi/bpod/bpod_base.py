@@ -293,26 +293,27 @@ class BpodBase(object):
             try:
                 status = self._bpodcom_state_machine_installation_status()
                 if status:
-                    # self._session += ValueMessage('GOOD', 'normal')
                     self._new_sma_sent = False
+                    trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
                 else:
-                    self._session += ValueMessage("BPODCRASH", "waiting 100 ms")
-                    time.sleep(0.1)
+                    self._session += ValueMessage("BPODCRASH", "waiting 1000 ms")
+                    time.sleep(1)
+                    self._arcom.serial_object.reset_input_buffer()
+                    self._arcom.serial_object.reset_output_buffer()
                     self.send_state_machine(sma)
                     self._bpodcom_run_state_machine()
                     self._new_sma_sent = False
-                    self.trial_start_timestamp = (
-                        self._bpodcom_get_trial_timestamp_start()
-                    )
+                    trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
             except:  # noqa: E722
-                self._session += ValueMessage("BPODCRASH", "waiting 100 ms")
-                time.sleep(0.1)
+                self._session += ValueMessage("BPODCRASH", "waiting 1000 ms")
+                time.sleep(1)
+                self._arcom.serial_object.reset_input_buffer()
+                self._arcom.serial_object.reset_output_buffer()
                 self.send_state_machine(sma)
                 self._bpodcom_run_state_machine()
                 self._new_sma_sent = False
-                self.trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
+                trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
 
-        trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
         self.trial_start_timepc = datetime_now.now()
 
         if self.bpod_start_timestamp is None:

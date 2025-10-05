@@ -1,8 +1,4 @@
-"""
-inspired by:
-https://github.com/DFRobot/DFRobot_HX711_I2C
-"""
-
+import struct
 import time
 import traceback
 from typing import List
@@ -55,26 +51,17 @@ class Scale(ScaleBase):
         except Exception:
             log.error("Error calibrating scale", exception=traceback.format_exc())
 
-    # def get_value(self) -> int:
-    #     data = self.i2cbus.read_i2c_block_data(
-    #         self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
-    #     )
-    #     value = (data[0] << 8) | data[1]
-    #     if value == 0 and self.alarm_timer.has_elapsed():
-    #         log.alarm("The scale is not working, please check the connection.")
-    #     return value
-
     def get_value(self, samples: int = 1, interval_s: float = 0.005) -> int:
         values: List[int] = []
         for i in range(samples):
             data = self.i2cbus.read_i2c_block_data(
                 self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
             )
-            v = (data[0] << 8) | data[1]
+            v = struct.unpack(">h", bytes(data))[0]
             values.append(v)
             if interval_s > 0 and i < samples - 1:
                 time.sleep(interval_s)
-        median = np.median(values)
+        median = int(np.median(values))
         if median == 0 and self.alarm_timer.has_elapsed():
             log.alarm("The scale is not working, please check the connection.")
         return median
