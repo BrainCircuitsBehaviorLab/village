@@ -9,18 +9,26 @@ from typing import Any, Callable, Tuple
 class TimeUtils:
     def __init__(self) -> None:
         self._base_wall: datetime.datetime = datetime.datetime.now()
-        self._base_mono: float = time.monotonic()
+        self._base_mono_ns: int = time.monotonic_ns()
 
     def sync(self) -> None:
         self._base_wall = datetime.datetime.now()
-        self._base_mono = time.monotonic()
+        self._base_mono_ns = time.monotonic_ns()
 
     def now(self) -> datetime.datetime:
-        elapsed = time.monotonic() - self._base_mono
-        return self._base_wall + datetime.timedelta(seconds=elapsed)
+        elapsed_ns = time.monotonic_ns() - self._base_mono_ns
+        return self._base_wall + datetime.timedelta(seconds=elapsed_ns / 1e9)
 
-    def get_time(self) -> float:
+    def get_time_monotonic(self) -> float:
         return time.monotonic()
+
+    def now_timestamp(self) -> float:
+        return self.now().timestamp()
+
+    def monotonic_ns_to_timestamps(self, mono_ns: int) -> float:
+        elapsed_ns = mono_ns - self._base_mono_ns
+        value = self._base_wall + datetime.timedelta(seconds=elapsed_ns / 1e9)
+        return value.timestamp()
 
     def time_in_future_seconds(self, seconds: int) -> datetime.datetime:
         return self.now() + datetime.timedelta(seconds=seconds)
@@ -49,6 +57,10 @@ class TimeUtils:
 
     def string_from_date(self, date: datetime.datetime) -> str:
         return date.strftime("%Y-%m-%d %H:%M:%S")
+
+    def string_from_timestamp(self, timestamp: float) -> str:
+        dt = datetime.datetime.fromtimestamp(timestamp)
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
 
     def filename_string_from_date(self, date: datetime.datetime) -> str:
         return date.strftime("%Y%m%d_%H%M%S")

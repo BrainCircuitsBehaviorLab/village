@@ -114,7 +114,7 @@ def run_rsync(
             preexec_fn=os.setsid,  # new process group for signal handling
         )
 
-        start_time = time_utils.get_time()
+        start_time = time_utils.get_time_monotonic()
         last_progress_time = start_time
 
         process_running = True
@@ -147,7 +147,7 @@ def run_rsync(
                     if output:
                         logging.info(output.strip())
                         last_progress_time = (
-                            time_utils.get_time()
+                            time_utils.get_time_monotonic()
                         )  # Reset progress timer
                 except Exception:
                     pass
@@ -159,7 +159,9 @@ def run_rsync(
                 break  # Success
 
             # If no progress for the timeout duration, assume it's stuck
-            if time_utils.get_time() - last_progress_time > 60:  # 60s no progress
+            if (
+                time_utils.get_time_monotonic() - last_progress_time > 60
+            ):  # 60s no progress
                 logging.warning("rsync seems stuck! Terminating...")
                 try:
                     # kill process group

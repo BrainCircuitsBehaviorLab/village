@@ -78,7 +78,7 @@ class BehaviorWindow(QOpenGLWidget):
 
     def start_drawing(self) -> None:
         self.active = True
-        self._start_timing = time_utils.get_time()
+        self._start_timing = time_utils.get_time_monotonic()
         if not self._swap_connected:
             self.frameSwapped.connect(self.update, Qt.ConnectionType.UniqueConnection)
             self._swap_connected = True
@@ -132,7 +132,7 @@ class BehaviorWindow(QOpenGLWidget):
                 pass
 
         # timing/frame
-        now = time_utils.get_time()
+        now = time_utils.get_time_monotonic()
         self.elapsed_time = now - self._start_timing
         self.frame += 1
 

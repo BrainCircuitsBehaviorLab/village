@@ -1454,7 +1454,7 @@ class VideoLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, rows=rows, columns=columns)
         self.deltas: list[float] = []
-        self.now = time_utils.get_time()
+        self.now = time_utils.get_time_monotonic()
         self.draw()
 
     def draw(self) -> None:
@@ -1680,7 +1680,7 @@ class VideoLayout(Layout):
 
     def next_frame_slot(self) -> None:
         last = self.now
-        self.now = time_utils.get_time()
+        self.now = time_utils.get_time_monotonic()
         delta = int((self.now - last) * 1000)
         self.deltas.append(delta)
 

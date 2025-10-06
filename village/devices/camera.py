@@ -83,6 +83,9 @@ class Camera(CameraBase):
             "FrameDurationLimits": (frame_duration, frame_duration),
             "AfMode": controls.AfModeEnum.Manual,
             "LensPosition": 0.0,
+            "AeEnable": False,
+            "AwbEnable": False,
+            "Sharpness": 0.0,
         }
         encoder_quality = Quality.VERY_LOW  # VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
 
@@ -122,7 +125,7 @@ class Camera(CameraBase):
         self.timings: list[int] = []
         self.trials: list[int] = []
         self.states: list[str] = []
-        self.timestamps: list[float] = []
+        self.pre_process_timestamps: list[float] = []
         self.x_positions: list[int] = []
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
@@ -161,7 +164,6 @@ class Camera(CameraBase):
 
         self.frame_number = 0
         self.chrono = time_utils.Chrono()
-        self.timestamp = ""
 
         self.masks: list[Any] = [-1, -1, -1, -1]
         self.counts: list[int] = [-1, -1, -1, -1]
@@ -178,7 +180,7 @@ class Camera(CameraBase):
         self.area4_alarm_timer = time_utils.Timer(3600)
         self.box_alarm_timer = time_utils.Timer(3600)
 
-        self.last_frame_time = time_utils.get_time()
+        self.pre_process_timestamp = time_utils.now_timestamp()
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
@@ -279,60 +281,84 @@ class Camera(CameraBase):
         self.trial = 0
         self.frames = []
         self.timings = []
-        self.timestamps = []
+        self.pre_process_timestamps = []
         self.camera_timestamps = []
         self.trials = []
         self.states = []
         self.frame_number = 0
-        self.timestamp = ""
         self.error = ""
         self.filename = ""
         self.chrono.reset()
-        self.last_frame_time = time_utils.get_time()
+        self.pre_process_timestamp = time_utils.now_timestamp()
+        self.camera_timestamp = self.pre_process_timestamp
 
     def save_csv(self) -> None:
         if self.path_csv == os.path.join(settings.get("VIDEOS_DIRECTORY"), "BOX.csv"):
             return
 
-        # if we stop when the last frame is being stored one of this lists
-        # may be one unit longer than the others, we remove the last element
-        min_length = min(
-            len(self.frames), len(self.timings), len(self.trials), len(self.states)
-        )
-
-        self.frames = self.frames[:min_length]
-        self.timings = self.timings[:min_length]
-        self.trials = self.trials[:min_length]
-        self.states = self.states[:min_length]
-
-        df = pd.DataFrame(
-            {
-                "frame": self.frames,
-                "ms": self.timings,
-                "trial": self.trials,
-                "state": self.states,
-            }
-        )
-
-        # if tracking is enabled, add timestamps and positions
         if self.tracking:
+            # if we stop when the last frame is being stored one of this lists
+            # may be one unit longer than the others, we remove the last element
             min_length = min(
-                len(df),
-                len(self.timestamps),
+                len(self.frames),
+                len(self.timings),
+                len(self.trials),
+                len(self.states),
+                len(self.pre_process_timestamps),
+                len(self.camera_timestamps),
                 len(self.x_positions),
                 len(self.y_positions),
-                len(self.camera_timestamps),
             )
-            self.timestamps = self.timestamps[:min_length]
+
+            self.frames = self.frames[:min_length]
+            self.timings = self.timings[:min_length]
+            self.trials = self.trials[:min_length]
+            self.states = self.states[:min_length]
+            self.pre_process_timestamps = self.pre_process_timestamps[:min_length]
+            self.camera_timestamps = self.camera_timestamps[:min_length]
             self.x_positions = self.x_positions[:min_length]
             self.y_positions = self.y_positions[:min_length]
+
+            df = pd.DataFrame(
+                {
+                    "frame": self.frames,
+                    "ms": self.timings,
+                    "trial": self.trials,
+                    "state": self.states,
+                    "pre_process_timestamp": self.pre_process_timestamps,
+                    "timestamp": self.camera_timestamps,
+                    "x_position": self.x_positions,
+                    "y_position": self.y_positions,
+                }
+            )
+
+        else:
+            min_length = min(
+                len(self.frames),
+                len(self.timings),
+                len(self.trials),
+                len(self.states),
+                len(self.pre_process_timestamps),
+                len(self.camera_timestamps),
+            )
+
+            self.frames = self.frames[:min_length]
+            self.timings = self.timings[:min_length]
+            self.trials = self.trials[:min_length]
+            self.states = self.states[:min_length]
+            self.pre_process_timestamps = self.pre_process_timestamps[:min_length]
             self.camera_timestamps = self.camera_timestamps[:min_length]
 
-            df = df.iloc[:min_length]
-            df["timestamp"] = self.timestamps
-            df["x_position"] = self.x_positions
-            df["y_position"] = self.y_positions
-            df["camera_timestamp"] = self.camera_timestamps
+            df = pd.DataFrame(
+                {
+                    "frame": self.frames,
+                    "ms": self.timings,
+                    "trial": self.trials,
+                    "state": self.states,
+                    "pre_process_timestamp": self.pre_process_timestamps,
+                    "timestamp": self.camera_timestamps,
+                }
+            )
 
         df.to_csv(self.path_csv, index=False, sep=";")
 
@@ -354,7 +380,7 @@ class Camera(CameraBase):
 
     def watchdog_tick(self) -> None:
         if (
-            time_utils.get_time() - self.last_frame_time > 10
+            time_utils.now_timestamp() - self.pre_process_timestamp > 10
         ):  # 10 seconds without a frame
             try:
                 self.restart_camera()
@@ -384,13 +410,15 @@ class Camera(CameraBase):
             self.change = False
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
-        self.timestamp = time_utils.now_string()
-        self.last_frame_time = time_utils.get_time()
+        self.pre_process_timestamp = time_utils.now_timestamp()
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:
                 metadata = request.get_metadata()
-                self.camera_timestamp = metadata["SensorTimestamp"] / 1e9
+                sensor_timestamp = metadata["SensorTimestamp"]
+                self.camera_timestamp = time_utils.monotonic_ns_to_timestamps(
+                    sensor_timestamp
+                )
                 self.get_gray_frame()
                 self.detect()
                 self.draw_detection()
@@ -649,7 +677,11 @@ class Camera(CameraBase):
             self.timing = 0
 
         text_trial = "trial: " + str(self.trial) if self.trial != 0 else ""
-        text_filename = self.filename if self.filename != "" else self.timestamp
+        text_filename = (
+            self.filename
+            if self.filename != ""
+            else time_utils.string_from_timestamp(self.pre_process_timestamp)
+        )
         text_frame = "frame: " + str(self.frame_number)
         text_timing = time_utils.format_duration(self.timing)
 
@@ -729,10 +761,10 @@ class Camera(CameraBase):
             self.timings.append(self.timing)
             self.trials.append(self.trial)
             self.states.append(self.state)
-            # self.timestamps.append(self.last_frame_time)
-            # self.x_positions.append(self.x_mean_value)
-            # self.y_positions.append(self.y_mean_value)
-            # self.camera_timestamps.append(self.camera_timestamp)
+            self.pre_process_timestamps.append(self.pre_process_timestamp)
+            self.x_positions.append(self.x_mean_value)
+            self.y_positions.append(self.y_mean_value)
+            self.camera_timestamps.append(self.camera_timestamp)
 
     def start_preview_window(self) -> QWidget:
         if self.cam._preview is not None:
