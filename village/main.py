@@ -112,6 +112,7 @@ def system_run(bevavior_window: QWidget) -> None:
     def background_checks() -> None:
         while True:
             time.sleep(1)
+            manager.update_cycle()
             if cam_corridor.chrono.get_seconds() > corridor_video_duration:
                 cam_corridor.stop_recording()
                 cam_corridor.start_recording()
@@ -120,6 +121,8 @@ def system_run(bevavior_window: QWidget) -> None:
                 manager.hourly_checks()
 
             if manager.cycle_change_detector.has_cycle_changed():
+                manager.update_cycle()
+                cam_corridor.change = True
                 manager.cycle_checks()
 
     background_thread = threading.Thread(target=background_checks, daemon=True)

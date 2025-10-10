@@ -82,10 +82,9 @@ class Camera(CameraBase):
             "NoiseReductionMode": controls.draft.NoiseReductionModeEnum.Fast,
             "FrameDurationLimits": (frame_duration, frame_duration),
             "AfMode": controls.AfModeEnum.Manual,
-            "LensPosition": 0.0,
-            "AeEnable": False,
-            "AwbEnable": False,
-            "Sharpness": 0.0,
+            "LensPosition": 1.0,
+            "Sharpness": 1.0,
+            "Contrast": 1.0,
         }
         encoder_quality = Quality.VERY_LOW  # VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
 
@@ -197,34 +196,37 @@ class Camera(CameraBase):
         self.thresholds: list[int] = []
         self.number_of_areas = 4
 
-        threshold_index = 4
-        if self.name == "CORRIDOR" and not manager.day:
-            threshold_index = 5
-
         for i in range(1, self.number_of_areas + 1):
             self.areas.append(settings.get("AREA" + str(i) + "_" + self.name)[0:4])
-            self.thresholds.append(
-                settings.get("AREA" + str(i) + "_" + self.name)[threshold_index]
-            )
+            self.thresholds.append(settings.get("AREA" + str(i) + "_" + self.name)[4])
 
         # areas active and allowed settings
         self.areas_active: list[bool] = []
         self.areas_allowed: list[bool] = []
+        self.areas_trigger: list[bool] = []
         if self.name == "CORRIDOR":
             self.areas_active = [True, True, True, True]
             self.areas_allowed = [True, True, True, True]
+            self.areas_trigger = [False, False, False, False]
         else:
             for i in range(1, self.number_of_areas + 1):
                 val = settings.get("USAGE" + str(i) + "_BOX")
                 if val == AreaActive.ALLOWED:
                     self.areas_active.append(True)
                     self.areas_allowed.append(True)
+                    self.areas_trigger.append(True)
+                elif val == AreaActive.TRIGGER:
+                    self.areas_active.append(True)
+                    self.areas_allowed.append(True)
+                    self.areas_trigger.append(True)
                 elif val == AreaActive.NOT_ALLOWED:
                     self.areas_active.append(True)
                     self.areas_allowed.append(False)
+                    self.areas_trigger.append(True)
                 else:
                     self.areas_active.append(False)
                     self.areas_allowed.append(False)
+                    self.areas_trigger.append(True)
 
         # detection settings
         self.zero_or_one_mouse = settings.get("DETECTION_OF_MOUSE_" + self.name)[0]
@@ -234,6 +236,24 @@ class Camera(CameraBase):
             self.tracking = settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON
         else:
             self.tracking = False
+
+        # lens position, sharpness and contrast settings
+        if self.name == "CORRIDOR" and manager.day:
+            lensposition = settings.get("LENS_POSITION_" + self.name)[0]
+            sharpness = settings.get("SHARPNESS_" + self.name)[0]
+            contrast = settings.get("CONTRAST_" + self.name)[0]
+        elif self.name == "CORRIDOR":
+            lensposition = settings.get("LENS_POSITION_" + self.name)[1]
+            sharpness = settings.get("SHARPNESS_" + self.name)[1]
+            contrast = settings.get("CONTRAST_" + self.name)[1]
+        else:
+            lensposition = settings.get("LENS_POSITION_" + self.name)
+            sharpness = settings.get("SHARPNESS_" + self.name)
+            contrast = settings.get("CONTRAST_" + self.name)
+
+        self.cam.set_controls({"LensPosition": lensposition})
+        self.cam.set_controls({"Sharpness": sharpness})
+        self.cam.set_controls({"Contrast": contrast})
 
     def start_camera(self) -> None:
         self.cam.start()
@@ -361,17 +381,6 @@ class Camera(CameraBase):
             )
 
         df.to_csv(self.path_csv, index=False, sep=";")
-
-    def change_focus(self, lensposition: float) -> None:
-        assert (
-            lensposition <= 10 and lensposition >= 0
-        ), "lensposition must be a value between 0 and 10"
-        self.cam.set_controls({"LensPosition": lensposition})
-
-    def change_framerate(self, framerate: int):
-        limit = int(1000000.0 / float(framerate))
-        # limit is both min and max number of microseconds for each frame
-        self.cam.set_controls({"FrameDurationLimits": (limit, limit)})
 
     def print_info_about_config(self) -> None:
         print("INFO ABOUT THE " + self.name + " CAM CONFIGURATION:")
@@ -646,30 +655,32 @@ class Camera(CameraBase):
             self.color_rectangle,
             -1,
         )
-        for i in range(self.number_of_areas):
-            if self.areas_active[i]:
-                cv2.rectangle(
-                    self.frame,
-                    (self.areas[i][0], self.areas[i][1]),
-                    (self.areas[i][2], self.areas[i][3]),
-                    self.color_areas[i],
-                    self.thickness_line,
-                )
-                if not self.areas_allowed[i]:
-                    cv2.line(
+
+        if self.view_detection:
+            for i in range(self.number_of_areas):
+                if self.areas_active[i]:
+                    cv2.rectangle(
                         self.frame,
                         (self.areas[i][0], self.areas[i][1]),
                         (self.areas[i][2], self.areas[i][3]),
                         self.color_areas[i],
                         self.thickness_line,
                     )
-                    cv2.line(
-                        self.frame,
-                        (self.areas[i][2], self.areas[i][1]),
-                        (self.areas[i][0], self.areas[i][3]),
-                        self.color_areas[i],
-                        self.thickness_line,
-                    )
+                    if not self.areas_allowed[i]:
+                        cv2.line(
+                            self.frame,
+                            (self.areas[i][0], self.areas[i][1]),
+                            (self.areas[i][2], self.areas[i][3]),
+                            self.color_areas[i],
+                            self.thickness_line,
+                        )
+                        cv2.line(
+                            self.frame,
+                            (self.areas[i][2], self.areas[i][1]),
+                            (self.areas[i][0], self.areas[i][3]),
+                            self.color_areas[i],
+                            self.thickness_line,
+                        )
 
     def write_texts(self) -> None:
         if not self.show_time_info:
@@ -762,9 +773,10 @@ class Camera(CameraBase):
             self.trials.append(self.trial)
             self.states.append(self.state)
             self.pre_process_timestamps.append(self.pre_process_timestamp)
+            self.camera_timestamps.append(self.camera_timestamp)
+        if self.tracking:
             self.x_positions.append(self.x_mean_value)
             self.y_positions.append(self.y_mean_value)
-            self.camera_timestamps.append(self.camera_timestamp)
 
     def start_preview_window(self) -> QWidget:
         if self.cam._preview is not None:

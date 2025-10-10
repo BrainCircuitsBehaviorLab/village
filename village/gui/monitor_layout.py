@@ -58,51 +58,75 @@ class LabelButtons:
 
         self.mapping_dict_index = {
             "left": 0,
-            "empty_limit": 0,
             "top": 1,
-            "subject_limit": 1,
             "right": 2,
             "bottom": 3,
             "threshold": 4,
-            "threshold_day": 4,
-            "threshold_night": 5,
-            "grams": -1,
+            "empty_limit": 0,
+            "subject_limit": 1,
+            "lens_position_day": 0,
+            "lens_position_night": 1,
+            "lens_position": -1,
+            "sharpness_day": 0,
+            "sharpness_night": 1,
+            "sharpness": -1,
+            "contrast_day": 0,
+            "contrast_night": 1,
+            "contrast": -1,
         }
         self.mapping_dict_max = {
             "left": width_res,
-            "empty_limit": 1000000,
             "top": height_res,
-            "subject_limit": 1000000,
             "right": width_res,
             "bottom": height_res,
             "threshold": 255,
-            "threshold_day": 255,
-            "threshold_night": 255,
-            "grams": 1000,
+            "empty_limit": 1000000,
+            "subject_limit": 1000000,
+            "lens_position_day": 10,
+            "lens_position_night": 10,
+            "lens_position": 10,
+            "sharpness_day": 16,
+            "sharpness_night": 16,
+            "sharpness": 16,
+            "contrast_day": 32,
+            "contrast_night": 32,
+            "contrast": 32,
         }
         self.mapping_dict_increase = {
             "left": "\u2192",
-            "empty_limit": "\u2191",
             "top": "\u2193",
-            "subject_limit": "\u2191",
             "right": "\u2192",
             "bottom": "\u2193",
             "threshold": "\u2191",
-            "threshold_day": "\u2191",
-            "threshold_night": "\u2191",
-            "grams": "\u2191",
+            "empty_limit": "\u2191",
+            "subject_limit": "\u2191",
+            "lens_position_day": "\u2191",
+            "lens_position_night": "\u2191",
+            "lens_position": "\u2191",
+            "sharpness_day": "\u2191",
+            "sharpness_night": "\u2191",
+            "sharpness": "\u2191",
+            "contrast_day": "\u2191",
+            "contrast_night": "\u2191",
+            "contrast": "\u2191",
         }
         self.mapping_dict_decrease = {
             "left": "\u2190",
-            "empty_limit": "\u2193",
             "top": "\u2191",
-            "subject_limit": "\u2193",
             "right": "\u2190",
             "bottom": "\u2191",
             "threshold": "\u2193",
-            "threshold_day": "\u2193",
-            "threshold_night": "\u2193",
-            "grams": "\u2193",
+            "empty_limit": "\u2193",
+            "subject_limit": "\u2193",
+            "lens_position_day": "\u2193",
+            "lens_position_night": "\u2193",
+            "lens_position": "\u2193",
+            "sharpness_day": "\u2193",
+            "sharpness_night": "\u2193",
+            "sharpness": "\u2193",
+            "contrast_day": "\u2193",
+            "contrast_night": "\u2193",
+            "contrast": "\u2193",
         }
 
         self.index: int = self.mapping_dict_index[direction]
@@ -168,9 +192,18 @@ class LabelButtons:
                 >= settings.get(self.name)[self.mapping_dict_index["bottom"]]
             ):
                 return
-            else:
+            elif self.direction in [
+                "right",
+                "bottom",
+                "threshold",
+                "empty_limit",
+                "subject_limit",
+            ]:
                 self.label_value += 1
-                self.label3.setText(str(self.label_value))
+            else:
+                self.label_value += 0.1
+                self.label_value = round(self.label_value, 1)
+            self.label3.setText(str(self.label_value))
 
     def decrease_value(self) -> None:
         if self.label_value > 0:
@@ -184,9 +217,24 @@ class LabelButtons:
                 <= settings.get(self.name)[self.mapping_dict_index["top"]]
             ):
                 return
-            else:
+            elif self.direction in [
+                "left",
+                "top",
+                "threshold",
+                "empty_limit",
+                "subject_limit",
+            ]:
                 self.label_value -= 1
-                self.label3.setText(str(self.label_value))
+            elif (
+                self.direction in ["contrast_day", "contrast_night", "contrast"]
+                and self.label_value <= 1
+            ):
+                return
+
+            else:
+                self.label_value -= 0.1
+                self.label_value = round(self.label_value, 1)
+            self.label3.setText(str(self.label_value))
 
     def start_increasing(self) -> None:
         self.increase_value()
@@ -202,7 +250,7 @@ class LabelButtons:
         self.timer_increase2.stop()
         self.timer_decrease2.stop()
 
-        if self.name == "SCALE_WEIGHT_TO_CALIBRATE":
+        if self.name in ["LENS_POSITION_BOX", "SHARPNESS_BOX", "CONTRAST_BOX"]:
             settings.set(self.name, self.label_value)
         else:
             coords = settings.get(self.name)
@@ -210,25 +258,8 @@ class LabelButtons:
             coords[self.index] = int(self.label_value)
             settings.set(self.name, coords)
 
-            if self.name == "AREA1_CORRIDOR":
-                cam_corridor.area1 = coords
-            elif self.name == "AREA2_CORRIDOR":
-                cam_corridor.area2 = coords
-            elif self.name == "AREA3_CORRIDOR":
-                cam_corridor.area3 = coords
-            elif self.name == "AREA4_CORRIDOR":
-                cam_corridor.area4 = coords
-            elif self.name == "AREA1_BOX":
-                cam_box.area1 = coords
-            elif self.name == "AREA2_BOX":
-                cam_box.area2 = coords
-            elif self.name == "AREA3_BOX":
-                cam_box.area3 = coords
-            elif self.name == "AREA4_BOX":
-                cam_box.area4 = coords
-
-            cam_corridor.change = True
-            cam_box.change = True
+        cam_corridor.change = True
+        cam_box.change = True
 
 
 class MonitorLayout(Layout):
@@ -241,7 +272,6 @@ class MonitorLayout(Layout):
         rectangle.setStyleSheet("background-color: lightgray;")
         self.addWidget(rectangle, 5, 0, 30, 200)
 
-        self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
 
         self.monitor_button.setDisabled(True)
@@ -453,7 +483,6 @@ class MonitorLayout(Layout):
 class MotorLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
         self.draw()
 
@@ -687,7 +716,6 @@ class MotorLayout(Layout):
 class PortsLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
         self.draw()
 
@@ -749,7 +777,6 @@ class PortsLayout(Layout):
 class VirtualMouseLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
         self.draw()
 
@@ -837,7 +864,6 @@ class VirtualMouseLayout(Layout):
 class FunctionsLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self.lbs: list[LabelButtons] = []
         self.buttons: list[QPushButton] = []
         self.draw()
 
@@ -874,20 +900,20 @@ class CorridorLayout(Layout):
 
     def draw(self) -> None:
         self.lbs: list[LabelButtons] = []
-        self.buttons: list[QPushButton] = []
 
         self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
         self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 121)
 
         self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 2, self.color_area1_str)
-        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 22, self.color_area2_str)
-        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 42, self.color_area3_str)
-        self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 62, self.color_area4_str)
+        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 21, self.color_area2_str)
+        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 40, self.color_area3_str)
+        self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 59, self.color_area4_str)
 
-        self.draw_area_buttons_box("AREA1_BOX", 2, 121, self.color_area1_str)
-        self.draw_area_buttons_box("AREA2_BOX", 2, 141, self.color_area2_str)
-        self.draw_area_buttons_box("AREA3_BOX", 2, 161, self.color_area3_str)
-        self.draw_area_buttons_box("AREA4_BOX", 2, 181, self.color_area4_str)
+        self.draw_area_buttons_box("AREA1_BOX", 2, 127, self.color_area1_str)
+        self.draw_area_buttons_box("AREA2_BOX", 2, 146, self.color_area2_str)
+        self.draw_area_buttons_box("AREA3_BOX", 2, 165, self.color_area3_str)
+        self.draw_area_buttons_box("AREA4_BOX", 2, 184, self.color_area4_str)
+        self.draw_camera_options()
 
         key = "USAGE1_BOX"
         possible_values = settings.get_values(key)
@@ -895,8 +921,8 @@ class CorridorLayout(Layout):
         self.area1_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            120,
-            19,
+            127,
+            16,
             2,
             possible_values,
             index,
@@ -910,8 +936,8 @@ class CorridorLayout(Layout):
         self.area2_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            140,
-            19,
+            146,
+            16,
             2,
             possible_values,
             index,
@@ -925,8 +951,8 @@ class CorridorLayout(Layout):
         self.area3_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            160,
-            19,
+            165,
+            16,
             2,
             possible_values,
             index,
@@ -940,8 +966,8 @@ class CorridorLayout(Layout):
         self.area4_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            180,
-            19,
+            184,
+            16,
             2,
             possible_values,
             index,
@@ -985,7 +1011,7 @@ class CorridorLayout(Layout):
         return
 
     def draw_mice_buttons(self, name: str, row: int, column: int) -> None:
-        width = 9
+        width = 8
         for direction in ("empty_limit", "subject_limit"):
             lb = LabelButtons(name, direction, row, column, width, "black", self)
             self.lbs.append(lb)
@@ -1001,10 +1027,9 @@ class CorridorLayout(Layout):
             "right",
             "top",
             "bottom",
-            "threshold_day",
-            "threshold_night",
+            "threshold",
         ):
-            lb = LabelButtons(name, direction, row, column, 9, color, self)
+            lb = LabelButtons(name, direction, row, column, 6, color, self)
             self.lbs.append(lb)
             row += 2
 
@@ -1027,7 +1052,7 @@ class CorridorLayout(Layout):
                 direction,
                 row,
                 column,
-                9,
+                6,
                 color,
                 self,
                 width_res=width_res,
@@ -1035,6 +1060,99 @@ class CorridorLayout(Layout):
             )
             self.lbs.append(lb)
             row += 2
+
+    def draw_camera_options(self) -> None:
+        row = 2
+        column = 79
+        width = 12
+        color = "black"
+
+        self.label_corridor: Label = self.create_and_add_label(
+            "CORRIDOR ADJUSTMENTS", row, column, 17, 2, color
+        )
+        row += 2
+
+        for direction in ("lens_position_day", "lens_position_night"):
+            lb = LabelButtons(
+                "LENS_POSITION_CORRIDOR",
+                direction,
+                row,
+                column,
+                width,
+                color,
+                self,
+            )
+            self.lbs.append(lb)
+            row += 2
+        for direction in ("sharpness_day", "sharpness_night"):
+            lb = LabelButtons(
+                "SHARPNESS_CORRIDOR",
+                direction,
+                row,
+                column,
+                width,
+                color,
+                self,
+            )
+            self.lbs.append(lb)
+            row += 2
+        for direction in ("contrast_day", "contrast_night"):
+            lb = LabelButtons(
+                "CONTRAST_CORRIDOR",
+                direction,
+                row,
+                column,
+                width,
+                color,
+                self,
+            )
+            self.lbs.append(lb)
+            row += 2
+
+        row = 2
+        column = 104
+        width = 9
+
+        self.label_box: Label = self.create_and_add_label(
+            "BOX ADJUSTMENTS", row, column, 17, 2, color
+        )
+        row += 2
+
+        lb = LabelButtons(
+            "LENS_POSITION_BOX",
+            "lens_position",
+            row,
+            column,
+            width,
+            color,
+            self,
+        )
+        self.lbs.append(lb)
+        row += 2
+
+        lb = LabelButtons(
+            "SHARPNESS_BOX",
+            "sharpness",
+            row,
+            column,
+            width,
+            color,
+            self,
+        )
+        self.lbs.append(lb)
+        row += 2
+
+        lb = LabelButtons(
+            "CONTRAST_BOX",
+            "contrast",
+            row,
+            column,
+            width,
+            color,
+            self,
+        )
+        self.lbs.append(lb)
+        row += 2
 
     def toggle_area1_box(self, value: str, key: str) -> None:
         settings.set(key, value)

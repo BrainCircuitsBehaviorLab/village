@@ -185,12 +185,6 @@ class CameraBase:
     def stop_recording(self) -> None:
         return
 
-    def change_focus(self, lensposition) -> None:
-        return
-
-    def change_framerate(self, framerate) -> None:
-        return
-
     def print_info_about_config(self) -> None:
         return
 

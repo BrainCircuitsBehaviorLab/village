@@ -681,7 +681,7 @@ class Manager:
                 + ", ".join(low_water_subs)
             )
         if not sync and settings.get("SYNC_TYPE") != SyncType.OFF:
-            log.alarm("No sync in the last 24 hours.")
+            log.alarm("No data sync in the last 24 hours.")
         self.change_cycle_flag = True
 
     def create_report(

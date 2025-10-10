@@ -391,6 +391,7 @@ class SettingsLayout(Layout):
             manager.cycle_change_detector = time_utils.CycleChangeDetector(
                 settings.get("DAYTIME"), settings.get("NIGHTTIME")
             )
+            manager.update_cycle()
 
         for i, toggle_button in enumerate(self.toggle_buttons):
             s = self.toggle_buttons_settings[i]

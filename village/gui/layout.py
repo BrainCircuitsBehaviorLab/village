@@ -324,7 +324,6 @@ class Layout(QGridLayout):
         self.update_status_label_buttons()
 
     def update_status_label_buttons(self) -> None:
-        manager.update_cycle()
         manager.update_text()
         self.status_label.setText(manager.text)
         if manager.state.can_stop_task():

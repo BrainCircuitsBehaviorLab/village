@@ -172,6 +172,11 @@ class Settings:
                     return list(map(int, self.saved_settings.value(key)))
                 except ValueError:
                     return [0] * len(self.saved_settings.value(key))
+            elif type == list[float]:
+                try:
+                    return list(map(float, self.saved_settings.value(key)))
+                except ValueError:
+                    return [0.0] * len(self.saved_settings.value(key))
             elif type == list[Active]:
                 return [Active(v) for v in self.saved_settings.value(key)]
             else:

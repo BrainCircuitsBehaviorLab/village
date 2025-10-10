@@ -478,35 +478,35 @@ a different version, please update it by following the instructions at sanworks.
 camera_settings = [
     Setting(
         "AREA1_CORRIDOR",
-        [100, 300, 200, 350, 100, 100],
+        [100, 300, 200, 350, 100],
         list[int],
         """The first area of the corridor, located between the homecage and the first
-door. Values include left, top, right, and bottom coordinates, as well as detection
-thresholds for daytime and nighttime.""",
+door. Values include left, top, right, and bottom coordinates, along with the
+detection threshold.""",
     ),
     Setting(
         "AREA2_CORRIDOR",
-        [200, 300, 300, 350, 100, 100],
+        [200, 300, 300, 350, 100],
         list[int],
         """The second area of the corridor, located between the first door and the
-area3. Values include left, top, right, and bottom coordinates, as well as detection
-thresholds for daytime and nighttime.""",
+area3. Values include left, top, right, and bottom coordinates, along with the
+detection threshold.""",
     ),
     Setting(
         "AREA3_CORRIDOR",
-        [300, 300, 400, 350, 100, 100],
+        [300, 300, 400, 350, 100],
         list[int],
         """The third area of the corridor, located between the area2 and the second
-door. Values include left, top, right, and bottom coordinates, as well as detection
-thresholds for daytime and nighttime.""",
+door. Values include left, top, right, and bottom coordinates, along with the
+detection threshold.""",
     ),
     Setting(
         "AREA4_CORRIDOR",
-        [400, 300, 500, 350, 100, 100],
+        [400, 300, 500, 350, 100],
         list[int],
         """The fourth area of the corridor, located between the second door and the
-behavioral box. Values include left, top, right, and bottom coordinates, as well as
-detection thresholds for daytime and nighttime.""",
+behavioral box. Values include left, top, right, and bottom coordinates, along with the
+detection threshold.""",
     ),
     Setting(
         "AREA1_BOX",
@@ -593,6 +593,42 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
         "ON",
         Active,
         "Preview the pixel detection on the image.",
+    ),
+    Setting(
+        "LENS_POSITION_CORRIDOR",
+        [1.0, 1.0],
+        list[float],
+        "The lens position of the corridor camera (day, night).",
+    ),
+    Setting(
+        "LENS_POSITION_BOX",
+        1.0,
+        float,
+        "The lens position of the box camera.",
+    ),
+    Setting(
+        "SHARPNESS_CORRIDOR",
+        [1.0, 1.0],
+        list[float],
+        "The sharpness of the corridor camera (day, night).",
+    ),
+    Setting(
+        "SHARPNESS_BOX",
+        1.0,
+        float,
+        "The sharpness of the box camera.",
+    ),
+    Setting(
+        "CONTRAST_CORRIDOR",
+        [1.0, 1.0],
+        list[float],
+        "The contrast of the corridor camera (day, night).",
+    ),
+    Setting(
+        "CONTRAST_BOX",
+        1.0,
+        float,
+        "The contrast of the box camera.",
     ),
 ]
 

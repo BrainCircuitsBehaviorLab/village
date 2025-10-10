@@ -54,6 +54,7 @@ class ScreenActive(SuperEnum):
 class AreaActive(SuperEnum):
     ALLOWED = "ALLOWED"
     NOT_ALLOWED = "NOT_ALLOWED"
+    TRIGGER = "TRIGGER"
     OFF = "OFF"
 
 
