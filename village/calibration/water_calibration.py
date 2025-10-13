@@ -1,4 +1,4 @@
-from village.classes.task import Event, Task
+from village.custom_classes.task import Event, Task
 
 
 class WaterCalibration(Task):

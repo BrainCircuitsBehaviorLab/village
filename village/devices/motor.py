@@ -3,7 +3,7 @@ import time
 import traceback
 
 from village.classes.abstract_classes import MotorBase
-from village.log import log
+from village.scripts.log import log
 from village.settings import settings
 
 

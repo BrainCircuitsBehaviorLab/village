@@ -28,10 +28,10 @@ from village.devices.motor import motor1, motor2
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
-from village.log import log
 from village.manager import manager
 from village.plots.corridor_plot import corridor_plot
-from village.plots.create_pixmap import create_pixmap
+from village.scripts.log import log
+from village.scripts.utils import create_pixmap
 from village.settings import settings
 
 if TYPE_CHECKING:
@@ -886,7 +886,9 @@ class FunctionsLayout(Layout):
         try:
             manager.functions[i]()
         except Exception:
-            log.error("Can not run function" + str(i), exception=traceback.format_exc())
+            log.error(
+                "Error running function" + str(i), exception=traceback.format_exc()
+            )
 
 
 class CorridorLayout(Layout):
@@ -921,7 +923,7 @@ class CorridorLayout(Layout):
         self.area1_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            127,
+            126,
             16,
             2,
             possible_values,
@@ -936,7 +938,7 @@ class CorridorLayout(Layout):
         self.area2_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            146,
+            145,
             16,
             2,
             possible_values,
@@ -951,7 +953,7 @@ class CorridorLayout(Layout):
         self.area3_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            165,
+            164,
             16,
             2,
             possible_values,
@@ -966,7 +968,7 @@ class CorridorLayout(Layout):
         self.area4_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            184,
+            183,
             16,
             2,
             possible_values,

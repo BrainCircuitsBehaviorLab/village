@@ -10,9 +10,9 @@ from village.classes.enums import Active, Controller, ScreenActive, State, SyncT
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.sound_device import get_sound_devices
 from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
-from village.log import log
 from village.manager import manager
 from village.scripts import utils
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import Setting, settings
 
@@ -719,7 +719,9 @@ class SettingsLayout(Layout):
             modify = "SCREEN SETTINGS"
         elif value == "TOUCHSCREEN" and key == "USE_SCREEN":
             modify = "TOUCHSCREEN SETTINGS"
-        elif value == "OTHER" and key == "BEHAVIOR_CONTROLLER":
+        elif value == "ARDUINO" and key == "BEHAVIOR_CONTROLLER":
+            self.delete_optional_widgets("BPOD SETTINGS")
+        elif value == "RASPBERRY" and key == "BEHAVIOR_CONTROLLER":
             self.delete_optional_widgets("BPOD SETTINGS")
         elif value == "BPOD" and key == "BEHAVIOR_CONTROLLER":
             modify = "BPOD SETTINGS"

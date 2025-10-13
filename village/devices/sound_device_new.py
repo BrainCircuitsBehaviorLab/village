@@ -10,7 +10,7 @@ from scipy.io import wavfile
 
 from village.classes.abstract_classes import SoundDeviceBase
 from village.classes.enums import Active
-from village.log import log
+from village.scripts.log import log
 from village.settings import settings
 
 

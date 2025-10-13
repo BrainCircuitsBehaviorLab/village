@@ -426,7 +426,8 @@ controller_settings = [
         "BPOD",
         Controller,
         """The controller used to run the behavioral box. The options are:
-        BPOD: The Bpod controller. OTHER: A custom controller that can be Arduino based.
+        BPOD: The Bpod controller. ARDUINO: A custom controller that can be
+        Arduino based. RASPBERRY: No need for an external controller.
         """,
     ),
     Setting(

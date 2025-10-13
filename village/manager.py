@@ -13,8 +13,6 @@ import pandas as pd
 import requests  # type: ignore
 
 from village.classes.abstract_classes import BehaviorWindowBase, CameraBase
-from village.classes.after_session import AfterSessionBase
-from village.classes.change_cycle import ChangeCycleBase
 from village.classes.collection import Collection
 from village.classes.enums import (
     Actions,
@@ -26,17 +24,18 @@ from village.classes.enums import (
     State,
     SyncType,
 )
-from village.classes.plot import (
-    OnlinePlotBase,
-    SessionPlotBase,
-    SubjectPlotBase,
-)
 from village.classes.subject import Subject
-from village.classes.task import Task
-from village.classes.training import TrainingProtocolBase
+from village.custom_classes.after_session_base import AfterSessionBase
+from village.custom_classes.camera_trigger_base import CameraTriggerBase
+from village.custom_classes.change_cycle_base import ChangeCycleBase
+from village.custom_classes.online_plot_base import OnlinePlotBase
+from village.custom_classes.session_plot_base import SessionPlotBase
+from village.custom_classes.subject_plot_base import SubjectPlotBase
+from village.custom_classes.task import Task
+from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.devices.temp_sensor import temp_sensor
-from village.log import log
 from village.scripts import utils
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -79,6 +78,7 @@ class Manager:
         self.online_plot: OnlinePlotBase = OnlinePlotBase()
         self.after_session: AfterSessionBase = AfterSessionBase()
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
+        self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.error_stop: bool = False
@@ -219,12 +219,14 @@ class Manager:
         online_plot_found = 0
         after_session_found = 0
         change_cycle_found = 0
+        camera_trigger_found = 0
         training_correct = False
         session_plot_correct = False
         subject_plot_correct = False
         online_plot_correct = False
         after_session_correct = False
         change_cycle_correct = False
+        camera_trigger_correct = False
         functions_path = ""
         sound_path = ""
 
@@ -326,6 +328,14 @@ class Manager:
                             y = cls()
                             self.change_cycle = y
                             change_cycle_correct = True
+                    elif (
+                        issubclass(cls, CameraTriggerBase) and cls != CameraTriggerBase
+                    ):
+                        camera_trigger_found += 1
+                        if camera_trigger_found == 1:
+                            z = cls()
+                            self.camera_trigger = z
+                            camera_trigger_correct = True
 
             except Exception:
                 log.error(
@@ -368,6 +378,12 @@ class Manager:
             log.info("Custom Change Cycle Run successfully imported")
         elif change_cycle_found > 1:
             log.error("Multiple Change Cycle Run found")
+        if camera_trigger_found == 0:
+            log.info("Custom Camera Trigger not found, using default")
+        elif camera_trigger_found == 1 and camera_trigger_correct:
+            log.info("Custom Camera Trigger successfully imported")
+        elif camera_trigger_found > 1:
+            log.error("Multiple Camera Trigger found")
         self.tasks = dict(sorted(tasks.items()))
         number_of_tasks = len(tasks)
         if number_of_tasks == 0:
@@ -805,6 +821,14 @@ class Manager:
             log.alarm("Low disk space (less than 10GB)")
 
         self.send_heartbeat()
+
+    def run_softcode_fuction(self, number: int) -> None:
+        try:
+            self.functions[number]()
+        except Exception:
+            log.error(
+                "Error running function" + str(number), exception=traceback.format_exc()
+            )
 
 
 manager = Manager()

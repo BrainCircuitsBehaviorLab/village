@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 
 from village.classes.abstract_classes import EventBase
-from village.classes.training import TrainingProtocolBase
-from village.log import log
+from village.custom_classes.training_protocol_base import TrainingProtocolBase
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.scripts.utils import get_x_value_interp
 from village.settings import settings

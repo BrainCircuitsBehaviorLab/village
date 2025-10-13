@@ -7,7 +7,7 @@ import numpy as np
 import smbus2
 
 from village.classes.abstract_classes import ScaleBase
-from village.log import log
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 

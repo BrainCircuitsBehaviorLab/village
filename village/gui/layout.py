@@ -22,8 +22,8 @@ from PyQt5.QtWidgets import (
 )
 
 from village.classes.enums import DataTable
-from village.log import log
 from village.manager import manager
+from village.scripts.log import log
 from village.settings import settings
 
 if TYPE_CHECKING:

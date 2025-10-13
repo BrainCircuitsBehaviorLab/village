@@ -13,12 +13,12 @@ from PyQt5.QtWidgets import QLabel, QMessageBox, QPushButton, QScrollArea, QWidg
 from village.calibration.water_calibration import WaterCalibration
 from village.classes.enums import State
 from village.gui.layout import Label, Layout, LineEdit
-from village.log import log
 from village.manager import manager
-from village.plots.create_pixmap import create_pixmap
 from village.plots.water_calibration_plot import water_calibration_plot
 from village.scripts import utils
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
+from village.scripts.utils import create_pixmap
 from village.settings import settings
 
 if TYPE_CHECKING:

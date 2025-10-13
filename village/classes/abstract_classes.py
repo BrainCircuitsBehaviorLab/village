@@ -158,13 +158,19 @@ class CameraBase:
     area3: list[int] = []
     area4: list[int] = []
     areas: list[list[int]] = []
+    area1_is_triggered: bool = False
+    area2_is_triggered: bool = False
+    area3_is_triggered: bool = False
+    area4_is_triggered: bool = False
     change: bool = False
-    state: str = ""
+    annotation: str = ""
     path_picture: str = ""
     error: str = "Error connecting to the camera "
     trial: int = -1
     is_recording: bool = False
     show_time_info: bool = False
+    x_position: int = -1
+    y_position: int = -1
     chrono = time_utils.Chrono()
 
     def start_camera(self) -> None:
@@ -191,7 +197,7 @@ class CameraBase:
     def pre_process(self, request) -> None:
         return
 
-    def log(self, text: str) -> None:
+    def write_text(self, text: str) -> None:
         return
 
     def areas_corridor_ok(self) -> bool:

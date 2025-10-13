@@ -5,8 +5,8 @@ import traceback
 from typing import Any, Callable
 
 from village.classes.abstract_classes import PyBpodBase
-from village.log import log
 from village.pybpodapi.protocol import Bpod, StateMachine
+from village.scripts.log import log
 from village.scripts.parse_bpod_messages import (
     parse_input_to_tuple_override,
     parse_output_to_tuple_override,

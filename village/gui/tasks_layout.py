@@ -19,14 +19,14 @@ from PyQt5.QtWidgets import (
 
 from village.classes.enums import State
 from village.classes.subject import Subject
-from village.classes.task import Task
+from village.custom_classes.task import Task
 from village.gui.layout import Layout
-from village.log import log
 from village.manager import manager
+from village.scripts.log import log
 from village.settings import settings
 
 if TYPE_CHECKING:
-    from village.classes.task import Task
+    from village.custom_classes.task import Task
     from village.gui.gui_window import GuiWindow
     from village.gui.layout import LineEdit, PushButton
 

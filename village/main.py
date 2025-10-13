@@ -47,8 +47,8 @@ from village.devices.sound_device_new import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
-from village.log import log
 from village.manager import manager
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -62,10 +62,6 @@ except PermissionError:
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
-# configure the logging of libcamera (the C++ library picamera2 uses)
-# '0' = DEBUG, '1' = INFO, '2' = WARNING, '3' = ERROR, '4' = FATAL
-# os.environ["LIBCAMERA_LOG_LEVELS"] = "3" # TODO does not work
-# os.environ["LIBCAMERA_LOG_FILE"] = "camera_errors2.log" # TODO does not work
 
 # to debug segfaults uncomment the following lines
 # import faulthandler

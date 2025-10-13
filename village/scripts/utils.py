@@ -4,15 +4,19 @@ import shutil
 import subprocess
 import traceback
 from datetime import datetime
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+from matplotlib.figure import Figure
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLayout
 from scipy.interpolate import PchipInterpolator
 
-from village.log import log
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -383,3 +387,16 @@ def get_x_value_interp(x, y, y_target) -> float | None:
     best_idx = int(np.argmin(diffs))
 
     return round(float(x_fit[best_idx]), 4)
+
+
+def create_pixmap(fig: Figure) -> QPixmap:
+    try:
+        buf = BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        pixmap = QPixmap()
+        pixmap.loadFromData(buf.getvalue())
+        plt.close(fig)
+        return pixmap
+    except Exception:
+        return QPixmap()

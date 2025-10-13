@@ -23,8 +23,8 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.abstract_classes import CameraBase
-from village.log import log
 from village.manager import manager
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import Color, settings
 
@@ -113,22 +113,20 @@ class Camera(CameraBase):
         self.color_areas = [color_area1, color_area2, color_area3, color_area4]
         self.color_rectangle = (255, 255, 255)
         self.color_text = (0, 0, 0)
-        self.color_state = (80, 80, 80)
         self.change = True
-        self.state = ""
+        self.annotation = ""
         self.trial = 0
         self.tracking = False
-        self.x_mean_position = -1
-        self.y_mean_position = -1
+        self.x_position = -1
+        self.y_position = -1
         self.frames: list[int] = []
         self.timings: list[int] = []
         self.trials: list[int] = []
-        self.states: list[str] = []
-        self.pre_process_timestamps: list[float] = []
+        self.annotations: list[str] = []
         self.x_positions: list[int] = []
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
-        self.camera_timestamp = 0.0
+        self.pre_process_timestamps: list[float] = []
 
         if self.change:
             self.set_properties()
@@ -180,6 +178,7 @@ class Camera(CameraBase):
         self.box_alarm_timer = time_utils.Timer(3600)
 
         self.pre_process_timestamp = time_utils.now_timestamp()
+        self.camera_timestamp = self.pre_process_timestamp
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
@@ -204,6 +203,11 @@ class Camera(CameraBase):
         self.areas_active: list[bool] = []
         self.areas_allowed: list[bool] = []
         self.areas_trigger: list[bool] = []
+        self.area1_is_triggered = False
+        self.area2_is_triggered = False
+        self.area3_is_triggered = False
+        self.area4_is_triggered = False
+
         if self.name == "CORRIDOR":
             self.areas_active = [True, True, True, True]
             self.areas_allowed = [True, True, True, True]
@@ -214,7 +218,7 @@ class Camera(CameraBase):
                 if val == AreaActive.ALLOWED:
                     self.areas_active.append(True)
                     self.areas_allowed.append(True)
-                    self.areas_trigger.append(True)
+                    self.areas_trigger.append(False)
                 elif val == AreaActive.TRIGGER:
                     self.areas_active.append(True)
                     self.areas_allowed.append(True)
@@ -222,11 +226,11 @@ class Camera(CameraBase):
                 elif val == AreaActive.NOT_ALLOWED:
                     self.areas_active.append(True)
                     self.areas_allowed.append(False)
-                    self.areas_trigger.append(True)
+                    self.areas_trigger.append(False)
                 else:
                     self.areas_active.append(False)
                     self.areas_allowed.append(False)
-                    self.areas_trigger.append(True)
+                    self.areas_trigger.append(False)
 
         # detection settings
         self.zero_or_one_mouse = settings.get("DETECTION_OF_MOUSE_" + self.name)[0]
@@ -297,17 +301,25 @@ class Camera(CameraBase):
         self.reset_values()
 
     def reset_values(self) -> None:
-        self.state = ""
+        self.annotation = ""
         self.trial = 0
         self.frames = []
         self.timings = []
-        self.pre_process_timestamps = []
         self.camera_timestamps = []
+        self.pre_process_timestamps = []
+        self.x_positions = []
+        self.y_positions = []
         self.trials = []
-        self.states = []
+        self.annotations = []
         self.frame_number = 0
         self.error = ""
         self.filename = ""
+        self.x_position = -1
+        self.y_position = -1
+        self.area1_is_triggered = False
+        self.area2_is_triggered = False
+        self.area3_is_triggered = False
+        self.area4_is_triggered = False
         self.chrono.reset()
         self.pre_process_timestamp = time_utils.now_timestamp()
         self.camera_timestamp = self.pre_process_timestamp
@@ -323,30 +335,30 @@ class Camera(CameraBase):
                 len(self.frames),
                 len(self.timings),
                 len(self.trials),
-                len(self.states),
-                len(self.pre_process_timestamps),
-                len(self.camera_timestamps),
+                len(self.annotations),
                 len(self.x_positions),
                 len(self.y_positions),
+                len(self.camera_timestamps),
+                len(self.pre_process_timestamps),
             )
 
             self.frames = self.frames[:min_length]
             self.timings = self.timings[:min_length]
             self.trials = self.trials[:min_length]
-            self.states = self.states[:min_length]
-            self.pre_process_timestamps = self.pre_process_timestamps[:min_length]
-            self.camera_timestamps = self.camera_timestamps[:min_length]
+            self.annotations = self.annotations[:min_length]
             self.x_positions = self.x_positions[:min_length]
             self.y_positions = self.y_positions[:min_length]
+            self.camera_timestamps = self.camera_timestamps[:min_length]
+            self.pre_process_timestamps = self.pre_process_timestamps[:min_length]
 
             df = pd.DataFrame(
                 {
                     "frame": self.frames,
                     "ms": self.timings,
                     "trial": self.trials,
-                    "state": self.states,
-                    "pre_process_timestamp": self.pre_process_timestamps,
+                    "annotation": self.annotations,
                     "timestamp": self.camera_timestamps,
+                    "pre_process_timestamp": self.pre_process_timestamps,
                     "x_position": self.x_positions,
                     "y_position": self.y_positions,
                 }
@@ -357,7 +369,7 @@ class Camera(CameraBase):
                 len(self.frames),
                 len(self.timings),
                 len(self.trials),
-                len(self.states),
+                len(self.annotations),
                 len(self.pre_process_timestamps),
                 len(self.camera_timestamps),
             )
@@ -365,7 +377,7 @@ class Camera(CameraBase):
             self.frames = self.frames[:min_length]
             self.timings = self.timings[:min_length]
             self.trials = self.trials[:min_length]
-            self.states = self.states[:min_length]
+            self.annotations = self.annotations[:min_length]
             self.pre_process_timestamps = self.pre_process_timestamps[:min_length]
             self.camera_timestamps = self.camera_timestamps[:min_length]
 
@@ -374,9 +386,9 @@ class Camera(CameraBase):
                     "frame": self.frames,
                     "ms": self.timings,
                     "trial": self.trials,
-                    "state": self.states,
-                    "pre_process_timestamp": self.pre_process_timestamps,
+                    "annotation": self.annotations,
                     "timestamp": self.camera_timestamps,
+                    "pre_process_timestamp": self.pre_process_timestamps,
                 }
             )
 
@@ -420,6 +432,7 @@ class Camera(CameraBase):
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
         self.pre_process_timestamp = time_utils.now_timestamp()
+
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:
@@ -429,7 +442,7 @@ class Camera(CameraBase):
                     sensor_timestamp
                 )
                 self.get_gray_frame()
-                self.detect()
+                self.detect_and_trigger()
                 self.draw_detection()
                 self.draw_rectangles()
                 self.write_texts()
@@ -442,17 +455,45 @@ class Camera(CameraBase):
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
     # @time_utils.measure_time
-    def detect(self) -> None:
+    def detect_and_trigger(self) -> None:
         if self.color == Color.BLACK:
             if self.tracking:
                 self.detect_black_position_contours()
+                if self.x_position != -1:
+                    self.trigger()
             else:
                 self.detect_black()
         else:
             if self.tracking:
                 self.detect_white_position_contours()
+                if self.x_position != -1:
+                    self.trigger()
             else:
                 self.detect_white()
+
+    def trigger(self) -> None:
+        if self.areas_trigger[0]:
+            x1, y1, x2, y2 = self.areas[0]
+            self.area1_is_triggered = (
+                x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
+            )
+        if self.areas_trigger[1]:
+            x1, y1, x2, y2 = self.areas[1]
+            self.area2_is_triggered = (
+                x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
+            )
+        if self.areas_trigger[2]:
+            x1, y1, x2, y2 = self.areas[2]
+            self.area3_is_triggered = (
+                x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
+            )
+        if self.areas_trigger[3]:
+            x1, y1, x2, y2 = self.areas[3]
+            self.area4_is_triggered = (
+                x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
+            )
+
+        manager.camera_trigger.trigger(self)
 
     def detect_black(self) -> None:
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
@@ -504,14 +545,14 @@ class Camera(CameraBase):
             if valid.size > 0:
                 index = 1 + valid[np.argmax(areas[valid])]
                 cx, cy = centroids[index]
-                self.x_mean_value = int(cx)
-                self.y_mean_value = int(cy)
+                self.x_position = int(cx)
+                self.y_position = int(cy)
             else:
-                self.x_mean_value = -1
-                self.y_mean_value = -1
+                self.x_position = -1
+                self.y_position = -1
         else:
-            self.x_mean_value = -1
-            self.y_mean_value = -1
+            self.x_position = -1
+            self.y_position = -1
 
     def detect_white_position_components(self) -> None:
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
@@ -539,14 +580,14 @@ class Camera(CameraBase):
             if valid.size > 0:
                 index = 1 + valid[np.argmax(areas[valid])]
                 cx, cy = centroids[index]
-                self.x_mean_value = int(cx)
-                self.y_mean_value = int(cy)
+                self.x_position = int(cx)
+                self.y_position = int(cy)
             else:
-                self.x_mean_value = -1
-                self.y_mean_value = -1
+                self.x_position = -1
+                self.y_position = -1
         else:
-            self.x_mean_value = -1
-            self.y_mean_value = -1
+            self.x_position = -1
+            self.y_position = -1
 
     def detect_black_position_contours(self) -> None:
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
@@ -566,8 +607,8 @@ class Camera(CameraBase):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         if not contours:
-            self.x_mean_value = -1
-            self.y_mean_value = -1
+            self.x_position = -1
+            self.y_position = -1
             return
 
         best_c = None
@@ -579,19 +620,19 @@ class Camera(CameraBase):
                 best_c = c
 
         if best_c is None:
-            self.x_mean_value = -1
-            self.y_mean_value = -1
+            self.x_position = -1
+            self.y_position = -1
             return
 
         M = cv2.moments(best_c)
         if M["m00"] > 0:
             cx = int(M["m10"] / M["m00"])
             cy = int(M["m01"] / M["m00"])
-            self.x_mean_value = cx
-            self.y_mean_value = cy
+            self.x_position = cx
+            self.y_position = cy
         else:
-            self.x_mean_value = -1
-            self.y_mean_value = -1
+            self.x_position = -1
+            self.y_position = -1
 
     def detect_white_position_contours(self) -> None:
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
@@ -611,8 +652,8 @@ class Camera(CameraBase):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         if not contours:
-            self.x_mean_value = -1
-            self.y_mean_value = -1
+            self.x_position = -1
+            self.y_position = -1
             return
 
         best_c = None
@@ -624,19 +665,19 @@ class Camera(CameraBase):
                 best_c = c
 
         if best_c is None:
-            self.x_mean_value = -1
-            self.y_mean_value = -1
+            self.x_position = -1
+            self.y_position = -1
             return
 
         M = cv2.moments(best_c)
         if M["m00"] > 0:
             cx = int(M["m10"] / M["m00"])
             cy = int(M["m01"] / M["m00"])
-            self.x_mean_value = cx
-            self.y_mean_value = cy
+            self.x_position = cx
+            self.y_position = cy
         else:
-            self.x_mean_value = -1
-            self.y_mean_value = -1
+            self.x_position = -1
+            self.y_position = -1
 
     def draw_detection(self) -> None:
         if self.view_detection:
@@ -696,7 +737,7 @@ class Camera(CameraBase):
         text_frame = "frame: " + str(self.frame_number)
         text_timing = time_utils.format_duration(self.timing)
 
-        text1 = text_filename + "  " + text_trial + "  " + self.state
+        text1 = text_filename + "  " + text_trial + "  " + self.annotation
         text2 = text_timing + "  " + text_frame
 
         cv2.putText(
@@ -757,10 +798,10 @@ class Camera(CameraBase):
                     pass
 
     def draw_position(self) -> None:
-        if self.x_mean_value != -1 and self.y_mean_value != -1:
+        if self.x_position != -1 and self.y_position != -1:
             cv2.circle(
                 self.frame,
-                (self.x_mean_value, self.y_mean_value),
+                (self.x_position, self.y_position),
                 10,
                 (255, 0, 255),
                 -1,
@@ -771,12 +812,12 @@ class Camera(CameraBase):
             self.frames.append(self.frame_number)
             self.timings.append(self.timing)
             self.trials.append(self.trial)
-            self.states.append(self.state)
+            self.annotations.append(self.annotation)
             self.pre_process_timestamps.append(self.pre_process_timestamp)
             self.camera_timestamps.append(self.camera_timestamp)
         if self.tracking:
-            self.x_positions.append(self.x_mean_value)
-            self.y_positions.append(self.y_mean_value)
+            self.x_positions.append(self.x_position)
+            self.y_positions.append(self.y_position)
 
     def start_preview_window(self) -> QWidget:
         if self.cam._preview is not None:
@@ -784,8 +825,8 @@ class Camera(CameraBase):
         self.window = LowFreqQPicamera2(picam2=self.cam, framerate=self.framerate)
         return self.window
 
-    def log(self, text: str) -> None:
-        self.state = text
+    def write_text(self, text: str) -> None:
+        self.annotation = text
 
     def areas_corridor_ok(self) -> bool:
         if self.counts[0] > self.zero_or_one_mouse:

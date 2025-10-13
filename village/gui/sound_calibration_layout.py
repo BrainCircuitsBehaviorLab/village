@@ -12,14 +12,14 @@ from PyQt5.QtWidgets import QLabel, QMessageBox, QScrollArea, QWidget
 
 from village.calibration.sound_calibration import SoundCalibration
 from village.classes.enums import State
-from village.classes.task import Task
+from village.custom_classes.task import Task
 from village.gui.layout import Layout
-from village.log import log
 from village.manager import manager
-from village.plots.create_pixmap import create_pixmap
 from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.scripts import utils
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
+from village.scripts.utils import create_pixmap
 from village.settings import settings
 
 if TYPE_CHECKING:

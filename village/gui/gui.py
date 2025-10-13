@@ -9,8 +9,8 @@ from village.classes.abstract_classes import BehaviorWindowBase
 from village.classes.enums import ScreenActive
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
-from village.log import log
 from village.screen.behavior_window import BehaviorWindow
+from village.scripts.log import log
 from village.settings import settings
 
 

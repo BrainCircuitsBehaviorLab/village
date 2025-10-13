@@ -20,7 +20,7 @@ class Log:
         date = time_utils.now_string()
         text = date + "  " + type + "  " + subject + "  " + description
         self.event.log(date, type, subject, description)
-        self.cam.log(text)
+        self.cam.write_text(text)
         print(text)
 
     def temperature(self, temperature: float, humidity: float) -> None:
@@ -33,7 +33,7 @@ class Log:
         description = task + " started"
         text = date + "  " + type + " " + subject + "  " + description
         self.event.log(date, type, subject, description)
-        self.cam.log(text)
+        self.cam.write_text(text)
         print(text)
 
     def end(self, task: str, subject: str = "system") -> None:
@@ -42,7 +42,7 @@ class Log:
         description = task + " ended"
         text = date + "  " + type + " " + subject + "  " + description
         self.event.log(date, type, subject, description)
-        self.cam.log(text)
+        self.cam.write_text(text)
         print(text)
 
     def error(
@@ -56,7 +56,7 @@ class Log:
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
         self.event.log(date, type, subject, description)
-        self.cam.log(text)
+        self.cam.write_text(text)
         print(text.replace("  |  ", "\n"))
 
     def alarm(
@@ -77,7 +77,7 @@ class Log:
         text = date + "  " + type + "  " + subject + "  " + description
         if not report:
             self.event.log(date, type, subject, description)
-            self.cam.log(text)
+            self.cam.write_text(text)
         print(text.replace("  |  ", "\n"))
 
     def clean_text(self, exception: str | None, description: str) -> str:

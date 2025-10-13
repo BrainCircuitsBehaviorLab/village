@@ -7,7 +7,7 @@ import time
 
 import fire
 
-from village.log import log
+from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.scripts.utils import setup_logging
 
