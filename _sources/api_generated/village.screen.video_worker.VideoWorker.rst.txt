@@ -1,0 +1,28 @@
+VideoWorker
+===========
+
+.. currentmodule:: village.screen.video_worker
+
+.. autoclass:: VideoWorker
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~VideoWorker.__init__
+      ~VideoWorker.get_latest_qimage
+      ~VideoWorker.run
+      ~VideoWorker.stop
+   
+   
+
+   
+   
+   

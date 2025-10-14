@@ -23,6 +23,7 @@ enums
       Active
       AreaActive
       Color
+      Controller
       Cycle
       DataTable
       Info
@@ -30,6 +31,7 @@ enums
       ScreenActive
       State
       SuperEnum
+      SyncType
    
    
 

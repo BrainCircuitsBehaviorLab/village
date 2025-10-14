@@ -29,4 +29,5 @@
    :recursive:
 
    behavior_window
+   video_worker
 

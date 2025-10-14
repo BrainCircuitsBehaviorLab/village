@@ -1,0 +1,36 @@
+SyncType
+========
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: SyncType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SyncType.keys
+      ~SyncType.values
+      ~SyncType.get_index_from_value
+      ~SyncType.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SyncType.HD
+      ~SyncType.SERVER
+      ~SyncType.OFF
+   
+   

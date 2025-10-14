@@ -1,7 +1,7 @@
-behavior\_window
-================
+video\_worker
+=============
 
-.. automodule:: village.screen.behavior_window
+.. automodule:: village.screen.video_worker
 
    
    
@@ -19,7 +19,7 @@ behavior\_window
       :toctree:
       :template: custom_class_template.rst
    
-      BehaviorWindow
+      VideoWorker
    
    
 

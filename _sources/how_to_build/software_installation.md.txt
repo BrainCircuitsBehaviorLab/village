@@ -123,7 +123,7 @@ Then, you need to configure the system to recognize a screen even if none is phy
 sudo nano /boot/firmware/cmdline.txt
 ```
 
-5. Add the following text: `vc4.force_hotplug=1 video=HDMI-A-1:1280x720@60D` if you are using only one screen, or `vc4.force_hotplug=3 video=HDMI-A-1:1280x720@60D video=HDMI-A-2:1280x720@60D` if you are using two screens.
+5. Add the following text: `vc4.force_hotplug=1 video=HDMI-A-1:1600x900@60D` if you are using only one screen, or `vc4.force_hotplug=3 video=HDMI-A-1:1600x900@60D video=HDMI-A-2:1280x720@60D` if you are using two screens.
 
 Explanation of values: (=1 makes the system operate as if a screen is connected to HDMI 1). (=2 makes the system operate as if a screen is connected to HDMI 2). (=3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2). HDMI-A-1 and HDMI-A-2 are used to specify the desired resolution.
 
@@ -147,7 +147,7 @@ sudo raspi-config
 The rfid sensor communicates using the serial port of the Raspberry.
 
 1. Go to `Preferences` and then `Raspberry Pi Configuration` and check that these options are enabled:
-SPI,I2c, Serial Port. The rest of the options should be disabled.
+SPI, I2c, Serial Port. The rest of the options should be disabled.
 
 ### Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication
 
@@ -177,11 +177,11 @@ cd /etc/udev/rules.d
 sudo nano 99-usb.rules
 ```
 
-3. In the new rule file, add the following line to create a symbolic link named `Bpod` for any device that matches the pattern `ttyACM*`. This will allow any device named ttyACM*(where* can be any number) to be consistently linked, provided it’s connected
+3. In the new rule file, add the following line to create a symbolic link named `controller` for any device that matches the pattern `ttyACM*`. This will allow any device named ttyACM*(where* can be any number) to be consistently linked, provided it’s connected
 to a specific USB port (in this case, the port associated with `KERNELS==3-1:1.0`).
 
 ```
-KERNEL=="ttyACM*",KERNELS=="3-1:1.0",SYMLINK+="Bpod"
+KERNEL=="ttyACM*",KERNELS=="3-1:1.0",SYMLINK+="controller"
 ```
 
 Note: The USB port identifier (KERNELS=="3-1:1.0") may vary depending on the physical USB port you are using. For reference, the 3-1:1.0 port on the Raspberry Pi is usually the USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command `dmesg` after connecting the device.
@@ -193,6 +193,33 @@ sudo udevadm trigger
 ```
 
 Now, whenever the Bpod device is connected to the specified USB port, it will consistently appear with the symbolic link `/dev/Bpod`, regardless of its dynamic ttyACM* designation.
+
+### Grant Permissions for Maximum Process Priority
+
+To allow your Python script to run with the highest priority, you need to grant special permissions to the Python interpreter. Replace python3.11 with the actual Python version you are using if it’s different.
+```
+sudo setcap cap_sys_nice=eip /usr/bin/python3.11
+```
+This command gives Python permission to change its own scheduling priority without needing to run as root.
+
+### Adjust Memory and Disk Cache Behavior
+
+1. Open the system configuration file:
+```
+sudo nano /etc/sysctl.conf
+```
+2. Add the following lines at the end of the file, then save and exit:
+```
+vm.swappiness=10
+vm.vfs_cache_pressure=50
+```
+These settings prioritize the use of RAM over disk cache whenever possible, in order to achieve better performance.
+
+3. Apply the changes immediately (without rebooting):
+```
+sudo sysctl -p
+```
+
 
 ### Install Training Village
 
