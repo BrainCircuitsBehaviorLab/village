@@ -34,7 +34,6 @@
    rfid
    scale
    sound_device
-   sound_device_new
    telegram_bot
    temp_sensor
 
