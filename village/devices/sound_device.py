@@ -1,6 +1,6 @@
 import os
+import queue
 import threading
-import time
 import traceback
 from typing import Any
 
@@ -35,13 +35,14 @@ class SoundDevice(SoundDeviceBase):
         sd.default.channels = self.channels
         sd.default.latency = self.latency
 
-        self.stream = sd.OutputStream(dtype="float32")
-        self.stream.close()
+        self.stream = None
         self.sound: np.ndarray[np.float32] = np.empty(0, dtype=np.float32)
-        self.playing = 0  # 0 = not playing, 1 = play, 2 = stop
-        self.thread = threading.Thread(target=self._play_sound_background, daemon=True)
-        self.thread_running = False
-        self.lock = threading.Lock()
+
+        self.command_queue: queue.Queue[Any] = queue.Queue()
+
+        self.thread = threading.Thread(target=self._audio_worker, daemon=True)
+        self.thread_running = True
+        self.thread.start()
 
     def load(self, left: Any, right: Any) -> None:
         if left is None and right is not None:
@@ -56,15 +57,9 @@ class SoundDevice(SoundDeviceBase):
                 "Sound error: Left and right vectors must have same length."
             )
 
-        self.stop()
-        self.sound = self.create_sound_vec(left, right)
-        self.stream.close()
-        self.stream = sd.OutputStream(dtype="float32")
-        self.stream.start()
-        self.playing = 0
-        self.thread = threading.Thread(target=self._play_sound_background, daemon=True)
-        self.thread_running = True
-        self.thread.start()
+        new_sound = self.create_sound_vec(left, right)
+
+        self.command_queue.put(("load", new_sound))
 
     def load_wav(self, path: str) -> None:
         if not os.path.exists(path):
@@ -94,32 +89,59 @@ class SoundDevice(SoundDeviceBase):
         self.load(left, right)
 
     def play(self) -> None:
-        if self.sound.size == 0:
-            raise ValueError("SoundR: No sound loaded. Please, use the method load().")
-        self.playing = 1
+        self.command_queue.put(("play", None))
 
     def stop(self) -> None:
-        if self.thread.is_alive():
-            self.playing = 2
-            self.thread.join(timeout=1.0)
-            self.stream.close()
-            self.thread_running = False
+        self.command_queue.put(("stop", None))
 
-    def _play_sound_background(self) -> None:
-        while self.thread_running:
-            if self.playing == 0:
-                time.sleep(0.001)
-            elif self.playing == 1:
-                if self.sound.size == 0:
-                    print("Error: no sound is loaded.")
-                    self.playing = 2
-                    break
-                else:
-                    self.stream.write(self.sound)
-                    self.playing = 2
-                    break
-            elif self.playing == 2:
-                break
+    def _audio_worker(self) -> None:
+        current_sound = np.empty(0, dtype=np.float32)
+        stream = sd.OutputStream(dtype="float32")
+
+        try:
+            while self.thread_running:
+                try:
+                    command, data = self.command_queue.get(timeout=1.0)
+
+                    if command == "load":
+                        try:
+                            stream.close()
+                        except Exception:
+                            pass
+                        current_sound = data
+                        stream = sd.OutputStream(dtype="float32")
+                        stream.start()
+
+                    elif command == "play":
+                        if current_sound.size != 0:
+                            stream.write(current_sound)
+
+                    elif command == "stop":
+                        try:
+                            stream.stop()
+                        except Exception:
+                            pass
+
+                    elif command == "shutdown":
+                        break
+
+                except queue.Empty:
+                    continue
+
+        except Exception as e:
+            log.error(f"Audio worker error: {e}", exception=traceback.format_exc())
+        finally:
+            if stream is not None:
+                stream.close()
+
+    def shutdown(self) -> None:
+        if self.thread_running:
+            self.thread_running = False
+            self.command_queue.put(("shutdown", None))
+            self.thread.join(timeout=2.0)
+
+    def __del__(self) -> None:
+        self.shutdown()
 
     @staticmethod
     def create_sound_vec(left: np.ndarray, right: np.ndarray) -> np.ndarray[np.float32]:

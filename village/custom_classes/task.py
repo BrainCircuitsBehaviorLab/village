@@ -12,7 +12,7 @@ from village.classes.collection import Collection
 from village.classes.enums import Active, Save
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
 from village.devices.bpod import bpod
-from village.devices.sound_device_new import sound_device
+from village.devices.sound_device import sound_device
 from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
 from village.scripts.log import log

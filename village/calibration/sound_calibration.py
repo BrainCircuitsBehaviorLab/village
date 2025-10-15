@@ -2,7 +2,7 @@ import time
 import traceback
 from threading import Thread
 
-from village.devices.sound_device_new import sound_device
+from village.devices.sound_device import sound_device
 from village.manager import manager
 from village.scripts.log import log
 

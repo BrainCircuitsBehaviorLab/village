@@ -43,7 +43,7 @@ from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
 from village.devices.scale import real_weight_inference, scale
-from village.devices.sound_device_new import sound_device
+from village.devices.sound_device import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
