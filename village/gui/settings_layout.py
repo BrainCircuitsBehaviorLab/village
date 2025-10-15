@@ -669,7 +669,12 @@ class SettingsLayout(Layout):
         else:
             possible_values = settings.get_values(s.key)
             index = settings.get_index(s.key)
-            if s.key in ("DETECTION_COLOR", "USE_SOUNDCARD", "USE_SCREEN"):
+            if s.key in (
+                "DETECTION_COLOR",
+                "USE_SOUNDCARD",
+                "USE_SCREEN",
+                "BEHAVIOR_CONTROLLER",
+            ):
                 size_to_use = size4
             else:
                 size_to_use = size1
@@ -709,34 +714,67 @@ class SettingsLayout(Layout):
     def toggle_button_changed(self, value: str, key: str) -> None:
         modify = ""
         if value == "OFF" and key == "USE_SOUNDCARD":
-            self.delete_optional_widgets("SOUND SETTINGS")
+            self.remove("SOUND SETTINGS")
         elif value == "ON" and key == "USE_SOUNDCARD":
             modify = "SOUND SETTINGS"
         elif value == "OFF" and key == "USE_SCREEN":
-            self.delete_optional_widgets("SCREEN SETTINGS")
-            self.delete_optional_widgets("TOUCHSCREEN SETTINGS")
+            self.remove("SCREEN SETTINGS")
+            self.remove("TOUCHSCREEN SETTINGS")
         elif value == "SCREEN" and key == "USE_SCREEN":
             modify = "SCREEN SETTINGS"
         elif value == "TOUCHSCREEN" and key == "USE_SCREEN":
             modify = "TOUCHSCREEN SETTINGS"
         elif value == "ARDUINO" and key == "BEHAVIOR_CONTROLLER":
-            self.delete_optional_widgets("BPOD SETTINGS")
+            self.remove("BPOD SETTINGS")
         elif value == "RASPBERRY" and key == "BEHAVIOR_CONTROLLER":
-            self.delete_optional_widgets("BPOD SETTINGS")
+            self.remove("BPOD SETTINGS")
         elif value == "BPOD" and key == "BEHAVIOR_CONTROLLER":
             modify = "BPOD SETTINGS"
         elif value == "HD" and key == "SYNC_TYPE":
             modify = "SYNC SETTINGS"
-            self.delete_optional_widgets("SERVER SETTINGS")
+            self.remove("SERVER SETTINGS")
         elif value == "SERVER" and key == "SYNC_TYPE":
             modify = "SERVER SETTINGS"
         elif value == "OFF" and key == "SYNC_TYPE":
-            self.delete_optional_widgets("SYNC SETTINGS")
-            self.delete_optional_widgets("SERVER SETTINGS")
+            self.remove("SYNC SETTINGS")
+            self.remove("SERVER SETTINGS")
 
         self.settings_changed(value, key)
         if modify != "":
             self.draw(all=False, modify=modify)
+
+    def remove(self, name: str) -> None:
+        for i in reversed(range(len(self.line_edits))):
+            if self.line_edits[i].property("type") == name:
+                print(self.line_edits_settings[i].key)
+                print(self.line_edits[i].text())
+                self.line_edits.pop(i)
+                self.line_edits_settings.pop(i)
+        for i in reversed(range(len(self.time_edits))):
+            if self.time_edits[i].property("type") == name:
+                print(self.time_edits_settings[i].key)
+                print(self.time_edits[i].text())
+                self.time_edits.pop(i)
+                self.time_edits_settings.pop(i)
+        for i in reversed(range(len(self.toggle_buttons))):
+            if self.toggle_buttons[i].property("type") == name:
+                print(self.toggle_buttons_settings[i].key)
+                print(self.toggle_buttons[i].text())
+                self.toggle_buttons.pop(i)
+                self.toggle_buttons_settings.pop(i)
+        for i in reversed(range(len(self.list_of_line_edits))):
+            if self.list_of_line_edits[i][0].property("type") == name:
+                print(self.list_of_line_edits_settings[i].key)
+                print(self.list_of_line_edits[i][0].text())
+                self.list_of_line_edits.pop(i)
+                self.list_of_line_edits_settings.pop(i)
+        for i in reversed(range(len(self.list_of_toggle_buttons))):
+            if self.list_of_toggle_buttons[i][0].property("type") == name:
+                print(self.list_of_toggle_buttons_settings[i].key)
+                print(self.list_of_toggle_buttons[i][0].text())
+                self.list_of_toggle_buttons.pop(i)
+                self.list_of_toggle_buttons_settings.pop(i)
+        self.delete_optional_widgets(name)
 
     def change_project_directory(self, value: str, key: str) -> None:
 
