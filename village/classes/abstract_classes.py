@@ -1,5 +1,6 @@
 from typing import Any, Callable, Optional
 
+from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
@@ -230,3 +231,12 @@ class BehaviorWindowBase(QWidget):
 
     def load_draw_function(self, draw_fn: Optional[Callable]) -> None:
         return
+
+    def load_image(self, file: str) -> None:
+        return
+
+    def load_video(self, file: str) -> None:
+        return
+
+    def get_video_frame(self) -> Optional[QImage]:
+        return None

@@ -1,16 +1,18 @@
 from __future__ import annotations
 
+import os
 from typing import Callable, Optional
 
 import gpiod
 from gpiod.line import Direction, Value
 from PyQt5.QtCore import QRect, Qt, QThread
-from PyQt5.QtGui import QColor, QImage, QPainter
+from PyQt5.QtGui import QColor, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QOpenGLWidget
 
 from village.manager import manager
 from village.screen.video_worker import VideoWorker
 from village.scripts.time_utils import time_utils
+from village.settings import settings
 
 
 class BehaviorWindow(QOpenGLWidget):
@@ -48,6 +50,12 @@ class BehaviorWindow(QOpenGLWidget):
         # background color
         self.background_color = QColor("black")
 
+        # images or videos
+        self.x = 0
+        self.y = 0
+        self.blend = False
+        self.image: Optional[QPixmap] = None
+
         self.show()
 
     def _init_gpio(self) -> None:
@@ -76,7 +84,7 @@ class BehaviorWindow(QOpenGLWidget):
         self.stop_drawing()
         self._draw_fn = draw_fn
 
-    def start_drawing(self) -> None:
+    def start_drawing(self, time: int) -> None:
         self.active = True
         self._start_timing = time_utils.get_time_monotonic()
         if not self._swap_connected:
@@ -96,13 +104,23 @@ class BehaviorWindow(QOpenGLWidget):
         self.elapsed_time = 0.0
         self.update()
 
-    def start_video(self, path: str) -> None:
+    def load_image(self, file: str) -> None:
+        media_directory = settings.get("MEDIA_DIRECTORY")
+        image_path = os.path.join(media_directory, file)
+        self.image = QPixmap(image_path)
+
+    def load_video(self, file: str) -> None:
+        media_directory = settings.get("MEDIA_DIRECTORY")
+        video_path = os.path.join(media_directory, file)
         self.stop_video()
         self._video_thread = QThread()
-        self._video_worker = VideoWorker(path)
+        self._video_worker = VideoWorker(video_path)
         self._video_worker.moveToThread(self._video_thread)
         self._video_thread.started.connect(self._video_worker.run)
-        self._video_thread.start()
+
+    def start_video(self, path: str) -> None:
+        if self._video_thread is not None:
+            self._video_thread.start()
 
     def stop_video(self) -> None:
         if self._video_worker:
