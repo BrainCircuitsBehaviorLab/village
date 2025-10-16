@@ -97,6 +97,12 @@ pip install setuptools_scm
 pip install sounddevice
 pip install python-telegram-bot
 pip install scipy
+pip install gpiod
+pip install fire
+pip install pyserial
+pip install pandas
+pip install seaborn
+pip install sphinx_book_theme
 ```
 
 ### Changing Preferences

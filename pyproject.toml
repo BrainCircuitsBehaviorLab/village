@@ -10,7 +10,6 @@ dependencies = [
     "python-dateutil",
     "pyserial",
     "pandas",
-    "python-dateutil",
     "setuptools_scm",
     "sounddevice",
     "python-telegram-bot",
@@ -18,6 +17,7 @@ dependencies = [
     "scipy",
     "sphinx_book_theme",
     "fire",
+    "gpiod",
 ]
 
 license = {text = "MIT"}
