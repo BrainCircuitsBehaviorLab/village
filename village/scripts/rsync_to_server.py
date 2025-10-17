@@ -1,5 +1,6 @@
 import logging
 import os
+import select
 import signal
 import subprocess
 import threading
@@ -70,7 +71,7 @@ def run_rsync(
     if port is None:
         rsync_cmd = [
             "rsync",
-            "-avzP",  # archive, verbose, compress, show progress
+            "-avP",  # archive, verbose, compress, show progress
             "--update",  # skip files that are newer on receiver
             "--safe-links",  # ignore symlinks that point outside the tree
             "--timeout=30",  # I/O timeout for rsync
@@ -86,7 +87,7 @@ def run_rsync(
     else:
         rsync_cmd = [
             "rsync",
-            "-avzP",  # archive, verbose, compress, show progress
+            "-avP",  # archive, verbose, compress, show progress
             "--update",  # skip files that are newer on receiver
             "--safe-links",  # ignore symlinks that point outside the tree
             "--timeout=30",  # I/O timeout for rsync
@@ -112,6 +113,7 @@ def run_rsync(
             stderr=subprocess.PIPE,
             universal_newlines=True,
             preexec_fn=os.setsid,  # new process group for signal handling
+            bufsize=1,  # line-buffered
         )
 
         start_time = time_utils.get_time_monotonic()
@@ -130,25 +132,33 @@ def run_rsync(
                     os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                 except Exception:
                     process.terminate()
+                # Closing pipes
+                try:
+                    if process.stdout:
+                        process.stdout.close()
+                except Exception:
+                    pass
+                try:
+                    if process.stderr:
+                        process.stderr.close()
+                except Exception:
+                    pass
                 process_running = False
 
         # Launching a thread to check for maximum_sync_time
         sync_time_thread = threading.Thread(target=check_maximum_sync_time, daemon=True)
         sync_time_thread.start()
 
-        # Stream output in real-time
+        # Stream output in (almost) real-time
         while process_running:
             if process.stdout:
                 try:
-                    # Non-blocking read con timeout
-                    output = process.stdout.readline()
-                    if output == "" and process.poll() is not None:
-                        break
-                    if output:
-                        logging.info(output.strip())
-                        last_progress_time = (
-                            time_utils.get_time_monotonic()
-                        )  # Reset progress timer
+                    ready, _, _ = select.select([process.stdout], [], [], 0.1)
+                    if ready:
+                        line = process.stdout.readline()
+                        if line:
+                            logging.info(line.strip())
+                            last_progress_time = time_utils.get_time_monotonic()
                 except Exception:
                     pass
 

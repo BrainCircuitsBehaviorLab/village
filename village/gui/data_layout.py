@@ -106,7 +106,8 @@ class TableView(QTableView):
                     super().mouseDoubleClickEvent(event)
                     self.save_changes_in_df()
             elif flags & Qt.ItemIsEditable:
-                text = "Wait until the box is empty before editing the tables."
+                text = "Wait until the box is empty or synchronization is complete"
+                text += " before editing the tables."
                 QMessageBox.information(self, "EDIT", text)
             else:
                 super().mouseDoubleClickEvent(event)
@@ -1177,7 +1178,8 @@ class DfLayout(Layout):
             self.table_view.save_changes_in_df()
             self.update_buttons()
         else:
-            text = "Wait until the box is empty before editing the subjects."
+            text = "Wait until the box is empty or synchronization is complete"
+            text += " before editing the subjects."
             QMessageBox.information(self.window, "EDIT", text)
 
     def delete_button_clicked(self) -> None:
@@ -1252,7 +1254,8 @@ class DfLayout(Layout):
                     sel_model.clearSelection()
                 self.update_buttons()
             else:
-                text = "Wait until the box is empty before editing the subjects."
+                text = "Wait until the box is empty or synchronization is complete"
+                text += " before editing the subjects."
                 QMessageBox.information(self.window, "EDIT", text)
 
     def cancel(self) -> None:

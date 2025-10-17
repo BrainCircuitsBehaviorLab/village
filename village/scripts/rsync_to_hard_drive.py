@@ -34,7 +34,7 @@ def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
     # Build rsync command for local copy
     rsync_cmd = [
         "rsync",
-        "-avzP",
+        "-avP",
         "--update",
         "--safe-links",
         "--timeout=30",

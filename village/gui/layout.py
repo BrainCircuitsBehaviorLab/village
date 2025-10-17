@@ -379,10 +379,12 @@ class Layout(QGridLayout):
                 manager.state = old_state
                 self.update_status_label_buttons()
         else:
+            text = "Wait until the box is empty or synchronization is complete"
+            text += " before exiting the application"
             QMessageBox.information(
                 self.window,
                 "EXIT",
-                "Wait until the box is empty before exiting the application",
+                text,
             )
 
     def change_layout(self, auto: bool = False) -> bool:
