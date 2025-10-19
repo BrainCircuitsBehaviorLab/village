@@ -1,3 +1,4 @@
+import queue
 from typing import Any, Callable, Optional
 
 from PyQt5.QtGui import QImage
@@ -134,6 +135,7 @@ class SoundDeviceBase:
         if settings.get("USE_SOUNDCARD") == Active.OFF
         else "Error connecting to the sound_device "
     )
+    error_queue: queue.Queue[str] = queue.Queue()
 
     def load(self, left: Any, right: Any) -> None:
         return

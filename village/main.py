@@ -32,6 +32,7 @@ from PyQt5.QtWidgets import QApplication
 q_app = QApplication.instance() or QApplication(sys.argv)
 
 import gc
+import queue
 import threading
 import time
 
@@ -99,6 +100,7 @@ def system_run(bevavior_window: QWidget) -> None:
     detection_timer = time_utils.Timer(settings.get("DETECTION_DURATION"))
     tare_timer = time_utils.Timer(settings.get("REPEAT_TARE_TIME"))
     plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
+    sound_alarm_timer = time_utils.Timer(3600)
 
     cam_corridor.start_recording()
 
@@ -109,6 +111,19 @@ def system_run(bevavior_window: QWidget) -> None:
         while True:
             time.sleep(1)
             manager.update_cycle()
+
+            try:
+                while True:
+                    error = sound_device.error_queue.get_nowait()
+                    if sound_alarm_timer.has_elapsed():
+                        log.alarm(
+                            "Error in sound_device",
+                            exception=error,
+                            subject=manager.subject.name,
+                        )
+            except queue.Empty:
+                pass
+
             if cam_corridor.chrono.get_seconds() > corridor_video_duration:
                 cam_corridor.stop_recording()
                 cam_corridor.start_recording()

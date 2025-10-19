@@ -38,7 +38,8 @@ class SoundDevice(SoundDeviceBase):
         self.stream = None
         self.sound: np.ndarray[np.float32] = np.empty(0, dtype=np.float32)
 
-        self.command_queue: queue.Queue[Any] = queue.Queue()
+        self.command_queue: queue.Queue[tuple] = queue.Queue()
+        self.error_queue: queue.Queue[str] = queue.Queue()
 
         self.thread = threading.Thread(target=self._audio_worker, daemon=True)
         self.thread_running = True
@@ -128,8 +129,15 @@ class SoundDevice(SoundDeviceBase):
                 except queue.Empty:
                     continue
 
-        except Exception as e:
-            log.error(f"Audio worker error: {e}", exception=traceback.format_exc())
+        # except Exception as e:
+        #     log.error(f"Audio worker error: {e}", exception=traceback.format_exc())
+
+        except Exception:
+            try:
+                self.error_queue.put_nowait(traceback.format_exc())
+            except queue.Full:
+                pass
+
         finally:
             if stream is not None:
                 stream.close()
