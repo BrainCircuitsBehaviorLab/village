@@ -88,9 +88,9 @@ class LabelButtons:
             "sharpness_day": 16,
             "sharpness_night": 16,
             "sharpness": 16,
-            "contrast_day": 32,
-            "contrast_night": 32,
-            "contrast": 32,
+            "contrast_day": 16,
+            "contrast_night": 16,
+            "contrast": 16,
         }
         self.mapping_dict_increase = {
             "left": "\u2192",
@@ -200,6 +200,9 @@ class LabelButtons:
                 "subject_limit",
             ]:
                 self.label_value += 1
+            elif self.direction in ["contrast_day", "contrast_night", "contrast"]:
+                self.label_value += 1
+                self.label_value = round(self.label_value, 1)
             else:
                 self.label_value += 0.1
                 self.label_value = round(self.label_value, 1)
@@ -231,6 +234,9 @@ class LabelButtons:
             ):
                 return
 
+            elif self.direction in ["contrast_day", "contrast_night", "contrast"]:
+                self.label_value -= 1
+                self.label_value = round(self.label_value, 1)
             else:
                 self.label_value -= 0.1
                 self.label_value = round(self.label_value, 1)

@@ -4,8 +4,6 @@ import traceback
 from pprint import pprint
 from typing import Any
 
-import itertools as it
-
 import cv2
 import numpy as np
 import pandas as pd
@@ -340,15 +338,30 @@ class Camera(CameraBase):
             camera_timestamps = tuple(self.camera_timestamps)
             pre_process_timestamps = tuple(self.pre_process_timestamps)
 
-            rows = list(zip(frames, timings, trials, annotations, camera_timestamps, pre_process_timestamps, 
-                            x_positions, y_positions))
+            rows = list(
+                zip(
+                    frames,
+                    timings,
+                    trials,
+                    annotations,
+                    camera_timestamps,
+                    pre_process_timestamps,
+                    x_positions,
+                    y_positions,
+                )
+            )
 
             df = pd.DataFrame(
                 rows,
                 columns=[
-                    "frame", "ms", "trial", "annotation",
-                    "timestamp", "pre_process_timestamp",
-                    "x_position", "y_position",
+                    "frame",
+                    "ms",
+                    "trial",
+                    "annotation",
+                    "timestamp",
+                    "pre_process_timestamp",
+                    "x_position",
+                    "y_position",
                 ],
             )
 
@@ -360,13 +373,26 @@ class Camera(CameraBase):
             camera_timestamps = tuple(self.camera_timestamps)
             pre_process_timestamps = tuple(self.pre_process_timestamps)
 
-            rows = list(zip(frames, timings, trials, annotations, camera_timestamps, pre_process_timestamps))
+            rows = list(
+                zip(
+                    frames,
+                    timings,
+                    trials,
+                    annotations,
+                    camera_timestamps,
+                    pre_process_timestamps,
+                )
+            )
 
             df = pd.DataFrame(
                 rows,
                 columns=[
-                    "frame", "ms", "trial", "annotation",
-                    "timestamp", "pre_process_timestamp",
+                    "frame",
+                    "ms",
+                    "trial",
+                    "annotation",
+                    "timestamp",
+                    "pre_process_timestamp",
                 ],
             )
 
