@@ -546,6 +546,7 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">queue</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
@@ -559,12 +560,6 @@
 <div class="viewcode-block" id="VideoWorker">
 <a class="viewcode-back" href="../../../api_generated/village.screen.video_worker.VideoWorker.html#village.screen.video_worker.VideoWorker">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">VideoWorker</span><span class="p">(</span><span class="n">QObject</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Reads a video using OpenCV and stores only the latest frame as an RGBA8 QImage.</span>
-<span class="sd">        •	run(): runs in a QThread</span>
-<span class="sd">        •	stop(): stops the loop</span>
-<span class="sd">        •	get_latest_qimage(): returns and consumes the latest QImage, or None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="VideoWorker.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.screen.video_worker.VideoWorker.html#village.screen.video_worker.VideoWorker.__init__">[docs]</a>
@@ -574,7 +569,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span> <span class="o">=</span> <span class="n">QMutex</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_last_img</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
     <span class="nd">@pyqtSlot</span><span class="p">()</span>
@@ -584,16 +589,35 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">return</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fps:&quot;</span><span class="p">,</span> <span class="n">fps</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">fps</span> <span class="o">=</span> <span class="mf">30.0</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span> <span class="o">=</span> <span class="n">fps</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">fps</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_started</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">produced_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
             <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
                 <span class="n">ok</span><span class="p">,</span> <span class="n">bgr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
                     <span class="k">break</span>
+
                 <span class="n">rgba</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGBA</span><span class="p">)</span>
                 <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
                 <span class="n">img</span> <span class="o">=</span> <span class="n">QImage</span><span class="p">(</span><span class="n">rgba</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">QImage</span><span class="o">.</span><span class="n">Format_RGBA8888</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+                <span class="n">produced_idx</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_last_img</span> <span class="o">=</span> <span class="n">img</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span> <span class="o">=</span> <span class="n">img</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span> <span class="o">=</span> <span class="n">produced_idx</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">unlock</span><span class="p">()</span>
+
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;video&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
@@ -605,14 +629,35 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_latest_qimage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+        <span class="n">target_idx</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">int</span><span class="p">((</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">target_idx</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span> <span class="o">==</span> <span class="n">target_idx</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_img</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_last_img</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># consume</span>
+        <span class="n">latest_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span>
+        <span class="n">latest_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">unlock</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">img</span>
+
+        <span class="k">if</span> <span class="n">latest_img</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">latest_idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
+
+        <span class="k">if</span> <span class="n">latest_idx</span> <span class="o">&gt;=</span> <span class="n">target_idx</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span> <span class="o">=</span> <span class="n">target_idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span> <span class="o">=</span> <span class="n">latest_img</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;stopping video worker&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 </pre></div>
@@ -647,7 +692,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=e3478bfd"></script>
+</div><script src="../../../_static/documentation_options.js?v=ffe7fe01"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
