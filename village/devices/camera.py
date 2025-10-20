@@ -4,6 +4,8 @@ import traceback
 from pprint import pprint
 from typing import Any
 
+import itertools as it
+
 import cv2
 import numpy as np
 import pandas as pd
@@ -329,67 +331,43 @@ class Camera(CameraBase):
             return
 
         if self.tracking:
-            # if we stop when the last frame is being stored one of this lists
-            # may be one unit longer than the others, we remove the last element
-            min_length = min(
-                len(self.frames),
-                len(self.timings),
-                len(self.trials),
-                len(self.annotations),
-                len(self.x_positions),
-                len(self.y_positions),
-                len(self.camera_timestamps),
-                len(self.pre_process_timestamps),
-            )
+            frames = tuple(self.frames)
+            timings = tuple(self.timings)
+            trials = tuple(self.trials)
+            annotations = tuple(self.annotations)
+            x_positions = tuple(self.x_positions)
+            y_positions = tuple(self.y_positions)
+            camera_timestamps = tuple(self.camera_timestamps)
+            pre_process_timestamps = tuple(self.pre_process_timestamps)
 
-            self.frames = self.frames[:min_length]
-            self.timings = self.timings[:min_length]
-            self.trials = self.trials[:min_length]
-            self.annotations = self.annotations[:min_length]
-            self.x_positions = self.x_positions[:min_length]
-            self.y_positions = self.y_positions[:min_length]
-            self.camera_timestamps = self.camera_timestamps[:min_length]
-            self.pre_process_timestamps = self.pre_process_timestamps[:min_length]
+            rows = list(zip(frames, timings, trials, annotations, camera_timestamps, pre_process_timestamps, 
+                            x_positions, y_positions))
 
             df = pd.DataFrame(
-                {
-                    "frame": self.frames,
-                    "ms": self.timings,
-                    "trial": self.trials,
-                    "annotation": self.annotations,
-                    "timestamp": self.camera_timestamps,
-                    "pre_process_timestamp": self.pre_process_timestamps,
-                    "x_position": self.x_positions,
-                    "y_position": self.y_positions,
-                }
+                rows,
+                columns=[
+                    "frame", "ms", "trial", "annotation",
+                    "timestamp", "pre_process_timestamp",
+                    "x_position", "y_position",
+                ],
             )
 
         else:
-            min_length = min(
-                len(self.frames),
-                len(self.timings),
-                len(self.trials),
-                len(self.annotations),
-                len(self.pre_process_timestamps),
-                len(self.camera_timestamps),
-            )
+            frames = tuple(self.frames)
+            timings = tuple(self.timings)
+            trials = tuple(self.trials)
+            annotations = tuple(self.annotations)
+            camera_timestamps = tuple(self.camera_timestamps)
+            pre_process_timestamps = tuple(self.pre_process_timestamps)
 
-            self.frames = self.frames[:min_length]
-            self.timings = self.timings[:min_length]
-            self.trials = self.trials[:min_length]
-            self.annotations = self.annotations[:min_length]
-            self.pre_process_timestamps = self.pre_process_timestamps[:min_length]
-            self.camera_timestamps = self.camera_timestamps[:min_length]
+            rows = list(zip(frames, timings, trials, annotations, camera_timestamps, pre_process_timestamps))
 
             df = pd.DataFrame(
-                {
-                    "frame": self.frames,
-                    "ms": self.timings,
-                    "trial": self.trials,
-                    "annotation": self.annotations,
-                    "timestamp": self.camera_timestamps,
-                    "pre_process_timestamp": self.pre_process_timestamps,
-                }
+                rows,
+                columns=[
+                    "frame", "ms", "trial", "annotation",
+                    "timestamp", "pre_process_timestamp",
+                ],
             )
 
         df.to_csv(self.path_csv, index=False, sep=";")
