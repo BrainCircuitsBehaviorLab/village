@@ -746,32 +746,22 @@ class SettingsLayout(Layout):
     def remove(self, name: str) -> None:
         for i in reversed(range(len(self.line_edits))):
             if self.line_edits[i].property("type") == name:
-                print(self.line_edits_settings[i].key)
-                print(self.line_edits[i].text())
                 self.line_edits.pop(i)
                 self.line_edits_settings.pop(i)
         for i in reversed(range(len(self.time_edits))):
             if self.time_edits[i].property("type") == name:
-                print(self.time_edits_settings[i].key)
-                print(self.time_edits[i].text())
                 self.time_edits.pop(i)
                 self.time_edits_settings.pop(i)
         for i in reversed(range(len(self.toggle_buttons))):
             if self.toggle_buttons[i].property("type") == name:
-                print(self.toggle_buttons_settings[i].key)
-                print(self.toggle_buttons[i].text())
                 self.toggle_buttons.pop(i)
                 self.toggle_buttons_settings.pop(i)
         for i in reversed(range(len(self.list_of_line_edits))):
             if self.list_of_line_edits[i][0].property("type") == name:
-                print(self.list_of_line_edits_settings[i].key)
-                print(self.list_of_line_edits[i][0].text())
                 self.list_of_line_edits.pop(i)
                 self.list_of_line_edits_settings.pop(i)
         for i in reversed(range(len(self.list_of_toggle_buttons))):
             if self.list_of_toggle_buttons[i][0].property("type") == name:
-                print(self.list_of_toggle_buttons_settings[i].key)
-                print(self.list_of_toggle_buttons[i][0].text())
                 self.list_of_toggle_buttons.pop(i)
                 self.list_of_toggle_buttons_settings.pop(i)
         self.delete_optional_widgets(name)

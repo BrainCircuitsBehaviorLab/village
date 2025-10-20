@@ -1,11 +1,14 @@
-# video_worker.py
 from __future__ import annotations
 
+import queue
+import traceback
 from typing import Optional
 
 import cv2
 from PyQt5.QtCore import QMutex, QObject, pyqtSlot
 from PyQt5.QtGui import QImage
+
+from village.scripts.error_queue import error_queue
 
 
 class VideoWorker(QObject):
@@ -27,24 +30,25 @@ class VideoWorker(QObject):
     @pyqtSlot()
     def run(self) -> None:
         try:
-            print("trying to open video", self.path)
             self.cap = cv2.VideoCapture(self.path)
             if self.cap is None or not self.cap.isOpened():
                 self.running = False
-                print("failed to open video", self.path)
                 return
             while self.running:
                 ok, bgr = self.cap.read()
                 if not ok:
-                    print("end of video", self.path)
                     break
-                print("frame")
                 rgba = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGBA)
                 h, w = rgba.shape[:2]
                 img = QImage(rgba.data, w, h, QImage.Format_RGBA8888).copy()
                 self.mtx.lock()
                 self._last_img = img
                 self.mtx.unlock()
+        except Exception:
+            try:
+                error_queue.put_nowait(("video", traceback.format_exc()))
+            except queue.Full:
+                pass
         finally:
             if self.cap is not None:
                 self.cap.release()
@@ -58,4 +62,5 @@ class VideoWorker(QObject):
         return img
 
     def stop(self) -> None:
+        print("stopping video worker")
         self.running = False

@@ -416,8 +416,8 @@ class Layout(QGridLayout):
                 self.window.create_tasks_layout()
             else:
                 text = (
-                    "Tasks can not be launched if there is a subject in the box "
-                    + "or a detection in progress"
+                    "Tasks cannot start while a subject is in the box, a detection is "
+                    + "ongoing, or data is syncing."
                 )
                 QMessageBox.information(
                     self.window,
@@ -442,8 +442,8 @@ class Layout(QGridLayout):
                 self.window.create_water_calibration_layout()
             else:
                 text = (
-                    "Calibration is not available if there is a subject in the box "
-                    + "or a detection in progress"
+                    "Calibration is not available while a subject is in the box, a "
+                    + "detection is ongoing, or data is syncing."
                 )
                 QMessageBox.information(
                     self.window,
@@ -460,8 +460,8 @@ class Layout(QGridLayout):
                 self.window.create_sound_calibration_layout()
             else:
                 text = (
-                    "Calibration is not available if there is a subject in the box "
-                    + "or a detection in progress"
+                    "Calibration is not available while a subject is in the box, a "
+                    + "detection is ongoing, or data is syncing."
                 )
                 QMessageBox.information(
                     self.window,
@@ -478,8 +478,8 @@ class Layout(QGridLayout):
                 self.window.create_settings_layout()
             else:
                 text = (
-                    "Settings can not be changed if there is a subject in the box "
-                    + "or a detection in progress"
+                    "Settings can not be changed while a subject is in the box, a "
+                    + "detection is ongoing, or data is syncing."
                 )
                 QMessageBox.information(
                     self.window,

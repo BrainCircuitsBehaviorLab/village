@@ -643,61 +643,6 @@ class MotorLayout(Layout):
         wiz = ScaleCalibrationWizard(self.window)
         wiz.exec_()
 
-    # def calibrate_scale_clicked(self) -> None:
-    #     if not manager.state.can_calibrate_scale():
-    #         text = (
-    #             "Calibration is not available if there is a subject in the box "
-    #             + "or a detection in progress"
-    #         )
-    #         QMessageBox.information(
-    #             self.window,
-    #             "CALIBRATION",
-    #             text,
-    #         )
-
-    #     scale.tare()
-    #     val = settings.get("SCALE_WEIGHT_TO_CALIBRATE")
-    #     self.reply = QDialog()
-    #     self.reply.setWindowTitle("Calibrate scale")
-    #     x = self.column_width * 65
-    #     y = self.row_height * 22
-    #     width = self.column_width * 32
-    #     height = self.row_height * 8
-    #     self.reply.setGeometry(x, y, width, height)
-    #     layout = QVBoxLayout()
-    #     text = "The scale has been tared. Make sure there was nothing on it, and now "
-    #     text += "place an object of known weight on top.\n"
-    #     text += "Enter the known weight value in grams:"
-    #     label = QLabel(text)
-    #     layout.addWidget(label)
-    #     self.lineEdit = QLineEdit()
-    #     self.lineEdit.setPlaceholderText(str(val))
-    #     layout.addWidget(self.lineEdit)
-    #     btns_layout = QHBoxLayout()
-    #     self.btn_ok = QPushButton("CALIBRATE")
-    #     self.btn_cancel = QPushButton("CANCEL")
-    #     btns_layout.addWidget(self.btn_ok)
-    #     btns_layout.addWidget(self.btn_cancel)
-    #     layout.addLayout(btns_layout)
-    #     self.reply.setLayout(layout)
-
-    #     self.btn_ok.clicked.connect(self.reply.accept)
-    #     self.btn_cancel.clicked.connect(self.reply.reject)
-
-    #     if self.reply.exec_():
-    #         try:
-    #             if self.lineEdit.text() == "":
-    #                 val = float(self.lineEdit.placeholderText())
-    #             else:
-    #                 val = float(self.lineEdit.text())
-    #             if val > 0.1:
-    #                 scale.calibrate(val)
-    #                 log.info("Scale calibrated")
-    #             else:
-    #                 log.error("Invalid value. Scale not calibrated")
-    #         except ValueError:
-    #             log.error("Invalid value. Scale not calibrated")
-
     def cancel_calibration(self) -> None:
         pass
 

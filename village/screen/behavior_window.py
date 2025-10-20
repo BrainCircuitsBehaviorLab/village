@@ -80,16 +80,27 @@ class BehaviorWindow(QOpenGLWidget):
     def closeEvent(self, event) -> None:
         event.ignore()
 
-    def load_draw_function(self, draw_fn: Optional[Callable]) -> None:
+    def load_draw_function(
+        self,
+        draw_fn: Optional[Callable],
+        image: str | None = None,
+        video: str | None = None,
+    ) -> None:
         self.stop_drawing()
+        if image is not None:
+            self.load_image(image)
+        elif video is not None:
+            self.load_video(video)
         self._draw_fn = draw_fn
 
-    def start_drawing(self, time: int) -> None:
+    def start_drawing(self) -> None:
+        print("starting drawing")
         self.active = True
         self._start_timing = time_utils.get_time_monotonic()
         if not self._swap_connected:
             self.frameSwapped.connect(self.update, Qt.ConnectionType.UniqueConnection)
             self._swap_connected = True
+        self.start_video()
         self.update()
 
     def stop_drawing(self) -> None:
@@ -102,6 +113,7 @@ class BehaviorWindow(QOpenGLWidget):
             self._swap_connected = False
         self.frame = 0
         self.elapsed_time = 0.0
+        self.stop_video()
         self.update()
 
     def load_image(self, file: str) -> None:
@@ -112,14 +124,14 @@ class BehaviorWindow(QOpenGLWidget):
     def load_video(self, file: str) -> None:
         media_directory = settings.get("MEDIA_DIRECTORY")
         video_path = os.path.join(media_directory, file)
-        self.stop_video()
         self._video_thread = QThread()
         self._video_worker = VideoWorker(video_path)
         self._video_worker.moveToThread(self._video_thread)
         self._video_thread.started.connect(self._video_worker.run)
 
-    def start_video(self, path: str) -> None:
+    def start_video(self) -> None:
         if self._video_thread is not None:
+            print("starting video")
             self._video_thread.start()
 
     def stop_video(self) -> None:
@@ -127,9 +139,14 @@ class BehaviorWindow(QOpenGLWidget):
             self._video_worker.stop()
         if self._video_thread:
             self._video_thread.quit()
-            self._video_thread.wait(500)
-        self._video_worker = None
-        self._video_thread = None
+
+    def _on_video_thread_finished(self) -> None:
+        if self._video_worker:
+            self._video_worker.deleteLater()
+            self._video_worker = None
+        if self._video_thread:
+            self._video_thread.deleteLater()
+            self._video_thread = None
 
     def get_video_frame(self) -> Optional[QImage]:
         if not self._video_worker:

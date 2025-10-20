@@ -49,6 +49,7 @@ from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
 from village.manager import manager
+from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
@@ -101,6 +102,7 @@ def system_run(bevavior_window: QWidget) -> None:
     tare_timer = time_utils.Timer(settings.get("REPEAT_TARE_TIME"))
     plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
     sound_alarm_timer = time_utils.Timer(3600)
+    video_alarm_timer = time_utils.Timer(3600)
 
     cam_corridor.start_recording()
 
@@ -114,10 +116,16 @@ def system_run(bevavior_window: QWidget) -> None:
 
             try:
                 while True:
-                    error = sound_device.error_queue.get_nowait()
-                    if sound_alarm_timer.has_elapsed():
+                    device, error = error_queue.get_nowait()
+                    if device == "sound" and sound_alarm_timer.has_elapsed():
                         log.alarm(
                             "Error in sound_device",
+                            exception=error,
+                            subject=manager.subject.name,
+                        )
+                    elif device == "video" and video_alarm_timer.has_elapsed():
+                        log.alarm(
+                            "Error in video worker",
                             exception=error,
                             subject=manager.subject.name,
                         )
