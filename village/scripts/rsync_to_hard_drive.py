@@ -97,7 +97,7 @@ def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
                 process_running = False
                 break
 
-            if time_utils.get_time_monotonic() - last_progress_time > 60:
+            if time_utils.get_time_monotonic() - last_progress_time > 600:
                 logging.warning("rsync seems stuck! Terminating...")
                 try:
                     os.killpg(os.getpgid(process.pid), signal.SIGTERM)

@@ -170,7 +170,7 @@ def run_rsync(
 
             # If no progress for the timeout duration, assume it's stuck
             if (
-                time_utils.get_time_monotonic() - last_progress_time > 60
+                time_utils.get_time_monotonic() - last_progress_time > 600
             ):  # 60s no progress
                 logging.warning("rsync seems stuck! Terminating...")
                 try:
