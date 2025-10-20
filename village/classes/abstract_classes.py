@@ -144,6 +144,9 @@ class SoundDeviceBase:
     def stop(self) -> None:
         return
 
+    def load_wav(self, file: str) -> None:
+        return
+
 
 class EventBase:
     def log(self, date: str, type: str, subject: str, description: str) -> None:

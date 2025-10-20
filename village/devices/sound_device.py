@@ -62,7 +62,9 @@ class SoundDevice(SoundDeviceBase):
 
         self.command_queue.put(("load", new_sound))
 
-    def load_wav(self, path: str) -> None:
+    def load_wav(self, file: str) -> None:
+        media_directory = settings.get("MEDIA_DIRECTORY")
+        path = os.path.join(media_directory, file)
         if not os.path.exists(path):
             raise FileNotFoundError(f"File '{path}' does not exist.")
 
@@ -131,8 +133,10 @@ class SoundDevice(SoundDeviceBase):
 
         except Exception:
             try:
-                error_queue.put_nowait(("audio", traceback.format_exc()))
+                print("ha habido una exception!!!!")
+                error_queue.put_nowait(("sound", traceback.format_exc()))
             except queue.Full:
+                print("error queue full, cannot log audio error")
                 pass
 
         finally:
