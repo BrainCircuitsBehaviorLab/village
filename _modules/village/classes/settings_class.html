@@ -618,6 +618,7 @@
         <span class="n">bpod_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
         <span class="n">camera_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
         <span class="n">motor_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+        <span class="n">visual_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
         <span class="n">hidden_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
@@ -640,6 +641,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bpod_settings</span> <span class="o">=</span> <span class="n">bpod_settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">camera_settings</span> <span class="o">=</span> <span class="n">camera_settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">motor_settings</span> <span class="o">=</span> <span class="n">motor_settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visual_settings</span> <span class="o">=</span> <span class="n">visual_settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_settings</span> <span class="o">=</span> <span class="n">hidden_settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span> <span class="o">=</span> <span class="n">QSettings</span><span class="p">(</span><span class="s2">&quot;village&quot;</span><span class="p">,</span> <span class="s2">&quot;village&quot;</span><span class="p">)</span>
 
@@ -659,6 +661,7 @@
             <span class="o">+</span> <span class="n">extra_settings</span>
             <span class="o">+</span> <span class="n">controller_settings</span>
             <span class="o">+</span> <span class="n">bpod_settings</span>
+            <span class="o">+</span> <span class="n">visual_settings</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="o">=</span> <span class="p">(</span>
@@ -675,6 +678,10 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">restore_factory_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">restorable_settings</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">restore_visual_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">visual_settings</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">create_factory_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -853,7 +860,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=06dde3a7"></script>
+</div><script src="../../../_static/documentation_options.js?v=5c990b24"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -29,6 +29,7 @@ Settings
       ~Settings.get_values
       ~Settings.print
       ~Settings.restore_factory_settings
+      ~Settings.restore_visual_settings
       ~Settings.set
       ~Settings.sync
    
