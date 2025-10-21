@@ -193,6 +193,8 @@ class LabelButtons:
             ):
                 return
             elif self.direction in [
+                "left",
+                "top",
                 "right",
                 "bottom",
                 "threshold",
@@ -223,6 +225,8 @@ class LabelButtons:
             elif self.direction in [
                 "left",
                 "top",
+                "right",
+                "bottom",
                 "threshold",
                 "empty_limit",
                 "subject_limit",
@@ -845,10 +849,10 @@ class FunctionsLayout(Layout):
 class CorridorLayout(Layout):
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self.color_area1_str = "rgb" + str(settings.get("COLOR_AREA1"))
-        self.color_area2_str = "rgb" + str(settings.get("COLOR_AREA2"))
-        self.color_area3_str = "rgb" + str(settings.get("COLOR_AREA3"))
-        self.color_area4_str = "rgb" + str(settings.get("COLOR_AREA4"))
+        self.color_area1_str = "rgb" + str(tuple(settings.get("COLOR_AREA1")))
+        self.color_area2_str = "rgb" + str(tuple(settings.get("COLOR_AREA2")))
+        self.color_area3_str = "rgb" + str(tuple(settings.get("COLOR_AREA3")))
+        self.color_area4_str = "rgb" + str(tuple(settings.get("COLOR_AREA4")))
         self.draw()
 
     def draw(self) -> None:

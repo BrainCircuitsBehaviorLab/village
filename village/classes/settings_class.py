@@ -63,6 +63,7 @@ class Settings:
         bpod_settings: list[Setting],
         camera_settings: list[Setting],
         motor_settings: list[Setting],
+        visual_settings: list[Setting],
         hidden_settings: list[Setting],
     ) -> None:
 
@@ -85,6 +86,7 @@ class Settings:
         self.bpod_settings = bpod_settings
         self.camera_settings = camera_settings
         self.motor_settings = motor_settings
+        self.visual_settings = visual_settings
         self.hidden_settings = hidden_settings
         self.saved_settings = QSettings("village", "village")
 
@@ -104,6 +106,7 @@ class Settings:
             + extra_settings
             + controller_settings
             + bpod_settings
+            + visual_settings
         )
 
         self.all_settings = (
@@ -119,6 +122,10 @@ class Settings:
 
     def restore_factory_settings(self) -> None:
         for s in self.restorable_settings:
+            self.saved_settings.setValue(s.key, s.value)
+
+    def restore_visual_settings(self) -> None:
+        for s in self.visual_settings:
             self.saved_settings.setValue(s.key, s.value)
 
     def create_factory_settings(self) -> None:

@@ -204,7 +204,7 @@ class SettingsLayout(Layout):
 
             # fourth column
             row = row1
-            name = "CAM FRAMERATES"
+            name = "CAMERA SETTINGS"
             label = self.create_and_add_label(name, row, column4, length, 2, "black")
             label.setProperty("type", name)
             row += 2
@@ -232,6 +232,15 @@ class SettingsLayout(Layout):
 
             # fifth column
             row = 5
+            name = "VISUAL SETTINGS"
+            label = self.create_and_add_label(name, row, column5, length, 2, "black")
+            label.setProperty("type", name)
+            row += 2
+            for s in settings.visual_settings:
+                self.create_label_and_value(row, column5, s, name, width=width5)
+                row += 2
+
+            row = 23
             name = "CONTROLLER SETTINGS"
             label = self.create_and_add_label(name, row, column5, length, 2, "black")
             label.setProperty("type", name)
@@ -244,7 +253,7 @@ class SettingsLayout(Layout):
             all and settings.get("BEHAVIOR_CONTROLLER") == Controller.BPOD
         ) or modify == "BPOD SETTINGS":
             name = "BPOD SETTINGS"
-            row = row1 + 6
+            row = row1 + 24
             for s in settings.bpod_settings:
                 self.create_label_and_value(row, column5, s, name, width=width5)
                 row += 2
@@ -416,7 +425,7 @@ class SettingsLayout(Layout):
             if s.value_type == list[int]:
                 values = [field.text() for field in list_line]
                 with suppress(BaseException):
-                    values_int = (int(values[0]), int(values[1]))
+                    values_int = [int(v) for v in values]
                     settings.set(s.key, values_int)
             else:
                 values = [field.text() for field in list_line]

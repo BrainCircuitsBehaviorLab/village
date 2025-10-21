@@ -106,11 +106,14 @@ class Camera(CameraBase):
         self.filename = ""
         self.cam.pre_callback = self.pre_process
 
-        color_area1 = settings.get("COLOR_AREA1")
-        color_area2 = settings.get("COLOR_AREA2")
-        color_area3 = settings.get("COLOR_AREA3")
-        color_area4 = settings.get("COLOR_AREA4")
+        color_area1 = tuple(settings.get("COLOR_AREA1"))
+        color_area2 = tuple(settings.get("COLOR_AREA2"))
+        color_area3 = tuple(settings.get("COLOR_AREA3"))
+        color_area4 = tuple(settings.get("COLOR_AREA4"))
         self.color_areas = [color_area1, color_area2, color_area3, color_area4]
+        self.thickness_line = settings.get("RECTANGLES_LINEWIDTH")
+        self.detection_color = tuple(settings.get("COLOR_DETECTION"))
+        self.detection_size = settings.get("DETECTION_CIRCLE_SIZE")
         self.color_rectangle = (255, 255, 255)
         self.color_text = (0, 0, 0)
         self.change = True
@@ -132,7 +135,6 @@ class Camera(CameraBase):
             self.set_properties()
             self.change = False
 
-        # labels settings
         self.origin_rectangle = (0, 0)
         self.end_rectangle = (self.width, int(self.height / 12))
 
@@ -153,7 +155,6 @@ class Camera(CameraBase):
 
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.scale = self.width * 0.000625
-        self.thickness_line = 2
         if self.width <= 640:
             self.thickness_text = 1
         else:
@@ -240,6 +241,15 @@ class Camera(CameraBase):
             self.tracking = settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON
         else:
             self.tracking = False
+
+        color_area1 = tuple(settings.get("COLOR_AREA1"))
+        color_area2 = tuple(settings.get("COLOR_AREA2"))
+        color_area3 = tuple(settings.get("COLOR_AREA3"))
+        color_area4 = tuple(settings.get("COLOR_AREA4"))
+        self.color_areas = [color_area1, color_area2, color_area3, color_area4]
+        self.thickness_line = settings.get("RECTANGLES_LINEWIDTH")
+        self.detection_color = tuple(settings.get("COLOR_DETECTION"))
+        self.detection_size = settings.get("DETECTION_CIRCLE_SIZE")
 
         # lens position, sharpness and contrast settings
         if self.name == "CORRIDOR" and manager.day:
@@ -806,8 +816,8 @@ class Camera(CameraBase):
             cv2.circle(
                 self.frame,
                 (self.x_position, self.y_position),
-                10,
-                (255, 0, 255),
+                self.detection_size,
+                self.detection_color,
                 -1,
             )
 

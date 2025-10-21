@@ -648,6 +648,16 @@ motor_settings = [
     ),
 ]
 
+visual_settings = [
+    Setting("COLOR_AREA1", [0, 136, 0], list[int], "The color of the first area."),
+    Setting("COLOR_AREA2", [204, 51, 170], list[int], "The color of the second area."),
+    Setting("COLOR_AREA3", [51, 119, 204], list[int], "The color of the third area."),
+    Setting("COLOR_AREA4", [221, 51, 0], list[int], "The color of the fourth area."),
+    Setting("COLOR_DETECTION", [255, 0, 255], list[int], "The color of the detection."),
+    Setting("RECTANGLES_LINEWIDTH", 2, int, "The linewidth of the areas."),
+    Setting("DETECTION_CIRCLE_SIZE", 5, int, "The size of the detection circle."),
+]
+
 hidden_settings = [
     Setting("FIRST_LAUNCH", "OFF", Active, "First launch of the system."),
     Setting(
@@ -681,10 +691,6 @@ hidden_settings = [
     Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)."),
     Setting("INFO", "SYSTEM_INFO", Info, "The information status."),
     Setting("ACTIONS", "CORRIDOR", Actions, "The actions status."),
-    Setting("COLOR_AREA1", (0, 136, 0), tuple, "The color of the first area."),
-    Setting("COLOR_AREA2", (204, 51, 170), tuple, "The color of the second area."),
-    Setting("COLOR_AREA3", (51, 119, 204), tuple, "The color of the third area."),
-    Setting("COLOR_AREA4", (221, 51, 0), tuple, "The color of the fourth area."),
 ]
 
 
@@ -708,8 +714,10 @@ settings = Settings(
     bpod_settings,
     camera_settings,
     motor_settings,
+    visual_settings,
     hidden_settings,
 )
 
 # settings.restore_factory_settings()
+# settings.restore_visual_settings()
 # settings.print()

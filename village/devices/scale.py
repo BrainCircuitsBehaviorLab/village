@@ -69,7 +69,7 @@ class Scale(ScaleBase):
     def get_weight(self) -> float:
         try:
             value = (self.get_value() - self.offset) / self.calibration
-            return value
+            return round(value, 2)
         except Exception:
             if self.error_message_timer.has_elapsed():
                 log.error("Error getting weight", exception=traceback.format_exc())
