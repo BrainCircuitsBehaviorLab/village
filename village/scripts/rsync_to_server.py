@@ -14,7 +14,13 @@ from village.scripts.utils import setup_logging
 
 
 def run_rsync(
-    source_path, destination, remote_user, remote_host, port, maximum_sync_time
+    source_path,
+    destination,
+    remote_user,
+    remote_host,
+    port,
+    maximum_sync_time,
+    cancel_event=None,
 ) -> bool:
     """
     Run rsync command with specified parameters
@@ -26,7 +32,12 @@ def run_rsync(
     - remote_host: Remote hostname or IP
     - port: SSH port
     - maximum_sync_time: Maximum_sync_time in seconds
+    - cancel_event: threading.Event to signal cancellation
     """
+
+    if cancel_event is None:
+        cancel_event = threading.Event()
+
     # Ensure source path ends with / to copy contents
     source_path = os.path.join(source_path, "")
     destination_dir = os.path.dirname(destination)
@@ -121,29 +132,34 @@ def run_rsync(
 
         process_running = True
 
-        def check_maximum_sync_time() -> None:
+        def _terminate(reason: str):
             nonlocal process_running
-            time.sleep(maximum_sync_time)
+            logging.error(reason)
+            try:
+                os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+            except Exception:
+                process.terminate()
+            try:
+                if process.stdout:
+                    process.stdout.close()
+            except Exception:
+                pass
+            try:
+                if process.stderr:
+                    process.stderr.close()
+            except Exception:
+                pass
+            process_running = False
+
+        def check_maximum_sync_time():
+            nonlocal process_running
+            fired = cancel_event.wait(timeout=maximum_sync_time)
             if process_running and process.poll() is None:
-                logging.error(
-                    f"Maximum sync time reached ({maximum_sync_time}s). Terminating."
-                )
-                try:
-                    os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                except Exception:
-                    process.terminate()
-                # Closing pipes
-                try:
-                    if process.stdout:
-                        process.stdout.close()
-                except Exception:
-                    pass
-                try:
-                    if process.stderr:
-                        process.stderr.close()
-                except Exception:
-                    pass
-                process_running = False
+                if fired:
+                    text = "External cancel requested. "
+                else:
+                    text = f"Maximum sync time reached ({maximum_sync_time}s). "
+            _terminate(text + "Terminating rsync process.")
 
         # Launching a thread to check for maximum_sync_time
         sync_time_thread = threading.Thread(target=check_maximum_sync_time, daemon=True)
@@ -243,7 +259,13 @@ def run_rsync(
 
 
 def main(
-    source, destination, remote_user, remote_host, port=None, maximum_sync_time=1200
+    source,
+    destination,
+    remote_user,
+    remote_host,
+    port=None,
+    maximum_sync_time=1200,
+    cancel_event=None,
 ) -> None:
     """
     Main function to sync data to remote server using rsync
@@ -255,6 +277,7 @@ def main(
     - remote_host: Remote hostname or IP
     - port: SSH port (default: None)
     - maximum_sync_time: Maximum sync time duration in seconds (default: 1200)
+    - cancel_event: threading.Event to signal cancellation (optional)
     """
     # Setup logging
     log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")
@@ -265,7 +288,13 @@ def main(
 
     # Run rsync
     success = run_rsync(
-        source, destination, remote_user, remote_host, port, maximum_sync_time
+        source,
+        destination,
+        remote_user,
+        remote_host,
+        port,
+        maximum_sync_time,
+        cancel_event,
     )
 
     # Log completion

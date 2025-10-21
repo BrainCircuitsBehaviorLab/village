@@ -4,6 +4,7 @@
 2. You can override this class in your project code to implement custom behavior.
 """
 
+import threading
 from typing import Optional
 
 from village.classes.enums import SyncType
@@ -24,6 +25,7 @@ class AfterSessionBase:
             self.port: Optional[int] = int(settings.get("SERVER_PORT"))
         except Exception:
             self.port = None
+        self.cancel_event = threading.Event()
 
     def run(self) -> None:
         if self.sync_type == SyncType.HD:
@@ -31,6 +33,7 @@ class AfterSessionBase:
                 source=self.data_directory,
                 destination=self.sync_directory,
                 maximum_sync_time=self.maximum_sync_time,
+                cancel_event=self.cancel_event,
             )
         elif self.sync_type == SyncType.SERVER:
             rsync_to_server(
@@ -40,6 +43,7 @@ class AfterSessionBase:
                 remote_host=self.server_host,
                 port=self.port,
                 maximum_sync_time=self.maximum_sync_time,
+                cancel_event=self.cancel_event,
             )
 
 

@@ -79,7 +79,7 @@ class State(SuperEnum):
     LAUNCH_MANUAL = "Manually launching the task"
     RUN_MANUAL = "Task running manually"
     SAVE_MANUAL = "Stopping the task, saving the data; task is running manually"
-    SYNC = "Synchronizing data with the server or doing user-defined tasks"
+    SYNC = "Synchronizing data or doing user-defined tasks"
     EXIT_GUI = "In the GUI window, ready to exit the app"
 
     def __init__(self, description: str) -> None:
@@ -110,6 +110,12 @@ class State(SuperEnum):
             State.RUN_OPENED,
             State.RUN_MANUAL,
         ):
+            return True
+        else:
+            return False
+
+    def can_stop_syncing(self) -> bool:
+        if self == State.SYNC:
             return True
         else:
             return False

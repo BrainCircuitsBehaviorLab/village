@@ -339,6 +339,15 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
+        elif manager.state.can_stop_syncing():
+            self.stop_button.setText("STOP SYNC")
+            text = (
+                "Stop data synchronization. Sync will resume automatically after "
+                + "the next session."
+            )
+            self.stop_button.setToolTip(text)
+            self.stop_button.setEnabled(True)
+            self.online_plots_button.setEnabled(False)
         else:
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
@@ -503,6 +512,8 @@ class Layout(QGridLayout):
             manager.getting_weights = False
             manager.state = State.WAIT
             log.info("Going to WAIT State")
+        elif manager.state.can_stop_syncing():
+            manager.after_session.cancel_event.set()
         self.update_gui()
 
     def close_online_plot_window(self) -> None:

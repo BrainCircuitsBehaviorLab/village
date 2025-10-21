@@ -12,7 +12,9 @@ from village.scripts.time_utils import time_utils
 from village.scripts.utils import setup_logging
 
 
-def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
+def run_rsync_local(
+    source_path, destination, maximum_sync_time, cancel_event=None
+) -> bool:
     """
     Run rsync to sync to a local destination (e.g., external HDD).
 
@@ -21,6 +23,10 @@ def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
     - destination: Local destination path (e.g., /media/pi/mydisk/backup/)
     - maximum_sync_time: Maximum_sync_time in seconds
     """
+
+    if cancel_event is None:
+        cancel_event = threading.Event()
+
     # Ensure source path ends with /
     source_path = os.path.join(source_path, "")
 
@@ -64,18 +70,34 @@ def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
         last_progress_time = start_time
         process_running = True
 
-        def check_maximum_sync_time() -> None:
+        def _terminate(reason: str):
             nonlocal process_running
-            time.sleep(maximum_sync_time)
+            logging.error(reason)
+            try:
+                os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+            except Exception:
+                process.terminate()
+            try:
+                if process.stdout:
+                    process.stdout.close()
+            except Exception:
+                pass
+            try:
+                if process.stderr:
+                    process.stderr.close()
+            except Exception:
+                pass
+            process_running = False
+
+        def check_maximum_sync_time():
+            nonlocal process_running
+            fired = cancel_event.wait(timeout=maximum_sync_time)
             if process_running and process.poll() is None:
-                logging.error(
-                    f"Maximum sync time reached ({maximum_sync_time}s). Terminating."
-                )
-                try:
-                    os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                except Exception:
-                    process.terminate()
-                process_running = False
+                if fired:
+                    text = "External cancel requested. "
+                else:
+                    text = f"Maximum sync time reached ({maximum_sync_time}s). "
+            _terminate(text + "Terminating rsync process.")
 
         sync_time_thread = threading.Thread(target=check_maximum_sync_time, daemon=True)
         sync_time_thread.start()
@@ -161,7 +183,7 @@ def run_rsync_local(source_path, destination, maximum_sync_time) -> bool:
             pass
 
 
-def main(source, destination, maximum_sync_time=1800) -> None:
+def main(source, destination, maximum_sync_time=1800, cancel_event=None) -> None:
     """
     Main function to sync data to local disk using rsync.
 
@@ -169,13 +191,14 @@ def main(source, destination, maximum_sync_time=1800) -> None:
     - source: Source directory path
     - destination: Destination path on remote system
     - maximum_sync_time: Maximum sync time duration in seconds (default: 1200)
+    - cancel_event: threading.Event to signal cancellation (optional)
     """
     log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")
     logging.info(f"Logging to file: {log_file}")
 
     logging.info(f"Starting local sync from {source} to {destination}")
 
-    success = run_rsync_local(source, destination, maximum_sync_time)
+    success = run_rsync_local(source, destination, maximum_sync_time, cancel_event)
 
     if success:
         logging.info(f"Sync completed successfully. Log file: {log_file}")

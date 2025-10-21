@@ -494,7 +494,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 manager.previous_state_wait = False
 
             case State.SYNC:
-                # Synchronizing data with the server or doing user-defined tasks
+                # Synchronizing data or doing user-defined tasks
                 gc.enable()
                 time_utils.sync()
                 if manager.after_session_flag:
