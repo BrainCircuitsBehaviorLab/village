@@ -84,7 +84,9 @@ def corridor_plot(
         y_pos = y_positions[subject]
 
         for i, (_, row) in enumerate(subject_data.iterrows()):
-            if row["description"] == "Subject detected":
+            if row["description"].startswith(
+                ("Subject not", "Detection in", "Large", "Multiple")
+            ):
                 detections_x.append(row["date"])
                 detections_y.append(y_pos)
             elif row["type"] == "START":
