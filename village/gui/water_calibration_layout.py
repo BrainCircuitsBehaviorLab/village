@@ -730,7 +730,7 @@ class WaterCalibrationLayout(Layout):
         try:
             for index in self.indices:
                 line_edit = self.total_weight_line_edits[index]
-                result = round((float(line_edit.text()) / self.iterations * 1000), 4)
+                result = round((float(line_edit.text()) / self.iterations * 1000), 5)
                 if result > 0:
                     self.water_delivered[index] = result
 
@@ -747,7 +747,7 @@ class WaterCalibrationLayout(Layout):
         for index in self.indices2:
             line_edit = self.total_weight_line_edits2[index]
             try:
-                result = round((float(line_edit.text()) / self.iterations2 * 1000), 4)
+                result = round((float(line_edit.text()) / self.iterations2 * 1000), 5)
             except Exception:
                 result = 0
             if result > 0:
@@ -757,7 +757,7 @@ class WaterCalibrationLayout(Layout):
                     / self.water_expected2[index]
                     * 100
                 )
-                error = round(error, 4)
+                error = round(error, 5)
                 self.errors2[index] = error
                 text = str(result) + " (" + str(error) + "% error)"
                 self.water_delivered_labels2[index].setText(text)

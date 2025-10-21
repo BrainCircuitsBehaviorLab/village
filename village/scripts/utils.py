@@ -373,7 +373,7 @@ def get_x_value_interp(x, y, y_target) -> float | None:
     if y_target < np.min(y) or y_target > np.max(y):
         return None
 
-    points = int((np.max(x) - np.min(x)) * 10000)
+    points = int((np.max(x) - np.min(x)) * 100000)
 
     x_fit, y_fit = interpolate(x, y, points=points)
 
@@ -386,7 +386,7 @@ def get_x_value_interp(x, y, y_target) -> float | None:
     diffs = np.abs(y_fit - y_target)
     best_idx = int(np.argmin(diffs))
 
-    return round(float(x_fit[best_idx]), 4)
+    return round(float(x_fit[best_idx]), 5)
 
 
 def create_pixmap(fig: Figure) -> QPixmap:
