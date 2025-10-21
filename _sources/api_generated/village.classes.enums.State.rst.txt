@@ -24,6 +24,7 @@ State
       ~State.can_edit_data
       ~State.can_calibrate_scale
       ~State.can_stop_task
+      ~State.can_stop_syncing
       ~State.can_go_to_wait
       ~State.__init__
    

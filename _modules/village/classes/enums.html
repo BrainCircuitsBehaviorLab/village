@@ -647,7 +647,7 @@
     <span class="n">LAUNCH_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Manually launching the task&quot;</span>
     <span class="n">RUN_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Task running manually&quot;</span>
     <span class="n">SAVE_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; task is running manually&quot;</span>
-    <span class="n">SYNC</span> <span class="o">=</span> <span class="s2">&quot;Synchronizing data with the server or doing user-defined tasks&quot;</span>
+    <span class="n">SYNC</span> <span class="o">=</span> <span class="s2">&quot;Synchronizing data or doing user-defined tasks&quot;</span>
     <span class="n">EXIT_GUI</span> <span class="o">=</span> <span class="s2">&quot;In the GUI window, ready to exit the app&quot;</span>
 
 <div class="viewcode-block" id="State.__init__">
@@ -681,6 +681,12 @@
             <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
             <span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span>
         <span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">can_stop_syncing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">SYNC</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -777,7 +783,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=890e9b70"></script>
+</div><script src="../../../_static/documentation_options.js?v=428e1388"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
