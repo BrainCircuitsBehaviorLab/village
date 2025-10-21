@@ -97,7 +97,7 @@ def run_rsync_local(
                     text = "External cancel requested. "
                 else:
                     text = f"Maximum sync time reached ({maximum_sync_time}s). "
-            _terminate(text + "Terminating rsync process.")
+                _terminate(text + "Terminating rsync process.")
 
         sync_time_thread = threading.Thread(target=check_maximum_sync_time, daemon=True)
         sync_time_thread.start()
