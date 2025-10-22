@@ -13,13 +13,13 @@ from village.scripts.utils import setup_logging
 
 
 def run_rsync_local(
-    source_path, destination, maximum_sync_time, cancel_event=None
+    source, destination, maximum_sync_time, cancel_event=None
 ) -> bool:
     """
     Run rsync to sync to a local destination (e.g., external HDD).
 
-    Parameters (for compatibility; only source_path and destination are used):
-    - source_path: Local path to sync
+    Parameters (for compatibility; only source and destination are used):
+    - source: Local path to sync
     - destination: Local destination path (e.g., /media/pi/mydisk/backup/)
     - maximum_sync_time: Maximum_sync_time in seconds
     """
@@ -28,7 +28,7 @@ def run_rsync_local(
         cancel_event = threading.Event()
 
     # Ensure source path ends with /
-    source_path = os.path.join(source_path, "")
+    source = os.path.join(source, "")
 
     # Ensure destination directory exists
     try:
@@ -54,7 +54,7 @@ def run_rsync_local(
         "rsync_logs/",  # exclude logs
         "--exclude",
         "data_removal_logs/",  # exclude logs
-        source_path,
+        source,
         destination,
     ]
 

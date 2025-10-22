@@ -14,7 +14,7 @@ from village.scripts.utils import setup_logging
 
 
 def run_rsync(
-    source_path,
+    source,
     destination,
     remote_user,
     remote_host,
@@ -26,7 +26,7 @@ def run_rsync(
     Run rsync command with specified parameters
 
     Parameters:
-    - source_path: Local path to sync
+    - source: Local path to sync
     - destination: Remote destination path
     - remote_user: Username on remote system
     - remote_host: Remote hostname or IP
@@ -39,7 +39,7 @@ def run_rsync(
         cancel_event = threading.Event()
 
     # Ensure source path ends with / to copy contents
-    source_path = os.path.join(source_path, "")
+    source = os.path.join(source, "")
     destination_dir = os.path.dirname(destination)
 
     try:
@@ -96,7 +96,7 @@ def run_rsync(
             "rsync_logs/",  # exclude logs
             "--exclude",
             "data_removal_logs/",  # exclude logs
-            source_path,
+            source,
             f"{remote_user}@{remote_host}:{destination}",
         ]
     else:
@@ -118,7 +118,7 @@ def run_rsync(
             "data_removal_logs/",  # exclude logs
             "-e",
             f"ssh -p {port}",  # specify ssh port
-            source_path,
+            source,
             f"{remote_user}@{remote_host}:{destination}",
         ]
 
