@@ -92,6 +92,10 @@ def run_rsync(
             "CORRIDOR*",  # exclude CORRIDOR videos and data
             "--exclude",
             ".git/",  # exclude git directory
+            "--exclude",
+            "rsync_logs/",  # exclude logs
+            "--exclude",
+            "data_removal_logs/",  # exclude logs
             source_path,
             f"{remote_user}@{remote_host}:{destination}",
         ]
@@ -108,6 +112,10 @@ def run_rsync(
             "CORRIDOR*",  # exclude CORRIDOR videos and data
             "--exclude",
             ".git/",  # exclude git directory
+            "--exclude",
+            "rsync_logs/",  # exclude logs
+            "--exclude",
+            "data_removal_logs/",  # exclude logs
             "-e",
             f"ssh -p {port}",  # specify ssh port
             source_path,

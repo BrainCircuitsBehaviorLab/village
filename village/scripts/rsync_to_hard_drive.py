@@ -50,6 +50,10 @@ def run_rsync_local(
         "CORRIDOR*",
         "--exclude",
         ".git/",
+        "--exclude",
+        "rsync_logs/",  # exclude logs
+        "--exclude",
+        "data_removal_logs/",  # exclude logs
         source_path,
         destination,
     ]
