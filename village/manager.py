@@ -714,8 +714,12 @@ class Manager:
         time_hours_ago = time_utils.hours_ago(hours)
 
         detections = events[
-            (events["description"].str.startswith(
-                ("Subject not", "Detection in", "Large", "Multiple")))
+            (
+                events["description"].str.startswith(
+                    ("Subject not", "Detection in", "Large", "Multiple")
+                )
+                | (events["type"] == "START")
+            )
             & (events["date"] >= time_hours_ago)
         ]
 
