@@ -278,7 +278,7 @@ class Task:
                 subject=self.subject,
             )
 
-        trials = self.raw_df["TRIAL"].iloc[-1]
+        trials = int(self.raw_df["TRIAL"].iloc[-1])
 
         if trials > 1:
             non_nan_values = self.raw_df["START"].dropna()
