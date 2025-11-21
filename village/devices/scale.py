@@ -37,17 +37,10 @@ class Scale(ScaleBase):
     def calibrate(self, weight: float) -> None:
         try:
             raw_value: float = self.get_value(samples=5)
-            if raw_value < 1:
-                log.error("Error calibrating scale", exception=traceback.format_exc())
-                return
             new_calibration = (raw_value - self.offset) / weight
-            if new_calibration <= 0:
-                log.error("Error calibrating scale", exception=traceback.format_exc())
-                return
             self.calibration = new_calibration
             settings.set("SCALE_CALIBRATION_VALUE", new_calibration)
             settings.set("SCALE_WEIGHT_TO_CALIBRATE", weight)
-
         except Exception:
             log.error("Error calibrating scale", exception=traceback.format_exc())
 
