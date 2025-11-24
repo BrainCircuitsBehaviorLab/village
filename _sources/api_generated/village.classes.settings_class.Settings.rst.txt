@@ -28,6 +28,7 @@ Settings
       ~Settings.get_type
       ~Settings.get_values
       ~Settings.print
+      ~Settings.restore_directory_settings
       ~Settings.restore_factory_settings
       ~Settings.restore_visual_settings
       ~Settings.set

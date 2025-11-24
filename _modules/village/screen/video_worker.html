@@ -592,7 +592,6 @@
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">fps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">))</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fps:&quot;</span><span class="p">,</span> <span class="n">fps</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="n">fps</span> <span class="o">=</span> <span class="mf">30.0</span>
 
@@ -636,8 +635,6 @@
         <span class="n">target_idx</span> <span class="o">=</span> <span class="p">(</span>
             <span class="nb">int</span><span class="p">((</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="n">target_idx</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span> <span class="o">==</span> <span class="n">target_idx</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
@@ -692,7 +689,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=3804a9bc"></script>
+</div><script src="../../../_static/documentation_options.js?v=0479c276"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
