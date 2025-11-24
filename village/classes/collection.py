@@ -21,7 +21,7 @@ class Collection(EventBase):
         self.columns: list[str] = columns
         self.types: list[Type] = types
         self.dict = {col: t for col, t in zip(self.columns, self.types)}
-        self.path: Path = Path(settings.get("DATA_DIRECTORY")) / (name + ".csv")
+        self.path: Path = Path(settings.get("SYSTEM_DIRECTORY")) / (name + ".csv")
         self.df = pd.DataFrame()
 
         if name != "":
@@ -76,7 +76,7 @@ class Collection(EventBase):
             first_rows: pd.DataFrame = self.df.head(file_size)
             date_str: str = time_utils.now_string_for_filename()
             new_filename: str = self.name + "_" + date_str + ".csv"
-            directory = Path(settings.get("DATA_DIRECTORY"), "old_events")
+            directory = Path(settings.get("SYSTEM_DIRECTORY"), "old_events")
             new_path = Path(directory, new_filename)
             directory.mkdir(parents=True, exist_ok=True)
             first_rows.to_csv(new_path, index=False, sep=";")

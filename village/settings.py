@@ -15,8 +15,10 @@ from village.classes.settings_class import (
     SyncType,
 )
 
+default_system_name = "village01"
+
 main_settings = [
-    Setting("SYSTEM_NAME", "village01", str, "The system’s unique name."),
+    Setting("SYSTEM_NAME", default_system_name, str, "The system’s unique name."),
     Setting(
         "DAYTIME",
         "08:00",
@@ -138,6 +140,12 @@ directory_settings = [
         str(Path(default_project_directory, "data", "videos")),
         str,
         "The videos directory.",
+    ),
+    Setting(
+        "SYSTEM_DIRECTORY",
+        str(Path(default_project_directory, "data", default_system_name)),
+        str,
+        "The system directory.",
     ),
     Setting(
         "CODE_DIRECTORY",
@@ -720,4 +728,4 @@ settings = Settings(
 
 # settings.restore_factory_settings()
 # settings.restore_visual_settings()
-# settings.print()
+settings.print()

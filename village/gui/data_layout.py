@@ -12,6 +12,7 @@ from classes.enums import State
 from pandas import DataFrame
 from PyQt5.QtCore import (
     QAbstractTableModel,
+    QEvent,
     QModelIndex,
     Qt,
     QTimer,
@@ -22,6 +23,7 @@ from PyQt5.QtGui import QBrush, QColor, QImage, QPixmap
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QAbstractScrollArea,
+    QApplication,
     QCheckBox,
     QDateTimeEdit,
     QDialog,
@@ -68,6 +70,15 @@ class TableView(QTableView):
             raise RuntimeError("TableView requires a Table model")
         return cast(Table, m)
 
+    def mousePressEvent(self, event) -> None:
+        """Clear selection when clicking on empty space in the table."""
+        index = self.indexAt(event.pos())
+        if not index.isValid():
+            sel_model = self.selectionModel()
+            if sel_model is not None:
+                sel_model.clearSelection()
+        super().mousePressEvent(event)
+
     def mouseDoubleClickEvent(self, event) -> None:
         index: QModelIndex = self.indexAt(event.pos())
         if not index.isValid():
@@ -103,6 +114,22 @@ class TableView(QTableView):
                     self.openDaysSelectionDialog(index, current_value)
                 else:
                     manager.state = State.MANUAL_MODE
+                    old_value = str(model.data(index, Qt.DisplayRole)).strip()
+                    if old_value not in ("", "nan", "0", "0.0"):
+                        text = (
+                            "If this subject already has recorded sessions, "
+                            + "modifying this value may lead to inconsistencies in "
+                            + "the data. Are you sure you want to modify this value?"
+                        )
+                        reply = QMessageBox.question(
+                            self,
+                            "Confirm edit",
+                            text,
+                            QMessageBox.Yes | QMessageBox.No,
+                            QMessageBox.No,
+                        )
+                        if reply == QMessageBox.No:
+                            return
                     super().mouseDoubleClickEvent(event)
                     self.save_changes_in_df()
             elif flags & Qt.ItemIsEditable:
@@ -331,11 +358,6 @@ class Table(QAbstractTableModel):
     def columnCount(self, parent=None) -> int:
         return self.df.shape[1]
 
-    # def data(self, index, role=Qt.DisplayRole) -> str | None:
-    #     if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
-    #         return str(self.df.iat[index.row(), index.column()])
-    #     return None
-
     def data(
         self, index: QModelIndex, role: int = Qt.DisplayRole
     ) -> Any | str | QBrush:
@@ -345,7 +367,7 @@ class Table(QAbstractTableModel):
         row = index.row()
         col = index.column()
 
-        if role == Qt.DisplayRole:
+        if role in (Qt.DisplayRole, Qt.EditRole):
             try:
                 return str(self.df.iat[row, col])
             except Exception:
@@ -523,24 +545,36 @@ class DataLayout(Layout):
                         "Can not create session plot", exception=traceback.format_exc()
                     )
         elif manager.table == DataTable.SUBJECTS:
-            path = self.page1Layout.get_path_from_subjects_row(
-                cast(pd.Series, self.page1Layout.get_selected_row_series())
-            )
-            try:
-                df = pd.read_csv(path, sep=";")
-                name = cast(pd.Series, self.page1Layout.get_selected_row_series())[
-                    "name"
-                ]
-                summary_df = manager.sessions_summary.df.loc[
-                    manager.sessions_summary.df["subject"] == name
-                ]
-                figure = manager.subject_plot.create_plot(df, summary_df, width, height)
-                pixmap = create_pixmap(figure)
-            except Exception:
-                log.error(
-                    "Can not create plot for file: " + path,
-                    exception=traceback.format_exc(),
+            if signal == "weights":
+                try:
+                    df = manager.sessions_summary.df.copy()
+                    figure = weights_plot(df, width, height)
+                    pixmap = create_pixmap(figure)
+                except Exception:
+                    log.error(
+                        "Can not create weights plot", exception=traceback.format_exc()
+                    )
+            else:
+                path = self.page1Layout.get_path_from_subjects_row(
+                    cast(pd.Series, self.page1Layout.get_selected_row_series())
                 )
+                try:
+                    df = pd.read_csv(path, sep=";")
+                    name = cast(pd.Series, self.page1Layout.get_selected_row_series())[
+                        "name"
+                    ]
+                    summary_df = manager.sessions_summary.df.loc[
+                        manager.sessions_summary.df["subject"] == name
+                    ]
+                    figure = manager.subject_plot.create_plot(
+                        df, summary_df, width, height
+                    )
+                    pixmap = create_pixmap(figure)
+                except Exception:
+                    log.error(
+                        "Can not create plot for file: " + path,
+                        exception=traceback.format_exc(),
+                    )
         elif manager.table == DataTable.WATER_CALIBRATION:
             try:
                 df = manager.water_calibration.get_last_water_df()
@@ -639,6 +673,28 @@ class DfLayout(Layout):
         self.weight = 0.0
         self.weights = False
         self.draw()
+
+        app = QApplication.instance()
+        if app is not None:
+            self.window.installEventFilter(self)
+
+    def eventFilter(self, obj, event) -> bool:
+        try:
+            if (
+                event.type() == QEvent.MouseButtonPress
+                and hasattr(self, "table_view")
+                and self.table_view is not None
+            ):
+                global_pos = event.globalPos()
+                table_pos = self.table_view.mapFromGlobal(global_pos)
+                if not self.table_view.rect().contains(table_pos):
+                    sel_model = self.table_view.selectionModel()
+                    if sel_model is not None:
+                        sel_model.clearSelection()
+                        self.update_buttons()
+        except Exception:
+            pass
+        return super().eventFilter(obj, event)
 
     def draw(self) -> None:
         self.searching = ""
@@ -950,16 +1006,22 @@ class DfLayout(Layout):
             case DataTable.SUBJECTS:
                 self.first_button.hide()
                 self.second_button.hide()
-                self.third_button.hide()
-                self.connect_button_to_add(self.fourth_button)
-                self.connect_button_to_delete(self.fifth_button)
+                self.connect_button_to_add(self.third_button)
+                self.connect_button_to_delete(self.fourth_button)
                 self.connect_button_to_plot(
-                    self.sixth_button, "PLOT SUBJECT", "Plot the selected subject"
+                    self.fifth_button, "PLOT SUBJECT", "Plot the selected subject"
                 )
-                self.fourth_button.setEnabled(True)
+                self.connect_button_to_plot_weights(
+                    self.sixth_button,
+                    "PLOT WEIGHTS",
+                    "Plot the weights of all subjects",
+                )
+
+                self.third_button.setEnabled(True)
                 enabled = bool(selected_indexes)
+                self.fourth_button.setEnabled(enabled)
                 self.fifth_button.setEnabled(enabled)
-                self.sixth_button.setEnabled(enabled)
+                self.sixth_button.setEnabled(True)
             case (
                 DataTable.WATER_CALIBRATION
                 | DataTable.SOUND_CALIBRATION

@@ -1,5 +1,5 @@
 # This file is part of the Training Village repository.
-# Copyright (C) [2024] [BRAIN CIRCUITS AND BEHAVIOR LAB]
+# Copyright (C) 2024-2025 BRAIN CIRCUITS AND BEHAVIOR LAB
 #
 # This program is licensed under the GNU General Public License v3 (GPLv3).
 # See the LICENSE.md file in the root of this repository for full license text.

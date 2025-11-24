@@ -35,7 +35,14 @@ def weights_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
 
     # Global x/y limits for consistency across subplots
     x_min, x_max = df["date"].min(), df["date"].max()
-    y_min, y_max = df["weight"].min(), df["weight"].max()
+
+    q1 = df["weight"].quantile(0.25)
+    q3 = df["weight"].quantile(0.75)
+    iqr = q3 - q1
+    lower = q1 - 1.5 * iqr
+    upper = q3 + 1.5 * iqr
+    df_clean = df[(df["weight"] >= lower) & (df["weight"] <= upper)].copy()
+    y_min, y_max = df_clean["weight"].min(), df_clean["weight"].max()
 
     fig, axes = plt.subplots(rows, cols, figsize=(width, height), squeeze=False)
 

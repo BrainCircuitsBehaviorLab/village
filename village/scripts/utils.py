@@ -22,15 +22,26 @@ from village.settings import settings
 
 
 def change_directory_settings(new_path: str) -> None:
+    system_name = settings.get("SYSTEM_NAME")
     settings.set("PROJECT_DIRECTORY", new_path)
     settings.set("DATA_DIRECTORY", str(Path(new_path, "data")))
     settings.set("SESSIONS_DIRECTORY", str(Path(new_path, "data", "sessions")))
     settings.set("VIDEOS_DIRECTORY", str(Path(new_path, "data", "videos")))
+    settings.set("SYSTEM_DIRECTORY", str(Path(new_path, "data", system_name)))
     settings.set("CODE_DIRECTORY", str(Path(new_path, "code")))
     settings.set("MEDIA_DIRECTORY", str(Path(new_path, "media")))
 
 
+def change_system_directory_settings() -> None:
+    system_name = settings.get("SYSTEM_NAME")
+    data_directory = settings.get("DATA_DIRECTORY")
+    settings.set("SYSTEM_DIRECTORY", str(Path(data_directory, system_name)))
+
+
 def create_directories() -> None:
+    print("create directories --------------")
+    print(settings.get("SYSTEM_DIRECTORY"))
+    print("----------------")
     directory = Path(settings.get("PROJECT_DIRECTORY"))
     directory.mkdir(parents=True, exist_ok=True)
     directory = Path(settings.get("DATA_DIRECTORY"))
@@ -38,6 +49,8 @@ def create_directories() -> None:
     directory = Path(settings.get("SESSIONS_DIRECTORY"))
     directory.mkdir(parents=True, exist_ok=True)
     directory = Path(settings.get("VIDEOS_DIRECTORY"))
+    directory.mkdir(parents=True, exist_ok=True)
+    directory = Path(settings.get("SYSTEM_DIRECTORY"))
     directory.mkdir(parents=True, exist_ok=True)
     directory = Path(settings.get("CODE_DIRECTORY"))
     directory.mkdir(parents=True, exist_ok=True)
@@ -47,6 +60,9 @@ def create_directories() -> None:
 
 def create_directories_from_path(p: str) -> bool:
     try:
+        print("create directories from path --------------")
+        print(settings.get("SYSTEM_NAME"))
+        print("----------------")
         path = Path(p)
         path.mkdir(parents=True, exist_ok=True)
         data = Path(path, "data")
@@ -55,6 +71,8 @@ def create_directories_from_path(p: str) -> bool:
         sessions.mkdir(parents=True, exist_ok=True)
         videos = Path(data, "videos")
         videos.mkdir(parents=True, exist_ok=True)
+        system = Path(data, settings.get("SYSTEM_NAME"))
+        system.mkdir(parents=True, exist_ok=True)
         code = Path(path, "code")
         code.mkdir(parents=True, exist_ok=True)
         return True
@@ -293,7 +311,7 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
 
 def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
     """Configure logging to file"""
-    data_dir = settings.get("DATA_DIRECTORY")
+    data_dir = settings.get("SYSTEM_DIRECTORY")
     logs_dir = os.path.join(data_dir, logs_subdirectory)
 
     # Create logs directory if it doesn't exist
