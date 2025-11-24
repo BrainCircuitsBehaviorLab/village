@@ -328,7 +328,6 @@ class SettingsLayout(Layout):
         manager.changing_settings = False
 
         critical_keys = [
-            "SYSTEM_NAME",
             "USE_SOUNDCARD",
             "SOUND_DEVICE",
             "SAMPLERATE",
@@ -391,9 +390,10 @@ class SettingsLayout(Layout):
 
                     if re.fullmatch(r"[A-Za-z0-9_-]+", value):
                         text = (
-                            "Are you sure you want to change the system name? "
-                            + "It is not recommended to do this while an experiment "
-                            + "is running. Although the system’s data directory will "
+                            "Are you sure you want to change the system name?\n"
+                            + "It is not recommended to do this if you have "
+                            + "already started collecting data for an experiment.\n"
+                            + "Although the system’s data directory will "
                             + " be renamed automatically, some data may already have "
                             + "been saved in CSV files using the previous "
                             + "system name."
@@ -414,6 +414,7 @@ class SettingsLayout(Layout):
                                 modify = "DIRECTORY SETTINGS"
                                 self.remove("DIRECTORY SETTINGS")
                                 self.draw(all=False, modify=modify)
+                                self.critical_changes = True
                             else:
                                 line_edit.setText(old_value)
                         else:
@@ -504,21 +505,22 @@ class SettingsLayout(Layout):
         cam_corridor.change = True
         cam_box.change = True
 
-        log.info("Settings modified.")
+        try:  # can fail if we are changing the system name
+            log.info("Settings modified.")
+        except Exception:
+            pass
 
         if self.critical_changes and not changing_project:
             text = (
                 "Some of the setting changes require a system restart to take effect."
             )
-            reply = QMessageBox.question(
+            QMessageBox.information(
                 self.window,
                 "Restart",
                 text,
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes,
             )
-            if reply == QMessageBox.Yes:
-                self.window.reload_app()
+
+            self.window.reload_app()
 
         self.critical_changes = False
 
@@ -562,7 +564,6 @@ class SettingsLayout(Layout):
         elif s.key == "PROJECT_DIRECTORY":
             value = settings.get(s.key)
             path = os.path.dirname(value)
-            # check if path exists
             if not os.path.exists(path):
                 utils.create_directories_from_path(path)
             possible_values = [os.path.join(path, name) for name in os.listdir(path)]
@@ -838,7 +839,6 @@ class SettingsLayout(Layout):
         self.delete_optional_widgets(name)
 
     def change_project_directory(self, value: str, key: str) -> None:
-
         if value == "NEW":
             text, ok = QInputDialog.getText(
                 self.window,

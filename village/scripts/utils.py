@@ -1,5 +1,7 @@
+import getpass
 import logging
 import os
+import re
 import shutil
 import subprocess
 import traceback
@@ -16,6 +18,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLayout
 from scipy.interpolate import PchipInterpolator
 
+from village.classes.enums import Active
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
@@ -35,13 +38,19 @@ def change_directory_settings(new_path: str) -> None:
 def change_system_directory_settings() -> None:
     system_name = settings.get("SYSTEM_NAME")
     data_directory = settings.get("DATA_DIRECTORY")
-    settings.set("SYSTEM_DIRECTORY", str(Path(data_directory, system_name)))
+    old_system_directory = settings.get("SYSTEM_DIRECTORY")
+    new_system_directory = str(Path(data_directory, system_name))
+
+    if old_system_directory != new_system_directory:
+        try:
+            os.rename(old_system_directory, new_system_directory)
+        except Exception:
+            pass
+
+    settings.set("SYSTEM_DIRECTORY", new_system_directory)
 
 
 def create_directories() -> None:
-    print("create directories --------------")
-    print(settings.get("SYSTEM_DIRECTORY"))
-    print("----------------")
     directory = Path(settings.get("PROJECT_DIRECTORY"))
     directory.mkdir(parents=True, exist_ok=True)
     directory = Path(settings.get("DATA_DIRECTORY"))
@@ -60,9 +69,6 @@ def create_directories() -> None:
 
 def create_directories_from_path(p: str) -> bool:
     try:
-        print("create directories from path --------------")
-        print(settings.get("SYSTEM_NAME"))
-        print("----------------")
         path = Path(p)
         path.mkdir(parents=True, exist_ok=True)
         data = Path(path, "data")
@@ -80,19 +86,53 @@ def create_directories_from_path(p: str) -> bool:
         return False
 
 
-def download_github_repository(repository: str) -> None:
-    directory = Path(settings.get("CODE_DIRECTORY"))
-    default_directory = Path(settings.get("DEFAULT_CODE_DIRECTORY"))
-    if len(os.listdir(directory)) == 0 and directory == default_directory:
+def download_github_repositories(repositories: list[str]) -> None:
+    if settings.get("GITHUB_REPOSITORIES_DOWNLOADED") == Active.ON:
+        return
+    downloaded_demo = False
+    downloaded_all = True
+    base_dir = Path("/home", getpass.getuser(), "village_projects")
+    base_dir.mkdir(parents=True, exist_ok=True)
+
+    for repository in repositories:
+        name = repository.rstrip("/").split("/")[-1]
+        name = re.sub(r"\.git$", "", name)
+        base_dir2 = Path(base_dir, name)
+        directory = Path(base_dir2, "code")
+        if directory.exists() and any(directory.iterdir()):
+            continue
         directory.mkdir(parents=True, exist_ok=True)
         try:
-            subprocess.run(["git", "clone", repository, directory])
-            log.info("Repository " + repository + " downloaded")
+            result = subprocess.run(
+                ["git", "clone", repository, str(directory)],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            if result.returncode == 0:
+                log.info("Repository " + repository + " downloaded")
+                if directory == Path(settings.get("DEFAULT_CODE_DIRECTORY")):
+                    downloaded_demo = True
+                continue
+            stderr_txt = result.stderr or ""
+            downloaded_all = False
+            shutil.rmtree(base_dir2, ignore_errors=True)
+            log.error(
+                "Error downloading repository " + repository,
+                exception=stderr_txt,
+            )
         except Exception:
+            downloaded_all = False
+            shutil.rmtree(base_dir2, ignore_errors=True)
             log.error(
                 "Error downloading repository " + repository,
                 exception=traceback.format_exc(),
             )
+    if downloaded_all:
+        settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "ON")
+    if not downloaded_demo:
+        new_path = str(Path(base_dir, "empty-project"))
+        change_directory_settings(new_path=new_path)
 
 
 def is_active_regular(value: str) -> bool:

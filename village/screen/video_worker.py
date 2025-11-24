@@ -42,7 +42,6 @@ class VideoWorker(QObject):
 
             try:
                 fps = float(self.cap.get(cv2.CAP_PROP_FPS))
-                print("fps:", fps)
             except Exception:
                 fps = 30.0
 
@@ -86,8 +85,6 @@ class VideoWorker(QObject):
         target_idx = (
             int((now - self._play_start) / self._frame_dt) if self._frame_dt > 0 else 0
         )
-
-        print(target_idx)
 
         if self._served_idx == target_idx and self._served_img is not None:
             return self._served_img

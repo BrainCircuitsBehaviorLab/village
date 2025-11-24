@@ -94,7 +94,6 @@ class BehaviorWindow(QOpenGLWidget):
         self._draw_fn = draw_fn
 
     def start_drawing(self) -> None:
-        print("starting drawing")
         self.active = True
         self._start_timing = time_utils.get_time_monotonic()
         if not self._swap_connected:
@@ -131,7 +130,6 @@ class BehaviorWindow(QOpenGLWidget):
 
     def start_video(self) -> None:
         if self._video_thread is not None:
-            print("starting video")
             self._video_thread.start()
 
     def stop_video(self) -> None:

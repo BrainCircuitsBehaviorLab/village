@@ -16,6 +16,15 @@ from village.classes.settings_class import (
 )
 
 default_system_name = "village01"
+default_project_name = "demo-village-project"
+default_project_directory = str(
+    Path("/home", getpass.getuser(), "village_projects", default_project_name)
+)
+default_code_directory = str(Path(default_project_directory, "code"))
+default_sync_destination = "/sync_destination"
+default_sync_directory = str(
+    Path(default_sync_destination, default_project_name + "_data")
+)
 
 main_settings = [
     Setting("SYSTEM_NAME", default_system_name, str, "The system’s unique name."),
@@ -103,18 +112,6 @@ telegram_settings = [
         "The URL of the healthchecks.io endpoint to notify when the system is running.",
     ),
 ]
-
-
-default_project_name = "demo_project"
-default_project_directory = str(
-    Path("/home", getpass.getuser(), "village_projects", default_project_name)
-)
-
-default_sync_destination = "/sync_destination"
-default_sync_directory = str(
-    Path(default_sync_destination, default_project_name + "_data")
-)
-
 
 directory_settings = [
     Setting(
@@ -669,17 +666,26 @@ visual_settings = [
 hidden_settings = [
     Setting("FIRST_LAUNCH", "OFF", Active, "First launch of the system."),
     Setting(
+        "GITHUB_REPOSITORIES_DOWNLOADED",
+        "OFF",
+        Active,
+        "GitHub repositories downloaded.",
+    ),
+    Setting(
         "DEFAULT_PROJECT_NAME", default_project_name, str, "The default project name."
     ),
     Setting(
-        "GITHUB_REPOSITORY_EXAMPLE",
-        "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-task.git",
-        str,
-        "The github repository to download.",
+        "GITHUB_REPOSITORY_EXAMPLES",
+        [
+            "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-project.git",
+            "https://github.com/BrainCircuitsBehaviorLab/demo-village-project.git",
+        ],
+        list[str],
+        "GitHub repositories with downloadable example projects.",
     ),
     Setting(
         "DEFAULT_CODE_DIRECTORY",
-        str(Path(default_project_directory, "code")),
+        default_code_directory,
         str,
         "The default directory of the user code.",
     ),
@@ -726,6 +732,11 @@ settings = Settings(
     hidden_settings,
 )
 
+settings.set("DEFAULT_PROJECT_NAME", default_project_name)
+settings.set("DEFAULT_CODE_DIRECTORY", default_code_directory)
+
+# settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "OFF")
 # settings.restore_factory_settings()
 # settings.restore_visual_settings()
+# settings.restore_directory_settings()
 settings.print()

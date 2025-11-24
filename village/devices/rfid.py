@@ -36,7 +36,6 @@ class Rfid:
                 if len(line) < 8:
                     continue
                 self.id = line[-10:]
-                # print(self.id)
                 self.id_history.append((self.id, time_utils.now()))
                 self.clean_old_ids()
                 self.update_multiple()

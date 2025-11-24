@@ -28,10 +28,6 @@ class Gui:
         screen = QGuiApplication.screens()[0]
         self.geometry = screen.geometry()
 
-        # print(screen.availableGeometry())
-        # print(screen.geometry())
-        # print(QGuiApplication.primaryScreen().devicePixelRatio())
-
         if settings.get("USE_SCREEN") != ScreenActive.OFF:
             self.create_behavior_window()
         else:
@@ -44,8 +40,6 @@ class Gui:
         screen = QGuiApplication.screens()[1]
         geometry = screen.geometry()
 
-        # print(screen.availableGeometry())
-        # print(screen.geometry())
         self.behavior_window = BehaviorWindow(geometry)
         settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
 
@@ -57,7 +51,10 @@ class Gui:
         sys.exit()
 
     def reload_app(self) -> None:
-        log.end("VILLAGE")
+        try:  # can fail if we are changing the system name
+            log.end("VILLAGE")
+        except Exception:
+            pass
         cam_corridor.stop_recording()
         cam_box.stop_recording()
         settings.sync()

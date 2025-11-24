@@ -107,11 +107,11 @@ class Manager:
         )
 
         self.update_cycle()
+        utils.download_github_repositories(settings.get("GITHUB_REPOSITORY_EXAMPLES"))
         utils.create_directories()
         self.create_collections()
         log.event = self.events
         log.temp = self.temperatures
-        utils.download_github_repository(settings.get("GITHUB_REPOSITORY_EXAMPLE"))
         self.detections = time_utils.TimestampTracker(
             hours=int(settings.get("NO_DETECTION_HOURS"))
         )

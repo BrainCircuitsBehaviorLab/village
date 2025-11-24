@@ -128,6 +128,10 @@ class Settings:
         for s in self.visual_settings:
             self.saved_settings.setValue(s.key, s.value)
 
+    def restore_directory_settings(self) -> None:
+        for s in self.directory_settings:
+            self.saved_settings.setValue(s.key, s.value)
+
     def create_factory_settings(self) -> None:
         for s in self.all_settings:
             self.saved_settings.setValue(s.key, s.value)
@@ -249,4 +253,8 @@ class Settings:
 
     def print(self) -> None:
         for s in self.all_settings:
-            print(s.key, self.get(s.key), s.value, s.value_type)
+            print(s.key)
+            print("value:", self.get(s.key))
+            print("value_type:", s.value_type)
+            print("default_value:", s.value)
+            print("")

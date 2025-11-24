@@ -133,7 +133,7 @@ class SoundDevice(SoundDeviceBase):
 
         except Exception:
             try:
-                print("ha habido una exception!!!!")
+                print("exception")
                 error_queue.put_nowait(("sound", traceback.format_exc()))
             except queue.Full:
                 print("error queue full, cannot log audio error")
