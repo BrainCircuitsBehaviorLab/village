@@ -863,6 +863,7 @@
         <span class="c1"># Store the trial timestamps in case bpod is using live_timestamps</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_run_state_machine</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trial_start_timepc</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_sma_sent</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -870,7 +871,6 @@
                 <span class="k">if</span> <span class="n">status</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_new_sma_sent</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="n">trial_start_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_get_trial_timestamp_start</span><span class="p">()</span>
-
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">+=</span> <span class="n">ValueMessage</span><span class="p">(</span><span class="s2">&quot;COM_ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;waiting 1000 ms&quot;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">com_error</span> <span class="o">=</span> <span class="kc">True</span>
@@ -880,6 +880,8 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">send_state_machine</span><span class="p">(</span><span class="n">sma</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">trial_timestamps</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_run_state_machine</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">trial_start_timepc</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_state_machine_installation_status</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_new_sma_sent</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="n">trial_start_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_get_trial_timestamp_start</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -891,10 +893,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">send_state_machine</span><span class="p">(</span><span class="n">sma</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">trial_timestamps</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_run_state_machine</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trial_start_timepc</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_state_machine_installation_status</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_new_sma_sent</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">trial_start_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bpodcom_get_trial_timestamp_start</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">trial_start_timepc</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bpod_start_timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bpod_start_timestamp</span> <span class="o">=</span> <span class="n">trial_start_timestamp</span>
@@ -1302,7 +1304,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=b860b715"></script>
+</div><script src="../../../../_static/documentation_options.js?v=02f1182b"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
