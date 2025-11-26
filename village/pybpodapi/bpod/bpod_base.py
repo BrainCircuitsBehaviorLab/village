@@ -287,6 +287,7 @@ class BpodBase(object):
         # Store the trial timestamps in case bpod is using live_timestamps
 
         self._bpodcom_run_state_machine()
+        self.trial_start_timepc = time_utils.now()
 
         if self._new_sma_sent:
             try:
@@ -294,7 +295,6 @@ class BpodBase(object):
                 if status:
                     self._new_sma_sent = False
                     trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
-
                 else:
                     self._session += ValueMessage("COM_ERROR", "waiting 1000 ms")
                     self.com_error = True
@@ -304,6 +304,8 @@ class BpodBase(object):
                     self.send_state_machine(sma)
                     self.trial_timestamps = []
                     self._bpodcom_run_state_machine()
+                    self.trial_start_timepc = time_utils.now()
+                    status = self._bpodcom_state_machine_installation_status()
                     self._new_sma_sent = False
                     trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
             except Exception:
@@ -315,10 +317,10 @@ class BpodBase(object):
                 self.send_state_machine(sma)
                 self.trial_timestamps = []
                 self._bpodcom_run_state_machine()
+                self.trial_start_timepc = time_utils.now()
+                status = self._bpodcom_state_machine_installation_status()
                 self._new_sma_sent = False
                 trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
-
-        self.trial_start_timepc = time_utils.now()
 
         if self.bpod_start_timestamp is None:
             self.bpod_start_timestamp = trial_start_timestamp
