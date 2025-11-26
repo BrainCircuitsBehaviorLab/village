@@ -230,6 +230,7 @@ def delete_all_elements_from_layout(layout: QLayout) -> None:
                     delete_all_elements_from_layout(layoutItem.layout())
 
 
+# not used function
 def reformat_trial_data(
     data: dict, date: str, trial: int, subject: str, task: str, system_name: str
 ) -> dict:
@@ -266,6 +267,7 @@ def reformat_trial_data(
     return output
 
 
+# not used function
 def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
 
     def make_list(x) -> Any | float | str:

@@ -232,7 +232,12 @@ class BehaviorWindowBase(QWidget):
     def stop_drawing(self) -> None:
         return
 
-    def load_draw_function(self, draw_fn: Optional[Callable]) -> None:
+    def load_draw_function(
+        self,
+        draw_fn: Optional[Callable],
+        image: str | None = None,
+        video: str | None = None,
+    ) -> None:
         return
 
     def load_image(self, file: str) -> None:

@@ -732,11 +732,10 @@ settings = Settings(
     hidden_settings,
 )
 
-settings.set("DEFAULT_PROJECT_NAME", default_project_name)
-settings.set("DEFAULT_CODE_DIRECTORY", default_code_directory)
-
+# settings.set("DEFAULT_PROJECT_NAME", default_project_name)
+# settings.set("DEFAULT_CODE_DIRECTORY", default_code_directory)
 # settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "OFF")
 # settings.restore_factory_settings()
 # settings.restore_visual_settings()
 # settings.restore_directory_settings()
-settings.print()
+# settings.print()
