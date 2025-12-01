@@ -547,7 +547,7 @@ class Manager:
 
     def run_task(self) -> None:
         try:
-            self.task.bpod.connect(self.functions)
+            self.task.controller.connect(self.functions)
             self.task.run()
         except Exception:
             if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:
@@ -685,15 +685,20 @@ class Manager:
             len(non_det_subs) > 0
             and settings.get("NO_DETECTION_SUBJECT_24H") == Active.ON
         ):
-            log.alarm("No detections in the last 24 hours: " + ", ".join(non_det_subs))
+            log.alarm(
+                "Subjects not detected in the last 24 hours: " + ", ".join(non_det_subs)
+            )
         if (
             len(non_ses_subs) > 0
             and settings.get("NO_SESSION_SUBJECT_24H") == Active.ON
         ):
-            log.alarm("No sessions in the last 24 hours: " + ", ".join(non_ses_subs))
+            log.alarm(
+                "Subjects with no sessions in the last 24 hours: "
+                + ", ".join(non_ses_subs)
+            )
         if len(low_water_subs) > 0:
             log.alarm(
-                "Low water consumption in the last 24 hours: "
+                "Subjects with low water intake in the last 24 hours: "
                 + ", ".join(low_water_subs)
             )
         if not sync and settings.get("SYNC_TYPE") != SyncType.OFF:
@@ -811,17 +816,17 @@ class Manager:
     def hourly_checks(self) -> None:
         temp, _, temp_string = temp_sensor.get_temperature()
         if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
-            log.alarm("Temperature above maximum: " + temp_string)
+            log.alarm("High temperature: " + temp_string)
         elif temp < float(settings.get("MINIMUM_TEMPERATURE")):
-            log.alarm("Temperature below minimum: " + temp_string)
+            log.alarm("Low temperature: " + temp_string)
 
         if self.detections.trigger_empty():
             value = str(self.detections.hours)
-            log.alarm("No subjects detected in the last " + value + " hours")
+            log.alarm("No detections in the last " + value + " hours")
 
         if self.sessions.trigger_empty():
             value = str(self.sessions.hours)
-            log.alarm("No sessions performed in the last " + value + " hours")
+            log.alarm("No sessions in the last " + value + " hours")
 
         if utils.has_low_disk_space():
             log.alarm("Low disk space (less than 10GB)")

@@ -710,23 +710,23 @@ class PortsLayout(Layout):
         self.disable_all()
         QTimer.singleShot(1500, self.enable_all)
 
-        if not manager.task.bpod.connected:
-            manager.task.bpod.connect(manager.functions)
+        if not manager.task.controller.connected:
+            manager.task.controller.connect(manager.functions)
             close = True
         else:
             close = False
-        manager.task.bpod.led(i, close)
+        manager.task.controller.led(i, close)
 
     def water_clicked(self, i=0) -> None:
         self.disable_all()
         QTimer.singleShot(1500, self.enable_all)
 
-        if not manager.task.bpod.connected:
-            manager.task.bpod.connect(manager.functions)
+        if not manager.task.controller.connected:
+            manager.task.controller.connect(manager.functions)
             close = True
         else:
             close = False
-        manager.task.bpod.water(i, close)
+        manager.task.controller.water(i, close)
 
 
 class VirtualMouseLayout(Layout):
@@ -795,12 +795,12 @@ class VirtualMouseLayout(Layout):
         return
 
     def poke_clicked(self, i=0) -> None:
-        if not manager.task.bpod.connected:
-            manager.task.bpod.connect(manager.functions)
+        if not manager.task.controller.connected:
+            manager.task.controller.connect(manager.functions)
             close = True
         else:
             close = False
-        manager.task.bpod.poke(i, close)
+        manager.task.controller.poke(i, close)
 
     def touch_clicked(self) -> None:
         x = self.x_line_edit.text()

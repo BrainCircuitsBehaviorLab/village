@@ -101,7 +101,9 @@ class Camera(CameraBase):
         self.cam.configure(self.config)
         self.path_video = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".mp4")
         self.path_csv = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".csv")
-        self.path_picture = os.path.join(settings.get("DATA_DIRECTORY"), name + ".jpg")
+        self.path_picture = os.path.join(
+            settings.get("SYSTEM_DIRECTORY"), name + ".jpg"
+        )
         self.output = FfmpegOutput(self.path_video)
         self.filename = ""
         self.cam.pre_callback = self.pre_process
@@ -898,7 +900,7 @@ class Camera(CameraBase):
                 self.prohibited_detections = 0
                 if self.box_alarm_timer.has_elapsed():
                     log.alarm(
-                        "1 mouse in prohibited area. Area: " + str(pixels_not_allowed)
+                        "1 subject in prohibited area. Area: " + str(pixels_not_allowed)
                     )
 
     def area_1_empty(self) -> bool:
