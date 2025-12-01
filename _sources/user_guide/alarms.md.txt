@@ -13,6 +13,33 @@ All commands start with the / symbol:
 ### Alarms
 The system is designed to cover every potential scenario, resulting in an extensive list of alarms. While many of these alarms may never be triggered, some could only appear once every few months.
 
+
+| Type                     | Name                           | Description                                                                                                              | Solution                                                                                     |
+|--------------------------|--------------------------------|--------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| Hourly System Check      | Low Temperature                | Temperature dropped below the configured threshold.                                                                      | Check HVAC, heating, and sensor calibration.                                                  |
+| Hourly System Check      | High Temperature               | Temperature exceeded the configured threshold.                                                                           | Check HVAC, lights, airflow, and sensor calibration.                                          |
+| Hourly System Check      | No Detection (X hours)         | No animal detected by RFID in the last X hours.                                                                          | Check Door 1, RFID reader, lighting, cabling, blockage, or system freeze.                    |
+| Hourly System Check      | No Session (X hours)           | No session performed in the last X hours.                                                                                | Check corridor access, Door 1, RFID, and video footage for problems.                         |
+| Hourly System Check      | Heartbeat Not Received         | The remote server did not receive the last heartbeat signal.                                                             | Check internet connection, Raspberry Pi status, or remote desktop access.                     |
+| Subject Check            | Low Weight                     | Subject's weight is less than half its baseline.                                                                         | Verify scale calibration; examine animal health; check food/water.                            |
+| Subject Check            | Low Water Intake (24h)         | Subject consumed less than the configured water threshold in the last 24 hours.                                          | Check water delivery, solenoid calibration, leaks, or clogging.                              |
+| Subject Check            | No Detection (X hours)         | Subject has not been detected for X hours (active hours only).                                                           | Check RFID antennas, lighting, dirt, or cage connectivity.                                    |
+| Subject Check            | No Session (X hours)           | Subject has not performed a session for X hours (active hours only).                                                     | Check corridor access, Door 1, RFID functionality, and behavior patterns.                     |
+| Task Preparation Check   | Invalid subjects.csv           | Error reading subjects.csv due to formatting or missing values.                                                          | Fix CSV formatting, verify paths, correct missing values.                                     |
+| Task Preparation Check   | Area4 Detection                | Unexpected pixels detected in Area 4, which should always be empty.                                                      | Check for dirt, lighting, stuck animals, or door malfunction.                                 |
+| Task Preparation Check   | Error Launching Task           | Task could not be started due to code or hardware error.                                                                 | Inspect logs; debug task code; check device connections.                                      |
+| Task Running Check       | Error Running Task             | Error occurred during task execution.                                                                                    | Inspect logs, hardware components, and restart the task.                                      |
+| Task Running Check       | Min Time & Areas3-4 Detection  | Minimum task time elapsed but Areas 3–4 never cleared; Door 2 could not close.                                           | Check for a stuck subject, faulty door, or incorrect pixel threshold.                         |
+| Task Running Check       | Wrong RFID Detection           | RFID detected in an invalid state — possible multiple animals in the corridor or subject mismatch.                        | Inspect corridor camera; verify RFIDs; adjust threshold; check door function.                |
+| Task Running Check       | 2 Subjects in Box              | Pixel count suggests more than one animal entered the operant box.                                                       | Check camera for noise/dirt; adjust threshold; verify door control.                           |
+| Task Running Check       | Subject in Prohibited Area     | Pixels detected in a restricted region.                                                                                  | Inspect video; adjust threshold or lighting; remove dirt.                                      |
+| Post-Task Check          | Few Trials Completed           | Subject completed fewer trials than the configured minimum (or none).                                                    | Check task code, reward ports, sensors, and corridor video.                                   |
+| Post-Task Check          | Large Dataframe                | Dataframe contains more than 100,000 rows, typically due to an abnormal high-frequency sensor event.                     | Inspect photogates, debounce settings, cable noise, or hardware malfunction.                  |
+| Post-Task Check          | Subject in Box Too Long        | More than 1 hour has passed since task ended and the subject is still inside the box.                                    | Wake with Door 2 pulses or sound; inspect video; ensure exit path is clear.                   |
+
+
+
+
 #### System Checks Performed Every Hour
 
 These checks occur hourly and may trigger the following alarms:
