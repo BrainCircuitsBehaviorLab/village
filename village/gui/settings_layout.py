@@ -7,7 +7,13 @@ from typing import TYPE_CHECKING, Any
 
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
-from village.classes.enums import Active, Controller, ScreenActive, State, SyncType
+from village.classes.enums import (
+    Active,
+    ControllerEnum,
+    ScreenActive,
+    State,
+    SyncType,
+)
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.sound_device import get_sound_devices
 from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
@@ -255,7 +261,7 @@ class SettingsLayout(Layout):
                 row += 2
 
         if (
-            all and settings.get("BEHAVIOR_CONTROLLER") == Controller.BPOD
+            all and settings.get("BEHAVIOR_CONTROLLER") == ControllerEnum.BPOD
         ) or modify == "BPOD SETTINGS":
             name = "BPOD SETTINGS"
             row = row1 + 24

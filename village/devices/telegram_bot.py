@@ -78,7 +78,7 @@ class TelegramBot(TelegramBotBase):
 
     async def plot(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
-            path = os.path.join(settings.get("VIDEOS_DIRECTORY"), "PLOT.jpg")
+            path = os.path.join(settings.get("SYSTEM_DIRECTORY"), "PLOT.jpg")
             subjects = manager.subjects.df["name"].tolist()
             fig = corridor_plot(manager.events.df.copy(), subjects, 4, 2)
             fig.savefig(path, format="jpg", dpi=300)
