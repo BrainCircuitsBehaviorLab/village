@@ -39,8 +39,8 @@ import time
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
-from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
+from village.devices.controller import controller
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
 from village.devices.scale import real_weight_inference, scale
@@ -71,13 +71,13 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 
 
 # init
-manager.task.bpod = bpod
+manager.task.controller = controller
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor
 manager.import_all_tasks()
 manager.send_heartbeat()
 manager.errors = (
-    bpod.error
+    controller.error
     + cam_corridor.error
     + cam_box.error
     + motor1.error
@@ -119,7 +119,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     device, error = error_queue.get_nowait()
                     if device == "sound" and sound_alarm_timer.has_elapsed():
                         log.alarm(
-                            "Error in sound_device",
+                            "Error in sound device",
                             exception=error,
                             subject=manager.subject.name,
                         )
@@ -401,7 +401,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     + manager.max_time_counter * 3600
                 ):
                     text = (
-                        "The subject has been in the box for "
+                        "The subject has been in the box for too long. "
                         + str(manager.task.chrono.get_seconds())
                         + " seconds. "
                     )

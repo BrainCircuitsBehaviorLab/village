@@ -7,11 +7,11 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from village.classes.abstract_classes import CameraBase, PyBpodBase
+from village.classes.abstract_classes import CameraBase
 from village.classes.collection import Collection
 from village.classes.enums import Active, Save
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
-from village.devices.bpod import bpod
+from village.devices.controller import BehaviorController, controller
 from village.devices.sound_device import sound_device
 from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
@@ -35,7 +35,7 @@ class Output(OutputChannel):
 
 class Task:
     def __init__(self) -> None:
-        self.bpod: PyBpodBase = bpod
+        self.controller: BehaviorController = controller
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.current_trial: int = 1
@@ -88,7 +88,7 @@ class Task:
 
     # DO NOT OVERWRITE THESE METHODS
     def send_softcode_to_bpod(self, code: int) -> None:
-        self.bpod.receive_softcode(code)
+        self.controller.receive_softcode(code)
 
     def run_in_thread(self, daemon=True) -> None:
         def test_run():
@@ -112,11 +112,11 @@ class Task:
             self.do_trial(send_to_cam=True)
 
     def do_trial(self, send_to_cam: bool = False) -> None:
-        self.bpod.create_state_machine()
+        self.controller.create_state_machine()
         if send_to_cam:
             self.cam_box.trial = self.current_trial
         self.create_trial()
-        self.bpod.send_and_run_state_machine()
+        self.controller.send_and_run_state_machine()
         self.get_trial_data()
         self.after_trial()
         self.register_default_values()
@@ -128,8 +128,9 @@ class Task:
         # TODO: make this with a better logic
         # read from bpod if there is one
         try:
-            data = self.bpod.session.current_trial.export()
-            occurrences = self.bpod.session.current_trial.events_occurrences
+            # no mypy
+            data = self.controller.session.current_trial.export()  # type: ignore
+            occurrences = self.controller.session.current_trial.events_occurrences  # type: ignore
         except Exception:
             if hasattr(self, "bpod_mock"):
                 data = self.bpod_mock.current_trial
@@ -169,27 +170,27 @@ class Task:
         self.trial_data = {}
 
     def register_value(self, name: str, value: Any) -> None:
-        self.bpod.register_value(name, value)
+        self.controller.register_value(name, value)
         self.trial_data[name] = value
 
     def register_default_values(self) -> None:
-        self.bpod.register_value("task", self.name)
-        self.bpod.register_value("subject", self.subject)
-        self.bpod.register_value("system_name", self.system_name)
-        self.bpod.register_value("date", self.date)
+        self.controller.register_value("task", self.name)
+        self.controller.register_value("subject", self.subject)
+        self.controller.register_value("system_name", self.system_name)
+        self.controller.register_value("date", self.date)
 
-        if hasattr(self.bpod, "bpod"):
-            if hasattr(self.bpod.bpod, "com_error"):
-                if self.bpod.bpod.com_error:
-                    self.bpod.register_value("COM_ERROR", 1)
-                    self.bpod.bpod.com_error = False
+        if hasattr(self.controller, "bpod"):
+            if hasattr(self.controller.bpod, "com_error"):
+                if self.controller.bpod.com_error:
+                    self.controller.register_value("COM_ERROR", 1)
+                    self.controller.bpod.com_error = False
 
         # # get all the attributes in self.settings and register them
         # for name in vars(self.settings):
         #     attribute = getattr(self.settings, name)
         #     self.bpod.register_value(name, attribute)
 
-        self.bpod.register_value("TRIAL", None)
+        self.controller.register_value("TRIAL", None)
 
     def disconnect_and_save(self, run_mode: str) -> tuple[Save, float, int, int, str]:
         save: Save = Save.NO
@@ -199,7 +200,7 @@ class Task:
         settings_str: str = ""
         self.close()
         sound_device.stop()
-        self.bpod.stop()
+        self.controller.stop()
         self.cam_box.stop_recording()
         if self.subject != "None":
             try:
@@ -230,7 +231,7 @@ class Task:
                         subject=self.subject,
                         exception=traceback.format_exc(),
                     )
-        self.bpod.close()
+        self.controller.close()
         return save, duration, trials, water, settings_str
 
     def save_json(self, run_mode: str) -> str:
