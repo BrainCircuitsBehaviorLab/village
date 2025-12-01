@@ -4,8 +4,9 @@ import time
 import traceback
 from typing import Any, Callable
 
-from village.classes.abstract_classes import PyBpodBase
+from village.classes.enums import ControllerEnum
 from village.pybpodapi.protocol import Bpod, StateMachine
+from village.pybpodapi.session import Session
 from village.scripts.log import log
 from village.scripts.parse_bpod_messages import (
     parse_input_to_tuple_override,
@@ -44,15 +45,115 @@ class SoftCode:
         self.client_socket.close()
 
 
-class PyBpod(PyBpodBase):
+class NullStateMachine:
+    def add_state(
+        self,
+        state_name: Any,
+        state_timer: float = 0,
+        state_change_conditions: Any = {},
+        output_actions: Any = (),
+    ) -> None:
+        pass
+
+    def set_global_timer(
+        self,
+        timer_id: Any,
+        timer_duration: Any,
+        on_set_delay: int = 0,
+        channel: Any | None = None,
+        on_message: int = 1,
+        off_message: int = 0,
+        loop_mode: int = 0,
+        loop_intervals: int = 0,
+        send_events: int = 1,
+        oneset_triggers: Any | None = None,
+    ) -> None:
+        pass
+
+    def set_condition(
+        self, condition_number: Any, condition_channel: Any, channel_value: Any
+    ) -> None:
+        pass
+
+    def set_global_counter(
+        self, counter_number: Any, target_event: Any, threshold: Any
+    ) -> None:
+        pass
+
+
+class NullBpod:
+    def close(self) -> None:
+        pass
+
+    def send_state_machine(self, sma: Any) -> None:
+        pass
+
+    def run_state_machine(self, sma: Any) -> None:
+        pass
+
+    def register_value(self, name: str, value: Any) -> None:
+        pass
+
+    def manual_override(
+        self,
+        channel_type: Any,
+        channel_name: Any,
+        channel_number: Any,
+        value: Any,
+    ) -> None:
+        pass
+
+
+class NullSoftcode:
+    def send(self, idx: int) -> None:
+        pass
+
+    def kill(self) -> None:
+        pass
+
+
+class NullSession:
+    def current_trial(self) -> None:
+        pass
+
+
+class BehaviorController:
     def __init__(self) -> None:
-        self.bpod = Bpod()
-        self.sma = StateMachine(self.bpod)
-        self.softcode = SoftCode()
-        self.session = self.bpod.session
-        self.connected = False
-        self.error = ""
-        self.functions: list[Callable] = []
+        self.type = settings.get("BEHAVIOR_CONTROLLER")
+        if self.type == ControllerEnum.BPOD:
+            self.bpod: Bpod | NullBpod = NullBpod()
+            self.sma: StateMachine | NullStateMachine = NullStateMachine()
+            self.softcode: SoftCode | NullSoftcode = NullSoftcode()
+            self.session: Session | NullSession = NullSession()
+            self.connected = False
+            self.functions: list[Callable] = []
+            self.error = "Error connecting to the bpod "
+            try:
+                self.bpod = Bpod()
+                self.sma = StateMachine(self.bpod)
+                self.softcode = SoftCode()
+                self.session = self.bpod.session
+                self.error = ""
+                log.info("Bpod successfully initialized")
+                self.bpod.close()
+            except Exception:
+                time.sleep(0.1)
+                try:
+                    self.bpod = Bpod()
+                    self.sma = StateMachine(self.bpod)
+                    self.softcode = SoftCode()
+                    self.session = self.bpod.session
+                    self.error = ""
+                    log.info("Bpod successfully initialized")
+                    self.bpod.close()
+                except Exception:
+                    log.error(
+                        "Could not initialize bpod", exception=traceback.format_exc()
+                    )
+        elif self.type == ControllerEnum.ARDUINO:
+            self.error = "Arduino not implemented yet"
+        elif self.type == ControllerEnum.RASPBERRY:
+            self.error = "Raspberry Pi not implemented yet"
 
     def add_state(
         self,
@@ -236,22 +337,8 @@ class PyBpod(PyBpodBase):
             pass
 
 
-def get_bpod() -> PyBpodBase:
-    try:
-        bpod = PyBpod()
-        log.info("Bpod successfully initialized")
-        bpod.close()
-        return bpod
-    except Exception:
-        time.sleep(0.1)
-        try:
-            bpod = PyBpod()
-            log.info("Bpod successfully initialized")
-            bpod.close()
-            return bpod
-        except Exception:
-            log.error("Could not initialize bpod", exception=traceback.format_exc())
-            return PyBpodBase()
+def get_controller() -> BehaviorController:
+    return BehaviorController()
 
 
-bpod = get_bpod()
+controller = get_controller()

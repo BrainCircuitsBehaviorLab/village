@@ -16,18 +16,19 @@ class WaterCalibration(Task):
 
     def create_trial(self) -> None:
         for i in range(len(self.states) - 1):
-            self.bpod.add_state(
+            self.controller.add_state(
                 state_name=self.states[i],
                 state_timer=self.times[i],
                 state_change_conditions={Event.Tup: self.wait_states[i]},
                 output_actions=self.outputs[i],
             )
-            self.bpod.add_state(
-                state_name=self.wait_states[i],
-                state_timer=0.3,
-                state_change_conditions={Event.Tup: self.states[i + 1]},
-                output_actions=[],
-            )
+
+        self.controller.add_state(
+            state_name="wait",
+            state_timer=0.3,
+            state_change_conditions={Event.Tup: "exit"},
+            output_actions=[],
+        )
 
     def after_trial(self) -> None:
         pass

@@ -6,7 +6,7 @@ from village.classes.settings_class import (
     Active,
     AreaActive,
     Color,
-    Controller,
+    ControllerEnum,
     Cycle,
     Info,
     ScreenActive,
@@ -429,7 +429,7 @@ controller_settings = [
     Setting(
         "BEHAVIOR_CONTROLLER",
         "BPOD",
-        Controller,
+        ControllerEnum,
         """The controller used to run the behavioral box. The options are:
         BPOD: The Bpod controller. ARDUINO: A custom controller that can be
         Arduino based. RASPBERRY: No need for an external controller.

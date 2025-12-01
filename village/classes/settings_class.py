@@ -7,7 +7,7 @@ from village.classes.enums import (
     Active,
     AreaActive,
     Color,
-    Controller,
+    ControllerEnum,
     Cycle,
     Info,
     ScreenActive,
@@ -162,8 +162,8 @@ class Settings:
                 return Active(str_value)
             elif type == Color:
                 return Color(str_value)
-            elif type == Controller:
-                return Controller(str_value)
+            elif type == ControllerEnum:
+                return ControllerEnum(str_value)
             elif type == SyncType:
                 return SyncType(str_value)
             elif type == Actions:
