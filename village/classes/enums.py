@@ -40,7 +40,7 @@ class Color(SuperEnum):
     WHITE = "WHITE"
 
 
-class Controller(SuperEnum):
+class ControllerEnum(SuperEnum):
     BPOD = "BPOD"
     ARDUINO = "ARDUINO"
     RASPBERRY = "RASPBERRY"
