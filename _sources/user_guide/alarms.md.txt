@@ -9,13 +9,18 @@ All commands start with the / symbol:
 - `/plot ‘days’`: Displays a plot of entrances and attempts over the last specified days (default is 3 days).
 
 
+### Subject Checks Performed Twice a Day
+
+Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake and average weight for all subjects.
+A warning alarm is also sent if one or more subjects have a warning.
+Warnings are listed in order of severity, from least to most critical: `Low Water Intake 24h`, `No detection 24h`, `No session 24h`
 
 ### Alarms
 The system is designed to cover every potential scenario, resulting in an extensive list of alarms. While many of these alarms may never be triggered, some could only appear once every few months.
 
 
 
-## System Alarms
+#### System Alarms
 
 | Alarm | Description | Solution |
 |-------|-------------|-----------|
@@ -27,7 +32,7 @@ The system is designed to cover every potential scenario, resulting in an extens
 | The subject has been in the box for too long | More than one hour has passed since the task ended and the subject is still inside the operant box. | Check via video if the subject is asleep. Verify that the scale and door servos are functioning properly to allow the subject to exit. |
 
 
-## Hardware Failure Alarms
+#### Hardware Failure Alarms
 
 | Alarm | Description | Solution |
 |-------|-------------|-----------|
@@ -35,7 +40,7 @@ The system is designed to cover every potential scenario, resulting in an extens
 | Scale not responding | The scale continuously reports 0.0 g, indicating invalid readings from the load cell. | Check scale wiring and connectors. Ensure all cables are firmly attached and the external 5V supply reaches the board. |
 
 
-## Hourly System Alarms
+#### Hourly System Alarms
 
 | Alarm | Description | Solution |
 |-------|-------------|-----------|
@@ -46,7 +51,7 @@ The system is designed to cover every potential scenario, resulting in an extens
 | Low disk space (less than 10GB) | The SD card is almost full. | Videos are stored for X days (configurable) and deleted only after proper synchronization. Check rsync_logs and data_removal_logs. Reduce the number of stored days if needed. |
 
 
-## Twice-Daily Alarms
+#### Twice-Daily Alarms
 
 | Alarm | Description | Solution |
 |-------|-------------|-----------|
@@ -56,7 +61,7 @@ The system is designed to cover every potential scenario, resulting in an extens
 | No data sync in the last 24h | No data has been synchronized with the external server/drive during the last 24 hours. | Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability. |
 
 
-## Task Running Alarms
+#### Task Running Alarms
 
 | Alarm | Description | Solution |
 |-------|-------------|-----------|
@@ -66,7 +71,7 @@ The system is designed to cover every potential scenario, resulting in an extens
 | Error in video worker | An error occurred when attempting to display video or visual stimuli. | Inspect the event log and traceback to determine the source of the issue. |
 
 
-## Saving Data Alarms
+#### Saving Data Alarms
 
 | Alarm | Description | Solution |
 |-------|-------------|-----------|
@@ -87,14 +92,6 @@ In such cases, first attempt to connect remotely:
 - If the process is unresponsive, investigate the terminal error messages.
 - If remote access fails, a physical check may be required to ensure the animals’ safety.
 ```
-
-#### Subject Checks Performed Twice a Day
-
-Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake and average weight for all subjects.
-A warning alarm is also sent if one or more subjects have a warning.
-Warnings are listed in order of severity, from least to most critical:
-
-- `Low Water Intake 24h`, `No detection 24h`, `No session 24h`
 
 
 

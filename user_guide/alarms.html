@@ -211,12 +211,6 @@
 <li class="toctree-l2"><a class="reference internal" href="data.html">Saved Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Receive and Respond to Telegram Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#system-alarms">System Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#hardware-failure-alarms">Hardware Failure Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#hourly-system-alarms">Hourly System Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#twice-daily-alarms">Twice-Daily Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#task-running-alarms">Task Running Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#saving-data-alarms">Saving Data Alarms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
 </ul>
 </li>
@@ -567,13 +561,17 @@ All commands start with the / symbol:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">/plot</span> <span class="pre">‘days’</span></code>: Displays a plot of entrances and attempts over the last specified days (default is 3 days).</p></li>
 </ul>
 </section>
+<section id="subject-checks-performed-twice-a-day">
+<h2>Subject Checks Performed Twice a Day</h2>
+<p>Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake and average weight for all subjects.
+A warning alarm is also sent if one or more subjects have a warning.
+Warnings are listed in order of severity, from least to most critical: <code class="docutils literal notranslate"><span class="pre">Low</span> <span class="pre">Water</span> <span class="pre">Intake</span> <span class="pre">24h</span></code>, <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">detection</span> <span class="pre">24h</span></code>, <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">session</span> <span class="pre">24h</span></code></p>
+</section>
 <section id="alarms">
 <h2>Alarms</h2>
 <p>The system is designed to cover every potential scenario, resulting in an extensive list of alarms. While many of these alarms may never be triggered, some could only appear once every few months.</p>
-</section>
-</section>
 <section id="system-alarms">
-<h1>System Alarms</h1>
+<h3>System Alarms</h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -612,7 +610,7 @@ All commands start with the / symbol:</p>
 </div>
 </section>
 <section id="hardware-failure-alarms">
-<h1>Hardware Failure Alarms</h1>
+<h3>Hardware Failure Alarms</h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -635,7 +633,7 @@ All commands start with the / symbol:</p>
 </div>
 </section>
 <section id="hourly-system-alarms">
-<h1>Hourly System Alarms</h1>
+<h3>Hourly System Alarms</h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -670,7 +668,7 @@ All commands start with the / symbol:</p>
 </div>
 </section>
 <section id="twice-daily-alarms">
-<h1>Twice-Daily Alarms</h1>
+<h3>Twice-Daily Alarms</h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -701,7 +699,7 @@ All commands start with the / symbol:</p>
 </div>
 </section>
 <section id="task-running-alarms">
-<h1>Task Running Alarms</h1>
+<h3>Task Running Alarms</h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -732,7 +730,7 @@ All commands start with the / symbol:</p>
 </div>
 </section>
 <section id="saving-data-alarms">
-<h1>Saving Data Alarms</h1>
+<h3>Saving Data Alarms</h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -775,14 +773,6 @@ All commands start with the / symbol:</p>
 <li><p>If remote access fails, a physical check may be required to ensure the animals’ safety.</p></li>
 </ul>
 </div>
-<section id="subject-checks-performed-twice-a-day">
-<h2>Subject Checks Performed Twice a Day</h2>
-<p>Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake and average weight for all subjects.
-A warning alarm is also sent if one or more subjects have a warning.
-Warnings are listed in order of severity, from least to most critical:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Low</span> <span class="pre">Water</span> <span class="pre">Intake</span> <span class="pre">24h</span></code>, <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">detection</span> <span class="pre">24h</span></code>, <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">session</span> <span class="pre">24h</span></code></p></li>
-</ul>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>In certain critical situations, the task is terminated, and the RFID reader is disconnected to prevent other subjects from entering the behavioral box until the issue is resolved.</p>
@@ -798,6 +788,7 @@ Warnings are listed in order of severity, from least to most critical:</p>
 <li><p>Click the alarm row, then select <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> to watch the footage.</p></li>
 </ol>
 </div>
+</section>
 </section>
 </section>
 
@@ -858,16 +849,16 @@ Warnings are listed in order of severity, from least to most critical:</p>
             <ul>
 <li><a class="reference internal" href="#">Receive and Respond to Telegram Alarms</a><ul>
 <li><a class="reference internal" href="#interrogate-the-system">Interrogate the system</a></li>
-<li><a class="reference internal" href="#alarms">Alarms</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#subject-checks-performed-twice-a-day">Subject Checks Performed Twice a Day</a></li>
+<li><a class="reference internal" href="#alarms">Alarms</a><ul>
 <li><a class="reference internal" href="#system-alarms">System Alarms</a></li>
 <li><a class="reference internal" href="#hardware-failure-alarms">Hardware Failure Alarms</a></li>
 <li><a class="reference internal" href="#hourly-system-alarms">Hourly System Alarms</a></li>
 <li><a class="reference internal" href="#twice-daily-alarms">Twice-Daily Alarms</a></li>
 <li><a class="reference internal" href="#task-running-alarms">Task Running Alarms</a></li>
-<li><a class="reference internal" href="#saving-data-alarms">Saving Data Alarms</a><ul>
-<li><a class="reference internal" href="#subject-checks-performed-twice-a-day">Subject Checks Performed Twice a Day</a></li>
+<li><a class="reference internal" href="#saving-data-alarms">Saving Data Alarms</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -879,7 +870,7 @@ Warnings are listed in order of severity, from least to most critical:</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=068553ed"></script>
+</div><script src="../_static/documentation_options.js?v=1f02fe27"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
