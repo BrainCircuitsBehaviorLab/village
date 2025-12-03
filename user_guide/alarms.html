@@ -211,8 +211,6 @@
 <li class="toctree-l2"><a class="reference internal" href="data.html">Saved Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_machine.html">System State Machine</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Receive and Respond to Telegram Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#alarms">Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#system-alarms"><strong>System Alarms</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
 </ul>
 </li>
@@ -574,23 +572,19 @@ Warnings (from least to most critical):</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">detection</span> <span class="pre">24h</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">session</span> <span class="pre">24h</span></code></p></li>
 </ul>
+</section>
 <hr class="docutils" />
-</section>
-</section>
 <section id="alarms">
-<h1>Alarms</h1>
+<h2>Alarms</h2>
 <p>The system is designed to cover all potential scenarios, resulting in an extensive list of alarms. While many may never appear, some occur rarely but are critical.</p>
-</section>
 <hr class="docutils" />
-<section class="tex2jax_ignore mathjax_ignore" id="system-alarms">
-<h1><strong>System Alarms</strong></h1>
 <div class="table-wrapper colwidths-given docutils container" id="id1">
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text">System Alarms</span></caption>
 <colgroup>
 <col style="width: 20.0%" />
-<col style="width: 50.0%" />
-<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
@@ -600,32 +594,264 @@ Warnings (from least to most critical):</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Invalid data in subjects.csv</p></td>
-<td><p>Error reading <em>subjects.csv</em>: malformed rows, inconsistent number of columns, stray spaces or line breaks.</p></td>
-<td><p>Verify file integrity: ensure consistent columns per row and remove extra whitespace. Fix or recreate if needed.</p></td>
+<td><p>An error occurred while reading subjects.csv. The file may contain malformed rows, inconsistent numbers of columns, or unintended spaces or line breaks.</p></td>
+<td><p>Verify that the CSV structure is correct: all rows must contain the same number of columns, without stray spaces, tabs, or newline characters. Fix or recreate the file if needed.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Detection in area4 when it should be empty</p></td>
-<td><p>Pixels detected in Area 4 when the box is empty and RFID detection occurs.</p></td>
-<td><p>Check lighting, clean corridor, remove objects, or review video for door or threshold malfunction.</p></td>
+<td><p>When the operant box is empty and a subject is detected by the RFID reader, pixels are also detected in Area 4, which should be empty.</p></td>
+<td><p>Check corridor illumination and remove any dirt or objects that may cause false detection. If an animal is actually present in area 4 when it should not be, review the previous videos to determine the cause (e.g., door malfunction, lightning issues, inaccurate camera thresholding).</p></td>
 </tr>
 <tr class="row-even"><td><p>Error running task</p></td>
-<td><p>A task execution error occurred (exception in the task code).</p></td>
-<td><p>Inspect event logs and traceback to identify the problematic line.</p></td>
+<td><p>A task execution error occurred, likely caused by an exception in the task code.</p></td>
+<td><p>Inspect the event logs to obtain the full traceback and identify the line of code that triggered the error.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Wrong RFID detection</p></td>
-<td><p>Caused by: (1) a different subject detected during another subject’s task; or (2) the correct subject detected in the corridor while door 2 was closed.</p></td>
-<td><p>Review corridor videos for door malfunction, threshold errors, lighting issues, or multi-animal entry.</p></td>
+<td><p>This alarm has two possible causes. 1) A different subject was detected in the corridor while the main subject was performing the task. 2) The correct subject was detected in the corridor even though door 2 was already closed and the subject should not be there.</p></td>
+<td><p>Review the previous videos to determine the cause (e.g., door malfunction, lightning issues, inaccurate camera thresholding).</p></td>
 </tr>
 <tr class="row-even"><td><p>Maximum time reached and areas 3 or 4 were never empty</p></td>
-<td><p>Door 2 could not close because areas 3–4 never cleared before maximum task duration.</p></td>
-<td><p>Check lighting, clean corridor, ensure subject did not fall asleep, and review videos for malfunction.</p></td>
+<td><p>After a subject enters the operant box, door 2 should close once areas 3 and 4 are empty. If the maximum task duration is reached and these areas were never cleared, the alarm is triggered.</p></td>
+<td><p>Check lighting and remove any dirt or objects in the corridor. Verify whether the animal fell asleep in the corridor or hesitated to enter the operant box. Review previous videos to check for door malfunction or issues with pixel detection.</p></td>
 </tr>
 <tr class="row-odd"><td><p>The subject has been in the box for too long</p></td>
-<td><p>More than 1 hour passed since the task ended and the subject remains inside.</p></td>
-<td><p>Verify via video if asleep. Confirm scale and servo motors operate correctly to allow exit.</p></td>
+<td><p>More than one hour has passed since the task ended, and the animal remains inside the operant box.</p></td>
+<td><p>Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<div class="table-wrapper colwidths-given docutils container" id="id2">
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Hardware Failure Alarms</span></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Solution</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Camera not responding</p></td>
+<td><p>The camera automatically restarts after failing to deliver frames for 10 seconds. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.</p></td>
+<td><p>Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Scale not responding</p></td>
+<td><p>The scale is continuously returning a weight of 0.0 grams, indicating that it is not receiving valid readings from the load cell.</p></td>
+<td><p>Inspect the scale wiring and connectors, ensuring all cables are firmly attached. Verify that the external 5V power supply is reaching the board.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given docutils container" id="id3">
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Hourly System Alarms</span></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Solution</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Low/High temperature</p></td>
+<td><p>Temperature has risen above or fallen below the configured threshold.</p></td>
+<td><p>Verify the room temperature using an independent sensor and take the appropriate corrective measures.</p></td>
+</tr>
+<tr class="row-odd"><td><p>No detections in the set interval</p></td>
+<td><p>No animal has been detected by the RFID system during the last X hours (X defined in settings).</p></td>
+<td><p>Ensure that animals have unobstructed access to the corridor (no blockage, door 1 open). Check RFID cabling and confirm that the external 5V power supply is reaching the RFID board.</p></td>
+</tr>
+<tr class="row-even"><td><p>No sessions in the set interval</p></td>
+<td><p>No session has been performed within the last X hours.</p></td>
+<td><p>Verify corridor access and correct RFID operation. Ensure the cameras are not falsely detecting pixels when the corridor is empty (check illumination and threshold configuration).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Heartbeat Not Received</p></td>
+<td><p>The remote server did not receive the latest heartbeat signal.</p></td>
+<td><p>Check whether the system is accessible remotely; it may have frozen or lost internet connectivity. If the system is unresponsive, attempt to restart it. If you cannot confirm whether the issue is due to a system failure or an internet outage, a physical inspection is required to ensure animal safety—an animal may be trapped inside the operant box without access to food or water.</p></td>
+</tr>
+<tr class="row-even"><td><p>Low disk space (less than 10GB)</p></td>
+<td><p>The disk is nearly full.</p></td>
+<td><p>Videos are kept on the Raspberry Pi’s SD card for X days (user-defined in settings) and are automatically deleted only after proper synchronization with an external server or drive. Review rsync_logs and data_removal_logs to confirm that files are being synchronized and deleted correctly. If necessary, reduce the number of days for which videos are stored.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given docutils container" id="id4">
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">Twice-Daily Alarms</span></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Solution</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Subjects with low water intake in the last 24h</p></td>
+<td><p>The subject consumed less than the configured water-intake threshold during the last 24 hours.</p></td>
+<td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning correctly.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Subjects with no session in the last 24h</p></td>
+<td><p>The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be enabled or disabled in the settings.</p></td>
+<td><p>Verify corridor access, door 1 operation, RFID functionality, and camera-based detection.</p></td>
+</tr>
+<tr class="row-even"><td><p>Subjects not detected in the last 24h</p></td>
+<td><p>The subject has not been detected by the RFID system for the last 24 hours. This check can be enabled or disabled in the settings.</p></td>
+<td><p>Check corridor access, door 1 status, and the correct functioning and power supply of the RFID system.</p></td>
+</tr>
+<tr class="row-odd"><td><p>No data sync in the last 24h</p></td>
+<td><p>No data has been successfully synchronized with the external server or hard drive during the last 24 hours.</p></td>
+<td><p>Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given docutils container" id="id5">
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Twice-Daily Alarms</span></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Solution</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Subjects with low water intake in the last 24h</p></td>
+<td><p>The subject consumed less than the configured water-intake threshold during the last 24 hours.</p></td>
+<td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning correctly.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Subjects with no session in the last 24h</p></td>
+<td><p>The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be enabled or disabled in the settings.</p></td>
+<td><p>Verify corridor access, door 1 operation, RFID functionality, and camera-based detection.</p></td>
+</tr>
+<tr class="row-even"><td><p>Subjects not detected in the last 24h</p></td>
+<td><p>The subject has not been detected by the RFID system for the last 24 hours. This check can be enabled or disabled in the settings.</p></td>
+<td><p>Check corridor access, door 1 status, and the correct functioning and power supply of the RFID system.</p></td>
+</tr>
+<tr class="row-odd"><td><p>No data sync in the last 24h</p></td>
+<td><p>No data has been successfully synchronized with the external server or hard drive during the last 24 hours.</p></td>
+<td><p>Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given docutils container" id="id6">
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text">Task Running Alarms</span></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Solution</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2 Subjects in Box</p></td>
+<td><p>The pixel count suggests that more than one animal has entered the operant box.</p></td>
+<td><p>Connect remotely to verify whether this is a true event or a false alarm. If two animals are indeed inside the box, carefully open and close door 2 and door 1 to allow them to exit safely. Stop the task (this will automatically disable the RFID reader), and once everything is back to normal, ensure that door 2 is closed and door 1 is open, then reactivate the RFID reader. If this was a false alarm, check illumination, cleanliness, and pixel-detection thresholds to prevent future false detections.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Subject in Prohibited Area</p></td>
+<td><p>Pixels are detected in a region where no animal should be present.</p></td>
+<td><p>Connect remotely to confirm whether the detection is real or a false alarm. If the alarm was false, inspect illumination, cleanliness, and pixel-detection thresholds to reduce the likelihood of recurring false positives.</p></td>
+</tr>
+<tr class="row-even"><td><p>Error in sound device</p></td>
+<td><p>An error occurred while attempting to play a sound.</p></td>
+<td><p>Check the events log to see the traceback and identify the exact cause of the error.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Error in video worker</p></td>
+<td><p>An error occurred while attempting to display video or visual stimuli.</p></td>
+<td><p>Check the events log to inspect the traceback and determine the source of the problem.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given docutils container" id="id7">
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-text">Saving Data Alarms</span></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Solution</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Error saving the task</p></td>
+<td><p>The task data could not be saved.</p></td>
+<td><p>Check the events log to inspect the traceback and identify the cause of the error.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Error updating the training settings</p></td>
+<td><p>The training settings could not be updated, so the subject will keep its previous configuration.</p></td>
+<td><p>Check the events log to inspect the traceback. The code that updates the training settings is delicate and may fail if the format of the CSV has changed unexpectedly (e.g., a column that is now a string instead of an integer). After modifying this part of the code, you can test it from the TASKS tab.</p></td>
+</tr>
+<tr class="row-even"><td><p>The session file is very large</p></td>
+<td><p>The session CSV contains more than 100,000 rows, typically caused by an abnormally high-frequency sensor event.</p></td>
+<td><p>Inspect photogates, check for cable noise, and verify that no hardware component is malfunctioning.</p></td>
+</tr>
+<tr class="row-odd"><td><p>No water was drunk</p></td>
+<td><p>The subject did not drink any water during the task. This check can be enabled or disabled in the settings.</p></td>
+<td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning properly.</p></td>
+</tr>
+<tr class="row-even"><td><p>No trials were recorded</p></td>
+<td><p>The subject did not complete any trials. This check can be enabled or disabled in the settings.</p></td>
+<td><p>Confirm that the animal entered the operant box and did not fall asleep. Inspect the task logic and verify that all hardware components are functioning correctly.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A missing heartbeat may be caused by temporary internet loss, a power outage, or a system freeze.</p>
+<p>Before acting:</p>
+<ul class="simple">
+<li><p>Attempt to connect remotely.</p></li>
+<li><p>If the system restarted, simply relaunch Training Village.</p></li>
+<li><p>If unresponsive, inspect terminal logs.</p></li>
+<li><p>If remote access fails, perform a physical check to ensure animal safety.</p></li>
+</ul>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Some critical alarms disable the RFID reader and halt new entries to protect other subjects.</p>
+<p>The system waits for the current subject to exit and be weighed, then closes Door 2 and opens Door 1.</p>
+<p>You must connect remotely, verify all animals are in the home cage, resolve the issue, and reactivate the RFID reader.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Always review video recordings for any unusual alarm to identify root causes (lighting, thresholds, dirt, hardware).</p>
+<p>To view a video:</p>
+<ol class="arabic simple">
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen → <code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>.</p></li>
+<li><p>Select the alarm row.</p></li>
+<li><p>Click <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> to watch the footage.</p></li>
+</ol>
+</div>
+</section>
 </section>
 
         </article>
@@ -686,10 +912,9 @@ Warnings (from least to most critical):</p>
 <li><a class="reference internal" href="#">Receive and Respond to Telegram Alarms</a><ul>
 <li><a class="reference internal" href="#interrogate-the-system">Interrogate the system</a></li>
 <li><a class="reference internal" href="#subject-checks-performed-twice-a-day">Subject Checks Performed Twice a Day</a></li>
+<li><a class="reference internal" href="#alarms">Alarms</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#alarms">Alarms</a></li>
-<li><a class="reference internal" href="#system-alarms"><strong>System Alarms</strong></a></li>
 </ul>
 
           </div>
@@ -699,7 +924,7 @@ Warnings (from least to most critical):</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=b12c2dd2"></script>
+</div><script src="../_static/documentation_options.js?v=3beb209c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
