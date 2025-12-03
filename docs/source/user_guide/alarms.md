@@ -81,7 +81,7 @@ To view a session video:
   - Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.
 ```
 
-```{important}
+```{warning}
 Some critical alarms disable the RFID reader and halt new entries to protect other subjects.
 
 The system waits for the current subject to exit and be weighed, then closes Door 2 and opens Door 1.
@@ -135,7 +135,7 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Videos are kept on the Raspberry Pi’s SD card for X days (user-defined in settings) and are automatically deleted only after proper synchronization with an external server or drive. Review rsync_logs and data_removal_logs to confirm that files are being synchronized and deleted correctly. If necessary, reduce the number of days for which videos are stored.
 ```
 
-```{important}
+```{warning}
 A missing heartbeat may be caused by temporary internet loss, a power outage, or a system freeze.
 
 Before acting:
