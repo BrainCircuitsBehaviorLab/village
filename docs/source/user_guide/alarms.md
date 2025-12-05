@@ -11,8 +11,7 @@ All commands start with the `/` symbol:
 ---
 
 ### Subject Checks Performed Twice a Day
-
-Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake and average weight for all subjects.
+Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake, and average weight for all subjects.
 
 A warning alarm is also sent if one or more subjects present an issue.
 Warnings (from least to most critical):
@@ -26,10 +25,10 @@ Warnings (from least to most critical):
 ### Alarms
 The system is designed to cover all potential scenarios, resulting in an extensive list of alarms. While many may never appear, some occur rarely but are critical.
 
-When an alarm is received, it is important to Always check the events log to determine which error occurred. If the error originates from the code, inspect the traceback to understand what happened.
-When it is not clear exactly what seccuence of events produced the alarm review the video recordings to identify the root cause (e.g., lighting, thresholds, dirt, hardware problem).
+When an alarm is received, it is important to always check the events log to determine which error occurred. If the error originates from the code, inspect the traceback to understand what happened.
+When it is not clear what sequence of events produced the alarm, review the video recordings to identify the root cause (e.g., lighting, thresholds, dirt, hardware issues).
 
-To view the details of an error (including traceback when available):
+To view the details of an error (including the traceback when available):
 1. Open the `DATA` screen → `EVENTS`.
 2. Double-click the alarm row.
 
@@ -42,7 +41,6 @@ To view a session video:
 1. Open the `DATA` screen → `SESSIONS_SUMMARY`.
 2. Select the session row.
 3. Click `VIDEO` to watch the footage.
-```
 
 ```{warning}
 Some critical alarms disable the RFID reader and halt new entries to protect other subjects.
@@ -52,8 +50,7 @@ The system waits for the current subject to exit and be weighed, then closes Doo
 You must connect remotely, verify all animals are in the home cage, resolve the issue, and reactivate the RFID reader.
 ```
 
----
-#### System Alarms
+#### Table of Alarms
 ```{list-table}
 :widths: 20 37 37 6
 :header-rows: 1
@@ -68,9 +65,9 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Check whether the system is accessible remotely. If you can connect and the Python process is frozen, try stopping it and launching it again (restart the OS if necessary). You may also find that the system is reachable but the code is not running, indicating that the Raspberry Pi has rebooted due to a power interruption. If you cannot connect remotely, there is no way to determine whether the system is functioning normally and only the internet connection is down, or whether the system is actually frozen or powered off. In this case, a physical inspection is required to ensure animal safety, as an animal may be trapped inside the operant box without access to food or water.
   - High.
 
-  * - Wrong RFID detection ⚠️
-  - This alarm has two possible causes. 1) A different subject was detected in the corridor while the main subject was performing the task. 2) The correct subject was detected in the corridor even though door 2 was already closed and the subject should not be there. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
-  - Review the previous videos to determine the cause (e.g., door malfunction, lightning issues, inaccurate camera thresholding).
+* - Wrong RFID detection ⚠️
+  - This alarm has two possible causes: (1) a different subject was detected in the corridor while the main subject was performing the task, or (2) the correct subject was detected in the corridor even though door 2 was already closed and the subject should not be there. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
+  - Review the previous videos to determine the cause (e.g., door malfunction, lighting issues, inaccurate camera thresholding).
   - High.
 
 * - Maximum time reached and areas 3 or 4 were never empty ⚠️
@@ -78,12 +75,12 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Check lighting and remove any dirt or objects in the corridor. Verify whether the animal fell asleep in the corridor or hesitated to enter the operant box. Review previous videos to check for door malfunction or issues with pixel detection.
   - High.
 
-  * - Error running task ⚠️
+* - Error running task ⚠️
   - A task execution error occurred, likely caused by an exception in the task code.
   - Inspect the event logs to obtain the full traceback and identify the line of code that triggered the error. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
   - High.
 
-  * - Error saving the task
+* - Error saving the task
   - The task data could not be saved.
   - Check the events log to inspect the traceback and identify the cause of the error.
   - High.
@@ -93,20 +90,20 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Check the events log to inspect the traceback. The code that updates the training settings is delicate and may fail if the format of the CSV has changed unexpectedly (e.g., a column that is now a string instead of an integer). After modifying this part of the code, you can test it from the TASKS tab.
   - High.
 
-  * - Detection in area4 when it should be empty
+* - Detection in area4 when it should be empty
   - When the operant box is empty and a subject is detected by the RFID reader, pixels are also detected in Area 4, which should be empty.
-  - Check corridor illumination and remove any dirt or objects that may cause false detection. If an animal is actually present in area 4 when it should not be, review the previous videos to determine the cause (e.g., door malfunction, lightning issues, inaccurate camera thresholding).
+  - Check corridor illumination and remove any dirt or objects that may cause false detection. If an animal is actually present in Area 4 when it should not be, review the previous videos to determine the cause (e.g., door malfunction, lighting issues, inaccurate camera thresholding).
   - High.
 
-  * - 2 Subjects in Box
+* - 2 Subjects in Box
   - The pixel count suggests that more than one animal has entered the operant box.
   - Connect remotely to verify whether this is a true event or a false alarm. If two animals are indeed inside the box, carefully open and close door 2 and door 1 to allow them to exit safely. Stop the task (this will automatically disable the RFID reader), and once everything is back to normal, ensure that door 2 is closed and door 1 is open, then reactivate the RFID reader. If this was a false alarm, check illumination, cleanliness, and pixel-detection thresholds to prevent future false detections.
-  -High.
+  - High.
 
 * - Subject in Prohibited Area
   - Pixels are detected in a region where no animal should be present.
   - Connect remotely to confirm whether the detection is real or a false alarm. If the alarm was false, inspect illumination, cleanliness, and pixel-detection thresholds to reduce the likelihood of recurring false positives.
-  -High.
+  - High.
 
 * - Invalid data in subjects.csv
   - An error occurred while reading subjects.csv. The file may contain malformed rows, inconsistent numbers of columns, or unintended spaces or line breaks.
@@ -133,7 +130,7 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Videos are kept on the Raspberry Pi’s SD card for X days (user-defined in settings) and are automatically deleted only after proper synchronization with an external server or drive. Review rsync_logs and data_removal_logs to confirm that files are being synchronized and deleted correctly. If necessary, reduce the number of days for which videos are stored.
   - High.
 
-  * - Error in sound device
+* - Error in sound device
   - An error occurred while attempting to play a sound.
   - Check the events log to see the traceback and identify the exact cause of the error.
   - High.
@@ -148,17 +145,17 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Inspect photogates, check for cable noise, and verify that no hardware component is malfunctioning.
   - High.
 
-  * - Subjects not detected in the last 24h
+* - Subjects not detected in the last 24h
   - The subject has not been detected by the RFID system for the last 24 hours. This check can be enabled or disabled in the settings.
   - Check corridor access, door 1 status, and the correct functioning and power supply of the RFID system.
-  -High.
+  - High.
 
 * - The subject has been in the box for too long
   - More than one hour has passed since the task ended, and the animal remains inside the operant box.
   - Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.
   - Low.
 
-  * - Camera not responding
+* - Camera not responding
   - The camera automatically restarts after failing to deliver frames for 10 seconds. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.
   - Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts.
   - Low.
@@ -192,4 +189,3 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - The subject did not complete any trials. This check can be enabled or disabled in the settings.
   - Confirm that the animal entered the operant box and did not fall asleep. Inspect the task logic and verify that all hardware components are functioning correctly.
   - Low.
-```
