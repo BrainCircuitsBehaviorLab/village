@@ -1134,8 +1134,10 @@ class DfLayout(Layout):
         date = time_utils.date_from_string(date_str)
         tsec = time_utils.seconds_since_start(date)
         if tsec < settings.get("CORRIDOR_VIDEO_DURATION"):
-            text = "The event is too recent. It is possible that "
-            text += "the video cannot be viewed until it has been fully recorded."
+            text = "The event is very recent. You may not be able to view the video "
+            text += "because it is currently being recorded. "
+            text += "You can close and reopen the application to force the recording "
+            text += "of a new video, which will allow you to view the previous one."
             QMessageBox.information(self.window, "EDIT", text)
         video_directory = settings.get("VIDEOS_DIRECTORY")
         return time_utils.find_closest_file_and_seconds(

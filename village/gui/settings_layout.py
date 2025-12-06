@@ -384,9 +384,9 @@ class SettingsLayout(Layout):
 
             if s.value_type == str:
                 value = line_edit.text()
+                old_value = str(settings.get("SYSTEM_NAME"))
 
-                if s.key == "SYSTEM_NAME":
-                    old_value = str(settings.get("SYSTEM_NAME"))
+                if s.key == "SYSTEM_NAME" and value != old_value:
 
                     if re.fullmatch(r"[A-Za-z0-9_-]+", value):
                         text = (
