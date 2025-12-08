@@ -6,19 +6,21 @@ import traceback
 from typing import Optional
 
 import cv2
-from PyQt5.QtCore import QMutex, QObject, pyqtSlot
+from PyQt5.QtCore import QMutex, QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QImage
 
 from village.scripts.error_queue import error_queue
 
 
 class VideoWorker(QObject):
+    finished = pyqtSignal()
 
     def __init__(self, path: str) -> None:
         super().__init__()
         self.path = path
-        self.cap = None
-        self.running = True
+        self.cap: Optional[cv2.VideoCapture] = None
+
+        self._running: bool = False
         self.mtx = QMutex()
 
         self._latest_img: Optional[QImage] = None
@@ -34,25 +36,28 @@ class VideoWorker(QObject):
 
     @pyqtSlot()
     def run(self) -> None:
+        self._running = True
         try:
             self.cap = cv2.VideoCapture(self.path)
             if self.cap is None or not self.cap.isOpened():
-                self.running = False
+                self._running = False
                 return
 
             try:
                 fps = float(self.cap.get(cv2.CAP_PROP_FPS))
+                if fps <= 0:
+                    fps = 30.0
             except Exception:
                 fps = 30.0
 
             self._fps = fps
-            self._frame_dt = 1.0 / fps
+            self._frame_dt = 1.0 / fps if fps > 0 else 0.0
             self._play_start = time.monotonic()
             self._started = True
 
             produced_idx = -1
 
-            while self.running:
+            while self._running:
                 ok, bgr = self.cap.read()
                 if not ok:
                     break
@@ -62,10 +67,13 @@ class VideoWorker(QObject):
                 img = QImage(rgba.data, w, h, QImage.Format_RGBA8888).copy()
 
                 produced_idx += 1
+
                 self.mtx.lock()
-                self._latest_img = img
-                self._latest_idx = produced_idx
-                self.mtx.unlock()
+                try:
+                    self._latest_img = img
+                    self._latest_idx = produced_idx
+                finally:
+                    self.mtx.unlock()
 
         except Exception:
             try:
@@ -75,24 +83,26 @@ class VideoWorker(QObject):
         finally:
             if self.cap is not None:
                 self.cap.release()
-            self.running = False
+                self.cap = None
+            self._running = False
+            self.finished.emit()
 
     def get_latest_qimage(self) -> Optional[QImage]:
-        if not self._started:
+        if not self._started or self._frame_dt <= 0:
             return None
 
         now = time.monotonic()
-        target_idx = (
-            int((now - self._play_start) / self._frame_dt) if self._frame_dt > 0 else 0
-        )
+        target_idx = int((now - self._play_start) / self._frame_dt)
 
         if self._served_idx == target_idx and self._served_img is not None:
             return self._served_img
 
         self.mtx.lock()
-        latest_img = self._latest_img
-        latest_idx = self._latest_idx
-        self.mtx.unlock()
+        try:
+            latest_img = self._latest_img
+            latest_idx = self._latest_idx
+        finally:
+            self.mtx.unlock()
 
         if latest_img is None or latest_idx < 0:
             return self._served_img
@@ -105,4 +115,4 @@ class VideoWorker(QObject):
         return self._served_img
 
     def stop(self) -> None:
-        self.running = False
+        self._running = False

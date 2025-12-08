@@ -7,7 +7,7 @@ import gpiod
 from gpiod.line import Direction, Value
 from PyQt5.QtCore import QRect, Qt, QThread
 from PyQt5.QtGui import QColor, QImage, QPainter, QPixmap
-from PyQt5.QtWidgets import QOpenGLWidget
+from PyQt5.QtWidgets import QApplication, QOpenGLWidget
 
 from village.manager import manager
 from village.screen.video_worker import VideoWorker
@@ -56,6 +56,10 @@ class BehaviorWindow(QOpenGLWidget):
         self.blend = False
         self.image: Optional[QPixmap] = None
 
+        app = QApplication.instance()
+        if app is not None:
+            app.aboutToQuit.connect(self.stop_video)
+
         self.show()
 
     def _init_gpio(self) -> None:
@@ -78,6 +82,7 @@ class BehaviorWindow(QOpenGLWidget):
         pass
 
     def closeEvent(self, event) -> None:
+        self.stop_video()
         event.ignore()
 
     def load_draw_function(
@@ -121,29 +126,40 @@ class BehaviorWindow(QOpenGLWidget):
         self.image = QPixmap(image_path)
 
     def load_video(self, file: str) -> None:
+        self.stop_video()
         media_directory = settings.get("MEDIA_DIRECTORY")
         video_path = os.path.join(media_directory, file)
-        self._video_thread = QThread()
+        self._video_thread = QThread(self)
         self._video_worker = VideoWorker(video_path)
         self._video_worker.moveToThread(self._video_thread)
         self._video_thread.started.connect(self._video_worker.run)
+        self._video_thread.finished.connect(self._on_video_thread_finished)
 
     def start_video(self) -> None:
-        if self._video_thread is not None:
+        if self._video_thread is not None and not self._video_thread.isRunning():
             self._video_thread.start()
 
     def stop_video(self) -> None:
-        if self._video_worker:
+        if self._video_worker is not None:
             self._video_worker.stop()
-        if self._video_thread:
-            self._video_thread.quit()
+        if self._video_thread is not None:
+            if self._video_thread.isRunning():
+                self._video_thread.quit()
+                self._video_thread.wait()
+            self._on_video_thread_finished()
 
     def _on_video_thread_finished(self) -> None:
-        if self._video_worker:
-            self._video_worker.deleteLater()
+        if self._video_worker is not None:
+            try:
+                self._video_worker.deleteLater()
+            except Exception:
+                pass
             self._video_worker = None
-        if self._video_thread:
-            self._video_thread.deleteLater()
+        if self._video_thread is not None:
+            try:
+                self._video_thread.deleteLater()
+            except Exception:
+                pass
             self._video_thread = None
 
     def get_video_frame(self) -> Optional[QImage]:
