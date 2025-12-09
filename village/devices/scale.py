@@ -56,7 +56,7 @@ class Scale(ScaleBase):
                 time.sleep(interval_s)
         median = int(np.median(values))
         if median == 0 and self.alarm_timer.has_elapsed():
-            log.alarm("The scale is not working, please check the connection.")
+            log.alarm("Scale not responding, please check the connection.")
         return median
 
     def get_weight(self) -> float:

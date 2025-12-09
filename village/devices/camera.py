@@ -427,7 +427,7 @@ class Camera(CameraBase):
         log.alarm(
             "Camera "
             + self.name
-            + " has not received a frame for "
+            + " not responding. No frames received for more than "
             + "10 seconds. Restarting the camera.",
             subject=manager.subject.name,
         )
