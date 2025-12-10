@@ -62,7 +62,7 @@ class SoundDevice(SoundDeviceBase):
 
         self.command_queue.put(("load", new_sound))
 
-    def load_wav(self, file: str) -> None:
+    def get_sound_from_wav(self, file: str) -> tuple[np.ndarray, np.ndarray]:
         media_directory = settings.get("MEDIA_DIRECTORY")
         path = os.path.join(media_directory, file)
         if not os.path.exists(path):
@@ -89,7 +89,7 @@ class SoundDevice(SoundDeviceBase):
         else:
             raise ValueError("Unsupported number of channels in WAV file.")
 
-        self.load(left, right)
+        return left, right
 
     def play(self) -> None:
         self.command_queue.put(("play", None))
