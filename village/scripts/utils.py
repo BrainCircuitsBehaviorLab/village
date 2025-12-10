@@ -567,9 +567,7 @@ def get_x_value_interp(x: Any, y: Any, y_target: float) -> float | None:
     if y_target < np.min(y) or y_target > np.max(y):
         return None
 
-    points = int((np.max(x) - np.min(x)) * 100000)
-
-    x_fit, y_fit = interpolate(x, y, points=points)
+    x_fit, y_fit = interpolate(x, y, points=1000)
 
     if x_fit is None:
         return None
