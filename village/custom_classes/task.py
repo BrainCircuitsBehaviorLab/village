@@ -280,7 +280,7 @@ class Task:
 
         trials = int(self.raw_df["TRIAL"].iloc[-1])
 
-        if trials > 1:
+        if trials >= 1:
             non_nan_values = self.raw_df["START"].dropna()
             # sort it
             non_nan_values = non_nan_values.sort_values(ascending=True)
