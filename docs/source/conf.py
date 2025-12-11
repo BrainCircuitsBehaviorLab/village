@@ -8,15 +8,15 @@
 
 import os
 import sys
-
 import setuptools_scm  # type: ignore
 
-# Used when building API docs, put the dependencies
-# of any class you are documenting here
-autodoc_mock_imports: list = [
+os.environ["SPHINX_BUILD"] = "1"
+
+from unittest.mock import MagicMock
+
+MOCK_MODULES = [
     "numpy",
     "pandas",
-    "PyQt5",
     "cv2",
     "serial",
     "smbus2",
@@ -26,6 +26,17 @@ autodoc_mock_imports: list = [
     "fire",
     "calplot",
 ]
+
+for mod_name in MOCK_MODULES:
+    mock = MagicMock()
+    mock.__name__ = mod_name
+    mock.__file__ = "mock"
+    mock.__path__ = ["mock"]
+    sys.modules[mod_name] = mock
+
+# Used when building API docs, put the dependencies
+# of any class you are documenting here
+autodoc_mock_imports = MOCK_MODULES
 
 # Add the module path to sys.path here.
 # If the directory is relative to the documentation root,
