@@ -12,9 +12,7 @@ from village.scripts.time_utils import time_utils
 from village.scripts.utils import setup_logging
 
 
-def run_rsync_local(
-    source, destination, maximum_sync_time, cancel_event=None
-) -> bool:
+def run_rsync_local(source, destination, maximum_sync_time, cancel_event=None) -> bool:
     """
     Run rsync to sync to a local destination (e.g., external HDD).
 
@@ -193,7 +191,7 @@ def main(source, destination, maximum_sync_time=1800, cancel_event=None) -> None
 
     Parameters:
     - source: Source directory path
-    - destination: Destination path on remote system
+    - destination: Destination path (on remote system)
     - maximum_sync_time: Maximum sync time duration in seconds (default: 1200)
     - cancel_event: threading.Event to signal cancellation (optional)
     """
