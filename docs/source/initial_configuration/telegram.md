@@ -15,7 +15,7 @@
 
 
 
-## 2. Check the Token of an Existing Bot
+### Check the Token of an Existing Bot
 1. Open the chat with **@BotFather**.
 
 2. Send: `/token`
@@ -24,7 +24,7 @@
 
 
 
-## 3. Configure the Bot to Trigger Alarms
+### Configure the Bot to Trigger Alarms
 1. Create a **group chat** that includes:
 - The bot (make it **administrator**: *Group → Edit → Administrators*).
 - Other participants who should receive the alarms.
