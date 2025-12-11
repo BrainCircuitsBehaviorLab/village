@@ -1,20 +1,45 @@
 ## Create a Telegram Bot
+1. Install **Telegram** on your phone and open the app.
 
-1. Text `@BotFather` in the search tab and select this bot.
-2. Text: `/newbot` and send.
-3. Follow Botfather instructions. Write down the token. Never share the token in github.
-4. Open a chat with your new bot and activate it by sending: `/start`.
+2. In the search bar, type **@BotFather** and select it.
+   Be careful: there may be other bots with similar names. The official BotFather has a **blue verification checkmark**.
 
-### Check the token of an existing bot
+3. Send the command `/newbot`
 
-5. Go to the `@BotFather` chat and send ``/token``.
+4. Follow BotFather’s instructions to create your bot.
+- At the end, you will receive a **token**.
+- Write it down and **never share your token publicly** (e.g., on GitHub).
 
-### Make the bot triggers the alarms
+5. Open a chat with your new bot and activate it by sending `/start`
 
-6. Create a chat with the bot and other participants (the bot must be admin: go to the group → edit → administrators). All the participants of this group will receive the
-alarms from the bot and will be able to send commands to it.
-7. Start a conversation with `@username_to_id_bot` to obtain your ID, the chat ID and
-the ID of all the other users.
-8. Copy the token, the chat ID and the allowed users IDs in academy settings (TELEGRAM_TOKEN, TELEGRAM_CHAT, TELEGRAM USERS)
+
+
+
+## 2. Check the Token of an Existing Bot
+1. Open the chat with **@BotFather**.
+
+2. Send: `/token`
+
+3. Select the bot whose token you want to retrieve.
+
+
+
+## 3. Configure the Bot to Trigger Alarms
+1. Create a **group chat** that includes:
+- The bot (make it **administrator**: *Group → Edit → Administrators*).
+- Other participants who should receive the alarms.
+
+→ Everyone in this group will receive alarms and can send commands to the bot.
+
+2. To obtain the **group chat ID**:
+- Start a conversation with **@username_to_id_bot** (IDBot).
+- Forward any message from the group to IDBot.
+- IDBot will reply with the **chat ID**-
+
+3. Copy the values into your **Village settings** t(he settings are stored in a system file that never leaves your Raspberry Pi and is never shared with anything else.)
+```ini
+TELEGRAM_TOKEN = <your-bot-token>
+TELEGRAM_CHAT  = <group-chat-id>
+```
 
 <br>
