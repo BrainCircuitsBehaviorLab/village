@@ -22,25 +22,12 @@ jobs:
 
   test:
     needs: [linting, manifest]
-    name: ${{ matrix.os }} py${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        # Run all supported Python versions on linux
-        python-version: ["3.9", "3.10", "3.11"]
-        os: [ubuntu-latest]
-        # Include one windows and macos run
-        include:
-        - os: macos-latest
-          python-version: "3.10"
-        - os: windows-latest
-          python-version: "3.10"
-
+    name: ubuntu py3.11
+    runs-on: ubuntu-latest
     steps:
-      # Run tests
       - uses: neuroinformatics-unit/actions/test@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.11"
 
   build_sdist_wheels:
     name: Build source distribution
