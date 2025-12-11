@@ -47,17 +47,18 @@ sudo apt full-upgrade
 
 ### Installing Needed Libraries
 
-1. Install OpenCV (library to manage video):
+1. Install OpenCV (the library used for video processing).
+The precompiled version of OpenCV that works reliably with Picamera2 depends on NumPy 1,
+even though NumPy 2 has been available for some time.
 
 ```
 sudo apt install -y python3-opencv
 sudo apt install -y opencv-data
 ```
 
-2. Install sound libraries: TODO check if pulseaudio is really needed.
+2. Install sound library.
 
 ```
-sudo apt-get install pulseaudio
 sudo apt-get install libportaudio2
 ```
 
@@ -89,20 +90,24 @@ python -m venv --system-site-packages ~/.env
 source ~/.env/bin/activate
 ```
 
-3. Install needed libraries with pip:
+3. Install the required libraries with pip. Because OpenCV depends on NumPy 1 (not NumPy 2),
+we need to use specific compatible versions of SciPy and Calplot.
+If NumPy 2 is accidentally installed via pip, you can remove it with: `pip uninstall numpy`
+This will uninstall only the pip-installed version (NumPy 2), while keeping the
+system version (NumPy 1) that was installed via apt.
 
 ```
 pip install python-dateutil
 pip install setuptools_scm
 pip install sounddevice
 pip install python-telegram-bot
-pip install scipy
+pip install scipy==1.11.4
 pip install gpiod
 pip install fire
 pip install pyserial
 pip install pandas
 pip install seaborn
-pip install sphinx_book_theme
+pip install calplot==0.1.7
 ```
 
 ### Changing Preferences
@@ -235,25 +240,31 @@ sudo sysctl -p
 source ~/.env/bin/activate
 ```
 
-2. Clone the repository inside your `/home/pi/` directory.
+2. Go to your `/home/pi/` directory.
+
+```
+cd
+```
+
+3. Clone the repository.
 
 ```
 git clone https://github.com/BrainCircuitsBehaviorLab/village.git
 ```
 
-3. Navigate to folder `village`.
+4. Navigate to folder `village`.
 
 ```
-cd /home/pi/village
+cd village
 ```
 
-4. Install the repository.
+5. Install the repository.
 
 ```
 pip install -e .
 ```
 
-5. You’re ready to start the system by simply running the `main.py` file.
+6. You’re ready to start the system by simply running the `main.py` file.
 ```python /home/pi/village/village/main.py```
 
 ### Create an Alias and Run the Training Village
