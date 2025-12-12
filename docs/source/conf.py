@@ -15,20 +15,42 @@ import setuptools_scm  # type: ignore
 autodoc_mock_imports = [
     "numpy",
     "pandas",
+    "PyQt5",
+    "PyQt5.QtCore",
+    "PyQt5.QtGui",
+    "PyQt5.QtWidgets",
     "cv2",
     "serial",
     "smbus2",
     "sounddevice",
     "telegram",
     "scipy",
+    "scipy.interpolate",
     "fire",
     "calplot",
+    "matplotlib",
+    "matplotlib.pyplot",
+    "matplotlib.dates",
+    "matplotlib.figure",
+    "picamera2",
+    "jinja2",
 ]
 
 # Add the module path to sys.path here.
 # If the directory is relative to the documentation root,
 # use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath("../.."))
+
+# Autodoc configuration to handle circular imports
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'undoc-members': True,
+    'show-inheritance': True,
+}
+
+# Don't execute code during import (helps avoid circular import side effects)
+autodoc_preserve_defaults = True
 
 project = "village"
 copyright = "2024, Rafael Marin, Balma Serrano, Hernando Vergara"

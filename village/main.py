@@ -507,15 +507,20 @@ def system_run(bevavior_window: QWidget) -> None:
                 log.info("Going to WAIT State")
 
 
-# create the GUI that will run in the main thread
-gui = Gui()
-manager.behavior_window = gui.behavior_window
+def main() -> None:
+    # create the GUI that will run in the main thread
+    gui = Gui()
+    manager.behavior_window = gui.behavior_window
 
-# start the secondary thread (control of the system)
-system_state = threading.Thread(
-    target=system_run, args=(manager.behavior_window,), daemon=True
-)
-system_state.start()
+    # start the secondary thread (control of the system)
+    system_state = threading.Thread(
+        target=system_run, args=(manager.behavior_window,), daemon=True
+    )
+    system_state.start()
 
-# start the GUI
-gui.q_app.exec()
+    # start the GUI
+    gui.q_app.exec()
+
+
+if __name__ == "__main__":
+    main()
