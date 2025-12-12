@@ -5,7 +5,7 @@ import traceback
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
-from classes.enums import State
+from village.classes.enums import State
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTime
 from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent

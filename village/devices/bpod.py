@@ -1,4 +1,5 @@
 import socket
+import sys
 import threading
 import time
 import traceback
@@ -237,6 +238,8 @@ class PyBpod(PyBpodBase):
 
 
 def get_bpod() -> PyBpodBase:
+    if "sphinx" in sys.modules:
+        return PyBpodBase()
     try:
         bpod = PyBpod()
         log.info("Bpod successfully initialized")

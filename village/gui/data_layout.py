@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, Optional, cast
 import cv2
 import numpy as np
 import pandas as pd
-from classes.enums import State
+from village.classes.enums import State
 from pandas import DataFrame
 from PyQt5.QtCore import (
     QAbstractTableModel,

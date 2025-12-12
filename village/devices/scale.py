@@ -47,13 +47,18 @@ class Scale(ScaleBase):
     def get_value(self, samples: int = 1, interval_s: float = 0.005) -> int:
         values: List[int] = []
         for i in range(samples):
-            data = self.i2cbus.read_i2c_block_data(
-                self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
-            )
-            v = struct.unpack(">h", bytes(data))[0]
-            values.append(v)
+            try:
+                data = self.i2cbus.read_i2c_block_data(
+                    self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
+                )
+                v = struct.unpack(">h", bytes(data))[0]
+                values.append(v)
+            except Exception:
+                pass
             if interval_s > 0 and i < samples - 1:
                 time.sleep(interval_s)
+        if not values:
+             return 0
         median = int(np.median(values))
         if median == 0 and self.alarm_timer.has_elapsed():
             log.alarm("Scale not responding, please check the connection.")
