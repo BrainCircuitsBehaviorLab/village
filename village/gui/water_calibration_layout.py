@@ -387,17 +387,14 @@ class WaterCalibrationLayout(Layout):
         self.addLayout(self.plot_layout, 5, 121, 38, 79)
 
     def change_layout(self, auto: bool = False) -> bool:
-        if manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
-            if not auto:
-                QMessageBox.information(
-                    self.window, "WARNING", "Wait until the task finishes."
-                )
+        if auto:
             return False
-        elif auto:
-            manager.changing_settings = False
-            return True
+        elif manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
+            QMessageBox.information(
+                self.window, "WARNING", "Wait until the task finishes."
+            )
+            return False
         elif self.save_button.isEnabled():
-
             reply = QMessageBox.question(
                 self.window,
                 "Save calibration",
@@ -405,7 +402,6 @@ class WaterCalibrationLayout(Layout):
                 QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
                 QMessageBox.Save,
             )
-
             if reply == QMessageBox.Save:
                 self.save_button.setDisabled(True)
                 self.save_button_clicked()
