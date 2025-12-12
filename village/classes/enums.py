@@ -4,7 +4,8 @@ from typing import Any
 
 class SuperEnum(Enum):
     def __eq__(self, other) -> bool:
-        assert hasattr(other, "value")
+        if not hasattr(other, "value"):
+            return False
         return self.value == other.value
 
     @classmethod
