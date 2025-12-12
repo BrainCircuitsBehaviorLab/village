@@ -10,8 +10,6 @@ import os
 import sys
 import setuptools_scm  # type: ignore
 
-os.environ["SPHINX_BUILD"] = "1"
-
 from unittest.mock import MagicMock
 
 MOCK_MODULES = [
