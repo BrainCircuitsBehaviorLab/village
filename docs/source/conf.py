@@ -192,3 +192,7 @@ linkcheck_anchors_ignore_for_url = [
 ]
 
 autosectionlabel_prefix_document = True
+
+autodoc_mock_imports = ["PyQt5", "PyQt6", "gpiod", "picamera2", "libcamera"]
+
+suppress_warnings = ["docutils"]
