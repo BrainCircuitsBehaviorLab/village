@@ -59,11 +59,16 @@ class Motor(MotorBase):
         )
 
     def __del__(self) -> None:
-        if self.pin is not None:
-            # ok take PWM out
-            os.system(f"echo {self.pwmx[self.pinIdx]} > {self.chip}/unexport")
-            # disable PWM Pin
-            os.system(f"/usr/bin/pinctrl set {self.pin} no")
+        try:
+            if self.pin is not None and os is not None:
+                # ok take PWM out
+                os.system(f"echo {self.pwmx[self.pinIdx]} > {self.chip}/unexport")
+                # disable PWM Pin
+                os.system(f"/usr/bin/pinctrl set {self.pin} no")
+        except AttributeError:
+            pass  # interpreter shutdown
+        except Exception:
+            pass
 
     def set(self, on_time_ns) -> None:
         if not self.flag:

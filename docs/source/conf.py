@@ -13,6 +13,8 @@ from unittest.mock import MagicMock
 
 # Manually mock PyQt5 to avoid infinite recursion in sphinx-autodoc-typehints
 # when unwrapping pyqtSignal/pyqtSlot.
+# Manually mock PyQt5.QtCore to avoid infinite recursion in sphinx-autodoc-typehints
+# when unwrapping pyqtSignal/pyqtSlot and to ensure classes are available for inheritance.
 class MockSignal:
     def __init__(self, *args, **kwargs): pass
     def connect(self, *args, **kwargs): pass
@@ -25,19 +27,27 @@ class MockSlot:
             return args[0]
         return self
 
-mock_qt = MagicMock()
+class MockClass(object):
+    def __init__(self, *args, **kwargs): pass
+
 mock_core = MagicMock()
 mock_core.pyqtSignal = MockSignal
 mock_core.pyqtSlot = MockSlot
-mock_core.QObject = object
-# Add other widely used QtCore classes to avoid AttributeErrors if needed, 
-# although MagicMock handles attributes automatically.
-# We explicitly set QObject to object to allow inheritance without issues.
+mock_core.QObject = MockClass  # Inheritable class
+mock_core.QAbstractTableModel = MockClass
+mock_core.QEvent = MockClass
+mock_core.QModelIndex = MockClass
+mock_core.QTimer = MockClass
+mock_core.QVariant = MockClass
+# Qt namespace
+mock_core.Qt = MagicMock()
+# Add common Qt constants used in default arguments if needed
+mock_core.Qt.AlignRight = 0
+mock_core.Qt.AlignVCenter = 0
+mock_core.Qt.AlignHCenter = 0
 
-sys.modules["PyQt5"] = mock_qt
+# Only manually inject QtCore. Let autodoc_mock_imports handle PyQt5, PyQt5.QtGui, PyQt5.QtWidgets
 sys.modules["PyQt5.QtCore"] = mock_core
-sys.modules["PyQt5.QtGui"] = MagicMock()
-sys.modules["PyQt5.QtWidgets"] = MagicMock()
 
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
