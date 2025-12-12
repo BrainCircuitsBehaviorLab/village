@@ -149,8 +149,16 @@ class Settings:
 
     def get(self, key: str) -> Any:
         """Get the value of a setting."""
-        type = next((s.value_type for s in self.all_settings if s.key == key), None)
-        str_value = str(self.saved_settings.value(key))
+        setting = next((s for s in self.all_settings if s.key == key), None)
+        if setting is None:
+            return None
+        type = setting.value_type
+
+        val = self.saved_settings.value(key)
+        if val is None:
+            val = setting.value
+
+        str_value = str(val)
         try:
             if type == str:
                 return str_value

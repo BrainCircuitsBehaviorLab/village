@@ -69,7 +69,10 @@ class TimeUtils:
         return datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
 
     def time_from_setting_string(self, string: str) -> datetime.time:
-        return datetime.datetime.strptime(string, "%H:%M").time()
+        try:
+            return datetime.datetime.strptime(string, "%H:%M").time()
+        except (ValueError, TypeError):
+            return datetime.time(8, 0)
 
     def date_from_path(self, path: str) -> datetime.datetime:
         filename = path.split("/")[-1][:-4]
@@ -223,8 +226,14 @@ class TimeUtils:
 
     class CycleChangeDetector:
         def __init__(self, day_time: str, night_time: str) -> None:
-            self.day_time = datetime.datetime.strptime(day_time, "%H:%M").time()
-            self.night_time = datetime.datetime.strptime(night_time, "%H:%M").time()
+            try:
+                self.day_time = datetime.datetime.strptime(day_time, "%H:%M").time()
+            except (ValueError, TypeError):
+                self.day_time = datetime.time(8, 0)
+            try:
+                self.night_time = datetime.datetime.strptime(night_time, "%H:%M").time()
+            except (ValueError, TypeError):
+                self.night_time = datetime.time(20, 0)
             self.last_state = self._get_current_cycle()
 
         def _get_current_cycle(self) -> str:
