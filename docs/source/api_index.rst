@@ -69,15 +69,7 @@ Plots
     village.plots
 
 
-Pybpodapi
----------
-.. autosummary::
-   :toctree: api_generated
-   :template: custom_module_template.rst
-   :recursive:
-   :nosignatures:
 
-    village.pybpodapi
 
 
 Screen
