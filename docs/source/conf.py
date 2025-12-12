@@ -10,9 +10,9 @@ import os
 import sys
 import setuptools_scm  # type: ignore
 
-from unittest.mock import MagicMock
-
-MOCK_MODULES = [
+# Used when building API docs, put the dependencies
+# of any class you are documenting here
+autodoc_mock_imports = [
     "numpy",
     "pandas",
     "cv2",
@@ -24,17 +24,6 @@ MOCK_MODULES = [
     "fire",
     "calplot",
 ]
-
-for mod_name in MOCK_MODULES:
-    mock = MagicMock()
-    mock.__name__ = mod_name
-    mock.__file__ = "mock"
-    mock.__path__ = ["mock"]
-    sys.modules[mod_name] = mock
-
-# Used when building API docs, put the dependencies
-# of any class you are documenting here
-autodoc_mock_imports = MOCK_MODULES
 
 # Add the module path to sys.path here.
 # If the directory is relative to the documentation root,

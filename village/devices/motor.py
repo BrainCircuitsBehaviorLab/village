@@ -93,9 +93,5 @@ def get_motor(pin: int, angles: list[int]) -> MotorBase:
         return MotorBase()
 
 
-if os.environ.get("SPHINX_BUILD") == "1":
-    motor1 = MotorBase()
-    motor2 = MotorBase()
-else:
-    motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
-    motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))
+motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
+motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))
