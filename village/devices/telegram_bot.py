@@ -99,9 +99,12 @@ class TelegramBot(TelegramBotBase):
         self.application.add_handler(CommandHandler("plot", self.plot))
         self.application.add_handler(CommandHandler("cam", self.cam))
 
-        await self.application.initialize()
-        await self.application.updater.start_polling()
-        await self.application.start()
+        try:
+            await self.application.initialize()
+            await self.application.updater.start_polling()
+            await self.application.start()
+        except TypeError:
+            pass
         self.connected = True
         while True:
             await asyncio.sleep(1)

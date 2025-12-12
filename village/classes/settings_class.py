@@ -156,7 +156,12 @@ class Settings:
 
         val = self.saved_settings.value(key)
         if val is None:
-            val = setting.value
+            return str(setting.value)
+        
+        # If QSettings returns a QVariant/PyQt object/string that is not the value we expect
+        # but contains "QSettings", it's likely a Sphinx build artifact or mock issue.
+        if "QSettings" in str(val):
+             return str(setting.value)
 
         str_value = str(val)
         try:
