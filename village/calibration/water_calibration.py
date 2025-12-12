@@ -12,7 +12,8 @@ class WaterCalibration(Task):
 
     def start(self) -> None:
         """Prepares the calibration task by defining states and output actions."""
-        self.states = ["valve" + str(i + 1) for i in self.indices] + ["wait"]
+        self.states = ["valve" + str(i + 1) for i in self.indices] + ["exit"]
+        self.wait_states = ["wait" + str(i + 1) for i in self.indices] + ["exit"]
         self.outputs = [
             [("PWM" + str(i + 1), 255), "Valve" + str(i + 1)] for i in self.indices
         ]
@@ -26,16 +27,15 @@ class WaterCalibration(Task):
             self.bpod.add_state(
                 state_name=self.states[i],
                 state_timer=self.times[i],
-                state_change_conditions={Event.Tup: self.states[i + 1]},
+                state_change_conditions={Event.Tup: self.wait_states[i]},
                 output_actions=self.outputs[i],
             )
-
-        self.bpod.add_state(
-            state_name="wait",
-            state_timer=0.150,
-            state_change_conditions={Event.Tup: "exit"},
-            output_actions=[],
-        )
+            self.bpod.add_state(
+                state_name=self.wait_states[i],
+                state_timer=0.3,
+                state_change_conditions={Event.Tup: self.states[i + 1]},
+                output_actions=[],
+            )
 
     def after_trial(self) -> None:
         """Executes logic after a trial completes."""
