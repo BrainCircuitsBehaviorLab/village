@@ -113,14 +113,14 @@ class Manager:
         log.event = self.events
         log.temp = self.temperatures
         self.detections = time_utils.TimestampTracker(
-            hours=int(settings.get("NO_DETECTION_HOURS"))
+            hours=int(settings.get("NO_DETECTION_HOURS") or 6)
         )
         self.sessions = time_utils.TimestampTracker(
-            hours=int(settings.get("NO_SESSION_HOURS"))
+            hours=int(settings.get("NO_SESSION_HOURS") or 6)
         )
         self.hour_change_detector = time_utils.HourChangeDetector()
         self.cycle_change_detector = time_utils.CycleChangeDetector(
-            settings.get("DAYTIME"), settings.get("NIGHTTIME")
+            settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
         )
         self.detection_change = True
         self.error_in_manual_task = False
@@ -405,13 +405,13 @@ class Manager:
 
     def update_cycle(self) -> None:
         match self.cycle:
-            case self.cycle.DAY:
+            case Cycle.DAY:
                 self.cycle_text = "DAY"
                 self.day = True
-            case self.cycle.NIGHT:
+            case Cycle.NIGHT:
                 self.cycle_text = "NIGHT"
                 self.day = False
-            case self.cycle.AUTO:
+            case Cycle.AUTO:
                 day = time_utils.time_from_setting_string(settings.get("DAYTIME"))
                 night = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
                 now = time_utils.now().time()
