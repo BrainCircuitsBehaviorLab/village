@@ -1,17 +1,21 @@
 import os
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
 from village.classes.enums import ScreenActive
-from village.classes.null_classes import BehaviorWindowBase
+from village.classes.null_classes import NullBehaviorWindow
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
 from village.screen.behavior_window import BehaviorWindow
 from village.scripts.log import log
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.screen.behavior_window import BehaviorWindow
 
 
 class Gui:
@@ -31,7 +35,9 @@ class Gui:
         if settings.get("USE_SCREEN") != ScreenActive.OFF:
             self.create_behavior_window()
         else:
-            self.behavior_window = BehaviorWindowBase()
+            self.behavior_window: BehaviorWindow | NullBehaviorWindow = (
+                NullBehaviorWindow()
+            )
 
         self.gui_window = GuiWindow(self)
 

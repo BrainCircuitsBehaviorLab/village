@@ -2,14 +2,14 @@ import json
 import traceback
 from pathlib import Path
 from threading import Thread
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import pandas as pd
 
 from village.classes.collection import Collection
 from village.classes.enums import Active, Save
-from village.classes.null_classes import CameraBase
+from village.classes.null_classes import NullCamera
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
 from village.devices.controller import BehaviorController, controller
 from village.devices.sound_device import sound_device
@@ -18,6 +18,9 @@ from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.devices.camera import Camera
 
 
 class TaskError(Exception):
@@ -44,7 +47,7 @@ class Task:
         self.system_name: str = settings.get("SYSTEM_NAME")
         self.date: str = time_utils.now_string()
 
-        self.cam_box = CameraBase()
+        self.cam_box: Camera | NullCamera = NullCamera()
 
         self.info: str = ""
 

@@ -80,14 +80,14 @@ class NullSession:
         pass
 
 
-class TelegramBotBase:
+class NullTelegramBot:
     error: str = "Error connecting to the telegram_bot "
 
     def alarm(self, message: str) -> None:
         return
 
 
-class ScaleBase:
+class NullScale:
     error: str = "Error connecting to the scale "
 
     def tare(self) -> None:
@@ -100,7 +100,7 @@ class ScaleBase:
         return 0.0
 
 
-class TempSensorBase:
+class NullTempSensor:
     error: str = "Error connecting to the temp_sensor "
 
     def start(self) -> None:
@@ -110,7 +110,7 @@ class TempSensorBase:
         return 0.0, 0.0, ""
 
 
-class MotorBase:
+class NullMotor:
     error: str = "Error connecting to the motor "
     open_angle: int = 0
     close_angle: int = 0
@@ -122,7 +122,7 @@ class MotorBase:
         return
 
 
-class SoundDeviceBase:
+class NullSoundDevice:
     samplerate: int = 44100
     error: str = (
         ""
@@ -143,7 +143,7 @@ class SoundDeviceBase:
         return
 
 
-class EventBase:
+class NullCollection:
     def log(self, date: str, type: str, subject: str, description: str) -> None:
         return
 
@@ -151,7 +151,7 @@ class EventBase:
         return
 
 
-class CameraBase:
+class NullCamera:
     area1: list[int] = []
     area2: list[int] = []
     area3: list[int] = []
@@ -218,7 +218,7 @@ class CameraBase:
         return
 
 
-class BehaviorWindowBase(QWidget):
+class NullBehaviorWindow(QWidget):
     background_color = None
 
     def start_drawing(self) -> None:

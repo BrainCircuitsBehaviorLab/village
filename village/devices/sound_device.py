@@ -9,7 +9,7 @@ import sounddevice as sd
 from scipy.io import wavfile
 
 from village.classes.enums import Active
-from village.classes.null_classes import SoundDeviceBase
+from village.classes.null_classes import NullSoundDevice
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.settings import settings
@@ -21,7 +21,7 @@ def get_sound_devices() -> list[str]:
     return devices_str
 
 
-class SoundDevice(SoundDeviceBase):
+class SoundDevice:
     def __init__(self) -> None:
         self.samplerate = int(settings.get("SAMPLERATE"))
         self.channels = 2
@@ -158,9 +158,9 @@ class SoundDevice(SoundDeviceBase):
         return np.ascontiguousarray(sound.T, dtype=np.float32)
 
 
-def get_sound_device() -> SoundDeviceBase:
+def get_sound_device() -> SoundDevice | NullSoundDevice:
     if settings.get("USE_SOUNDCARD") == Active.OFF:
-        return SoundDeviceBase()
+        return NullSoundDevice()
     else:
         try:
             sound_device = SoundDevice()
@@ -170,7 +170,7 @@ def get_sound_device() -> SoundDeviceBase:
             log.error(
                 "Could not initialize sound device", exception=traceback.format_exc()
             )
-            return SoundDeviceBase()
+            return NullSoundDevice()
 
 
 sound_device = get_sound_device()

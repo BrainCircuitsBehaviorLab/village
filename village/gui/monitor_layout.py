@@ -24,7 +24,7 @@ from PyQt5.QtWidgets import (
 
 from village.classes.enums import Actions, Active, Cycle, Info, ScreenActive
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.motor import motor1, motor2
+from village.devices.motor import Motor, motor1, motor2
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
@@ -35,7 +35,7 @@ from village.scripts.utils import create_pixmap
 from village.settings import settings
 
 if TYPE_CHECKING:
-    from village.classes.null_classes import MotorBase
+    from village.classes.null_classes import NullMotor
     from village.gui.gui_window import GuiWindow
 
 
@@ -547,7 +547,7 @@ class MotorLayout(Layout):
         )
 
     def draw_motor_buttons(
-        self, name: str, row: int, column: int, motor: MotorBase
+        self, name: str, row: int, column: int, motor: Motor | NullMotor
     ) -> None:
         open_name: str = "OPEN " + name
         open_door: PushButton = self.create_and_add_button(
