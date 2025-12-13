@@ -7,9 +7,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from village.classes.abstract_classes import CameraBase
 from village.classes.collection import Collection
 from village.classes.enums import Active, Save
+from village.classes.null_classes import CameraBase
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
 from village.devices.controller import BehaviorController, controller
 from village.devices.sound_device import sound_device
@@ -88,7 +88,7 @@ class Task:
 
     # DO NOT OVERWRITE THESE METHODS
     def send_softcode_to_bpod(self, code: int) -> None:
-        self.controller.receive_softcode(code)
+        self.controller.send_softcode_to_bpod(code)
 
     def run_in_thread(self, daemon=True) -> None:
         def test_run():

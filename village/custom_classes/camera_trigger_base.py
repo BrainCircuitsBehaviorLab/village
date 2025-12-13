@@ -1,4 +1,4 @@
-from village.classes.abstract_classes import CameraBase
+from village.classes.null_classes import CameraBase
 
 
 class CameraTriggerBase:

@@ -35,7 +35,7 @@ from village.scripts.utils import create_pixmap
 from village.settings import settings
 
 if TYPE_CHECKING:
-    from village.classes.abstract_classes import MotorBase
+    from village.classes.null_classes import MotorBase
     from village.gui.gui_window import GuiWindow
 
 

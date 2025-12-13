@@ -2,7 +2,7 @@ import traceback
 
 import smbus2
 
-from village.classes.abstract_classes import TempSensorBase
+from village.classes.null_classes import TempSensorBase
 from village.scripts.log import log
 from village.settings import settings
 

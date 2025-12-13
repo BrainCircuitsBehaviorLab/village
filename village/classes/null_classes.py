@@ -4,19 +4,34 @@ from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
-from village.pybpodapi.session import Session
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
-class PyBpodBase:
-    error: str = "Error connecting to the bpod "
-    session: Session | Any = None
-    connected: bool = False
+class NullBpod:
+    def close(self) -> None:
+        pass
 
-    def connect(self, functions: list[Callable]) -> None:
-        return
+    def send_state_machine(self, sma: Any) -> None:
+        pass
 
+    def run_state_machine(self, sma: Any) -> None:
+        pass
+
+    def register_value(self, name: str, value: Any) -> None:
+        pass
+
+    def manual_override(
+        self,
+        channel_type: Any,
+        channel_name: Any,
+        channel_number: Any,
+        value: Any,
+    ) -> None:
+        pass
+
+
+class NullStateMachine:
     def add_state(
         self,
         state_name: Any,
@@ -24,7 +39,7 @@ class PyBpodBase:
         state_change_conditions: Any = {},
         output_actions: Any = (),
     ) -> None:
-        return
+        pass
 
     def set_global_timer(
         self,
@@ -39,50 +54,30 @@ class PyBpodBase:
         send_events: int = 1,
         oneset_triggers: Any | None = None,
     ) -> None:
-        return
+        pass
 
     def set_condition(
         self, condition_number: Any, condition_channel: Any, channel_value: Any
     ) -> None:
-        return
+        pass
 
     def set_global_counter(
         self, counter_number: Any, target_event: Any, threshold: Any
     ) -> None:
-        return
+        pass
 
-    def create_state_machine(self) -> None:
-        return
 
-    def send_and_run_state_machine(self) -> None:
-        return
+class NullSoftCodeToBpod:
+    def send(self, idx: int) -> None:
+        pass
 
-    def close(self) -> None:
-        return
+    def kill(self) -> None:
+        pass
 
-    def stop(self) -> None:
-        return
 
-    def manual_override_input(self, message: str) -> None:
-        return
-
-    def manual_override_output(self, message: str | tuple) -> None:
-        return
-
-    def register_value(self, name: str, value: Any) -> None:
-        return
-
-    def receive_softcode(self, idx: int) -> None:
-        return
-
-    def led(self, i: int, close: bool) -> None:
-        return
-
-    def water(self, i: int, close: bool) -> None:
-        return
-
-    def poke(self, i: int, close: bool) -> None:
-        return
+class NullSession:
+    def current_trial(self) -> None:
+        pass
 
 
 class TelegramBotBase:

@@ -2,7 +2,7 @@ import os
 import time
 import traceback
 
-from village.classes.abstract_classes import MotorBase
+from village.classes.null_classes import MotorBase
 from village.scripts.log import log
 from village.settings import settings
 

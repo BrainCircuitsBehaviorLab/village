@@ -12,7 +12,6 @@ import numpy as np
 import pandas as pd
 import requests  # type: ignore
 
-from village.classes.abstract_classes import BehaviorWindowBase, CameraBase
 from village.classes.collection import Collection
 from village.classes.enums import (
     Actions,
@@ -24,6 +23,7 @@ from village.classes.enums import (
     State,
     SyncType,
 )
+from village.classes.null_classes import BehaviorWindowBase, CameraBase
 from village.classes.subject import Subject
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase

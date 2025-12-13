@@ -1,6 +1,6 @@
 import re
 
-from village.classes.abstract_classes import (
+from village.classes.null_classes import (
     CameraBase,
     EventBase,
     TelegramBotBase,
