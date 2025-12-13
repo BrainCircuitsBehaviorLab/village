@@ -53,6 +53,7 @@ class BehaviorController:
                     log.info("Bpod successfully initialized")
                     self.bpod.close()
                 except Exception:
+                    self.error = "Error connecting to Bpod"
                     log.error(
                         "Could not initialize bpod", exception=traceback.format_exc()
                     )

@@ -22,7 +22,7 @@ except Exception:
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.null_classes import CameraBase
+from village.classes.null_classes import NullCamera
 from village.manager import manager
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
@@ -62,7 +62,7 @@ class LowFreqQPicamera2(QPicamera2):
 
 
 # the camera class
-class Camera(CameraBase):
+class Camera:
     def __init__(self, index: int, framerate: int, name: str) -> None:
 
         frame_duration = int(1000000 / framerate)
@@ -509,7 +509,8 @@ class Camera(CameraBase):
                 x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
             )
 
-        manager.camera_trigger.trigger(self)
+        if manager.camera_trigger is not None:
+            manager.camera_trigger.trigger(self)
 
     def detect_black(self) -> None:
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
@@ -919,14 +920,14 @@ class Camera(CameraBase):
         self.cam.capture_file(self.path_picture)
 
 
-def get_camera(index: int, framerate: int, name: str) -> CameraBase:
+def get_camera(index: int, framerate: int, name: str) -> Camera | NullCamera:
     try:
         cam = Camera(index, framerate, name)
         log.info("Cam " + name + " successfully initialized")
         return cam
     except Exception:
         log.error("Could not initialize cam " + name, exception=traceback.format_exc())
-        return CameraBase()
+        return NullCamera()
 
 
 cam_corridor = get_camera(

@@ -1,19 +1,25 @@
 import re
+from typing import TYPE_CHECKING
 
 from village.classes.null_classes import (
-    CameraBase,
-    EventBase,
-    TelegramBotBase,
+    NullCamera,
+    NullCollection,
+    NullTelegramBot,
 )
 from village.scripts.time_utils import time_utils
+
+if TYPE_CHECKING:
+    from village.classes.collection import Collection
+    from village.devices.camera import Camera
+    from village.devices.telegram_bot import TelegramBot
 
 
 class Log:
     def __init__(self) -> None:
-        self.event = EventBase()
-        self.temp = EventBase()
-        self.cam = CameraBase()
-        self.telegram_bot = TelegramBotBase()
+        self.event: Collection | NullCollection = NullCollection()
+        self.temp: Collection | NullCollection = NullCollection()
+        self.cam: Camera | NullCamera = NullCamera()
+        self.telegram_bot: TelegramBot | NullTelegramBot = NullTelegramBot()
 
     def info(self, description: str, subject: str = "system") -> None:
         type = "INFO"

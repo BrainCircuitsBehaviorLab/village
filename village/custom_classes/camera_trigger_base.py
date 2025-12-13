@@ -1,11 +1,11 @@
-from village.classes.null_classes import CameraBase
+from village.devices.camera import Camera
 
 
 class CameraTriggerBase:
     def __init__(self) -> None:
         self.name = "Camera Trigger"
 
-    def trigger(self, cam: CameraBase) -> None:
+    def trigger(self, cam: Camera) -> None:
 
         # the camera automatically returns a True value if the subject is detected
         # within any of the predefined trigger areas.

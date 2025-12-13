@@ -6,13 +6,13 @@ from typing import List
 import numpy as np
 import smbus2
 
-from village.classes.null_classes import ScaleBase
+from village.classes.null_classes import NullScale
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
-class Scale(ScaleBase):
+class Scale:
     def __init__(self, address: str) -> None:
         self.I2C_ADDR = int(address, 16)
         self.REG_DATA_GET_RAM_DATA = 0x00  # Get sensor raw data
@@ -69,14 +69,14 @@ class Scale(ScaleBase):
             return 0.0
 
 
-def get_scale(address: str) -> ScaleBase:
+def get_scale(address: str) -> Scale | NullScale:
     try:
         scale = Scale(address=address)
         log.info("Scale successfully initialized")
         return scale
     except Exception:
         log.error("Could not initialize scale", exception=traceback.format_exc())
-        return ScaleBase()
+        return NullScale()
 
 
 scale = get_scale(settings.get("SCALE_ADDRESS"))

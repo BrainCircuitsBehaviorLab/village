@@ -2,7 +2,7 @@ import os
 import time
 import traceback
 
-from village.classes.null_classes import MotorBase
+from village.classes.null_classes import NullMotor
 from village.scripts.log import log
 from village.settings import settings
 
@@ -20,7 +20,7 @@ def find_pwmchip(target_device="1f00098000.pwm") -> str:
     raise RuntimeError("No valid PWM chip found! Update target_device if needed.")
 
 
-class Motor(MotorBase):
+class Motor:
 
     def __init__(self, pin: int, angles: list[int]) -> None:
         self.pin = 0
@@ -83,14 +83,14 @@ class Motor(MotorBase):
         self.set(self.transform(self.close_angle))
 
 
-def get_motor(pin: int, angles: list[int]) -> MotorBase:
+def get_motor(pin: int, angles: list[int]) -> Motor | NullMotor:
     try:
         motor = Motor(pin=pin, angles=angles)
         log.info("Motor successfully initialized")
         return motor
     except Exception:
         log.error("Could not initialize motor", exception=traceback.format_exc())
-        return MotorBase()
+        return NullMotor()
 
 
 motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))

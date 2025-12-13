@@ -50,6 +50,7 @@ from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
 from village.manager import manager
 from village.scripts.error_queue import error_queue
+from village.scripts.import_all import import_all
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
@@ -74,7 +75,7 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 manager.task.controller = controller
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor
-manager.import_all_tasks()
+import_all(manager)
 manager.send_heartbeat()
 manager.errors = (
     controller.error
@@ -226,7 +227,8 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_AUTO:
                 # Automatically launching the task
-                if manager.launch_task_auto(cam_box):
+                manager.cam_box = cam_box
+                if manager.launch_task_auto():
                     manager.detection_change = True
                     manager.state = State.RUN_FIRST
                     log.info("Going to RUN_FIRST State")
@@ -458,7 +460,8 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_MANUAL:
                 # Manually launching the task
-                if manager.launch_task_manual(cam_box):
+                manager.cam_box = cam_box
+                if manager.launch_task_manual():
                     manager.detection_change = True
                     manager.state = State.RUN_MANUAL
                     log.info("Going to RUN_MANUAL State")

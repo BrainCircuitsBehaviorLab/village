@@ -2,12 +2,12 @@ import traceback
 
 import smbus2
 
-from village.classes.null_classes import TempSensorBase
+from village.classes.null_classes import NullTempSensor
 from village.scripts.log import log
 from village.settings import settings
 
 
-class TempSensor(TempSensorBase):
+class TempSensor:
     def __init__(self, address: str) -> None:
         self.I2C_ADDR = int(address, 16)
         self.bus = 1
@@ -38,14 +38,14 @@ class TempSensor(TempSensorBase):
         return temp, RH, temp_RH_string
 
 
-def get_temp_sensor(address: str) -> TempSensorBase:
+def get_temp_sensor(address: str) -> TempSensor | NullTempSensor:
     try:
         temp_sensor = TempSensor(address=address)
         log.info("Temp sensor successfully initialized")
         return temp_sensor
     except Exception:
         log.error("Could not initialize temp sensor", exception=traceback.format_exc())
-        return TempSensorBase()
+        return NullTempSensor()
 
 
 temp_sensor = get_temp_sensor(address=settings.get("TEMP_SENSOR_ADDRESS"))
