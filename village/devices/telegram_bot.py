@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-from village.classes.abstract_classes import TelegramBotBase
+from village.classes.null_classes import TelegramBotBase
 from village.devices.camera import cam_box, cam_corridor
 from village.manager import manager
 from village.plots.corridor_plot import corridor_plot

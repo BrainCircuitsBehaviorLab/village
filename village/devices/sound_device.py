@@ -8,8 +8,8 @@ import numpy as np
 import sounddevice as sd
 from scipy.io import wavfile
 
-from village.classes.abstract_classes import SoundDeviceBase
 from village.classes.enums import Active
+from village.classes.null_classes import SoundDeviceBase
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.settings import settings

@@ -22,7 +22,7 @@ except Exception:
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.abstract_classes import CameraBase
+from village.classes.null_classes import CameraBase
 from village.manager import manager
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils

@@ -5,8 +5,8 @@ from pathlib import Path
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
-from village.classes.abstract_classes import BehaviorWindowBase
 from village.classes.enums import ScreenActive
+from village.classes.null_classes import BehaviorWindowBase
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
 from village.screen.behavior_window import BehaviorWindow
