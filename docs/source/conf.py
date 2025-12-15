@@ -100,7 +100,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
-    "sphinx_autodoc_typehints",
+    # "sphinx_autodoc_typehints",  # Disabled: conflicts with autodoc_mock_imports
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
