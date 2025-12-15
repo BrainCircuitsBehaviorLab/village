@@ -31,6 +31,7 @@ if TYPE_CHECKING:
 
 
 class Label(QLabel):
+    """Custom styled QLabel."""
     def __init__(
         self,
         text: str,
@@ -40,6 +41,7 @@ class Label(QLabel):
         description: str,
         background: str,
     ) -> None:
+        """Initializes a Label with specific styling."""
         super().__init__(text)
         style = "QLabel {color: " + color
         if bold:
@@ -57,7 +59,9 @@ class Label(QLabel):
 
 
 class LabelImage(QLabel):
+    """QLabel for displaying an image from the resources directory."""
     def __init__(self, file) -> None:
+        """Initializes a LabelImage."""
         super().__init__()
         self.setAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
         image_path = os.path.join(settings.get("APP_DIRECTORY"), "resources", file)
@@ -66,14 +70,18 @@ class LabelImage(QLabel):
 
 
 class LineEdit(QLineEdit):
+    """Custom QLineEdit that triggers an action on text change."""
     def __init__(self, text: str, action: Callable) -> None:
+        """Initializes a LineEdit."""
         super().__init__()
         self.setText(text)
         self.textChanged.connect(action)
 
 
 class TimeEdit(QTimeEdit):
+    """Custom QTimeEdit with HH:mm format."""
     def __init__(self, text: str, action: Callable) -> None:
+        """Initializes a TimeEdit."""
         super().__init__()
         self.setDisplayFormat("HH:mm")
         self.setTime(QTime.fromString(text, "HH:mm"))
@@ -81,9 +89,11 @@ class TimeEdit(QTimeEdit):
 
 
 class PushButton(QPushButton):
+    """Custom styled QPushButton."""
     def __init__(
         self, text: str, color: str, action: Callable, description: str
     ) -> None:
+        """Initializes a PushButton."""
         super().__init__(text)
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if description != "":
@@ -94,6 +104,7 @@ class PushButton(QPushButton):
 
 
 class ToggleButton(QPushButton):
+    """Button that cycles through a list of values when pressed."""
     def __init__(
         self,
         key: str,
@@ -104,6 +115,7 @@ class ToggleButton(QPushButton):
         description: str,
         color: str = "lightgray",
     ) -> None:
+        """Initializes a ToggleButton."""
         super().__init__()
         self.key = key
         self.possible_values = possible_values
@@ -117,6 +129,7 @@ class ToggleButton(QPushButton):
         self.pressed.connect(self.on_pressed)
 
     def update_style(self) -> None:
+        """Updates the button text and color based on current value."""
         if self.complete_name:
             self.setText(self.key + " " + self.value)
         else:
@@ -129,6 +142,7 @@ class ToggleButton(QPushButton):
         self.setStyleSheet(style)
 
     def on_pressed(self) -> None:
+        """Handles button press, cycling value and triggering action."""
         self.index = (self.index + 1) % len(self.possible_values)
         self.value = self.possible_values[self.index]
         self.update_style()
@@ -136,9 +150,11 @@ class ToggleButton(QPushButton):
 
 
 class ComboBox(QComboBox):
+    """Custom QComboBox linked to a setting or variable."""
     def __init__(
         self, key: str, possible_values: list[str], index: int, action: Callable
     ) -> None:
+        """Initializes a ComboBox."""
         super().__init__()
         self.addItems(possible_values)
         self.key = key
@@ -155,21 +171,31 @@ class ComboBox(QComboBox):
         self.update_style()
 
     def update_style(self) -> None:
+        """Updates the combo box styling."""
         color = "darkgray" if self.value == "OFF" else "lightgray"
         self.setStyleSheet(
             "QComboBox {background-color: " + color + "; font-size: 10px}"
         )
 
     def handleTextChanged(self, value: str) -> None:
+        """Handles value changes."""
         self.value = value
         self.update_style()
         self.action(self.value, self.key)
 
     def wheelEvent(self, event: QWheelEvent) -> None:
+        """Ignores wheel events to prevent accidental changes."""
         event.ignore()
 
 
+
 class Layout(QGridLayout):
+    """Base class for all GUI layouts in the application.
+
+    Provides common methods for creating widgets (buttons, labels, inputs) and
+    managing the layout grid.
+    """
+
     def __init__(
         self,
         window: GuiWindow,
@@ -177,6 +203,14 @@ class Layout(QGridLayout):
         rows: int = 51,
         columns: int = 200,
     ) -> None:
+        """Initializes the Layout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            stacked (bool, optional): Whether this layout is part of a stacked widget. Defaults to False.
+            rows (int, optional): Number of rows in the grid. Defaults to 51.
+            columns (int, optional): Number of columns in the grid. Defaults to 200.
+        """
         super().__init__()
         self.window = window
         self.stacked = stacked
@@ -211,6 +245,7 @@ class Layout(QGridLayout):
             self.create_common_elements()
 
     def create_common_elements(self) -> None:
+        """Creates the navigation menu buttons common to all main layouts."""
         self.status_label = self.create_and_add_label(
             "", 3, 0, 200, 2, "white", background="black"
         )
@@ -324,6 +359,7 @@ class Layout(QGridLayout):
         self.update_status_label_buttons()
 
     def update_status_label_buttons(self) -> None:
+        """Updates the status label and button states based on manager state."""
         manager.update_text()
         self.status_label.setText(manager.text)
         if manager.state.can_stop_task():
@@ -355,6 +391,7 @@ class Layout(QGridLayout):
             self.online_plots_button.setEnabled(False)
 
     def exit_button_clicked(self) -> None:
+        """Handles exit button click, confirming exit and saving data if needed."""
         if manager.table == DataTable.SUBJECTS:
             try:
                 if self.page1Layout.df["name"].duplicated().any():
@@ -397,9 +434,22 @@ class Layout(QGridLayout):
             )
 
     def change_layout(self, auto: bool = False) -> bool:
+        """Checks if layout change is allowed (placeholder base method).
+
+        Args:
+            auto (bool, optional): Whether the change is automatic. Defaults to False.
+
+        Returns:
+            bool: Always True in the base class.
+        """
         return True
 
     def main_button_clicked(self, auto: bool = False) -> None:
+        """Handles main menu button click.
+
+        Args:
+            auto (bool, optional): Whether the click is automatic. Defaults to False.
+        """
         if self.change_layout(auto=auto):
             if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
@@ -408,6 +458,7 @@ class Layout(QGridLayout):
             self.window.create_main_layout()
 
     def monitor_button_clicked(self) -> None:
+        """Handles monitor button click."""
         if self.change_layout():
             if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
@@ -417,6 +468,7 @@ class Layout(QGridLayout):
             self.window.create_monitor_layout()
 
     def tasks_button_clicked(self) -> None:
+        """Handles tasks button click."""
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
@@ -435,6 +487,7 @@ class Layout(QGridLayout):
                 )
 
     def data_button_clicked(self) -> None:
+        """Handles data button click."""
         if self.change_layout():
             if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
@@ -443,6 +496,7 @@ class Layout(QGridLayout):
             self.window.create_data_layout()
 
     def water_calibration_button_clicked(self) -> None:
+        """Handles water calibration button click."""
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
@@ -461,6 +515,7 @@ class Layout(QGridLayout):
                 )
 
     def sound_calibration_button_clicked(self) -> None:
+        """Handles sound calibration button click."""
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
@@ -479,6 +534,7 @@ class Layout(QGridLayout):
                 )
 
     def settings_button_clicked(self) -> None:
+        """Handles settings button click."""
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
@@ -497,6 +553,7 @@ class Layout(QGridLayout):
                 )
 
     def stop_button_clicked(self) -> None:
+        """Handles stop button click to stop tasks, sync, or reset state."""
         if manager.state.can_stop_task():
             if manager.state == State.RUN_MANUAL:
                 log.info("Task manually stopped.", subject=manager.subject.name)
@@ -517,12 +574,14 @@ class Layout(QGridLayout):
         self.update_gui()
 
     def close_online_plot_window(self) -> None:
+        """Closes the online plot window if it is open."""
         try:
             self.plot_dialog.close()
         except Exception:
             pass
 
     def show_online_plots_clicked(self) -> None:
+        """Handles the online plots button click to show or update the plot window."""
         try:
             manager.online_plot.update_canvas(manager.task.session_df)
         except Exception:
@@ -546,9 +605,15 @@ class Layout(QGridLayout):
             self.plot_dialog.show()
 
     def closeEvent(self, event: QCloseEvent) -> None:
+        """Ignores the close event to prevent closing the layout directly."""
         event.ignore()
 
     def delete_optional_widgets(self, type: str) -> None:
+        """Deletes widgets of a specific type from the layout.
+
+        Args:
+            type (str): The type property value to match.
+        """
         for i in reversed(range(self.count())):
             widget = self.itemAt(i).widget()
             if widget is not None:
@@ -568,7 +633,23 @@ class Layout(QGridLayout):
         description: str = "",
         background: str = "",
     ) -> Label:
+        """Creates and adds a Label to the layout.
 
+        Args:
+            text (str): The label text.
+            row (int): The row index.
+            column (int): The column index.
+            width (int): The width span.
+            height (int): The height span.
+            color (str): The text color.
+            right_aligment (bool, optional): Whether to right align. Defaults to False.
+            bold (bool, optional): Whether to use bold font. Defaults to True.
+            description (str, optional): Tooltip text. Defaults to "".
+            background (str, optional): Background color. Defaults to "".
+
+        Returns:
+            Label: The created label.
+        """
         label = Label(text, color, right_aligment, bold, description, background)
         label.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(label, row, column, height, width)
@@ -577,7 +658,18 @@ class Layout(QGridLayout):
     def create_and_add_image(
         self, row: int, column: int, width: int, height: int, file: str
     ) -> LabelImage:
+        """Creates and adds an image label to the layout.
 
+        Args:
+            row (int): The row index.
+            column (int): The column index.
+            width (int): The width span.
+            height (int): The height span.
+            file (str): The image filename.
+
+        Returns:
+            LabelImage: The created image label.
+        """
         path = Path(settings.get("APP_DIRECTORY")) / "resources" / file
 
         label = LabelImage(path)
@@ -594,7 +686,19 @@ class Layout(QGridLayout):
         height: int,
         action: Callable,
     ) -> LineEdit:
+        """Creates and adds a LineEdit to the layout.
 
+        Args:
+            text (str): The initial text.
+            row (int): The row index.
+            column (int): The column index.
+            width (int): The width span.
+            height (int): The height span.
+            action (Callable): The function to call on text change.
+
+        Returns:
+            LineEdit: The created line edit.
+        """
         line_edit = LineEdit(text, action)
         line_edit.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(line_edit, row, column, height, width)
@@ -609,7 +713,19 @@ class Layout(QGridLayout):
         height: int,
         action: Callable,
     ) -> TimeEdit:
+        """Creates and adds a TimeEdit to the layout.
 
+        Args:
+            text (str): The initial time text (HH:mm).
+            row (int): The row index.
+            column (int): The column index.
+            width (int): The width span.
+            height (int): The height span.
+            action (Callable): The function to call on time change.
+
+        Returns:
+            TimeEdit: The created time edit.
+        """
         time_edit = TimeEdit(text, action)
         time_edit.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(time_edit, row, column, height, width)
@@ -626,7 +742,21 @@ class Layout(QGridLayout):
         description: str,
         color: str = "lightgray",
     ) -> PushButton:
+        """Creates and adds a PushButton to the layout.
 
+        Args:
+            text (str): The button text.
+            row (int): The row index.
+            column (int): The column index.
+            width (int): The width span.
+            height (int): The height span.
+            action (Callable): The function to call on button press.
+            description (str): Tooltip text.
+            color (str, optional): Background color. Defaults to "lightgray".
+
+        Returns:
+            PushButton: The created button.
+        """
         button = PushButton(text, color, action, description)
         button.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(button, row, column, height, width)
@@ -646,7 +776,24 @@ class Layout(QGridLayout):
         complete_name: bool = False,
         color: str = "lightgray",
     ) -> ToggleButton:
+        """Creates and adds a ToggleButton to the layout.
 
+        Args:
+            key (str): The key associated with the button.
+            row (int): The row index.
+            column (int): The column index.
+            width (int): The width span.
+            height (int): The height span.
+            possible_values (list): List of possible values to cycle through.
+            index (int): Initial index in possible_values.
+            action (Callable): The function to call on toggle.
+            description (str): Tooltip text.
+            complete_name (bool, optional): Whether to show key + value. Defaults to False.
+            color (str, optional): Background color. Defaults to "lightgray".
+
+        Returns:
+            ToggleButton: The created toggle button.
+        """
         button = ToggleButton(
             key,
             possible_values,
@@ -671,16 +818,32 @@ class Layout(QGridLayout):
         index: int,
         action: Callable,
     ) -> ComboBox:
+        """Creates and adds a ComboBox to the layout.
 
+        Args:
+            key (str): The key associated with the combo box.
+            row (int): The row index.
+            column (int): The column index.
+            width (int): The width span.
+            height (int): The height span.
+            possible_values (list): List of items.
+            index (int): Initial selected index.
+            action (Callable): The function to call on selection change.
+
+        Returns:
+            ComboBox: The created combo box.
+        """
         combo_box = ComboBox(key, possible_values, index, action)
         combo_box.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(combo_box, row, column, height, width)
         return combo_box
 
     def update_gui(self) -> None:
+        """Updates the GUI elements (placeholder base method)."""
         pass
 
     def check_errors(self) -> None:
+        """Checks for errors in the manual task and displays a warning if needed."""
         if manager.error_in_manual_task:
             text = "Error in manual task"
             QMessageBox.information(self.window, "ERROR", text)
@@ -688,7 +851,10 @@ class Layout(QGridLayout):
 
 
 class OnlinePlotDialog(QDialog):
+    """Dialog for displaying real-time plots during a task."""
+
     def __init__(self) -> None:
+        """Initializes the OnlinePlotDialog."""
         super().__init__()
         self.setWindowTitle("Online Plots")
         layout = QVBoxLayout()
@@ -702,5 +868,6 @@ class OnlinePlotDialog(QDialog):
                 pass
 
     def closeEvent(self, event) -> None:
+        """Handles the close event to ensure the plot is properly closed."""
         manager.online_plot.close()
         super().closeEvent(event)

@@ -1,4 +1,10 @@
 import getpass
+"""Configuration settings for the Training Village application.
+
+This module defines all the configurable settings for the application, organizing them
+into categories such as main, sound, screen, directory, and more. It initializes the
+global `settings` object used throughout the codebase.
+"""
 from pathlib import Path
 
 from village.classes.settings_class import (

@@ -10,8 +10,26 @@ from village.scripts.utils import setup_logging
 
 
 def check_files_for_backup_remote(
-    files, directory, backup_dir, remote_user, remote_host, port
-) -> list:
+    files: list[str],
+    directory: str,
+    backup_dir: str,
+    remote_user: str,
+    remote_host: str,
+    port: int | None,
+) -> list[str]:
+    """Checks which files have been backed up on a remote server.
+
+    Args:
+        files (list[str]): List of filenames to check.
+        directory (str): The local directory containing the files.
+        backup_dir (str): The remote backup directory.
+        remote_user (str): Username on remote system.
+        remote_host (str): Remote hostname or IP.
+        port (int | None): SSH port.
+
+    Returns:
+        list[str]: List of full paths of files that can be safe to remove locally.
+    """
     files_to_remove = []
     # Create a single SSH connection to the remote server
     import os
@@ -50,7 +68,19 @@ def check_files_for_backup_remote(
     return files_to_remove
 
 
-def check_files_for_backup_local(files, directory, backup_dir) -> list:
+def check_files_for_backup_local(
+    files: list[str], directory: str, backup_dir: str
+) -> list[str]:
+    """Checks which files have been backed up locally (e.g., external drive).
+
+    Args:
+        files (list[str]): List of filenames to check.
+        directory (str): The local directory containing the source files.
+        backup_dir (str): The local backup directory.
+
+    Returns:
+        list[str]: List of full paths of files that can be safe to remove.
+    """
     files_to_remove = []
     for file in files:
         try:
@@ -62,7 +92,15 @@ def check_files_for_backup_local(files, directory, backup_dir) -> list:
     return files_to_remove
 
 
-def parse_timestamp_from_filename(filename) -> datetime | None:
+def parse_timestamp_from_filename(filename: str) -> datetime | None:
+    """Parses a timestamp from a filename.
+
+    Args:
+        filename (str): The filename string.
+
+    Returns:
+        datetime | None: The parsed datetime object, or None if parsing fails.
+    """
     # Assuming the timestamp is in the format ..._..._YYYYMMDD_HHMMSS.something
     try:
         timestamp_str = filename.split("_")[-2] + filename.split("_")[-1].split(".")[0]
@@ -72,15 +110,27 @@ def parse_timestamp_from_filename(filename) -> datetime | None:
 
 
 def remove_old_data(
-    directory,
-    days,
-    safe,
-    backup_dir,
-    remote_user,
-    remote_host,
-    port,
-    remote,
+    directory: str,
+    days: int,
+    safe: bool,
+    backup_dir: str,
+    remote_user: str,
+    remote_host: str,
+    port: int | None,
+    remote: bool,
 ) -> None:
+    """Core logic to identify and remove old data files.
+
+    Args:
+        directory (str): Directory to clean up.
+        days (int): Retention period in days.
+        safe (bool): If True, verifies backup before deletion.
+        backup_dir (str): Backup directory path.
+        remote_user (str): Remote username.
+        remote_host (str): Remote host.
+        port (int | None): SSH port.
+        remote (bool): If True, checks remote backup; otherwise local.
+    """
     removed_count = 0
     files_to_check = []
     files_to_remove = []
@@ -125,34 +175,42 @@ def remove_old_data(
         )
 
 
-def remove_file(file_path, removed_count: int) -> int:
+def remove_file(file_path: str, removed_count: int) -> int:
+    """Removes a single file and logs the action.
+
+    Args:
+        file_path (str): Path to the file.
+        removed_count (int): Current count of removed files.
+
+    Returns:
+        int: Updated count of removed files.
+    """
     os.remove(file_path)
     logging.info(f"Removed {file_path}")
     return removed_count + 1
 
 
 def main(
-    directory,
-    days,
-    safe,
-    backup_dir,
-    remote_user=None,
-    remote_host=None,
-    port=None,
-    remote=True,
+    directory: str,
+    days: int,
+    safe: bool,
+    backup_dir: str,
+    remote_user: str | None = None,
+    remote_host: str | None = None,
+    port: int | None = None,
+    remote: bool = True,
 ) -> None:
-    """
-    Main function to remove old data files from a directory
+    """Main function to remove old data files from a directory.
 
-    Parameters:
-    - directory: Directory to remove files from
-    - days: Number of days to keep files
-    - safe: If True, will check for backup files before removing
-    - backup_dir: Directory to check for backup files
-    - remote_user: Username on remote system
-    - remote_host: Remote hostname or IP
-    - port: SSH port
-    - remote: If False, will check for backup files in a locally connected HD
+    Args:
+        directory (str): Directory to remove files from.
+        days (int): Number of days to keep files.
+        safe (bool): If True, will check for backup files before removing.
+        backup_dir (str): Directory to check for backup files.
+        remote_user (str | None): Username on remote system.
+        remote_host (str | None): Remote hostname or IP.
+        port (int | None): SSH port.
+        remote (bool): If True, checks remote backup; otherwise local.
     """
 
     log_file, file_handler = setup_logging(logs_subdirectory="data_removal_logs")
@@ -182,3 +240,4 @@ if __name__ == "__main__":
     #     remote_host="cluster",
     #     # port=4022,
     # )
+

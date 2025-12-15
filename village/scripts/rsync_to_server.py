@@ -14,25 +14,27 @@ from village.scripts.utils import setup_logging
 
 
 def run_rsync(
-    source,
-    destination,
-    remote_user,
-    remote_host,
-    port,
-    maximum_sync_time,
-    cancel_event=None,
+    source: str,
+    destination: str,
+    remote_user: str,
+    remote_host: str,
+    port: int | None,
+    maximum_sync_time: int,
+    cancel_event: threading.Event | None = None,
 ) -> bool:
-    """
-    Run rsync command with specified parameters
+    """Run rsync command with specified parameters.
 
-    Parameters:
-    - source: Local path to sync
-    - destination: Remote destination path
-    - remote_user: Username on remote system
-    - remote_host: Remote hostname or IP
-    - port: SSH port
-    - maximum_sync_time: Maximum_sync_time in seconds
-    - cancel_event: threading.Event to signal cancellation
+    Args:
+        source (str): Local path to sync.
+        destination (str): Remote destination path.
+        remote_user (str): Username on remote system.
+        remote_host (str): Remote hostname or IP.
+        port (int | None): SSH port.
+        maximum_sync_time (int): Maximum sync time in seconds.
+        cancel_event (threading.Event | None): Event to signal cancellation.
+
+    Returns:
+        bool: True if sync succeeded, False otherwise.
     """
 
     if cancel_event is None:
@@ -267,25 +269,24 @@ def run_rsync(
 
 
 def main(
-    source,
-    destination,
-    remote_user,
-    remote_host,
-    port=None,
-    maximum_sync_time=1200,
-    cancel_event=None,
+    source: str,
+    destination: str,
+    remote_user: str,
+    remote_host: str,
+    port: int | None = None,
+    maximum_sync_time: int = 1200,
+    cancel_event: threading.Event | None = None,
 ) -> None:
-    """
-    Main function to sync data to remote server using rsync
+    """Main function to sync data to remote server using rsync.
 
-    Parameters:
-    - source: Source directory path
-    - destination: Destination path on remote system
-    - remote_user: Username on remote system
-    - remote_host: Remote hostname or IP
-    - port: SSH port (default: None)
-    - maximum_sync_time: Maximum sync time duration in seconds (default: 1200)
-    - cancel_event: threading.Event to signal cancellation (optional)
+    Args:
+        source (str): Source directory path.
+        destination (str): Destination path on remote system.
+        remote_user (str): Username on remote system.
+        remote_host (str): Remote hostname or IP.
+        port (int | None): SSH port (default: None).
+        maximum_sync_time (int): Maximum sync time duration in seconds. Defaults to 1200.
+        cancel_event (threading.Event | None): Event to signal cancellation. Defaults to None.
     """
     # Setup logging
     log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")
@@ -321,3 +322,4 @@ def main(
 
 if __name__ == "__main__":
     fire.Fire(main)
+

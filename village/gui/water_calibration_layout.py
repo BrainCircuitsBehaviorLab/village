@@ -26,13 +26,21 @@ if TYPE_CHECKING:
 
 
 class WaterCalibrationLayout(Layout):
+    """Layout for water port calibration and testing."""
+
     def __init__(self, window: GuiWindow) -> None:
+        """Initializes the WaterCalibrationLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+        """
         super().__init__(window)
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
         self.draw()
 
     def draw(self) -> None:
+        """Draws the water calibration layout elements."""
         self.water_calibration_button.setDisabled(True)
         self.df = pd.DataFrame()
         self.date = ""
@@ -130,6 +138,7 @@ class WaterCalibrationLayout(Layout):
             "WATER EXPECTED(ul)",
             31,
             5,
+            133,
             20,
             2,
             "black",
@@ -387,6 +396,14 @@ class WaterCalibrationLayout(Layout):
         self.addLayout(self.plot_layout, 5, 121, 38, 79)
 
     def change_layout(self, auto: bool = False) -> bool:
+        """Handles layout changes, prompting to save if calibration is unsaved.
+
+        Args:
+            auto (bool): If True, forces the change without prompt. Defaults to False.
+
+        Returns:
+            bool: True if layout change is allowed, False otherwise.
+        """
         if manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
             if not auto:
                 QMessageBox.information(
@@ -422,6 +439,12 @@ class WaterCalibrationLayout(Layout):
             return True
 
     def calibration_changed(self, value: str = "", key: str = "") -> None:
+        """Updates calibration settings based on UI input.
+
+        Args:
+            value (str): New value (unused).
+            key (str): Setting key (unused).
+        """
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
         self.times = [0.0 for _ in range(8)]
@@ -457,6 +480,12 @@ class WaterCalibrationLayout(Layout):
                 self.update_status_label_buttons()
 
     def test_changed(self, value: str = "", key: str = "") -> None:
+        """Updates test settings based on UI input.
+
+        Args:
+            value (str): New value (unused).
+            key (str): Setting key (unused).
+        """
         self.test_button.setDisabled(True)
         self.calibrate_button.setDisabled(True)
         self.water_expected2 = [0.0 for _ in range(8)]
@@ -493,6 +522,7 @@ class WaterCalibrationLayout(Layout):
                 self.update_status_label_buttons()
 
     def calibrate_button_clicked(self) -> None:
+        """Starts the calibration process."""
         if self.calibration_denied:
             QMessageBox.information(
                 self.window,
@@ -524,6 +554,7 @@ class WaterCalibrationLayout(Layout):
         manager.run_task_in_thread()
 
     def test_button_clicked(self) -> None:
+        """Starts the test process."""
         if self.test_denied:
             QMessageBox.information(
                 self.window,
@@ -589,6 +620,7 @@ class WaterCalibrationLayout(Layout):
             self.iterations_line_edit2.setStyleSheet("")
 
     def save_button_clicked(self) -> None:
+        """Saves the calibration data."""
         counts = self.df["port_number"].value_counts()
         valid_ports = counts[counts >= 2].index
         removed_ports = counts[counts < 2].index.tolist()
@@ -619,6 +651,7 @@ class WaterCalibrationLayout(Layout):
         self.window.create_water_calibration_layout()
 
     def delete_button_clicked(self) -> None:
+        """Prompts to delete the current calibration session."""
         reply = QMessageBox.question(
             self.window,
             "Delete calibration",
@@ -631,6 +664,7 @@ class WaterCalibrationLayout(Layout):
             self.window.create_water_calibration_layout()
 
     def update_gui(self) -> None:
+        """Updates the GUI status."""
         self.update_status_label_buttons()
         if manager.state == State.WAIT and self.calibration_initiated:
             self.calibration_initiated = False
@@ -694,6 +728,7 @@ class WaterCalibrationLayout(Layout):
             self.all_tests_done()
 
     def all_tests_done(self) -> None:
+        """Resets the UI after all tests are completed."""
         self.indices2 = []
         self.indices2_cleared = []
 
@@ -721,9 +756,21 @@ class WaterCalibrationLayout(Layout):
         manager.changing_settings = False
 
     def select_port(self, value: str, index: int) -> None:
+        """Selects a port (placeholder).
+
+        Args:
+            value (str): Value.
+            index (int): Index.
+        """
         pass
 
     def calibration_weighted(self, value: str = "", key: str = "") -> None:
+        """Calculates water delivered based on total weight during calibration.
+
+        Args:
+            value (str): New value (unused).
+            key (str): Setting key (unused).
+        """
         self.water_delivered = [0.0 for _ in range(8)]
         for line_edit in self.water_delivered_labels:
             line_edit.setText("0")
@@ -739,6 +786,11 @@ class WaterCalibrationLayout(Layout):
             pass
 
     def test_weighted(self, i: int) -> None:
+        """Calculates water delivered based on total weight during testing.
+
+        Args:
+            i (int): The index of the port being tested.
+        """
         self.water_delivered2 = [0.0 for _ in range(8)]
         for line_edit in self.water_delivered_labels2:
             line_edit.setText("0")
@@ -773,6 +825,7 @@ class WaterCalibrationLayout(Layout):
                 self.update_plot = True
 
     def add_button_clicked(self) -> None:
+        """Adds a calibration point."""
         if self.date == "":
             self.date = time_utils.now_string()
         if self.calibration_number < 0:
@@ -817,6 +870,11 @@ class WaterCalibrationLayout(Layout):
         self.info_layout.update()
 
     def ok_button2_clicked(self, index: int) -> None:
+        """Confirms a successful test and saves it for a specific port.
+
+        Args:
+            index (int): The index of the port.
+        """
         self.ok_buttons2[index].setDisabled(True)
         self.add_buttons2[index].setDisabled(True)
 
@@ -856,6 +914,11 @@ class WaterCalibrationLayout(Layout):
         self.total_weight_line_edits2[index].setStyleSheet("")
 
     def add_button2_clicked(self, index: int) -> None:
+        """Adds a failed test as a new calibration point for a specific port.
+
+        Args:
+            index (int): The index of the port.
+        """
         self.ok_button2_clicked(index)
         self.test_denied = True
 
@@ -882,6 +945,7 @@ class WaterCalibrationLayout(Layout):
         self.test_row_dicts.append(row_dict)
 
     def stop_button_clicked(self) -> None:
+        """Handles stop button click to reset UI elements."""
         if manager.state.can_stop_task():
             log.info("Task manually stopped.", subject=manager.subject.name)
             manager.state = State.SAVE_MANUAL
@@ -905,6 +969,8 @@ class WaterCalibrationLayout(Layout):
 
 
 class CalibrationPlotLayout(Layout):
+    """Layout for displaying the calibration plot."""
+
     def __init__(
         self,
         window: GuiWindow,
@@ -912,6 +978,14 @@ class CalibrationPlotLayout(Layout):
         columns: int,
         parent_layout: WaterCalibrationLayout,
     ) -> None:
+        """Initializes the CalibrationPlotLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+            parent_layout (WaterCalibrationLayout): The parent layout.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows
         self.columns = columns
@@ -919,6 +993,7 @@ class CalibrationPlotLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
+        """Draws the plot area."""
         self.plot_label = QLabel()
         self.plot_label.setStyleSheet(
             "QLabel {border: 1px solid gray; background-color: white;}"
@@ -932,6 +1007,12 @@ class CalibrationPlotLayout(Layout):
         self.plot_height = (self.rows * self.row_height - 5) / dpi
 
     def update(self, df: pd.DataFrame, test_point: tuple[float, float] | None) -> None:
+        """Updates the plot with new data.
+
+        Args:
+            df (pd.DataFrame): The calibration data.
+            test_point (tuple[float, float] | None): Optional test point to highlight.
+        """
         if df.empty:
             self.plot_label.setText("")
             return
@@ -958,6 +1039,8 @@ class CalibrationPlotLayout(Layout):
 
 
 class InfoLayout(Layout):
+    """Layout for displaying detailed calibration information."""
+
     def __init__(
         self,
         window: GuiWindow,
@@ -965,6 +1048,14 @@ class InfoLayout(Layout):
         columns: int,
         parent_layout: WaterCalibrationLayout,
     ) -> None:
+        """Initializes the InfoLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+            parent_layout (WaterCalibrationLayout): The parent layout.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows
         self.columns = columns
@@ -972,6 +1063,7 @@ class InfoLayout(Layout):
         self.update()
 
     def update(self) -> None:
+        """Updates the displayed information."""
         self.title = self.create_and_add_label(
             "CALIBRATION POINTS", 0, 1, 40, 2, "black", bold=False
         )
@@ -1004,6 +1096,11 @@ class InfoLayout(Layout):
             )
 
     def delete_point(self, i: int) -> None:
+        """Deletes a calibration point.
+
+        Args:
+            i (int): Index of the point.
+        """
         utils.delete_all_elements_from_layout(self)
         self.parent_layout.calibration_points.pop(i)
         if len(self.parent_layout.calibration_points) == 0:

@@ -16,7 +16,25 @@ from village.settings import settings
 
 
 class Collection(EventBase):
+    """Manages a collection of data entries stored in a CSV file and a pandas DataFrame.
+
+    Attributes:
+        name (str): Name of the collection.
+        columns (list[str]): List of column names.
+        types (list[Type]): List of column data types.
+        dict (dict): Dictionary mapping columns to types.
+        path (Path): Path to the CSV file.
+        df (pd.DataFrame): The pandas DataFrame holding the data.
+    """
+
     def __init__(self, name: str, columns: list[str], types: list[Type]) -> None:
+        """Initializes the Collection.
+
+        Args:
+            name (str): The name of the collection (and the file base name).
+            columns (list[str]): The column names.
+            types (list[Type]): The data types for each column.
+        """
         self.name: str = name
         self.columns: list[str] = columns
         self.types: list[Type] = types
@@ -39,6 +57,11 @@ class Collection(EventBase):
                 sys.exit()
 
     def add_entry(self, entry: list) -> None:
+        """Adds a new entry to the collection.
+
+        Args:
+            entry (list): The list of values for the new row.
+        """
         entry_str = [
             "" if isinstance(e, float) and np.isnan(e) else str(e) for e in entry
         ]
@@ -52,6 +75,15 @@ class Collection(EventBase):
 
     @staticmethod
     def convert_with_default(value, target_type: Any) -> Any:
+        """Converts a value to a target type, using defaults for failures.
+
+        Args:
+            value: The value to convert.
+            target_type (Any): The target type.
+
+        Returns:
+            Any: The converted value or a default.
+        """
         try:
             return target_type(value)
         except (ValueError, TypeError):
@@ -65,11 +97,20 @@ class Collection(EventBase):
                 return value
 
     def convert_df_to_types(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Converts DataFrame columns to the specified types.
+
+        Args:
+            df (pd.DataFrame): The DataFrame to convert.
+
+        Returns:
+            pd.DataFrame: The converted DataFrame.
+        """
         for col, type in zip(df.columns, self.types):
             df[col] = df[col].apply(lambda x: self.convert_with_default(x, type))
         return df
 
     def check_split_csv(self) -> None:
+        """Checks if the CSV file is too large and splits it if necessary."""
         max_size = 50000
         file_size = 40000
         if len(self.df) > max_size:
@@ -85,12 +126,30 @@ class Collection(EventBase):
             self.df = last
 
     def get_last_entry(self, column: str, value: str) -> Union[pd.Series, None]:
+        """Gets the last entry matching a specific value in a column.
+
+        Args:
+            column (str): The column to search.
+            value (str): The value to match.
+
+        Returns:
+            Union[pd.Series, None]: The last matching row, or None.
+        """
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
         if not column_df.empty:
             return column_df.iloc[-1]
         return None
 
     def get_last_entry_name(self, column: str, value: str) -> str | None:
+        """Gets the 'name' field of the last entry matching a condition.
+
+        Args:
+            column (str): The column to search.
+            value (str): The value to match.
+
+        Returns:
+            str | None: The name, or None.
+        """
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
         name = None
         if not column_df.empty:
@@ -103,30 +162,60 @@ class Collection(EventBase):
         return name
 
     def get_first_entry(self, column: str, value: str) -> Union[pd.Series, None]:
+        """Gets the first entry matching a specific value in a column.
+
+        Args:
+            column (str): The column to search.
+            value (str): The value to match.
+
+        Returns:
+            Union[pd.Series, None]: The first matching row, or None.
+        """
         column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
         if not column_df.empty:
             return column_df.iloc[0]
         return None
 
     def change_last_entry(self, column: str, value: Any) -> None:
+        """Updates a value in the last entry of the DataFrame and saves.
 
+        Args:
+            column (str): The column to update.
+            value (Any): The new value.
+        """
         self.df.loc[self.df.index[-1], column] = value
         self.save_from_df()
 
     def log(self, date: str, type: str, subject: str, description: str) -> None:
+        """Logs an event if the collection schema matches standard logging fields.
+
+        Args:
+            date (str): Date string.
+            type (str): Event type.
+            subject (str): Subject name.
+            description (str): Description.
+        """
         if self.columns == ["date", "type", "subject", "description"]:
             entry = [date, type, subject, description]
             self.add_entry(entry)
 
     def log_temp(self, date: str, temperature: float, humidity: float) -> None:
+        """Logs temperature if the collection schema matches temperature fields.
+
+        Args:
+            date (str): Date string.
+            temperature (float): Temperature value.
+            humidity (float): Humidity value.
+        """
         if self.columns == ["date", "temperature", "humidity"]:
             entry = [date, temperature, humidity]
             self.add_entry(entry)
 
     def get_last_water_df(self) -> pd.DataFrame:
-        """
-        Returns a DataFrame that contains, for each unique value in the 'port_number'
-        column, all rows where 'calibration_number' is maximum.
+        """Returns the latest water calibration entries for each port.
+
+        Returns:
+            pd.DataFrame: Filtered DataFrame with max calibration numbers per port.
         """
         df = self.df[self.df["calibration_number"] != -1].copy()
         max_values = df.groupby(["port_number"])["calibration_number"].transform("max")
@@ -134,9 +223,10 @@ class Collection(EventBase):
         return df
 
     def get_last_sound_df(self) -> pd.DataFrame:
-        """
-        Returns a DataFrame that contains, for each unique combination of 'speaker' and
-        'sound_name', all rows where 'calibration_number' is maximum.
+        """Returns the latest sound calibration entries for each speaker/sound.
+
+        Returns:
+            pd.DataFrame: Filtered DataFrame with max calibration numbers per sound.
         """
         df = self.df[self.df["calibration_number"] != -1].copy()
         max_values = df.groupby(["speaker", "sound_name"])[
@@ -146,6 +236,18 @@ class Collection(EventBase):
         return df
 
     def get_valve_time(self, port: int, volume: float) -> float:
+        """Calculates valve open time for a given volume based on calibration.
+
+        Args:
+            port (int): The port number.
+            volume (float): The target volume in ul.
+
+        Returns:
+            float: The time in seconds.
+
+        Raises:
+            ValueError: If calibration data is invalid or missing.
+        """
         try:
             calibration_df = self.df[self.df["port_number"] == port]
             max_calibration = calibration_df["calibration_number"].max()
@@ -175,6 +277,19 @@ class Collection(EventBase):
             raise ValueError(text)
 
     def get_sound_gain(self, speaker: int, dB: float, sound_name: str) -> float:
+        """Calculates sound gain for a target dB based on calibration.
+
+        Args:
+            speaker (int): The speaker ID.
+            dB (float): The target decibels.
+            sound_name (str): The name of the sound.
+
+        Returns:
+            float: The gain factor.
+
+        Raises:
+            ValueError: If calibration data is invalid or missing.
+        """
         try:
             if dB == 0:
                 return 0.0
@@ -209,6 +324,11 @@ class Collection(EventBase):
     def save_from_df(
         self, training: TrainingProtocolBase = TrainingProtocolBase()
     ) -> None:
+        """Saves values from the current DataFrame to the CSV file, processing formatting.
+
+        Args:
+            training (TrainingProtocolBase): Protocol for formatting specific fields.
+        """
         new_df = self.df_from_df(self.df, training)
         new_df.to_csv(self.path, index=False, sep=";")
         self.df = new_df
@@ -216,6 +336,15 @@ class Collection(EventBase):
     def df_from_df(
         self, df: pd.DataFrame, training: TrainingProtocolBase
     ) -> pd.DataFrame:
+        """Processes a DataFrame for saving (formatting dates, enums, etc).
+
+        Args:
+            df (pd.DataFrame): The input DataFrame.
+            training (TrainingProtocolBase): The training protocol for custom formatting.
+
+        Returns:
+            pd.DataFrame: The processed DataFrame.
+        """
         new_df = self.convert_df_to_types(df)
 
         if "next_session_time" in new_df.columns:
@@ -252,3 +381,4 @@ class Collection(EventBase):
             )
 
         return new_df
+

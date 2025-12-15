@@ -40,6 +40,8 @@ if TYPE_CHECKING:
 
 
 class LabelButtons:
+    """Class to manage labels with increase/decrease buttons for settings."""
+
     def __init__(
         self,
         name: str,
@@ -52,6 +54,19 @@ class LabelButtons:
         width_res: int = 640,
         height_res: int = 480,
     ) -> None:
+        """Initializes the LabelButtons instance.
+
+        Args:
+            name (str): The name of the setting.
+            direction (str): The specific attribute (e.g., 'left', 'top', 'threshold').
+            row (int): The row position in the layout.
+            column (int): The column position in the layout.
+            width (int): The width of the label.
+            color (str): The color of the text.
+            layout (Layout): The parent layout.
+            width_res (int, optional): Width resolution. Defaults to 640.
+            height_res (int, optional): Height resolution. Defaults to 480.
+        """
         self.name = name
         self.direction = direction
         self.short_name = name.split("_")[0]
@@ -181,6 +196,7 @@ class LabelButtons:
         self.timer_decrease2.timeout.connect(self.decrease_value)
 
     def increase_value(self) -> None:
+        """Increases the value of the setting safely."""
         if self.label_value < self.max:
             if (
                 self.direction == "left"
@@ -211,6 +227,7 @@ class LabelButtons:
             self.label3.setText(str(self.label_value))
 
     def decrease_value(self) -> None:
+        """Decreases the value of the setting safely."""
         if self.label_value > 0:
             if (
                 self.direction == "right"
@@ -247,14 +264,17 @@ class LabelButtons:
             self.label3.setText(str(self.label_value))
 
     def start_increasing(self) -> None:
+        """Starts the timer to increase the value continuously."""
         self.increase_value()
         self.timer_increase1.start()
 
     def start_decreasing(self) -> None:
+        """Starts the timer to decrease the value continuously."""
         self.decrease_value()
         self.timer_decrease1.start()
 
     def stop_timer(self) -> None:
+        """Stops the timers and saves the new value."""
         self.timer_increase1.stop()
         self.timer_decrease1.stop()
         self.timer_increase2.stop()
@@ -273,11 +293,19 @@ class LabelButtons:
 
 
 class MonitorLayout(Layout):
+    """Layout for monitoring system status, devices, and camera feeds."""
+
     def __init__(self, window: GuiWindow) -> None:
+        """Initializes the MonitorLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+        """
         super().__init__(window)
         self.draw()
 
     def draw(self) -> None:
+        """Draws the monitor layout elements."""
         rectangle = QWidget()
         rectangle.setStyleSheet("background-color: lightgray;")
         self.addWidget(rectangle, 5, 0, 30, 200)
@@ -437,17 +465,35 @@ class MonitorLayout(Layout):
         self.addWidget(self.qpicamera2_box, 5, 120, 28, 80)
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
+        """Toggles the cycle setting.
+
+        Args:
+            value (str): The new cycle value.
+            key (str): The setting key.
+        """
         manager.cycle = Cycle[value]
         settings.set(key, value)
         self.update_status_label_buttons()
         cam_corridor.change = True
 
     def toggle_rfid_reader_button(self, value: str, key: str) -> None:
+        """Toggles the RFID reader setting.
+
+        Args:
+            value (str): The new RFID reader value.
+            key (str): The setting key.
+        """
         manager.rfid_reader = Active[value]
         settings.set(key, value)
         self.update_status_label_buttons()
 
     def toggle_actions_button(self, value: str, key: str) -> None:
+        """Toggles the action mode.
+
+        Args:
+            value (str): The new action value.
+            key (str): The setting key.
+        """
         manager.actions = Actions[value]
         settings.set(key, value)
         index = Actions.get_index_from_string(value)
@@ -456,6 +502,12 @@ class MonitorLayout(Layout):
         self.update_gui()
 
     def toggle_info_button(self, value: str, key: str) -> None:
+        """Toggles the info view mode.
+
+        Args:
+            value (str): The new info value.
+            key (str): The setting key.
+        """
         manager.info = Info[value]
         settings.set(key, value)
         index = Info.get_index_from_string(value)
@@ -464,6 +516,7 @@ class MonitorLayout(Layout):
         self.update_gui()
 
     def update_gui(self) -> None:
+        """Updates the GUI and its components."""
         self.update_status_label_buttons()
         if manager.rfid_changed:
             manager.rfid_changed = False
@@ -485,18 +538,36 @@ class MonitorLayout(Layout):
                     self.page7Layout.update_gui()
 
     def change_layout(self, auto: bool = False) -> bool:
+        """Handles layout changes, stopping camera previews.
+
+        Args:
+            auto (bool): If True, automatically changes. Defaults to False.
+
+        Returns:
+            bool: Always True.
+        """
         cam_corridor.stop_preview_window()
         cam_box.stop_preview_window()
         return True
 
 
 class MotorLayout(Layout):
+    """Layout for controlling motors and scale."""
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the MotorLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.buttons: list[QPushButton] = []
         self.draw()
 
     def draw(self) -> None:
+        """Draws the motor control buttons and scale options."""
         self.draw_motor_buttons("MOTOR1", 2, 2, motor1)
         self.draw_motor_buttons("MOTOR2", 2, 18, motor2)
 
@@ -549,6 +620,14 @@ class MotorLayout(Layout):
     def draw_motor_buttons(
         self, name: str, row: int, column: int, motor: MotorBase
     ) -> None:
+        """Draws buttons for a specific motor.
+
+        Args:
+            name (str): The motor name.
+            row (int): The row position.
+            column (int): The column position.
+            motor (MotorBase): The motor object.
+        """
         open_name: str = "OPEN " + name
         open_door: PushButton = self.create_and_add_button(
             open_name, row, column, 14, 2, motor.open, "Open the door"
@@ -562,9 +641,11 @@ class MotorLayout(Layout):
         self.buttons.append(close_door)
 
     def tare_scale_clicked(self) -> None:
+        """Initiates scale taring."""
         manager.taring_scale = True
 
     def change_angles_clicked(self) -> None:
+        """Opens a dialog to change motor angles."""
         motor1_open_val = settings.get("MOTOR1_VALUES")[0]
         motor1_close_val = settings.get("MOTOR1_VALUES")[1]
         motor2_open_val = settings.get("MOTOR2_VALUES")[0]
@@ -638,6 +719,7 @@ class MotorLayout(Layout):
             motor2.close_angle = val4
 
     def calibrate_scale_clicked(self) -> None:
+        """Opens the scale calibration wizard."""
         # Block calibration if the system is busy
         if not manager.state.can_calibrate_scale():
             QMessageBox.information(
@@ -654,9 +736,11 @@ class MotorLayout(Layout):
         wiz.exec_()
 
     def cancel_calibration(self) -> None:
+        """Cancels scale calibration (placeholder)."""
         pass
 
     def get_weight_clicked(self) -> None:
+        """Gets the current weight from the scale."""
         if manager.getting_weights:
             manager.log_weight = True
         else:
@@ -665,16 +749,27 @@ class MotorLayout(Layout):
             log.info(weight_str)
 
     def get_temperature_clicked(self) -> None:
+        """Gets the current temperature and humidity."""
         _, _, temp_str = temp_sensor.get_temperature()
 
 
 class PortsLayout(Layout):
+    """Layout for controlling behavioral ports."""
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the PortsLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.buttons: list[QPushButton] = []
         self.draw()
 
     def draw(self) -> None:
+        """Draws the port control buttons (LED and Water)."""
         for i in range(8):
             button1 = self.create_and_add_button(
                 "LED" + str(i + 1),
@@ -699,14 +794,21 @@ class PortsLayout(Layout):
             self.buttons.append(button2)
 
     def disable_all(self) -> None:
+        """Disables all port buttons."""
         for b in self.buttons:
             b.setEnabled(False)
 
     def enable_all(self) -> None:
+        """Enables all port buttons."""
         for b in self.buttons:
             b.setEnabled(True)
 
     def led_clicked(self, i=0) -> None:
+        """Toggles the LED for a specific port.
+
+        Args:
+            i (int): Port index (1-based).
+        """
         self.disable_all()
         QTimer.singleShot(1500, self.enable_all)
 
@@ -718,6 +820,11 @@ class PortsLayout(Layout):
         manager.task.bpod.led(i, close)
 
     def water_clicked(self, i=0) -> None:
+        """Delivers water for a specific port.
+
+        Args:
+            i (int): Port index (1-based).
+        """
         self.disable_all()
         QTimer.singleShot(1500, self.enable_all)
 
@@ -730,12 +837,22 @@ class PortsLayout(Layout):
 
 
 class VirtualMouseLayout(Layout):
+    """Layout for simulating mouse actions on the touchscreen."""
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the VirtualMouseLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.buttons: list[QPushButton] = []
         self.draw()
 
     def draw(self) -> None:
+        """Draws the virtual mouse controls."""
         for i in range(8):
             button = self.create_and_add_button(
                 "POKE" + str(i + 1),
@@ -792,9 +909,15 @@ class VirtualMouseLayout(Layout):
             self.touch.hide()
 
     def coordinates_changed(self) -> None:
+        """Handles changes in the coordinate fields."""
         return
 
     def poke_clicked(self, i=0) -> None:
+        """Simulates a poke action.
+
+        Args:
+            i (int): Port index (1-based).
+        """
         if not manager.task.bpod.connected:
             manager.task.bpod.connect(manager.functions)
             close = True
@@ -803,6 +926,7 @@ class VirtualMouseLayout(Layout):
         manager.task.bpod.poke(i, close)
 
     def touch_clicked(self) -> None:
+        """Simulates a touch action at the specified coordinates."""
         x = self.x_line_edit.text()
         y = self.y_line_edit.text()
         try:
@@ -817,12 +941,22 @@ class VirtualMouseLayout(Layout):
 
 
 class FunctionsLayout(Layout):
+    """Layout for executing user-defined functions."""
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the FunctionsLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.buttons: list[QPushButton] = []
         self.draw()
 
     def draw(self) -> None:
+        """Draws the function buttons."""
         for i in range(98):
             row = i // 2 * 2 + 1
             column = 2 if i % 2 == 0 else 14
@@ -838,6 +972,11 @@ class FunctionsLayout(Layout):
             self.buttons.append(button)
 
     def function_clicked(self, i=0) -> None:
+        """Executes the selected user function.
+
+        Args:
+            i (int): Function index.
+        """
         try:
             manager.functions[i]()
         except Exception:
@@ -847,7 +986,16 @@ class FunctionsLayout(Layout):
 
 
 class CorridorLayout(Layout):
+    """Layout for configuring corridor settings."""
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the CorridorLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.color_area1_str = "rgb" + str(tuple(settings.get("COLOR_AREA1")))
         self.color_area2_str = "rgb" + str(tuple(settings.get("COLOR_AREA2")))
@@ -856,6 +1004,7 @@ class CorridorLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
+        """Draws the corridor configuration options."""
         self.lbs: list[LabelButtons] = []
 
         self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
@@ -965,9 +1114,17 @@ class CorridorLayout(Layout):
         )
 
     def close(self) -> None:
+        """Closes the layout (no-op)."""
         return
 
     def draw_mice_buttons(self, name: str, row: int, column: int) -> None:
+        """Draws detection limit buttons.
+
+        Args:
+            name (str): The name of the setting.
+            row (int): The row position.
+            column (int): The column position.
+        """
         width = 8
         for direction in ("empty_limit", "subject_limit"):
             lb = LabelButtons(name, direction, row, column, width, "black", self)
@@ -977,6 +1134,14 @@ class CorridorLayout(Layout):
     def draw_area_buttons_corridor(
         self, name: str, row: int, column: int, color: str
     ) -> None:
+        """Draws area buttons for the corridor.
+
+        Args:
+            name (str): The name of the area.
+            row (int): The row position.
+            column (int): The column position.
+            color (str): The color of the label.
+        """
         self.label1: Label = self.create_and_add_label(name, row, column, 16, 2, color)
         row += 2
         for direction in (
@@ -993,6 +1158,14 @@ class CorridorLayout(Layout):
     def draw_area_buttons_box(
         self, name: str, row: int, column: int, color: str
     ) -> None:
+        """Draws area buttons for the box.
+
+        Args:
+            name (str): The name of the area.
+            row (int): The row position.
+            column (int): The column position.
+            color (str): The color of the label.
+        """
         width_res = settings.get("CAM_BOX_RESOLUTION")[0]
         height_res = settings.get("CAM_BOX_RESOLUTION")[1]
         self.label2: Label = self.create_and_add_label(name, row, column, 16, 2, color)
@@ -1019,6 +1192,7 @@ class CorridorLayout(Layout):
             row += 2
 
     def draw_camera_options(self) -> None:
+        """Draws camera adjustment options."""
         row = 2
         column = 79
         width = 12
@@ -1112,36 +1286,82 @@ class CorridorLayout(Layout):
         row += 2
 
     def toggle_area1_box(self, value: str, key: str) -> None:
+        """Toggles area 1 box usage.
+
+        Args:
+            value (str): The new value.
+            key (str): The setting key.
+        """
         settings.set(key, value)
         cam_box.change = True
 
     def toggle_area2_box(self, value: str, key: str) -> None:
+        """Toggles area 2 box usage.
+
+        Args:
+            value (str): The new value.
+            key (str): The setting key.
+        """
         settings.set(key, value)
         cam_box.change = True
 
     def toggle_area3_box(self, value: str, key: str) -> None:
+        """Toggles area 3 box usage.
+
+        Args:
+            value (str): The new value.
+            key (str): The setting key.
+        """
         settings.set(key, value)
         cam_box.change = True
 
     def toggle_area4_box(self, value: str, key: str) -> None:
+        """Toggles area 4 box usage.
+
+        Args:
+            value (str): The new value.
+            key (str): The setting key.
+        """
         settings.set(key, value)
         cam_box.change = True
 
     def toggle_corridor(self, value: str, key: str) -> None:
+        """Toggles corridor detection view.
+
+        Args:
+            value (str): The new value.
+            key (str): The setting key.
+        """
         settings.set(key, value)
         cam_corridor.change = True
 
     def toggle_box(self, value: str, key: str) -> None:
+        """Toggles box detection view.
+
+        Args:
+            value (str): The new value.
+            key (str): The setting key.
+        """
         settings.set(key, value)
         cam_box.change = True
 
 
 class InfoLayout(Layout):
+    """Layout for displaying system information logs."""
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the InfoLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.draw()
 
     def draw(self) -> None:
+        """Draws the info text area."""
         self.events_text: QLabel = self.create_and_add_label("", 0, 2, 198, 17, "black")
         self.events_text.setTextFormat(Qt.RichText)
         self.events_text.setTextInteractionFlags(Qt.TextSelectableByMouse)
@@ -1152,12 +1372,21 @@ class InfoLayout(Layout):
         self.update_gui()
 
     def update_gui(self) -> None:
+        """Updates the displayed events logs."""
         df_tail = manager.events.df.tail(16)
         html_table = self.events_df_to_html(df_tail)
         self.events_text.setText(html_table)
 
     @staticmethod
     def events_df_to_html(df) -> str:
+        """Converts the events DataFrame to an HTML table string.
+
+        Args:
+            df (pd.DataFrame): The events DataFrame.
+
+        Returns:
+            str: HTML representation of the table.
+        """
         ROW_BG = {
             "INFO": None,
             "START": "#e6f2ff",
@@ -1193,13 +1422,23 @@ class InfoLayout(Layout):
 
 
 class CorridorPlotLayout(Layout):
+    """Layout for displaying the corridor plot."""
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the CorridorPlotLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows
         self.columns = columns
         self.draw()
 
     def draw(self) -> None:
+        """Draws the plot area."""
         self.plot_label = QLabel()
         dpi = int(settings.get("MATPLOTLIB_DPI"))
         self.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
@@ -1211,6 +1450,7 @@ class CorridorPlotLayout(Layout):
         self.plot_height = (self.rows * self.row_height) / dpi
 
     def update_gui(self) -> None:
+        """Updates the plot with the latest data."""
         pixmap = QPixmap()
         try:
             figure = corridor_plot(
@@ -1242,6 +1482,11 @@ class ScaleCalibrationWizard(QWizard):
     """
 
     def __init__(self, parent=None):
+        """Initializes the ScaleCalibrationWizard.
+
+        Args:
+            parent (QWidget, optional): Parent widget. Defaults to None.
+        """
         super().__init__(parent)
         self.setWindowTitle("Scale Calibration")
         self.resize(560, 300)
@@ -1266,7 +1511,11 @@ class ScaleCalibrationWizard(QWizard):
 
     # Expose helpers so pages can reuse them
     def read_scale_grams(self) -> float:
-        """Read weight from your device API (adapt if needed)."""
+        """Read weight from your device API.
+
+        Returns:
+            float: The current weight in grams.
+        """
         return float(scale.get_weight())
 
 
@@ -1274,6 +1523,7 @@ class Step1TarePage(QWizardPage):
     """Step 1: Tare the scale with an empty platform."""
 
     def __init__(self) -> None:
+        """Initializes Step1TarePage."""
         super().__init__()
         self.setTitle("Step 1/4 — Tare")
         lay = QVBoxLayout(self)
@@ -1291,7 +1541,11 @@ class Step1TarePage(QWizardPage):
         lay.addStretch(1)
 
     def validatePage(self) -> bool:
-        """Called when Next is pressed. Perform Tare here."""
+        """Called when Next is pressed. Perform Tare here.
+
+        Returns:
+            bool: True if tare is successful, False otherwise.
+        """
         try:
             scale.tare()
             self.status.setText("Tare completed successfully.")
@@ -1306,6 +1560,11 @@ class Step2KnownWeightPage(QWizardPage):
     """Step 2: Place a known weight and enter its value (grams)."""
 
     def __init__(self, default_weight: float) -> None:
+        """Initializes Step2KnownWeightPage.
+
+        Args:
+            default_weight (float): The default weight to show in the input.
+        """
         super().__init__()
         self.setTitle("Step 2/4 — Known Weight")
         lay = QVBoxLayout(self)
@@ -1332,6 +1591,11 @@ class Step2KnownWeightPage(QWizardPage):
         lay.addStretch(1)
 
     def _parse_weight(self) -> float | None:
+        """Parses the weight from the input field.
+
+        Returns:
+            float | None: The parsed weight or None if invalid.
+        """
         text = self.edit.text().strip()
         if not text and self.edit.placeholderText():
             text = self.edit.placeholderText()
@@ -1342,7 +1606,11 @@ class Step2KnownWeightPage(QWizardPage):
             return None
 
     def validatePage(self) -> bool:
-        """When Next is pressed: validate, store, and calibrate."""
+        """When Next is pressed: validate, store, and calibrate.
+
+        Returns:
+            bool: True if calibration is successful, False otherwise.
+        """
         wiz: ScaleCalibrationWizard = self.wizard()  # type: ignore
         val = self._parse_weight()
         if val is None:
@@ -1371,7 +1639,8 @@ class Step2KnownWeightPage(QWizardPage):
 class Step3VerifyWithWeightPage(QWizardPage):
     """Step 3: Verify reading with the known weight on the platform."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initializes Step3VerifyWithWeightPage."""
         super().__init__()
         self.setTitle("Step 3/4 — Verify with Weight")
         lay = QVBoxLayout(self)
@@ -1394,7 +1663,8 @@ class Step3VerifyWithWeightPage(QWizardPage):
         lay.addWidget(self.status)
         lay.addStretch(1)
 
-    def _on_get(self):
+    def _on_get(self) -> None:
+        """Handles the 'Get weight' button click."""
         wiz: ScaleCalibrationWizard = self.wizard()  # type: ignore
         try:
             grams = wiz.read_scale_grams()
@@ -1413,7 +1683,8 @@ class Step3VerifyWithWeightPage(QWizardPage):
 class Step4VerifyNoWeightPage(QWizardPage):
     """Step 4: Remove the weight and verify near-zero reading."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initializes Step4VerifyNoWeightPage."""
         super().__init__()
         self.setTitle("Step 4/4 — Final Check (No Weight)")
         lay = QVBoxLayout(self)
@@ -1437,7 +1708,8 @@ class Step4VerifyNoWeightPage(QWizardPage):
         lay.addWidget(self.status)
         lay.addStretch(1)
 
-    def _on_get(self):
+    def _on_get(self) -> None:
+        """Handles the 'Get weight' button click."""
         wiz: ScaleCalibrationWizard = self.wizard()  # type: ignore
         try:
             grams = wiz.read_scale_grams()

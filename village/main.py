@@ -94,6 +94,11 @@ log.start("VILLAGE")
 
 # create a secondary thread
 def system_run(bevavior_window: QWidget) -> None:
+    """Runs the main system control loop in a secondary thread.
+
+    Args:
+        bevavior_window (QWidget): The main behavior window widget.
+    """
     id = ""
     multiple = False
     checking_subject_requirements = True
@@ -110,6 +115,7 @@ def system_run(bevavior_window: QWidget) -> None:
     weight_threshold = float(settings.get("WEIGHT_THRESHOLD"))
 
     def background_checks() -> None:
+        """Performs periodic background checks for errors, storage, and schedule changes."""
         while True:
             time.sleep(1)
             manager.update_cycle()
@@ -508,6 +514,10 @@ def system_run(bevavior_window: QWidget) -> None:
 
 
 def main() -> None:
+    """Main entry point for the application.
+
+    Initializes the GUI, starts the system control thread, and triggers the application execution loop.
+    """
     # create the GUI that will run in the main thread
     gui = Gui()
     manager.behavior_window = gui.behavior_window

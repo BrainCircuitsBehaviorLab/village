@@ -7,6 +7,19 @@ from matplotlib.figure import Figure
 
 
 def weights_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
+    """Generates a multi-panel plot of subject weights over time.
+
+    Creates individual subplots for each subject to visualize weight trends.
+    Applies data filtering using Interquartile Range (IQR) to handle outliers.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing 'subject', 'date', and 'weight' columns.
+        width (float): Width of the figure in inches.
+        height (float): Height of the figure in inches.
+
+    Returns:
+        Figure: The generated matplotlib figure containing the subplots.
+    """
     if df is None or df.empty:
         fig, _ = plt.subplots(figsize=(width, height))
         return fig
@@ -99,3 +112,4 @@ def weights_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
     fig.suptitle(f"Weights by Subject (N subjects = {n_subjects})", y=0.995)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     return fig
+
