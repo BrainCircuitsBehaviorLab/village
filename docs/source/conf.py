@@ -9,6 +9,35 @@
 import os
 import sys
 import setuptools_scm  # type: ignore
+from unittest.mock import MagicMock
+
+# Manually mock PyQt5 to avoid infinite recursion in sphinx-autodoc-typehints
+# when unwrapping pyqtSignal/pyqtSlot.
+class MockSignal:
+    def __init__(self, *args, **kwargs): pass
+    def connect(self, *args, **kwargs): pass
+    def emit(self, *args, **kwargs): pass
+
+class MockSlot:
+    def __init__(self, *args, **kwargs): pass
+    def __call__(self, *args, **kwargs):
+        if len(args) == 1 and callable(args[0]):
+            return args[0]
+        return self
+
+mock_qt = MagicMock()
+mock_core = MagicMock()
+mock_core.pyqtSignal = MockSignal
+mock_core.pyqtSlot = MockSlot
+mock_core.QObject = object
+# Add other widely used QtCore classes to avoid AttributeErrors if needed, 
+# although MagicMock handles attributes automatically.
+# We explicitly set QObject to object to allow inheritance without issues.
+
+sys.modules["PyQt5"] = mock_qt
+sys.modules["PyQt5.QtCore"] = mock_core
+sys.modules["PyQt5.QtGui"] = MagicMock()
+sys.modules["PyQt5.QtWidgets"] = MagicMock()
 
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
@@ -33,6 +62,7 @@ autodoc_mock_imports = [
     "matplotlib.dates",
     "matplotlib.figure",
     "picamera2",
+    "picamera2",
     "jinja2",
     "seaborn",
 ]
@@ -52,9 +82,6 @@ autodoc_default_options = {
 
 # Don't execute code during import (helps avoid circular import side effects)
 autodoc_preserve_defaults = True
-
-# Suppress duplicate object warnings (common when using autosummary with :recursive:)
-suppress_warnings = ['autosummary', 'ref.duplicate']
 
 project = "village"
 copyright = "2024, Rafael Marin, Balma Serrano, Hernando Vergara"
