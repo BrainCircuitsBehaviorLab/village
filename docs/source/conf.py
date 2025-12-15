@@ -131,6 +131,8 @@ myst_enable_extensions = [
 # Automatically add anchors to markdown headings
 myst_heading_anchors = 3
 
+suppress_warnings = ['autosummary', 'ref.duplicate']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
