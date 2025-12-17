@@ -23,12 +23,12 @@ class WaterCalibration(Task):
                 output_actions=self.outputs[i],
             )
 
-        self.controller.add_state(
-            state_name="wait",
-            state_timer=0.3,
-            state_change_conditions={Event.Tup: "exit"},
-            output_actions=[],
-        )
+            self.controller.add_state(
+                state_name="wait",
+                state_timer=0.3,
+                state_change_conditions={Event.Tup: "exit"},
+                output_actions=[],
+            )
 
     def after_trial(self) -> None:
         pass
