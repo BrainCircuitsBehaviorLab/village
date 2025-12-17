@@ -62,7 +62,7 @@ for detailed guidance on how to assemble the Training Village system.
 
 - [**Bpod**](https://sanworks.io/shop/viewproduct?productID=1036), x1 - 1495.0€
 - [**Interface board**](https://sanworks.io/shop/viewproduct?productID=1008), x6 - Total: 228.0€, The number needed depends on task
-- **Mouse port**[3d printed part.com](https://github.com/sanworks/Bpod/blob/4b756d8251f0a06ee9a442e9cac465872c1b4174/CAD/Ports/Mouse%20nosepoke/STL/Mousepoke.stl), x1 - Total: 5.0€, The number needed depends on the task
+- [**Mouse port**](https://github.com/sanworks/Bpod/blob/4b756d8251f0a06ee9a442e9cac465872c1b4174/CAD/Ports/Mouse%20nosepoke/STL/Mousepoke.stl), x1 - Total: 5.0€, The number needed depends on the task
 - **White LED (VAOL-3GWY4)**, x1 - 0.7€
 - **IR Emitter (OPB100Z)**, x6 - Total: 54.0€, If not available, you can buy parts separately: emitter and receiver (OPB100-EZ + OPB100-SZ)
 - [**Stainless steel tube**](https://www.amazon.es/gp/product/B07TYVB4R8/ref=ox_sc_act_title_1?smid=A2NF1LB1MEBSO1&psc=1), 50cm x 1.6mm internal diameter x 2mm external diameter, x1 - 9.0€
