@@ -20,11 +20,3 @@ Your browser does not support viewing PDFs. Please download the PDF to view it.
 </details>
 
 [PDF instructions]: /_static/training-village-instructions.pdf
-
-
-TODOS:
-* Add small version to the pdf.
-* Los tornillos no se ven. Poner en el pdf cuales son
-* Actualizar piezas
-* Dibujo del motor para pegar y montar esta mal
-*
