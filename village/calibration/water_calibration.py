@@ -22,11 +22,10 @@ class WaterCalibration(Task):
                 state_change_conditions={Event.Tup: self.wait_states[i]},
                 output_actions=self.outputs[i],
             )
-
             self.controller.add_state(
-                state_name="wait",
+                state_name=self.wait_states[i],
                 state_timer=0.3,
-                state_change_conditions={Event.Tup: "exit"},
+                state_change_conditions={Event.Tup: self.states[i + 1]},
                 output_actions=[],
             )
 
