@@ -1,3 +1,5 @@
+<img src="_static/illustration.png" width="100%" alt="Training Village">
+
 The Training Village is a system designed for the continuous automated training of rodents in complex cognitive tasks. In the system, RFID-tagged animals live in groups and access individually the behavioral box (e.g. an operant chamber) to perform tasks at any time, rain or shine.
 
 The Training Village is  designed to wrap around your own task protocols and integrate with your behavioral control system although we provide it in tandem with a general-purpose touchscreen chamber and some standard task protocols run by BPod (by [Sanworks][SANWORKS]).
