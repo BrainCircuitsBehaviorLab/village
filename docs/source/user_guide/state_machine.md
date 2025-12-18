@@ -1,8 +1,6 @@
 ## System State Machine
 
-<a href="/_static/states.png" target="_blank" rel="noopener">
-  <img src="/_static/states.png" alt="State machine" style="cursor: zoom-in;">
-</a>
+[![State machine](/_static/states.png)](/_static/states.png)
 
 This is the state diagram of all possible system states and their descriptions.
 
