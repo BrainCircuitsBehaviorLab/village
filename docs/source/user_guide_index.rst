@@ -11,11 +11,7 @@ User Guide
     user_guide/subjects.md
     user_guide/corridor.md
     user_guide/detection.md
-    user_guide/use.md
     user_guide/create.md
-    user_guide/test.md
-    user_guide/plots.md
-    user_guide/data.md
     user_guide/state_machine.md
     user_guide/alarms.md
     user_guide/maintenance.md
