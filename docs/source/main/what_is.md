@@ -47,18 +47,23 @@ The Training Village has been rigorously tested in the [Brain Circuits and Behav
 The Training Village can work continuously for months, allowing the automatic collection of large datasets of cognitive-demanding tasks that often require long training periods (e.g. 20-40 sessions). It automatically adjusts training difficulty, timing, and session duration based on each animal’s motivation and needs,  letting subjects learn at their own pace while ensuring a balanced usage of the behavioral box. On average, mice in the Training Village perform about three sessions per day, with a significant preference for the nighttime. Behavioral box occupancy depends on the group size. With groups of 14 animals housed together in the system, the average occupancy is around 70% of the total daytime (i.e. 16.8 hours of training per day), indicating a high usage at this capacity. Subjects' performance and motivation are comparable to the manual training, yet with a significant reduction in the experimenter involvement.
 
 
-<img src="_static/plots.png" style="float: left; width: 50%; margin-right: 20px; margin-bottom: 10px;">
+<div style="display: flex; align-items: flex-start; gap: 20px;">
 
-Tu texto aquí fluirá a la derecha de la imagen. Puedes escribir varios párrafos y el texto seguirá fluyendo alrededor.
+  <div style="flex: 1;">
+    <img src="_static/plots.png" style="width: 100%;">
+  </div>
 
-<div style="clear: both;"></div>
+  <div style="flex: 1;">
+    <p>
+    The Training Village can work continuously for months, allowing the automatic collection of large datasets of cognitive-demanding tasks that often require long training periods (e.g. 20–40 sessions). It automatically adjusts training difficulty, timing, and session duration based on each animal’s motivation and needs, letting subjects learn at their own pace while ensuring a balanced usage of the behavioral box.
+    </p>
 
+    <p>
+    On average, mice in the Training Village perform about three sessions per day, with a significant preference for the nighttime. Behavioral box occupancy depends on the group size.
+    </p>
+  </div>
 
-<img src="_static/plots.png" style="float: right; width: 50%; margin-left: 20px; margin-bottom: 10px;">
-
-Tu texto aquí fluirá a la derecha de la imagen. Puedes escribir varios párrafos y el texto seguirá fluyendo alrededor.
-
-<div style="clear: both;"></div>
+</div>
 
 
 ## Open Source
