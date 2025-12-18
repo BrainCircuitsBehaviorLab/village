@@ -10,7 +10,7 @@ By completely removing direct human intervention in the behavioral testing, the 
 
 The Training Village is freely available, and legally protected by [GPL version 3][GPL] and [OSHW version 1][OSHW] licenses.
 
-<video controls width="100%">
+<video controls width="100%" poster="_static/video_poster.png">
   <source src="_static/video.m4v" type="video/mp4">
 </video>
 
@@ -46,7 +46,20 @@ The Training Village has been rigorously tested in the [Brain Circuits and Behav
 
 The Training Village can work continuously for months, allowing the automatic collection of large datasets of cognitive-demanding tasks that often require long training periods (e.g. 20-40 sessions). It automatically adjusts training difficulty, timing, and session duration based on each animal’s motivation and needs,  letting subjects learn at their own pace while ensuring a balanced usage of the behavioral box. On average, mice in the Training Village perform about three sessions per day, with a significant preference for the nighttime. Behavioral box occupancy depends on the group size. With groups of 14 animals housed together in the system, the average occupancy is around 70% of the total daytime (i.e. 16.8 hours of training per day), indicating a high usage at this capacity. Subjects' performance and motivation are comparable to the manual training, yet with a significant reduction in the experimenter involvement.
 
-![plots](_static/plots.png)
+
+<img src="_static/plots.png" style="float: left; width: 50%; margin-right: 20px; margin-bottom: 10px;">
+
+Tu texto aquí fluirá a la derecha de la imagen. Puedes escribir varios párrafos y el texto seguirá fluyendo alrededor.
+
+<div style="clear: both;"></div>
+
+
+<img src="_static/plots.png" style="float: right; width: 50%; margin-left: 20px; margin-bottom: 10px;">
+
+Tu texto aquí fluirá a la derecha de la imagen. Puedes escribir varios párrafos y el texto seguirá fluyendo alrededor.
+
+<div style="clear: both;"></div>
+
 
 ## Open Source
 Training Village is an open-source project. You can find the code in our [GitHub repository][REPO] and all the necessary resources to build it in the [resources section][RESOURCES].
