@@ -204,11 +204,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/subjects.html">Create New Subjects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/corridor.html">Calibrate and Test Corridor Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/detection.html">Calibrate and Test Animal Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/use.html">Use an Existing Training Protocol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/create.html">Create a Training Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/test.html">Test a Training Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/plots.html">Create Real-Time Plots</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/data.html">Saved Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
@@ -224,8 +220,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../initial_configuration/hardware.html">Hardware Connections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../initial_configuration/remote.html">Configure Remote Access</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/backup.html">Schedule Backups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/heartbeat.html">Send Heartbeat Signals to a Remote Device</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api_index.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -387,7 +381,6 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><input aria-label="Toggle navigation of Resources" class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../resources/ISO.html">System ISO Image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
 </ul>
 </li>
@@ -438,7 +431,7 @@
 <p>Because the system is running 24/7, it is designed to be remotely controlled. It can be accessed at any time to check on the system’s status or to monitor the state of the animals through various cameras viewing the entry corridor and the inside of the behavioral box. Additionally, a configurable alert system integrated with Telegram allows users to receive real-time notifications regarding system status or the conditions of the animals.</p>
 <p>By completely removing direct human intervention in the behavioral testing, the Training Village can decrease the stress of the animals caused by transportation and handling, providing the stable and predictable conditions that are optimal for animal cognitive testing. Moreover, the automatisation of the full process can impact positively in the work of the researchers carrying out these experiments which can be very repetitive and boring.</p>
 <p>The Training Village is freely available, and legally protected by <a class="reference external" href="https://www.gnu.org/licenses/quick-guide-gplv3.pdf">GPL version 3</a> and <a class="reference external" href="https://oshwa.org/resources/open-source-hardware-definition/">OSHW version 1</a> licenses.</p>
-<video controls width="100%">
+<video controls width="100%" poster="_static/video_poster.png">
   <source src="_static/video.m4v" type="video/mp4">
 </video>
 <section id="how-does-it-work">
@@ -471,7 +464,12 @@ Most of the elements in the mouse version of the corridor are 3D-printed, except
 <h1>System usage</h1>
 <p>The Training Village has been rigorously tested in the <a class="reference external" href="https://braincircuitsbehavior.org">Brain Circuits and Behavior Lab</a> with different groups of mice and two different behavioral tasks: a multi-choice delayed response task and a foraging task. Recently, the system has been adapted to rats in the <a class="reference external" href="https://www.uab.cat/en/incuab/fx-animalmindslab-en">Animal Minds Lab</a>.</p>
 <p>The Training Village can work continuously for months, allowing the automatic collection of large datasets of cognitive-demanding tasks that often require long training periods (e.g. 20-40 sessions). It automatically adjusts training difficulty, timing, and session duration based on each animal’s motivation and needs,  letting subjects learn at their own pace while ensuring a balanced usage of the behavioral box. On average, mice in the Training Village perform about three sessions per day, with a significant preference for the nighttime. Behavioral box occupancy depends on the group size. With groups of 14 animals housed together in the system, the average occupancy is around 70% of the total daytime (i.e. 16.8 hours of training per day), indicating a high usage at this capacity. Subjects’ performance and motivation are comparable to the manual training, yet with a significant reduction in the experimenter involvement.</p>
-<p><img alt="plots" src="main/_static/plots.png" /></p>
+<img alt="main/_static/plots.png" src="main/_static/plots.png" />
+<p>Tu texto aquí fluirá a la derecha de la imagen. Puedes escribir varios párrafos y el texto seguirá fluyendo alrededor.</p>
+<div style="clear: both;"></div>
+<img alt="main/_static/plots.png" src="main/_static/plots.png" />
+<p>Tu texto aquí fluirá a la derecha de la imagen. Puedes escribir varios párrafos y el texto seguirá fluyendo alrededor.</p>
+<div style="clear: both;"></div>
 </section>
 <section id="open-source">
 <h1>Open Source</h1>
@@ -540,7 +538,7 @@ BRAIN CIRCUITS AND BEHAVIOR LAB
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=eb67c75e"></script>
+</div><script src="../_static/documentation_options.js?v=b30cee4b"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
