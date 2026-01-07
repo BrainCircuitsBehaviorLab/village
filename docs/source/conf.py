@@ -33,7 +33,7 @@ autodoc_mock_imports: list = [
 sys.path.insert(0, os.path.abspath("../.."))
 
 project = "village"
-copyright = "2024, Rafael Marin, Balma Serrano, Hernando Vergara"
+copyright = "2024, Rafael Marin, Balma Serrano, Hernando Vergara, Jaime de la Rocha"
 author = "Rafael Marin"
 try:
     release = setuptools_scm.get_version(root="../..", relative_to=__file__)
