@@ -156,4 +156,3 @@ def parse_output_to_tuple(val: str | tuple[str, int]) -> tuple:
                 return (base, suffix)
 
         raise ValueError(f"Bad output_state: {val}")
-

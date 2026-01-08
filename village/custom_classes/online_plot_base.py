@@ -78,4 +78,3 @@ class OnlinePlotBase:
             return
 
         df.plot(kind="scatter", x="TRIAL_START", y="trial", ax=self.ax)
-

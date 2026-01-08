@@ -78,4 +78,3 @@ def get_temp_sensor(address: str) -> TempSensorBase:
 
 
 temp_sensor = get_temp_sensor(address=settings.get("TEMP_SENSOR_ADDRESS"))
-

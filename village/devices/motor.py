@@ -157,7 +157,6 @@ def get_motor(pin: int, angles: list[int]) -> MotorBase:
         return MotorBase()
 
 
-
 import sys
 
 if "sphinx" in sys.modules:
@@ -166,4 +165,3 @@ if "sphinx" in sys.modules:
 else:
     motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
     motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))
-

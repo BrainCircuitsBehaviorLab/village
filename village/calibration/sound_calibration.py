@@ -60,4 +60,3 @@ class SoundCalibration:
     def close(self) -> None:
         """Closes the calibration instance and releases resources."""
         return
-

@@ -29,11 +29,13 @@ class TaskError(Exception):
 
 class Event(EventName):
     """Enumeration of Bpod event names."""
+
     pass
 
 
 class Output(OutputChannel):
     """Enumeration of Bpod output channels."""
+
     pass
 
 
@@ -117,6 +119,7 @@ class Task:
         Args:
             daemon (bool, optional): Whether to run as a daemon thread. Defaults to True.
         """
+
         def test_run():
             self.create_paths()
             self.start()
@@ -562,4 +565,3 @@ class Task:
         self.video_path = str(Path(self.video_directory, self.filename + ".mp4"))
         self.video_data_path = str(Path(self.video_directory, self.filename + ".csv"))
         self.subject_path = str(Path(self.sessions_directory, self.subject + ".csv"))
-

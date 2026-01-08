@@ -17,6 +17,7 @@ class PyBpodBase:
         session (Session | Any): Bpod session object.
         connected (bool): Connection status.
     """
+
     error: str = "Error connecting to the bpod "
     session: Session | Any = None
     connected: bool = False
@@ -182,6 +183,7 @@ class TelegramBotBase:
     Attributes:
         error (str): Error message.
     """
+
     error: str = "Error connecting to the telegram_bot "
 
     def alarm(self, message: str) -> None:
@@ -199,6 +201,7 @@ class ScaleBase:
     Attributes:
         error (str): Error message.
     """
+
     error: str = "Error connecting to the scale "
 
     def tare(self) -> None:
@@ -228,6 +231,7 @@ class TempSensorBase:
     Attributes:
         error (str): Error message.
     """
+
     error: str = "Error connecting to the temp_sensor "
 
     def start(self) -> None:
@@ -251,6 +255,7 @@ class MotorBase:
         open_angle (int): Angle for open position.
         close_angle (int): Angle for close position.
     """
+
     error: str = "Error connecting to the motor "
     open_angle: int = 0
     close_angle: int = 0
@@ -271,6 +276,7 @@ class SoundDeviceBase:
         samplerate (int): Audio sample rate.
         error (str): Error message.
     """
+
     samplerate: int = 44100
     error: str = (
         ""
@@ -353,6 +359,7 @@ class CameraBase:
         y_position (int): Y coordinate of tracked object.
         chrono (time_utils.Chrono): Timer utility.
     """
+
     area1: list[int] = []
     area2: list[int] = []
     area3: list[int] = []
@@ -477,6 +484,7 @@ class BehaviorWindowBase(QWidget):
     Attributes:
         background_color: The background color.
     """
+
     background_color = None
 
     def start_drawing(self) -> None:
@@ -525,4 +533,3 @@ class BehaviorWindowBase(QWidget):
             Optional[QImage]: The current frame as a QImage.
         """
         return None
-

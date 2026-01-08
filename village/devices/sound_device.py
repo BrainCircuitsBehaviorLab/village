@@ -232,4 +232,3 @@ def get_sound_device() -> SoundDeviceBase:
 
 
 sound_device = get_sound_device()
-

@@ -92,7 +92,7 @@ class Scale(ScaleBase):
             if interval_s > 0 and i < samples - 1:
                 time.sleep(interval_s)
         if not values:
-             return 0
+            return 0
         median = int(np.median(values))
         if median == 0 and self.alarm_timer.has_elapsed():
             log.alarm("Scale not responding, please check the connection.")
@@ -158,4 +158,3 @@ def real_weight_inference(weight_array, threshold) -> tuple[bool, float]:
         return (True, median_weight)
     else:
         return (False, 0.0)
-

@@ -83,4 +83,3 @@ def sound_calibration_plot(
     ax.grid(True)
 
     return fig
-

@@ -284,6 +284,7 @@ class TimeUtils:
         Returns:
             Callable: Wrapped function.
         """
+
         def wrapper(*args, **kwargs) -> Any:
             start = time.perf_counter()
             result = func(*args, **kwargs)

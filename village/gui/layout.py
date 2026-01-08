@@ -5,7 +5,6 @@ import traceback
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
-from village.classes.enums import State
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTime
 from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
@@ -21,7 +20,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
 )
 
-from village.classes.enums import DataTable
+from village.classes.enums import DataTable, State
 from village.manager import manager
 from village.scripts.log import log
 from village.settings import settings
@@ -32,6 +31,7 @@ if TYPE_CHECKING:
 
 class Label(QLabel):
     """Custom styled QLabel."""
+
     def __init__(
         self,
         text: str,
@@ -60,6 +60,7 @@ class Label(QLabel):
 
 class LabelImage(QLabel):
     """QLabel for displaying an image from the resources directory."""
+
     def __init__(self, file) -> None:
         """Initializes a LabelImage."""
         super().__init__()
@@ -71,6 +72,7 @@ class LabelImage(QLabel):
 
 class LineEdit(QLineEdit):
     """Custom QLineEdit that triggers an action on text change."""
+
     def __init__(self, text: str, action: Callable) -> None:
         """Initializes a LineEdit."""
         super().__init__()
@@ -80,6 +82,7 @@ class LineEdit(QLineEdit):
 
 class TimeEdit(QTimeEdit):
     """Custom QTimeEdit with HH:mm format."""
+
     def __init__(self, text: str, action: Callable) -> None:
         """Initializes a TimeEdit."""
         super().__init__()
@@ -90,6 +93,7 @@ class TimeEdit(QTimeEdit):
 
 class PushButton(QPushButton):
     """Custom styled QPushButton."""
+
     def __init__(
         self, text: str, color: str, action: Callable, description: str
     ) -> None:
@@ -105,6 +109,7 @@ class PushButton(QPushButton):
 
 class ToggleButton(QPushButton):
     """Button that cycles through a list of values when pressed."""
+
     def __init__(
         self,
         key: str,
@@ -151,6 +156,7 @@ class ToggleButton(QPushButton):
 
 class ComboBox(QComboBox):
     """Custom QComboBox linked to a setting or variable."""
+
     def __init__(
         self, key: str, possible_values: list[str], index: int, action: Callable
     ) -> None:
@@ -186,7 +192,6 @@ class ComboBox(QComboBox):
     def wheelEvent(self, event: QWheelEvent) -> None:
         """Ignores wheel events to prevent accidental changes."""
         event.ignore()
-
 
 
 class Layout(QGridLayout):

@@ -87,4 +87,3 @@ def measure_softcode_latency(bpod: BpodWithLatencyTest, n_trials: int = 100):
 
 mybpod = BpodWithLatencyTest()
 measure_softcode_latency(mybpod, 200)
-

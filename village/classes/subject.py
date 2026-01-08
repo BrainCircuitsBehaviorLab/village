@@ -82,4 +82,3 @@ class Subject:
                 subject=self.name,
             )
             return False
-

@@ -196,4 +196,3 @@ def get_telegram_bot() -> TelegramBotBase:
 
 
 telegram_bot = get_telegram_bot()
-

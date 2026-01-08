@@ -112,4 +112,3 @@ def weights_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
     fig.suptitle(f"Weights by Subject (N subjects = {n_subjects})", y=0.995)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     return fig
-

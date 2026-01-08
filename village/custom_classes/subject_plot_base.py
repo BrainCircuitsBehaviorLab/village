@@ -36,4 +36,3 @@ class SubjectPlotBase:
         ax.set_title("Subject Plot")
         ax.set_ylabel("Number of trials")
         return fig
-

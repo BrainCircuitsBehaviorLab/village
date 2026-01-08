@@ -91,6 +91,7 @@ class AreaActive(SuperEnum):
 
 class State(SuperEnum):
     """Enum representing the state of the village system."""
+
     WAIT = "All subjects are at home, waiting for RFID detection"
     DETECTION = "Gathering subject data, checking requirements to enter"
     ACCESS = "Closing door1, opening door2"
@@ -226,4 +227,3 @@ class Save(SuperEnum):
     NO = "NO"
     ZERO = "ZERO"
     ERROR = "ERROR"
-
