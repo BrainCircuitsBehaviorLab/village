@@ -161,4 +161,3 @@ class Log:
 
 
 log = Log()
-

@@ -15,7 +15,7 @@ from village.settings import Active, settings
 
 class ChangeCycleBase:
     """Base class for operations performed during the day/night cycle change.
-    
+
     This class handles cleanup tasks such as deleting old video files and ensuring
     disk space is managed, potentially backing up data before deletion.
     """
@@ -64,4 +64,3 @@ class ChangeCycleBase:
 if __name__ == "__main__":
     change_cycle = ChangeCycleBase()
     change_cycle.run()
-

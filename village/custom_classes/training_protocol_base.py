@@ -248,4 +248,3 @@ class TrainingProtocolBase:
         dict = self.get_dict()
         _, new_dict = self.correct_types_in_dict(dict)
         return json.dumps(new_dict)
-

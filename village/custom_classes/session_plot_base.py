@@ -35,4 +35,3 @@ class SessionPlotBase:
         df.plot(kind="line", x="TRIAL_START", y="trial", ax=ax)
         ax.scatter(df["TRIAL_START"], df["trial"], color="red")
         return fig
-

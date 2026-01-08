@@ -33,6 +33,7 @@ if TYPE_CHECKING:
 
 class ExtraLayout(Layout):
     """Layout helper for checking task buttons and settings in scrollable areas."""
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         """Initializes the ExtraLayout."""
         super().__init__(window, stacked=True, rows=rows, columns=columns)
@@ -545,4 +546,3 @@ class TasksLayout(Layout):
         """Updates the GUI status."""
         self.update_status_label_buttons()
         self.check_buttons()
-

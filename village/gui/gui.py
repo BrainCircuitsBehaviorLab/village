@@ -78,4 +78,3 @@ class Gui:
         self.q_app.quit()
         python = sys.executable
         os.execv(python, [python] + sys.argv)
-

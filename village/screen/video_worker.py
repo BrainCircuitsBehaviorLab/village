@@ -14,11 +14,11 @@ from village.scripts.error_queue import error_queue
 
 class VideoWorker(QObject):
     """Worker class for decoding video frames in a separate thread.
-    
+
     Uses OpenCV to read frames and serves them as QImages for display.
     Maintains synchronization with real-time based on the video's FPS.
     """
-    
+
     finished = pyqtSignal()
 
     def __init__(self, path: str) -> None:
@@ -136,4 +136,3 @@ class VideoWorker(QObject):
     def stop(self) -> None:
         """Stops the video decoding loop."""
         self._running = False
-

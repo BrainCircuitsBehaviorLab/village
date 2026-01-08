@@ -47,4 +47,3 @@ class MainLayout(Layout):
     def update_gui(self) -> None:
         """Updates the status line and buttons."""
         self.update_status_label_buttons()
-

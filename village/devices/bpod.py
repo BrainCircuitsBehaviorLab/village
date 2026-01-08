@@ -394,4 +394,3 @@ def get_bpod() -> PyBpodBase:
 
 
 bpod = get_bpod()
-

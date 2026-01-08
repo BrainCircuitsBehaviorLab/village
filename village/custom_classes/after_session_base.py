@@ -16,7 +16,7 @@ from village.settings import settings
 
 class AfterSessionBase:
     """Base class for operations performed after a session ends.
-    
+
     This class handles data synchronization (backup) to either a hard drive
     or a remote server based on current settings.
     """
@@ -62,4 +62,3 @@ class AfterSessionBase:
 if __name__ == "__main__":
     after_session = AfterSessionBase()
     after_session.run()
-

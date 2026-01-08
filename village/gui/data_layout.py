@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING, Any, Optional, cast
 import cv2
 import numpy as np
 import pandas as pd
-from village.classes.enums import State
 from pandas import DataFrame
 from PyQt5.QtCore import (
     QAbstractTableModel,
@@ -40,7 +39,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from village.classes.enums import DataTable
+from village.classes.enums import DataTable, State
 from village.gui.layout import Layout
 from village.manager import manager
 from village.plots.sound_calibration_plot import sound_calibration_plot

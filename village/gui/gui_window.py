@@ -139,4 +139,3 @@ class GuiWindow(QWidget):
         """
         if self.update_chrono.get_seconds() > self.screensave_time:
             self.layout.main_button_clicked(auto=True)
-

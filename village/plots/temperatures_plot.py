@@ -41,4 +41,3 @@ def temperatures_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d %H:%M"))
 
     return fig
-

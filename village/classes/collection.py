@@ -381,4 +381,3 @@ class Collection(EventBase):
             )
 
         return new_df
-

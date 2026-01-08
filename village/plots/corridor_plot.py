@@ -161,4 +161,3 @@ def corridor_plot(
     fig.subplots_adjust(left=0.03, right=0.97, top=0.97, bottom=0.1)
 
     return fig
-

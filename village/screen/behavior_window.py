@@ -253,4 +253,3 @@ class BehaviorWindow(QOpenGLWidget):
         with QPainter(self) as painter:
             # clean the window
             painter.fillRect(manager.behavior_window.rect(), self.background_color)
-
