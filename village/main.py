@@ -60,7 +60,8 @@ except PermissionError:
     print("No permission to change nice value.")
     print("Write this in the terminal:")
     print("sudo setcap cap_sys_nice=eip /usr/bin/python3.11")
-    raise
+    # When running in restricted environments (e.g., documentation builds),
+    # we can't change the nice value. Continue without raising to allow import.
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"

@@ -84,6 +84,6 @@ def measure_softcode_latency(bpod: BpodWithLatencyTest, n_trials: int = 100):
     print(f"Media = {statistics.mean(latencies):.3f} ms")
     print(f"Mediana = {statistics.median(latencies):.3f} ms")
 
-
-mybpod = BpodWithLatencyTest()
-measure_softcode_latency(mybpod, 200)
+if __name__ == "__main__":
+    mybpod = BpodWithLatencyTest()
+    measure_softcode_latency(mybpod, 200)
