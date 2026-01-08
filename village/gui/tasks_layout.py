@@ -32,12 +32,21 @@ if TYPE_CHECKING:
 
 
 class ExtraLayout(Layout):
+    """Layout helper for checking task buttons and settings in scrollable areas."""
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the ExtraLayout."""
         super().__init__(window, stacked=True, rows=rows, columns=columns)
 
 
 class TasksLayout(Layout):
+    """Layout for selecting and configuring tasks."""
+
     def __init__(self, window: GuiWindow) -> None:
+        """Initializes the TasksLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+        """
         super().__init__(window)
         self.window = window
         self.selected = ""
@@ -46,6 +55,7 @@ class TasksLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
+        """Draws the tasks layout elements, including task selection list and settings."""
         self.line_edits: dict[str, LineEdit] = {}
         self.tasks_button.setDisabled(True)
 
@@ -137,6 +147,12 @@ class TasksLayout(Layout):
         self.check_buttons()
 
     def create_tab_with_scroll_area(self, tab_name: str, layout: ExtraLayout) -> None:
+        """Creates a scrollable tab in the settings panel.
+
+        Args:
+            tab_name (str): Name of the tab.
+            layout (ExtraLayout): Layout to populate the tab with.
+        """
         tab = QWidget()
         scroll_area = QScrollArea()
         scroll_area.setStyleSheet("border: 0px;")
@@ -153,11 +169,13 @@ class TasksLayout(Layout):
         self.right_tabs.addTab(tab, tab_name)
 
     def restart_tab_panel(self) -> None:
+        """Clears and recreates the right-side tab panel for task settings."""
         self.right_tabs.clear()
         self.right_layout_general = ExtraLayout(self.window, 30, 79)
         self.create_tab_with_scroll_area("General", self.right_layout_general)
 
     def check_buttons(self) -> None:
+        """Updates button states based on application state and selection."""
         if manager.state.can_stop_task():
             self.run_task_button.setEnabled(False)
             for button in self.task_buttons:
@@ -190,6 +208,12 @@ class TasksLayout(Layout):
                 line_edit.setEnabled(True)
 
     def select_task(self, cls: Type, name: str) -> None:
+        """Selects a task type and updates the UI with its settings.
+
+        Args:
+            cls (Type): Task class.
+            name (str): Task name.
+        """
         if issubclass(cls, Task):
             self.subject_index = 0
             self.testing_training = False
@@ -214,6 +238,7 @@ class TasksLayout(Layout):
             self.create_gui_properties(testing_training=False)
 
     def training_button_clicked(self) -> None:
+        """Sets up the UI for testing the training protocol."""
         self.subject_index = 0
         self.testing_training = True
         self.central_sub_layout.delete_optional_widgets("optional")
@@ -225,6 +250,11 @@ class TasksLayout(Layout):
         self.create_gui_properties(testing_training=True)
 
     def create_gui_properties(self, testing_training: bool) -> None:
+        """Generates input fields for task settings.
+
+        Args:
+            testing_training (bool): Whether we are in training protocol test mode.
+        """
         self.line_edits = {}
         self.central_sub_layout.delete_optional_widgets("optional2")
         self.right_layout_general.delete_optional_widgets("optional2")
@@ -311,12 +341,26 @@ class TasksLayout(Layout):
         self.update_gui()
 
     def find_tab_by_label(self, label: str) -> Union[QWidget, None]:
+        """Finds a tab widget by its label name.
+
+        Args:
+            label (str): Text label of the tab.
+
+        Returns:
+            Union[QWidget, None]: The tab widget if found, None otherwise.
+        """
         for index in range(self.right_tabs.count()):
             if self.right_tabs.tabText(index) == label:
                 return self.right_tabs.widget(index)
         return None
 
     def select_subject(self, value: str, key: str) -> None:
+        """Handles subject selection, loading their training history.
+
+        Args:
+            value (str): Selected subject name.
+            key (str): Setting key (unused).
+        """
         self.subject_index = self.subject_combo.currentIndex()
         current_value = ""
         if value != "None":
@@ -337,6 +381,7 @@ class TasksLayout(Layout):
         self.create_gui_properties(testing_training=self.testing_training)
 
     def run_task_button_clicked(self) -> None:
+        """Validates settings and launches the selected task."""
         wrong_keys = self.change_properties()
         if self.testing_training:
             if len(wrong_keys) <= 2:
@@ -398,6 +443,16 @@ class TasksLayout(Layout):
         value: str,
         width: int = 23,
     ) -> None:
+        """Creates a label and input widget pair for a setting.
+
+        Args:
+            layout (Layout): The parent layout.
+            row (int): Row index.
+            column (int): Column index.
+            name (str): Setting name.
+            value (str): Current value.
+            width (int, optional): Width in grid cells. Defaults to 23.
+        """
         label = layout.create_and_add_label(
             name, row, column, width, 2, "black", bold=True
         )
@@ -434,6 +489,11 @@ class TasksLayout(Layout):
         self.line_edits[name] = line_edit
 
     def change_properties(self) -> list[str]:
+        """Reads input fields and updates the task settings.
+
+        Returns:
+            list[str]: List of settings that failed validation.
+        """
         wrong_values: list[str] = []
         properties = manager.training.get_dict()
         remove_names = [
@@ -474,11 +534,15 @@ class TasksLayout(Layout):
         return wrong_values + wrong_keys
 
     def change_text(self) -> None:
+        """Placeholder for text change events."""
         pass
 
     def change_combo(self, value: str, key: str) -> None:
+        """Placeholder for combobox change events."""
         pass
 
     def update_gui(self) -> None:
+        """Updates the GUI status."""
         self.update_status_label_buttons()
         self.check_buttons()
+

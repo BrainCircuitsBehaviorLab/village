@@ -8,29 +8,80 @@
 
 import os
 import sys
-
 import setuptools_scm  # type: ignore
+from unittest.mock import MagicMock
+
+# Manually mock PyQt5 to avoid infinite recursion in sphinx-autodoc-typehints
+# when unwrapping pyqtSignal/pyqtSlot.
+class MockSignal:
+    def __init__(self, *args, **kwargs): pass
+    def connect(self, *args, **kwargs): pass
+    def emit(self, *args, **kwargs): pass
+
+class MockSlot:
+    def __init__(self, *args, **kwargs): pass
+    def __call__(self, *args, **kwargs):
+        if len(args) == 1 and callable(args[0]):
+            return args[0]
+        return self
+
+mock_qt = MagicMock()
+mock_core = MagicMock()
+mock_core.pyqtSignal = MockSignal
+mock_core.pyqtSlot = MockSlot
+mock_core.QObject = object
+# Add other widely used QtCore classes to avoid AttributeErrors if needed, 
+# although MagicMock handles attributes automatically.
+# We explicitly set QObject to object to allow inheritance without issues.
+
+sys.modules["PyQt5"] = mock_qt
+sys.modules["PyQt5.QtCore"] = mock_core
+sys.modules["PyQt5.QtGui"] = MagicMock()
+sys.modules["PyQt5.QtWidgets"] = MagicMock()
 
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
-autodoc_mock_imports: list = [
+autodoc_mock_imports = [
     "numpy",
     "pandas",
     "PyQt5",
+    "PyQt5.QtCore",
+    "PyQt5.QtGui",
+    "PyQt5.QtWidgets",
     "cv2",
     "serial",
     "smbus2",
     "sounddevice",
     "telegram",
     "scipy",
+    "scipy.interpolate",
     "fire",
     "calplot",
+    "matplotlib",
+    "matplotlib.pyplot",
+    "matplotlib.dates",
+    "matplotlib.figure",
+    "picamera2",
+    "picamera2",
+    "jinja2",
+    "seaborn",
 ]
 
 # Add the module path to sys.path here.
 # If the directory is relative to the documentation root,
 # use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath("../.."))
+
+# Autodoc configuration to handle circular imports
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'undoc-members': True,
+    'show-inheritance': True,
+}
+
+# Don't execute code during import (helps avoid circular import side effects)
+autodoc_preserve_defaults = True
 
 project = "village"
 copyright = "2024, Rafael Marin, Balma Serrano, Hernando Vergara, Jaime de la Rocha"
@@ -49,7 +100,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
-    "sphinx_autodoc_typehints",
+    # "sphinx_autodoc_typehints",  # Disabled: conflicts with autodoc_mock_imports
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
@@ -80,6 +131,8 @@ myst_enable_extensions = [
 # Automatically add anchors to markdown headings
 myst_heading_anchors = 3
 
+suppress_warnings = ['autosummary', 'ref.duplicate']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -98,6 +151,7 @@ exclude_patterns = [
     # to ensure that include files (partial pages) aren't built, exclude them
     # https://github.com/sphinx-doc/sphinx/issues/1965#issuecomment-124732907
     "**/includes/**",
+    "**/pybpodapi/**",
 ]
 
 # -- Options for HTML output -------------------------------------------------

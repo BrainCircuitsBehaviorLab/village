@@ -7,6 +7,13 @@ import pandas as pd
 def main(
     subject: str, sessions_directory: str, deleted_sessions: list[str] = []
 ) -> None:
+    """Consolidates individual session CSVs for a subject into a single global CSV.
+
+    Args:
+        subject (str): The name of the subject.
+        sessions_directory (str): The directory containing session data.
+        deleted_sessions (list[str]): List of session filenames to exclude.
+    """
     subject_directory = os.path.join(sessions_directory, subject)
     final_name = subject + ".csv"
     final_path = os.path.join(sessions_directory, subject, final_name)
@@ -23,6 +30,14 @@ def main(
             sessions.append(file)
 
     def extract_datetime(filename) -> str:
+        """Extracts the datetime timestamp from a session filename.
+
+        Args:
+            filename (str): The session filename.
+
+        Returns:
+            str: The extracted timestamp string.
+        """
         base_name = str(os.path.basename(filename))
         datetime = base_name.split("_")[2] + base_name.split("_")[3].split(".")[0]
         return datetime
@@ -71,3 +86,4 @@ def main(
 
 if __name__ == "__main__":
     fire.Fire(main)
+

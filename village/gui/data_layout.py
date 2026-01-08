@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, Optional, cast
 import cv2
 import numpy as np
 import pandas as pd
-from classes.enums import State
+from village.classes.enums import State
 from pandas import DataFrame
 from PyQt5.QtCore import (
     QAbstractTableModel,
@@ -58,13 +58,28 @@ if TYPE_CHECKING:
 
 
 class TableView(QTableView):
+    """Custom QTableView with enhanced event handling."""
+
     def __init__(self, model: "Table | None" = None) -> None:
+        """Initializes the TableView.
+
+        Args:
+            model (Table | None, optional): The data model for the table. Defaults to None.
+        """
         super().__init__()
         if model is not None:
             self.setModel(model)
         self.setEditTriggers(QAbstractItemView.DoubleClicked)
 
     def _model(self) -> "Table":
+        """Returns the casted Table model.
+
+        Raises:
+            RuntimeError: If the model is not an instance of Table.
+
+        Returns:
+            Table: The table model.
+        """
         m = self.model()
         if not isinstance(m, Table):
             raise RuntimeError("TableView requires a Table model")
@@ -205,7 +220,15 @@ class TableView(QTableView):
 
 
 class DaysSelectionDialog(QDialog):
+    """Dialog for selecting specific days or toggling ON/OFF."""
+
     def __init__(self, parent=None, current_value=None) -> None:
+        """Initializes the DaysSelectionDialog.
+
+        Args:
+            parent (QWidget, optional): Parent widget. Defaults to None.
+            current_value (str, optional): Current value ("ON", "OFF", or "Mon-Tue..."). Defaults to None.
+        """
         super().__init__(parent)
         self.setWindowTitle("Select Days or On/Off")
 
@@ -319,6 +342,11 @@ class DaysSelectionDialog(QDialog):
             checkbox.blockSignals(False)
 
     def getSelection(self) -> str | None:
+        """Constructs the result string based on selected days.
+
+        Returns:
+            str: A string representing the selected days (e.g., "Mon-Wed-Fri") or "ON"/"OFF".
+        """
         if self.on_checkbox.isChecked():
             return "ON"
         if self.off_checkbox.isChecked():
@@ -334,10 +362,13 @@ class DaysSelectionDialog(QDialog):
         return None
 
     def accept(self) -> None:
+        """Accepts the dialog and closes it."""
         super().accept()
 
 
 class Table(QAbstractTableModel):
+    """Custom data model for handling pandas DataFrames in QTableView."""
+
     def __init__(
         self,
         df: pd.DataFrame,
@@ -345,6 +376,14 @@ class Table(QAbstractTableModel):
         layout_parent: "DfLayout",
         editable: bool = False,
     ) -> None:
+        """Initializes the Table model.
+
+        Args:
+            df (pd.DataFrame): The DataFrame to display (potentially filtered).
+            complete_df (pd.DataFrame): The full DataFrame.
+            layout_parent (DfLayout): The parent layout managing this table.
+            editable (bool, optional): Whether the table is editable. Defaults to False.
+        """
         super().__init__()
         self.df = df
         self.complete_df = complete_df
@@ -352,15 +391,38 @@ class Table(QAbstractTableModel):
         self.layout_parent = layout_parent
         self.table_view: Optional[TableView] = None
 
-    def rowCount(self, parent=None) -> int:
+    def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
+        """Returns the number of rows in the table.
+
+        Args:
+            parent (QModelIndex, optional): The parent index. Defaults to QModelIndex().
+
+        Returns:
+            int: number of rows.
+        """
         return self.df.shape[0]
 
-    def columnCount(self, parent=None) -> int:
+    def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
+        """Returns the number of columns in the table.
+
+        Args:
+            parent (QModelIndex, optional): The parent index. Defaults to QModelIndex().
+
+        Returns:
+            int: number of columns.
+        """
         return self.df.shape[1]
 
-    def data(
-        self, index: QModelIndex, role: int = Qt.DisplayRole
-    ) -> Any | str | QBrush:
+    def data(self, index: QModelIndex, role: int = Qt.DisplayRole) -> Any:
+        """Returns the data stored under the given role for the item referred to by the index.
+
+        Args:
+            index (QModelIndex): The index of the item.
+            role (int, optional): The role for which data is requested. Defaults to Qt.DisplayRole.
+
+        Returns:
+            Any: The data for the given role.
+        """
         if not index.isValid():
             return QVariant()
 
@@ -369,7 +431,10 @@ class Table(QAbstractTableModel):
 
         if role in (Qt.DisplayRole, Qt.EditRole):
             try:
-                return str(self.df.iat[row, col])
+                value = self.df.iat[row, col]
+                if pd.isna(value):
+                    return ""
+                return str(value)
             except Exception:
                 return QVariant()
 
@@ -387,7 +452,19 @@ class Table(QAbstractTableModel):
                 return QVariant()
         return QVariant()
 
-    def headerData(self, section, orientation, role=Qt.DisplayRole) -> str | None:
+    def headerData(
+        self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole
+    ) -> Any:
+        """Returns the data for the given role and section in the header with the specified orientation.
+
+        Args:
+            section (int): The section number (row or column index).
+            orientation (Qt.Orientation): The orientation of the header (Horizontal or Vertical).
+            role (int, optional): The role for which data is requested. Defaults to Qt.DisplayRole.
+
+        Returns:
+            Any: The header data.
+        """
         if role != Qt.DisplayRole:
             return None
 
@@ -428,11 +505,33 @@ class Table(QAbstractTableModel):
         self.dataChanged.emit(index, index, [Qt.DisplayRole])
         return True
 
-    def flags(self, index) -> Any:
+    def flags(self, index: QModelIndex) -> Qt.ItemFlags:
+        """Returns the item flags for the given index.
+
+        Args:
+            index (QModelIndex): The index of the item.
+
+        Returns:
+            Qt.ItemFlags: The item flags.
+        """
+        flags = super().flags(index)
         if self.editable:
-            return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
-        else:
-            return Qt.ItemIsSelectable | Qt.ItemIsEnabled
+            flags |= Qt.ItemIsEditable
+        return flags
+
+    def sort(self, column: int, order: Qt.SortOrder) -> None:
+        """Sorts the model by column and order.
+
+        Args:
+            column (int): The column index to sort by.
+            order (Qt.SortOrder): The sort order (Ascending or Descending).
+        """
+        self.layoutAboutToBeChanged.emit()
+        col_name = self.df.columns[column]
+        ascending = order == Qt.AscendingOrder
+        self.df.sort_values(by=col_name, ascending=ascending, inplace=True)
+        self.df.reset_index(drop=True, inplace=True)
+        self.layoutChanged.emit()
 
     def insertRow(self, position, index=None) -> bool:
         self.beginInsertRows(index or QModelIndex(), position, position)
@@ -444,6 +543,11 @@ class Table(QAbstractTableModel):
         return True
 
     def add_rows(self, new_df: pd.DataFrame) -> None:
+        """Adds rows to the table model from a DataFrame.
+
+        Args:
+            new_df (pd.DataFrame): The DataFrame containing rows to add.
+        """
         if self.table_view is None:
             self.df = new_df
             return
@@ -460,7 +564,14 @@ class Table(QAbstractTableModel):
 
 
 class DataLayout(Layout):
+    """Layout for interacting with data (tables, videos, plots)."""
+
     def __init__(self, window: GuiWindow) -> None:
+        """Initializes the DataLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+        """
         super().__init__(window)
         self.draw()
 
@@ -628,6 +739,7 @@ class DataLayout(Layout):
         self.central_layout.setCurrentWidget(self.page1)
 
     def update_data(self) -> None:
+        """Updates the data displayed in the current layout based on the selected table."""
         if self.central_layout.currentIndex() == 0:
             self.page1Layout.update_data()
             self.page1Layout.create_table()
@@ -637,6 +749,7 @@ class DataLayout(Layout):
             self.page3Layout.update_data()
 
     def update_gui(self) -> None:
+        """Updates the GUI elements of the current layout."""
         self.update_status_label_buttons()
         if self.central_layout.currentIndex() == 0:
             self.page1Layout.update_gui()
@@ -646,6 +759,14 @@ class DataLayout(Layout):
             self.page3Layout.update_gui()
 
     def change_layout(self, auto: bool = False) -> bool:
+        """Checks if the layout can be changed based on current data validity.
+
+        Args:
+            auto (bool, optional): Whether the change is automatic. Defaults to False.
+
+        Returns:
+            bool: True if the layout can be changed, False otherwise.
+        """
         if manager.table == DataTable.SUBJECTS:
             if self.page1Layout.df["name"].duplicated().any():
                 text = "There are repeated names in the subjects table."
@@ -662,10 +783,19 @@ class DataLayout(Layout):
 
 
 class DfLayout(Layout):
+    """Layout for displaying and searching data tables."""
+
     plot_change_requested = pyqtSignal(str)
     video_change_requested = pyqtSignal((str, int))
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the DfLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.df = DataFrame()
         self.complete_df = DataFrame()
@@ -679,6 +809,7 @@ class DfLayout(Layout):
             self.window.installEventFilter(self)
 
     def eventFilter(self, obj, event) -> bool:
+        """Filters events for the table view to clear selection on outside click."""
         try:
             if (
                 event.type() == QEvent.MouseButtonPress
@@ -697,6 +828,7 @@ class DfLayout(Layout):
         return super().eventFilter(obj, event)
 
     def draw(self) -> None:
+        """Draws the UI elements for the DfLayout."""
         self.searching = ""
         self.previous_searching = ""
 
@@ -753,6 +885,7 @@ class DfLayout(Layout):
         self.addWidget(self.table_view, 5, 0, 42, 200)
 
     def update_data(self) -> None:
+        """Updates the DataFrame based on the currently selected DataTable."""
         match manager.table:
             case DataTable.EVENTS:
                 self.complete_df = manager.events.df
@@ -793,11 +926,13 @@ class DfLayout(Layout):
         self.df = self.obtain_searched_df()
 
     def back_button_clicked(self) -> None:
+        """Handles the back button click, returning to the SESSIONS_SUMMARY table."""
         self.back_button.hide()
         self.title.show()
         self.title.setCurrentText(DataTable.SESSIONS_SUMMARY.value)
 
     def create_table(self) -> None:
+        """Creates and sets up the QTableView with the current DataFrame."""
         editable = manager.table in (DataTable.SUBJECTS, DataTable.SESSIONS_SUMMARY)
         self.model = self.create_and_add_table(
             self.df,
@@ -828,6 +963,21 @@ class DfLayout(Layout):
         widths: list[int],
         editable: bool,
     ) -> Table:
+        """Creates a Table model and sets it to the QTableView.
+
+        Args:
+            df (pd.DataFrame): The DataFrame to display.
+            complete_df (pd.DataFrame): The complete DataFrame.
+            row (int): The starting row for the table in the layout.
+            column (int): The starting column for the table in the layout.
+            width (int): The width span for the table.
+            height (int): The height span for the table.
+            widths (list[int]): A list of column widths.
+            editable (bool): Whether the table should be editable.
+
+        Returns:
+            Table: The created Table model.
+        """
 
         model = Table(df, complete_df, self, editable)
 
@@ -859,6 +1009,12 @@ class DfLayout(Layout):
         return model
 
     def change_data_table(self, value: str, key: str) -> None:
+        """Changes the currently displayed data table.
+
+        Args:
+            value (str): The value of the new DataTable to display.
+            key (str): The key associated with the change (unused).
+        """
         if manager.table == DataTable.SUBJECTS:
             if self.df["name"].duplicated().any():
                 text = "There are repeated names in the subjects table."
@@ -878,6 +1034,11 @@ class DfLayout(Layout):
                 self.create_table()
 
     def obtain_searched_df(self) -> DataFrame:
+        """Filters the complete DataFrame based on the current search term.
+
+        Returns:
+            DataFrame: The filtered DataFrame.
+        """
         term = self.searching
         df = self.complete_df.copy()
         if not term:
@@ -892,6 +1053,7 @@ class DfLayout(Layout):
         return df.loc[mask_any]
 
     def update_gui(self) -> None:
+        """Updates the GUI elements, including refreshing the table data."""
         self.update_data()
         if self.searching == self.previous_searching:
             self.model.add_rows(self.df)
@@ -900,6 +1062,7 @@ class DfLayout(Layout):
             self.create_table()
 
     def connect_button_to_delete(self, button: QPushButton) -> None:
+        """Connects a button to the delete action."""
         try:
             button.clicked.disconnect()
         except TypeError:
@@ -910,6 +1073,11 @@ class DfLayout(Layout):
         button.show()
 
     def connect_button_to_data_raw(self, button: QPushButton) -> None:
+        """Connects a button to show raw data.
+
+        Args:
+            button (QPushButton): The button to connect.
+        """
         try:
             button.clicked.disconnect()
         except TypeError:
@@ -920,6 +1088,11 @@ class DfLayout(Layout):
         button.show()
 
     def connect_button_to_data(self, button: QPushButton) -> None:
+        """Connects a button to show data.
+
+        Args:
+            button (QPushButton): The button to connect.
+        """
         try:
             button.clicked.disconnect()
         except TypeError:
@@ -930,6 +1103,11 @@ class DfLayout(Layout):
         button.show()
 
     def connect_button_to_video(self, button: QPushButton) -> None:
+        """Connects a button to show video.
+
+        Args:
+            button (QPushButton): The button to connect.
+        """
         try:
             button.clicked.disconnect()
         except TypeError:
@@ -940,6 +1118,13 @@ class DfLayout(Layout):
         button.show()
 
     def connect_button_to_plot(self, button: QPushButton, text: str, info: str) -> None:
+        """Connects a button to show a plot.
+
+        Args:
+            button (QPushButton): The button to connect.
+            text (str): The text to display on the button.
+            info (str): The tooltip text.
+        """
         try:
             button.clicked.disconnect()
         except TypeError:
@@ -952,6 +1137,13 @@ class DfLayout(Layout):
     def connect_button_to_plot_weights(
         self, button: QPushButton, text: str, info: str
     ) -> None:
+        """Connects a button to show weights plot.
+
+        Args:
+            button (QPushButton): The button to connect.
+            text (str): The text to display on the button.
+            info (str): The tooltip text.
+        """
         try:
             button.clicked.disconnect()
         except TypeError:
@@ -962,6 +1154,11 @@ class DfLayout(Layout):
         button.show()
 
     def connect_button_to_add(self, button: QPushButton) -> None:
+        """Connects a button to add a new subject.
+
+        Args:
+            button (QPushButton): The button to connect.
+        """
         try:
             button.clicked.disconnect()
         except TypeError:
@@ -972,6 +1169,7 @@ class DfLayout(Layout):
         button.show()
 
     def update_buttons(self) -> None:
+        """Updates the state and visibility of action buttons based on selection and table type."""
         sel_model = self.table_view.selectionModel()
         selected_indexes = sel_model.selectedRows() if sel_model else []
         match manager.table:
@@ -1055,12 +1253,19 @@ class DfLayout(Layout):
                 self.sixth_button.setEnabled(True)
 
     def search(self, value: str) -> None:
+        """Sets the search term.
+
+        Args:
+            value (str): The search term.
+        """
         self.searching = value
 
     def button_clicked(self) -> None:
+        """Placeholder for button click event."""
         pass
 
     def data_button_clicked(self) -> None:
+        """Actions to take when the DATA button is clicked."""
         series = self.get_selected_row_series()
         if series is None:
             return
@@ -1078,6 +1283,7 @@ class DfLayout(Layout):
             log.error(message, exception=traceback.format_exc())
 
     def data_raw_button_clicked(self) -> None:
+        """Actions to take when the DATA RAW button is clicked."""
         series = self.get_selected_row_series()
         if series is None:
             return
@@ -1095,6 +1301,11 @@ class DfLayout(Layout):
             log.error(message, exception=traceback.format_exc())
 
     def get_selected_row_series(self) -> pd.Series | None:
+        """Returns the selected row as a Series.
+
+        Returns:
+            pd.Series | None: The selected row, or None if no row is selected.
+        """
         sel_model = self.table_view.selectionModel()
         if not sel_model:
             return None
@@ -1105,6 +1316,11 @@ class DfLayout(Layout):
         return self.model.df.iloc[index.row()]
 
     def get_seconds_from_session_row(self) -> int:
+        """Calculates the time elapsed in seconds from the session start for the selected row.
+
+        Returns:
+            int: The elapsed time in seconds.
+        """
         try:
             sel_model = self.table_view.selectionModel()
             if not sel_model:
@@ -1130,6 +1346,14 @@ class DfLayout(Layout):
             return 0
 
     def get_path_and_seconds_from_events_row(self, row: pd.Series) -> tuple[str, int]:
+        """Finds the corresponding video path and timestamp for an event row.
+
+        Args:
+            row (pd.Series): The event row.
+
+        Returns:
+            tuple[str, int]: The video path and timestamp in seconds.
+        """
         date_str = row["date"]
         date = time_utils.date_from_string(date_str)
         tsec = time_utils.seconds_since_start(date)
@@ -1145,12 +1369,28 @@ class DfLayout(Layout):
         )
 
     def get_path_from_subjects_row(self, row: pd.Series) -> str:
+        """Constructs the path to the subject's CSV file.
+
+        Args:
+            row (pd.Series): The subject row.
+
+        Returns:
+            str: The path to the CSV file.
+        """
         subject = row["name"]
         sessions_directory = settings.get("SESSIONS_DIRECTORY")
         path = os.path.join(sessions_directory, subject, subject + ".csv")
         return path
 
     def get_filename_from_sessions_summary_row(self, row: pd.Series) -> str:
+        """Constructs the session filename from a row.
+
+        Args:
+            row (pd.Series): The session summary row.
+
+        Returns:
+            str: The session filename.
+        """
         date_str = row["date"]
         task = row["task"]
         subject = row["subject"]
@@ -1160,6 +1400,14 @@ class DfLayout(Layout):
         return filename
 
     def get_paths_from_sessions_summary_row(self, row: pd.Series) -> list[str]:
+        """Constructs various file paths associated with a session.
+
+        Args:
+            row (pd.Series): The session summary row.
+
+        Returns:
+            list[str]: A list containing session paths (csv, raw, json, video, video_data).
+        """
         date_str = row["date"]
         task = row["task"]
         subject = row["subject"]
@@ -1189,6 +1437,7 @@ class DfLayout(Layout):
         return paths
 
     def video_button_clicked(self) -> None:
+        """Actions to take when the VIDEO button is clicked."""
         path = ""
         seconds = 0
         selected_row = self.get_selected_row_series()
@@ -1209,6 +1458,7 @@ class DfLayout(Layout):
         self.video_change_requested.emit(path, seconds)
 
     def plot_button_clicked(self) -> None:
+        """Actions to take when the PLOT button is clicked."""
         selected_row = self.get_selected_row_series()
         if selected_row is not None:
             self.plot_change_requested.emit("")
@@ -1222,9 +1472,11 @@ class DfLayout(Layout):
             self.plot_change_requested.emit("")
 
     def plot_weights_button_clicked(self) -> None:
+        """Actions to take when the PLOT WEIGHTS button is clicked."""
         self.plot_change_requested.emit("weights")
 
     def add_button_clicked(self) -> None:
+        """Actions to take when the ADD button is clicked (add new subject row)."""
         if manager.state.can_edit_data():
             self.searching = ""
             self.search_edit.setText("")
@@ -1247,6 +1499,7 @@ class DfLayout(Layout):
             QMessageBox.information(self.window, "EDIT", text)
 
     def delete_button_clicked(self) -> None:
+        """Actions to take when the DELETE button is clicked."""
         sel_model = self.table_view.selectionModel()
         selected_indexes = sel_model.selectedRows() if sel_model else []
         if selected_indexes:
@@ -1323,6 +1576,7 @@ class DfLayout(Layout):
                 QMessageBox.information(self.window, "EDIT", text)
 
     def cancel(self) -> None:
+        """Cancels the current editing session."""
         manager.state = State.WAIT
         self.update_buttons()
         if manager.table == DataTable.SUBJECTS:
@@ -1333,6 +1587,15 @@ class DfLayout(Layout):
             self.create_table()
 
     def edit_task_settings(self, current_value: str, can_edit: bool) -> str:
+        """Opens a dialog to edit task settings (JSON string).
+
+        Args:
+            current_value (str): The current settings as a JSON string.
+            can_edit (bool): Whether the settings are editable.
+
+        Returns:
+            str: The updated settings as a JSON string.
+        """
         try:
             new_dict = json.loads(current_value)
         except Exception:
@@ -1402,6 +1665,14 @@ class DfLayout(Layout):
         return json.dumps(new_dict)
 
     def edit_next_settings(self, current_value: str) -> str:
+        """Opens a dialog to edit the next session's settings.
+
+        Args:
+            current_value (str): The current settings as a JSON string.
+
+        Returns:
+            str: The updated settings as a JSON string.
+        """
         manager.training.load_settings_from_jsonstring(current_value)
         new_dict = manager.training.get_dict()
 
@@ -1466,6 +1737,14 @@ class DfLayout(Layout):
         return json.dumps(new_dict)
 
     def edit_next_session_time(self, current_value: str) -> str:
+        """Opens a dialog to select the time for the next session.
+
+        Args:
+            current_value (str): The current session time string.
+
+        Returns:
+            str: The selected time string.
+        """
         self.reply = QDialog()
         self.reply.setWindowTitle("Select Next Session Time")
         layout = QVBoxLayout()
@@ -1492,39 +1771,62 @@ class DfLayout(Layout):
             return ""
 
     def on_data_changed(self) -> None:
+        """Saves data changes to the DataFrame when modified."""
         self.table_view.save_changes_in_df()
 
 
 class PlotLayout(Layout):
+    """Layout for displaying data plots."""
+
     data_from_plot_change_requested = pyqtSignal(str)
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the PlotLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.draw()
 
     def draw(self) -> None:
+        """Draws the plot layout UI."""
         self.plot_label = QLabel()
         self.addWidget(self.plot_label, 0, 0, 45, 200)
 
         self.create_and_add_button("CLOSE", 1, 177, 20, 2, self.close, "Close the plot")
 
     def update_data(self) -> None:
+        """Updates the plot data (placeholder)."""
         pass
 
     def close(self) -> None:
+        """Closes the plot and signals the change."""
         self.data_from_plot_change_requested.emit("")
 
 
 class VideoLayout(Layout):
+    """Layout for playing behavioral videos with playback controls."""
+
     data_from_video_change_requested = pyqtSignal(str)
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        """Initializes the VideoLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+        """
         super().__init__(window, rows=rows, columns=columns)
         self.deltas: list[float] = []
         self.now = time_utils.get_time_monotonic()
         self.draw()
 
     def draw(self) -> None:
+        """Draws the video playback UI."""
         self.video_label = QLabel()
         self.addWidget(self.video_label, 0, 0, 45, 200)
 
@@ -1614,6 +1916,12 @@ class VideoLayout(Layout):
         )
 
     def start_video(self, path: str, seconds: int) -> None:
+        """Starts video playback from a specific time.
+
+        Args:
+            path (str): The path to the video file.
+            seconds (int): The number of seconds to skip.
+        """
         try:
             self.cap = cv2.VideoCapture(path)
             self.fps = int(self.cap.get(cv2.CAP_PROP_FPS))
@@ -1633,6 +1941,7 @@ class VideoLayout(Layout):
             pass
 
     def play_pause(self) -> None:
+        """Toggles video playback (play/pause)."""
         try:
             if self.timer.isActive():
                 self.timer.stop()
@@ -1642,6 +1951,7 @@ class VideoLayout(Layout):
             pass
 
     def double_speed(self) -> None:
+        """Doubles the video playback speed."""
         try:
             if self.speed < 2:
                 self.speed *= 2
@@ -1653,6 +1963,7 @@ class VideoLayout(Layout):
             pass
 
     def half_speed(self) -> None:
+        """Halves the video playback speed."""
         try:
             if self.speed > 0.06:
                 self.speed /= 2
@@ -1664,6 +1975,7 @@ class VideoLayout(Layout):
             pass
 
     def forward_frame(self) -> None:
+        """Moves the video forward by one frame."""
         try:
             if self.timer.isActive():
                 self.timer.stop()
@@ -1672,6 +1984,7 @@ class VideoLayout(Layout):
             pass
 
     def backward_frame(self) -> None:
+        """Moves the video backward by one frame."""
         try:
             if self.timer.isActive():
                 self.timer.stop()
@@ -1684,6 +1997,7 @@ class VideoLayout(Layout):
             pass
 
     def forward_ten_seconds(self) -> None:
+        """Skips video forward by 10 seconds."""
         try:
             if self.cap.isOpened():
                 current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
@@ -1697,6 +2011,7 @@ class VideoLayout(Layout):
             pass
 
     def backward_ten_seconds(self) -> None:
+        """Skips video backward by 10 seconds."""
         try:
             if self.cap.isOpened():
                 current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
@@ -1708,6 +2023,7 @@ class VideoLayout(Layout):
             pass
 
     def forward_five_minutes(self) -> None:
+        """Skips video forward by 5 minutes."""
         try:
             if self.cap.isOpened():
                 current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
@@ -1721,6 +2037,7 @@ class VideoLayout(Layout):
             pass
 
     def backward_five_minutes(self) -> None:
+        """Skips video backward by 5 minutes."""
         try:
             if self.cap.isOpened():
                 current_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
@@ -1732,6 +2049,7 @@ class VideoLayout(Layout):
             pass
 
     def stop_button_clicked(self) -> None:
+        """Stops the video playback and releases resources."""
         try:
             self.timer.stop()
             self.cap.release()
@@ -1739,6 +2057,7 @@ class VideoLayout(Layout):
             pass
 
     def close(self) -> None:
+        """Closes the video layout and saves playback data."""
         self.stop_button_clicked()
         self.data_from_video_change_requested.emit("")
         with open("deltas.txt", "w") as f:
@@ -1746,6 +2065,7 @@ class VideoLayout(Layout):
                 f.write(f"{delta}\n")
 
     def next_frame_slot(self) -> None:
+        """Handles the next frame timer event to update the video display."""
         last = self.now
         self.now = time_utils.get_time_monotonic()
         delta = int((self.now - last) * 1000)
@@ -1765,4 +2085,5 @@ class VideoLayout(Layout):
             self.video_label.setPixmap(pix)
 
     def update_data(self) -> None:
+        """Updates the video data (placeholder)."""
         pass
