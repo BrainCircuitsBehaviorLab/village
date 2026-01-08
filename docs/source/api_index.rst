@@ -19,4 +19,3 @@ API
     village.scripts
     village.manager
     village.main
-    village.settings

@@ -39,6 +39,11 @@ def change_directory_settings(new_path: str) -> None:
     settings.set("CODE_DIRECTORY", str(Path(new_path, "code")))
     settings.set("MEDIA_DIRECTORY", str(Path(new_path, "media")))
 
+    directory = os.path.basename(new_path)
+    sync_destination = settings.get("SYNC_DESTINATION")
+    new_value = os.path.join(sync_destination, directory + "_data")
+    settings.set("SYNC_DIRECTORY", new_value)
+
 
 def change_system_directory_settings() -> None:
     """Updates the system directory setting and renames the directory if it changed.
@@ -492,7 +497,7 @@ def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
         log = logging.getLogger(unwanted_logger)
         log.setLevel(logging.WARNING)
         log.propagate = False  # Prevents logs from bubbling up to the root logger
-    
+
     return log_filename, file_handler
 
 
@@ -519,7 +524,7 @@ def interpolate(x: Any, y: Any, points: int = 100) -> tuple[np.ndarray, np.ndarr
     Args:
         x (Any): Input x coordinates (array-like).
         y (Any): Input y coordinates (array-like).
-        points (int, optional): Number of interpolated points to generate. Defaults to 100.
+        points (int, optional): Number of interpolated points to generate. Default: 100.
 
     Returns:
         tuple[np.ndarray, np.ndarray]: A tuple (x_fit, y_fit) of interpolated arrays,
@@ -600,4 +605,3 @@ def create_pixmap(fig: Figure) -> QPixmap:
         return pixmap
     except Exception:
         return QPixmap()
-
