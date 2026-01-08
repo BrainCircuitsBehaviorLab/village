@@ -114,10 +114,10 @@ def remove_old_data(
     days: int,
     safe: bool,
     backup_dir: str,
-    remote_user: str,
-    remote_host: str,
-    port: int | None,
     remote: bool,
+    remote_user: str | None = None,
+    remote_host: str | None = None,
+    port: int | None = None,
 ) -> None:
     """Core logic to identify and remove old data files.
 
@@ -126,10 +126,10 @@ def remove_old_data(
         days (int): Retention period in days.
         safe (bool): If True, verifies backup before deletion.
         backup_dir (str): Backup directory path.
-        remote_user (str): Remote username.
-        remote_host (str): Remote host.
-        port (int | None): SSH port.
         remote (bool): If True, checks remote backup; otherwise local.
+        remote_user (str | None): Remote username.
+        remote_host (str | None): Remote host.
+        port (int | None): SSH port.
     """
     removed_count = 0
     files_to_check = []
@@ -153,6 +153,13 @@ def remove_old_data(
 
     if safe:
         if remote:
+            assert (
+                remote_user is not None
+            ), "Remote user must be provided for remote backup check"
+            assert (
+                remote_host is not None
+            ), "Remote host must be provided for remote backup check"
+
             files_to_remove = check_files_for_backup_remote(
                 files_to_check, directory, backup_dir, remote_user, remote_host, port
             )
@@ -195,29 +202,29 @@ def main(
     days: int,
     safe: bool,
     backup_dir: str,
+    remote: bool,
     remote_user: str | None = None,
     remote_host: str | None = None,
     port: int | None = None,
-    remote: bool = True,
 ) -> None:
     """Main function to remove old data files from a directory.
 
     Args:
-        directory (str): Directory to remove files from.
-        days (int): Number of days to keep files.
-        safe (bool): If True, will check for backup files before removing.
-        backup_dir (str): Directory to check for backup files.
-        remote_user (str | None): Username on remote system.
-        remote_host (str | None): Remote hostname or IP.
-        port (int | None): SSH port.
+        directory (str): Directory to clean up.
+        days (int): Retention period in days.
+        safe (bool): If True, verifies backup before deletion.
+        backup_dir (str): Backup directory path.
         remote (bool): If True, checks remote backup; otherwise local.
+        remote_user (str | None): Remote username.
+        remote_host (str | None): Remote host.
+        port (int | None): SSH port.
     """
 
     log_file, file_handler = setup_logging(logs_subdirectory="data_removal_logs")
     logging.info(f"Logging to file: {log_file}")
     try:
         remove_old_data(
-            directory, days, safe, backup_dir, remote_user, remote_host, port, remote
+            directory, days, safe, backup_dir, remote, remote_user, remote_host, port
         )
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")
@@ -240,4 +247,3 @@ if __name__ == "__main__":
     #     remote_host="cluster",
     #     # port=4022,
     # )
-

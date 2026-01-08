@@ -1481,7 +1481,7 @@ class ScaleCalibrationWizard(QWizard):
       4) Remove weight and verify near-zero reading
     """
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         """Initializes the ScaleCalibrationWizard.
 
         Args:

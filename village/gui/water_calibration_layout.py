@@ -138,7 +138,6 @@ class WaterCalibrationLayout(Layout):
             "WATER EXPECTED(ul)",
             31,
             5,
-            133,
             20,
             2,
             "black",

@@ -12,13 +12,9 @@ from village.scripts.time_utils import time_utils
 from village.scripts.utils import setup_logging
 
 
-def run_rsync_local(
-    source: str,
-    destination: str,
-    maximum_sync_time: int,
-    cancel_event: threading.Event | None = None,
-) -> bool:
-    """Run rsync to sync to a local destination (e.g., external HDD).
+def run_rsync_local(source, destination, maximum_sync_time, cancel_event=None) -> bool:
+    """
+    Run rsync to sync to a local destination (e.g., external HDD).
 
     Args:
         source (str): Local path to sync.
@@ -204,8 +200,15 @@ def main(
     Args:
         source (str): Source directory path.
         destination (str): Destination path on remote system.
-        maximum_sync_time (int): Maximum sync time duration in seconds. Defaults to 1800.
-        cancel_event (threading.Event | None): Event to signal cancellation. Defaults to None.
+        maximum_sync_time (int): Maximum sync time duration in seconds.
+        Defaults to 1800.
+        cancel_event (threading.Event | None): Event to signal cancellation.
+        Defaults to None.
+    Parameters:
+    - source: Source directory path
+    - destination: Destination path (on remote system)
+    - maximum_sync_time: Maximum sync time duration in seconds (default: 1200)
+    - cancel_event: threading.Event to signal cancellation (optional)
     """
     log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")
     logging.info(f"Logging to file: {log_file}")
@@ -228,4 +231,3 @@ def main(
 
 if __name__ == "__main__":
     fire.Fire(main)
-

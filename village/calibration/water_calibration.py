@@ -20,7 +20,7 @@ class WaterCalibration(Task):
 
     def create_trial(self) -> None:
         """Creates the state machine for a calibration trial.
-        
+
         Adds states for each valve to be calibrated and a final wait state.
         """
         for i in range(len(self.states) - 1):
@@ -44,4 +44,3 @@ class WaterCalibration(Task):
     def close(self) -> None:
         """Cleanly closes the calibration task."""
         pass
-
