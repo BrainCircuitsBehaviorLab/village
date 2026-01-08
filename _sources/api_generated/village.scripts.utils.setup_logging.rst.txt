@@ -1,0 +1,6 @@
+setup\_logging
+==============
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: setup_logging

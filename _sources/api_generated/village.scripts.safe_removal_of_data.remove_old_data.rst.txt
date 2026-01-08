@@ -1,0 +1,6 @@
+remove\_old\_data
+=================
+
+.. currentmodule:: village.scripts.safe_removal_of_data
+
+.. autofunction:: remove_old_data

@@ -1,0 +1,47 @@
+Manager
+=======
+
+.. currentmodule:: village.manager
+
+.. autoclass:: Manager
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Manager.__init__
+      ~Manager.create_collections
+      ~Manager.create_report
+      ~Manager.cycle_checks
+      ~Manager.disconnect_and_save
+      ~Manager.get_both_sessions_dfs
+      ~Manager.get_subject_from_tag
+      ~Manager.hourly_checks
+      ~Manager.import_all_tasks
+      ~Manager.launch_task_auto
+      ~Manager.launch_task_manual
+      ~Manager.multiple_detections
+      ~Manager.reset_subject_task_training
+      ~Manager.run_softcode_fuction
+      ~Manager.run_task
+      ~Manager.run_task_in_thread
+      ~Manager.save_refractory_to_subjects
+      ~Manager.save_to_sessions_summary
+      ~Manager.save_to_subjects
+      ~Manager.send_heartbeat
+      ~Manager.update_cycle
+      ~Manager.update_raw_session_df
+      ~Manager.update_text
+   
+   
+
+   
+   
+   

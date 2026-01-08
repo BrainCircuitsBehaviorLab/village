@@ -1,0 +1,6 @@
+check\_files\_for\_backup\_local
+================================
+
+.. currentmodule:: village.scripts.safe_removal_of_data
+
+.. autofunction:: check_files_for_backup_local

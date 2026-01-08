@@ -1,0 +1,6 @@
+weights\_plot
+=============
+
+.. currentmodule:: village.plots.weights_plot
+
+.. autofunction:: weights_plot

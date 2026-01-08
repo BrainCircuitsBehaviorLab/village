@@ -1,0 +1,36 @@
+safe\_removal\_of\_data
+=======================
+
+.. automodule:: village.scripts.safe_removal_of_data
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      check_files_for_backup_local
+      check_files_for_backup_remote
+      main
+      parse_timestamp_from_filename
+      remove_file
+      remove_old_data
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

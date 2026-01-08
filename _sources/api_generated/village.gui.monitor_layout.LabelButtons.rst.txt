@@ -1,0 +1,30 @@
+LabelButtons
+============
+
+.. currentmodule:: village.gui.monitor_layout
+
+.. autoclass:: LabelButtons
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LabelButtons.__init__
+      ~LabelButtons.decrease_value
+      ~LabelButtons.increase_value
+      ~LabelButtons.start_decreasing
+      ~LabelButtons.start_increasing
+      ~LabelButtons.stop_timer
+   
+   
+
+   
+   
+   

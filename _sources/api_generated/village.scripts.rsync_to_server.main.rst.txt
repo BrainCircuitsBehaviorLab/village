@@ -1,0 +1,6 @@
+main
+====
+
+.. currentmodule:: village.scripts.rsync_to_server
+
+.. autofunction:: main

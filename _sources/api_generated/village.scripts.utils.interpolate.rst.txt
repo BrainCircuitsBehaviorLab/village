@@ -1,0 +1,6 @@
+interpolate
+===========
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: interpolate

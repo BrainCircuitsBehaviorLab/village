@@ -1,0 +1,38 @@
+SoundDevice
+===========
+
+.. currentmodule:: village.devices.sound_device
+
+.. autoclass:: SoundDevice
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SoundDevice.__init__
+      ~SoundDevice.create_sound_vec
+      ~SoundDevice.load
+      ~SoundDevice.load_wav
+      ~SoundDevice.play
+      ~SoundDevice.shutdown
+      ~SoundDevice.stop
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SoundDevice.error
+      ~SoundDevice.samplerate
+   
+   

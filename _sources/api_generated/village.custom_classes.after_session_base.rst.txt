@@ -1,0 +1,31 @@
+after\_session\_base
+====================
+
+.. automodule:: village.custom_classes.after_session_base
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      AfterSessionBase
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+sound\_calibration\_plot
+========================
+
+.. currentmodule:: village.plots.sound_calibration_plot
+
+.. autofunction:: sound_calibration_plot

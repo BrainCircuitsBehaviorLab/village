@@ -1,0 +1,31 @@
+sound\_calibration
+==================
+
+.. automodule:: village.calibration.sound_calibration
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      SoundCalibration
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,32 @@
+rsync\_to\_hard\_drive
+======================
+
+.. automodule:: village.scripts.rsync_to_hard_drive
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      main
+      run_rsync_local
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+has\_low\_disk\_space
+=====================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: has_low_disk_space

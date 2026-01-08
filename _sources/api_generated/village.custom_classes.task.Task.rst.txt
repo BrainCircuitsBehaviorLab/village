@@ -1,0 +1,43 @@
+Task
+====
+
+.. currentmodule:: village.custom_classes.task
+
+.. autoclass:: Task
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Task.__init__
+      ~Task.after_trial
+      ~Task.close
+      ~Task.concatenate_trial_data
+      ~Task.create_paths
+      ~Task.create_trial
+      ~Task.disconnect_and_save
+      ~Task.do_trial
+      ~Task.get_name
+      ~Task.get_trial_data
+      ~Task.register_default_values
+      ~Task.register_value
+      ~Task.run
+      ~Task.run_in_thread
+      ~Task.save_csv
+      ~Task.save_json
+      ~Task.send_softcode_to_bpod
+      ~Task.start
+      ~Task.transform
+   
+   
+
+   
+   
+   

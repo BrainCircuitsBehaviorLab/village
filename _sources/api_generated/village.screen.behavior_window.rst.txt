@@ -1,0 +1,23 @@
+behavior\_window
+================
+
+.. automodule:: village.screen.behavior_window
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

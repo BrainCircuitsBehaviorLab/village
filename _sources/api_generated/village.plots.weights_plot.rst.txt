@@ -1,0 +1,31 @@
+weights\_plot
+=============
+
+.. automodule:: village.plots.weights_plot
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      weights_plot
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

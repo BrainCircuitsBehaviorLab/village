@@ -1,0 +1,6 @@
+run\_rsync\_local
+=================
+
+.. currentmodule:: village.scripts.rsync_to_hard_drive
+
+.. autofunction:: run_rsync_local

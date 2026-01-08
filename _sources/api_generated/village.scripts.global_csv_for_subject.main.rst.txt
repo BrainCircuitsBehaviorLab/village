@@ -1,0 +1,6 @@
+main
+====
+
+.. currentmodule:: village.scripts.global_csv_for_subject
+
+.. autofunction:: main

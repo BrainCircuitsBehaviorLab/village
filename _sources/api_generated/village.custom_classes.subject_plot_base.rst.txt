@@ -1,0 +1,31 @@
+subject\_plot\_base
+===================
+
+.. automodule:: village.custom_classes.subject_plot_base
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      SubjectPlotBase
+   
+   
+
+   
+   
+   
+
+
+

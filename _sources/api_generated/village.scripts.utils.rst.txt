@@ -1,0 +1,46 @@
+utils
+=====
+
+.. automodule:: village.scripts.utils
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      calculate_active_hours
+      change_directory_settings
+      change_system_directory_settings
+      create_directories
+      create_directories_from_path
+      create_pixmap
+      delete_all_elements_from_layout
+      download_github_repositories
+      get_x_value_interp
+      has_low_disk_space
+      interpolate
+      is_active
+      is_active_regular
+      reformat_trial_data
+      setup_logging
+      transform_raw_to_clean
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

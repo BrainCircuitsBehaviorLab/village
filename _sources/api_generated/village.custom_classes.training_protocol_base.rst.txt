@@ -1,0 +1,39 @@
+training\_protocol\_base
+========================
+
+.. automodule:: village.custom_classes.training_protocol_base
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      Settings
+      TrainingProtocolBase
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      TrainingError
+   
+   
+
+
+

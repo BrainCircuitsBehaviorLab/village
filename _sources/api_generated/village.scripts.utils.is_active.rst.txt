@@ -1,0 +1,6 @@
+is\_active
+==========
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: is_active

@@ -1,0 +1,6 @@
+change\_directory\_settings
+===========================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: change_directory_settings

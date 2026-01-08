@@ -1,0 +1,6 @@
+create\_pixmap
+==============
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: create_pixmap

@@ -1,0 +1,6 @@
+temperatures\_plot
+==================
+
+.. currentmodule:: village.plots.temperatures_plot
+
+.. autofunction:: temperatures_plot

@@ -1,0 +1,6 @@
+create\_directories
+===================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: create_directories

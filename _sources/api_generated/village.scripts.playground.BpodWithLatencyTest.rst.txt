@@ -1,0 +1,26 @@
+BpodWithLatencyTest
+===================
+
+.. currentmodule:: village.scripts.playground
+
+.. autoclass:: BpodWithLatencyTest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BpodWithLatencyTest.__init__
+      ~BpodWithLatencyTest.softcode_handler_function
+   
+   
+
+   
+   
+   

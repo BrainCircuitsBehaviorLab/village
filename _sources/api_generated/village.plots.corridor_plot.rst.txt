@@ -1,0 +1,31 @@
+corridor\_plot
+==============
+
+.. automodule:: village.plots.corridor_plot
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      corridor_plot
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

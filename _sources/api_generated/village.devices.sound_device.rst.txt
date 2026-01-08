@@ -1,0 +1,40 @@
+sound\_device
+=============
+
+.. automodule:: village.devices.sound_device
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      get_sound_device
+      get_sound_devices
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      SoundDevice
+   
+   
+
+   
+   
+   
+
+
+

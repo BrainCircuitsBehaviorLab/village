@@ -1,0 +1,6 @@
+transform\_raw\_to\_clean
+=========================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: transform_raw_to_clean

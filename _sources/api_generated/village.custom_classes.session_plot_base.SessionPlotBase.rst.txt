@@ -1,0 +1,26 @@
+SessionPlotBase
+===============
+
+.. currentmodule:: village.custom_classes.session_plot_base
+
+.. autoclass:: SessionPlotBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SessionPlotBase.__init__
+      ~SessionPlotBase.create_plot
+   
+   
+
+   
+   
+   

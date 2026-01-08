@@ -1,0 +1,6 @@
+corridor\_plot
+==============
+
+.. currentmodule:: village.plots.corridor_plot
+
+.. autofunction:: corridor_plot

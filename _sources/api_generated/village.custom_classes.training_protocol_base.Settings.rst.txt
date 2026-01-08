@@ -1,0 +1,25 @@
+Settings
+========
+
+.. currentmodule:: village.custom_classes.training_protocol_base
+
+.. autoclass:: Settings
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Settings.__init__
+   
+   
+
+   
+   
+   

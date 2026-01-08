@@ -1,0 +1,26 @@
+LowFreqQPicamera2
+=================
+
+.. currentmodule:: village.devices.camera
+
+.. autoclass:: LowFreqQPicamera2
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LowFreqQPicamera2.__init__
+      ~LowFreqQPicamera2.render_request
+   
+   
+
+   
+   
+   

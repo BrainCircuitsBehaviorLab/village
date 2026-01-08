@@ -1,0 +1,31 @@
+water\_calibration\_plot
+========================
+
+.. automodule:: village.plots.water_calibration_plot
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      water_calibration_plot
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

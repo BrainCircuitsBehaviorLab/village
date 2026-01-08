@@ -1,0 +1,32 @@
+rsync\_to\_server
+=================
+
+.. automodule:: village.scripts.rsync_to_server
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      main
+      run_rsync
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

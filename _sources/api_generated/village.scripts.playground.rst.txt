@@ -1,0 +1,39 @@
+playground
+==========
+
+.. automodule:: village.scripts.playground
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      measure_softcode_latency
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      BpodWithLatencyTest
+   
+   
+
+   
+   
+   
+
+
+

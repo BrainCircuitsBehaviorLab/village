@@ -1,0 +1,6 @@
+download\_github\_repositories
+==============================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: download_github_repositories

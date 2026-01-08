@@ -1,0 +1,6 @@
+main
+====
+
+.. currentmodule:: village.scripts.rsync_to_hard_drive
+
+.. autofunction:: main

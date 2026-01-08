@@ -1,0 +1,6 @@
+village.custom\_classes.training\_protocol\_base.TrainingError
+==============================================================
+
+.. currentmodule:: village.custom_classes.training_protocol_base
+
+.. autoexception:: TrainingError

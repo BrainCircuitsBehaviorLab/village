@@ -1,0 +1,6 @@
+delete\_all\_elements\_from\_layout
+===================================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: delete_all_elements_from_layout

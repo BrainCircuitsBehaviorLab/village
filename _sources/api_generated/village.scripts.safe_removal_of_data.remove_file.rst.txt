@@ -1,0 +1,6 @@
+remove\_file
+============
+
+.. currentmodule:: village.scripts.safe_removal_of_data
+
+.. autofunction:: remove_file

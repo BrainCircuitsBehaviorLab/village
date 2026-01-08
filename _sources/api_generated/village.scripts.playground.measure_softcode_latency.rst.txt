@@ -1,0 +1,6 @@
+measure\_softcode\_latency
+==========================
+
+.. currentmodule:: village.scripts.playground
+
+.. autofunction:: measure_softcode_latency

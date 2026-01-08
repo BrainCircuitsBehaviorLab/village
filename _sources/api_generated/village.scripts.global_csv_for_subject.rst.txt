@@ -1,0 +1,31 @@
+global\_csv\_for\_subject
+=========================
+
+.. automodule:: village.scripts.global_csv_for_subject
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      main
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

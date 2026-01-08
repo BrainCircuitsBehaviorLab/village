@@ -1,0 +1,6 @@
+reformat\_trial\_data
+=====================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: reformat_trial_data

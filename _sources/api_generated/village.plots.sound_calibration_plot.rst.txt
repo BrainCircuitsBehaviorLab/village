@@ -1,0 +1,31 @@
+sound\_calibration\_plot
+========================
+
+.. automodule:: village.plots.sound_calibration_plot
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      sound_calibration_plot
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+water\_calibration\_plot
+========================
+
+.. currentmodule:: village.plots.water_calibration_plot
+
+.. autofunction:: water_calibration_plot

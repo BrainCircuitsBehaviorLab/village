@@ -1,0 +1,31 @@
+change\_cycle\_base
+===================
+
+.. automodule:: village.custom_classes.change_cycle_base
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      ChangeCycleBase
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,43 @@
+WaterCalibration
+================
+
+.. currentmodule:: village.calibration.water_calibration
+
+.. autoclass:: WaterCalibration
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~WaterCalibration.__init__
+      ~WaterCalibration.after_trial
+      ~WaterCalibration.close
+      ~WaterCalibration.concatenate_trial_data
+      ~WaterCalibration.create_paths
+      ~WaterCalibration.create_trial
+      ~WaterCalibration.disconnect_and_save
+      ~WaterCalibration.do_trial
+      ~WaterCalibration.get_name
+      ~WaterCalibration.get_trial_data
+      ~WaterCalibration.register_default_values
+      ~WaterCalibration.register_value
+      ~WaterCalibration.run
+      ~WaterCalibration.run_in_thread
+      ~WaterCalibration.save_csv
+      ~WaterCalibration.save_json
+      ~WaterCalibration.send_softcode_to_bpod
+      ~WaterCalibration.start
+      ~WaterCalibration.transform
+   
+   
+
+   
+   
+   

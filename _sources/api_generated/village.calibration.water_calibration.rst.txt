@@ -1,0 +1,31 @@
+water\_calibration
+==================
+
+.. automodule:: village.calibration.water_calibration
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      WaterCalibration
+   
+   
+
+   
+   
+   
+
+
+

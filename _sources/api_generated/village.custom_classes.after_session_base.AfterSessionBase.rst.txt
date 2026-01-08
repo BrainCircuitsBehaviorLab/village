@@ -1,0 +1,26 @@
+AfterSessionBase
+================
+
+.. currentmodule:: village.custom_classes.after_session_base
+
+.. autoclass:: AfterSessionBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AfterSessionBase.__init__
+      ~AfterSessionBase.run
+   
+   
+
+   
+   
+   
