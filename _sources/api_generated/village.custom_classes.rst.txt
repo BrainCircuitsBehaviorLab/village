@@ -1,0 +1,39 @@
+﻿custom\_classes
+===============
+
+.. automodule:: village.custom_classes
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom_module_template.rst
+   :recursive:
+
+   after_session_base
+   camera_trigger_base
+   change_cycle_base
+   online_plot_base
+   session_plot_base
+   subject_plot_base
+   task
+   training_protocol_base
+

@@ -1,0 +1,49 @@
+TimeUtils
+=========
+
+.. currentmodule:: village.scripts.time_utils
+
+.. autoclass:: TimeUtils
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeUtils.__init__
+      ~TimeUtils.date_from_path
+      ~TimeUtils.date_from_previous_weekday
+      ~TimeUtils.date_from_string
+      ~TimeUtils.days_ago_init_times
+      ~TimeUtils.filename_string_from_date
+      ~TimeUtils.find_closest_file_and_seconds
+      ~TimeUtils.format_duration
+      ~TimeUtils.get_time_monotonic
+      ~TimeUtils.hours_ago
+      ~TimeUtils.measure_time
+      ~TimeUtils.monotonic_ns_to_timestamps
+      ~TimeUtils.now
+      ~TimeUtils.now_string
+      ~TimeUtils.now_string_for_filename
+      ~TimeUtils.now_timestamp
+      ~TimeUtils.range_24_hours
+      ~TimeUtils.seconds_since_start
+      ~TimeUtils.string_from_date
+      ~TimeUtils.string_from_timestamp
+      ~TimeUtils.sync
+      ~TimeUtils.time_from_setting_string
+      ~TimeUtils.time_in_future_seconds
+      ~TimeUtils.time_since_day_started
+      ~TimeUtils.tomorrow_init_time
+   
+   
+
+   
+   
+   

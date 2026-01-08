@@ -1,0 +1,26 @@
+CameraTriggerBase
+=================
+
+.. currentmodule:: village.custom_classes.camera_trigger_base
+
+.. autoclass:: CameraTriggerBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CameraTriggerBase.__init__
+      ~CameraTriggerBase.trigger
+   
+   
+
+   
+   
+   

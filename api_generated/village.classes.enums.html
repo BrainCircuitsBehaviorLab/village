@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Actions" href="village.classes.enums.Actions.html"><link rel="prev" title="classes" href="village.classes.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Actions" href="village.classes.enums.Actions.html"><link rel="prev" title="TempSensorBase" href="village.classes.abstract_classes.TempSensorBase.html">
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.classes.enums.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
@@ -175,7 +175,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -223,9 +223,20 @@
 </ul>
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../api_index.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="village.devices.html">devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a></li>
 <li class="toctree-l2 current has-children"><a class="reference internal" href="village.classes.html">classes</a><input aria-label="Toggle navigation of classes" checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">enums</a><input aria-label="Toggle navigation of enums" checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.abstract_classes.html">abstract_classes</a><input aria-label="Toggle navigation of abstract_classes" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.CameraBase.html">CameraBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.EventBase.html">EventBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.MotorBase.html">MotorBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.PyBpodBase.html">PyBpodBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.ScaleBase.html">ScaleBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.SoundDeviceBase.html">SoundDeviceBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.TelegramBotBase.html">TelegramBotBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.TempSensorBase.html">TempSensorBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">enums</a><input aria-label="Toggle navigation of enums" checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Actions.html">Actions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Active.html">Active</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.AreaActive.html">AreaActive</a></li>
@@ -241,145 +252,53 @@
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.SyncType.html">SyncType</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.settings_class.html">settings_class</a><input aria-label="Toggle navigation of settings_class" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.settings_class.html">settings_class</a><input aria-label="Toggle navigation of settings_class" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.settings_class.Setting.html">Setting</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.settings_class.Settings.html">Settings</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.custom_classes.html">custom_classes</a><input aria-label="Toggle navigation of custom_classes" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><input aria-label="Toggle navigation of camera_trigger_base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.devices.html">devices</a><input aria-label="Toggle navigation of devices" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.motor.html">motor</a><input aria-label="Toggle navigation of motor" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.Motor.html">Motor</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="village.pybpodapi.html">pybpodapi</a><input aria-label="Toggle navigation of pybpodapi" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.bpod_modules.html">bpod_modules</a><input aria-label="Toggle navigation of bpod_modules" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="village.pybpodapi.bpod_modules.bpod_modules.html">bpod_modules</a><input aria-label="Toggle navigation of bpod_modules" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="village.pybpodapi.bpod_modules.bpod_modules.BpodModules.html">BpodModules</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.com.html">com</a><input aria-label="Toggle navigation of com" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.html">messaging</a><input aria-label="Toggle navigation of messaging" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.base_message.html">base_message</a><input aria-label="Toggle navigation of base_message" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.base_message.BaseMessage.html">BaseMessage</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.debug.html">debug</a><input aria-label="Toggle navigation of debug" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.debug.DebugMessage.html">DebugMessage</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.end_trial.html">end_trial</a><input aria-label="Toggle navigation of end_trial" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.end_trial.EndTrial.html">EndTrial</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.error.html">error</a><input aria-label="Toggle navigation of error" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.error.ErrorMessage.html">ErrorMessage</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.event_occurrence.html">event_occurrence</a><input aria-label="Toggle navigation of event_occurrence" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.event_occurrence.EventOccurrence.html">EventOccurrence</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.event_resume.html">event_resume</a><input aria-label="Toggle navigation of event_resume" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.event_resume.EventResume.html">EventResume</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.parser.html">parser</a><input aria-label="Toggle navigation of parser" class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.parser.MessageParser.html">MessageParser</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.session_info.html">session_info</a><input aria-label="Toggle navigation of session_info" class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.session_info.SessionInfo.html">SessionInfo</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.softcode_occurrence.html">softcode_occurrence</a><input aria-label="Toggle navigation of softcode_occurrence" class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.softcode_occurrence.SoftcodeOccurrence.html">SoftcodeOccurrence</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.state_occurrence.html">state_occurrence</a><input aria-label="Toggle navigation of state_occurrence" class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.state_occurrence.StateOccurrence.html">StateOccurrence</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.state_transition.html">state_transition</a><input aria-label="Toggle navigation of state_transition" class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.state_transition.StateTransition.html">StateTransition</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.stderr.html">stderr</a><input aria-label="Toggle navigation of stderr" class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.stderr.StderrMessage.html">StderrMessage</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.stdout.html">stdout</a><input aria-label="Toggle navigation of stdout" class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.stdout.StdoutMessage.html">StdoutMessage</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.trial.html">trial</a><input aria-label="Toggle navigation of trial" class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.trial.Trial.html">Trial</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.untagged_message.html">untagged_message</a><input aria-label="Toggle navigation of untagged_message" class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.untagged_message.UntaggedMessage.html">UntaggedMessage</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.value.html">value</a><input aria-label="Toggle navigation of value" class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.value.ValueMessage.html">ValueMessage</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.messaging.warning.html">warning</a><input aria-label="Toggle navigation of warning" class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.messaging.warning.WarningMessage.html">WarningMessage</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="village.pybpodapi.com.protocol.html">protocol</a><input aria-label="Toggle navigation of protocol" class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.protocol.recv_msg_headers.html">recv_msg_headers</a><input aria-label="Toggle navigation of recv_msg_headers" class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.protocol.recv_msg_headers.ReceiveMessageHeader.html">ReceiveMessageHeader</a></li>
-</ul>
-</li>
-<li class="toctree-l5 has-children"><a class="reference internal" href="village.pybpodapi.com.protocol.send_msg_headers.html">send_msg_headers</a><input aria-label="Toggle navigation of send_msg_headers" class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="village.pybpodapi.com.protocol.send_msg_headers.SendMessageHeader.html">SendMessageHeader</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="village.pybpodapi.com.stderr_buffer.html">stderr_buffer</a><input aria-label="Toggle navigation of stderr_buffer" class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="village.pybpodapi.com.stderr_buffer.StderrBuffer.html">StderrBuffer</a></li>
-</ul>
-</li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="village.pybpodapi.com.stdout_buffer.html">stdout_buffer</a><input aria-label="Toggle navigation of stdout_buffer" class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="village.pybpodapi.com.stdout_buffer.StdoutBuffer.html">StdoutBuffer</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.exceptions.html">exceptions</a><input aria-label="Toggle navigation of exceptions" class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="village.pybpodapi.exceptions.bpod_error.html">bpod_error</a><input aria-label="Toggle navigation of bpod_error" class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="village.pybpodapi.exceptions.bpod_error.BpodErrorException.html">village.pybpodapi.exceptions.bpod_error.BpodErrorException</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.session.html">session</a><input aria-label="Toggle navigation of session" class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.session.Session.html">Session</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.pybpodapi.session.StreamsWrapper.html">StreamsWrapper</a></li>
-</ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="village.pybpodapi.utils.html">utils</a><input aria-label="Toggle navigation of utils" class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="village.pybpodapi.utils.csv.html">csv</a><input aria-label="Toggle navigation of csv" class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="village.pybpodapi.utils.csv.Reader.html">Reader</a></li>
-<li class="toctree-l5"><a class="reference internal" href="village.pybpodapi.utils.csv.Writer.html">Writer</a></li>
-</ul>
-</li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="village.pybpodapi.utils.date_parser.html">date_parser</a><input aria-label="Toggle navigation of date_parser" class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="village.pybpodapi.utils.date_parser.parse.html">parse</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="village.plots.html">plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="village.screen.html">screen</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.scripts.html">scripts</a><input aria-label="Toggle navigation of scripts" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.log.html">log</a><input aria-label="Toggle navigation of log" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.log.Log.html">Log</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><input aria-label="Toggle navigation of Resources" class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><input aria-label="Toggle navigation of parse_bpod_messages" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.time_utils.html">time_utils</a><input aria-label="Toggle navigation of time_utils" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><input aria-label="Toggle navigation of Resources" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
 </ul>
@@ -419,7 +338,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
@@ -460,11 +379,11 @@
 <tr class="row-even"><td><p><a class="reference internal" href="village.classes.enums.ScreenActive.html#village.classes.enums.ScreenActive" title="village.classes.enums.ScreenActive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScreenActive</span></code></a>(value)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.enums.State.html#village.classes.enums.State" title="village.classes.enums.State"><code class="xref py py-obj docutils literal notranslate"><span class="pre">State</span></code></a>(description)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.enums.State.html#village.classes.enums.State" title="village.classes.enums.State"><code class="xref py py-obj docutils literal notranslate"><span class="pre">State</span></code></a>(value)</p></td>
+<td><p>Enum representing the state of the village system.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SuperEnum</span></code></a>(value)</p></td>
-<td><p></p></td>
+<td><p>Base Enum class with extended functionality.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="village.classes.enums.SyncType.html#village.classes.enums.SyncType" title="village.classes.enums.SyncType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SyncType</span></code></a>(value)</p></td>
 <td><p></p></td>
@@ -472,6 +391,542 @@
 </tbody>
 </table>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.SuperEnum">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SuperEnum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#SuperEnum"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Base Enum class with extended functionality.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.SuperEnum.keys">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#SuperEnum.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns a list of all enum names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>usage: [e.name for e in cls]</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.SuperEnum.values">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#SuperEnum.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns a list of all enum values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>usage: [e.value for e in cls]</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.SuperEnum.get_index_from_value">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_index_from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Enum</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#SuperEnum.get_index_from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Gets the index of an enum member by its value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>Enum</em>) – The enum member or value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The index.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.SuperEnum.get_index_from_string">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_index_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#SuperEnum.get_index_from_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Gets the index of an enum member by its string value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string string.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The index.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.Active">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#Active"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Active.ON">
+<span class="sig-name descname"><span class="pre">ON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ON'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Active.OFF">
+<span class="sig-name descname"><span class="pre">OFF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OFF'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.SyncType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SyncType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#SyncType"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.SyncType.HD">
+<span class="sig-name descname"><span class="pre">HD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'HD'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.SyncType.SERVER">
+<span class="sig-name descname"><span class="pre">SERVER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SERVER'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.SyncType.OFF">
+<span class="sig-name descname"><span class="pre">OFF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OFF'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.Color">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#Color"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Color.BLACK">
+<span class="sig-name descname"><span class="pre">BLACK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'BLACK'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Color.WHITE">
+<span class="sig-name descname"><span class="pre">WHITE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'WHITE'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.Controller">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Controller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#Controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Controller.BPOD">
+<span class="sig-name descname"><span class="pre">BPOD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'BPOD'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Controller.ARDUINO">
+<span class="sig-name descname"><span class="pre">ARDUINO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ARDUINO'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Controller.RASPBERRY">
+<span class="sig-name descname"><span class="pre">RASPBERRY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RASPBERRY'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.ScreenActive">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ScreenActive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#ScreenActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.ScreenActive.SCREEN">
+<span class="sig-name descname"><span class="pre">SCREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SCREEN'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.ScreenActive.TOUCHSCREEN">
+<span class="sig-name descname"><span class="pre">TOUCHSCREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TOUCHSCREEN'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.ScreenActive.OFF">
+<span class="sig-name descname"><span class="pre">OFF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OFF'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.AreaActive">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AreaActive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#AreaActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.AreaActive.ALLOWED">
+<span class="sig-name descname"><span class="pre">ALLOWED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ALLOWED'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.AreaActive.NOT_ALLOWED">
+<span class="sig-name descname"><span class="pre">NOT_ALLOWED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NOT_ALLOWED'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.AreaActive.TRIGGER">
+<span class="sig-name descname"><span class="pre">TRIGGER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TRIGGER'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.AreaActive.OFF">
+<span class="sig-name descname"><span class="pre">OFF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OFF'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.State">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">State</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#State"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<p>Enum representing the state of the village system.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.WAIT">
+<span class="sig-name descname"><span class="pre">WAIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'All</span> <span class="pre">subjects</span> <span class="pre">are</span> <span class="pre">at</span> <span class="pre">home,</span> <span class="pre">waiting</span> <span class="pre">for</span> <span class="pre">RFID</span> <span class="pre">detection'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.DETECTION">
+<span class="sig-name descname"><span class="pre">DETECTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Gathering</span> <span class="pre">subject</span> <span class="pre">data,</span> <span class="pre">checking</span> <span class="pre">requirements</span> <span class="pre">to</span> <span class="pre">enter'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.ACCESS">
+<span class="sig-name descname"><span class="pre">ACCESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Closing</span> <span class="pre">door1,</span> <span class="pre">opening</span> <span class="pre">door2'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.LAUNCH_AUTO">
+<span class="sig-name descname"><span class="pre">LAUNCH_AUTO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Automatically</span> <span class="pre">launching</span> <span class="pre">the</span> <span class="pre">task'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.RUN_FIRST">
+<span class="sig-name descname"><span class="pre">RUN_FIRST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Task</span> <span class="pre">running,</span> <span class="pre">waiting</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">corridor</span> <span class="pre">to</span> <span class="pre">become</span> <span class="pre">empty'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.CLOSE_DOOR2">
+<span class="sig-name descname"><span class="pre">CLOSE_DOOR2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Closing</span> <span class="pre">door2'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.RUN_CLOSED">
+<span class="sig-name descname"><span class="pre">RUN_CLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Task</span> <span class="pre">running,</span> <span class="pre">the</span> <span class="pre">subject</span> <span class="pre">cannot</span> <span class="pre">leave</span> <span class="pre">yet'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.OPEN_DOOR2">
+<span class="sig-name descname"><span class="pre">OPEN_DOOR2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Opening</span> <span class="pre">door2'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.RUN_OPENED">
+<span class="sig-name descname"><span class="pre">RUN_OPENED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Task</span> <span class="pre">running,</span> <span class="pre">the</span> <span class="pre">subject</span> <span class="pre">can</span> <span class="pre">leave'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.EXIT_UNSAVED">
+<span class="sig-name descname"><span class="pre">EXIT_UNSAVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Closing</span> <span class="pre">door2,</span> <span class="pre">opening</span> <span class="pre">door1;</span> <span class="pre">data</span> <span class="pre">still</span> <span class="pre">not</span> <span class="pre">saved'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.SAVE_OUTSIDE">
+<span class="sig-name descname"><span class="pre">SAVE_OUTSIDE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Stopping</span> <span class="pre">the</span> <span class="pre">task,</span> <span class="pre">saving</span> <span class="pre">the</span> <span class="pre">data;</span> <span class="pre">the</span> <span class="pre">subject</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">outside'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.SAVE_INSIDE">
+<span class="sig-name descname"><span class="pre">SAVE_INSIDE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Stopping</span> <span class="pre">the</span> <span class="pre">task,</span> <span class="pre">saving</span> <span class="pre">the</span> <span class="pre">data;</span> <span class="pre">the</span> <span class="pre">subject</span> <span class="pre">is</span> <span class="pre">still</span> <span class="pre">inside'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.WAIT_EXIT">
+<span class="sig-name descname"><span class="pre">WAIT_EXIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Task</span> <span class="pre">finished,</span> <span class="pre">waiting</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">subject</span> <span class="pre">to</span> <span class="pre">leave'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.EXIT_SAVED">
+<span class="sig-name descname"><span class="pre">EXIT_SAVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Closing</span> <span class="pre">door2,</span> <span class="pre">opening</span> <span class="pre">door1;</span> <span class="pre">data</span> <span class="pre">already</span> <span class="pre">saved'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.OPEN_DOOR2_STOP">
+<span class="sig-name descname"><span class="pre">OPEN_DOOR2_STOP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Opening</span> <span class="pre">door2,</span> <span class="pre">disconnecting</span> <span class="pre">RFID'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.MANUAL_MODE">
+<span class="sig-name descname"><span class="pre">MANUAL_MODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Settings</span> <span class="pre">are</span> <span class="pre">being</span> <span class="pre">changed</span> <span class="pre">or</span> <span class="pre">task</span> <span class="pre">is</span> <span class="pre">being</span> <span class="pre">manually</span> <span class="pre">prepared'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.LAUNCH_MANUAL">
+<span class="sig-name descname"><span class="pre">LAUNCH_MANUAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Manually</span> <span class="pre">launching</span> <span class="pre">the</span> <span class="pre">task'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.RUN_MANUAL">
+<span class="sig-name descname"><span class="pre">RUN_MANUAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Task</span> <span class="pre">running</span> <span class="pre">manually'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.SAVE_MANUAL">
+<span class="sig-name descname"><span class="pre">SAVE_MANUAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Stopping</span> <span class="pre">the</span> <span class="pre">task,</span> <span class="pre">saving</span> <span class="pre">the</span> <span class="pre">data;</span> <span class="pre">task</span> <span class="pre">is</span> <span class="pre">running</span> <span class="pre">manually'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.SYNC">
+<span class="sig-name descname"><span class="pre">SYNC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Synchronizing</span> <span class="pre">data</span> <span class="pre">or</span> <span class="pre">doing</span> <span class="pre">user-defined</span> <span class="pre">tasks'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.State.EXIT_GUI">
+<span class="sig-name descname"><span class="pre">EXIT_GUI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'In</span> <span class="pre">the</span> <span class="pre">GUI</span> <span class="pre">window,</span> <span class="pre">ready</span> <span class="pre">to</span> <span class="pre">exit</span> <span class="pre">the</span> <span class="pre">app'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.State.can_exit">
+<span class="sig-name descname"><span class="pre">can_exit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_exit"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if the system can exit in this state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if exit is allowed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.State.can_edit_data">
+<span class="sig-name descname"><span class="pre">can_edit_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_edit_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if data editing is allowed in this state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if editing is allowed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.State.can_calibrate_scale">
+<span class="sig-name descname"><span class="pre">can_calibrate_scale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_calibrate_scale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if scale calibration is allowed in this state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if calibration is allowed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.State.can_stop_task">
+<span class="sig-name descname"><span class="pre">can_stop_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_stop_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if the running task can be stopped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if task can be stopped.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.State.can_stop_syncing">
+<span class="sig-name descname"><span class="pre">can_stop_syncing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_stop_syncing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if syncing process can be stopped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if syncing can be stopped.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.enums.State.can_go_to_wait">
+<span class="sig-name descname"><span class="pre">can_go_to_wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_go_to_wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if the state can transition to WAIT.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if transition to WAIT is allowed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.Cycle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#Cycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Cycle.AUTO">
+<span class="sig-name descname"><span class="pre">AUTO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'AUTO'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Cycle.DAY">
+<span class="sig-name descname"><span class="pre">DAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DAY'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Cycle.NIGHT">
+<span class="sig-name descname"><span class="pre">NIGHT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIGHT'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.Actions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#Actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Actions.CORRIDOR">
+<span class="sig-name descname"><span class="pre">CORRIDOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CORRIDOR'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Actions.PORTS">
+<span class="sig-name descname"><span class="pre">PORTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PORTS'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Actions.FUNCTIONS">
+<span class="sig-name descname"><span class="pre">FUNCTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FUNCTIONS'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Actions.VIRTUAL_MOUSE">
+<span class="sig-name descname"><span class="pre">VIRTUAL_MOUSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'VIRTUAL_MOUSE'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.Info">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#Info"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Info.SYSTEM_INFO">
+<span class="sig-name descname"><span class="pre">SYSTEM_INFO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SYSTEM_INFO'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Info.DETECTION_SETTINGS">
+<span class="sig-name descname"><span class="pre">DETECTION_SETTINGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DETECTION_SETTINGS'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Info.DETECTION_PLOT">
+<span class="sig-name descname"><span class="pre">DETECTION_PLOT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DETECTION_PLOT'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#DataTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.EVENTS">
+<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'EVENTS'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.SESSIONS_SUMMARY">
+<span class="sig-name descname"><span class="pre">SESSIONS_SUMMARY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SESSIONS_SUMMARY'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.SUBJECTS">
+<span class="sig-name descname"><span class="pre">SUBJECTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SUBJECTS'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.WATER_CALIBRATION">
+<span class="sig-name descname"><span class="pre">WATER_CALIBRATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'WATER_CALIBRATION'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.SOUND_CALIBRATION">
+<span class="sig-name descname"><span class="pre">SOUND_CALIBRATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SOUND_CALIBRATION'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.TEMPERATURES">
+<span class="sig-name descname"><span class="pre">TEMPERATURES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TEMPERATURES'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.SESSION">
+<span class="sig-name descname"><span class="pre">SESSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SESSION'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.SESSION_RAW">
+<span class="sig-name descname"><span class="pre">SESSION_RAW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SESSION_RAW'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.OLD_SESSION">
+<span class="sig-name descname"><span class="pre">OLD_SESSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OLD_SESSION'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.DataTable.OLD_SESSION_RAW">
+<span class="sig-name descname"><span class="pre">OLD_SESSION_RAW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OLD_SESSION_RAW'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.enums.Save">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/enums.html#Save"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.classes.enums.SuperEnum.html#village.classes.enums.SuperEnum" title="village.classes.enums.SuperEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperEnum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Save.YES">
+<span class="sig-name descname"><span class="pre">YES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'YES'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Save.NO">
+<span class="sig-name descname"><span class="pre">NO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NO'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Save.ZERO">
+<span class="sig-name descname"><span class="pre">ZERO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ZERO'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.enums.Save.ERROR">
+<span class="sig-name descname"><span class="pre">ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ERROR'</span></em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -488,14 +943,14 @@
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="village.classes.html">
+          <a class="prev-page" href="village.classes.abstract_classes.TempSensorBase.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">classes</div>
+                <div class="title">TempSensorBase</div>
                 
               </div>
             </a>
@@ -517,13 +972,142 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">enums</a><ul>
+<li><a class="reference internal" href="#village.classes.enums.SuperEnum"><code class="docutils literal notranslate"><span class="pre">SuperEnum</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.SuperEnum.keys"><code class="docutils literal notranslate"><span class="pre">SuperEnum.keys()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.SuperEnum.values"><code class="docutils literal notranslate"><span class="pre">SuperEnum.values()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.SuperEnum.get_index_from_value"><code class="docutils literal notranslate"><span class="pre">SuperEnum.get_index_from_value()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.SuperEnum.get_index_from_string"><code class="docutils literal notranslate"><span class="pre">SuperEnum.get_index_from_string()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.Active"><code class="docutils literal notranslate"><span class="pre">Active</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.Active.ON"><code class="docutils literal notranslate"><span class="pre">Active.ON</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Active.OFF"><code class="docutils literal notranslate"><span class="pre">Active.OFF</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.SyncType"><code class="docutils literal notranslate"><span class="pre">SyncType</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.SyncType.HD"><code class="docutils literal notranslate"><span class="pre">SyncType.HD</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.SyncType.SERVER"><code class="docutils literal notranslate"><span class="pre">SyncType.SERVER</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.SyncType.OFF"><code class="docutils literal notranslate"><span class="pre">SyncType.OFF</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.Color"><code class="docutils literal notranslate"><span class="pre">Color</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.Color.BLACK"><code class="docutils literal notranslate"><span class="pre">Color.BLACK</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Color.WHITE"><code class="docutils literal notranslate"><span class="pre">Color.WHITE</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.Controller"><code class="docutils literal notranslate"><span class="pre">Controller</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.Controller.BPOD"><code class="docutils literal notranslate"><span class="pre">Controller.BPOD</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Controller.ARDUINO"><code class="docutils literal notranslate"><span class="pre">Controller.ARDUINO</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Controller.RASPBERRY"><code class="docutils literal notranslate"><span class="pre">Controller.RASPBERRY</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.ScreenActive"><code class="docutils literal notranslate"><span class="pre">ScreenActive</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.ScreenActive.SCREEN"><code class="docutils literal notranslate"><span class="pre">ScreenActive.SCREEN</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.ScreenActive.TOUCHSCREEN"><code class="docutils literal notranslate"><span class="pre">ScreenActive.TOUCHSCREEN</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.ScreenActive.OFF"><code class="docutils literal notranslate"><span class="pre">ScreenActive.OFF</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.AreaActive"><code class="docutils literal notranslate"><span class="pre">AreaActive</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.AreaActive.ALLOWED"><code class="docutils literal notranslate"><span class="pre">AreaActive.ALLOWED</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.AreaActive.NOT_ALLOWED"><code class="docutils literal notranslate"><span class="pre">AreaActive.NOT_ALLOWED</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.AreaActive.TRIGGER"><code class="docutils literal notranslate"><span class="pre">AreaActive.TRIGGER</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.AreaActive.OFF"><code class="docutils literal notranslate"><span class="pre">AreaActive.OFF</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.State"><code class="docutils literal notranslate"><span class="pre">State</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.State.WAIT"><code class="docutils literal notranslate"><span class="pre">State.WAIT</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.DETECTION"><code class="docutils literal notranslate"><span class="pre">State.DETECTION</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.ACCESS"><code class="docutils literal notranslate"><span class="pre">State.ACCESS</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.LAUNCH_AUTO"><code class="docutils literal notranslate"><span class="pre">State.LAUNCH_AUTO</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.RUN_FIRST"><code class="docutils literal notranslate"><span class="pre">State.RUN_FIRST</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.CLOSE_DOOR2"><code class="docutils literal notranslate"><span class="pre">State.CLOSE_DOOR2</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.RUN_CLOSED"><code class="docutils literal notranslate"><span class="pre">State.RUN_CLOSED</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.OPEN_DOOR2"><code class="docutils literal notranslate"><span class="pre">State.OPEN_DOOR2</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.RUN_OPENED"><code class="docutils literal notranslate"><span class="pre">State.RUN_OPENED</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.EXIT_UNSAVED"><code class="docutils literal notranslate"><span class="pre">State.EXIT_UNSAVED</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.SAVE_OUTSIDE"><code class="docutils literal notranslate"><span class="pre">State.SAVE_OUTSIDE</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.SAVE_INSIDE"><code class="docutils literal notranslate"><span class="pre">State.SAVE_INSIDE</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.WAIT_EXIT"><code class="docutils literal notranslate"><span class="pre">State.WAIT_EXIT</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.EXIT_SAVED"><code class="docutils literal notranslate"><span class="pre">State.EXIT_SAVED</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.OPEN_DOOR2_STOP"><code class="docutils literal notranslate"><span class="pre">State.OPEN_DOOR2_STOP</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.MANUAL_MODE"><code class="docutils literal notranslate"><span class="pre">State.MANUAL_MODE</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.LAUNCH_MANUAL"><code class="docutils literal notranslate"><span class="pre">State.LAUNCH_MANUAL</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.RUN_MANUAL"><code class="docutils literal notranslate"><span class="pre">State.RUN_MANUAL</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.SAVE_MANUAL"><code class="docutils literal notranslate"><span class="pre">State.SAVE_MANUAL</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.SYNC"><code class="docutils literal notranslate"><span class="pre">State.SYNC</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.EXIT_GUI"><code class="docutils literal notranslate"><span class="pre">State.EXIT_GUI</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.can_exit"><code class="docutils literal notranslate"><span class="pre">State.can_exit()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.can_edit_data"><code class="docutils literal notranslate"><span class="pre">State.can_edit_data()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.can_calibrate_scale"><code class="docutils literal notranslate"><span class="pre">State.can_calibrate_scale()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.can_stop_task"><code class="docutils literal notranslate"><span class="pre">State.can_stop_task()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.can_stop_syncing"><code class="docutils literal notranslate"><span class="pre">State.can_stop_syncing()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.can_go_to_wait"><code class="docutils literal notranslate"><span class="pre">State.can_go_to_wait()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.Cycle"><code class="docutils literal notranslate"><span class="pre">Cycle</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.Cycle.AUTO"><code class="docutils literal notranslate"><span class="pre">Cycle.AUTO</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Cycle.DAY"><code class="docutils literal notranslate"><span class="pre">Cycle.DAY</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Cycle.NIGHT"><code class="docutils literal notranslate"><span class="pre">Cycle.NIGHT</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.Actions"><code class="docutils literal notranslate"><span class="pre">Actions</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.Actions.CORRIDOR"><code class="docutils literal notranslate"><span class="pre">Actions.CORRIDOR</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Actions.PORTS"><code class="docutils literal notranslate"><span class="pre">Actions.PORTS</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Actions.FUNCTIONS"><code class="docutils literal notranslate"><span class="pre">Actions.FUNCTIONS</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Actions.VIRTUAL_MOUSE"><code class="docutils literal notranslate"><span class="pre">Actions.VIRTUAL_MOUSE</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.Info"><code class="docutils literal notranslate"><span class="pre">Info</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.Info.SYSTEM_INFO"><code class="docutils literal notranslate"><span class="pre">Info.SYSTEM_INFO</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Info.DETECTION_SETTINGS"><code class="docutils literal notranslate"><span class="pre">Info.DETECTION_SETTINGS</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Info.DETECTION_PLOT"><code class="docutils literal notranslate"><span class="pre">Info.DETECTION_PLOT</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable"><code class="docutils literal notranslate"><span class="pre">DataTable</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.EVENTS"><code class="docutils literal notranslate"><span class="pre">DataTable.EVENTS</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.SESSIONS_SUMMARY"><code class="docutils literal notranslate"><span class="pre">DataTable.SESSIONS_SUMMARY</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.SUBJECTS"><code class="docutils literal notranslate"><span class="pre">DataTable.SUBJECTS</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.WATER_CALIBRATION"><code class="docutils literal notranslate"><span class="pre">DataTable.WATER_CALIBRATION</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.SOUND_CALIBRATION"><code class="docutils literal notranslate"><span class="pre">DataTable.SOUND_CALIBRATION</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.TEMPERATURES"><code class="docutils literal notranslate"><span class="pre">DataTable.TEMPERATURES</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.SESSION"><code class="docutils literal notranslate"><span class="pre">DataTable.SESSION</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.SESSION_RAW"><code class="docutils literal notranslate"><span class="pre">DataTable.SESSION_RAW</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.OLD_SESSION"><code class="docutils literal notranslate"><span class="pre">DataTable.OLD_SESSION</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.DataTable.OLD_SESSION_RAW"><code class="docutils literal notranslate"><span class="pre">DataTable.OLD_SESSION_RAW</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.enums.Save"><code class="docutils literal notranslate"><span class="pre">Save</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.enums.Save.YES"><code class="docutils literal notranslate"><span class="pre">Save.YES</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Save.NO"><code class="docutils literal notranslate"><span class="pre">Save.NO</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Save.ZERO"><code class="docutils literal notranslate"><span class="pre">Save.ZERO</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.Save.ERROR"><code class="docutils literal notranslate"><span class="pre">Save.ERROR</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=fc756fe3"></script>
+</div><script src="../_static/documentation_options.js?v=983c28a9"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

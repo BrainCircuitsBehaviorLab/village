@@ -1,0 +1,6 @@
+parse\_output\_to\_tuple\_override
+==================================
+
+.. currentmodule:: village.scripts.parse_bpod_messages
+
+.. autofunction:: parse_output_to_tuple_override

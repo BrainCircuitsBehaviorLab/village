@@ -1,0 +1,1065 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
+        <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/classes/abstract_classes.html">
+        <link rel="prefetch" href="../../../_static/logo.png" as="image">
+
+    <link rel="shortcut icon" href="../../../_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>village.classes.abstract_classes - Training village</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Training village</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../_static/logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../user_guide_index.html">User Guide</a><input aria-label="Toggle navigation of User Guide" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/GUI.html">GUI Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/settings.html">Initial Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/subjects.html">Create New Subjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/corridor.html">Calibrate and Test Corridor Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/detection.html">Calibrate and Test Animal Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/create.html">Create a Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/maintenance.html">Maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../how_to_build_index.html">How to Build It</a><input aria-label="Toggle navigation of How to Build It" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/software_installation.html">Software Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../initial_configuration_index.html">Initial Configuration</a><input aria-label="Toggle navigation of Initial Configuration" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/hardware.html">Hardware Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/remote.html">Configure Remote Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api_index.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.calibration.html">calibration</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a><input aria-label="Toggle navigation of classes" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.html">abstract_classes</a><input aria-label="Toggle navigation of abstract_classes" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html">CameraBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.EventBase.html">EventBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.MotorBase.html">MotorBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html">PyBpodBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.ScaleBase.html">ScaleBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.SoundDeviceBase.html">SoundDeviceBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.TelegramBotBase.html">TelegramBotBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.TempSensorBase.html">TempSensorBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.classes.enums.html">enums</a><input aria-label="Toggle navigation of enums" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Controller.html">Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Save.html">Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.SyncType.html">SyncType</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.html">settings_class</a><input aria-label="Toggle navigation of settings_class" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_generated/village.custom_classes.html">custom_classes</a><input aria-label="Toggle navigation of custom_classes" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><input aria-label="Toggle navigation of camera_trigger_base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_generated/village.devices.html">devices</a><input aria-label="Toggle navigation of devices" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.devices.motor.html">motor</a><input aria-label="Toggle navigation of motor" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.Motor.html">Motor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.plots.html">plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.screen.html">screen</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_generated/village.scripts.html">scripts</a><input aria-label="Toggle navigation of scripts" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.scripts.log.html">log</a><input aria-label="Toggle navigation of log" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.log.Log.html">Log</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><input aria-label="Toggle navigation of parse_bpod_messages" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.scripts.time_utils.html">time_utils</a><input aria-label="Toggle navigation of time_utils" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../resources_index.html">Resources</a><input aria-label="Toggle navigation of Resources" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/code.html">Code Repository</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq_index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../troubleshooting_index.html">Troubleshooting</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for village.classes.abstract_classes</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QImage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QWidget</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Active</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">village.pybpodapi.session</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+
+
+<div class="viewcode-block" id="PyBpodBase">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PyBpodBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Bpod interface.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        error (str): Error message.</span>
+<span class="sd">        session (Session | Any): Bpod session object.</span>
+<span class="sd">        connected (bool): Connection status.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the bpod &quot;</span>
+    <span class="n">session</span><span class="p">:</span> <span class="n">Session</span> <span class="o">|</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="PyBpodBase.connect">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.connect">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connects to the Bpod device.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            functions (list[Callable]): List of callback functions for softcodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.add_state">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.add_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_state</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">state_name</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">state_timer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">state_change_conditions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="n">output_actions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">(),</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a state to the state machine.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state_name (Any): Name of the state.</span>
+<span class="sd">            state_timer (float): Duration of the state in seconds.</span>
+<span class="sd">            state_change_conditions (Any): Conditions to transition to other states.</span>
+<span class="sd">            output_actions (Any): Actions to perform in this state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.set_global_timer">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.set_global_timer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_global_timer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">timer_id</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">timer_duration</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">on_set_delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">channel</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">on_message</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">off_message</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">loop_mode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">loop_intervals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">send_events</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">oneset_triggers</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configures a global timer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timer_id (Any): ID of the timer.</span>
+<span class="sd">            timer_duration (Any): Duration of the timer.</span>
+<span class="sd">            on_set_delay (int): Delay before the timer starts.</span>
+<span class="sd">            channel (Any | None): Output channel to link.</span>
+<span class="sd">            on_message (int): Message when timer starts.</span>
+<span class="sd">            off_message (int): Message when timer ends.</span>
+<span class="sd">            loop_mode (int): Loop mode.</span>
+<span class="sd">            loop_intervals (int): Interval between loops.</span>
+<span class="sd">            send_events (int): Whether to send events.</span>
+<span class="sd">            oneset_triggers (Any | None): Triggers to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.set_condition">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.set_condition">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_condition</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">condition_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">condition_channel</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">channel_value</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets a condition for the state machine.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            condition_number (Any): The condition ID.</span>
+<span class="sd">            condition_channel (Any): The channel to check.</span>
+<span class="sd">            channel_value (Any): The value to match.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.set_global_counter">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.set_global_counter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_global_counter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">counter_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">target_event</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configures a global counter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            counter_number (Any): The counter ID.</span>
+<span class="sd">            target_event (Any): The event to count.</span>
+<span class="sd">            threshold (Any): The count threshold.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.create_state_machine">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.create_state_machine">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_state_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and initializes a new state machine.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.send_and_run_state_machine">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.send_and_run_state_machine">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_and_run_state_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the current state machine to the Bpod and starts it.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.close">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes the connection to the Bpod.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.stop">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.stop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the current trial or operation.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.manual_override_input">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.manual_override_input">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">manual_override_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simulates an input event manually.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): The input message/event string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.manual_override_output">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.manual_override_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">manual_override_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Manually triggers an output.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str | tuple): The output command.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.register_value">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.register_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registers a value to be tracked or logged.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the value.</span>
+<span class="sd">            value (Any): The value itself.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.receive_softcode">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.receive_softcode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">receive_softcode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handles received softcodes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            idx (int): The softcode index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.led">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.led">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">close</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Controls an LED.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            i (int): The LED index.</span>
+<span class="sd">            close (bool): Whether to turn it off (or close the circuit).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.water">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.water">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">water</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">close</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Controls a water valve.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            i (int): The valve index.</span>
+<span class="sd">            close (bool): Whether to close the valve.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PyBpodBase.poke">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase.poke">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">poke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">close</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simulates a poke event.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            i (int): The poke index.</span>
+<span class="sd">            close (bool): State of the poke.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TelegramBotBase">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.TelegramBotBase.html#village.classes.abstract_classes.TelegramBotBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TelegramBotBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Telegram Bot interface.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        error (str): Error message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the telegram_bot &quot;</span>
+
+<div class="viewcode-block" id="TelegramBotBase.alarm">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.TelegramBotBase.html#village.classes.abstract_classes.TelegramBotBase.alarm">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">alarm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends an alarm message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): The alarm message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ScaleBase">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.ScaleBase.html#village.classes.abstract_classes.ScaleBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScaleBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Scale interface.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        error (str): Error message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the scale &quot;</span>
+
+<div class="viewcode-block" id="ScaleBase.tare">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.ScaleBase.html#village.classes.abstract_classes.ScaleBase.tare">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tare</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tares the scale.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="ScaleBase.calibrate">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.ScaleBase.html#village.classes.abstract_classes.ScaleBase.calibrate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calibrates the scale using a known weight.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            weight (float): The known weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="ScaleBase.get_weight">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.ScaleBase.html#village.classes.abstract_classes.ScaleBase.get_weight">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current weight.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The weight reading (default 0.0).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.0</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TempSensorBase">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.TempSensorBase.html#village.classes.abstract_classes.TempSensorBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TempSensorBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Temperature Sensor interface.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        error (str): Error message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the temp_sensor &quot;</span>
+
+<div class="viewcode-block" id="TempSensorBase.start">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.TempSensorBase.html#village.classes.abstract_classes.TempSensorBase.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the sensor.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="TempSensorBase.get_temperature">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.TempSensorBase.html#village.classes.abstract_classes.TempSensorBase.get_temperature">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets temperature and humidity.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[float, float, str]: Temperature, humidity, and formatted string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MotorBase">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.MotorBase.html#village.classes.abstract_classes.MotorBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MotorBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Motor interface.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        error (str): Error message.</span>
+<span class="sd">        open_angle (int): Angle for open position.</span>
+<span class="sd">        close_angle (int): Angle for close position.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the motor &quot;</span>
+    <span class="n">open_angle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">close_angle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="MotorBase.open">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.MotorBase.html#village.classes.abstract_classes.MotorBase.open">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Opens the motor/device.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="MotorBase.close">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.MotorBase.html#village.classes.abstract_classes.MotorBase.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes the motor/device.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SoundDeviceBase">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.SoundDeviceBase.html#village.classes.abstract_classes.SoundDeviceBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SoundDeviceBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Sound Device interface.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        samplerate (int): Audio sample rate.</span>
+<span class="sd">        error (str): Error message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">samplerate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">44100</span>
+    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SOUNDCARD&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">OFF</span>
+        <span class="k">else</span> <span class="s2">&quot;Error connecting to the sound_device &quot;</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="SoundDeviceBase.load">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.SoundDeviceBase.html#village.classes.abstract_classes.SoundDeviceBase.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads sound data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            load (Any): Left channel data or similar.</span>
+<span class="sd">            right (Any): Right channel data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="SoundDeviceBase.play">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.SoundDeviceBase.html#village.classes.abstract_classes.SoundDeviceBase.play">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plays the loaded sound.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="SoundDeviceBase.stop">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.SoundDeviceBase.html#village.classes.abstract_classes.SoundDeviceBase.stop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops sound playback.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="SoundDeviceBase.load_wav">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.SoundDeviceBase.html#village.classes.abstract_classes.SoundDeviceBase.load_wav">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_wav</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a WAV file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (str): Path or name of the WAV file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EventBase">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.EventBase.html#village.classes.abstract_classes.EventBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EventBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for event logging interfaces.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EventBase.log">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.EventBase.html#village.classes.abstract_classes.EventBase.log">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logs a generic event.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            date (str): Date/time string.</span>
+<span class="sd">            type (str): Event type.</span>
+<span class="sd">            subject (str): Subject name.</span>
+<span class="sd">            description (str): Description.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="EventBase.log_temp">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.EventBase.html#village.classes.abstract_classes.EventBase.log_temp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_temp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">humidity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logs temperature and humidity data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            date (str): Date/time string.</span>
+<span class="sd">            temperature (float): Temperature value.</span>
+<span class="sd">            humidity (float): Humidity value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CameraBase">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CameraBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Camera interface.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        area1 (list[int]): Coordinates for area 1.</span>
+<span class="sd">        area2 (list[int]): Coordinates for area 2.</span>
+<span class="sd">        area3 (list[int]): Coordinates for area 3.</span>
+<span class="sd">        area4 (list[int]): Coordinates for area 4.</span>
+<span class="sd">        areas (list[list[int]]): List of all area coordinates.</span>
+<span class="sd">        area1_is_triggered (bool): Trigger status for area 1.</span>
+<span class="sd">        area2_is_triggered (bool): Trigger status for area 2.</span>
+<span class="sd">        area3_is_triggered (bool): Trigger status for area 3.</span>
+<span class="sd">        area4_is_triggered (bool): Trigger status for area 4.</span>
+<span class="sd">        change (bool): Flag for property changes.</span>
+<span class="sd">        annotation (str): Current annotation text.</span>
+<span class="sd">        path_picture (str): Path to save pictures.</span>
+<span class="sd">        error (str): Error message.</span>
+<span class="sd">        trial (int): Current trial number.</span>
+<span class="sd">        is_recording (bool): Recording status.</span>
+<span class="sd">        show_time_info (bool): Time info display flag.</span>
+<span class="sd">        x_position (int): X coordinate of tracked object.</span>
+<span class="sd">        y_position (int): Y coordinate of tracked object.</span>
+<span class="sd">        chrono (time_utils.Chrono): Timer utility.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">area1</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">area2</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">area3</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">area4</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">areas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">area1_is_triggered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">area2_is_triggered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">area3_is_triggered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">area4_is_triggered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">change</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">annotation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">path_picture</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the camera &quot;</span>
+    <span class="n">trial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">is_recording</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">show_time_info</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">x_position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">y_position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">chrono</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">Chrono</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CameraBase.start_camera">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.start_camera">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the camera.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.stop_camera">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.stop_camera">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the camera.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.start_preview_window">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.start_preview_window">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QWidget</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the preview window.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QWidget: A QWidget for the preview.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">QWidget</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.stop_preview_window">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.stop_preview_window">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the preview window.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.start_recording">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.start_recording">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">path_csv</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts recording.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path_video (str): Path for video file.</span>
+<span class="sd">            path_csv (str): Path for CSV data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.stop_recording">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.stop_recording">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops recording.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.print_info_about_config">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.print_info_about_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_info_about_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints camera configuration info.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.pre_process">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.pre_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pre_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocessing callback for frames.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request: The request object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.write_text">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.write_text">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes text annotation to the frame.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): The text to write.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.areas_corridor_ok">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.areas_corridor_ok">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">areas_corridor_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks corridor areas status.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if OK.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.area_1_empty">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.area_1_empty">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">area_1_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 1 is empty.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.area_2_empty">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.area_2_empty">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">area_2_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 2 is empty.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.area_3_empty">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.area_3_empty">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">area_3_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 3 is empty.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.area_4_empty">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.area_4_empty">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">area_4_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 4 is empty.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="CameraBase.take_picture">
+<a class="viewcode-back" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase.take_picture">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">take_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes a picture.&quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BehaviorWindowBase</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Behavior Window GUI.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        background_color: The background color.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">background_color</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the drawing mode.&quot;&quot;&quot;</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the drawing mode.&quot;&quot;&quot;</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_function</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
+        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a drawing function and media.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            draw_fn (Optional[Callable]): The drawing function.</span>
+<span class="sd">            image (str | None): Image path.</span>
+<span class="sd">            video (str | None): Video path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (str): The file path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a video.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (str): The file path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_video_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current video frame.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[QImage]: The current frame as a QImage.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Rafael Marin, Balma Serrano, Hernando Vergara, Jaime de la Rocha
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=983c28a9"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

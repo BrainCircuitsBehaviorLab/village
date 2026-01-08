@@ -1,0 +1,6 @@
+get\_motor
+==========
+
+.. currentmodule:: village.devices.motor
+
+.. autofunction:: get_motor

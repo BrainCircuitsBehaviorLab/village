@@ -1,0 +1,49 @@
+PyBpodBase
+==========
+
+.. currentmodule:: village.classes.abstract_classes
+
+.. autoclass:: PyBpodBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PyBpodBase.__init__
+      ~PyBpodBase.add_state
+      ~PyBpodBase.close
+      ~PyBpodBase.connect
+      ~PyBpodBase.create_state_machine
+      ~PyBpodBase.led
+      ~PyBpodBase.manual_override_input
+      ~PyBpodBase.manual_override_output
+      ~PyBpodBase.poke
+      ~PyBpodBase.receive_softcode
+      ~PyBpodBase.register_value
+      ~PyBpodBase.send_and_run_state_machine
+      ~PyBpodBase.set_condition
+      ~PyBpodBase.set_global_counter
+      ~PyBpodBase.set_global_timer
+      ~PyBpodBase.stop
+      ~PyBpodBase.water
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PyBpodBase.connected
+      ~PyBpodBase.error
+      ~PyBpodBase.session
+   
+   

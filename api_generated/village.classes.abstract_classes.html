@@ -1,0 +1,1609 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="CameraBase" href="village.classes.abstract_classes.CameraBase.html"><link rel="prev" title="classes" href="village.classes.html">
+        <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.classes.abstract_classes.html">
+        <link rel="prefetch" href="../_static/logo.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>abstract_classes - Training village</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Training village</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><input aria-label="Toggle navigation of User Guide" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">GUI Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/settings.html">Initial Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/subjects.html">Create New Subjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/corridor.html">Calibrate and Test Corridor Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/detection.html">Calibrate and Test Animal Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/create.html">Create a Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><input aria-label="Toggle navigation of How to Build It" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../initial_configuration_index.html">Initial Configuration</a><input aria-label="Toggle navigation of Initial Configuration" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/hardware.html">Hardware Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/remote.html">Configure Remote Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api_index.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="village.classes.html">classes</a><input aria-label="Toggle navigation of classes" checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">abstract_classes</a><input aria-label="Toggle navigation of abstract_classes" checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.CameraBase.html">CameraBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.EventBase.html">EventBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.MotorBase.html">MotorBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.PyBpodBase.html">PyBpodBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.ScaleBase.html">ScaleBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.SoundDeviceBase.html">SoundDeviceBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.TelegramBotBase.html">TelegramBotBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.TempSensorBase.html">TempSensorBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.enums.html">enums</a><input aria-label="Toggle navigation of enums" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Controller.html">Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Save.html">Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.SyncType.html">SyncType</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.settings_class.html">settings_class</a><input aria-label="Toggle navigation of settings_class" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.custom_classes.html">custom_classes</a><input aria-label="Toggle navigation of custom_classes" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><input aria-label="Toggle navigation of camera_trigger_base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.devices.html">devices</a><input aria-label="Toggle navigation of devices" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.motor.html">motor</a><input aria-label="Toggle navigation of motor" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.Motor.html">Motor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.plots.html">plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.screen.html">screen</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.scripts.html">scripts</a><input aria-label="Toggle navigation of scripts" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.log.html">log</a><input aria-label="Toggle navigation of log" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.log.Log.html">Log</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><input aria-label="Toggle navigation of parse_bpod_messages" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.time_utils.html">time_utils</a><input aria-label="Toggle navigation of time_utils" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><input aria-label="Toggle navigation of Resources" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/api_generated/village.classes.abstract_classes.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="module-village.classes.abstract_classes">
+<span id="abstract-classes"></span><h1>abstract_classes</h1>
+<p class="rubric">Classes</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.abstract_classes.CameraBase.html#village.classes.abstract_classes.CameraBase" title="village.classes.abstract_classes.CameraBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CameraBase</span></code></a>()</p></td>
+<td><p>Base class for Camera interface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.abstract_classes.EventBase.html#village.classes.abstract_classes.EventBase" title="village.classes.abstract_classes.EventBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EventBase</span></code></a>()</p></td>
+<td><p>Base class for event logging interfaces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.abstract_classes.MotorBase.html#village.classes.abstract_classes.MotorBase" title="village.classes.abstract_classes.MotorBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MotorBase</span></code></a>()</p></td>
+<td><p>Base class for Motor interface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase" title="village.classes.abstract_classes.PyBpodBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PyBpodBase</span></code></a>()</p></td>
+<td><p>Base class for Bpod interface.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.abstract_classes.ScaleBase.html#village.classes.abstract_classes.ScaleBase" title="village.classes.abstract_classes.ScaleBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScaleBase</span></code></a>()</p></td>
+<td><p>Base class for Scale interface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.abstract_classes.SoundDeviceBase.html#village.classes.abstract_classes.SoundDeviceBase" title="village.classes.abstract_classes.SoundDeviceBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoundDeviceBase</span></code></a>()</p></td>
+<td><p>Base class for Sound Device interface.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.abstract_classes.TelegramBotBase.html#village.classes.abstract_classes.TelegramBotBase" title="village.classes.abstract_classes.TelegramBotBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TelegramBotBase</span></code></a>()</p></td>
+<td><p>Base class for Telegram Bot interface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.abstract_classes.TempSensorBase.html#village.classes.abstract_classes.TempSensorBase" title="village.classes.abstract_classes.TempSensorBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TempSensorBase</span></code></a>()</p></td>
+<td><p>Base class for Temperature Sensor interface.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PyBpodBase</span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for Bpod interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.error">
+<span class="sig-name descname"><span class="pre">error</span></span></dt>
+<dd><p>Error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.session">
+<span class="sig-name descname"><span class="pre">session</span></span></dt>
+<dd><p>Bpod session object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Session | Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.connected">
+<span class="sig-name descname"><span class="pre">connected</span></span></dt>
+<dd><p>Connection status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">bpod</span> <span class="pre">'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">session</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Session</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">connected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Connects to the Bpod device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>functions</strong> (<em>list</em><em>[</em><em>Callable</em><em>]</em>) – List of callback functions for softcodes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.add_state">
+<span class="sig-name descname"><span class="pre">add_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_timer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_change_conditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.add_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Adds a state to the state machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_name</strong> (<em>Any</em>) – Name of the state.</p></li>
+<li><p><strong>state_timer</strong> (<em>float</em>) – Duration of the state in seconds.</p></li>
+<li><p><strong>state_change_conditions</strong> (<em>Any</em>) – Conditions to transition to other states.</p></li>
+<li><p><strong>output_actions</strong> (<em>Any</em>) – Actions to perform in this state.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.set_global_timer">
+<span class="sig-name descname"><span class="pre">set_global_timer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timer_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timer_duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_set_delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">off_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_intervals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">send_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oneset_triggers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.set_global_timer"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Configures a global timer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timer_id</strong> (<em>Any</em>) – ID of the timer.</p></li>
+<li><p><strong>timer_duration</strong> (<em>Any</em>) – Duration of the timer.</p></li>
+<li><p><strong>on_set_delay</strong> (<em>int</em>) – Delay before the timer starts.</p></li>
+<li><p><strong>channel</strong> (<em>Any</em><em> | </em><em>None</em>) – Output channel to link.</p></li>
+<li><p><strong>on_message</strong> (<em>int</em>) – Message when timer starts.</p></li>
+<li><p><strong>off_message</strong> (<em>int</em>) – Message when timer ends.</p></li>
+<li><p><strong>loop_mode</strong> (<em>int</em>) – Loop mode.</p></li>
+<li><p><strong>loop_intervals</strong> (<em>int</em>) – Interval between loops.</p></li>
+<li><p><strong>send_events</strong> (<em>int</em>) – Whether to send events.</p></li>
+<li><p><strong>oneset_triggers</strong> (<em>Any</em><em> | </em><em>None</em>) – Triggers to set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.set_condition">
+<span class="sig-name descname"><span class="pre">set_condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.set_condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sets a condition for the state machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>condition_number</strong> (<em>Any</em>) – The condition ID.</p></li>
+<li><p><strong>condition_channel</strong> (<em>Any</em>) – The channel to check.</p></li>
+<li><p><strong>channel_value</strong> (<em>Any</em>) – The value to match.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.set_global_counter">
+<span class="sig-name descname"><span class="pre">set_global_counter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counter_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.set_global_counter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Configures a global counter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>counter_number</strong> (<em>Any</em>) – The counter ID.</p></li>
+<li><p><strong>target_event</strong> (<em>Any</em>) – The event to count.</p></li>
+<li><p><strong>threshold</strong> (<em>Any</em>) – The count threshold.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.create_state_machine">
+<span class="sig-name descname"><span class="pre">create_state_machine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.create_state_machine"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Creates and initializes a new state machine.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.send_and_run_state_machine">
+<span class="sig-name descname"><span class="pre">send_and_run_state_machine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.send_and_run_state_machine"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sends the current state machine to the Bpod and starts it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Closes the connection to the Bpod.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Stops the current trial or operation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.manual_override_input">
+<span class="sig-name descname"><span class="pre">manual_override_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.manual_override_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Simulates an input event manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The input message/event string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.manual_override_output">
+<span class="sig-name descname"><span class="pre">manual_override_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.manual_override_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Manually triggers an output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em> | </em><em>tuple</em>) – The output command.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.register_value">
+<span class="sig-name descname"><span class="pre">register_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.register_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Registers a value to be tracked or logged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the value.</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – The value itself.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.receive_softcode">
+<span class="sig-name descname"><span class="pre">receive_softcode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.receive_softcode"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Handles received softcodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – The softcode index.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.led">
+<span class="sig-name descname"><span class="pre">led</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.led"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Controls an LED.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) – The LED index.</p></li>
+<li><p><strong>close</strong> (<em>bool</em>) – Whether to turn it off (or close the circuit).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.water">
+<span class="sig-name descname"><span class="pre">water</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.water"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Controls a water valve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) – The valve index.</p></li>
+<li><p><strong>close</strong> (<em>bool</em>) – Whether to close the valve.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.PyBpodBase.poke">
+<span class="sig-name descname"><span class="pre">poke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#PyBpodBase.poke"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Simulates a poke event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) – The poke index.</p></li>
+<li><p><strong>close</strong> (<em>bool</em>) – State of the poke.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.TelegramBotBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TelegramBotBase</span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#TelegramBotBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for Telegram Bot interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.TelegramBotBase.error">
+<span class="sig-name descname"><span class="pre">error</span></span></dt>
+<dd><p>Error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">telegram_bot</span> <span class="pre">'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.TelegramBotBase.alarm">
+<span class="sig-name descname"><span class="pre">alarm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#TelegramBotBase.alarm"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sends an alarm message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The alarm message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.ScaleBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ScaleBase</span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#ScaleBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for Scale interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.ScaleBase.error">
+<span class="sig-name descname"><span class="pre">error</span></span></dt>
+<dd><p>Error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">scale</span> <span class="pre">'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.ScaleBase.tare">
+<span class="sig-name descname"><span class="pre">tare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#ScaleBase.tare"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Tares the scale.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.ScaleBase.calibrate">
+<span class="sig-name descname"><span class="pre">calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#ScaleBase.calibrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calibrates the scale using a known weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>weight</strong> (<em>float</em>) – The known weight.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.ScaleBase.get_weight">
+<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#ScaleBase.get_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Gets the current weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The weight reading (default 0.0).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.TempSensorBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TempSensorBase</span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#TempSensorBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for Temperature Sensor interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.TempSensorBase.error">
+<span class="sig-name descname"><span class="pre">error</span></span></dt>
+<dd><p>Error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">temp_sensor</span> <span class="pre">'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.TempSensorBase.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#TempSensorBase.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Starts the sensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.TempSensorBase.get_temperature">
+<span class="sig-name descname"><span class="pre">get_temperature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#TempSensorBase.get_temperature"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Gets temperature and humidity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Temperature, humidity, and formatted string.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[float, float, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.MotorBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MotorBase</span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#MotorBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for Motor interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.MotorBase.error">
+<span class="sig-name descname"><span class="pre">error</span></span></dt>
+<dd><p>Error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.MotorBase.open_angle">
+<span class="sig-name descname"><span class="pre">open_angle</span></span></dt>
+<dd><p>Angle for open position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.MotorBase.close_angle">
+<span class="sig-name descname"><span class="pre">close_angle</span></span></dt>
+<dd><p>Angle for close position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">motor</span> <span class="pre">'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">open_angle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">close_angle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.MotorBase.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#MotorBase.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Opens the motor/device.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.MotorBase.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#MotorBase.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Closes the motor/device.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.SoundDeviceBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SoundDeviceBase</span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#SoundDeviceBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for Sound Device interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.SoundDeviceBase.samplerate">
+<span class="sig-name descname"><span class="pre">samplerate</span></span></dt>
+<dd><p>Audio sample rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.SoundDeviceBase.error">
+<span class="sig-name descname"><span class="pre">error</span></span></dt>
+<dd><p>Error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">samplerate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">44100</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">sound_device</span> <span class="pre">'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.SoundDeviceBase.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#SoundDeviceBase.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Loads sound data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>load</strong> (<em>Any</em>) – Left channel data or similar.</p></li>
+<li><p><strong>right</strong> (<em>Any</em>) – Right channel data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.SoundDeviceBase.play">
+<span class="sig-name descname"><span class="pre">play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#SoundDeviceBase.play"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plays the loaded sound.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.SoundDeviceBase.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#SoundDeviceBase.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Stops sound playback.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.SoundDeviceBase.load_wav">
+<span class="sig-name descname"><span class="pre">load_wav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#SoundDeviceBase.load_wav"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Loads a WAV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – Path or name of the WAV file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.EventBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EventBase</span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#EventBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for event logging interfaces.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.EventBase.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#EventBase.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Logs a generic event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date</strong> (<em>str</em>) – Date/time string.</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – Event type.</p></li>
+<li><p><strong>subject</strong> (<em>str</em>) – Subject name.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Description.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.EventBase.log_temp">
+<span class="sig-name descname"><span class="pre">log_temp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">humidity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#EventBase.log_temp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Logs temperature and humidity data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date</strong> (<em>str</em>) – Date/time string.</p></li>
+<li><p><strong>temperature</strong> (<em>float</em>) – Temperature value.</p></li>
+<li><p><strong>humidity</strong> (<em>float</em>) – Humidity value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CameraBase</span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for Camera interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area1">
+<span class="sig-name descname"><span class="pre">area1</span></span></dt>
+<dd><p>Coordinates for area 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area2">
+<span class="sig-name descname"><span class="pre">area2</span></span></dt>
+<dd><p>Coordinates for area 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area3">
+<span class="sig-name descname"><span class="pre">area3</span></span></dt>
+<dd><p>Coordinates for area 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area4">
+<span class="sig-name descname"><span class="pre">area4</span></span></dt>
+<dd><p>Coordinates for area 4.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.areas">
+<span class="sig-name descname"><span class="pre">areas</span></span></dt>
+<dd><p>List of all area coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area1_is_triggered">
+<span class="sig-name descname"><span class="pre">area1_is_triggered</span></span></dt>
+<dd><p>Trigger status for area 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area2_is_triggered">
+<span class="sig-name descname"><span class="pre">area2_is_triggered</span></span></dt>
+<dd><p>Trigger status for area 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area3_is_triggered">
+<span class="sig-name descname"><span class="pre">area3_is_triggered</span></span></dt>
+<dd><p>Trigger status for area 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area4_is_triggered">
+<span class="sig-name descname"><span class="pre">area4_is_triggered</span></span></dt>
+<dd><p>Trigger status for area 4.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.change">
+<span class="sig-name descname"><span class="pre">change</span></span></dt>
+<dd><p>Flag for property changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.annotation">
+<span class="sig-name descname"><span class="pre">annotation</span></span></dt>
+<dd><p>Current annotation text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.path_picture">
+<span class="sig-name descname"><span class="pre">path_picture</span></span></dt>
+<dd><p>Path to save pictures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.error">
+<span class="sig-name descname"><span class="pre">error</span></span></dt>
+<dd><p>Error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.trial">
+<span class="sig-name descname"><span class="pre">trial</span></span></dt>
+<dd><p>Current trial number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.is_recording">
+<span class="sig-name descname"><span class="pre">is_recording</span></span></dt>
+<dd><p>Recording status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.show_time_info">
+<span class="sig-name descname"><span class="pre">show_time_info</span></span></dt>
+<dd><p>Time info display flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.x_position">
+<span class="sig-name descname"><span class="pre">x_position</span></span></dt>
+<dd><p>X coordinate of tracked object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.y_position">
+<span class="sig-name descname"><span class="pre">y_position</span></span></dt>
+<dd><p>Y coordinate of tracked object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.chrono">
+<span class="sig-name descname"><span class="pre">chrono</span></span></dt>
+<dd><p>Timer utility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>time_utils.Chrono</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">area1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">area2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">area3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">area4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">areas</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">area1_is_triggered</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">area2_is_triggered</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">area3_is_triggered</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">area4_is_triggered</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">annotation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">path_picture</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">camera</span> <span class="pre">'</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">trial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">is_recording</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">show_time_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">x_position</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">y_position</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">chrono</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;village.scripts.time_utils.TimeUtils.Chrono</span> <span class="pre">object&gt;</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.start_camera">
+<span class="sig-name descname"><span class="pre">start_camera</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.start_camera"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Starts the camera.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.stop_camera">
+<span class="sig-name descname"><span class="pre">stop_camera</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.stop_camera"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Stops the camera.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.start_preview_window">
+<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='140042860014736'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Starts the preview window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A QWidget for the preview.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>QWidget</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.stop_preview_window">
+<span class="sig-name descname"><span class="pre">stop_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.stop_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Stops the preview window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.start_recording">
+<span class="sig-name descname"><span class="pre">start_recording</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_video</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_csv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.start_recording"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Starts recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_video</strong> (<em>str</em>) – Path for video file.</p></li>
+<li><p><strong>path_csv</strong> (<em>str</em>) – Path for CSV data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.stop_recording">
+<span class="sig-name descname"><span class="pre">stop_recording</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.stop_recording"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Stops recording.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.print_info_about_config">
+<span class="sig-name descname"><span class="pre">print_info_about_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.print_info_about_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Prints camera configuration info.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.pre_process">
+<span class="sig-name descname"><span class="pre">pre_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.pre_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Preprocessing callback for frames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – The request object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.write_text">
+<span class="sig-name descname"><span class="pre">write_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.write_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes text annotation to the frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to write.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.areas_corridor_ok">
+<span class="sig-name descname"><span class="pre">areas_corridor_ok</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.areas_corridor_ok"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks corridor areas status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if OK.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area_1_empty">
+<span class="sig-name descname"><span class="pre">area_1_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.area_1_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if area 1 is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if empty.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area_2_empty">
+<span class="sig-name descname"><span class="pre">area_2_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.area_2_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if area 2 is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if empty.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area_3_empty">
+<span class="sig-name descname"><span class="pre">area_3_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.area_3_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if area 3 is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if empty.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.area_4_empty">
+<span class="sig-name descname"><span class="pre">area_4_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.area_4_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if area 4 is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if empty.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.take_picture">
+<span class="sig-name descname"><span class="pre">take_picture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.take_picture"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Takes a picture.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="village.classes.abstract_classes.CameraBase.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">CameraBase</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="village.classes.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">classes</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Rafael Marin, Balma Serrano, Hernando Vergara, Jaime de la Rocha
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">abstract_classes</a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase"><code class="docutils literal notranslate"><span class="pre">PyBpodBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.error"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.session"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.session</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.connected"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.connected</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.error</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.session</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.connected</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.connect"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.connect()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.add_state"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.add_state()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.set_global_timer"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.set_global_timer()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.set_condition"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.set_condition()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.set_global_counter"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.set_global_counter()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.create_state_machine"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.create_state_machine()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.send_and_run_state_machine"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.send_and_run_state_machine()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.close"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.close()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.stop"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.stop()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.manual_override_input"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.manual_override_input()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.manual_override_output"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.manual_override_output()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.register_value"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.register_value()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.receive_softcode"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.receive_softcode()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.led"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.led()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.water"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.water()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.PyBpodBase.poke"><code class="docutils literal notranslate"><span class="pre">PyBpodBase.poke()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.TelegramBotBase"><code class="docutils literal notranslate"><span class="pre">TelegramBotBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.TelegramBotBase.error"><code class="docutils literal notranslate"><span class="pre">TelegramBotBase.error</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">TelegramBotBase.error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.TelegramBotBase.alarm"><code class="docutils literal notranslate"><span class="pre">TelegramBotBase.alarm()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase"><code class="docutils literal notranslate"><span class="pre">ScaleBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase.error"><code class="docutils literal notranslate"><span class="pre">ScaleBase.error</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">ScaleBase.error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase.tare"><code class="docutils literal notranslate"><span class="pre">ScaleBase.tare()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase.calibrate"><code class="docutils literal notranslate"><span class="pre">ScaleBase.calibrate()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase.get_weight"><code class="docutils literal notranslate"><span class="pre">ScaleBase.get_weight()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.TempSensorBase"><code class="docutils literal notranslate"><span class="pre">TempSensorBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.TempSensorBase.error"><code class="docutils literal notranslate"><span class="pre">TempSensorBase.error</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">TempSensorBase.error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.TempSensorBase.start"><code class="docutils literal notranslate"><span class="pre">TempSensorBase.start()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.TempSensorBase.get_temperature"><code class="docutils literal notranslate"><span class="pre">TempSensorBase.get_temperature()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.MotorBase"><code class="docutils literal notranslate"><span class="pre">MotorBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.MotorBase.error"><code class="docutils literal notranslate"><span class="pre">MotorBase.error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.MotorBase.open_angle"><code class="docutils literal notranslate"><span class="pre">MotorBase.open_angle</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.MotorBase.close_angle"><code class="docutils literal notranslate"><span class="pre">MotorBase.close_angle</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">MotorBase.error</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">MotorBase.open_angle</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">MotorBase.close_angle</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.MotorBase.open"><code class="docutils literal notranslate"><span class="pre">MotorBase.open()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.MotorBase.close"><code class="docutils literal notranslate"><span class="pre">MotorBase.close()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.SoundDeviceBase"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.SoundDeviceBase.samplerate"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase.samplerate</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.SoundDeviceBase.error"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase.error</span></code></a></li>
+<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase.samplerate</span></code></a></li>
+<li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase.error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.SoundDeviceBase.load"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase.load()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.SoundDeviceBase.play"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase.play()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.SoundDeviceBase.stop"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase.stop()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.SoundDeviceBase.load_wav"><code class="docutils literal notranslate"><span class="pre">SoundDeviceBase.load_wav()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.EventBase"><code class="docutils literal notranslate"><span class="pre">EventBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.EventBase.log"><code class="docutils literal notranslate"><span class="pre">EventBase.log()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.EventBase.log_temp"><code class="docutils literal notranslate"><span class="pre">EventBase.log_temp()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase"><code class="docutils literal notranslate"><span class="pre">CameraBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area1"><code class="docutils literal notranslate"><span class="pre">CameraBase.area1</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area2"><code class="docutils literal notranslate"><span class="pre">CameraBase.area2</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area3"><code class="docutils literal notranslate"><span class="pre">CameraBase.area3</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area4"><code class="docutils literal notranslate"><span class="pre">CameraBase.area4</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.areas"><code class="docutils literal notranslate"><span class="pre">CameraBase.areas</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area1_is_triggered"><code class="docutils literal notranslate"><span class="pre">CameraBase.area1_is_triggered</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area2_is_triggered"><code class="docutils literal notranslate"><span class="pre">CameraBase.area2_is_triggered</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area3_is_triggered"><code class="docutils literal notranslate"><span class="pre">CameraBase.area3_is_triggered</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area4_is_triggered"><code class="docutils literal notranslate"><span class="pre">CameraBase.area4_is_triggered</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.change"><code class="docutils literal notranslate"><span class="pre">CameraBase.change</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.annotation"><code class="docutils literal notranslate"><span class="pre">CameraBase.annotation</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.path_picture"><code class="docutils literal notranslate"><span class="pre">CameraBase.path_picture</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.error"><code class="docutils literal notranslate"><span class="pre">CameraBase.error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.trial"><code class="docutils literal notranslate"><span class="pre">CameraBase.trial</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.is_recording"><code class="docutils literal notranslate"><span class="pre">CameraBase.is_recording</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.show_time_info"><code class="docutils literal notranslate"><span class="pre">CameraBase.show_time_info</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.x_position"><code class="docutils literal notranslate"><span class="pre">CameraBase.x_position</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.y_position"><code class="docutils literal notranslate"><span class="pre">CameraBase.y_position</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.chrono"><code class="docutils literal notranslate"><span class="pre">CameraBase.chrono</span></code></a></li>
+<li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">CameraBase.area1</span></code></a></li>
+<li><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">CameraBase.area2</span></code></a></li>
+<li><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">CameraBase.area3</span></code></a></li>
+<li><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">CameraBase.area4</span></code></a></li>
+<li><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">CameraBase.areas</span></code></a></li>
+<li><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">CameraBase.area1_is_triggered</span></code></a></li>
+<li><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">CameraBase.area2_is_triggered</span></code></a></li>
+<li><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">CameraBase.area3_is_triggered</span></code></a></li>
+<li><a class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">CameraBase.area4_is_triggered</span></code></a></li>
+<li><a class="reference internal" href="#id20"><code class="docutils literal notranslate"><span class="pre">CameraBase.change</span></code></a></li>
+<li><a class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">CameraBase.annotation</span></code></a></li>
+<li><a class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">CameraBase.path_picture</span></code></a></li>
+<li><a class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">CameraBase.error</span></code></a></li>
+<li><a class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">CameraBase.trial</span></code></a></li>
+<li><a class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">CameraBase.is_recording</span></code></a></li>
+<li><a class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">CameraBase.show_time_info</span></code></a></li>
+<li><a class="reference internal" href="#id27"><code class="docutils literal notranslate"><span class="pre">CameraBase.x_position</span></code></a></li>
+<li><a class="reference internal" href="#id28"><code class="docutils literal notranslate"><span class="pre">CameraBase.y_position</span></code></a></li>
+<li><a class="reference internal" href="#id29"><code class="docutils literal notranslate"><span class="pre">CameraBase.chrono</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.start_camera"><code class="docutils literal notranslate"><span class="pre">CameraBase.start_camera()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.stop_camera"><code class="docutils literal notranslate"><span class="pre">CameraBase.stop_camera()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.start_preview_window"><code class="docutils literal notranslate"><span class="pre">CameraBase.start_preview_window()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.stop_preview_window"><code class="docutils literal notranslate"><span class="pre">CameraBase.stop_preview_window()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.start_recording"><code class="docutils literal notranslate"><span class="pre">CameraBase.start_recording()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.stop_recording"><code class="docutils literal notranslate"><span class="pre">CameraBase.stop_recording()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.print_info_about_config"><code class="docutils literal notranslate"><span class="pre">CameraBase.print_info_about_config()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.pre_process"><code class="docutils literal notranslate"><span class="pre">CameraBase.pre_process()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.write_text"><code class="docutils literal notranslate"><span class="pre">CameraBase.write_text()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.areas_corridor_ok"><code class="docutils literal notranslate"><span class="pre">CameraBase.areas_corridor_ok()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area_1_empty"><code class="docutils literal notranslate"><span class="pre">CameraBase.area_1_empty()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area_2_empty"><code class="docutils literal notranslate"><span class="pre">CameraBase.area_2_empty()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area_3_empty"><code class="docutils literal notranslate"><span class="pre">CameraBase.area_3_empty()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.area_4_empty"><code class="docutils literal notranslate"><span class="pre">CameraBase.area_4_empty()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.CameraBase.take_picture"><code class="docutils literal notranslate"><span class="pre">CameraBase.take_picture()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=983c28a9"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

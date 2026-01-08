@@ -1,0 +1,40 @@
+motor
+=====
+
+.. automodule:: village.devices.motor
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      find_pwmchip
+      get_motor
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      Motor
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,1032 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
+        <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/scripts/time_utils.html">
+        <link rel="prefetch" href="../../../_static/logo.png" as="image">
+
+    <link rel="shortcut icon" href="../../../_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>village.scripts.time_utils - Training village</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Training village</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../_static/logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../user_guide_index.html">User Guide</a><input aria-label="Toggle navigation of User Guide" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/GUI.html">GUI Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/settings.html">Initial Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/subjects.html">Create New Subjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/corridor.html">Calibrate and Test Corridor Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/detection.html">Calibrate and Test Animal Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/create.html">Create a Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/maintenance.html">Maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../how_to_build_index.html">How to Build It</a><input aria-label="Toggle navigation of How to Build It" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../how_to_build/software_installation.html">Software Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../initial_configuration_index.html">Initial Configuration</a><input aria-label="Toggle navigation of Initial Configuration" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/hardware.html">Hardware Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/remote.html">Configure Remote Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api_index.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.calibration.html">calibration</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a><input aria-label="Toggle navigation of classes" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.html">abstract_classes</a><input aria-label="Toggle navigation of abstract_classes" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.CameraBase.html">CameraBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.EventBase.html">EventBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.MotorBase.html">MotorBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.PyBpodBase.html">PyBpodBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.ScaleBase.html">ScaleBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.SoundDeviceBase.html">SoundDeviceBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.TelegramBotBase.html">TelegramBotBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.abstract_classes.TempSensorBase.html">TempSensorBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.classes.enums.html">enums</a><input aria-label="Toggle navigation of enums" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Controller.html">Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Save.html">Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.SyncType.html">SyncType</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.html">settings_class</a><input aria-label="Toggle navigation of settings_class" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_generated/village.custom_classes.html">custom_classes</a><input aria-label="Toggle navigation of custom_classes" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><input aria-label="Toggle navigation of camera_trigger_base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_generated/village.devices.html">devices</a><input aria-label="Toggle navigation of devices" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.devices.motor.html">motor</a><input aria-label="Toggle navigation of motor" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.Motor.html">Motor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.plots.html">plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.screen.html">screen</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_generated/village.scripts.html">scripts</a><input aria-label="Toggle navigation of scripts" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.scripts.log.html">log</a><input aria-label="Toggle navigation of log" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.log.Log.html">Log</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><input aria-label="Toggle navigation of parse_bpod_messages" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_generated/village.scripts.time_utils.html">time_utils</a><input aria-label="Toggle navigation of time_utils" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../resources_index.html">Resources</a><input aria-label="Toggle navigation of Resources" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/code.html">Code Repository</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq_index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../troubleshooting_index.html">Troubleshooting</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for village.scripts.time_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span>
+
+
+<div class="viewcode-block" id="TimeUtils">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeUtils</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Utility class for time-related operations using monotonic and wall-clock time.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TimeUtils.__init__">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the TimeUtils instance with current time values.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_wall</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_mono_ns</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic_ns</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.sync">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.sync">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Synchronizes base time references.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_wall</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_mono_ns</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic_ns</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.now">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.now">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">now</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current datetime calculated from monotonic time.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.datetime: Current time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">elapsed_ns</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic_ns</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_mono_ns</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_wall</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed_ns</span> <span class="o">/</span> <span class="mf">1e9</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.get_time_monotonic">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.get_time_monotonic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_time_monotonic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current monotonic time in seconds.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Monotonic time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.now_timestamp">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.now_timestamp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">now_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current timestamp.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Current timestamp.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.monotonic_ns_to_timestamps">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.monotonic_ns_to_timestamps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">monotonic_ns_to_timestamps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mono_ns</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts monotonic nanoseconds to a timestamp.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mono_ns (int): Monotonic time in nanoseconds.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Corresponding timestamp.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">elapsed_ns</span> <span class="o">=</span> <span class="n">mono_ns</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_mono_ns</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_wall</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed_ns</span> <span class="o">/</span> <span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.time_in_future_seconds">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.time_in_future_seconds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">time_in_future_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a datetime a specific number of seconds in the future.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            seconds (int): seconds to add.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.datetime: Future time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.hours_ago">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.hours_ago">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hours_ago</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a datetime a specific number of hours in the past.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hours (int): hours to subtract.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.datetime: Past time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.date_from_previous_weekday">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.date_from_previous_weekday">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">date_from_previous_weekday</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weekday</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the date of the most recent occurrence of a specific weekday.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            weekday (int): The day of the week (0=Monday, 6=Sunday).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.datetime: The resulting date.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">today</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">days</span> <span class="o">=</span> <span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">weekday</span><span class="p">()</span> <span class="o">-</span> <span class="n">weekday</span><span class="p">)</span> <span class="o">%</span> <span class="mi">7</span>
+        <span class="k">return</span> <span class="n">today</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.time_since_day_started">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.time_since_day_started">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">time_since_day_started</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the time elapsed since the start of the current day.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.timedelta: Time elapsed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t</span> <span class="o">-</span> <span class="n">start</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.seconds_since_start">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.seconds_since_start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">seconds_since_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of seconds elapsed since a given start time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            start (datetime.datetime): Start time.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Seconds elapsed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.now_string">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.now_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">now_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current time as a formatted string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Formatted time string (&quot;%Y-%m-%d %H:%M:%S&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.now_string_for_filename">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.now_string_for_filename">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">now_string_for_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current time formatted for filenames.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Formatted time string (&quot;%Y%m%d_%H%M%S&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.string_from_date">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.string_from_date">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">string_from_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats a date object as a string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            date (datetime.datetime): Date object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Formatted string (&quot;%Y-%m-%d %H:%M:%S&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.string_from_timestamp">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.string_from_timestamp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">string_from_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats a timestamp as a string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestamp (float): Timestamp to format.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Formatted string (&quot;%Y-%m-%d %H:%M:%S&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.filename_string_from_date">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.filename_string_from_date">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filename_string_from_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats a date object for filenames.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            date (datetime.datetime): Date object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Formatted string (&quot;%Y%m%d_%H%M%S&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.date_from_string">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.date_from_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">date_from_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses a date string into a datetime object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            string (str): Date string (&quot;%Y-%m-%d %H:%M:%S&quot;).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.datetime: Parsed datetime object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.time_from_setting_string">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.time_from_setting_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">time_from_setting_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses a time string from settings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            string (str): Time string (&quot;%H:%M&quot;).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.time: Parsed time object, defaults to 08:00 on error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.date_from_path">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.date_from_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">date_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts date from a file path based on filename convention.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): File path.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.datetime: Extracted date.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">date_str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.days_ago_init_times">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.days_ago_init_times">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">days_ago_init_times</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">first</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+        <span class="n">second</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+        <span class="n">days</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">time_to_end</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates initialization times for a previous day.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            first (datetime.time): First time.</span>
+<span class="sd">            second (datetime.time): Second time.</span>
+<span class="sd">            days (int): Days ago.</span>
+<span class="sd">            time_to_end (datetime.datetime | None): End time reference.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[datetime.datetime, datetime.datetime]: Calculated datetimes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">end</span> <span class="o">=</span> <span class="n">time_to_end</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="n">end</span><span class="o">.</span><span class="n">time</span><span class="p">():</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">hour</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
+            <span class="n">minute</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
+            <span class="n">second</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
+            <span class="n">microsecond</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">hour</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
+            <span class="n">minute</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
+            <span class="n">second</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
+            <span class="n">microsecond</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.tomorrow_init_time">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.tomorrow_init_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tomorrow_init_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the initialization time for tomorrow.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            first (datetime.time): Target time.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            datetime.datetime: Calculated datetime.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">day</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="n">base</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="k">else</span> <span class="n">base</span>
+        <span class="k">return</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">hour</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
+            <span class="n">minute</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
+            <span class="n">second</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
+            <span class="n">microsecond</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.range_24_hours">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.range_24_hours">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">range_24_hours</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">day_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">first_init_time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates a 24-hour range starting from a specific time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            day_date (datetime.datetime): The date.</span>
+<span class="sd">            first_init_time (datetime.time): The start time.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[datetime.datetime, datetime.datetime]: Start and end datetimes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">day_date</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">first_init_time</span><span class="p">)</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.measure_time">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.measure_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">measure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decorator to measure execution time of a function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            func (Callable): Function to measure.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Callable: Wrapped function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> execution time: </span><span class="si">{</span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.find_closest_file_and_seconds">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.find_closest_file_and_seconds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_closest_file_and_seconds</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finds the file closest to a given date and calculates time difference.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            directory (str): Directory to search.</span>
+<span class="sd">            prefix (str): Filename prefix.</span>
+<span class="sd">            date (datetime.datetime): Target date.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[str, int]: Path to closest file and seconds difference.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">closest_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">closest_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">time_seconds</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.mp4&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">date_str</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+                    <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">file_date</span> <span class="o">&lt;</span> <span class="n">date</span> <span class="ow">and</span> <span class="p">(</span>
+                        <span class="n">closest_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">file_date</span> <span class="o">&gt;</span> <span class="n">closest_time</span>
+                    <span class="p">):</span>
+                        <span class="n">closest_time</span> <span class="o">=</span> <span class="n">file_date</span>
+                        <span class="n">closest_file</span> <span class="o">=</span> <span class="n">filename</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">closest_file</span> <span class="ow">and</span> <span class="n">closest_time</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">closest_file</span><span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">date</span> <span class="o">-</span> <span class="n">closest_time</span>
+            <span class="n">time_seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">time_seconds</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.format_duration">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.format_duration">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">milliseconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats a duration in milliseconds to a string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            milliseconds (int): Duration in milliseconds.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Formatted string (&quot;HH:MM:SS.mmm&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hours</span> <span class="o">=</span> <span class="n">milliseconds</span> <span class="o">//</span> <span class="mi">3_600_000</span>
+        <span class="n">minutes</span> <span class="o">=</span> <span class="p">(</span><span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">3_600_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">60_000</span>
+        <span class="n">seconds</span> <span class="o">=</span> <span class="p">(</span><span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">60_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1_000</span>
+        <span class="n">millis</span> <span class="o">=</span> <span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">1_000</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hours</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">millis</span><span class="si">:</span><span class="s2">03</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.Chrono">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Chrono</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simple specific chronometer for measuring elapsed time.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the Chrono.&quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TimeUtils.Chrono.reset">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono.reset">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Resets the chronometer.&quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.Chrono.get_time">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono.get_time">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in seconds.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                float: Elapsed time.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.Chrono.get_seconds">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono.get_seconds">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in seconds as integer.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                int: Elapsed seconds.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.Chrono.get_milliseconds">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono.get_milliseconds">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_milliseconds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in milliseconds.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                int: Elapsed milliseconds.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TimeUtils.Timer">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Timer">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Timer</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Timer for checking if a specific duration has elapsed.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the Timer.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                seconds (int): Duration in seconds.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span> <span class="o">=</span> <span class="n">seconds</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="mf">10.0</span>
+
+<div class="viewcode-block" id="TimeUtils.Timer.has_elapsed">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Timer.has_elapsed">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_elapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the timer has elapsed.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                bool: True if elapsed, resets automatically.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.Timer.ten_seconds_elapsed">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Timer.ten_seconds_elapsed">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">ten_seconds_elapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if 10 seconds have elapsed.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                bool: True if 10 seconds elapsed, resets automatically.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.Timer.reset">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Timer.reset">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Resets the timer.&quot;&quot;&quot;</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TimeUtils.HourChangeDetector">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.HourChangeDetector">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">HourChangeDetector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects if the hour has changed.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the HourChangeDetector.&quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span>
+
+<div class="viewcode-block" id="TimeUtils.HourChangeDetector.has_hour_changed">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.HourChangeDetector.has_hour_changed">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_hour_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the hour has changed since last check.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                bool: True if hour changed.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">current_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span>
+            <span class="k">if</span> <span class="n">current_hour</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span> <span class="o">=</span> <span class="n">current_hour</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TimeUtils.CycleChangeDetector">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.CycleChangeDetector">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">CycleChangeDetector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects if the day/night cycle has changed.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">day_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">night_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the CycleChangeDetector.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                day_time (str): Start time of day.</span>
+<span class="sd">                night_time (str): Start time of night.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">day_time</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">night_time</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_cycle</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_get_current_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Determines current cycle state.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                str: &#39;day&#39; or &#39;night&#39;.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;day&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="k">else</span> <span class="s2">&quot;night&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;day&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;night&quot;</span>
+
+<div class="viewcode-block" id="TimeUtils.CycleChangeDetector.has_cycle_changed">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.CycleChangeDetector.has_cycle_changed">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_cycle_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the cycle has changed.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                bool: True if cycle changed.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_cycle</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">current</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span> <span class="o">=</span> <span class="n">current</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TimeUtils.TimestampTracker">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.TimestampTracker">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">TimestampTracker</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tracks timestamps and checks for emptiness within a time window.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the TimestampTracker.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                hours (int): Time window in hours.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hours</span> <span class="o">=</span> <span class="n">hours</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="TimeUtils.TimestampTracker.add_timestamp">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.TimestampTracker.add_timestamp">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">add_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Adds a current timestamp.&quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.TimestampTracker.trigger_empty">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.TimestampTracker.trigger_empty">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">trigger_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the tracker is empty / inactive for the duration.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                bool: True if state changed to empty.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hours</span> <span class="o">*</span> <span class="mi">3600</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span><span class="n">ts</span> <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="k">if</span> <span class="n">ts</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">]</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+</div>
+
+
+
+<span class="n">time_utils</span> <span class="o">=</span> <span class="n">TimeUtils</span><span class="p">()</span>
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Rafael Marin, Balma Serrano, Hernando Vergara, Jaime de la Rocha
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=983c28a9"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

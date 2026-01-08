@@ -1,0 +1,41 @@
+﻿scripts
+=======
+
+.. automodule:: village.scripts
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom_module_template.rst
+   :recursive:
+
+   error_queue
+   global_csv_for_subject
+   log
+   parse_bpod_messages
+   playground
+   rsync_to_hard_drive
+   rsync_to_server
+   safe_removal_of_data
+   time_utils
+   utils
+

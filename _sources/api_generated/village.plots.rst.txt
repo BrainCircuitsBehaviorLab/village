@@ -1,0 +1,36 @@
+﻿plots
+=====
+
+.. automodule:: village.plots
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom_module_template.rst
+   :recursive:
+
+   corridor_plot
+   sound_calibration_plot
+   temperatures_plot
+   water_calibration_plot
+   weights_plot
+

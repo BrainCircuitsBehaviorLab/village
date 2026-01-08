@@ -1,0 +1,38 @@
+Motor
+=====
+
+.. currentmodule:: village.devices.motor
+
+.. autoclass:: Motor
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Motor.__init__
+      ~Motor.close
+      ~Motor.enable
+      ~Motor.open
+      ~Motor.set
+      ~Motor.transform
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Motor.close_angle
+      ~Motor.error
+      ~Motor.open_angle
+   
+   
