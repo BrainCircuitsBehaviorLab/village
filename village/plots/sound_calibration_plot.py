@@ -12,6 +12,20 @@ def sound_calibration_plot(
     height: float,
     point: tuple[float, float] | None,
 ) -> Figure:
+    """Generates a plot for sound calibration data.
+
+    Plots the gain vs. measured dB for different speakers and sounds, including
+    interpolated curves and an optional specific data point.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing calibration data.
+        width (float): Width of the figure in inches.
+        height (float): Height of the figure in inches.
+        point (tuple[float, float] | None): Optional (gain, dB) point to highlight.
+
+    Returns:
+        Figure: The generated matplotlib figure.
+    """
     fig, ax = plt.subplots(figsize=(width, height))
 
     speakers = sorted(df["speaker"].unique())

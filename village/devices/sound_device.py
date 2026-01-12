@@ -16,13 +16,34 @@ from village.settings import settings
 
 
 def get_sound_devices() -> list[str]:
+    """Retrieves a list of available sound device names.
+
+    Returns:
+        list[str]: A list of device names.
+    """
     devices = sd.query_devices()
     devices_str = [d["name"] for d in devices]
     return devices_str
 
 
 class SoundDevice:
+    """Handles audio playback using sounddevice.
+
+    Attributes:
+        samplerate (int): Audio sample rate.
+        channels (int): Number of audio channels.
+        latency (str): Latency setting for sounddevice.
+        index (int): Index of the used sound device.
+        error (str): Error message.
+        stream (sd.OutputStream): The active audio stream (internal).
+        sound (np.ndarray): The current sound buffer.
+        command_queue (queue.Queue): Queue for processing audio commands in a thread.
+        thread (threading.Thread): Background thread for audio processing.
+        thread_running (bool): Flag to control the background thread.
+    """
+
     def __init__(self) -> None:
+        """Initializes the SoundDevice with settings."""
         self.samplerate = int(settings.get("SAMPLERATE"))
         self.channels = 2
         self.latency = "high"
@@ -46,6 +67,15 @@ class SoundDevice:
         self.thread.start()
 
     def load(self, left: Any, right: Any) -> None:
+        """Loads sound data into the playback queue.
+
+        Args:
+            left (Any): Left channel data (array-like).
+            right (Any): Right channel data (array-like).
+
+        Raises:
+            ValueError: If inputs are invalid or lengths differ.
+        """
         if left is None and right is not None:
             left = np.zeros(len(right))
         elif right is None and left is not None:
@@ -92,12 +122,15 @@ class SoundDevice:
         return left, right
 
     def play(self) -> None:
+        """Triggers playback of the loaded sound."""
         self.command_queue.put(("play", None))
 
     def stop(self) -> None:
+        """Stops playback."""
         self.command_queue.put(("stop", None))
 
     def _audio_worker(self) -> None:
+        """Worker function for the audio thread to handle stream operations."""
         current_sound = np.empty(0, dtype=np.float32)
         stream = sd.OutputStream(dtype="float32")
 
@@ -144,21 +177,37 @@ class SoundDevice:
                 stream.close()
 
     def shutdown(self) -> None:
+        """Shuts down the audio thread and stream."""
         if self.thread_running:
             self.thread_running = False
             self.command_queue.put(("shutdown", None))
             self.thread.join(timeout=2.0)
 
     def __del__(self) -> None:
+        """Destructor to ensure shutdown."""
         self.shutdown()
 
     @staticmethod
     def create_sound_vec(left: np.ndarray, right: np.ndarray) -> np.ndarray[np.float32]:
+        """Interleaves left and right channels into a stereo array.
+
+        Args:
+            left (np.ndarray): Left channel data.
+            right (np.ndarray): Right channel data.
+
+        Returns:
+            np.ndarray[np.float32]: Interleaved stereo data.
+        """
         sound = np.array([left, right])
         return np.ascontiguousarray(sound.T, dtype=np.float32)
 
 
 def get_sound_device() -> SoundDevice | NullSoundDevice:
+    """Factory function to initialize the SoundDevice.
+
+    Returns:
+        SoundDeviceBase: An initialized SoundDevice or base class if disabled/failed.
+    """
     if settings.get("USE_SOUNDCARD") == Active.OFF:
         return NullSoundDevice()
     else:

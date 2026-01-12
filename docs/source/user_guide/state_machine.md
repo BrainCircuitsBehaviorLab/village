@@ -1,6 +1,6 @@
 ## System State Machine
 
-![State machine](/_static/states.png)
+[![State machine](/_static/states.png)](/_static/states.png)
 
 This is the state diagram of all possible system states and their descriptions.
 

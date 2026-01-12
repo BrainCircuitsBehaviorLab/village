@@ -2,7 +2,7 @@ import json
 import traceback
 from pathlib import Path
 from threading import Thread
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Tuple
 
 import numpy as np
 import pandas as pd
@@ -24,19 +24,32 @@ if TYPE_CHECKING:
 
 
 class TaskError(Exception):
+    """Exception raised for errors in the Task class."""
+
     def __init__(self, message) -> None:
         super().__init__(message)
 
 
 class Event(EventName):
+    """Enumeration of Bpod event names."""
+
     pass
 
 
 class Output(OutputChannel):
+    """Enumeration of Bpod output channels."""
+
     pass
 
 
 class Task:
+    """Base class for defining and running behavioral tasks using Bpod.
+
+    This class provides the infrastructure for task management, including
+    communication with Bpod, data logging, session management, and integration
+    with other devices like cameras and sound systems.
+    """
+
     def __init__(self) -> None:
         self.controller: BehaviorController = controller
         self.name: str = self.get_name()
@@ -78,22 +91,37 @@ class Task:
 
     # OVERWRITE THESE METHODS IN YOUR TASKS
     def start(self) -> None:
+        """Starts the task. Must be overridden by subclasses."""
         raise TaskError("The method start(self) is required")
 
     def create_trial(self) -> None:
+        """Creates the state machine for the current trial. Must be overridden."""
         raise TaskError("The method create_trial(self) is required")
 
     def after_trial(self) -> None:
+        """Executed after each trial completes. Must be overridden."""
         raise TaskError("The method after_trial(self) is required")
 
     def close(self) -> None:
+        """Closes the task and releases resources. Must be overridden."""
         raise TaskError("The method close(self) is required")
 
     # DO NOT OVERWRITE THESE METHODS
     def send_softcode_to_bpod(self, code: int) -> None:
+        """Sends a softcode to the Bpod device.
+
+        Args:
+            code (int): The softcode value to send.
+        """
         self.controller.send_softcode_to_bpod(code)
 
-    def run_in_thread(self, daemon=True) -> None:
+    def run_in_thread(self, daemon: bool = True) -> None:
+        """Runs the task in a separate background thread.
+
+        Args:
+            daemon (bool, optional): Whether to run as a daemon thread. Defaults to True.
+        """
+
         def test_run():
             self.create_paths()
             self.start()
@@ -106,6 +134,7 @@ class Task:
         return
 
     def run(self) -> None:
+        """Runs the task in the main thread until completion or forced stop."""
         self.start()
         while (
             self.current_trial <= self.maximum_number_of_trials
@@ -115,6 +144,13 @@ class Task:
             self.do_trial(send_to_cam=True)
 
     def do_trial(self, send_to_cam: bool = False) -> None:
+        """Executes a single trial.
+
+        Initializes the state machine, runs it, collects data, and performs post-trial updates.
+
+        Args:
+            send_to_cam (bool, optional): Whether to update the camera with the trial number. Defaults to False.
+        """
         self.controller.create_state_machine()
         if send_to_cam:
             self.cam_box.trial = self.current_trial
@@ -128,6 +164,11 @@ class Task:
         return
 
     def get_trial_data(self) -> None:
+        """Retrieves and processes data from the last executed trial.
+
+        Extracts timestamps, events, and states from the Bpod session and updates
+        `self.trial_data`.
+        """
         # TODO: make this with a better logic
         # read from bpod if there is one
         try:
@@ -168,15 +209,23 @@ class Task:
         self.trial_data["ordered_list_of_events"] = [msg.content for msg in occurrences]
 
     def concatenate_trial_data(self) -> None:
+        """Appends the current trial's data to the session DataFrame."""
         self.row_df = pd.DataFrame([self.trial_data])
         self.session_df = pd.concat([self.session_df, self.row_df], ignore_index=True)
         self.trial_data = {}
 
     def register_value(self, name: str, value: Any) -> None:
+        """Registers a custom value to be saved with the trial data.
+
+        Args:
+            name (str): The name of the value (column header).
+            value (Any): The value to store.
+        """
         self.controller.register_value(name, value)
         self.trial_data[name] = value
 
     def register_default_values(self) -> None:
+        """Registers standard session metadata values (task, subject, system, date)."""
         self.controller.register_value("task", self.name)
         self.controller.register_value("subject", self.subject)
         self.controller.register_value("system_name", self.system_name)
@@ -195,7 +244,16 @@ class Task:
 
         self.controller.register_value("TRIAL", None)
 
-    def disconnect_and_save(self, run_mode: str) -> tuple[Save, float, int, int, str]:
+    def disconnect_and_save(self, run_mode: str) -> Tuple[Save, float, int, int, str]:
+        """Stops the task, disconnects devices, and saves session data.
+
+        Args:
+            run_mode (str): The mode in which the task was run (e.g., "Manual").
+
+        Returns:
+            Tuple[Save, float, int, int, str]: A tuple containing the save status,
+            session duration, number of trials, water consumed, and settings string.
+        """
         save: Save = Save.NO
         duration: float = 0.0
         trials: int = 0
@@ -238,6 +296,14 @@ class Task:
         return save, duration, trials, water, settings_str
 
     def save_json(self, run_mode: str) -> str:
+        """Saves the session settings to a JSON file.
+
+        Args:
+            run_mode (str): The execution mode string.
+
+        Returns:
+            str: The JSON string containing the settings.
+        """
 
         dictionary: dict[str, Any] = {}
 
@@ -267,7 +333,19 @@ class Task:
 
         return json_string
 
-    def save_csv(self, run_mode: str) -> tuple[float, int, int, bool]:
+    def save_csv(self, run_mode: str) -> Tuple[float, int, int, bool]:
+        """Saves the session data to CSV files.
+
+        Processes raw data, saves raw and clean session files, and updates the
+        subject's cumulative data file.
+
+        Args:
+            run_mode (str): The execution mode string.
+
+        Returns:
+            Tuple[float, int, int, bool]: Duration, trial count, water consumed,
+            and success status.
+        """
 
         duration: float = 0.0
         trials: int = 0
@@ -359,6 +437,14 @@ class Task:
             return 0.0, 0, 0, False
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Transforms raw session data into a wide format suitable for analysis.
+
+        Args:
+            df (pd.DataFrame): Raw dataframe.
+
+        Returns:
+            pd.DataFrame: Transformed dataframe.
+        """
 
         def make_list(x) -> Any | float | str:
             if x.size <= 1:
@@ -443,6 +529,7 @@ class Task:
 
     @classmethod
     def get_name(cls) -> str:
+        """Returns the name of the task class."""
         name = cls.__name__
         if name == "Task":
             return "None"
@@ -450,6 +537,7 @@ class Task:
             return name
 
     def create_paths(self) -> None:
+        """Sets up file and directory paths for the session."""
         start_time = time_utils.now()
         self.date = time_utils.string_from_date(start_time)
         start_time_str = time_utils.filename_string_from_date(start_time)

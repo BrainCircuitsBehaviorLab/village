@@ -13,9 +13,20 @@ from village.scripts.error_queue import error_queue
 
 
 class VideoWorker(QObject):
+    """Worker class for decoding video frames in a separate thread.
+
+    Uses OpenCV to read frames and serves them as QImages for display.
+    Maintains synchronization with real-time based on the video's FPS.
+    """
+
     finished = pyqtSignal()
 
     def __init__(self, path: str) -> None:
+        """Initializes the VideoWorker.
+
+        Args:
+            path (str): Path to the video file.
+        """
         super().__init__()
         self.path = path
         self.cap: Optional[cv2.VideoCapture] = None
@@ -36,6 +47,7 @@ class VideoWorker(QObject):
 
     @pyqtSlot()
     def run(self) -> None:
+        """Main loop for reading and processing video frames."""
         self._running = True
         try:
             self.cap = cv2.VideoCapture(self.path)
@@ -88,6 +100,13 @@ class VideoWorker(QObject):
             self.finished.emit()
 
     def get_latest_qimage(self) -> Optional[QImage]:
+        """Returns the most appropriate video frame for the current time.
+
+        Calculates the target frame based on elapsed time since start.
+
+        Returns:
+            Optional[QImage]: The current video frame.
+        """
         if not self._started or self._frame_dt <= 0:
             return None
 
@@ -115,4 +134,5 @@ class VideoWorker(QObject):
         return self._served_img
 
     def stop(self) -> None:
+        """Stops the video decoding loop."""
         self._running = False

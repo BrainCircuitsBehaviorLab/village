@@ -19,7 +19,21 @@ from village.settings import settings
 
 
 class TelegramBot:
+    """A Telegram Bot for controlling and monitoring the village system.
+
+    Attributes:
+        token (str): The Telegram bot token.
+        chat (str): The chat ID to send alarms to.
+        message (str): Current message buffer.
+        connected (bool): Connection status.
+        error_running (bool): Flag indicating if an error occurred during the loop.
+        error (str): Error message.
+        thread (threading.Thread): Background thread for the bot loop.
+        application (Application): The python-telegram-bot application instance.
+    """
+
     def __init__(self) -> None:
+        """Initializes the TelegramBot and starts the background loop."""
         self.token = settings.get("TELEGRAM_TOKEN")
         self.chat = settings.get("TELEGRAM_CHAT")
         self.message = ""
@@ -31,10 +45,21 @@ class TelegramBot:
         self.thread.start()
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Responds to the /start command.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object.
+        """
         text = "Hi! Use /report <hours> to get a report of the last hours."
         await update.message.reply_text(text)
 
     def alarm(self, message: str) -> None:
+        """Sends an alarm message to the configured chat.
+
+        Args:
+            message (str): The message content.
+        """
         try:
             url = "https://api.telegram.org/bot%s/sendMessage" % self.token
             data = parse.urlencode({"chat_id": self.chat, "text": message})
@@ -43,6 +68,12 @@ class TelegramBot:
             log.error("Telegram error sending alarm", exception=traceback.format_exc())
 
     async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Generates and sends a report for the specified number of hours.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object (contains args).
+        """
         try:
             hours = int(context.args[0])
             if hours < 1:
@@ -61,6 +92,12 @@ class TelegramBot:
             )
 
     async def cam(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Takes pictures from cameras and sends them.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object.
+        """
         try:
             cam_corridor.take_picture()
             cam_box.take_picture()
@@ -77,6 +114,12 @@ class TelegramBot:
             log.error("Telegram error sending photos", exception=traceback.format_exc())
 
     async def plot(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Generates and sends a plot of corridor events.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object.
+        """
         try:
             path = os.path.join(settings.get("SYSTEM_DIRECTORY"), "PLOT.jpg")
             subjects = manager.subjects.df["name"].tolist()
@@ -92,6 +135,7 @@ class TelegramBot:
             log.error("Telegram error sending plot", exception=traceback.format_exc())
 
     async def main(self) -> None:
+        """Main asyncio loop for the bot application."""
         self.application = ApplicationBuilder().token(self.token).build()
         self.application.add_handler(CommandHandler("start", self.start))
         self.application.add_handler(CommandHandler("help", self.start))
@@ -99,18 +143,23 @@ class TelegramBot:
         self.application.add_handler(CommandHandler("plot", self.plot))
         self.application.add_handler(CommandHandler("cam", self.cam))
 
-        await self.application.initialize()
-        await self.application.updater.start_polling()
-        await self.application.start()
+        try:
+            await self.application.initialize()
+            await self.application.updater.start_polling()
+            await self.application.start()
+        except TypeError:
+            pass
         self.connected = True
         while True:
             await asyncio.sleep(1)
 
     async def botloop_starttask(self) -> None:
+        """Starts the main bot task."""
         bot_routine = asyncio.create_task(self.main())
         await bot_routine
 
     def botloop(self) -> None:
+        """Entry point for the bot thread."""
         try:
             asyncio.run(self.botloop_starttask())
         except Exception:
@@ -119,6 +168,11 @@ class TelegramBot:
 
 
 def get_telegram_bot() -> TelegramBot | NullTelegramBot:
+    """Factory function to initialize and connect the TelegramBot.
+
+    Returns:
+        TelegramBotBase: An initialized TelegramBot instance or base class on failure.
+    """
     try:
         telegram_bot = TelegramBot()
         chrono = time_utils.Chrono()

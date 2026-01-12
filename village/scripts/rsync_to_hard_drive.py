@@ -16,10 +16,14 @@ def run_rsync_local(source, destination, maximum_sync_time, cancel_event=None) -
     """
     Run rsync to sync to a local destination (e.g., external HDD).
 
-    Parameters (for compatibility; only source and destination are used):
-    - source: Local path to sync
-    - destination: Local destination path (e.g., /media/pi/mydisk/backup/)
-    - maximum_sync_time: Maximum_sync_time in seconds
+    Args:
+        source (str): Local path to sync.
+        destination (str): Local destination path (e.g., /media/pi/mydisk/backup/).
+        maximum_sync_time (int): Maximum sync time in seconds.
+        cancel_event (threading.Event | None): Event to signal cancellation.
+
+    Returns:
+        bool: True if sync succeeded, False otherwise.
     """
 
     if cancel_event is None:
@@ -185,10 +189,21 @@ def run_rsync_local(source, destination, maximum_sync_time, cancel_event=None) -
             pass
 
 
-def main(source, destination, maximum_sync_time=1800, cancel_event=None) -> None:
-    """
-    Main function to sync data to local disk using rsync.
+def main(
+    source: str,
+    destination: str,
+    maximum_sync_time: int = 1800,
+    cancel_event: threading.Event | None = None,
+) -> None:
+    """Main function to sync data to local disk using rsync.
 
+    Args:
+        source (str): Source directory path.
+        destination (str): Destination path on remote system.
+        maximum_sync_time (int): Maximum sync time duration in seconds.
+        Defaults to 1800.
+        cancel_event (threading.Event | None): Event to signal cancellation.
+        Defaults to None.
     Parameters:
     - source: Source directory path
     - destination: Destination path (on remote system)

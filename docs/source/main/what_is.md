@@ -10,7 +10,7 @@ By completely removing direct human intervention in the behavioral testing, the 
 
 The Training Village is freely available, and legally protected by [GPL version 3][GPL] and [OSHW version 1][OSHW] licenses.
 
-<video controls width="100%">
+<video controls width="100%" poster="_static/video_poster.png">
   <source src="_static/video.m4v" type="video/mp4">
 </video>
 

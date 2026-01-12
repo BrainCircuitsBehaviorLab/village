@@ -1,3 +1,5 @@
+import socket
+import sys
 import threading
 import time
 import traceback
@@ -62,6 +64,7 @@ class BehaviorController:
         elif self.type == ControllerEnum.RASPBERRY:
             self.error = "Raspberry Pi not implemented yet"
 
+
     def add_state(
         self,
         state_name: Any,
@@ -69,6 +72,14 @@ class BehaviorController:
         state_change_conditions: Any = {},
         output_actions: Any = (),
     ) -> None:
+        """Adds a state to the state machine.
+
+        Args:
+            state_name (Any): The name of the state.
+            state_timer (float): Duration of the state in seconds.
+            state_change_conditions (Any): Dictionary of events that trigger state transitions.
+            output_actions (Any): Actions to perform when entering the state.
+        """
         self.sma.add_state(
             state_name=state_name,
             state_timer=state_timer,
@@ -89,6 +100,20 @@ class BehaviorController:
         send_events: int = 1,
         oneset_triggers: Any | None = None,
     ) -> None:
+        """Sets a global timer.
+
+        Args:
+            timer_id (Any): The ID of the timer.
+            timer_duration (Any): The duration of the timer.
+            on_set_delay (int): Delay before setting the timer.
+            channel (Any | None): The channel associated with the timer.
+            on_message (int): Message to send when timer starts.
+            off_message (int): Message to send when timer ends.
+            loop_mode (int): Loop mode configuration.
+            loop_intervals (int): Number of loop intervals.
+            send_events (int): Whether to send events.
+            oneset_triggers (Any | None): Triggers to set once.
+        """
         self.sma.set_global_timer(
             timer_id=timer_id,
             timer_duration=timer_duration,
@@ -105,6 +130,13 @@ class BehaviorController:
     def set_condition(
         self, condition_number: Any, condition_channel: Any, channel_value: Any
     ) -> None:
+        """Sets a condition for the state machine.
+
+        Args:
+            condition_number (Any): The identifier for the condition.
+            condition_channel (Any): The channel to check.
+            channel_value (Any): The value to check against.
+        """
         self.sma.set_condition(
             condition_number=condition_number,
             condition_channel=condition_channel,
@@ -114,6 +146,13 @@ class BehaviorController:
     def set_global_counter(
         self, counter_number: Any, target_event: Any, threshold: Any
     ) -> None:
+        """Sets a global counter.
+
+        Args:
+            counter_number (Any): The ID of the counter.
+            target_event (Any): The event to count.
+            threshold (Any): The count threshold.
+        """
         self.sma.set_global_counter(
             counter_number=counter_number,
             target_event=target_event,
@@ -121,19 +160,37 @@ class BehaviorController:
         )
 
     def create_state_machine(self) -> None:
+        """Creates a new state machine instance."""
         self.sma = StateMachine(self.bpod)
 
     def send_and_run_state_machine(self) -> None:
+        """Sends and runs the current state machine on the Bpod."""
         self.bpod.send_state_machine(self.sma)
         self.bpod.run_state_machine(self.sma)
 
     def register_value(self, name: str, value: Any) -> None:
+        """Registers a value with the Bpod session.
+
+        Args:
+            name (str): The name of the value.
+            value (Any): The value to register.
+        """
         self.bpod.register_value(name, value)
 
     def send_softcode_to_bpod(self, idx: int) -> None:
+        """Handles sending a softcode to the bpod.
+
+        Args:
+            idx (int): The softcode index.
+        """
         self.softcode_to_bpod.send(idx)
 
     def manual_override_input(self, message: str) -> None:
+        """Manually overrides an input channel.
+
+        Args:
+            message (str): The override message string.
+        """
         channel_name, channel_number, value = parse_input_to_tuple_override(message)
 
         self.bpod.manual_override(
@@ -144,6 +201,11 @@ class BehaviorController:
         )
 
     def manual_override_output(self, message: str | tuple) -> None:
+        """Manually overrides an output channel.
+
+        Args:
+            message (str | tuple): The override message string or tuple.
+        """
         channel_name, channel_number, value = parse_output_to_tuple_override(message)
 
         self.bpod.manual_override(
@@ -154,10 +216,20 @@ class BehaviorController:
         )
 
     def softcode_handler_function(self, data: int) -> None:
+        """Handles regular softcode callbacks.
+
+        Args:
+            data (int): The softcode data value (1-99).
+        """
         if 1 <= data <= 99:
             self.functions[data]()
 
     def connect(self, functions: list[Callable]) -> None:
+        """Connects to the Bpod and initializes session.
+
+        Args:
+            functions (list[Callable]): List of callback functions for softcodes.
+        """
         try:
             self.bpod = Bpod()
         except Exception:
@@ -171,6 +243,12 @@ class BehaviorController:
         self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
 
     def led(self, i: int, close: bool) -> None:
+        """Triggers an LED in a separate thread.
+
+        Args:
+            i (int): LED index.
+            close (bool): Whether to close connection after triggered.
+        """
         thread = threading.Thread(
             target=self.led_thread,
             args=(
@@ -181,6 +259,12 @@ class BehaviorController:
         thread.start()
 
     def led_thread(self, i: int, close: bool) -> None:
+        """Thread function to blink an LED.
+
+        Args:
+            i (int): LED index.
+            close (bool): Whether to close connection after.
+        """
         port = "PWM" + str(i)
         self.manual_override_output((port, 255))
         time.sleep(1)
@@ -189,6 +273,12 @@ class BehaviorController:
             self.close()
 
     def water(self, i: int, close: bool) -> None:
+        """Triggers a water valve in a separate thread.
+
+        Args:
+            i (int): Valve index.
+            close (bool): Whether to close connection.
+        """
         thread = threading.Thread(
             target=self.water_thread,
             args=(
@@ -199,6 +289,12 @@ class BehaviorController:
         thread.start()
 
     def water_thread(self, i: int, close: bool) -> None:
+        """Thread function to open and close a water valve.
+
+        Args:
+            i (int): Valve index.
+            close (bool): Whether to close connection.
+        """
         self.manual_override_output("Valve" + str(i))
         time.sleep(1)
         self.manual_override_output("Valve" + str(i) + "Off")
@@ -206,6 +302,12 @@ class BehaviorController:
             self.close()
 
     def poke(self, i: int, close: bool) -> None:
+        """Simulates a poke event in a separate thread.
+
+        Args:
+            i (int): Poke port index.
+            close (bool): Whether to close connection.
+        """
         thread = threading.Thread(
             target=self.poke_thread,
             args=(
@@ -216,6 +318,12 @@ class BehaviorController:
         thread.start()
 
     def poke_thread(self, i: int, close: bool) -> None:
+        """Thread function to simulate poke entry and exit.
+
+        Args:
+            i (int): Poke port index.
+            close (bool): Whether to close connection.
+        """
         self.manual_override_input("Port" + str(i) + "In")
         time.sleep(0.1)
         self.manual_override_input("Port" + str(i) + "Out")
@@ -223,6 +331,7 @@ class BehaviorController:
             self.close()
 
     def clean(self) -> None:
+        """Runs a cleanup state machine that exits immediately."""
         self.add_state(
             state_name="End",
             state_timer=0,
@@ -232,11 +341,13 @@ class BehaviorController:
         self.send_and_run_state_machine()
 
     def stop(self) -> None:
+        """Stops the current session and closes connections."""
         self.softcode_to_bpod.kill()
         time.sleep(1)
         self.close()
 
     def close(self) -> None:
+        """Closes the Bpod connection."""
         self.connected = False
         try:
             self.bpod.close()

@@ -19,7 +19,14 @@ if TYPE_CHECKING:
 
 
 class Gui:
+    """Main GUI application controller.
+
+    Manages the application lifecycle, including initializing the main window,
+    handling secondary screens (behavior window), and managing application exit/reload.
+    """
+
     def __init__(self) -> None:
+        """Initializes the GUI application."""
         self.q_app = QApplication.instance()
         self.q_app.setStyle("Fusion")
         self.q_app.setStyleSheet("QLineEdit:disabled {background-color: #f0f0f0;}")
@@ -42,6 +49,7 @@ class Gui:
         self.gui_window = GuiWindow(self)
 
     def create_behavior_window(self) -> None:
+        """Creates and configures the behavior window on the secondary monitor."""
         # get the resolution of the secondary monitor
         screen = QGuiApplication.screens()[1]
         geometry = screen.geometry()
@@ -50,6 +58,10 @@ class Gui:
         settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
 
     def exit_app(self) -> None:
+        """Exits the application gracefully.
+
+        Stops recordings, logs the end of the session, and quits the Qt application.
+        """
         log.end("VILLAGE")
         cam_corridor.stop_recording()
         cam_box.stop_recording()
@@ -57,6 +69,11 @@ class Gui:
         sys.exit()
 
     def reload_app(self) -> None:
+        """Reloads the application by restarting the process.
+
+        Stops recordings, syncs settings, and re-executes the current script.
+        This is useful for applying configuration changes that require a restart.
+        """
         try:  # can fail if we are changing the system name
             log.end("VILLAGE")
         except Exception:

@@ -42,6 +42,7 @@ from village.settings import Color, settings
 
 # use this function to get info
 def print_info_about_the_connected_cameras() -> None:
+    """Prints diagnostic information about connected cameras using Picamera2."""
     print("INFO ABOUT THE CONNECTED CAMERAS:")
     pprint(Picamera2.global_camera_info())
     print()
@@ -49,12 +50,30 @@ def print_info_about_the_connected_cameras() -> None:
 
 # the preview class
 class LowFreqQPicamera2(QPicamera2):
+    """A QPicamera2 subclass that renders frames at a lower frequency.
+
+    Attributes:
+        _frame_counter (int): Counter for skipped frames.
+        _good_frame (int): The interval at which frames should be rendered.
+    """
+
     def __init__(self, picam2, *args, framerate, **kwargs) -> None:
+        """Initializes the LowFreqQPicamera2.
+
+        Args:
+            picam2: The Picamera2 instance.
+            framerate (int): The full framerate of the camera.
+        """
         super().__init__(picam2, *args, **kwargs)
         self._frame_counter = 0
         self._good_frame = framerate // int(settings.get("CAM_PREVIEWS_FRAMERATE"))
 
     def render_request(self, completed_request) -> None:
+        """Renders requests only at the specified subsampled rate.
+
+        Args:
+            completed_request: The completed camera request.
+        """
         self._frame_counter += 1
         if self._frame_counter == self._good_frame:
             self._frame_counter = 0
@@ -63,7 +82,76 @@ class LowFreqQPicamera2(QPicamera2):
 
 # the camera class
 class Camera:
+    """Controls a Picamera2 device, handles recording, and performs real-time detection.
+
+    Attributes:
+        width (int): Frame width.
+        height (int): Frame height.
+        index (int): Camera index.
+        name (str): Camera name (e.g., "BOX", "CORRIDOR").
+        framerate (int): Camera framerate.
+        encoder_quality: Quality setting for H264 encoder.
+        encoder (H264Encoder): The video encoder instance.
+        cam (Picamera2): The Picamera2 instance.
+        config: The camera configuration.
+        path_video (str): Path to the output video file.
+        path_csv (str): Path to the output CSV file.
+        path_picture (str): Path to save snapshots.
+        output (FfmpegOutput): The output handler for recording.
+        filename (str): Base filename for recordings.
+        color_areas (list): Colors for detection areas.
+        thickness_line (int): Line thickness for drawing.
+        detection_color (tuple): Color for detection indicators.
+        detection_size (int): Size of detection indicators.
+        color_rectangle (tuple): Color for the status rectangle.
+        color_text (tuple): Color for text overlays.
+        change (bool): Flag to trigger property updates.
+        annotation (str): Current annotation text.
+        trial (int): Current trial number.
+        tracking (bool): Whether position tracking is enabled.
+        x_position (int): Centroid X coordinate.
+        y_position (int): Centroid Y coordinate.
+        frames (list[int]): List of frame numbers.
+        timings (list[int]): List of timings.
+        trials (list[int]): List of trial numbers.
+        annotations (list[str]): List of annotations.
+        x_positions (list[int]): List of X positions.
+        y_positions (list[int]): List of Y positions.
+        camera_timestamps (list[float]): List of camera sensor timestamps.
+        pre_process_timestamps (list[float]): List of preprocess timestamps.
+        origin_rectangle (tuple): Coordinates for status bar background.
+        end_rectangle (tuple): Dimensions for status bar background.
+        origin_text1 (tuple): Position for first text line.
+        origin_text2 (tuple): Position for second text line.
+        origin_areas (list): Positions for area status text.
+        font: Font used for overlays.
+        scale (float): Font scale.
+        thickness_text (int): Font thickness.
+        frame_number (int): Current frame number.
+        chrono (time_utils.Chrono): Chronometer for timing.
+        masks (list): Detection masks for each area.
+        counts (list[int]): Pixel counts for each area.
+        error (str): Error message.
+        error_frame (int): Frame number where error occurred.
+        is_recording (bool): Recording status.
+        show_time_info (bool): Whether to display time info on frame.
+        two_mice_detections (int): Counter for multiple mouse detections.
+        prohibited_detections (int): Counter for prohibited area detections.
+        area4_alarm_timer (time_utils.Timer): Timer for area 4 alarms.
+        box_alarm_timer (time_utils.Timer): Timer for box alarms.
+        pre_process_timestamp (float): Timestamp of last preprocess call.
+        camera_timestamp (float): Timestamp of current frame.
+        watchdog_timer (QTimer): Timer to restart camera if frozen.
+    """
+
     def __init__(self, index: int, framerate: int, name: str) -> None:
+        """Initializes the Camera.
+
+        Args:
+            index (int): Camera index.
+            framerate (int): Desired framerate.
+            name (str): Name of the camera.
+        """
 
         frame_duration = int(1000000 / framerate)
 
@@ -190,6 +278,7 @@ class Camera:
         self.watchdog_timer.start()
 
     def set_properties(self) -> None:
+        """Updates camera detection properties from settings."""
         # black or white detection setting
         self.color: Color = settings.get("DETECTION_COLOR")
 
@@ -272,18 +361,27 @@ class Camera:
         self.cam.set_controls({"Contrast": contrast})
 
     def start_camera(self) -> None:
+        """Starts the camera capture."""
         self.cam.start()
 
     def stop_camera(self) -> None:
+        """Stops the camera capture."""
         self.cam.stop()
 
     def stop_preview_window(self) -> None:
+        """Stops the preview window and resets preview to NULL."""
         if self.cam._preview is not None:
             self.cam.stop_preview()
         self.window.cleanup()
         self.cam.start_preview(Preview.NULL)
 
     def start_recording(self, path_video: str = "", path_csv: str = "") -> None:
+        """Starts recording video and data.
+
+        Args:
+            path_video (str): Custom video path. Defaults to automatic naming based on settings.
+            path_csv (str): Custom CSV path. Defaults to automatic naming based on settings.
+        """
         self.filename = os.path.splitext(os.path.basename(path_video))[0]
         time_start = time_utils.now_string_for_filename()
         self.chrono.reset()
@@ -305,6 +403,7 @@ class Camera:
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_recording(self) -> None:
+        """Stops recording and saves CSV data."""
         if self.is_recording:
             self.is_recording = False
             self.cam.stop_encoder()
@@ -313,6 +412,7 @@ class Camera:
         self.reset_values()
 
     def reset_values(self) -> None:
+        """Resets all tracking and recording variables to defaults."""
         self.annotation = ""
         self.trial = 0
         self.frames = []
@@ -337,6 +437,7 @@ class Camera:
         self.camera_timestamp = self.pre_process_timestamp
 
     def save_csv(self) -> None:
+        """Saves the recorded data frames to a CSV file."""
         if self.path_csv == os.path.join(settings.get("VIDEOS_DIRECTORY"), "BOX.csv"):
             return
 
@@ -411,11 +512,13 @@ class Camera:
         df.to_csv(self.path_csv, index=False, sep=";")
 
     def print_info_about_config(self) -> None:
+        """Prints the current camera configuration to console."""
         print("INFO ABOUT THE " + self.name + " CAM CONFIGURATION:")
         pprint(self.config)
         print()
 
     def watchdog_tick(self) -> None:
+        """Checks if the camera is still producing frames, restarts if frozen."""
         if (
             time_utils.now_timestamp() - self.pre_process_timestamp > 10
         ):  # 10 seconds without a frame
@@ -425,6 +528,7 @@ class Camera:
                 pass
 
     def restart_camera(self) -> None:
+        """Restarts the camera subprocess and watchdog."""
         self.watchdog_timer.stop()
         log.alarm(
             "Camera "
@@ -442,6 +546,11 @@ class Camera:
             self.start_recording()
 
     def pre_process(self, request: Any) -> None:
+        """Callback for frame processing. Handles detection, drawing, and recording.
+
+        Args:
+            request (Any): The camera request containing the frame buffer.
+        """
         if self.change:
             self.set_properties()
             self.change = False
@@ -468,10 +577,12 @@ class Camera:
                     self.areas_box_ok()
 
     def get_gray_frame(self) -> None:
+        """Converts the current frame to grayscale."""
         self.gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
     # @time_utils.measure_time
     def detect_and_trigger(self) -> None:
+        """Performs detection based on color settings and position tracking."""
         if self.color == Color.BLACK:
             if self.tracking:
                 self.detect_black_position_contours()
@@ -488,6 +599,7 @@ class Camera:
                 self.detect_white()
 
     def trigger(self) -> None:
+        """Checks if detection zones are triggered and notifies the manager."""
         if self.areas_trigger[0]:
             x1, y1, x2, y2 = self.areas[0]
             self.area1_is_triggered = (
@@ -513,6 +625,7 @@ class Camera:
             manager.camera_trigger.trigger(self)
 
     def detect_black(self) -> None:
+        """Detects black objects in defined areas using thresholding."""
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
                 roi = self.gray_frame[y1:y2, x1:x2]
@@ -525,6 +638,7 @@ class Camera:
                 self.counts[index] = -1
 
     def detect_white(self) -> None:
+        """Detects white objects in defined areas using thresholding."""
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
                 roi = self.gray_frame[y1:y2, x1:x2]
@@ -537,6 +651,7 @@ class Camera:
                 self.counts[index] = -1
 
     def detect_black_position_components(self) -> None:
+        """Detects position of black mouse using connected components."""
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
 
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
@@ -572,6 +687,7 @@ class Camera:
             self.y_position = -1
 
     def detect_white_position_components(self) -> None:
+        """Detects position of white mouse using connected components."""
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
 
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
@@ -607,6 +723,7 @@ class Camera:
             self.y_position = -1
 
     def detect_black_position_contours(self) -> None:
+        """Detects position of black mouse using contours."""
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
@@ -652,6 +769,7 @@ class Camera:
             self.y_position = -1
 
     def detect_white_position_contours(self) -> None:
+        """Detects position of white mouse using contours."""
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
@@ -697,6 +815,7 @@ class Camera:
             self.y_position = -1
 
     def draw_detection(self) -> None:
+        """Draws detection results (thresholded views or position) on the frame."""
         if self.view_detection:
             if self.color == Color.BLACK:
                 self.draw_thresholded_black()
@@ -706,6 +825,7 @@ class Camera:
                 self.draw_position()
 
     def draw_rectangles(self) -> None:
+        """Draws the status bar background and detection area rectangles."""
         cv2.rectangle(
             self.frame,
             self.origin_rectangle,
@@ -741,6 +861,7 @@ class Camera:
                         )
 
     def write_texts(self) -> None:
+        """Writes status text (filename, trial, timing) onto the frame."""
         if not self.show_time_info:
             self.frame_number = 0
             self.timing = 0
@@ -778,6 +899,7 @@ class Camera:
         )
 
     def write_pixel_detection(self) -> None:
+        """Writes pixel count for each area on the frame."""
         for i in range(self.number_of_areas):
             if self.areas_active[i]:
                 cv2.putText(
@@ -791,6 +913,7 @@ class Camera:
                 )
 
     def draw_thresholded_black(self) -> None:
+        """Draws the thresholded view for black detection on the frame."""
         for i, f in enumerate(self.areas):
             if self.areas_active[i]:
                 try:
@@ -804,6 +927,7 @@ class Camera:
                     pass
 
     def draw_thresholded_white(self) -> None:
+        """Draws the thresholded view for white detection on the frame."""
         for i, f in enumerate(self.areas):
             if self.areas_active[i]:
                 try:
@@ -815,6 +939,7 @@ class Camera:
                     pass
 
     def draw_position(self) -> None:
+        """Draws the current tracked position on the frame."""
         if self.x_position != -1 and self.y_position != -1:
             cv2.circle(
                 self.frame,
@@ -825,6 +950,7 @@ class Camera:
             )
 
     def write_csv(self) -> None:
+        """Appends current frame data to internal lists for CSV export."""
         if self.is_recording:
             self.frames.append(self.frame_number)
             self.timings.append(self.timing)
@@ -837,15 +963,30 @@ class Camera:
             self.y_positions.append(self.y_position)
 
     def start_preview_window(self) -> QWidget:
+        """Starts a low-frequency preview window for the GUI.
+
+        Returns:
+            QWidget: The preview widget.
+        """
         if self.cam._preview is not None:
             self.cam.stop_preview()
         self.window = LowFreqQPicamera2(picam2=self.cam, framerate=self.framerate)
         return self.window
 
     def write_text(self, text: str) -> None:
+        """Sets the annotation text to be displayed on the frame.
+
+        Args:
+            text (str): The annotation text.
+        """
         self.annotation = text
 
     def areas_corridor_ok(self) -> bool:
+        """Checks if the corridor areas are in valid states (no unexpected detections).
+
+        Returns:
+            bool: True if areas are okay, False otherwise.
+        """
         if self.counts[0] > self.zero_or_one_mouse:
             log.info(
                 "Detection in area1: " + str(self.counts[0]),
@@ -876,6 +1017,7 @@ class Camera:
             return True
 
     def areas_box_ok(self) -> None:
+        """Checks box areas for allowed/prohibited detections and logs alarms if needed."""
         pixels_allowed = 0
         pixels_not_allowed = 0
 
@@ -905,22 +1047,37 @@ class Camera:
                     )
 
     def area_1_empty(self) -> bool:
+        """Checks if area 1 is empty."""
         return self.counts[0] <= self.zero_or_one_mouse
 
     def area_2_empty(self) -> bool:
+        """Checks if area 2 is empty."""
         return self.counts[1] <= self.zero_or_one_mouse
 
     def area_3_empty(self) -> bool:
+        """Checks if area 3 is empty."""
         return self.counts[2] <= self.zero_or_one_mouse
 
     def area_4_empty(self) -> bool:
+        """Checks if area 4 is empty."""
         return self.counts[3] <= self.zero_or_one_mouse
 
     def take_picture(self) -> None:
+        """Captures a snapshot from the camera."""
         self.cam.capture_file(self.path_picture)
 
 
 def get_camera(index: int, framerate: int, name: str) -> Camera | NullCamera:
+    """Factory function to initialize a Camera.
+
+    Args:
+        index (int): Camera index.
+        framerate (int): Framerate.
+        name (str): Camera name.
+
+    Returns:
+        CameraBase: An initialized Camera or null class on failure.
+    """
     try:
         cam = Camera(index, framerate, name)
         log.info("Cam " + name + " successfully initialized")

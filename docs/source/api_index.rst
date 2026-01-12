@@ -3,62 +3,19 @@ API
 
 .. currentmodule:: village
 
-Devices
----------
 .. autosummary::
    :toctree: api_generated
    :template: custom_module_template.rst
    :recursive:
    :nosignatures:
 
+    village.calibration
+    village.classes
+    village.custom_classes
     village.devices
-
-
-Classes
-------------------
-.. autosummary::
-   :toctree: api_generated
-   :template: custom_module_template.rst
-   :recursive:
-   :nosignatures:
-
-   village.classes
-
-
-Gui
----------
-.. autosummary::
-   :toctree: api_generated
-   :template: custom_module_template.rst
-   :recursive:
-   :nosignatures:
-
     village.gui
-
-
-Pybpodapi
----------
-.. autosummary::
-   :toctree: api_generated
-   :template: custom_module_template.rst
-   :recursive:
-   :nosignatures:
-
-    village.pybpodapi
-
-
-Other
----------
-.. autosummary::
-   :toctree: api_generated
-   :template: custom_module_template.rst
-   :recursive:
-   :nosignatures:
-
+    village.plots
     village.screen
+    village.scripts
     village.manager
-    village.log
     village.main
-    village.rt_plots
-    village.time_utils
-    village.video

@@ -27,18 +27,29 @@ if TYPE_CHECKING:
 
 
 class DummyTask(Task):
+    """A dummy task class for use during calibration."""
+
     def close(self):
+        """Closes the dummy task (no-op)."""
         pass
 
 
 class SoundCalibrationLayout(Layout):
+    """Layout for sound calibration and testing."""
+
     def __init__(self, window: GuiWindow) -> None:
+        """Initializes the SoundCalibrationLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+        """
         super().__init__(window)
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
         self.draw()
 
     def draw(self) -> None:
+        """Draws the sound calibration layout elements."""
         self.sound_calibration_button.setDisabled(True)
         self.df = pd.DataFrame()
         self.date = ""
@@ -337,12 +348,11 @@ class SoundCalibrationLayout(Layout):
         self.addLayout(self.plot_layout, 5, 121, 38, 79)
 
     def change_layout(self, auto: bool = False) -> bool:
-        if auto:
-            return False
-        elif manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
-            QMessageBox.information(
-                self.window, "WARNING", "Wait until the task finishes."
-            )
+        if manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
+            if not auto:
+                QMessageBox.information(
+                    self.window, "WARNING", "Wait until the task finishes."
+                )
             return False
         elif self.save_button.isEnabled():
             reply = QMessageBox.question(
@@ -368,6 +378,12 @@ class SoundCalibrationLayout(Layout):
             return True
 
     def calibration_changed(self, value: str = "", key: str = "") -> None:
+        """Updates calibration settings based on UI input.
+
+        Args:
+            value (str): New value (unused).
+            key (str): Setting key (unused).
+        """
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
         self.gain = 0
@@ -406,6 +422,12 @@ class SoundCalibrationLayout(Layout):
             self.update_status_label_buttons()
 
     def test_changed(self, value: str = "", key: str = "") -> None:
+        """Updates test settings based on UI input.
+
+        Args:
+            value (str): New value (unused).
+            key (str): Setting key (unused).
+        """
         self.test_button.setDisabled(True)
         self.calibrate_button.setDisabled(True)
         self.dB_expected2 = 0
@@ -444,6 +466,7 @@ class SoundCalibrationLayout(Layout):
             self.update_status_label_buttons()
 
     def calibrate_button_clicked(self) -> None:
+        """Starts the calibration process."""
         if self.calibration_denied:
             QMessageBox.information(
                 self.window,
@@ -473,6 +496,7 @@ class SoundCalibrationLayout(Layout):
         task.run_in_thread()
 
     def test_button_clicked(self) -> None:
+        """Starts the test process."""
         if self.test_denied:
             QMessageBox.information(
                 self.window,
@@ -531,7 +555,7 @@ class SoundCalibrationLayout(Layout):
             task.run_in_thread()
 
     def save_button_clicked(self) -> None:
-
+        """Saves the calibration data."""
         removed_list: list[str] = []
         filtered_df = self.df.copy()
 
@@ -576,6 +600,7 @@ class SoundCalibrationLayout(Layout):
         self.window.create_sound_calibration_layout()
 
     def delete_button_clicked(self) -> None:
+        """Prompts to delete the current calibration session."""
         reply = QMessageBox.question(
             self.window,
             "Delete calibration",
@@ -588,6 +613,7 @@ class SoundCalibrationLayout(Layout):
             self.window.create_sound_calibration_layout()
 
     def update_gui(self) -> None:
+        """Updates the GUI status."""
         self.update_status_label_buttons()
         if manager.state == State.WAIT and self.calibration_initiated:
             self.calibration_initiated = False
@@ -655,6 +681,12 @@ class SoundCalibrationLayout(Layout):
             self.save_button.setDisabled(True)
 
     def calibration_measured(self, value: str = "", key: str = "") -> None:
+        """Handles input of measured dB during calibration.
+
+        Args:
+            value (str): New value (unused).
+            key (str): Setting key (unused).
+        """
         self.dB_obtained = 0
         try:
             result = round(float(self.dB_obtained_line_edit.text()), 4)
@@ -665,6 +697,12 @@ class SoundCalibrationLayout(Layout):
             pass
 
     def test_measured(self, value: str = "", key: str = "") -> None:
+        """Handles input of measured dB during testing.
+
+        Args:
+            value (str): New value (unused).
+            key (str): Setting key (unused).
+        """
         self.dB_obtained2 = 0
         self.error_label2.setText("")
         try:
@@ -691,6 +729,7 @@ class SoundCalibrationLayout(Layout):
             pass
 
     def add_button_clicked(self) -> None:
+        """Adds a calibration point."""
         if self.date == "":
             self.date = time_utils.now_string()
         if self.calibration_number < 0:
@@ -731,6 +770,7 @@ class SoundCalibrationLayout(Layout):
         self.info_layout.update()
 
     def ok_button2_clicked(self) -> None:
+        """Confirms a successful test and saves it."""
         if self.date == "":
             self.date = time_utils.now_string()
 
@@ -755,6 +795,11 @@ class SoundCalibrationLayout(Layout):
         self.reset_values_after_ok_or_add2()
 
     def reset_values_after_ok_or_add2(self, delete_df=True) -> None:
+        """Resets inputs after a test action.
+
+        Args:
+            delete_df (bool): Whether to clear the current DataFrame. Defaults to True.
+        """
         if delete_df:
             self.df = pd.DataFrame()
         self.test_point = None
@@ -780,6 +825,7 @@ class SoundCalibrationLayout(Layout):
         self.update_plot = True
 
     def add_button2_clicked(self) -> None:
+        """Adds a failed test as a new calibration point."""
         self.test_denied = True
 
         if self.calibration_number < 0:
@@ -802,13 +848,15 @@ class SoundCalibrationLayout(Layout):
             "dB_expected": np.nan,
             "error(%)": np.nan,
         }
-        self.df = pd.DataFrame([row_dict])
+
+        df = pd.DataFrame([row_dict])
+        self.df = pd.concat([self.df, df], ignore_index=True)
         self.calibration_points.append(row_dict)
-        self.update_plot = True
 
         self.reset_values_after_ok_or_add2(delete_df=False)
 
     def stop_button_clicked(self) -> None:
+        """Handles stop button click to reset UI elements."""
         if manager.state.can_stop_task():
             log.info("Task manually stopped.", subject=manager.subject.name)
             manager.state = State.SAVE_MANUAL
@@ -830,6 +878,8 @@ class SoundCalibrationLayout(Layout):
 
 
 class CalibrationPlotLayout(Layout):
+    """Layout for displaying the calibration plot."""
+
     def __init__(
         self,
         window: GuiWindow,
@@ -837,6 +887,14 @@ class CalibrationPlotLayout(Layout):
         columns: int,
         parent_layout: SoundCalibrationLayout,
     ) -> None:
+        """Initializes the CalibrationPlotLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+            parent_layout (SoundCalibrationLayout): The parent layout.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows
         self.columns = columns
@@ -844,6 +902,7 @@ class CalibrationPlotLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
+        """Draws the plot area."""
         self.plot_label = QLabel()
         self.plot_label.setStyleSheet(
             "QLabel {border: 1px solid gray; background-color: white;}"
@@ -857,6 +916,12 @@ class CalibrationPlotLayout(Layout):
         self.plot_height = (self.rows * self.row_height - 5) / dpi
 
     def update(self, df: pd.DataFrame, test_point: tuple[float, float] | None) -> None:
+        """Updates the plot with new data.
+
+        Args:
+            df (pd.DataFrame): The calibration data.
+            test_point (tuple[float, float] | None): Optional test point to highlight.
+        """
         pixmap = QPixmap()
         try:
             figure = sound_calibration_plot(
@@ -879,6 +944,8 @@ class CalibrationPlotLayout(Layout):
 
 
 class InfoLayout(Layout):
+    """Layout for displaying detailed calibration information."""
+
     def __init__(
         self,
         window: GuiWindow,
@@ -886,6 +953,14 @@ class InfoLayout(Layout):
         columns: int,
         parent_layout: SoundCalibrationLayout,
     ) -> None:
+        """Initializes the InfoLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+            rows (int): Number of rows.
+            columns (int): Number of columns.
+            parent_layout (SoundCalibrationLayout): The parent layout.
+        """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows
         self.columns = columns
@@ -893,6 +968,7 @@ class InfoLayout(Layout):
         self.update()
 
     def update(self) -> None:
+        """Updates the displayed information."""
         self.title = self.create_and_add_label(
             "CALIBRATION POINTS", 0, 1, 40, 2, "black", bold=False
         )
@@ -930,6 +1006,11 @@ class InfoLayout(Layout):
             )
 
     def delete_point(self, i: int) -> None:
+        """Deletes a calibration point.
+
+        Args:
+            i (int): Index of the point to delete.
+        """
         utils.delete_all_elements_from_layout(self)
         self.parent_layout.calibration_points.pop(i)
         if len(self.parent_layout.calibration_points) == 0:

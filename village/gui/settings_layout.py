@@ -48,7 +48,14 @@ mini_box = 4
 
 
 class SettingsLayout(Layout):
+    """Layout for viewing and modifying application settings."""
+
     def __init__(self, window: GuiWindow) -> None:
+        """Initializes the SettingsLayout.
+
+        Args:
+            window (GuiWindow): The parent window.
+        """
         super().__init__(window)
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
@@ -56,6 +63,12 @@ class SettingsLayout(Layout):
         self.draw(all=True, modify="")
 
     def draw(self, all: bool, modify) -> None:
+        """Draws the settings layout elements.
+
+        Args:
+            all (bool): Whether to redraw all settings.
+            modify (str): The specific group of settings to modify, if any.
+        """
         self.settings_button.setDisabled(True)
 
         if all:
@@ -295,6 +308,14 @@ class SettingsLayout(Layout):
             self.restore_button.clicked.connect(self.restore_button_clicked)
 
     def change_layout(self, auto: bool = False) -> bool:
+        """Handles layout changes, prompting to save if needed.
+
+        Args:
+            auto (bool): If True, forces the change without prompt. Defaults to False.
+
+        Returns:
+            bool: True if layout change is allowed, False otherwise.
+        """
         if auto:
             return True
         elif self.save_button.isEnabled():
@@ -320,14 +341,26 @@ class SettingsLayout(Layout):
             return True
 
     def settings_changed(self, value: str = "", key: str = "") -> None:
+        """Marks settings as changed and enables the save button.
+
+        Args:
+            value (str): The new value (optional).
+            key (str): The key of the setting changed (optional).
+        """
         manager.changing_settings = True
         self.update_status_label_buttons()
         self.save_button.setEnabled(True)
 
     def save_button_clicked(self) -> None:
+        """Handles the save button click."""
         self.save(changing_project=False)
 
     def save(self, changing_project) -> None:
+        """Saves current settings to disk.
+
+        Args:
+            changing_project (bool): Whether the project directory is being changed.
+        """
         sync_directory = self.create_sync_directory()
 
         self.save_button.setDisabled(True)
@@ -531,6 +564,7 @@ class SettingsLayout(Layout):
         self.critical_changes = False
 
     def restore_button_clicked(self) -> None:
+        """Prompts to restore factory settings and applies if confirmed."""
         reply = QMessageBox.question(
             self.window,
             "Restore factory settings",
@@ -547,6 +581,15 @@ class SettingsLayout(Layout):
     def create_label_and_value(
         self, row: int, column: int, s: Setting, type: Any, width: int = 0
     ) -> None:
+        """Creates a UI element for a specific setting.
+
+        Args:
+            row (int): Row index.
+            column (int): Column index.
+            s (Setting): The setting object.
+            type (Any): The group type of the setting.
+            width (int, optional): Width offset for the value widget. Defaults to 0.
+        """
         label = self.create_and_add_label(
             s.key,
             row,
@@ -773,6 +816,11 @@ class SettingsLayout(Layout):
             self.toggle_buttons_settings.append(s)
 
     def create_sync_directory(self) -> str:
+        """Determines the synchronization directory path.
+
+        Returns:
+            str: The full path to the sync directory.
+        """
         directory = os.path.basename(settings.get("PROJECT_DIRECTORY"))
         index = next(
             (
@@ -787,9 +835,21 @@ class SettingsLayout(Layout):
         return new_value
 
     def change_sound_device(self, value: str, key: str) -> None:
+        """Handles changes to the sound device selection.
+
+        Args:
+            value (str): The new sound device name.
+            key (str): The setting key (unused).
+        """
         self.settings_changed(value, key)
 
     def toggle_button_changed(self, value: str, key: str) -> None:
+        """Handles changes to toggle buttons and updates the UI accordingly.
+
+        Args:
+            value (str): The new value.
+            key (str): The setting key.
+        """
         modify = ""
         if value == "OFF" and key == "USE_SOUNDCARD":
             self.remove("SOUND SETTINGS")
@@ -822,6 +882,11 @@ class SettingsLayout(Layout):
             self.draw(all=False, modify=modify)
 
     def remove(self, name: str) -> None:
+        """Removes a group of settings from the UI.
+
+        Args:
+            name (str): The group name to remove.
+        """
         for i in reversed(range(len(self.line_edits))):
             if self.line_edits[i].property("type") == name:
                 self.line_edits.pop(i)
@@ -845,6 +910,12 @@ class SettingsLayout(Layout):
         self.delete_optional_widgets(name)
 
     def change_project_directory(self, value: str, key: str) -> None:
+        """Handles changing the project directory, including creating a new project.
+
+        Args:
+            value (str): The new directory path or "NEW".
+            key (str): The setting key (unused).
+        """
         if value == "NEW":
             text, ok = QInputDialog.getText(
                 self.window,
@@ -890,7 +961,16 @@ class SettingsLayout(Layout):
                 self.project_directory_combobox.blockSignals(False)
 
     def create_project_directory(self, path) -> bool:
+        """Creates the directory structure for a new project.
+
+        Args:
+            path (str): The path for the new project.
+
+        Returns:
+            bool: True if creation was successful.
+        """
         return utils.create_directories_from_path(path)
 
     def update_gui(self) -> None:
+        """Updates the GUI elements."""
         self.update_status_label_buttons()
