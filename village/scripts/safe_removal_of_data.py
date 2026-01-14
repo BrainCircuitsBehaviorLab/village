@@ -243,6 +243,7 @@ if __name__ == "__main__":
     #     days=8,
     #     safe=True,
     #     backup_dir="/archive/training_village/visual_and_COT_data/videos",
+    #     remote=True,
     #     remote_user="training_village",
     #     remote_host="cluster",
     #     # port=4022,
