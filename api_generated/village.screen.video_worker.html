@@ -7,7 +7,7 @@
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.screen.video_worker.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <link rel="shortcut icon" href="../_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.svg"><!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>video_worker - Training village</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -553,14 +553,14 @@
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="village.screen.video_worker.VideoWorker">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VideoWorker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/screen/video_worker.html#VideoWorker"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">VideoWorker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/screen/video_worker.html#VideoWorker"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Worker class for decoding video frames in a separate thread.</p>
 <p>Uses OpenCV to read frames and serves them as QImages for display.
 Maintains synchronization with real-time based on the video’s FPS.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="village.screen.video_worker.VideoWorker.finished">
-<span class="sig-name descname"><span class="pre">finished</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MockSignal</span> <span class="pre">object&gt;</span></em></dt>
+<span class="sig-name descname"><span class="pre">finished</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MockSignal</span> <span class="pre">object&gt;</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -571,7 +571,7 @@ Maintains synchronization with real-time based on the video’s FPS.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.screen.video_worker.VideoWorker.get_latest_qimage">
-<span class="sig-name descname"><span class="pre">get_latest_qimage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QImage'</span> <span class="pre">id='139866622448720'&gt;</span> <span class="pre">|</span> <span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/screen/video_worker.html#VideoWorker.get_latest_qimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">get_latest_qimage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QImage'</span> <span class="pre">id='139976467184080'&gt;</span> <span class="pre">|</span> <span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/screen/video_worker.html#VideoWorker.get_latest_qimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the most appropriate video frame for the current time.</p>
 <p>Calculates the target frame based on elapsed time since start.</p>
 <dl class="field-list simple">
@@ -668,9 +668,9 @@ Maintains synchronization with real-time based on the video’s FPS.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=6c1edd33"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+</div><script src="../_static/documentation_options.js?v=d5f095ec"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>

@@ -7,7 +7,7 @@
         <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.custom_classes.task.Task.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <link rel="shortcut icon" href="../_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.svg"><!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>Task - Training village</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -543,7 +543,7 @@
 <h1>Task</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="village.custom_classes.task.Task">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Task</span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Task</span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for defining and running behavioral tasks using Bpod.</p>
 <p>This class provides the infrastructure for task management, including
@@ -619,6 +619,151 @@ with other devices like cameras and sound systems.</p>
 </tbody>
 </table>
 </div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.bpod">
+<span class="sig-name descname"><span class="pre">bpod</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="village.classes.abstract_classes.PyBpodBase.html#village.classes.abstract_classes.PyBpodBase" title="village.classes.abstract_classes.PyBpodBase"><span class="pre">PyBpodBase</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.subject">
+<span class="sig-name descname"><span class="pre">subject</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.current_trial">
+<span class="sig-name descname"><span class="pre">current_trial</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.current_trial_states">
+<span class="sig-name descname"><span class="pre">current_trial_states</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.touch_response">
+<span class="sig-name descname"><span class="pre">touch_response</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.system_name">
+<span class="sig-name descname"><span class="pre">system_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.date">
+<span class="sig-name descname"><span class="pre">date</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.filename">
+<span class="sig-name descname"><span class="pre">filename</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.sessions_directory">
+<span class="sig-name descname"><span class="pre">sessions_directory</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.raw_session_path">
+<span class="sig-name descname"><span class="pre">raw_session_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.session_path">
+<span class="sig-name descname"><span class="pre">session_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.session_settings_path">
+<span class="sig-name descname"><span class="pre">session_settings_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.video_directory">
+<span class="sig-name descname"><span class="pre">video_directory</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.video_path">
+<span class="sig-name descname"><span class="pre">video_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.video_data_path">
+<span class="sig-name descname"><span class="pre">video_data_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.subject_path">
+<span class="sig-name descname"><span class="pre">subject_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.rt_session_path">
+<span class="sig-name descname"><span class="pre">rt_session_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.settings">
+<span class="sig-name descname"><span class="pre">settings</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="village.custom_classes.training_protocol_base.Settings.html#village.custom_classes.training_protocol_base.Settings" title="village.custom_classes.training_protocol_base.Settings"><span class="pre">Settings</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.training">
+<span class="sig-name descname"><span class="pre">training</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html#village.custom_classes.training_protocol_base.TrainingProtocolBase" title="village.custom_classes.training_protocol_base.TrainingProtocolBase"><span class="pre">TrainingProtocolBase</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.trial_data">
+<span class="sig-name descname"><span class="pre">trial_data</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection.dict" title="village.classes.collection.Collection.dict"><span class="pre">dict</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.raw_df">
+<span class="sig-name descname"><span class="pre">raw_df</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pandas.DataFrame</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.session_df">
+<span class="sig-name descname"><span class="pre">session_df</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pandas.DataFrame</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.subject_df">
+<span class="sig-name descname"><span class="pre">subject_df</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pandas.DataFrame</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.force_stop">
+<span class="sig-name descname"><span class="pre">force_stop</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.maximum_number_of_trials">
+<span class="sig-name descname"><span class="pre">maximum_number_of_trials</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.sound_calibration">
+<span class="sig-name descname"><span class="pre">sound_calibration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection" title="village.classes.collection.Collection"><span class="pre">Collection</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.custom_classes.task.Task.water_calibration">
+<span class="sig-name descname"><span class="pre">water_calibration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection" title="village.classes.collection.Collection"><span class="pre">Collection</span></a></span></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="village.custom_classes.task.Task.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -791,7 +936,7 @@ and success status.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.custom_classes.task.Task.get_name">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the name of the task class.</p>
 </dd></dl>
 
@@ -863,6 +1008,35 @@ and success status.</p>
 <li><a class="reference internal" href="#">Task</a><ul>
 <li><a class="reference internal" href="#village.custom_classes.task.Task"><code class="docutils literal notranslate"><span class="pre">Task</span></code></a><ul>
 <li><a class="reference internal" href="#village.custom_classes.task.Task.__init__"><code class="docutils literal notranslate"><span class="pre">Task.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.bpod"><code class="docutils literal notranslate"><span class="pre">Task.bpod</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.name"><code class="docutils literal notranslate"><span class="pre">Task.name</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.subject"><code class="docutils literal notranslate"><span class="pre">Task.subject</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.current_trial"><code class="docutils literal notranslate"><span class="pre">Task.current_trial</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.current_trial_states"><code class="docutils literal notranslate"><span class="pre">Task.current_trial_states</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.touch_response"><code class="docutils literal notranslate"><span class="pre">Task.touch_response</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.system_name"><code class="docutils literal notranslate"><span class="pre">Task.system_name</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.date"><code class="docutils literal notranslate"><span class="pre">Task.date</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.info"><code class="docutils literal notranslate"><span class="pre">Task.info</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.filename"><code class="docutils literal notranslate"><span class="pre">Task.filename</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.sessions_directory"><code class="docutils literal notranslate"><span class="pre">Task.sessions_directory</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.raw_session_path"><code class="docutils literal notranslate"><span class="pre">Task.raw_session_path</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.session_path"><code class="docutils literal notranslate"><span class="pre">Task.session_path</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.session_settings_path"><code class="docutils literal notranslate"><span class="pre">Task.session_settings_path</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.video_directory"><code class="docutils literal notranslate"><span class="pre">Task.video_directory</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.video_path"><code class="docutils literal notranslate"><span class="pre">Task.video_path</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.video_data_path"><code class="docutils literal notranslate"><span class="pre">Task.video_data_path</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.subject_path"><code class="docutils literal notranslate"><span class="pre">Task.subject_path</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.rt_session_path"><code class="docutils literal notranslate"><span class="pre">Task.rt_session_path</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.settings"><code class="docutils literal notranslate"><span class="pre">Task.settings</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.training"><code class="docutils literal notranslate"><span class="pre">Task.training</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.trial_data"><code class="docutils literal notranslate"><span class="pre">Task.trial_data</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.raw_df"><code class="docutils literal notranslate"><span class="pre">Task.raw_df</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.session_df"><code class="docutils literal notranslate"><span class="pre">Task.session_df</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.subject_df"><code class="docutils literal notranslate"><span class="pre">Task.subject_df</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.force_stop"><code class="docutils literal notranslate"><span class="pre">Task.force_stop</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.maximum_number_of_trials"><code class="docutils literal notranslate"><span class="pre">Task.maximum_number_of_trials</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.sound_calibration"><code class="docutils literal notranslate"><span class="pre">Task.sound_calibration</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task.Task.water_calibration"><code class="docutils literal notranslate"><span class="pre">Task.water_calibration</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.task.Task.start"><code class="docutils literal notranslate"><span class="pre">Task.start()</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.task.Task.create_trial"><code class="docutils literal notranslate"><span class="pre">Task.create_trial()</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.task.Task.after_trial"><code class="docutils literal notranslate"><span class="pre">Task.after_trial()</span></code></a></li>
@@ -894,9 +1068,9 @@ and success status.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=6c1edd33"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+</div><script src="../_static/documentation_options.js?v=d5f095ec"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>

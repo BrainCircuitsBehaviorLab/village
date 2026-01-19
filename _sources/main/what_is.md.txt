@@ -48,6 +48,19 @@ The Training Village can work continuously for months, allowing the automatic co
 
 ![plots](_static/plots.png)
 
+
+## Citing Training Village
+
+If you use **Training Village**, please cite:
+
+Serrano-Porcar, B., Marin, R., Rodríguez, J., Barezzi, C., Vasoya, H., Kean, D., Pottinger, D., Taylor, A., Martínez Vergara, H., & de la Rocha, J. (2026).
+*The Training Village: an open platform for continuous testing of rodents in cognitive tasks.*
+**bioRxiv**. https://doi.org/10.64898/2026.01.12.698970
+
+
+
+
+
 ## Open Source
 Training Village is an open-source project. You can find the code in our [GitHub repository][REPO] and all the necessary resources to build it in the [resources section][RESOURCES].
 
@@ -58,6 +71,14 @@ style="color:#8B00FF; font-size:24px; font-weight:normal;
 font-family:'Futura', sans-serif; text-decoration:none;">
 BRAIN CIRCUITS AND BEHAVIOR LAB
 </a>
+
+Funding was provided by the Spanish State Research Agency (AEI), the European Research Council (ERC), and the Cellex Foundation.
+
+<div style="display: flex; justify-content: center; align-items: center; gap: 40px;">
+  <img src="_static/AEI.png" alt="AEI logo" style="height: 80px;">
+  <img src="_static/ERC.png" alt="ERC logo" style="height: 80px;">
+  <img src="_static/CELLEX.png" alt="Cellex logo" style="height: 80px;">
+</div>
 
 Contact: [marinraf@gmail.com](mailto:marinraf@gmail.com)
 
