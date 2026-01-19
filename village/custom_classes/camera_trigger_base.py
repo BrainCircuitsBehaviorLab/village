@@ -12,15 +12,11 @@ class CameraTriggerBase:
         """Initializes the CameraTriggerBase instance."""
         self.name = "Camera Trigger"
 
-<<<<<<< HEAD
     def trigger(self, cam: Camera) -> None:
-=======
-    def trigger(self, cam: CameraBase) -> None:
         """Evaluates camera triggers and performs corresponding actions.
 
         This method is called to check if any defined areas in the camera view
         have been triggered (e.g., by the subject entering them).
->>>>>>> main
 
         Args:
             cam (CameraBase): The camera instance providing the trigger status.
