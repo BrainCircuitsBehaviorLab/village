@@ -42,9 +42,7 @@ To simplify interaction with the hardware components, we have designed a custom 
 ![controller](_static/raspberry_hat.png)
 
 ## System usage
-The Training Village has been rigorously tested in the [Brain Circuits and Behavior Lab][LAB] with different groups of mice and two different behavioral tasks: a multi-choice delayed response task and a foraging task. Recently, the system has been adapted to rats in the [Animal Minds Lab][RAT].
-
-The Training Village can work continuously for months, allowing the automatic collection of large datasets of cognitive-demanding tasks that often require long training periods (e.g. 20-40 sessions). It automatically adjusts training difficulty, timing, and session duration based on each animal’s motivation and needs,  letting subjects learn at their own pace while ensuring a balanced usage of the behavioral box. On average, mice in the Training Village perform about three sessions per day, with a significant preference for the nighttime. Behavioral box occupancy depends on the group size. With groups of 14 animals housed together in the system, the average occupancy is around 70% of the total daytime (i.e. 16.8 hours of training per day), indicating a high usage at this capacity. Subjects' performance and motivation are comparable to the manual training, yet with a significant reduction in the experimenter involvement.
+The Training Village has been rigorously tested in the [Brain Circuits and Behavior Lab][LAB] across multiple cohorts of mice and three distinct behavioral paradigms: a three-choice visuospatial delayed response task, a two-choice visual or auditory perceptual discrimination task, and a two-armed bandit task. The system has been successfully adapted to rats in the [Animal Minds Lab][RAT].
 
 ![plots](_static/plots.png)
 
@@ -72,15 +70,25 @@ font-family:'Futura', sans-serif; text-decoration:none;">
 BRAIN CIRCUITS AND BEHAVIOR LAB
 </a>
 
-Funding was provided by the Spanish State Research Agency (AEI), the European Research Council (ERC), and the Cellex Foundation.
 
-<div style="display: flex; justify-content: center; align-items: center; gap: 40px;">
-  <img src="_static/AEI.png" alt="AEI logo" style="height: 80px;">
-  <img src="_static/ERC.png" alt="ERC logo" style="height: 80px;">
-  <img src="_static/CELLEX.png" alt="Cellex logo" style="height: 80px;">
+Funding was provided by the Spanish State Research Agency (AEI), the European Research
+Council (ERC), and the Cellex Foundation.
+
+<div style="
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  max-width: 600px;
+  margin: 20px auto 40px auto;
+">
+  <img src="_static/AEI.png" alt="AEI logo" style="height: 70px;">
+  <img src="_static/ERC.png" alt="ERC logo" style="height: 70px;">
+  <img src="_static/CELLEX.png" alt="Cellex logo" style="height: 70px;">
 </div>
 
 Contact: [marinraf@gmail.com](mailto:marinraf@gmail.com)
+
 
 [SANWORKS]: https://sanworks.io
 [GPL]: https://www.gnu.org/licenses/quick-guide-gplv3.pdf
