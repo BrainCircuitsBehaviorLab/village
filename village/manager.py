@@ -82,7 +82,6 @@ class Manager:
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
-        self.error_stop: bool = False
         self.calibrating: bool = False
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
@@ -138,7 +137,8 @@ class Manager:
         self.behavior_window = BehaviorWindowBase()
 
     def create_collections(self) -> None:
-        """Creates and initializes data collections for events, summaries, and measurements."""
+        """Creates and initializes data collections for events, summaries,
+        and measurements."""
         self.events = Collection(
             "events", ["date", "type", "subject", "description"], [str, str, str, str]
         )
@@ -210,7 +210,8 @@ class Manager:
         )
 
     def import_all_tasks(self) -> None:
-        """Imports all tasks, custom classes, and functions from the configured code directory."""
+        """Imports all tasks, custom classes, and functions from the configured
+        code directory."""
         directory = settings.get("CODE_DIRECTORY")
         sys.path.append(directory)
 
@@ -444,7 +445,8 @@ class Manager:
                         self.day = False
 
     def update_text(self) -> None:
-        """Updates the status text with current system state, subject, task, and cycle info."""
+        """Updates the status text with current system state, subject, task,
+        and cycle info."""
         state_name = self.state.name
         state_description = self.state.description
         subject_name = self.subject.name
@@ -625,7 +627,6 @@ class Manager:
         self.raw_session_df = pd.DataFrame()
         self.calibrating = False
         self.previous_state_wait = True
-        self.error_stop = False
 
     def update_raw_session_df(self) -> pd.DataFrame:
         """Updates and returns the raw session DataFrame from the CSV file.
@@ -643,7 +644,8 @@ class Manager:
         return self.raw_session_df
 
     def get_both_sessions_dfs(self) -> list[pd.DataFrame]:
-        """Retrieves both the raw session DataFrame from disk and the current in-memory session DataFrame.
+        """Retrieves both the raw session DataFrame from disk and the current
+        in-memory session DataFrame.
 
         Returns:
             list[pd.DataFrame]: A list containing [raw_session_df, task.session_df].
@@ -692,7 +694,8 @@ class Manager:
         self.after_session_flag = True
 
     def save_to_subjects(self) -> None:
-        """Updates subject data, including next session time and training settings, after a successful session."""
+        """Updates subject data, including next session time and training settings,
+        after a successful session."""
         df = self.subjects.df.copy()
         self.training.settings = self.task.settings
         next_settings = self.training.get_jsonstring(exclude=["observations"])
@@ -707,7 +710,8 @@ class Manager:
         self.subjects.save_from_df(self.training)
 
     def save_refractory_to_subjects(self) -> None:
-        """Updates the subject's next session time based on the refractory period (without full save)."""
+        """Updates the subject's next session time based on the refractory period
+        (without full save)."""
         df = self.subjects.df.copy()
         time_val = time_utils.time_in_future_seconds(
             int(self.training.settings.refractory_period)
@@ -743,7 +747,8 @@ class Manager:
         )
 
     def cycle_checks(self) -> None:
-        """Performs daily cycle checks and logs alarms for missing detections, sessions, or syncs."""
+        """Performs daily cycle checks and logs alarms for missing detections,
+        sessions, or syncs."""
         text, non_det_subs, non_ses_subs, low_water_subs, sync = self.create_report(24)
         log.alarm(text, report=True)
         if (
@@ -768,7 +773,8 @@ class Manager:
     def create_report(
         self, hours: int
     ) -> tuple[str, list[str], list[str], list[str], bool]:
-        """Generates a report of system activity and subject status for the last N hours.
+        """Generates a report of system activity and subject status for the
+        last N hours.
 
         Args:
             hours (int): The number of hours to report on.
@@ -884,7 +890,8 @@ class Manager:
             pass
 
     def hourly_checks(self) -> None:
-        """Performs hourly system health checks including temperature, disk space, and recent activity."""
+        """Performs hourly system health checks including temperature, disk space,
+        and recent activity."""
         temp, _, temp_string = temp_sensor.get_temperature()
         if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
             log.alarm("Temperature above maximum: " + temp_string)
