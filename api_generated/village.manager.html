@@ -801,13 +801,15 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.create_collections">
 <span class="sig-name descname"><span class="pre">create_collections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.create_collections"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Creates and initializes data collections for events, summaries, and measurements.</p>
+<dd><p>Creates and initializes data collections for events, summaries,
+and measurements.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.import_all_tasks">
 <span class="sig-name descname"><span class="pre">import_all_tasks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.import_all_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Imports all tasks, custom classes, and functions from the configured code directory.</p>
+<dd><p>Imports all tasks, custom classes, and functions from the configured
+code directory.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -836,7 +838,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.update_text">
 <span class="sig-name descname"><span class="pre">update_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.update_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Updates the status text with current system state, subject, task, and cycle info.</p>
+<dd><p>Updates the status text with current system state, subject, task,
+and cycle info.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -925,7 +928,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.get_both_sessions_dfs">
 <span class="sig-name descname"><span class="pre">get_both_sessions_dfs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.get_both_sessions_dfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Retrieves both the raw session DataFrame from disk and the current in-memory session DataFrame.</p>
+<dd><p>Retrieves both the raw session DataFrame from disk and the current
+in-memory session DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list containing [raw_session_df, task.session_df].</p>
@@ -950,13 +954,15 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.save_to_subjects">
 <span class="sig-name descname"><span class="pre">save_to_subjects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.save_to_subjects"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Updates subject data, including next session time and training settings, after a successful session.</p>
+<dd><p>Updates subject data, including next session time and training settings,
+after a successful session.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.save_refractory_to_subjects">
 <span class="sig-name descname"><span class="pre">save_refractory_to_subjects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.save_refractory_to_subjects"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Updates the subject’s next session time based on the refractory period (without full save).</p>
+<dd><p>Updates the subject’s next session time based on the refractory period
+(without full save).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -978,13 +984,15 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.cycle_checks">
 <span class="sig-name descname"><span class="pre">cycle_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.cycle_checks"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Performs daily cycle checks and logs alarms for missing detections, sessions, or syncs.</p>
+<dd><p>Performs daily cycle checks and logs alarms for missing detections,
+sessions, or syncs.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.create_report">
 <span class="sig-name descname"><span class="pre">create_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.create_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Generates a report of system activity and subject status for the last N hours.</p>
+<dd><p>Generates a report of system activity and subject status for the
+last N hours.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>hours</strong> (<em>int</em>) – The number of hours to report on.</p>
@@ -1011,7 +1019,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="village.manager.Manager.hourly_checks">
 <span class="sig-name descname"><span class="pre">hourly_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/manager.html#Manager.hourly_checks"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Performs hourly system health checks including temperature, disk space, and recent activity.</p>
+<dd><p>Performs hourly system health checks including temperature, disk space,
+and recent activity.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1143,7 +1152,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=cbcc8336"></script>
+</div><script src="../_static/documentation_options.js?v=e9f6f001"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

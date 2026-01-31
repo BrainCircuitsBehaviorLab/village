@@ -621,7 +621,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">camera_trigger</span><span class="p">:</span> <span class="n">CameraTriggerBase</span> <span class="o">=</span> <span class="n">CameraTriggerBase</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span> <span class="o">=</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previous_state_wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">error_stop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calibrating</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">:</span> <span class="n">DataTable</span> <span class="o">=</span> <span class="n">DataTable</span><span class="o">.</span><span class="n">EVENTS</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rfid_reader</span><span class="p">:</span> <span class="n">Active</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RFID_READER&quot;</span><span class="p">)</span>
@@ -680,7 +679,8 @@
 <div class="viewcode-block" id="Manager.create_collections">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.create_collections">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and initializes data collections for events, summaries, and measurements.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and initializes data collections for events, summaries,</span>
+<span class="sd">        and measurements.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">Collection</span><span class="p">(</span>
             <span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">],</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
         <span class="p">)</span>
@@ -755,7 +755,8 @@
 <div class="viewcode-block" id="Manager.import_all_tasks">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.import_all_tasks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">import_all_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Imports all tasks, custom classes, and functions from the configured code directory.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Imports all tasks, custom classes, and functions from the configured</span>
+<span class="sd">        code directory.&quot;&quot;&quot;</span>
         <span class="n">directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CODE_DIRECTORY&quot;</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
 
@@ -998,7 +999,8 @@
 <div class="viewcode-block" id="Manager.update_text">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.update_text">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the status text with current system state, subject, task, and cycle info.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the status text with current system state, subject, task,</span>
+<span class="sd">        and cycle info.&quot;&quot;&quot;</span>
         <span class="n">state_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span>
         <span class="n">state_description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">description</span>
         <span class="n">subject_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span>
@@ -1196,8 +1198,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">last_line_raw_df</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">raw_session_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calibrating</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">previous_state_wait</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">error_stop</span> <span class="o">=</span> <span class="kc">False</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_state_wait</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="Manager.update_raw_session_df">
@@ -1221,7 +1222,8 @@
 <div class="viewcode-block" id="Manager.get_both_sessions_dfs">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.get_both_sessions_dfs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_both_sessions_dfs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves both the raw session DataFrame from disk and the current in-memory session DataFrame.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves both the raw session DataFrame from disk and the current</span>
+<span class="sd">        in-memory session DataFrame.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list[pd.DataFrame]: A list containing [raw_session_df, task.session_df].</span>
@@ -1276,7 +1278,8 @@
 <div class="viewcode-block" id="Manager.save_to_subjects">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.save_to_subjects">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save_to_subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates subject data, including next session time and training settings, after a successful session.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates subject data, including next session time and training settings,</span>
+<span class="sd">        after a successful session.&quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">settings</span>
         <span class="n">next_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_jsonstring</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;observations&quot;</span><span class="p">])</span>
@@ -1294,7 +1297,8 @@
 <div class="viewcode-block" id="Manager.save_refractory_to_subjects">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.save_refractory_to_subjects">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save_refractory_to_subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the subject&#39;s next session time based on the refractory period (without full save).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the subject&#39;s next session time based on the refractory period</span>
+<span class="sd">        (without full save).&quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">time_val</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">time_in_future_seconds</span><span class="p">(</span>
             <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span><span class="p">)</span>
@@ -1336,7 +1340,8 @@
 <div class="viewcode-block" id="Manager.cycle_checks">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.cycle_checks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cycle_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs daily cycle checks and logs alarms for missing detections, sessions, or syncs.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs daily cycle checks and logs alarms for missing detections,</span>
+<span class="sd">        sessions, or syncs.&quot;&quot;&quot;</span>
         <span class="n">text</span><span class="p">,</span> <span class="n">non_det_subs</span><span class="p">,</span> <span class="n">non_ses_subs</span><span class="p">,</span> <span class="n">low_water_subs</span><span class="p">,</span> <span class="n">sync</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_report</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span>
@@ -1364,7 +1369,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_report</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a report of system activity and subject status for the last N hours.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a report of system activity and subject status for the</span>
+<span class="sd">        last N hours.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            hours (int): The number of hours to report on.</span>
@@ -1486,7 +1492,8 @@
 <div class="viewcode-block" id="Manager.hourly_checks">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.hourly_checks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">hourly_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs hourly system health checks including temperature, disk space, and recent activity.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs hourly system health checks including temperature, disk space,</span>
+<span class="sd">        and recent activity.&quot;&quot;&quot;</span>
         <span class="n">temp</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">temp_string</span> <span class="o">=</span> <span class="n">temp_sensor</span><span class="o">.</span><span class="n">get_temperature</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">temp</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MAXIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
             <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Temperature above maximum: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
@@ -1558,7 +1565,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=cbcc8336"></script>
+</div><script src="../../_static/documentation_options.js?v=e9f6f001"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
