@@ -24,7 +24,7 @@ class WaterCalibration(Task):
             )
             self.bpod.add_state(
                 state_name=self.wait_states[i],
-                state_timer=0.3,
+                state_timer=0.1,
                 state_change_conditions={Event.Tup: self.states[i + 1]},
                 output_actions=[],
             )
