@@ -8,6 +8,17 @@ from village.settings import settings
 
 
 def find_pwmchip(target_device="1f00098000.pwm") -> str:
+    """Finds the PWM chip path for a given target device.
+
+    Args:
+        target_device (str): The target device name to look for. Defaults to "1f00098000.pwm".
+
+    Returns:
+        str: The path to the PWM chip or raises RuntimeError if not found.
+
+    Raises:
+        RuntimeError: If no valid PWM chip is found.
+    """
     for chip in os.listdir("/sys/class/pwm"):
         if chip.startswith("pwmchip"):
             devlink = os.path.join("/sys/class/pwm", chip, "device")
@@ -21,8 +32,26 @@ def find_pwmchip(target_device="1f00098000.pwm") -> str:
 
 
 class Motor(MotorBase):
+    """Controls a motor via PWM.
+
+    Attributes:
+        pin (int): The GPIO pin number used for the motor.
+        pinIdx (int): The index of the pin in the internal configuration lists.
+        pwmx (list[int]): Mapping of pin indices to PWM channels.
+        flag (bool): State flag indicating if the motor is enabled.
+        open_angle (int): The angle for the open position.
+        close_angle (int): The angle for the close position.
+        error (str): Error message if any.
+        chip (str): The path to the PWM chip.
+    """
 
     def __init__(self, pin: int, angles: list[int]) -> None:
+        """Initializes the Motor.
+
+        Args:
+            pin (int): The GPIO pin number.
+            angles (list[int]): A list containing [open_angle, close_angle].
+        """
         self.pin = 0
         self.pinIdx = 0
         self.pwmx = [0, 1, 2, 3, 2, 3]
@@ -53,19 +82,35 @@ class Motor(MotorBase):
             log.error("Error Invalid Pin")
 
     def enable(self, flag) -> None:
+        """Enables or disables the motor PWM.
+
+        Args:
+            flag (bool): True to enable, False to disable.
+        """
         self.flag = flag
         os.system(
             f"echo {int(self.flag)} > {self.chip}/pwm{self.pwmx[self.pinIdx]}/enable"
         )
 
     def __del__(self) -> None:
-        if self.pin is not None:
-            # ok take PWM out
-            os.system(f"echo {self.pwmx[self.pinIdx]} > {self.chip}/unexport")
-            # disable PWM Pin
-            os.system(f"/usr/bin/pinctrl set {self.pin} no")
+        """Cleans up PWM resources and resets pin control."""
+        try:
+            if self.pin is not None and os is not None:
+                # ok take PWM out
+                os.system(f"echo {self.pwmx[self.pinIdx]} > {self.chip}/unexport")
+                # disable PWM Pin
+                os.system(f"/usr/bin/pinctrl set {self.pin} no")
+        except AttributeError:
+            pass  # interpreter shutdown
+        except Exception:
+            pass
 
     def set(self, on_time_ns) -> None:
+        """Sets the duty cycle in nanoseconds.
+
+        Args:
+            on_time_ns (int): The high time in nanoseconds.
+        """
         if not self.flag:
             self.enable(True)
         os.system(
@@ -73,17 +118,36 @@ class Motor(MotorBase):
         )
 
     def transform(self, value: int) -> int:
+        """Transforms an angle to a PWM duty cycle in nanoseconds.
+
+        Args:
+            value (int): The angle in degrees (0-180).
+
+        Returns:
+            int: The duty cycle in nanoseconds (500000 - 2500000).
+        """
         # 0 to 180 degrees -> 500000 to 2500000 ns
         return int(value / 180 * 2000000 + 500000)
 
     def open(self) -> None:
+        """Moves the motor to the open position."""
         self.set(self.transform(self.open_angle))
 
     def close(self) -> None:
+        """Moves the motor to the close position."""
         self.set(self.transform(self.close_angle))
 
 
 def get_motor(pin: int, angles: list[int]) -> MotorBase:
+    """Factory function to create and initialize a Motor instance.
+
+    Args:
+        pin (int): The GPIO pin number.
+        angles (list[int]): A list containing [open_angle, close_angle].
+
+    Returns:
+        MotorBase: An initialized Motor instance or a dummy MotorBase if initialization fails.
+    """
     try:
         motor = Motor(pin=pin, angles=angles)
         log.info("Motor successfully initialized")
@@ -93,5 +157,11 @@ def get_motor(pin: int, angles: list[int]) -> MotorBase:
         return MotorBase()
 
 
-motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
-motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))
+import sys
+
+if "sphinx" in sys.modules:
+    motor1 = MotorBase()
+    motor2 = MotorBase()
+else:
+    motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
+    motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))

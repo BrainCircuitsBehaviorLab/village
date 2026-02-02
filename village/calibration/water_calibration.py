@@ -2,12 +2,16 @@ from village.custom_classes.task import Event, Task
 
 
 class WaterCalibration(Task):
+    """Task class for calibrating water delivery valves."""
+
     def __init__(self) -> None:
+        """Initializes the WaterCalibration task."""
         super().__init__()
         self.indices: list[int] = []
         self.times: list[float] = []
 
     def start(self) -> None:
+        """Prepares the calibration task by defining states and output actions."""
         self.states = ["valve" + str(i + 1) for i in self.indices] + ["exit"]
         self.wait_states = ["wait" + str(i + 1) for i in self.indices] + ["exit"]
         self.outputs = [
@@ -15,6 +19,10 @@ class WaterCalibration(Task):
         ]
 
     def create_trial(self) -> None:
+        """Creates the state machine for a calibration trial.
+
+        Adds states for each valve to be calibrated and a final wait state.
+        """
         for i in range(len(self.states) - 1):
             self.bpod.add_state(
                 state_name=self.states[i],
@@ -30,7 +38,9 @@ class WaterCalibration(Task):
             )
 
     def after_trial(self) -> None:
+        """Executes logic after a trial completes."""
         pass
 
     def close(self) -> None:
+        """Cleanly closes the calibration task."""
         pass

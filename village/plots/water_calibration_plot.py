@@ -12,6 +12,20 @@ def water_calibration_plot(
     height: float,
     point: tuple[float, float] | None,
 ) -> Figure:
+    """Generates a plot for water calibration data.
+
+    Plots the time duration vs. water volume delivered for different ports,
+    including interpolated curves and an optional specific data point.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing calibration data.
+        width (float): Width of the figure in inches.
+        height (float): Height of the figure in inches.
+        point (tuple[float, float] | None): Optional (time, volume) point to highlight.
+
+    Returns:
+        Figure: The generated matplotlib figure.
+    """
     fig, ax = plt.subplots(figsize=(width, height))
 
     ports = sorted(df["port_number"].unique())

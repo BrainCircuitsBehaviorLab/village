@@ -60,7 +60,8 @@ except PermissionError:
     print("No permission to change nice value.")
     print("Write this in the terminal:")
     print("sudo setcap cap_sys_nice=eip /usr/bin/python3.11")
-    raise
+    # When running in restricted environments (e.g., documentation builds),
+    # we can't change the nice value. Continue without raising to allow import.
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
@@ -94,6 +95,11 @@ log.start("VILLAGE")
 
 # create a secondary thread
 def system_run(bevavior_window: QWidget) -> None:
+    """Runs the main system control loop in a secondary thread.
+
+    Args:
+        bevavior_window (QWidget): The main behavior window widget.
+    """
     id = ""
     multiple = False
     checking_subject_requirements = True
@@ -110,6 +116,8 @@ def system_run(bevavior_window: QWidget) -> None:
     weight_threshold = float(settings.get("WEIGHT_THRESHOLD"))
 
     def background_checks() -> None:
+        """Performs periodic background checks for errors, storage,
+        and schedule changes."""
         while True:
             time.sleep(1)
             manager.update_cycle()
@@ -357,20 +365,25 @@ def system_run(bevavior_window: QWidget) -> None:
                     )
                     manager.state = State.SAVE_INSIDE
                 elif weight > weight_threshold:
-                    manager.measuring_weight_list.append(weight)
-                    ok, weight_value = real_weight_inference(
-                        manager.measuring_weight_list,
-                        weight_threshold,
-                    )
-                    if ok:
-                        manager.weight = weight_value
-                        manager.getting_weights = False
-                        manager.measuring_weight_list = []
-                        manager.state = State.EXIT_UNSAVED
-                        log.info(
-                            "Subject back home: " + str(manager.weight) + " g",
-                            subject=manager.subject.name,
+                    if (
+                        not cam_corridor.area_2_empty()
+                        and cam_corridor.area_3_empty()
+                        and cam_corridor.area_4_empty()
+                    ):
+                        manager.measuring_weight_list.append(weight)
+                        ok, weight_value = real_weight_inference(
+                            manager.measuring_weight_list,
+                            weight_threshold,
                         )
+                        if ok:
+                            manager.weight = weight_value
+                            manager.getting_weights = False
+                            manager.measuring_weight_list = []
+                            manager.state = State.EXIT_UNSAVED
+                            log.info(
+                                "Subject back home: " + str(manager.weight) + " g",
+                                subject=manager.subject.name,
+                            )
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
@@ -416,8 +429,10 @@ def system_run(bevavior_window: QWidget) -> None:
                     manager.max_time_counter += 1
 
                 elif weight > weight_threshold:
-                    if not manager.error_stop or (
-                        cam_corridor.area_3_empty() and cam_corridor.area_4_empty()
+                    if (
+                        not cam_corridor.area_2_empty()
+                        and cam_corridor.area_3_empty()
+                        and cam_corridor.area_4_empty()
                     ):
                         manager.measuring_weight_list.append(weight)
                         ok, weight_value = real_weight_inference(
@@ -446,7 +461,6 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
                 motor2.open()
-                manager.error_stop = True
                 manager.rfid_reader = Active.OFF
                 manager.rfid_changed = True
                 manager.state = State.SAVE_INSIDE
@@ -507,15 +521,25 @@ def system_run(bevavior_window: QWidget) -> None:
                 log.info("Going to WAIT State")
 
 
-# create the GUI that will run in the main thread
-gui = Gui()
-manager.behavior_window = gui.behavior_window
+def main() -> None:
+    """Main entry point for the application.
 
-# start the secondary thread (control of the system)
-system_state = threading.Thread(
-    target=system_run, args=(manager.behavior_window,), daemon=True
-)
-system_state.start()
+    Initializes the GUI, starts the system control thread, and triggers
+    the application execution loop.
+    """
+    # create the GUI that will run in the main thread
+    gui = Gui()
+    manager.behavior_window = gui.behavior_window
 
-# start the GUI
-gui.q_app.exec()
+    # start the secondary thread (control of the system)
+    system_state = threading.Thread(
+        target=system_run, args=(manager.behavior_window,), daemon=True
+    )
+    system_state.start()
+
+    # start the GUI
+    gui.q_app.exec()
+
+
+if __name__ == "__main__":
+    main()

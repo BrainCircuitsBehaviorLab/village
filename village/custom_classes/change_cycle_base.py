@@ -1,5 +1,6 @@
-# runs when cycle day/night changes and there is no animal in the behavioural box
 """
+This module runs when cycle day/night changes and there is no animal in the behavioural box.
+
 1. Deletes the old videos.
 2. You can override this class in your project code to implement custom behavior.
 """
@@ -13,7 +14,14 @@ from village.settings import Active, settings
 
 
 class ChangeCycleBase:
+    """Base class for operations performed during the day/night cycle change.
+
+    This class handles cleanup tasks such as deleting old video files and ensuring
+    disk space is managed, potentially backing up data before deletion.
+    """
+
     def __init__(self) -> None:
+        """Initializes the ChangeCycleBase instance with settings."""
         self.directory = settings.get("VIDEOS_DIRECTORY")
         self.days = settings.get("DAYS_OF_VIDEO_STORAGE")
         self.safe = settings.get("SAFE_DELETE") == Active.ON
@@ -27,6 +35,11 @@ class ChangeCycleBase:
             self.port = None
 
     def run(self) -> None:
+        """Executes the cycle change logic, primarily old data removal.
+
+        Calls the safe_removal_script to delete old videos, optionally backing them up
+        locally or to a remote server based on settings.
+        """
         if self.sync_type == SyncType.HD:
             safe_removal_script(
                 directory=self.directory,
@@ -41,10 +54,10 @@ class ChangeCycleBase:
                 days=self.days,
                 safe=self.safe,
                 backup_dir=self.backup_dir,
+                remote=True,
                 remote_user=self.remote_user,
                 remote_host=self.remote_host,
                 port=self.port,
-                remote=True,
             )
 
 

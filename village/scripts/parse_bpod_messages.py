@@ -3,6 +3,17 @@ from typing import Any
 
 
 def parse_input_to_tuple_override(msg: str) -> tuple[str, int, int]:
+    """Parses a Bpod input message string into a structured tuple.
+
+    Args:
+        msg (str): The input message string (e.g., 'Port1In').
+
+    Returns:
+        tuple[str, int, int]: A tuple (type, channel, value).
+
+    Raises:
+        ValueError: If the message format is unrecognized.
+    """
 
     # Pattern for "Port#In" and "Port#Out" (where # is 1-9)
     port_pattern = re.compile(r"Port([0-9])(In|Out)")
@@ -42,6 +53,17 @@ def parse_input_to_tuple_override(msg: str) -> tuple[str, int, int]:
 def parse_output_to_tuple_override(
     message: str | tuple[str, int]
 ) -> tuple[str, Any, int]:
+    """Parses a Bpod output message into a structured tuple.
+
+    Args:
+        message (str | tuple): The output message to parse.
+
+    Returns:
+        tuple[str, Any, int]: A tuple (type, channel, value).
+
+    Raises:
+        ValueError: If the message format is unrecognized.
+    """
     # Convert the message to string if it's a tuple
     msg = str(message)
 
@@ -86,6 +108,17 @@ def parse_output_to_tuple_override(
 
 
 def parse_output_to_tuple(val: str | tuple[str, int]) -> tuple:
+    """Parses typical Bpod output strings or tuples into standardized tuples.
+
+    Args:
+        val (str | tuple): The output value/message.
+
+    Returns:
+        tuple: (Base, Info) parsed structure.
+
+    Raises:
+        ValueError: If the input format is invalid.
+    """
     if isinstance(val, tuple):
         return val
     else:

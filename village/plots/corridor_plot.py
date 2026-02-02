@@ -17,6 +17,23 @@ def corridor_plot(
     ndays: int = 3,
     from_date: Union[str, None, datetime] = None,
 ) -> Figure:
+    """Generates a corridor activity plot for multiple subjects.
+
+    Visualizes subject activity (detections and session times) over a specified
+    number of days, with day/night shading.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing activity data.
+        subjects (list[str]): List of subject names to include in the plot.
+        width (float): Width of the figure in inches.
+        height (float): Height of the figure in inches.
+        ndays (int, optional): Number of days to plot. Defaults to 3.
+        from_date (Union[str, None, datetime], optional): Start date for the plot.
+            If None, uses the current time. Defaults to None.
+
+    Returns:
+        Figure: The generated matplotlib figure.
+    """
 
     subjects = sorted(subjects)
 

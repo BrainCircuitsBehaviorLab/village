@@ -25,6 +25,11 @@ from village.settings import settings
 
 
 def change_directory_settings(new_path: str) -> None:
+    """Update all directory settings based on a new project root path.
+
+    Args:
+        new_path (str): The absolute path to the new project root directory.
+    """
     system_name = settings.get("SYSTEM_NAME")
     settings.set("PROJECT_DIRECTORY", new_path)
     settings.set("DATA_DIRECTORY", str(Path(new_path, "data")))
@@ -34,8 +39,17 @@ def change_directory_settings(new_path: str) -> None:
     settings.set("CODE_DIRECTORY", str(Path(new_path, "code")))
     settings.set("MEDIA_DIRECTORY", str(Path(new_path, "media")))
 
+    directory = os.path.basename(new_path)
+    sync_destination = settings.get("SYNC_DESTINATION")
+    new_value = os.path.join(sync_destination, directory + "_data")
+    settings.set("SYNC_DIRECTORY", new_value)
+
 
 def change_system_directory_settings() -> None:
+    """Updates the system directory setting and renames the directory if it changed.
+
+    This handles cases where the SYSTEM_NAME setting might have been updated.
+    """
     system_name = settings.get("SYSTEM_NAME")
     data_directory = settings.get("DATA_DIRECTORY")
     old_system_directory = settings.get("SYSTEM_DIRECTORY")
@@ -51,6 +65,10 @@ def change_system_directory_settings() -> None:
 
 
 def create_directories() -> None:
+    """Create all necessary system directories if they do not exist.
+
+    Uses paths defined in the global settings.
+    """
     directory = Path(settings.get("PROJECT_DIRECTORY"))
     directory.mkdir(parents=True, exist_ok=True)
     directory = Path(settings.get("DATA_DIRECTORY"))
@@ -68,6 +86,14 @@ def create_directories() -> None:
 
 
 def create_directories_from_path(p: str) -> bool:
+    """Creates a standard directory structure rooted at the given path.
+
+    Args:
+        p (str): Root path for the new directory structure.
+
+    Returns:
+        bool: True if successful, False if an exception occurred.
+    """
     try:
         path = Path(p)
         path.mkdir(parents=True, exist_ok=True)
@@ -87,6 +113,14 @@ def create_directories_from_path(p: str) -> bool:
 
 
 def download_github_repositories(repositories: list[str]) -> None:
+    """Clone a list of GitHub repositories into the user's village_projects directory.
+
+    If a repository already exists and is not empty, it is skipped.
+    Updates the 'GITHUB_REPOSITORIES_DOWNLOADED' setting upon success.
+
+    Args:
+        repositories (list[str]): A list of GitHub repository URLs.
+    """
     if settings.get("GITHUB_REPOSITORIES_DOWNLOADED") == Active.ON:
         return
     downloaded_demo = False
@@ -136,6 +170,15 @@ def download_github_repositories(repositories: list[str]) -> None:
 
 
 def is_active_regular(value: str) -> bool:
+    """Checks if the current day allows activity based on a simple schedule.
+
+    Args:
+        value (str): "ON", "OFF", or a hyphen-separated list of active days
+                     (e.g., "Mon-Wed-Fri").
+
+    Returns:
+        bool: True if active today, False otherwise.
+    """
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     weekday_number = time_utils.now().weekday()
     today = days[weekday_number]
@@ -149,6 +192,17 @@ def is_active_regular(value: str) -> bool:
 
 
 def is_active(value: str) -> bool:
+    """Check if a schedule string dictates activity at the current time.
+
+    The value can be "ON", "OFF", or a range of days (e.g., "Mon-Fri").
+    Uses DAYTIME and NIGHTTIME settings to determine active hours within those days.
+
+    Args:
+        value (str): The schedule string to evaluate.
+
+    Returns:
+        bool: True if active right now, False otherwise.
+    """
     if value == "ON":
         return True
     elif value == "OFF":
@@ -176,7 +230,17 @@ def is_active(value: str) -> bool:
     return False
 
 
-def calculate_active_hours(df) -> dict[str, int]:
+def calculate_active_hours(df: pd.DataFrame) -> dict[str, int]:
+    """Calculates the total active hours for different entities based on a DataFrame.
+
+    The DataFrame is expected to have 'name' and 'active' columns.
+
+    Args:
+        df (pd.DataFrame): Input dataframe with schedule information.
+
+    Returns:
+        dict[str, int]: Dictionary mapping names to total active hours.
+    """
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     weekday_number = time_utils.now().weekday()
     today = days[weekday_number]
@@ -219,6 +283,11 @@ def calculate_active_hours(df) -> dict[str, int]:
 
 
 def delete_all_elements_from_layout(layout: QLayout) -> None:
+    """Recursively removes all widgets and sub-layouts from a QLayout.
+
+    Args:
+        layout (QLayout): The layout to clear.
+    """
     for i in reversed(range(layout.count())):
         layoutItem = layout.itemAt(i)
         if layoutItem is not None:
@@ -234,6 +303,19 @@ def delete_all_elements_from_layout(layout: QLayout) -> None:
 def reformat_trial_data(
     data: dict, date: str, trial: int, subject: str, task: str, system_name: str
 ) -> dict:
+    """Reformats raw trial data into a flattened dictionary structure.
+
+    Args:
+        data (dict): Raw data dictionary containing events and states.
+        date (str): Date string.
+        trial (int): Trial number.
+        subject (str): Subject identifier.
+        task (str): Task identifier.
+        system_name (str): System name.
+
+    Returns:
+        dict: Flattened dictionary including formatted start/end times.
+    """
 
     output = {
         "date": date,
@@ -269,6 +351,17 @@ def reformat_trial_data(
 
 # not used function
 def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
+    """Transforms raw Bpod trial data into a clean, wide-format DataFrame.
+
+    Processes MSG, START, and END columns to create specific start/end columns
+    for each message type.
+
+    Args:
+        df (pd.DataFrame): Raw input DataFrame.
+
+    Returns:
+        pd.DataFrame: Cleaned and pivoted DataFrame.
+    """
 
     def make_list(x) -> Any | float | str:
         if x.size <= 1:
@@ -352,7 +445,18 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
-    """Configure logging to file"""
+    """Configure the logging system to write to a timestamped file.
+    Creates the log directory if needed, resets existing handlers, and suppresses
+    verbose logs from external libraries (urllib3, telegram, etc.).
+
+    Args:
+        logs_subdirectory (str): The name of the subdirectory in the system folder
+            where logs should be stored.
+
+    Returns:
+        tuple[str, logging.FileHandler]: A tuple containing the log filename and
+            the created FileHandler instance.
+    """
     data_dir = settings.get("SYSTEM_DIRECTORY")
     logs_dir = os.path.join(data_dir, logs_subdirectory)
 
@@ -398,12 +502,34 @@ def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
 
 
 def has_low_disk_space(threshold_gb=10) -> bool:
+    """Checks if the root partition has low disk space.
+
+    Args:
+        threshold_gb (int, optional): The threshold in GB. Defaults to 10.
+
+    Returns:
+        bool: True if free space is below the threshold, False otherwise.
+    """
     total, used, free = shutil.disk_usage("/")
     free_gb = free / (1024**3)
     return free_gb < threshold_gb
 
 
-def interpolate(x, y, points=100) -> tuple:
+def interpolate(x: Any, y: Any, points: int = 100) -> tuple[np.ndarray, np.ndarray]:
+    """Perform PCHIP interpolation on specific data points.
+
+    Sorts the data, averages y-values for duplicate x-values, and generates
+    interpolated points.
+
+    Args:
+        x (Any): Input x coordinates (array-like).
+        y (Any): Input y coordinates (array-like).
+        points (int, optional): Number of interpolated points to generate. Default: 100.
+
+    Returns:
+        tuple[np.ndarray, np.ndarray]: A tuple (x_fit, y_fit) of interpolated arrays,
+        or (None, None) if insufficient data points.
+    """
     x = np.asarray(x)
     y = np.asarray(y)
 
@@ -428,7 +554,20 @@ def interpolate(x, y, points=100) -> tuple:
     return x_fit, y_fit
 
 
-def get_x_value_interp(x, y, y_target) -> float | None:
+def get_x_value_interp(x: Any, y: Any, y_target: float) -> float | None:
+    """Find the x-value corresponding to a target y-value using interpolation.
+
+    Useful for finding thresholds (e.g., x value where y crosses 50%).
+
+    Args:
+        x (Any): Input x coordinates.
+        y (Any): Input y coordinates.
+        y_target (float): The target y value to search for.
+
+    Returns:
+        float | None: The estimated x value, or None if the target is out of range
+        or interpolation fails.
+    """
 
     if y_target < np.min(y) or y_target > np.max(y):
         return None
@@ -448,6 +587,14 @@ def get_x_value_interp(x, y, y_target) -> float | None:
 
 
 def create_pixmap(fig: Figure) -> QPixmap:
+    """Creates a QPixmap from a matplotlib Figure.
+
+    Args:
+        fig (Figure): The matplotlib figure.
+
+    Returns:
+        QPixmap: The generated QPixmap, or an empty QPixmap if an error occurs.
+    """
     try:
         buf = BytesIO()
         fig.savefig(buf, format="png")

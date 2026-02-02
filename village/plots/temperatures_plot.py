@@ -5,6 +5,16 @@ from matplotlib.figure import Figure
 
 
 def temperatures_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
+    """Generates a plot of temperature data over time.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing 'date' and 'temperature' columns.
+        width (float): Width of the figure in inches.
+        height (float): Height of the figure in inches.
+
+    Returns:
+        Figure: The generated matplotlib figure.
+    """
     max_data_points = 365 * 24
     if len(df) > max_data_points:
         df = df.iloc[-max_data_points:]

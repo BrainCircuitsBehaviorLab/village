@@ -70,6 +70,7 @@ class Manager:
     """
 
     def __init__(self) -> None:
+        """Initializes the Manager with default settings and initializes collections."""
         self.subject = Subject()
         self.task = Task()
         self.training: TrainingProtocolBase = TrainingProtocolBase()
@@ -81,7 +82,6 @@ class Manager:
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
-        self.error_stop: bool = False
         self.calibrating: bool = False
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
@@ -113,14 +113,14 @@ class Manager:
         log.event = self.events
         log.temp = self.temperatures
         self.detections = time_utils.TimestampTracker(
-            hours=int(settings.get("NO_DETECTION_HOURS"))
+            hours=int(settings.get("NO_DETECTION_HOURS") or 6)
         )
         self.sessions = time_utils.TimestampTracker(
-            hours=int(settings.get("NO_SESSION_HOURS"))
+            hours=int(settings.get("NO_SESSION_HOURS") or 6)
         )
         self.hour_change_detector = time_utils.HourChangeDetector()
         self.cycle_change_detector = time_utils.CycleChangeDetector(
-            settings.get("DAYTIME"), settings.get("NIGHTTIME")
+            settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
         )
         self.detection_change = True
         self.error_in_manual_task = False
@@ -137,6 +137,8 @@ class Manager:
         self.behavior_window = BehaviorWindowBase()
 
     def create_collections(self) -> None:
+        """Creates and initializes data collections for events, summaries,
+        and measurements."""
         self.events = Collection(
             "events", ["date", "type", "subject", "description"], [str, str, str, str]
         )
@@ -208,6 +210,8 @@ class Manager:
         )
 
     def import_all_tasks(self) -> None:
+        """Imports all tasks, custom classes, and functions from the configured
+        code directory."""
         directory = settings.get("CODE_DIRECTORY")
         sys.path.append(directory)
 
@@ -394,6 +398,14 @@ class Manager:
             log.info(str(number_of_tasks) + " tasks successfully imported")
 
     def get_subject_from_tag(self, tag: str) -> bool:
+        """Retrieves a subject based on their RFID tag.
+
+        Args:
+            tag (str): The RFID tag string.
+
+        Returns:
+            bool: True if subject found, False otherwise.
+        """
         subject_series = self.subjects.get_last_entry(column="tag", value=tag)
 
         if subject_series is None:
@@ -404,14 +416,15 @@ class Manager:
             return True
 
     def update_cycle(self) -> None:
+        """Updates the day/night cycle state based on current time and settings."""
         match self.cycle:
-            case self.cycle.DAY:
+            case Cycle.DAY:
                 self.cycle_text = "DAY"
                 self.day = True
-            case self.cycle.NIGHT:
+            case Cycle.NIGHT:
                 self.cycle_text = "NIGHT"
                 self.day = False
-            case self.cycle.AUTO:
+            case Cycle.AUTO:
                 day = time_utils.time_from_setting_string(settings.get("DAYTIME"))
                 night = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
                 now = time_utils.now().time()
@@ -432,6 +445,8 @@ class Manager:
                         self.day = False
 
     def update_text(self) -> None:
+        """Updates the status text with current system state, subject, task,
+        and cycle info."""
         state_name = self.state.name
         state_description = self.state.description
         subject_name = self.subject.name
@@ -459,6 +474,14 @@ class Manager:
         )
 
     def multiple_detections(self, multiple: bool) -> bool:
+        """Checks if multiple RFID tags were detected.
+
+        Args:
+            multiple (bool): The multiple detection flag from the RFID reader.
+
+        Returns:
+            bool: True if multiple tags detected, False otherwise.
+        """
         if multiple:
             log.info(
                 "Multiple tags detected in the last seconds",
@@ -468,6 +491,14 @@ class Manager:
         return False
 
     def launch_task_manual(self, cam: CameraBase) -> bool:
+        """Launches a task in manual mode.
+
+        Args:
+            cam (CameraBase): The camera instance to use.
+
+        Returns:
+            bool: True if launched successfully, False otherwise.
+        """
         self.task.create_paths()
         self.task.cam_box = cam
         self.task.water_calibration = self.water_calibration
@@ -493,6 +524,14 @@ class Manager:
             return False
 
     def launch_task_auto(self, cam: CameraBase) -> bool:
+        """Launches a task in automatic mode based on training protocol.
+
+        Args:
+            cam (CameraBase): The camera instance to use.
+
+        Returns:
+            bool: True if launched successfully, False otherwise.
+        """
         try:
             self.weight = np.nan
             self.training.load_settings_from_jsonstring(self.subject.next_settings)
@@ -542,10 +581,12 @@ class Manager:
             return False
 
     def run_task_in_thread(self) -> None:
+        """Starts the task execution in a separate thread."""
         self.process = Thread(target=self.run_task, daemon=True)
         self.process.start()
 
     def run_task(self) -> None:
+        """Executes the task logic and handles exceptions/errors during execution."""
         try:
             self.task.bpod.connect(self.functions)
             self.task.run()
@@ -577,6 +618,7 @@ class Manager:
                 log.info("Going to OPEN_DOOR2_STOP State")
 
     def reset_subject_task_training(self) -> None:
+        """Resets the subject, task, and training attributes to default states."""
         self.task = Task()
         self.subject = Subject()
         self.training.restore()
@@ -585,9 +627,13 @@ class Manager:
         self.raw_session_df = pd.DataFrame()
         self.calibrating = False
         self.previous_state_wait = True
-        self.error_stop = False
 
     def update_raw_session_df(self) -> pd.DataFrame:
+        """Updates and returns the raw session DataFrame from the CSV file.
+
+        Returns:
+            pd.DataFrame: The loaded raw session data.
+        """
         try:
             self.raw_session_df = pd.read_csv(
                 self.rt_session_path,
@@ -598,10 +644,21 @@ class Manager:
         return self.raw_session_df
 
     def get_both_sessions_dfs(self) -> list[pd.DataFrame]:
+        """Retrieves both the raw session DataFrame from disk and the current
+        in-memory session DataFrame.
+
+        Returns:
+            list[pd.DataFrame]: A list containing [raw_session_df, task.session_df].
+        """
         raw_df = self.update_raw_session_df()
         return [raw_df, self.task.session_df]
 
     def disconnect_and_save(self, run_mode: str) -> None:
+        """Disconnects devices and saves session data.
+
+        Args:
+            run_mode (str): The mode in which the task was run (e.g., "Auto", "Manual").
+        """
         # TODO kill the touchscreen reading
         self.behavior_window.load_draw_function(None)
         self.behavior_window.stop_drawing()
@@ -637,6 +694,8 @@ class Manager:
         self.after_session_flag = True
 
     def save_to_subjects(self) -> None:
+        """Updates subject data, including next session time and training settings,
+        after a successful session."""
         df = self.subjects.df.copy()
         self.training.settings = self.task.settings
         next_settings = self.training.get_jsonstring(exclude=["observations"])
@@ -651,6 +710,8 @@ class Manager:
         self.subjects.save_from_df(self.training)
 
     def save_refractory_to_subjects(self) -> None:
+        """Updates the subject's next session time based on the refractory period
+        (without full save)."""
         df = self.subjects.df.copy()
         time_val = time_utils.time_in_future_seconds(
             int(self.training.settings.refractory_period)
@@ -663,7 +724,14 @@ class Manager:
     def save_to_sessions_summary(
         self, duration: float, trials: int, water: int, settings_used_str: str
     ) -> None:
+        """Saves a summary of the session to the sessions_summary collection.
 
+        Args:
+            duration (float): The duration of the session in seconds.
+            trials (int): The number of trials completed.
+            water (int): The amount of water delivered.
+            settings_used_str (str): The settings string used for the session.
+        """
         self.sessions_summary.add_entry(
             [
                 self.task.date,
@@ -679,6 +747,8 @@ class Manager:
         )
 
     def cycle_checks(self) -> None:
+        """Performs daily cycle checks and logs alarms for missing detections,
+        sessions, or syncs."""
         text, non_det_subs, non_ses_subs, low_water_subs, sync = self.create_report(24)
         log.alarm(text, report=True)
         if (
@@ -703,6 +773,16 @@ class Manager:
     def create_report(
         self, hours: int
     ) -> tuple[str, list[str], list[str], list[str], bool]:
+        """Generates a report of system activity and subject status for the
+        last N hours.
+
+        Args:
+            hours (int): The number of hours to report on.
+
+        Returns:
+            tuple: A tuple containing the report text, list of non-detected subjects,
+                   non-session subjects, low water subjects, and sync status boolean.
+        """
         minimum_water = float(settings.get("MINIMUM_WATER_SUBJECT_24H"))
         events = self.events.df.copy()
         subjects = self.subjects.df.copy()
@@ -801,6 +881,7 @@ class Manager:
         )
 
     def send_heartbeat(self) -> None:
+        """Sends a heartbeat signal to the healthcheck URL if configured."""
         if self.healthchecks_url == "":
             return
         try:
@@ -809,6 +890,8 @@ class Manager:
             pass
 
     def hourly_checks(self) -> None:
+        """Performs hourly system health checks including temperature, disk space,
+        and recent activity."""
         temp, _, temp_string = temp_sensor.get_temperature()
         if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
             log.alarm("Temperature above maximum: " + temp_string)
@@ -829,6 +912,11 @@ class Manager:
         self.send_heartbeat()
 
     def run_softcode_fuction(self, number: int) -> None:
+        """Runs a user-defined softcode function.
+
+        Args:
+            number (int): The function index (1-based).
+        """
         try:
             self.functions[number]()
         except Exception:
