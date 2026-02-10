@@ -955,9 +955,9 @@ class Camera(CameraBase):
             self.annotations.append(self.annotation)
             self.pre_process_timestamps.append(self.pre_process_timestamp)
             self.camera_timestamps.append(self.camera_timestamp)
-        if self.tracking:
-            self.x_positions.append(self.x_position)
-            self.y_positions.append(self.y_position)
+            if self.tracking:
+                self.x_positions.append(self.x_position)
+                self.y_positions.append(self.y_position)
 
     def start_preview_window(self) -> QWidget:
         """Starts a low-frequency preview window for the GUI.
