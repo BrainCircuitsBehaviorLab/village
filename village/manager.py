@@ -911,7 +911,7 @@ class Manager:
 
         self.send_heartbeat()
 
-    def run_softcode_fuction(self, number: int) -> None:
+    def run_softcode_function(self, number: int) -> None:
         """Runs a user-defined softcode function.
 
         Args:
