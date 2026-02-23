@@ -533,3 +533,22 @@ class BehaviorWindowBase(QWidget):
             Optional[QImage]: The current frame as a QImage.
         """
         return None
+
+
+class LEDStripBase:
+    """Base class for LED strip"""
+
+    error: str = "LED strip not available."
+    num_leds: int = 10
+
+    def set_led_color(self, index: int, red: int, green: int, blue: int) -> None:
+        """Set the color of a specific LED"""
+        print(f"Dummy LED {index} changed to {(red, green, blue)}")
+
+    def update_strip(self) -> None:
+        """Update the LED strip to show changes"""
+        print("Dummy LED strip updated")
+
+    def clear_strip(self) -> None:
+        """Clear all LEDs"""
+        print("Dummy LED strip cleared")

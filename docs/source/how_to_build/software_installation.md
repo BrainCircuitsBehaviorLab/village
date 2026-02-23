@@ -231,6 +231,16 @@ These settings prioritize the use of RAM over disk cache whenever possible, in o
 sudo sysctl -p
 ```
 
+### Optional: Increase SPI buffer size for LED strip
+
+1. Modify the file: `/boot/firmware/cmdline.txt`
+
+```
+sudo nano /boot/firmware/cmdline.txt
+```
+
+2. Add the following text on the same line (e.g. after the vc4 edit done previously): ` spidev.bufsiz=32768`.
+
 
 ### Install Training Village
 
