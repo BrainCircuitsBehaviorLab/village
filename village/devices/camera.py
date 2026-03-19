@@ -1005,8 +1005,8 @@ class Camera:
             return True
 
     def areas_box_ok(self) -> None:
-        """Checks box areas for allowed/prohibited detections and logs alarms
-        if needed."""
+        """Checks box areas for allowed/prohibited detections and logs
+        alarms if needed."""
         pixels_allowed = 0
         pixels_not_allowed = 0
 
