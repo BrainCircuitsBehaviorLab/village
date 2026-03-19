@@ -3,16 +3,17 @@ import statistics
 import threading
 import time
 
-from village.devices.bpod import bpod
+from village.devices.controller import controller
 
 
 class BpodWithLatencyTest:
     """Class to test Bpod latency by measuring round-trip time of softcodes."""
 
     def __init__(self, *args, **kwargs):
-        """Initializes the test class with a Bpod instance and synchronization events."""
+        """Initializes the test class with a Bpod instance and
+        synchronization events."""
         print(1)
-        self.mybpod = bpod
+        self.mybpod = controller
         print(2)
 
         # Events to synchronize the benchmark

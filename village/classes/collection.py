@@ -7,7 +7,6 @@ from typing import Any, Type, Union
 import numpy as np
 import pandas as pd
 
-from village.classes.abstract_classes import EventBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
@@ -15,7 +14,7 @@ from village.scripts.utils import get_x_value_interp
 from village.settings import settings
 
 
-class Collection(EventBase):
+class Collection:
     """Manages a collection of data entries stored in a CSV file and a pandas DataFrame.
 
     Attributes:
@@ -324,7 +323,8 @@ class Collection(EventBase):
     def save_from_df(
         self, training: TrainingProtocolBase = TrainingProtocolBase()
     ) -> None:
-        """Saves values from the current DataFrame to the CSV file, processing formatting.
+        """Saves values from the current DataFrame to the CSV file,
+        processing formatting.
 
         Args:
             training (TrainingProtocolBase): Protocol for formatting specific fields.
@@ -340,7 +340,8 @@ class Collection(EventBase):
 
         Args:
             df (pd.DataFrame): The input DataFrame.
-            training (TrainingProtocolBase): The training protocol for custom formatting.
+            training (TrainingProtocolBase): The training protocol for
+            custom formatting.
 
         Returns:
             pd.DataFrame: The processed DataFrame.

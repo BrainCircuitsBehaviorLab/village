@@ -2,7 +2,7 @@ import os
 import time
 import traceback
 
-from village.classes.abstract_classes import MotorBase
+from village.classes.null_classes import NullMotor
 from village.scripts.log import log
 from village.settings import settings
 
@@ -11,7 +11,8 @@ def find_pwmchip(target_device="1f00098000.pwm") -> str:
     """Finds the PWM chip path for a given target device.
 
     Args:
-        target_device (str): The target device name to look for. Defaults to "1f00098000.pwm".
+        target_device (str): The target device name to look for.
+        Defaults to "1f00098000.pwm".
 
     Returns:
         str: The path to the PWM chip or raises RuntimeError if not found.
@@ -31,7 +32,7 @@ def find_pwmchip(target_device="1f00098000.pwm") -> str:
     raise RuntimeError("No valid PWM chip found! Update target_device if needed.")
 
 
-class Motor(MotorBase):
+class Motor:
     """Controls a motor via PWM.
 
     Attributes:
@@ -138,7 +139,7 @@ class Motor(MotorBase):
         self.set(self.transform(self.close_angle))
 
 
-def get_motor(pin: int, angles: list[int]) -> MotorBase:
+def get_motor(pin: int, angles: list[int]) -> Motor | NullMotor:
     """Factory function to create and initialize a Motor instance.
 
     Args:
@@ -146,7 +147,8 @@ def get_motor(pin: int, angles: list[int]) -> MotorBase:
         angles (list[int]): A list containing [open_angle, close_angle].
 
     Returns:
-        MotorBase: An initialized Motor instance or a dummy MotorBase if initialization fails.
+        MotorBase: An initialized Motor instance or a dummy MotorBase if
+        initialization fails.
     """
     try:
         motor = Motor(pin=pin, angles=angles)
@@ -154,14 +156,8 @@ def get_motor(pin: int, angles: list[int]) -> MotorBase:
         return motor
     except Exception:
         log.error("Could not initialize motor", exception=traceback.format_exc())
-        return MotorBase()
+        return NullMotor()
 
 
-import sys
-
-if "sphinx" in sys.modules:
-    motor1 = MotorBase()
-    motor2 = MotorBase()
-else:
-    motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
-    motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))
+motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
+motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))
