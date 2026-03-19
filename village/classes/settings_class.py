@@ -7,7 +7,7 @@ from village.classes.enums import (
     Active,
     AreaActive,
     Color,
-    Controller,
+    ControllerEnum,
     Cycle,
     Info,
     ScreenActive,
@@ -25,7 +25,8 @@ class Setting:
         value_type (type): The expected type of the value (e.g., int, float, str, enum).
         description (str): A description of what the setting controls.
         type0 (type): The base type (e.g., list if value_type is list[int]).
-        type1 (type | None): The inner type for lists (e.g., int if value_type is list[int]).
+        type1 (type | None): The inner type for lists (e.g., int if value_type
+        is list[int]).
     """
 
     def __init__(
@@ -35,7 +36,8 @@ class Setting:
 
         Args:
             key (str): The name of the setting.
-            factory_value (Any): The default value. For enums, this is the string representation.
+            factory_value (Any): The default value. For enums, this is the
+            string representation.
             value_type (type): The type of the value.
             description (str): A brief description of the setting.
         """
@@ -194,8 +196,9 @@ class Settings:
         if val is None:
             return setting.value
 
-        # If QSettings returns a QVariant/PyQt object/string that is not the value we expect
-        # but contains "QSettings", it's likely a Sphinx build artifact or mock issue.
+        # If QSettings returns a QVariant/PyQt object/string that is not the value
+        # we expect but contains "QSettings", it's likely a Sphinx build
+        # artifact or mock issue.
         val_str = str(val)
         if "QSettings" in val_str or "PyQt5" in val_str:
             return setting.value
@@ -212,8 +215,8 @@ class Settings:
                 return Active(str_value)
             elif type == Color:
                 return Color(str_value)
-            elif type == Controller:
-                return Controller(str_value)
+            elif type == ControllerEnum:
+                return ControllerEnum(str_value)
             elif type == SyncType:
                 return SyncType(str_value)
             elif type == Actions:
