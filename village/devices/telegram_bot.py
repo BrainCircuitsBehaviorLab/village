@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-from village.classes.abstract_classes import TelegramBotBase
+from village.classes.null_classes import NullTelegramBot
 from village.devices.camera import cam_box, cam_corridor
 from village.manager import manager
 from village.plots.corridor_plot import corridor_plot
@@ -18,7 +18,7 @@ from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
-class TelegramBot(TelegramBotBase):
+class TelegramBot:
     """A Telegram Bot for controlling and monitoring the village system.
 
     Attributes:
@@ -121,7 +121,7 @@ class TelegramBot(TelegramBotBase):
             context (ContextTypes.DEFAULT_TYPE): The context object.
         """
         try:
-            path = os.path.join(settings.get("VIDEOS_DIRECTORY"), "PLOT.jpg")
+            path = os.path.join(settings.get("SYSTEM_DIRECTORY"), "PLOT.jpg")
             subjects = manager.subjects.df["name"].tolist()
             fig = corridor_plot(manager.events.df.copy(), subjects, 4, 2)
             fig.savefig(path, format="jpg", dpi=300)
@@ -167,7 +167,7 @@ class TelegramBot(TelegramBotBase):
             log.error("Telegram error", exception=traceback.format_exc())
 
 
-def get_telegram_bot() -> TelegramBotBase:
+def get_telegram_bot() -> TelegramBot | NullTelegramBot:
     """Factory function to initialize and connect the TelegramBot.
 
     Returns:
@@ -186,13 +186,13 @@ def get_telegram_bot() -> TelegramBotBase:
             log.info("Telegram bot successfully initialized")
             return telegram_bot
         elif telegram_bot.error_running:
-            return TelegramBotBase()
+            return NullTelegramBot()
         else:
             log.error("Could not initialize telegram bot, time expired")
-            return TelegramBotBase()
+            return NullTelegramBot()
     except Exception:
         log.error("Could not initialize telegram bot", exception=traceback.format_exc())
-        return TelegramBotBase()
+        return NullTelegramBot()
 
 
 telegram_bot = get_telegram_bot()

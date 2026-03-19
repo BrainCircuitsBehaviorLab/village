@@ -4,32 +4,34 @@ from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
-from village.pybpodapi.session import Session
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
-class PyBpodBase:
-    """Base class for Bpod interface.
+class NullBpod:
+    def close(self) -> None:
+        pass
 
-    Attributes:
-        error (str): Error message.
-        session (Session | Any): Bpod session object.
-        connected (bool): Connection status.
-    """
+    def send_state_machine(self, sma: Any) -> None:
+        pass
 
-    error: str = "Error connecting to the bpod "
-    session: Session | Any = None
-    connected: bool = False
+    def run_state_machine(self, sma: Any) -> None:
+        pass
 
-    def connect(self, functions: list[Callable]) -> None:
-        """Connects to the Bpod device.
+    def register_value(self, name: str, value: Any) -> None:
+        pass
 
-        Args:
-            functions (list[Callable]): List of callback functions for softcodes.
-        """
-        return
+    def manual_override(
+        self,
+        channel_type: Any,
+        channel_name: Any,
+        channel_number: Any,
+        value: Any,
+    ) -> None:
+        pass
 
+
+class NullStateMachine:
     def add_state(
         self,
         state_name: Any,
@@ -45,7 +47,7 @@ class PyBpodBase:
             state_change_conditions (Any): Conditions to transition to other states.
             output_actions (Any): Actions to perform in this state.
         """
-        return
+        pass
 
     def set_global_timer(
         self,
@@ -74,7 +76,7 @@ class PyBpodBase:
             send_events (int): Whether to send events.
             oneset_triggers (Any | None): Triggers to set.
         """
-        return
+        pass
 
     def set_condition(
         self, condition_number: Any, condition_channel: Any, channel_value: Any
@@ -86,104 +88,28 @@ class PyBpodBase:
             condition_channel (Any): The channel to check.
             channel_value (Any): The value to match.
         """
-        return
+        pass
 
     def set_global_counter(
         self, counter_number: Any, target_event: Any, threshold: Any
     ) -> None:
-        """Configures a global counter.
-
-        Args:
-            counter_number (Any): The counter ID.
-            target_event (Any): The event to count.
-            threshold (Any): The count threshold.
-        """
-        return
-
-    def create_state_machine(self) -> None:
-        """Creates and initializes a new state machine."""
-        return
-
-    def send_and_run_state_machine(self) -> None:
-        """Sends the current state machine to the Bpod and starts it."""
-        return
-
-    def close(self) -> None:
-        """Closes the connection to the Bpod."""
-        return
-
-    def stop(self) -> None:
-        """Stops the current trial or operation."""
-        return
-
-    def manual_override_input(self, message: str) -> None:
-        """Simulates an input event manually.
-
-        Args:
-            message (str): The input message/event string.
-        """
-        return
-
-    def manual_override_output(self, message: str | tuple) -> None:
-        """Manually triggers an output.
-
-        Args:
-            message (str | tuple): The output command.
-        """
-        return
-
-    def register_value(self, name: str, value: Any) -> None:
-        """Registers a value to be tracked or logged.
-
-        Args:
-            name (str): Name of the value.
-            value (Any): The value itself.
-        """
-        return
-
-    def receive_softcode(self, idx: int) -> None:
-        """Handles received softcodes.
-
-        Args:
-            idx (int): The softcode index.
-        """
-        return
-
-    def led(self, i: int, close: bool) -> None:
-        """Controls an LED.
-
-        Args:
-            i (int): The LED index.
-            close (bool): Whether to turn it off (or close the circuit).
-        """
-        return
-
-    def water(self, i: int, close: bool) -> None:
-        """Controls a water valve.
-
-        Args:
-            i (int): The valve index.
-            close (bool): Whether to close the valve.
-        """
-        return
-
-    def poke(self, i: int, close: bool) -> None:
-        """Simulates a poke event.
-
-        Args:
-            i (int): The poke index.
-            close (bool): State of the poke.
-        """
-        return
+        pass
 
 
-class TelegramBotBase:
-    """Base class for Telegram Bot interface.
+class NullSoftCodeToBpod:
+    def send(self, idx: int) -> None:
+        pass
 
-    Attributes:
-        error (str): Error message.
-    """
+    def kill(self) -> None:
+        pass
 
+
+class NullSession:
+    def current_trial(self) -> None:
+        pass
+
+
+class NullTelegramBot:
     error: str = "Error connecting to the telegram_bot "
 
     def alarm(self, message: str) -> None:
@@ -195,13 +121,7 @@ class TelegramBotBase:
         return
 
 
-class ScaleBase:
-    """Base class for Scale interface.
-
-    Attributes:
-        error (str): Error message.
-    """
-
+class NullScale:
     error: str = "Error connecting to the scale "
 
     def tare(self) -> None:
@@ -225,13 +145,7 @@ class ScaleBase:
         return 0.0
 
 
-class TempSensorBase:
-    """Base class for Temperature Sensor interface.
-
-    Attributes:
-        error (str): Error message.
-    """
-
+class NullTempSensor:
     error: str = "Error connecting to the temp_sensor "
 
     def start(self) -> None:
@@ -247,15 +161,7 @@ class TempSensorBase:
         return 0.0, 0.0, ""
 
 
-class MotorBase:
-    """Base class for Motor interface.
-
-    Attributes:
-        error (str): Error message.
-        open_angle (int): Angle for open position.
-        close_angle (int): Angle for close position.
-    """
-
+class NullMotor:
     error: str = "Error connecting to the motor "
     open_angle: int = 0
     close_angle: int = 0
@@ -269,14 +175,7 @@ class MotorBase:
         return
 
 
-class SoundDeviceBase:
-    """Base class for Sound Device interface.
-
-    Attributes:
-        samplerate (int): Audio sample rate.
-        error (str): Error message.
-    """
-
+class NullSoundDevice:
     samplerate: int = 44100
     error: str = (
         ""
@@ -310,9 +209,7 @@ class SoundDeviceBase:
         return
 
 
-class EventBase:
-    """Base class for event logging interfaces."""
-
+class NullCollection:
     def log(self, date: str, type: str, subject: str, description: str) -> None:
         """Logs a generic event.
 
@@ -335,31 +232,7 @@ class EventBase:
         return
 
 
-class CameraBase:
-    """Base class for Camera interface.
-
-    Attributes:
-        area1 (list[int]): Coordinates for area 1.
-        area2 (list[int]): Coordinates for area 2.
-        area3 (list[int]): Coordinates for area 3.
-        area4 (list[int]): Coordinates for area 4.
-        areas (list[list[int]]): List of all area coordinates.
-        area1_is_triggered (bool): Trigger status for area 1.
-        area2_is_triggered (bool): Trigger status for area 2.
-        area3_is_triggered (bool): Trigger status for area 3.
-        area4_is_triggered (bool): Trigger status for area 4.
-        change (bool): Flag for property changes.
-        annotation (str): Current annotation text.
-        path_picture (str): Path to save pictures.
-        error (str): Error message.
-        trial (int): Current trial number.
-        is_recording (bool): Recording status.
-        show_time_info (bool): Time info display flag.
-        x_position (int): X coordinate of tracked object.
-        y_position (int): Y coordinate of tracked object.
-        chrono (time_utils.Chrono): Timer utility.
-    """
-
+class NullCamera:
     area1: list[int] = []
     area2: list[int] = []
     area3: list[int] = []
@@ -478,13 +351,7 @@ class CameraBase:
         return
 
 
-class BehaviorWindowBase(QWidget):
-    """Base class for Behavior Window GUI.
-
-    Attributes:
-        background_color: The background color.
-    """
-
+class NullBehaviorWindow(QWidget):
     background_color = None
 
     def start_drawing(self) -> None:

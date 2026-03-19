@@ -1,4 +1,4 @@
-from village.classes.abstract_classes import CameraBase
+from village.devices.camera import Camera
 
 
 class CameraTriggerBase:
@@ -12,7 +12,7 @@ class CameraTriggerBase:
         """Initializes the CameraTriggerBase instance."""
         self.name = "Camera Trigger"
 
-    def trigger(self, cam: CameraBase) -> None:
+    def trigger(self, cam: Camera) -> None:
         """Evaluates camera triggers and performs corresponding actions.
 
         This method is called to check if any defined areas in the camera view
