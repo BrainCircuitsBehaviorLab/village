@@ -24,7 +24,7 @@ from PyQt5.QtWidgets import (
 
 from village.classes.enums import Actions, Active, Cycle, Info, ScreenActive
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.motor import motor1, motor2
+from village.devices.motor import Motor, motor1, motor2
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
@@ -35,7 +35,7 @@ from village.scripts.utils import create_pixmap
 from village.settings import settings
 
 if TYPE_CHECKING:
-    from village.classes.abstract_classes import MotorBase
+    from village.classes.null_classes import NullMotor
     from village.gui.gui_window import GuiWindow
 
 
@@ -618,7 +618,7 @@ class MotorLayout(Layout):
         )
 
     def draw_motor_buttons(
-        self, name: str, row: int, column: int, motor: MotorBase
+        self, name: str, row: int, column: int, motor: Motor | NullMotor
     ) -> None:
         """Draws buttons for a specific motor.
 
@@ -812,12 +812,12 @@ class PortsLayout(Layout):
         self.disable_all()
         QTimer.singleShot(1500, self.enable_all)
 
-        if not manager.task.bpod.connected:
-            manager.task.bpod.connect(manager.functions)
+        if not manager.task.controller.connected:
+            manager.task.controller.connect(manager.functions)
             close = True
         else:
             close = False
-        manager.task.bpod.led(i, close)
+        manager.task.controller.led(i, close)
 
     def water_clicked(self, i=0) -> None:
         """Delivers water for a specific port.
@@ -828,12 +828,12 @@ class PortsLayout(Layout):
         self.disable_all()
         QTimer.singleShot(1500, self.enable_all)
 
-        if not manager.task.bpod.connected:
-            manager.task.bpod.connect(manager.functions)
+        if not manager.task.controller.connected:
+            manager.task.controller.connect(manager.functions)
             close = True
         else:
             close = False
-        manager.task.bpod.water(i, close)
+        manager.task.controller.water(i, close)
 
 
 class VirtualMouseLayout(Layout):
@@ -918,12 +918,12 @@ class VirtualMouseLayout(Layout):
         Args:
             i (int): Port index (1-based).
         """
-        if not manager.task.bpod.connected:
-            manager.task.bpod.connect(manager.functions)
+        if not manager.task.controller.connected:
+            manager.task.controller.connect(manager.functions)
             close = True
         else:
             close = False
-        manager.task.bpod.poke(i, close)
+        manager.task.controller.poke(i, close)
 
     def touch_clicked(self) -> None:
         """Simulates a touch action at the specified coordinates."""

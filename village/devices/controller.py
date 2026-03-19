@@ -1,12 +1,18 @@
-import socket
-import sys
 import threading
 import time
 import traceback
 from typing import Any, Callable
 
-from village.classes.abstract_classes import PyBpodBase
+from village.classes.enums import ControllerEnum
+from village.classes.null_classes import (
+    NullBpod,
+    NullSession,
+    NullSoftCodeToBpod,
+    NullStateMachine,
+)
+from village.pybpodapi.com.softcode_to_bpod import SoftCodeToBpod
 from village.pybpodapi.protocol import Bpod, StateMachine
+from village.pybpodapi.session import Session
 from village.scripts.log import log
 from village.scripts.parse_bpod_messages import (
     parse_input_to_tuple_override,
@@ -15,68 +21,46 @@ from village.scripts.parse_bpod_messages import (
 from village.settings import settings
 
 
-class SoftCode:
-    """Handles UDP SoftCode communication.
-
-    Attributes:
-        client_socket (socket.socket): The UDP socket.
-        address (tuple): The (ip, port) address for UDP communication.
-    """
-
+class BehaviorController:
     def __init__(self) -> None:
-        """Initializes the SoftCode connection."""
-        address = int(settings.get("BPOD_NET_PORT"))
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.client_socket.settimeout(1.0)
-        self.address = ("127.0.0.1", address)
-
-    def send(self, idx: int) -> None:
-        """Sends a SoftCode to the configured address.
-
-        Args:
-            idx (int): The softcode index to send.
-        """
-        str_message = "SoftCode" + str(idx)
-        message = str_message.encode("utf-8")
-        self.client_socket.sendto(message, self.address)
-        stop_message = b"s"
-        self.client_socket.sendto(stop_message, self.address)
-
-    def kill(self) -> None:
-        """Sends a kill signal to stop the current session."""
-        str_message = "kill"
-        message = str_message.encode("utf-8")
-        self.client_socket.sendto(message, self.address)
-        stop_message = b"s"
-        self.client_socket.sendto(stop_message, self.address)
-
-    def close(self) -> None:
-        """Closes the UDP socket."""
-        self.client_socket.close()
-
-
-class PyBpod(PyBpodBase):
-    """Interface for controlling Bpod devices.
-
-    Attributes:
-        bpod (Bpod): The Bpod device instance.
-        sma (StateMachine): The state machine instance.
-        softcode (SoftCode): The SoftCode handler.
-        session: The current Bpod session.
-        connected (bool): Connection status.
-        error (str): Error message if any.
-        functions (list[Callable]): List of callback functions for softcodes.
-    """
-
-    def __init__(self) -> None:
-        """Initializes the PyBpod interface."""
-        self.bpod = Bpod()
-        self.sma = StateMachine(self.bpod)
-        self.softcode = SoftCode()
-        self.session = self.bpod.session
-        self.connected = False
-        self.error = ""
-        self.functions: list[Callable] = []
+        self.type = settings.get("BEHAVIOR_CONTROLLER")
+        if self.type == ControllerEnum.BPOD:
+            self.bpod: Bpod | NullBpod = NullBpod()
+            self.sma: StateMachine | NullStateMachine = NullStateMachine()
+            self.softcode_to_bpod: SoftCodeToBpod | NullSoftCodeToBpod = (
+                NullSoftCodeToBpod()
+            )
+            self.session: Session | NullSession = NullSession()
+            self.connected = False
+            self.functions: list[Callable] = []
+            self.error = "Error connecting to the bpod "
+            try:
+                self.bpod = Bpod()
+                self.sma = StateMachine(self.bpod)
+                self.softcode_to_bpod = SoftCodeToBpod()
+                self.session = self.bpod.session
+                self.error = ""
+                log.info("Bpod successfully initialized")
+                self.bpod.close()
+            except Exception:
+                time.sleep(0.1)
+                try:
+                    self.bpod = Bpod()
+                    self.sma = StateMachine(self.bpod)
+                    self.softcode_to_bpod = SoftCodeToBpod()
+                    self.session = self.bpod.session
+                    self.error = ""
+                    log.info("Bpod successfully initialized")
+                    self.bpod.close()
+                except Exception:
+                    self.error = "Error connecting to Bpod"
+                    log.error(
+                        "Could not initialize bpod", exception=traceback.format_exc()
+                    )
+        elif self.type == ControllerEnum.ARDUINO:
+            self.error = "Arduino not implemented yet"
+        elif self.type == ControllerEnum.RASPBERRY:
+            self.error = "Raspberry Pi not implemented yet"
 
     def add_state(
         self,
@@ -90,7 +74,8 @@ class PyBpod(PyBpodBase):
         Args:
             state_name (Any): The name of the state.
             state_timer (float): Duration of the state in seconds.
-            state_change_conditions (Any): Dictionary of events that trigger state transitions.
+            state_change_conditions (Any): Dictionary of events that trigger
+            state transitions.
             output_actions (Any): Actions to perform when entering the state.
         """
         self.sma.add_state(
@@ -190,13 +175,13 @@ class PyBpod(PyBpodBase):
         """
         self.bpod.register_value(name, value)
 
-    def receive_softcode(self, idx: int) -> None:
-        """Handles receiving a softcode and forwarding it via SoftCode sender.
+    def send_softcode_to_bpod(self, idx: int) -> None:
+        """Handles sending a softcode to the bpod.
 
         Args:
             idx (int): The softcode index.
         """
-        self.softcode.send(idx)
+        self.softcode_to_bpod.send(idx)
 
     def manual_override_input(self, message: str) -> None:
         """Manually overrides an input channel.
@@ -249,7 +234,7 @@ class PyBpod(PyBpodBase):
             time.sleep(0.1)
             self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
-        self.softcode = SoftCode()
+        self.softcode_to_bpod = SoftCodeToBpod()
         self.session = self.bpod.session
         self.connected = True
         self.functions = functions
@@ -355,7 +340,7 @@ class PyBpod(PyBpodBase):
 
     def stop(self) -> None:
         """Stops the current session and closes connections."""
-        self.softcode.kill()
+        self.softcode_to_bpod.kill()
         time.sleep(1)
         self.close()
 
@@ -368,29 +353,8 @@ class PyBpod(PyBpodBase):
             pass
 
 
-def get_bpod() -> PyBpodBase:
-    """Initializes and returns a PyBpod instance.
-
-    Returns:
-        PyBpodBase: An instance of PyBpod or a dummy base class on failure/Sphinx.
-    """
-    if "sphinx" in sys.modules:
-        return PyBpodBase()
-    try:
-        bpod = PyBpod()
-        log.info("Bpod successfully initialized")
-        bpod.close()
-        return bpod
-    except Exception:
-        time.sleep(0.1)
-        try:
-            bpod = PyBpod()
-            log.info("Bpod successfully initialized")
-            bpod.close()
-            return bpod
-        except Exception:
-            log.error("Could not initialize bpod", exception=traceback.format_exc())
-            return PyBpodBase()
+def get_controller() -> BehaviorController:
+    return BehaviorController()
 
 
-bpod = get_bpod()
+controller = get_controller()
