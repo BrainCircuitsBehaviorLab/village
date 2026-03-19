@@ -2,22 +2,25 @@ import json
 import traceback
 from pathlib import Path
 from threading import Thread
-from typing import Any, Tuple
+from typing import TYPE_CHECKING, Any, Tuple
 
 import numpy as np
 import pandas as pd
 
-from village.classes.abstract_classes import CameraBase, PyBpodBase
 from village.classes.collection import Collection
 from village.classes.enums import Active, Save
+from village.classes.null_classes import NullCamera
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
-from village.devices.bpod import bpod
+from village.devices.controller import BehaviorController, controller
 from village.devices.sound_device import sound_device
 from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.devices.camera import Camera
 
 
 class TaskError(Exception):
@@ -48,8 +51,7 @@ class Task:
     """
 
     def __init__(self) -> None:
-        """Initializes the Task instance with default settings and components."""
-        self.bpod: PyBpodBase = bpod
+        self.controller: BehaviorController = controller
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.current_trial: int = 1
@@ -58,7 +60,7 @@ class Task:
         self.system_name: str = settings.get("SYSTEM_NAME")
         self.date: str = time_utils.now_string()
 
-        self.cam_box = CameraBase()
+        self.cam_box: Camera | NullCamera = NullCamera()
 
         self.info: str = ""
 
@@ -111,13 +113,14 @@ class Task:
         Args:
             code (int): The softcode value to send.
         """
-        self.bpod.receive_softcode(code)
+        self.controller.send_softcode_to_bpod(code)
 
     def run_in_thread(self, daemon: bool = True) -> None:
         """Runs the task in a separate background thread.
 
         Args:
-            daemon (bool, optional): Whether to run as a daemon thread. Defaults to True.
+            daemon (bool, optional): Whether to run as a daemon thread.
+            Defaults to True.
         """
 
         def test_run():
@@ -144,16 +147,18 @@ class Task:
     def do_trial(self, send_to_cam: bool = False) -> None:
         """Executes a single trial.
 
-        Initializes the state machine, runs it, collects data, and performs post-trial updates.
+        Initializes the state machine, runs it, collects data, and performs
+        post-trial updates.
 
         Args:
-            send_to_cam (bool, optional): Whether to update the camera with the trial number. Defaults to False.
+            send_to_cam (bool, optional): Whether to update the camera with the
+            trial number. Defaults to False.
         """
-        self.bpod.create_state_machine()
+        self.controller.create_state_machine()
         if send_to_cam:
             self.cam_box.trial = self.current_trial
         self.create_trial()
-        self.bpod.send_and_run_state_machine()
+        self.controller.send_and_run_state_machine()
         self.get_trial_data()
         self.after_trial()
         self.register_default_values()
@@ -170,8 +175,9 @@ class Task:
         # TODO: make this with a better logic
         # read from bpod if there is one
         try:
-            data = self.bpod.session.current_trial.export()
-            occurrences = self.bpod.session.current_trial.events_occurrences
+            # no mypy
+            data = self.controller.session.current_trial.export()  # type: ignore
+            occurrences = self.controller.session.current_trial.events_occurrences  # type: ignore
         except Exception:
             if hasattr(self, "bpod_mock"):
                 data = self.bpod_mock.current_trial
@@ -218,28 +224,28 @@ class Task:
             name (str): The name of the value (column header).
             value (Any): The value to store.
         """
-        self.bpod.register_value(name, value)
+        self.controller.register_value(name, value)
         self.trial_data[name] = value
 
     def register_default_values(self) -> None:
         """Registers standard session metadata values (task, subject, system, date)."""
-        self.bpod.register_value("task", self.name)
-        self.bpod.register_value("subject", self.subject)
-        self.bpod.register_value("system_name", self.system_name)
-        self.bpod.register_value("date", self.date)
+        self.controller.register_value("task", self.name)
+        self.controller.register_value("subject", self.subject)
+        self.controller.register_value("system_name", self.system_name)
+        self.controller.register_value("date", self.date)
 
-        if hasattr(self.bpod, "bpod"):
-            if hasattr(self.bpod.bpod, "com_error"):
-                if self.bpod.bpod.com_error:
-                    self.bpod.register_value("COM_ERROR", 1)
-                    self.bpod.bpod.com_error = False
+        if hasattr(self.controller, "bpod"):
+            if hasattr(self.controller.bpod, "com_error"):
+                if self.controller.bpod.com_error:
+                    self.controller.register_value("COM_ERROR", 1)
+                    self.controller.bpod.com_error = False
 
         # # get all the attributes in self.settings and register them
         # for name in vars(self.settings):
         #     attribute = getattr(self.settings, name)
         #     self.bpod.register_value(name, attribute)
 
-        self.bpod.register_value("TRIAL", None)
+        self.controller.register_value("TRIAL", None)
 
     def disconnect_and_save(self, run_mode: str) -> Tuple[Save, float, int, int, str]:
         """Stops the task, disconnects devices, and saves session data.
@@ -258,7 +264,7 @@ class Task:
         settings_str: str = ""
         self.close()
         sound_device.stop()
-        self.bpod.stop()
+        self.controller.stop()
         self.cam_box.stop_recording()
         if self.subject != "None":
             try:
@@ -289,7 +295,7 @@ class Task:
                         subject=self.subject,
                         exception=traceback.format_exc(),
                     )
-        self.bpod.close()
+        self.controller.close()
         return save, duration, trials, water, settings_str
 
     def save_json(self, run_mode: str) -> str:
