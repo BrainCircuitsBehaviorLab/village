@@ -347,6 +347,40 @@ class TimeUtils:
         millis = milliseconds % 1_000
         return f"{hours:02}:{minutes:02}:{seconds:02}.{millis:03}"
 
+    def get_sorted_videos(self, directory: str) -> list[str]:
+        files = [f for f in os.listdir(directory) if f.endswith(".mp4")]
+        files_with_dates = []
+        for f in files:
+            try:
+                date = self.date_from_path(f)
+                files_with_dates.append((f, date))
+            except (ValueError, IndexError):
+                pass
+        files_with_dates.sort(key=lambda x: x[1])
+        return [f for f, _ in files_with_dates]
+
+    def next_video_path(self, video_path: str) -> str | None:
+        directory = os.path.dirname(video_path)
+        filename = os.path.basename(video_path)
+        sorted_videos = self.get_sorted_videos(directory)
+        if filename not in sorted_videos:
+            return None
+        idx = sorted_videos.index(filename)
+        if idx + 1 < len(sorted_videos):
+            return os.path.join(directory, sorted_videos[idx + 1])
+        return None
+
+    def previous_video_path(self, video_path: str) -> str | None:
+        directory = os.path.dirname(video_path)
+        filename = os.path.basename(video_path)
+        sorted_videos = self.get_sorted_videos(directory)
+        if filename not in sorted_videos:
+            return None
+        idx = sorted_videos.index(filename)
+        if idx - 1 >= 0:
+            return os.path.join(directory, sorted_videos[idx - 1])
+        return None
+
     class Chrono:
         """Simple specific chronometer for measuring elapsed time."""
 

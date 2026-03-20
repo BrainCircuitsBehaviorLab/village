@@ -63,7 +63,8 @@ class TableView(QTableView):
         """Initializes the TableView.
 
         Args:
-            model (Table | None, optional): The data model for the table. Defaults to None.
+            model (Table | None, optional): The data model for the table.
+            Defaults to None.
         """
         super().__init__()
         if model is not None:
@@ -226,7 +227,8 @@ class DaysSelectionDialog(QDialog):
 
         Args:
             parent (QWidget, optional): Parent widget. Defaults to None.
-            current_value (str, optional): Current value ("ON", "OFF", or "Mon-Tue..."). Defaults to None.
+            current_value (str, optional): Current value ("ON", "OFF", or "Mon-Tue...").
+            Defaults to None.
         """
         super().__init__(parent)
         self.setWindowTitle("Select Days or On/Off")
@@ -344,7 +346,8 @@ class DaysSelectionDialog(QDialog):
         """Constructs the result string based on selected days.
 
         Returns:
-            str: A string representing the selected days (e.g., "Mon-Wed-Fri") or "ON"/"OFF".
+            str: A string representing the selected days
+            (e.g., "Mon-Wed-Fri") or "ON"/"OFF".
         """
         if self.on_checkbox.isChecked():
             return "ON"
@@ -413,11 +416,13 @@ class Table(QAbstractTableModel):
         return self.df.shape[1]
 
     def data(self, index: QModelIndex, role: int = Qt.DisplayRole) -> Any:
-        """Returns the data stored under the given role for the item referred to by the index.
+        """Returns the data stored under the given role for the item
+        referred to by the index.
 
         Args:
             index (QModelIndex): The index of the item.
-            role (int, optional): The role for which data is requested. Defaults to Qt.DisplayRole.
+            role (int, optional): The role for which data is requested.
+            Defaults to Qt.DisplayRole.
 
         Returns:
             Any: The data for the given role.
@@ -454,12 +459,15 @@ class Table(QAbstractTableModel):
     def headerData(
         self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole
     ) -> Any:
-        """Returns the data for the given role and section in the header with the specified orientation.
+        """Returns the data for the given role and section in the header
+        with the specified orientation.
 
         Args:
             section (int): The section number (row or column index).
-            orientation (Qt.Orientation): The orientation of the header (Horizontal or Vertical).
-            role (int, optional): The role for which data is requested. Defaults to Qt.DisplayRole.
+            orientation (Qt.Orientation): The orientation of the header
+            (Horizontal or Vertical).
+            role (int, optional): The role for which data is requested.
+            Defaults to Qt.DisplayRole.
 
         Returns:
             Any: The header data.
@@ -738,7 +746,8 @@ class DataLayout(Layout):
         self.central_layout.setCurrentWidget(self.page1)
 
     def update_data(self) -> None:
-        """Updates the data displayed in the current layout based on the selected table."""
+        """Updates the data displayed in the current layout based on
+        the selected table."""
         if self.central_layout.currentIndex() == 0:
             self.page1Layout.update_data()
             self.page1Layout.create_table()
@@ -1168,7 +1177,8 @@ class DfLayout(Layout):
         button.show()
 
     def update_buttons(self) -> None:
-        """Updates the state and visibility of action buttons based on selection and table type."""
+        """Updates the state and visibility of action buttons based on selection
+        and table type."""
         sel_model = self.table_view.selectionModel()
         selected_indexes = sel_model.selectedRows() if sel_model else []
         match manager.table:
@@ -1315,7 +1325,8 @@ class DfLayout(Layout):
         return self.model.df.iloc[index.row()]
 
     def get_seconds_from_session_row(self) -> int:
-        """Calculates the time elapsed in seconds from the session start for the selected row.
+        """Calculates the time elapsed in seconds from the session start
+        for the selected row.
 
         Returns:
             int: The elapsed time in seconds.
@@ -1405,7 +1416,8 @@ class DfLayout(Layout):
             row (pd.Series): The session summary row.
 
         Returns:
-            list[str]: A list containing session paths (csv, raw, json, video, video_data).
+            list[str]: A list containing session paths
+            (csv, raw, json, video, video_data).
         """
         date_str = row["date"]
         task = row["task"]
@@ -1820,8 +1832,7 @@ class VideoLayout(Layout):
             columns (int): Number of columns.
         """
         super().__init__(window, rows=rows, columns=columns)
-        self.deltas: list[float] = []
-        self.now = time_utils.get_time_monotonic()
+        self.video_path = ""
         self.draw()
 
     def draw(self) -> None:
@@ -1913,6 +1924,36 @@ class VideoLayout(Layout):
             self.backward_five_minutes,
             "Skip backward 5 minutes",
         )
+        self.create_and_add_button(
+            "Previous video",
+            26,
+            155,
+            15,
+            2,
+            self.previous_video,
+            "Play the previous video",
+        )
+        self.create_and_add_button(
+            "Next video",
+            26,
+            170,
+            15,
+            2,
+            self.next_video,
+            "Play the next video",
+        )
+
+    def next_video(self) -> None:
+        path = time_utils.next_video_path(self.video_path)
+        if path is not None:
+            self.stop_button_clicked()
+            self.start_video(path, 0)
+
+    def previous_video(self) -> None:
+        path = time_utils.previous_video_path(self.video_path)
+        if path is not None:
+            self.stop_button_clicked()
+            self.start_video(path, 0)
 
     def start_video(self, path: str, seconds: int) -> None:
         """Starts video playback from a specific time.
@@ -1921,6 +1962,7 @@ class VideoLayout(Layout):
             path (str): The path to the video file.
             seconds (int): The number of seconds to skip.
         """
+        self.video_path = path
         try:
             self.cap = cv2.VideoCapture(path)
             self.fps = int(self.cap.get(cv2.CAP_PROP_FPS))
@@ -2059,16 +2101,9 @@ class VideoLayout(Layout):
         """Closes the video layout and saves playback data."""
         self.stop_button_clicked()
         self.data_from_video_change_requested.emit("")
-        with open("deltas.txt", "w") as f:
-            for delta in self.deltas:
-                f.write(f"{delta}\n")
 
     def next_frame_slot(self) -> None:
         """Handles the next frame timer event to update the video display."""
-        last = self.now
-        self.now = time_utils.get_time_monotonic()
-        delta = int((self.now - last) * 1000)
-        self.deltas.append(delta)
 
         ret, frame = self.cap.read()
         if ret:

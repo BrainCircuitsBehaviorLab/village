@@ -4,7 +4,8 @@ from matplotlib.figure import Figure
 
 
 class OnlinePlotBase:
-    """Class to handle creation and management of Matplotlib figures to monitor behavioral data in real-time.
+    """Class to handle creation and management of Matplotlib figures to monitor
+    behavioral data in real-time.
 
     Use this with the variables you are registering in your task,
     that are part of Task.session_df.
@@ -19,15 +20,10 @@ class OnlinePlotBase:
         self.fig: Figure | None = None
         self.active = False
 
-    def ensure_figure(self, width: int = 10, height: int = 8) -> None:
-        """Ensures that the matplotlib figure exists, creating it if necessary.
-
-        Args:
-            width (int, optional): Width of the figure in inches. Defaults to 10.
-            height (int, optional): Height of the figure in inches. Defaults to 8.
-        """
+    def ensure_figure(self) -> None:
+        """Ensures that the matplotlib figure exists, creating it if necessary."""
         if self.fig is None or getattr(self.fig, "canvas", None) is None:
-            self.create_figure_and_axes(width, height)
+            self.create_figure_and_axes()
 
     def close(self) -> None:
         """Closes the matplotlib figure and resets the state."""
@@ -52,13 +48,10 @@ class OnlinePlotBase:
         except Exception:
             pass
 
-    def create_figure_and_axes(self, width: int = 10, height: int = 8) -> None:
-        """Creates the figure and axes. Should be overridden by subclasses.
-
-        Args:
-            width (int, optional): Width of the figure. Defaults to 10.
-            height (int, optional): Height of the figure. Defaults to 8.
-        """
+    def create_figure_and_axes(self) -> None:
+        """Creates the figure and axes. Should be overridden by subclasses."""
+        width = 10
+        height = 8
         self.fig, self.ax = plt.subplots(figsize=(width, height))
 
         # self.fig = plt.figure(figsize=(width, height))
