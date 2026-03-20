@@ -35,6 +35,7 @@ from PyQt5.QtWidgets import (
     QScrollArea,
     QStackedLayout,
     QTableView,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -46,10 +47,10 @@ from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.plots.temperatures_plot import temperatures_plot
 from village.plots.water_calibration_plot import water_calibration_plot
 from village.plots.weights_plot import weights_plot
+from village.scripts import utils
 from village.scripts.global_csv_for_subject import main as global_csv_for_subject_script
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
-from village.scripts.utils import create_pixmap
 from village.settings import settings
 
 if TYPE_CHECKING:
@@ -84,6 +85,23 @@ class TableView(QTableView):
         if not isinstance(m, Table):
             raise RuntimeError("TableView requires a Table model")
         return cast(Table, m)
+
+    def show_text_dialog(self, text: str) -> None:
+        dialog = QDialog(self)
+        dialog.setWindowTitle("")
+        layout = QVBoxLayout(dialog)
+
+        text_edit = QTextEdit()
+        text_edit.setReadOnly(True)
+        text_edit.setPlainText(text)
+        layout.addWidget(text_edit)
+
+        btn = QPushButton("OK")
+        btn.clicked.connect(dialog.accept)
+        layout.addWidget(btn)
+
+        dialog.resize(500, 400)
+        dialog.exec_()
 
     def mousePressEvent(self, event) -> None:
         """Clear selection when clicking on empty space in the table."""
@@ -186,7 +204,7 @@ class TableView(QTableView):
         else:
             text = str(index.data())
             text = text.replace("  |  ", "\n")
-            QMessageBox.information(self, "", text)
+            self.show_text_dialog(text)
 
     def save_changes_in_df(self, update: bool = True) -> None:
         model = self._model()
@@ -491,6 +509,14 @@ class Table(QAbstractTableModel):
     def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
         if role != Qt.EditRole:
             return False
+
+        column_name = self.df.columns[index.column()]
+        if manager.table == DataTable.SUBJECTS and column_name == "name":
+            error = utils.validate_subject_name(str(value))
+            if error:
+                QMessageBox.warning(None, "Invalid name", error)
+                return False
+
         column_dtype = self.df.dtypes.iloc[index.column()]
         try:
             if column_dtype in ("int64", "Int64"):
@@ -644,7 +670,7 @@ class DataLayout(Layout):
                 try:
                     df = manager.sessions_summary.df.copy()
                     figure = weights_plot(df, width, height)
-                    pixmap = create_pixmap(figure)
+                    pixmap = utils.create_pixmap(figure)
                 except Exception:
                     log.error(
                         "Can not create weights plot", exception=traceback.format_exc()
@@ -657,7 +683,7 @@ class DataLayout(Layout):
                     weight = row["weight"]
                     df = pd.read_csv(paths[0], sep=";")
                     figure = manager.session_plot.create_plot(df, weight, width, height)
-                    pixmap = create_pixmap(figure)
+                    pixmap = utils.create_pixmap(figure)
                 except Exception:
                     log.error(
                         "Can not create session plot", exception=traceback.format_exc()
@@ -667,7 +693,7 @@ class DataLayout(Layout):
                 try:
                     df = manager.sessions_summary.df.copy()
                     figure = weights_plot(df, width, height)
-                    pixmap = create_pixmap(figure)
+                    pixmap = utils.create_pixmap(figure)
                 except Exception:
                     log.error(
                         "Can not create weights plot", exception=traceback.format_exc()
@@ -687,7 +713,7 @@ class DataLayout(Layout):
                     figure = manager.subject_plot.create_plot(
                         df, summary_df, width, height
                     )
-                    pixmap = create_pixmap(figure)
+                    pixmap = utils.create_pixmap(figure)
                 except Exception:
                     log.error(
                         "Can not create plot for file: " + path,
@@ -697,7 +723,7 @@ class DataLayout(Layout):
             try:
                 df = manager.water_calibration.get_last_water_df()
                 figure = water_calibration_plot(df, width, height, None)
-                pixmap = create_pixmap(figure)
+                pixmap = utils.create_pixmap(figure)
             except Exception:
                 log.error(
                     "Can not create water calibration plot",
@@ -707,7 +733,7 @@ class DataLayout(Layout):
             try:
                 df = manager.sound_calibration.get_last_sound_df()
                 figure = sound_calibration_plot(df, width, height, None)
-                pixmap = create_pixmap(figure)
+                pixmap = utils.create_pixmap(figure)
             except Exception:
                 log.error(
                     "Can not create sound calibration plot",
@@ -718,7 +744,7 @@ class DataLayout(Layout):
                 figure = temperatures_plot(
                     manager.temperatures.df.copy(), width, height
                 )
-                pixmap = create_pixmap(figure)
+                pixmap = utils.create_pixmap(figure)
             except Exception:
                 log.error(
                     "Can not create temperatures plot",
@@ -729,7 +755,7 @@ class DataLayout(Layout):
                 figure = manager.session_plot.create_plot(
                     manager.old_session_df, self.page1Layout.weight, width, height
                 )
-                pixmap = create_pixmap(figure)
+                pixmap = utils.create_pixmap(figure)
             except Exception:
                 log.error(
                     "Can not create session plot",

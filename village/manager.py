@@ -446,13 +446,18 @@ class Manager:
 
     def update_text(self) -> None:
         """Updates the status text with current system state, subject, task,
-        and cycle info."""
+        cycle and project name info."""
         state_name = self.state.name
         state_description = self.state.description
         subject_name = self.subject.name
         task_name = self.task.name
         rfid_reader_name = self.rfid_reader.name
         cycle_text = self.cycle_text
+        try:
+            project_text = settings.get("PROJECT_DIRECTORY")
+            project_text = os.path.basename(project_text.rstrip("/"))
+        except Exception:
+            project_text = ""
 
         self.text = (
             "     SYSTEM STATE: "
@@ -471,6 +476,9 @@ class Manager:
             + "                    "
             + "CYCLE: "
             + cycle_text
+            + "                    "
+            + "PROJECT: "
+            + project_text
         )
 
     def multiple_detections(self, multiple: bool) -> bool:

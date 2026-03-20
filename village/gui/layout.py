@@ -255,7 +255,6 @@ class Layout(QGridLayout):
         self.status_label = self.create_and_add_label(
             "", 3, 0, 200, 2, "white", background="black"
         )
-        # self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
         size = 18
 
@@ -329,14 +328,14 @@ class Layout(QGridLayout):
             "Go to the setting menu",
         )
 
-        self.online_plots_button = self.create_and_add_button(
+        self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
             1,
             158,
             14,
             2,
-            self.show_online_plots_clicked,
-            "Show the online plots when a task is running",
+            self.online_or_force_button_clicked,
+            "Show live plots while a task is running",
             "powderblue",
         )
 
@@ -366,13 +365,18 @@ class Layout(QGridLayout):
 
     def update_status_label_buttons(self) -> None:
         """Updates the status label and button states based on manager state."""
+
         manager.update_text()
         self.status_label.setText(manager.text)
         if manager.state.can_stop_task():
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
             self.stop_button.setEnabled(True)
-            self.online_plots_button.setEnabled(True)
+            self.online_or_force_button.setText("ONLINE PLOTS")
+            self.online_or_force_button.setToolTip(
+                "Show live plots while a task is running"
+            )
+            self.online_or_force_button.setEnabled(True)
         elif manager.state.can_go_to_wait():
             self.stop_button.setText("GO TO WAIT STATE")
             text = (
@@ -381,6 +385,11 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
+            self.online_or_force_button.setText("FORCE SYNC")
+            self.online_or_force_button.setToolTip(
+                "Force synchronisation with external device or server"
+            )
+            self.online_or_force_button.setEnabled(False)
         elif manager.state.can_stop_syncing():
             self.stop_button.setText("STOP SYNC")
             text = (
@@ -389,12 +398,29 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
-            self.online_plots_button.setEnabled(False)
+            self.online_or_force_button.setText("FORCE SYNC")
+            self.online_or_force_button.setToolTip(
+                "Force synchronisation with external device or server"
+            )
+            self.online_or_force_button.setEnabled(False)
+        elif manager.state == State.WAIT:
+            self.stop_button.setText("STOP TASK")
+            self.stop_button.setToolTip("Stop a running task")
+            self.stop_button.setEnabled(False)
+            self.online_or_force_button.setText("FORCE SYNC")
+            self.online_or_force_button.setToolTip(
+                "Force synchronisation with external device or server"
+            )
+            self.online_or_force_button.setEnabled(True)
         else:
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
             self.stop_button.setEnabled(False)
-            self.online_plots_button.setEnabled(False)
+            self.online_or_force_button.setText("FORCE SYNC")
+            self.online_or_force_button.setToolTip(
+                "Force synchronisation with external device or server"
+            )
+            self.online_or_force_button.setEnabled(False)
 
     def exit_button_clicked(self) -> None:
         """Handles exit button click, confirming exit and saving data if needed."""
@@ -522,6 +548,13 @@ class Layout(QGridLayout):
 
     def sound_calibration_button_clicked(self) -> None:
         """Handles sound calibration button click."""
+        if not manager.sound_calibration_functions:
+            text = "To calibrate the sound, you must first create a list of functions "
+            text += "that generate the sounds you want to use for calibration in "
+            text += "your project. Please refer to the documentation for instructions "
+            text += "on how to do this."
+            QMessageBox.information(self.window, "WARNING", text)
+            return
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
@@ -586,29 +619,35 @@ class Layout(QGridLayout):
         except Exception:
             pass
 
-    def show_online_plots_clicked(self) -> None:
+    def online_or_force_button_clicked(self) -> None:
         """Handles the online plots button click to show or update the plot window."""
-        try:
-            manager.online_plot.update_canvas(manager.task.session_df)
-        except Exception:
-            log.error(
-                "Error in online plot",
-                subject=manager.subject.name,
-                exception=traceback.format_exc(),
-            )
+        if manager.state == State.WAIT:
+            manager.detection_change = True
+            manager.state = State.SYNC
+            log.info("Going to SYNC State")
+            manager.state = State.SYNC
+        else:
+            try:
+                manager.online_plot.update_canvas(manager.task.session_df)
+            except Exception:
+                log.error(
+                    "Error in online plot",
+                    subject=manager.subject.name,
+                    exception=traceback.format_exc(),
+                )
 
-        if not manager.online_plot.active:
-            manager.online_plot.active = True
-            manager.online_plot.update_canvas(manager.task.session_df.copy())
-            geom = (
-                self.column_width * 10,
-                self.row_height * 5,
-                self.column_width * 62,
-                self.row_height * 20,
-            )
-            self.plot_dialog = OnlinePlotDialog()
-            self.plot_dialog.setGeometry(*geom)
-            self.plot_dialog.show()
+            if not manager.online_plot.active:
+                manager.online_plot.active = True
+                manager.online_plot.update_canvas(manager.task.session_df.copy())
+                geom = (
+                    self.column_width * 10,
+                    self.row_height * 5,
+                    self.column_width * 62,
+                    self.row_height * 20,
+                )
+                self.plot_dialog = OnlinePlotDialog()
+                self.plot_dialog.setGeometry(*geom)
+                self.plot_dialog.show()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         """Ignores the close event to prevent closing the layout directly."""

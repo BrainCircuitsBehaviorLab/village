@@ -222,7 +222,7 @@ if you don't need to specify a particular port for the SSH connection.""",
 device_settings = [
     Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1."),
     Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2."),
-    Setting("SCALE_ADDRESS", "0x64", str, "The address of the scale."),
+    Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
     Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
     Setting(
         "CAM_BOX_INDEX",
