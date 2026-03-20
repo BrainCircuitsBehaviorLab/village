@@ -889,11 +889,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_layout</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">79</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">change_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">manager</span><span class="o">.</span><span class="n">state</span> <span class="ow">in</span> <span class="p">[</span><span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">SAVE_MANUAL</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">auto</span><span class="p">:</span>
-                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;Wait until the task finishes.&quot;</span>
-                <span class="p">)</span>
+        <span class="k">if</span> <span class="n">auto</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">manager</span><span class="o">.</span><span class="n">state</span> <span class="ow">in</span> <span class="p">[</span><span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">SAVE_MANUAL</span><span class="p">]:</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;Wait until the task finishes.&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_button</span><span class="o">.</span><span class="n">isEnabled</span><span class="p">():</span>
             <span class="n">reply</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span>
@@ -1591,7 +1592,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=78f3c706"></script>
+</div><script src="../../../_static/documentation_options.js?v=2a8cfe83"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

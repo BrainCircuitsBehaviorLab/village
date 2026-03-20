@@ -24,14 +24,17 @@ TimeUtils
       ~TimeUtils.filename_string_from_date
       ~TimeUtils.find_closest_file_and_seconds
       ~TimeUtils.format_duration
+      ~TimeUtils.get_sorted_videos
       ~TimeUtils.get_time_monotonic
       ~TimeUtils.hours_ago
       ~TimeUtils.measure_time
       ~TimeUtils.monotonic_ns_to_timestamps
+      ~TimeUtils.next_video_path
       ~TimeUtils.now
       ~TimeUtils.now_string
       ~TimeUtils.now_string_for_filename
       ~TimeUtils.now_timestamp
+      ~TimeUtils.previous_video_path
       ~TimeUtils.range_24_hours
       ~TimeUtils.seconds_since_start
       ~TimeUtils.string_from_date

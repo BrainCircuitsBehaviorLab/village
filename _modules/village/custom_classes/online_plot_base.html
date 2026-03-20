@@ -541,7 +541,8 @@
 <div class="viewcode-block" id="OnlinePlotBase">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OnlinePlotBase</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to handle creation and management of Matplotlib figures to monitor behavioral data in real-time.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to handle creation and management of Matplotlib figures to monitor</span>
+<span class="sd">    behavioral data in real-time.</span>
 
 <span class="sd">    Use this with the variables you are registering in your task,</span>
 <span class="sd">    that are part of Task.session_df.</span>
@@ -561,15 +562,10 @@
 
 <div class="viewcode-block" id="OnlinePlotBase.ensure_figure">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ensure_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensures that the matplotlib figure exists, creating it if necessary.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            width (int, optional): Width of the figure in inches. Defaults to 10.</span>
-<span class="sd">            height (int, optional): Height of the figure in inches. Defaults to 8.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ensure_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensures that the matplotlib figure exists, creating it if necessary.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;canvas&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">create_figure_and_axes</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_figure_and_axes</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="OnlinePlotBase.close">
@@ -603,13 +599,10 @@
 
 <div class="viewcode-block" id="OnlinePlotBase.create_figure_and_axes">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_figure_and_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the figure and axes. Should be overridden by subclasses.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            width (int, optional): Width of the figure. Defaults to 10.</span>
-<span class="sd">            height (int, optional): Height of the figure. Defaults to 8.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_figure_and_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the figure and axes. Should be overridden by subclasses.&quot;&quot;&quot;</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="mi">8</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span></div>
 
 
@@ -666,7 +659,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=78f3c706"></script>
+</div><script src="../../../_static/documentation_options.js?v=2a8cfe83"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

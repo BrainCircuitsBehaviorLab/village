@@ -580,17 +580,23 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.format_duration" title="village.scripts.time_utils.TimeUtils.format_duration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_duration</span></code></a>(milliseconds)</p></td>
 <td><p>Formats a duration in milliseconds to a string.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.get_time_monotonic" title="village.scripts.time_utils.TimeUtils.get_time_monotonic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_monotonic</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.get_sorted_videos" title="village.scripts.time_utils.TimeUtils.get_sorted_videos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sorted_videos</span></code></a>(directory)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.get_time_monotonic" title="village.scripts.time_utils.TimeUtils.get_time_monotonic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_monotonic</span></code></a>()</p></td>
 <td><p>Returns the current monotonic time in seconds.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.hours_ago" title="village.scripts.time_utils.TimeUtils.hours_ago"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hours_ago</span></code></a>(hours)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.hours_ago" title="village.scripts.time_utils.TimeUtils.hours_ago"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hours_ago</span></code></a>(hours)</p></td>
 <td><p>Returns a datetime a specific number of hours in the past.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.measure_time" title="village.scripts.time_utils.TimeUtils.measure_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">measure_time</span></code></a>(func)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.measure_time" title="village.scripts.time_utils.TimeUtils.measure_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">measure_time</span></code></a>(func)</p></td>
 <td><p>Decorator to measure execution time of a function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.monotonic_ns_to_timestamps" title="village.scripts.time_utils.TimeUtils.monotonic_ns_to_timestamps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monotonic_ns_to_timestamps</span></code></a>(mono_ns)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.monotonic_ns_to_timestamps" title="village.scripts.time_utils.TimeUtils.monotonic_ns_to_timestamps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">monotonic_ns_to_timestamps</span></code></a>(mono_ns)</p></td>
 <td><p>Converts monotonic nanoseconds to a timestamp.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.next_video_path" title="village.scripts.time_utils.TimeUtils.next_video_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">next_video_path</span></code></a>(video_path)</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now" title="village.scripts.time_utils.TimeUtils.now"><code class="xref py py-obj docutils literal notranslate"><span class="pre">now</span></code></a>()</p></td>
 <td><p>Returns the current datetime calculated from monotonic time.</p></td>
@@ -604,31 +610,34 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now_timestamp" title="village.scripts.time_utils.TimeUtils.now_timestamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">now_timestamp</span></code></a>()</p></td>
 <td><p>Returns the current timestamp.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.range_24_hours" title="village.scripts.time_utils.TimeUtils.range_24_hours"><code class="xref py py-obj docutils literal notranslate"><span class="pre">range_24_hours</span></code></a>(day_date, first_init_time)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.previous_video_path" title="village.scripts.time_utils.TimeUtils.previous_video_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">previous_video_path</span></code></a>(video_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.range_24_hours" title="village.scripts.time_utils.TimeUtils.range_24_hours"><code class="xref py py-obj docutils literal notranslate"><span class="pre">range_24_hours</span></code></a>(day_date, first_init_time)</p></td>
 <td><p>Calculates a 24-hour range starting from a specific time.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.seconds_since_start" title="village.scripts.time_utils.TimeUtils.seconds_since_start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">seconds_since_start</span></code></a>(start)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.seconds_since_start" title="village.scripts.time_utils.TimeUtils.seconds_since_start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">seconds_since_start</span></code></a>(start)</p></td>
 <td><p>Returns the number of seconds elapsed since a given start time.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.string_from_date" title="village.scripts.time_utils.TimeUtils.string_from_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">string_from_date</span></code></a>(date)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.string_from_date" title="village.scripts.time_utils.TimeUtils.string_from_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">string_from_date</span></code></a>(date)</p></td>
 <td><p>Formats a date object as a string.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.string_from_timestamp" title="village.scripts.time_utils.TimeUtils.string_from_timestamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">string_from_timestamp</span></code></a>(timestamp)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.string_from_timestamp" title="village.scripts.time_utils.TimeUtils.string_from_timestamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">string_from_timestamp</span></code></a>(timestamp)</p></td>
 <td><p>Formats a timestamp as a string.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.sync" title="village.scripts.time_utils.TimeUtils.sync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sync</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.sync" title="village.scripts.time_utils.TimeUtils.sync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sync</span></code></a>()</p></td>
 <td><p>Synchronizes base time references.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_from_setting_string" title="village.scripts.time_utils.TimeUtils.time_from_setting_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_from_setting_string</span></code></a>(string)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_from_setting_string" title="village.scripts.time_utils.TimeUtils.time_from_setting_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_from_setting_string</span></code></a>(string)</p></td>
 <td><p>Parses a time string from settings.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_in_future_seconds" title="village.scripts.time_utils.TimeUtils.time_in_future_seconds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_in_future_seconds</span></code></a>(seconds)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_in_future_seconds" title="village.scripts.time_utils.TimeUtils.time_in_future_seconds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_in_future_seconds</span></code></a>(seconds)</p></td>
 <td><p>Returns a datetime a specific number of seconds in the future.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_since_day_started" title="village.scripts.time_utils.TimeUtils.time_since_day_started"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_since_day_started</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_since_day_started" title="village.scripts.time_utils.TimeUtils.time_since_day_started"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_since_day_started</span></code></a>()</p></td>
 <td><p>Returns the time elapsed since the start of the current day.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.tomorrow_init_time" title="village.scripts.time_utils.TimeUtils.tomorrow_init_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tomorrow_init_time</span></code></a>(first)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.tomorrow_init_time" title="village.scripts.time_utils.TimeUtils.tomorrow_init_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tomorrow_init_time</span></code></a>(first)</p></td>
 <td><p>Calculates the initialization time for tomorrow.</p></td>
 </tr>
 </tbody>
@@ -1025,6 +1034,21 @@
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="village.scripts.time_utils.TimeUtils.get_sorted_videos">
+<span class="sig-name descname"><span class="pre">get_sorted_videos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/scripts/time_utils.html#TimeUtils.get_sorted_videos"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.scripts.time_utils.TimeUtils.next_video_path">
+<span class="sig-name descname"><span class="pre">next_video_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/time_utils.html#TimeUtils.next_video_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.scripts.time_utils.TimeUtils.previous_video_path">
+<span class="sig-name descname"><span class="pre">previous_video_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/time_utils.html#TimeUtils.previous_video_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="village.scripts.time_utils.TimeUtils.Chrono">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Chrono</span></span><a class="reference internal" href="../_modules/village/scripts/time_utils.html#TimeUtils.Chrono"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -1276,6 +1300,9 @@
 <li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.measure_time"><code class="docutils literal notranslate"><span class="pre">TimeUtils.measure_time()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.find_closest_file_and_seconds"><code class="docutils literal notranslate"><span class="pre">TimeUtils.find_closest_file_and_seconds()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.format_duration"><code class="docutils literal notranslate"><span class="pre">TimeUtils.format_duration()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.get_sorted_videos"><code class="docutils literal notranslate"><span class="pre">TimeUtils.get_sorted_videos()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.next_video_path"><code class="docutils literal notranslate"><span class="pre">TimeUtils.next_video_path()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.previous_video_path"><code class="docutils literal notranslate"><span class="pre">TimeUtils.previous_video_path()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Chrono</span></code></a><ul>
 <li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.reset"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Chrono.reset()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.get_time"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Chrono.get_time()</span></code></a></li>
@@ -1315,7 +1342,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=78f3c706"></script>
+</div><script src="../_static/documentation_options.js?v=2a8cfe83"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

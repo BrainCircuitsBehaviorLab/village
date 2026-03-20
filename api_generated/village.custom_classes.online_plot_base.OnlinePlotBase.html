@@ -545,7 +545,8 @@
 <dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">OnlinePlotBase</span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class to handle creation and management of Matplotlib figures to monitor behavioral data in real-time.</p>
+<p>Class to handle creation and management of Matplotlib figures to monitor
+behavioral data in real-time.</p>
 <p>Use this with the variables you are registering in your task,
 that are part of Task.session_df.</p>
 <p>Subclasses should override <cite>create_figure_and_axes</cite> (to create axes) and
@@ -566,10 +567,10 @@ that are part of Task.session_df.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.close" title="village.custom_classes.online_plot_base.OnlinePlotBase.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></a>()</p></td>
 <td><p>Closes the matplotlib figure and resets the state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes" title="village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_figure_and_axes</span></code></a>([width, height])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes" title="village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_figure_and_axes</span></code></a>()</p></td>
 <td><p>Creates the figure and axes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure" title="village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_figure</span></code></a>([width, height])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure" title="village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_figure</span></code></a>()</p></td>
 <td><p>Ensures that the matplotlib figure exists, creating it if necessary.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.update_canvas" title="village.custom_classes.online_plot_base.OnlinePlotBase.update_canvas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_canvas</span></code></a>(df)</p></td>
@@ -583,16 +584,8 @@ that are part of Task.session_df.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure">
-<span class="sig-name descname"><span class="pre">ensure_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.ensure_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">ensure_figure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.ensure_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Ensures that the matplotlib figure exists, creating it if necessary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Width of the figure in inches. Defaults to 10.</p></li>
-<li><p><strong>height</strong> (<em>int</em><em>, </em><em>optional</em>) – Height of the figure in inches. Defaults to 8.</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -614,16 +607,8 @@ that are part of Task.session_df.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes">
-<span class="sig-name descname"><span class="pre">create_figure_and_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.create_figure_and_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">create_figure_and_axes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.create_figure_and_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Creates the figure and axes. Should be overridden by subclasses.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Width of the figure. Defaults to 10.</p></li>
-<li><p><strong>height</strong> (<em>int</em><em>, </em><em>optional</em>) – Height of the figure. Defaults to 8.</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -717,7 +702,7 @@ that are part of Task.session_df.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=78f3c706"></script>
+</div><script src="../_static/documentation_options.js?v=2a8cfe83"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

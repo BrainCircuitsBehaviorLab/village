@@ -959,6 +959,49 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hours</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">millis</span><span class="si">:</span><span class="s2">03</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
+<div class="viewcode-block" id="TimeUtils.get_sorted_videos">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.get_sorted_videos">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_sorted_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.mp4&quot;</span><span class="p">)]</span>
+        <span class="n">files_with_dates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_from_path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">files_with_dates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">f</span><span class="p">,</span> <span class="n">date</span><span class="p">))</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+                <span class="k">pass</span>
+        <span class="n">files_with_dates</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">files_with_dates</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.next_video_path">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.next_video_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">next_video_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+        <span class="n">sorted_videos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sorted_videos</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sorted_videos</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">sorted_videos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_videos</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">sorted_videos</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="TimeUtils.previous_video_path">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.previous_video_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">previous_video_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+        <span class="n">sorted_videos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sorted_videos</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sorted_videos</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">sorted_videos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">sorted_videos</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
 <div class="viewcode-block" id="TimeUtils.Chrono">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono">[docs]</a>
     <span class="k">class</span><span class="w"> </span><span class="nc">Chrono</span><span class="p">:</span>
@@ -1220,7 +1263,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=78f3c706"></script>
+</div><script src="../../../_static/documentation_options.js?v=2a8cfe83"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
