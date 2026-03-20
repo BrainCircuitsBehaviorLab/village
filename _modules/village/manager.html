@@ -478,6 +478,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.reformat_trial_data.html">reformat_trial_data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.setup_logging.html">setup_logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.transform_raw_to_clean.html">transform_raw_to_clean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.validate_subject_name.html">validate_subject_name</a></li>
 </ul>
 </li>
 </ul>
@@ -1000,13 +1001,18 @@
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.update_text">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the status text with current system state, subject, task,</span>
-<span class="sd">        and cycle info.&quot;&quot;&quot;</span>
+<span class="sd">        cycle and project name info.&quot;&quot;&quot;</span>
         <span class="n">state_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span>
         <span class="n">state_description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">description</span>
         <span class="n">subject_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span>
         <span class="n">task_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span>
         <span class="n">rfid_reader_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rfid_reader</span><span class="o">.</span><span class="n">name</span>
         <span class="n">cycle_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle_text</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">project_text</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PROJECT_DIRECTORY&quot;</span><span class="p">)</span>
+            <span class="n">project_text</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">project_text</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">project_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;     SYSTEM STATE: &quot;</span>
@@ -1025,6 +1031,9 @@
             <span class="o">+</span> <span class="s2">&quot;                    &quot;</span>
             <span class="o">+</span> <span class="s2">&quot;CYCLE: &quot;</span>
             <span class="o">+</span> <span class="n">cycle_text</span>
+            <span class="o">+</span> <span class="s2">&quot;                    &quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;PROJECT: &quot;</span>
+            <span class="o">+</span> <span class="n">project_text</span>
         <span class="p">)</span></div>
 
 
@@ -1565,7 +1574,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=2a8cfe83"></script>
+</div><script src="../../_static/documentation_options.js?v=5069ce2a"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

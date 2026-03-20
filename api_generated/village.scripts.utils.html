@@ -479,6 +479,7 @@
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.reformat_trial_data.html">reformat_trial_data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.setup_logging.html">setup_logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.transform_raw_to_clean.html">transform_raw_to_clean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.validate_subject_name.html">validate_subject_name</a></li>
 </ul>
 </li>
 </ul>
@@ -592,6 +593,9 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="village.scripts.utils.transform_raw_to_clean.html#village.scripts.utils.transform_raw_to_clean" title="village.scripts.utils.transform_raw_to_clean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_raw_to_clean</span></code></a>(df)</p></td>
 <td><p>Transforms raw Bpod trial data into a clean, wide-format DataFrame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.scripts.utils.validate_subject_name.html#village.scripts.utils.validate_subject_name" title="village.scripts.utils.validate_subject_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_subject_name</span></code></a>(name)</p></td>
+<td><p>Returns an error message if the name is invalid, None if valid.</p></td>
 </tr>
 </tbody>
 </table>
@@ -708,13 +712,19 @@ Uses DAYTIME and NIGHTTIME settings to determine active hours within those days.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="village.scripts.utils.delete_all_elements_from_layout">
-<span class="sig-name descname"><span class="pre">delete_all_elements_from_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QLayout'</span> <span class="pre">id='139895895565648'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#delete_all_elements_from_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">delete_all_elements_from_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QLayout'</span> <span class="pre">id='140404032168080'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#delete_all_elements_from_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Recursively removes all widgets and sub-layouts from a QLayout.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>layout</strong> (<em>QLayout</em>) – The layout to clear.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="village.scripts.utils.validate_subject_name">
+<span class="sig-name descname"><span class="pre">validate_subject_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#validate_subject_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns an error message if the name is invalid, None if valid.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -850,7 +860,7 @@ or interpolation fails.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="village.scripts.utils.create_pixmap">
-<span class="sig-name descname"><span class="pre">create_pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.figure.Figure</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QPixmap'</span> <span class="pre">id='139895895565904'&gt;</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#create_pixmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">create_pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.figure.Figure</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QPixmap'</span> <span class="pre">id='140404032168528'&gt;</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#create_pixmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Creates a QPixmap from a matplotlib Figure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -932,6 +942,7 @@ or interpolation fails.</p>
 <li><a class="reference internal" href="#village.scripts.utils.is_active"><code class="docutils literal notranslate"><span class="pre">is_active()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.calculate_active_hours"><code class="docutils literal notranslate"><span class="pre">calculate_active_hours()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.delete_all_elements_from_layout"><code class="docutils literal notranslate"><span class="pre">delete_all_elements_from_layout()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.utils.validate_subject_name"><code class="docutils literal notranslate"><span class="pre">validate_subject_name()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.reformat_trial_data"><code class="docutils literal notranslate"><span class="pre">reformat_trial_data()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.transform_raw_to_clean"><code class="docutils literal notranslate"><span class="pre">transform_raw_to_clean()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
@@ -950,7 +961,7 @@ or interpolation fails.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=2a8cfe83"></script>
+</div><script src="../_static/documentation_options.js?v=5069ce2a"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

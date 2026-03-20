@@ -478,6 +478,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.reformat_trial_data.html">reformat_trial_data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.setup_logging.html">setup_logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.transform_raw_to_clean.html">transform_raw_to_clean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.validate_subject_name.html">validate_subject_name</a></li>
 </ul>
 </li>
 </ul>
@@ -861,6 +862,47 @@
 
 
 
+<div class="viewcode-block" id="validate_subject_name">
+<a class="viewcode-back" href="../../../api_generated/village.scripts.utils.validate_subject_name.html#village.scripts.utils.validate_subject_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_subject_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an error message if the name is invalid, None if valid.&quot;&quot;&quot;</span>
+    <span class="n">INVALID_CHARS</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;[^a-zA-Z0-9_\-]&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;Subject name cannot be empty.&quot;</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">INVALID_CHARS</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Subject names can only contain letters, numbers, &quot;</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;underscores (_) and hyphens (-).&quot;</span>
+        <span class="k">return</span> <span class="n">text</span>
+    <span class="n">reserved</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;CON&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PRN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AUX&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;NUL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM4&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM5&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM6&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM7&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;COM9&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT4&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT5&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT6&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT7&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LPT9&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="n">reserved</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is a reserved system name and cannot be used.&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
 <span class="c1"># not used function</span>
 <div class="viewcode-block" id="reformat_trial_data">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.utils.reformat_trial_data.html#village.scripts.utils.reformat_trial_data">[docs]</a>
@@ -1220,7 +1262,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=2a8cfe83"></script>
+</div><script src="../../../_static/documentation_options.js?v=5069ce2a"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

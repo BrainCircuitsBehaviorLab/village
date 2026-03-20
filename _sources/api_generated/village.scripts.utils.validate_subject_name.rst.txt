@@ -1,0 +1,6 @@
+validate\_subject\_name
+=======================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: validate_subject_name
