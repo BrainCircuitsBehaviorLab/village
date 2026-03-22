@@ -118,7 +118,6 @@ class Camera(CameraBase):
         x_positions (list[int]): List of X positions.
         y_positions (list[int]): List of Y positions.
         camera_timestamps (list[float]): List of camera sensor timestamps.
-        pre_process_timestamps (list[float]): List of preprocess timestamps.
         origin_rectangle (tuple): Coordinates for status bar background.
         end_rectangle (tuple): Dimensions for status bar background.
         origin_text1 (tuple): Position for first text line.
@@ -139,7 +138,6 @@ class Camera(CameraBase):
         prohibited_detections (int): Counter for prohibited area detections.
         area4_alarm_timer (time_utils.Timer): Timer for area 4 alarms.
         box_alarm_timer (time_utils.Timer): Timer for box alarms.
-        pre_process_timestamp (float): Timestamp of last preprocess call.
         camera_timestamp (float): Timestamp of current frame.
         watchdog_timer (QTimer): Timer to restart camera if frozen.
     """
@@ -217,7 +215,6 @@ class Camera(CameraBase):
         self.x_positions: list[int] = []
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
-        self.pre_process_timestamps: list[float] = []
 
         if self.change:
             self.set_properties()
@@ -266,8 +263,7 @@ class Camera(CameraBase):
         self.area4_alarm_timer = time_utils.Timer(3600)
         self.box_alarm_timer = time_utils.Timer(3600)
 
-        self.pre_process_timestamp = time_utils.now_timestamp()
-        self.camera_timestamp = self.pre_process_timestamp
+        self.camera_timestamp = time_utils.now_timestamp()
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
@@ -377,8 +373,10 @@ class Camera(CameraBase):
         """Starts recording video and data.
 
         Args:
-            path_video (str): Custom video path. Defaults to automatic naming based on settings.
-            path_csv (str): Custom CSV path. Defaults to automatic naming based on settings.
+            path_video (str): Custom video path. Defaults to automatic naming
+            based on settings.
+            path_csv (str): Custom CSV path. Defaults to automatic naming
+            based on settings.
         """
         self.filename = os.path.splitext(os.path.basename(path_video))[0]
         time_start = time_utils.now_string_for_filename()
@@ -416,7 +414,6 @@ class Camera(CameraBase):
         self.frames = []
         self.timings = []
         self.camera_timestamps = []
-        self.pre_process_timestamps = []
         self.x_positions = []
         self.y_positions = []
         self.trials = []
@@ -431,8 +428,7 @@ class Camera(CameraBase):
         self.area3_is_triggered = False
         self.area4_is_triggered = False
         self.chrono.reset()
-        self.pre_process_timestamp = time_utils.now_timestamp()
-        self.camera_timestamp = self.pre_process_timestamp
+        self.camera_timestamp = time_utils.now_timestamp()
 
     def save_csv(self) -> None:
         """Saves the recorded data frames to a CSV file."""
@@ -447,7 +443,6 @@ class Camera(CameraBase):
             x_positions = tuple(self.x_positions)
             y_positions = tuple(self.y_positions)
             camera_timestamps = tuple(self.camera_timestamps)
-            pre_process_timestamps = tuple(self.pre_process_timestamps)
 
             rows = list(
                 zip(
@@ -456,7 +451,6 @@ class Camera(CameraBase):
                     trials,
                     annotations,
                     camera_timestamps,
-                    pre_process_timestamps,
                     x_positions,
                     y_positions,
                 )
@@ -470,7 +464,6 @@ class Camera(CameraBase):
                     "trial",
                     "annotation",
                     "timestamp",
-                    "pre_process_timestamp",
                     "x_position",
                     "y_position",
                 ],
@@ -482,7 +475,6 @@ class Camera(CameraBase):
             trials = tuple(self.trials)
             annotations = tuple(self.annotations)
             camera_timestamps = tuple(self.camera_timestamps)
-            pre_process_timestamps = tuple(self.pre_process_timestamps)
 
             rows = list(
                 zip(
@@ -491,7 +483,6 @@ class Camera(CameraBase):
                     trials,
                     annotations,
                     camera_timestamps,
-                    pre_process_timestamps,
                 )
             )
 
@@ -503,7 +494,6 @@ class Camera(CameraBase):
                     "trial",
                     "annotation",
                     "timestamp",
-                    "pre_process_timestamp",
                 ],
             )
 
@@ -518,7 +508,7 @@ class Camera(CameraBase):
     def watchdog_tick(self) -> None:
         """Checks if the camera is still producing frames, restarts if frozen."""
         if (
-            time_utils.now_timestamp() - self.pre_process_timestamp > 10
+            time_utils.now_timestamp() - self.camera_timestamp > 10
         ):  # 10 seconds without a frame
             try:
                 self.restart_camera()
@@ -554,7 +544,6 @@ class Camera(CameraBase):
             self.change = False
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
-        self.pre_process_timestamp = time_utils.now_timestamp()
 
         with MappedArray(request, "main") as m:
             self.frame = m.array
@@ -867,7 +856,7 @@ class Camera(CameraBase):
         text_filename = (
             self.filename
             if self.filename != ""
-            else time_utils.string_from_timestamp(self.pre_process_timestamp)
+            else time_utils.string_from_timestamp(self.camera_timestamp)
         )
         text_frame = "frame: " + str(self.frame_number)
         text_timing = time_utils.format_duration(self.timing)
@@ -953,7 +942,6 @@ class Camera(CameraBase):
             self.timings.append(self.timing)
             self.trials.append(self.trial)
             self.annotations.append(self.annotation)
-            self.pre_process_timestamps.append(self.pre_process_timestamp)
             self.camera_timestamps.append(self.camera_timestamp)
             if self.tracking:
                 self.x_positions.append(self.x_position)
@@ -1014,7 +1002,8 @@ class Camera(CameraBase):
             return True
 
     def areas_box_ok(self) -> None:
-        """Checks box areas for allowed/prohibited detections and logs alarms if needed."""
+        """Checks box areas for allowed/prohibited detections and logs alarms
+        if needed."""
         pixels_allowed = 0
         pixels_not_allowed = 0
 

@@ -40,9 +40,9 @@ class OnlinePlotBase:
         Args:
             df (pd.DataFrame): The dataframe containing the latest session data.
         """
-        self.ensure_figure()
-        self.update_plot(df)
         try:
+            self.ensure_figure()
+            self.update_plot(df)
             if self.fig is not None and self.fig.canvas is not None:
                 self.fig.canvas.draw_idle()
         except Exception:
