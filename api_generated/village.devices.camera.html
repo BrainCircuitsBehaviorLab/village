@@ -973,17 +973,6 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.camera.Camera.pre_process_timestamps">
-<span class="sig-name descname"><span class="pre">pre_process_timestamps</span></span></dt>
-<dd><p>List of preprocess timestamps.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="village.devices.camera.Camera.origin_rectangle">
 <span class="sig-name descname"><span class="pre">origin_rectangle</span></span></dt>
 <dd><p>Coordinates for status bar background.</p>
@@ -1199,17 +1188,6 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.camera.Camera.pre_process_timestamp">
-<span class="sig-name descname"><span class="pre">pre_process_timestamp</span></span></dt>
-<dd><p>Timestamp of last preprocess call.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="village.devices.camera.Camera.camera_timestamp">
 <span class="sig-name descname"><span class="pre">camera_timestamp</span></span></dt>
 <dd><p>Timestamp of current frame.</p>
@@ -1262,8 +1240,10 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path_video</strong> (<em>str</em>) – Custom video path. Defaults to automatic naming based on settings.</p></li>
-<li><p><strong>path_csv</strong> (<em>str</em>) – Custom CSV path. Defaults to automatic naming based on settings.</p></li>
+<li><p><strong>path_video</strong> (<em>str</em>) – Custom video path. Defaults to automatic naming</p></li>
+<li><p><strong>settings.</strong> (<em>based on</em>)</p></li>
+<li><p><strong>path_csv</strong> (<em>str</em>) – Custom CSV path. Defaults to automatic naming</p></li>
+<li><p><strong>settings.</strong></p></li>
 </ul>
 </dd>
 </dl>
@@ -1420,7 +1400,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.devices.camera.Camera.start_preview_window">
-<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='140404034426768'&gt;</span></span></span><a class="reference internal" href="../_modules/village/devices/camera.html#Camera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='139666043438224'&gt;</span></span></span><a class="reference internal" href="../_modules/village/devices/camera.html#Camera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Starts a low-frequency preview window for the GUI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1460,7 +1440,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="village.devices.camera.Camera.areas_box_ok">
 <span class="sig-name descname"><span class="pre">areas_box_ok</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/camera.html#Camera.areas_box_ok"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Checks box areas for allowed/prohibited detections and logs alarms if needed.</p>
+<dd><p>Checks box areas for allowed/prohibited detections and logs alarms
+if needed.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1615,7 +1596,6 @@
 <li><a class="reference internal" href="#village.devices.camera.Camera.x_positions"><code class="docutils literal notranslate"><span class="pre">Camera.x_positions</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.y_positions"><code class="docutils literal notranslate"><span class="pre">Camera.y_positions</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.camera_timestamps"><code class="docutils literal notranslate"><span class="pre">Camera.camera_timestamps</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.camera.Camera.pre_process_timestamps"><code class="docutils literal notranslate"><span class="pre">Camera.pre_process_timestamps</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.origin_rectangle"><code class="docutils literal notranslate"><span class="pre">Camera.origin_rectangle</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.end_rectangle"><code class="docutils literal notranslate"><span class="pre">Camera.end_rectangle</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.origin_text1"><code class="docutils literal notranslate"><span class="pre">Camera.origin_text1</span></code></a></li>
@@ -1636,7 +1616,6 @@
 <li><a class="reference internal" href="#village.devices.camera.Camera.prohibited_detections"><code class="docutils literal notranslate"><span class="pre">Camera.prohibited_detections</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.area4_alarm_timer"><code class="docutils literal notranslate"><span class="pre">Camera.area4_alarm_timer</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.box_alarm_timer"><code class="docutils literal notranslate"><span class="pre">Camera.box_alarm_timer</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.camera.Camera.pre_process_timestamp"><code class="docutils literal notranslate"><span class="pre">Camera.pre_process_timestamp</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.camera_timestamp"><code class="docutils literal notranslate"><span class="pre">Camera.camera_timestamp</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.watchdog_timer"><code class="docutils literal notranslate"><span class="pre">Camera.watchdog_timer</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.camera.Camera.set_properties"><code class="docutils literal notranslate"><span class="pre">Camera.set_properties()</span></code></a></li>
@@ -1691,7 +1670,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=5069ce2a"></script>
+</div><script src="../_static/documentation_options.js?v=ae54849a"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
