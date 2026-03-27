@@ -1,9 +1,34 @@
 from typing import Any, Callable
 
+from village.classes.enums import ControllerEnum
+from village.classes.trial_recorder import TrialRecorder
 
-class BehaviorController:
+
+class Controller:
     def __init__(self) -> None:
+
+        self.type = ControllerEnum.RASPBERRY
+        self.connected = False
         self.functions: list[Callable] = []
+        self.error = ""
+        self.rt_session_path = str(
+            Path(settings.get("SESSIONS_DIRECTORY"), "session.csv")
+        )
+        self.recorder: TrialRecorder = TrialRecorder(self.rt_session_path)
+
+
+    def connect(self, functions: list[Callable]) -> None:
+        """Connects to the Bpod and initializes session.
+
+        Args:
+            functions (list[Callable]): List of callback functions for softcodes.
+        """
+        self.functions = functions
+        self.connected = True
+
+    def get_trial_data(self) -> dict:
+        return self.recorder.get_trial_data()
+
 
     def add_state(
         self,
@@ -85,13 +110,13 @@ class BehaviorController:
         pass
 
     def register_value(self, name: str, value: Any) -> None:
-        """Registers a value with the Bpod session.
+        """Registers a value with the session recorder.
 
         Args:
             name (str): The name of the value.
             value (Any): The value to register.
         """
-        pass
+        self.recorder.add_value(name, value)
 
     def send_softcode_to_bpod(self, idx: int) -> None:
         """Handles sending a softcode to the bpod.
@@ -125,14 +150,6 @@ class BehaviorController:
         """
         if 1 <= data <= 99:
             self.functions[data]()
-
-    def connect(self, functions: list[Callable]) -> None:
-        """Connects to the Bpod and initializes session.
-
-        Args:
-            functions (list[Callable]): List of callback functions for softcodes.
-        """
-        pass
 
     def led(self, i: int, close: bool) -> None:
         """Triggers an LED in a separate thread.

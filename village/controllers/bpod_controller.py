@@ -9,7 +9,8 @@ from village.classes.null_classes import (
     NullSoftCodeToBpod,
     NullStateMachine,
 )
-from village.controllers.behavior_controller import BehaviorController
+from village.classes.enums import ControllerEnum
+from village.controllers.controller import Controller
 from village.pybpodapi.com.softcode_to_bpod import SoftCodeToBpod
 from village.pybpodapi.protocol import Bpod, StateMachine
 from village.pybpodapi.session import Session
@@ -20,10 +21,11 @@ from village.scripts.parse_bpod_messages import (
 )
 
 
-class BpodController(BehaviorController):
+class BpodController(Controller):
     def __init__(self) -> None:
         super().__init__()
 
+        self.type = ControllerEnum.BPOD
         self.bpod: Bpod | NullBpod = NullBpod()
         self.sma: StateMachine | NullStateMachine = NullStateMachine()
         self.softcode_to_bpod: SoftCodeToBpod | NullSoftCodeToBpod = (
@@ -32,12 +34,12 @@ class BpodController(BehaviorController):
         self.session: Session | NullSession = NullSession()
         self.connected = False
         self.functions: list[Callable] = []
-        self.error = "Error connecting to the bpod "
+
+        self.check_connection()
+
+    def check_connection(self):
         try:
             self.bpod = Bpod()
-            self.sma = StateMachine(self.bpod)
-            self.softcode_to_bpod = SoftCodeToBpod()
-            self.session = self.bpod.session
             self.error = ""
             log.info("Bpod successfully initialized")
             self.bpod.close()
@@ -45,15 +47,33 @@ class BpodController(BehaviorController):
             time.sleep(0.1)
             try:
                 self.bpod = Bpod()
-                self.sma = StateMachine(self.bpod)
-                self.softcode_to_bpod = SoftCodeToBpod()
-                self.session = self.bpod.session
                 self.error = ""
                 log.info("Bpod successfully initialized")
                 self.bpod.close()
             except Exception:
                 self.error = "Error connecting to Bpod"
                 log.error("Could not initialize bpod", exception=traceback.format_exc())
+
+    def connect(self, functions: list[Callable]) -> None:
+        """Connects to the Bpod and initializes session.
+
+        Args:
+            functions (list[Callable]): List of callback functions for softcodes.
+        """
+        try:
+            self.bpod = Bpod()
+        except Exception:
+            time.sleep(0.1)
+            self.bpod = Bpod()
+        self.sma = StateMachine(self.bpod)
+        self.softcode_to_bpod = SoftCodeToBpod()
+        self.session = self.bpod.session
+        self.connected = True
+        self.functions = functions
+        self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
+
+    def get_trial_data(self) -> dict:
+        return self.recorder.get_trial_data()
 
     def add_state(
         self,
@@ -160,13 +180,13 @@ class BpodController(BehaviorController):
         self.bpod.run_state_machine(self.sma)
 
     def register_value(self, name: str, value: Any) -> None:
-        """Registers a value with the Bpod session.
+        """Registers a value with the session recorder.
 
         Args:
             name (str): The name of the value.
             value (Any): The value to register.
         """
-        self.bpod.register_value(name, value)
+        self.recorder.add_value(name, value)
 
     def send_softcode_to_bpod(self, idx: int) -> None:
         """Handles sending a softcode to the bpod.
@@ -215,23 +235,6 @@ class BpodController(BehaviorController):
         if 1 <= data <= 99:
             self.functions[data]()
 
-    def connect(self, functions: list[Callable]) -> None:
-        """Connects to the Bpod and initializes session.
-
-        Args:
-            functions (list[Callable]): List of callback functions for softcodes.
-        """
-        try:
-            self.bpod = Bpod()
-        except Exception:
-            time.sleep(0.1)
-            self.bpod = Bpod()
-        self.sma = StateMachine(self.bpod)
-        self.softcode_to_bpod = SoftCodeToBpod()
-        self.session = self.bpod.session
-        self.connected = True
-        self.functions = functions
-        self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
 
     def led(self, i: int, close: bool) -> None:
         """Triggers an LED in a separate thread.
