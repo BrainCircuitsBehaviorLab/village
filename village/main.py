@@ -40,7 +40,9 @@ from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.controller import controller
+from village.controllers.bpod_controller import BpodController
+from village.controllers.arduino_controller import ArduinoController
+from village.controllers.controller import Controller
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
 from village.devices.scale import real_weight_inference, scale
@@ -73,6 +75,14 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 
 
 # init
+controller_type = settings.get("BEHAVIOR_CONTROLLER")
+if controller_type == "bpod":
+    controller = BpodController()
+elif controller_type == "arduino":
+    controller = ArduinoController()
+else:
+    controller = Controller()
+
 manager.task.controller = controller
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor

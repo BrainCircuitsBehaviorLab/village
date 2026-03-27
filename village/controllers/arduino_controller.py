@@ -1,11 +1,30 @@
 from typing import Any, Callable
 
-from village.controllers.behavior_controller import BehaviorController
+from village.classes.enums import ControllerEnum
+from village.controllers.controller import Controller
 
 
-class ArduinoController(BehaviorController):
+class ArduinoController(Controller):
     def __init__(self) -> None:
         super().__init__()
+
+        self.type = ControllerEnum.ARDUINO
+        self.check_connection()
+
+    def check_connection(self):
+        self.error = ""
+
+    def connect(self, functions: list[Callable]) -> None:
+        """Connects to the Arduino and initializes session.
+
+        Args:
+            functions (list[Callable]): List of callback functions for softcodes.
+        """
+        self.functions = functions
+        self.connected = True
+
+    def get_trial_data(self) -> dict:
+        return self.recorder.get_trial_data()
 
     def add_state(
         self,
@@ -87,13 +106,13 @@ class ArduinoController(BehaviorController):
         pass
 
     def register_value(self, name: str, value: Any) -> None:
-        """Registers a value with the Bpod session.
+        """Registers a value with the session recorder.
 
         Args:
             name (str): The name of the value.
             value (Any): The value to register.
         """
-        pass
+        self.recorder.add_value(name, value)
 
     def send_softcode_to_bpod(self, idx: int) -> None:
         """Handles sending a softcode to the bpod.
@@ -127,14 +146,6 @@ class ArduinoController(BehaviorController):
         """
         if 1 <= data <= 99:
             self.functions[data]()
-
-    def connect(self, functions: list[Callable]) -> None:
-        """Connects to the Bpod and initializes session.
-
-        Args:
-            functions (list[Callable]): List of callback functions for softcodes.
-        """
-        pass
 
     def led(self, i: int, close: bool) -> None:
         """Triggers an LED in a separate thread.

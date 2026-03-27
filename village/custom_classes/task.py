@@ -8,10 +8,10 @@ import numpy as np
 import pandas as pd
 
 from village.classes.collection import Collection
-from village.classes.enums import Active, Save
+from village.classes.enums import Active, Save, ControllerEnum
 from village.classes.null_classes import NullCamera
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
-from village.devices.controller import BehaviorController, controller
+from village.controllers.controller import Controller
 from village.devices.sound_device import sound_device
 from village.pybpodapi.bpod.hardware.events import EventName
 from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
@@ -51,7 +51,7 @@ class Task:
     """
 
     def __init__(self) -> None:
-        self.controller: BehaviorController = controller
+        self.controller: Controller = Controller()
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.current_trial: int = 1
@@ -142,74 +142,28 @@ class Task:
             and self.chrono.get_seconds() < self.settings.maximum_duration
             and not self.force_stop
         ):
-            self.do_trial(send_to_cam=True)
+            self.do_trial()
 
-    def do_trial(self, send_to_cam: bool = False) -> None:
+    def do_trial(self) -> None:
         """Executes a single trial.
 
         Initializes the state machine, runs it, collects data, and performs
         post-trial updates.
-
-        Args:
-            send_to_cam (bool, optional): Whether to update the camera with the
-            trial number. Defaults to False.
         """
-        self.controller.create_state_machine()
-        if send_to_cam:
+        if self.controller.type == ControllerEnum.BPOD:
+            self.controller.create_state_machine()
             self.cam_box.trial = self.current_trial
-        self.create_trial()
-        self.controller.send_and_run_state_machine()
-        self.get_trial_data()
+            self.create_trial()
+            self.controller.send_and_run_state_machine()
+        else:
+            self.cam_box.trial = self.current_trial
+            self.create_trial()
+        self.trial_data = self.controller.get_trial_data()
         self.after_trial()
         self.register_default_values()
         self.concatenate_trial_data()
         self.current_trial += 1
         return
-
-    def get_trial_data(self) -> None:
-        """Retrieves and processes data from the last executed trial.
-
-        Extracts timestamps, events, and states from the Bpod session and updates
-        `self.trial_data`.
-        """
-        # TODO: make this with a better logic
-        # read from bpod if there is one
-        try:
-            # no mypy
-            data = self.controller.session.current_trial.export()  # type: ignore
-            occurrences = self.controller.session.current_trial.events_occurrences  # type: ignore
-        except Exception:
-            if hasattr(self, "bpod_mock"):
-                data = self.bpod_mock.current_trial
-                occurrences = self.bpod_mock.events_occurrences
-
-        self.trial_data.update(
-            {
-                "date": self.date,
-                "trial": self.current_trial,
-                "subject": self.subject,
-                "task": self.name,
-                "system_name": self.system_name,
-                "TRIAL_START": data["Trial start timestamp"],
-                "TRIAL_END": max(
-                    [
-                        max(timestamps)
-                        for timestamps in data["Events timestamps"].values()
-                    ]
-                ),
-            }
-        )
-
-        for event, timestamps in data["Events timestamps"].items():
-            self.trial_data[event] = timestamps
-
-        for state, intervals in data["States timestamps"].items():
-            starts = [start for start, _ in intervals]
-            ends = [end for _, end in intervals]
-            self.trial_data[f"STATE_{state}_START"] = starts
-            self.trial_data[f"STATE_{state}_END"] = ends
-
-        self.trial_data["ordered_list_of_events"] = [msg.content for msg in occurrences]
 
     def concatenate_trial_data(self) -> None:
         """Appends the current trial's data to the session DataFrame."""
@@ -229,23 +183,18 @@ class Task:
 
     def register_default_values(self) -> None:
         """Registers standard session metadata values (task, subject, system, date)."""
-        self.controller.register_value("task", self.name)
-        self.controller.register_value("subject", self.subject)
-        self.controller.register_value("system_name", self.system_name)
-        self.controller.register_value("date", self.date)
+        self.register_value("task", self.name)
+        self.register_value("subject", self.subject)
+        self.register_value("system_name", self.system_name)
+        self.register_value("date", self.date)
 
         if hasattr(self.controller, "bpod"):
             if hasattr(self.controller.bpod, "com_error"):
-                if self.controller.bpod.com_error:
-                    self.controller.register_value("COM_ERROR", 1)
-                    self.controller.bpod.com_error = False
+                if self.bpod.com_error:
+                    self.register_value("COM_ERROR", 1)
+                    self.bpod.com_error = False
 
-        # # get all the attributes in self.settings and register them
-        # for name in vars(self.settings):
-        #     attribute = getattr(self.settings, name)
-        #     self.bpod.register_value(name, attribute)
-
-        self.controller.register_value("TRIAL", None)
+        self.register_value("TRIAL", None)
 
     def disconnect_and_save(self, run_mode: str) -> Tuple[Save, float, int, int, str]:
         """Stops the task, disconnects devices, and saves session data.
