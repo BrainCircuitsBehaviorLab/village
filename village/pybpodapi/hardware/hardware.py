@@ -49,8 +49,6 @@ class Hardware(object):
         received from Bpod
         """
 
-        self.outputs = self.outputs  # + ['G', 'G', 'G']
-
         self.n_uart_channels = len([idx for idx in self.inputs if idx == "U"])
 
         # set up channels

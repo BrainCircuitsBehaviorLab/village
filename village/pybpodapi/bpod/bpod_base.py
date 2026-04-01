@@ -10,10 +10,8 @@ import time
 
 from village.classes.trial_recorder import TrialRecorder
 from village.pybpodapi.bpod.trial import EventOccurrence, Trial
-from village.pybpodapi.hardware.channels import ChannelName, ChannelType
-from village.pybpodapi.hardware.events import EventName
+from village.pybpodapi.hardware.channels import ChannelType
 from village.pybpodapi.hardware.hardware import Hardware
-from village.pybpodapi.hardware.output_channels import OutputChannel
 from village.scripts.time_utils import time_utils
 
 from .non_blockingsocketreceive import NonBlockingSocketReceive
@@ -36,19 +34,8 @@ class BpodBase(object):
     uploaded to Bpod box
     """
 
-    class Events(EventName):
-        pass
-
-    class OutputChannels(OutputChannel):
-        pass
-
     class ChannelTypes(ChannelType):
         pass
-
-    class ChannelNames(ChannelName):
-        pass
-
-    CHECK_STATE_MACHINE_COUNTER = 0
 
     def __init__(
         self,
@@ -327,7 +314,9 @@ class BpodBase(object):
         if self.bpod_start_timestamp is None:
             self.bpod_start_timestamp = bpod_trial_start
 
-        self.recorder.start_trial(controller_timestamp=0.0, raspberry_timestamp=self.raspberry_trial_start)
+        self.recorder.start_trial(
+            controller_timestamp=0.0, raspberry_timestamp=self.raspberry_trial_start
+        )
         self.recorder.enter_state(sma.state_names[0], 0.0)
         # create a list of executed states
         state_change_indexes = []
@@ -505,7 +494,9 @@ class BpodBase(object):
                     sma.is_running = False
                 else:
                     event_name = sma.hardware.channels.get_event_name(event_id)
-                    current_trial.add_event(EventOccurrence(event_id, event_name, event_timestamp))
+                    current_trial.add_event(
+                        EventOccurrence(event_id, event_name, event_timestamp)
+                    )
                     self.recorder.add_event(event_name, event_timestamp)
                     self.trial_timestamps.append(event_timestamp)
 
@@ -617,7 +608,6 @@ class BpodBase(object):
         current_trial.raspberry_trial_start = self.raspberry_trial_start
         current_trial.bpod_start_timestamp = self.bpod_start_timestamp
 
-
         trial_end_timestamp, discrepancy = self._bpodcom_read_timestamps()
         current_trial.trial_end_timestamp = trial_end_timestamp
 
@@ -664,8 +654,7 @@ class BpodBase(object):
                     self.recorder._states_start[key_start] = [float("nan")]
                     self.recorder._states_end[key_end] = [float("nan")]
 
-        logger.debug("Trial recorded: %s event types",
-                     len(self.recorder._events))
+        logger.debug("Trial recorded: %s event types", len(self.recorder._events))
 
     def find_module_by_name(self, name):
         """
