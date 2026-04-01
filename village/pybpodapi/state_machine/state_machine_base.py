@@ -1,7 +1,7 @@
 # mypy: ignore-errors
 import logging
 
-from village.pybpodapi.bpod.hardware.events import EventName
+from village.pybpodapi.hardware.events import EventName
 from village.pybpodapi.state_machine.conditions import Conditions
 from village.pybpodapi.state_machine.global_counters import GlobalCounters
 from village.pybpodapi.state_machine.global_timers import GlobalTimers

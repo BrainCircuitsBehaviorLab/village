@@ -1,23 +1,28 @@
 # mypy: ignore-errors
+# Adapted from pybpodapi (MIT License)
+# Original authors: Ricardo Ribeiro, Carlos Mão de Ferro, Joshua Sanders, Luís Teixeira
+# https://github.com/pybpod/pybpod-api
+
 import logging
 import math
 import socket
 import time
 
 from village.classes.trial_recorder import TrialRecorder
-from village.pybpodapi.bpod.hardware.channels import ChannelName, ChannelType
-from village.pybpodapi.bpod.hardware.events import EventName
-from village.pybpodapi.bpod.hardware.hardware import Hardware
-from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
-from village.pybpodapi.com.messaging.event_occurrence import EventOccurrence
-from village.pybpodapi.com.messaging.trial import Trial
-from village.pybpodapi.exceptions.bpod_error import BpodErrorException
+from village.pybpodapi.bpod.trial import EventOccurrence, Trial
+from village.pybpodapi.hardware.channels import ChannelName, ChannelType
+from village.pybpodapi.hardware.events import EventName
+from village.pybpodapi.hardware.hardware import Hardware
+from village.pybpodapi.hardware.output_channels import OutputChannel
 from village.scripts.time_utils import time_utils
-from village.settings import settings
 
 from .non_blockingsocketreceive import NonBlockingSocketReceive
 
 logger = logging.getLogger(__name__)
+
+
+class BpodErrorException(Exception):
+    pass
 
 
 class BpodBase(object):
@@ -47,30 +52,27 @@ class BpodBase(object):
 
     def __init__(
         self,
-        serial_port=None,
-        sync_channel=None,
-        sync_mode=None,
-        net_port=None,
+        serial_port,
+        baudrate,
+        sync_channel,
+        sync_mode,
+        net_port,
+        target_firmware,
+        bnc_ports,
+        behavior_ports,
     ):
         self.recorder = TrialRecorder(same_clock=False)
         self._current_trial = None
         self._trial_count = 0
 
-        self.serial_port = (
-            serial_port if serial_port is not None else settings.get("CONTROLLER_PORT")
-        )
-        self.baudrate = settings.get("BPOD_BAUDRATE")
-        self.sync_channel = (
-            sync_channel
-            if sync_channel is not None
-            else settings.get("BPOD_SYNC_CHANNEL")
-        )
-        self.sync_mode = (
-            sync_mode if sync_mode is not None else settings.get("BPOD_SYNC_MODE")
-        )
-        self.net_port = (
-            net_port if net_port is not None else settings.get("BPOD_NET_PORT")
-        )
+        self.serial_port = serial_port
+        self.baudrate = baudrate
+        self.sync_channel = sync_channel
+        self.sync_mode = sync_mode
+        self.net_port = net_port
+        self.target_firmware = target_firmware
+        self.bnc_ports = bnc_ports
+        self.behavior_ports = behavior_ports
         self._hardware = Hardware()  # type: Hardware
         self.bpod_modules = None
         self.bpod_start_timestamp = None
@@ -144,13 +146,13 @@ class BpodBase(object):
         # check the firmware version
         firmware_version, machine_type = self._bpodcom_firmware_version()
 
-        if firmware_version < settings.get("BPOD_TARGET_FIRMWARE"):
+        if firmware_version < self.target_firmware:
             raise BpodErrorException(
                 """Error: Old firmware detected.
                 Please update Bpod firmware to version 22 and try again."""
             )
 
-        if firmware_version > settings.get("BPOD_TARGET_FIRMWARE"):
+        if firmware_version > self.target_firmware:
             print("Firmware version is new: ", firmware_version)
             raise BpodErrorException(
                 """Error: Future firmware detected.
@@ -197,6 +199,10 @@ class BpodBase(object):
         if self.socketin is not None:
             self.socketin.close()
             self.sock.close()
+
+    def __del__(self):
+        if hasattr(self, "recorder"):
+            self.recorder.close()
 
     def stop_trial(self):
         self._bpodcom_stop_trial()

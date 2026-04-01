@@ -1,8 +1,14 @@
 import logging
-
-from village.pybpodapi.com.messaging.event_occurrence import EventOccurrence
+from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class EventOccurrence:
+    event_id: int
+    event_name: str
+    host_timestamp: float = None
 
 
 class Trial:
