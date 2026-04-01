@@ -3,20 +3,26 @@ import time
 import traceback
 from typing import Any, Callable
 
+from village.classes.enums import ControllerEnum
 from village.classes.null_classes import (
     NullBpod,
     NullSoftCodeToBpod,
     NullStateMachine,
 )
-from village.classes.enums import ControllerEnum
 from village.controllers.controller import Controller
+from village.pybpodapi.bpod.bpod_com_protocol_modules import (
+    BpodCOMProtocolModules as Bpod,
+)
 from village.pybpodapi.com.softcode_to_bpod import SoftCodeToBpod
-from village.pybpodapi.protocol import Bpod, StateMachine
+from village.pybpodapi.state_machine.state_machine_runner import (
+    StateMachineRunner as StateMachine,
+)
 from village.scripts.log import log
 from village.scripts.parse_bpod_messages import (
     parse_input_to_tuple_override,
     parse_output_to_tuple_override,
 )
+from village.settings import settings
 
 
 class BpodController(Controller):
@@ -34,16 +40,28 @@ class BpodController(Controller):
 
         self.check_connection()
 
+    def _make_bpod(self) -> Bpod:
+        return Bpod(
+            serial_port=settings.get("CONTROLLER_PORT"),
+            baudrate=settings.get("BPOD_BAUDRATE"),
+            sync_channel=settings.get("BPOD_SYNC_CHANNEL"),
+            sync_mode=settings.get("BPOD_SYNC_MODE"),
+            net_port=settings.get("BPOD_NET_PORT"),
+            target_firmware=settings.get("BPOD_TARGET_FIRMWARE"),
+            bnc_ports=settings.get("BPOD_BNC_PORTS"),
+            behavior_ports=settings.get("BPOD_BEHAVIOR_PORTS"),
+        )
+
     def check_connection(self):
         try:
-            self.bpod = Bpod()
+            self.bpod = self._make_bpod()
             self.error = ""
             log.info("Bpod successfully initialized")
             self.bpod.close()
         except Exception:
             time.sleep(0.1)
             try:
-                self.bpod = Bpod()
+                self.bpod = self._make_bpod()
                 self.error = ""
                 log.info("Bpod successfully initialized")
                 self.bpod.close()
@@ -58,12 +76,12 @@ class BpodController(Controller):
             functions (list[Callable]): List of callback functions for softcodes.
         """
         try:
-            self.bpod = Bpod()
+            self.bpod = self._make_bpod()
         except Exception:
             time.sleep(0.1)
-            self.bpod = Bpod()
+            self.bpod = self._make_bpod()
         self.sma = StateMachine(self.bpod)
-        self.softcode_to_bpod = SoftCodeToBpod()
+        self.softcode_to_bpod = SoftCodeToBpod(net_port=settings.get("BPOD_NET_PORT"))
         self.recorder = self.bpod.recorder  # Share recorder with Bpod
         self.connected = True
         self.functions = functions

@@ -2,7 +2,7 @@ import logging
 import math
 
 from village.pybpodapi.com.arcom import ArduinoTypes
-from village.pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
+from village.pybpodapi.com.send_msg_headers import SendMessageHeader
 from village.pybpodapi.state_machine.state_machine_base import StateMachineBase
 
 logger = logging.getLogger(__name__)

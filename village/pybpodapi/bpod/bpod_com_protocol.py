@@ -1,14 +1,13 @@
 # mypy: ignore-errors
 import logging
 
-from village.pybpodapi.bpod.bpod_base import BpodBase
-from village.pybpodapi.bpod.hardware.channels import ChannelType
+from village.pybpodapi.bpod.bpod_base import BpodBase, BpodErrorException
 from village.pybpodapi.bpod_modules.bpod_module import BpodModule
 from village.pybpodapi.com.arcom import ArCOM, ArduinoTypes
-from village.pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
-from village.pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
-from village.pybpodapi.exceptions.bpod_error import BpodErrorException
-from village.settings import Active, settings
+from village.pybpodapi.com.recv_msg_headers import ReceiveMessageHeader
+from village.pybpodapi.com.send_msg_headers import SendMessageHeader
+from village.pybpodapi.hardware.channels import ChannelType
+from village.settings import Active
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +27,21 @@ class BpodCOMProtocol(BpodBase):
 
     """
 
-    def __init__(self, serial_port=None, sync_channel=None, sync_mode=None):
-        super(BpodCOMProtocol, self).__init__(serial_port, sync_channel, sync_mode)
+    def __init__(
+        self,
+        serial_port,
+        baudrate,
+        sync_channel,
+        sync_mode,
+        net_port,
+        target_firmware,
+        bnc_ports,
+        behavior_ports,
+    ):
+        super(BpodCOMProtocol, self).__init__(
+            serial_port, baudrate, sync_channel, sync_mode,
+            net_port, target_firmware, bnc_ports, behavior_ports,
+        )
 
         self._arcom = None  # type: ArCOM
         self.bpod_com_ready = False
@@ -277,15 +289,13 @@ class BpodCOMProtocol(BpodBase):
         hardware.inputs_enabled = [0] * len(hardware.inputs)
 
         for j, i in enumerate(hardware.bnc_inputports_indexes):
-            hardware.inputs_enabled[i] = settings.get("BPOD_BNC_PORTS")[j] == Active.ON
+            hardware.inputs_enabled[i] = self.bnc_ports[j] == Active.ON
 
         for j, i in enumerate(hardware.wired_inputports_indexes):
             hardware.inputs_enabled[i] = False
 
         for j, i in enumerate(hardware.behavior_inputports_indexes):
-            hardware.inputs_enabled[i] = (
-                settings.get("BPOD_BEHAVIOR_PORTS")[j] == Active.ON
-            )
+            hardware.inputs_enabled[i] = self.behavior_ports[j] == Active.ON
 
         logger.debug("Requesting ports enabling (%s)", SendMessageHeader.ENABLE_PORTS)
         logger.debug(

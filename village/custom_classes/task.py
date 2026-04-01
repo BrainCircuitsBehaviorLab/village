@@ -13,8 +13,8 @@ from village.classes.null_classes import NullCamera
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
 from village.controllers.controller import Controller
 from village.devices.sound_device import sound_device
-from village.pybpodapi.bpod.hardware.events import EventName
-from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
+from village.pybpodapi.hardware.events import EventName
+from village.pybpodapi.hardware.output_channels import OutputChannel
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings

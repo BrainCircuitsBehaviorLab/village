@@ -1,15 +1,12 @@
 import socket
 
-from village.settings import settings
-
 
 class SoftCodeToBpod:
-    def __init__(self) -> None:
+    def __init__(self, net_port: int) -> None:
         """Open the connection"""
-        address = int(settings.get("BPOD_NET_PORT"))
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.client_socket.settimeout(1.0)
-        self.address = ("127.0.0.1", address)
+        self.address = ("127.0.0.1", net_port)
 
     def send(self, idx: int) -> None:
         """Send the softcode to the port idx"""

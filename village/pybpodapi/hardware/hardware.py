@@ -1,7 +1,7 @@
 # mypy: ignore-errors
 import logging
 
-from village.pybpodapi.bpod.hardware.channels import Channels
+from village.pybpodapi.hardware.channels import Channels
 
 logger = logging.getLogger(__name__)
 
@@ -40,9 +40,6 @@ class Hardware(object):
 
         self.pos_global_timer_trig = 0
 
-    ##################################################
-    #################### METHODS #####################
-    ##################################################
 
     def setup(self, modules):
         """
@@ -95,9 +92,6 @@ class Hardware(object):
             )
         )
 
-    ##################################################
-    #################### PROPERTIES ##################
-    ##################################################
 
     @property
     def cycle_frequency(self):

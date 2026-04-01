@@ -1,15 +1,53 @@
 import logging
 
-from village.pybpodapi.bpod.hardware.events.base_eventname import BaseEventName
-
 logger = logging.getLogger(__name__)
 
 
-class EventName(BaseEventName):
+class EventName(object):
     """
     Input event codes
     These values must be set according to Bpod firmware specification.
     """
+
+    @staticmethod
+    def is_state_timer(event_name):
+        return True if event_name.startswith("Tup") else False
+
+    @staticmethod
+    def is_condition(event_name):
+        return True if event_name.startswith("Condition") else False
+
+    @staticmethod
+    def is_global_counter_end(event_name):
+        return (
+            True
+            if event_name.startswith("GlobalCounter") and event_name.endswith("End")
+            else False
+        )
+
+    @staticmethod
+    def is_global_timer_trigger(event_name):
+        return event_name == "GlobalTimerTrig"
+
+    @staticmethod
+    def is_global_timer_cancel(event_name):
+        return event_name == "GlobalTimerCancel"
+
+    @staticmethod
+    def is_global_timer_start(event_name):
+        return (
+            True
+            if event_name.startswith("GlobalTimer") and event_name.endswith("Start")
+            else False
+        )
+
+    @staticmethod
+    def is_global_timer_end(event_name):
+        return (
+            True
+            if event_name.startswith("GlobalTimer") and event_name.endswith("End")
+            else False
+        )
 
     #: Tup
     Tup = "Tup"
