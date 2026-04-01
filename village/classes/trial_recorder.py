@@ -9,24 +9,35 @@ class TrialRecorder:
     Records states, events, and values during a trial.
     Generates both a raw CSV (line per event) and a per-trial data dictionary.
 
-    Usage:
-        recorder = TrialRecorder(csv_path="session.csv")
+    Args:
+        same_clock: If True (default), timestamps are already in raspberry time.
+            If False, a different device clock is used and timestamps
+            are auto-converted using the offset from start_trial().
+
+    Usage (same clock - Arduino/Raspberry):
+        recorder = TrialRecorder()
         recorder.start_trial(datetime.now().timestamp())
-        recorder.enter_state("WaitForPoke", datetime.now().timestamp())
         recorder.add_event("Port1In", datetime.now().timestamp())
-        recorder.enter_state("Reward", datetime.now().timestamp())
         recorder.end_trial(datetime.now().timestamp())
-        data = recorder.get_trial_data()
+
+    Usage (different clock - Bpod):
+        recorder = TrialRecorder(same_clock=False)
+        recorder.start_trial(raspberry_timestamp, controller_timestamp=0.0)
+        recorder.add_event("Port1In", 2.5)  # controller-relative
+        # → stored as raspberry_timestamp + 2.5
     """
 
-    # CSV_COLUMNS = ["TRIAL", "TIMESTAMP", "TYPE", "NAME", "VALUE"]
     CSV_COLUMNS = ["TRIAL", "START", "END", "MSG", "VALUE"]
 
-    def __init__(self, csv_path: str | None = None) -> None:
-        self._csv_path = csv_path
+    def __init__(self, same_clock: bool = True) -> None:
+        self._csv_path = str(
+            Path(settings.get("SESSIONS_DIRECTORY"), "session.csv")
+        )
         self._csv_file = None
         self._csv_writer = None
         self._trial_number: int = 0
+        self._same_clock = same_clock
+        self._time_offset: float = 0.0
 
         # Current trial state
         self._trial_start: float | None = None
@@ -38,22 +49,43 @@ class TrialRecorder:
         self._ordered_events: list[str] = []
         self._values: dict[str, Any] = {}
 
-        if csv_path:
-            self._csv_file = open(csv_path, "w", newline="")
-            self._csv_writer = csv.writer(
-                self._csv_file, delimiter=";", lineterminator="\n"
-            )
-            self._csv_writer.writerow(self.CSV_COLUMNS)
-            self._csv_file.flush()
+        self._csv_file = open(csv_path, "w", newline="")
+        self._csv_writer = csv.writer(
+            self._csv_file, delimiter=";", lineterminator="\n"
+        )
+        self._csv_writer.writerow(self.CSV_COLUMNS)
+        self._csv_file.flush()
 
-    def start_trial(self, timestamp: float) -> None:
+    def _to_absolute(self, controller_timestamp: float | None) -> float | None:
+        """Convert a controller timestamp to absolute raspberry time.
+
+        If same_clock=True, returns timestamp unchanged.
+        If same_clock=False, adds the offset computed in start_trial.
+        """
+        if controller_timestamp is None:
+            return None
+        if self._same_clock:
+            return controller_timestamp
+        return controller_timestamp + self._time_offset
+
+    def start_trial(self, controller_timestamp: float, raspberry_timestamp: float) -> None:
         """Mark the beginning of a new trial.
 
         Args:
-            timestamp: UNIX epoch in seconds.
+            controller_timestamp: Controller clock value at trial start.
+                If same_clock=True, this is the raspberry time directly.
+            raspberry_timestamp: Raspberry time (UNIX epoch in seconds).
+                Only used when same_clock=False. The offset is computed as:
+                offset = raspberry_timestamp - controller_timestamp
         """
         self._trial_number += 1
-        self._trial_start = round(timestamp, 4)
+
+        if not self._same_clock:
+            self._time_offset = raspberry_timestamp - controller_timestamp
+        else:
+            self._time_offset = 0.0
+
+        self._trial_start = round(raspberry_timestamp, 4)
         self._current_state = None
         self._current_state_start = None
         self._states_start = {}
@@ -61,34 +93,36 @@ class TrialRecorder:
         self._events = {}
         self._ordered_events = []
         self._values = {}
-        timestamp_str = f"{timestamp:.4f}"
+        timestamp_str = f"{raspberry_timestamp:.4f}"
         self._write_csv_row(timestamp_str, "", "TRIAL_START", "")
 
-    def enter_state(self, state_name: str, timestamp: float) -> None:
+    def enter_state(self, state_name: str, controller_timestamp: float) -> None:
         """Record entering a new state. Closes the previous state.
 
         Args:
             state_name: Name of the state being entered.
-            timestamp: UNIX epoch in seconds.
+            controller_timestamp: Controller clock timestamp.
         """
-        self._close_current_state(timestamp)
+        abs_ts = self._to_absolute(controller_timestamp)
+        self._close_current_state(abs_ts)
         self._current_state = state_name
-        self._current_state_start = round(timestamp, 4)
-        timestamp_str = f"{timestamp:.4f}"
+        self._current_state_start = round(abs_ts, 4)
+        timestamp_str = f"{abs_ts:.4f}"
         self._write_csv_row(timestamp_str, "", f"_Transition_to_{state_name}", "")
 
-    def add_event(self, event_name: str, timestamp: float) -> None:
+    def add_event(self, event_name: str, controller_timestamp: float) -> None:
         """Record an event occurrence.
 
         Args:
             event_name: Name of the event.
-            timestamp: UNIX epoch in seconds.
+            controller_timestamp: Controller clock timestamp.
         """
+        abs_ts = self._to_absolute(controller_timestamp)
         if event_name not in self._events:
             self._events[event_name] = []
-        self._events[event_name].append(round(timestamp, 4))
+        self._events[event_name].append(round(abs_ts, 4))
         self._ordered_events.append(event_name)
-        timestamp_str = f"{timestamp:.4f}"
+        timestamp_str = f"{abs_ts:.4f}"
         self._write_csv_row(timestamp_str, "", event_name, "")
 
     def add_value(self, name: str, value: Any) -> None:
@@ -101,14 +135,15 @@ class TrialRecorder:
         self._values[name] = value
         self._write_csv_row("", "", name, str(value))
 
-    def end_trial(self, timestamp: float) -> None:
+    def end_trial(self, controller_timestamp: float) -> None:
         """Mark the end of the current trial. Closes the last open state.
 
         Args:
-            timestamp: UNIX epoch in seconds.
+            controller_timestamp: Controller clock timestamp.
         """
-        self._close_current_state(timestamp)
-        timestamp_str = f"{timestamp:.4f}"
+        abs_ts = self._to_absolute(controller_timestamp)
+        self._close_current_state(abs_ts)
+        timestamp_str = f"{abs_ts:.4f}"
         self._write_csv_row(timestamp_str, "", "TRIAL_END", "")
 
 

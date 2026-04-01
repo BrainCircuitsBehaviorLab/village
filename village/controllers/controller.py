@@ -11,10 +11,7 @@ class Controller:
         self.connected = False
         self.functions: list[Callable] = []
         self.error = ""
-        self.rt_session_path = str(
-            Path(settings.get("SESSIONS_DIRECTORY"), "session.csv")
-        )
-        self.recorder: TrialRecorder = TrialRecorder(self.rt_session_path)
+        self.recorder: TrialRecorder = TrialRecorder()
 
 
     def connect(self, functions: list[Callable]) -> None:

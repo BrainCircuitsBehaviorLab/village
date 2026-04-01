@@ -1,8 +1,8 @@
 import logging
 import os
 
+from village.classes.trial_recorder import TrialRecorder
 from village.pybpodapi.bpod.bpod_com_protocol_modules import BpodCOMProtocolModules
-from village.pybpodapi.session import Session
 from village.settings import settings
 
 logger = logging.getLogger(__name__)
@@ -30,12 +30,12 @@ class BpodIO(BpodCOMProtocolModules):
 
         super(BpodIO, self).__init__(serial_port, sync_channel, sync_mode)
 
-    def create_session(self):
-        return (
-            Session(os.path.join(self.workspace_path, self.session_name) + ".csv")
-            if self.workspace_path
-            else Session()
-        )
+        # Initialize recorder with CSV path for raw session data
+        if self.workspace_path:
+            csv_path = os.path.join(self.workspace_path, self.session_name) + ".csv"
+            self.recorder = TrialRecorder(same_clock=False)
+        else:
+            self.recorder = TrialRecorder(same_clock=False)
 
     def close(self):
         """
@@ -44,8 +44,8 @@ class BpodIO(BpodCOMProtocolModules):
         super(BpodIO, self).close()
 
     def __del__(self):
-        if hasattr(self, "session") and self.session:
-            del self._session
+        if hasattr(self, "recorder"):
+            self.recorder.close()
 
     @property
     def workspace_path(self):

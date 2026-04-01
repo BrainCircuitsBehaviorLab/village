@@ -5,7 +5,6 @@ from typing import Any, Callable
 
 from village.classes.null_classes import (
     NullBpod,
-    NullSession,
     NullSoftCodeToBpod,
     NullStateMachine,
 )
@@ -13,7 +12,6 @@ from village.classes.enums import ControllerEnum
 from village.controllers.controller import Controller
 from village.pybpodapi.com.softcode_to_bpod import SoftCodeToBpod
 from village.pybpodapi.protocol import Bpod, StateMachine
-from village.pybpodapi.session import Session
 from village.scripts.log import log
 from village.scripts.parse_bpod_messages import (
     parse_input_to_tuple_override,
@@ -31,7 +29,6 @@ class BpodController(Controller):
         self.softcode_to_bpod: SoftCodeToBpod | NullSoftCodeToBpod = (
             NullSoftCodeToBpod()
         )
-        self.session: Session | NullSession = NullSession()
         self.connected = False
         self.functions: list[Callable] = []
 
@@ -67,13 +64,20 @@ class BpodController(Controller):
             self.bpod = Bpod()
         self.sma = StateMachine(self.bpod)
         self.softcode_to_bpod = SoftCodeToBpod()
-        self.session = self.bpod.session
+        self.recorder = self.bpod.recorder  # Share recorder with Bpod
         self.connected = True
         self.functions = functions
         self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
 
     def get_trial_data(self) -> dict:
-        return self.recorder.get_trial_data()
+        trial_data = self.recorder.get_trial_data()
+        # Use Bpod's event occurrences for precise hardware ordering
+        if self.bpod._current_trial is not None:
+            trial_data["ordered_list_of_events"] = [
+                e.event_name
+                for e in self.bpod._current_trial.events_occurrences
+            ]
+        return trial_data
 
     def add_state(
         self,
@@ -178,15 +182,6 @@ class BpodController(Controller):
         """Sends and runs the current state machine on the Bpod."""
         self.bpod.send_state_machine(self.sma)
         self.bpod.run_state_machine(self.sma)
-
-    def register_value(self, name: str, value: Any) -> None:
-        """Registers a value with the session recorder.
-
-        Args:
-            name (str): The name of the value.
-            value (Any): The value to register.
-        """
-        self.recorder.add_value(name, value)
 
     def send_softcode_to_bpod(self, idx: int) -> None:
         """Handles sending a softcode to the bpod.
