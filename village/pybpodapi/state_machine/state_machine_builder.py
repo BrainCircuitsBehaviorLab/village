@@ -18,72 +18,31 @@ class StateMachineBuilder(StateMachineBase):
     will affect the whole pybpodapi library.
     """
 
+    def _replace_in_matrix(self, matrix, j, old_state, new_state):
+        transitions = matrix[j]
+        matrix[j] = [
+            (t[0], new_state) if t[1] == old_state else t for t in transitions
+        ]
+
     def update_state_numbers(self):
         """
         Replace undeclared states (at the time they were referenced)
         with actual state numbers
         """
         for i in range(len(self.undeclared)):
-            undeclaredStateNumber = i + 10000
-            thisStateNumber = self.manifest.index(self.undeclared[i])
+            undeclared_number = i + 10000
+            actual_number = self.manifest.index(self.undeclared[i])
             for j in range(self.total_states_added):
-                if self.state_timer_matrix[j] == undeclaredStateNumber:
-                    self.state_timer_matrix[j] = thisStateNumber
-
-                # input matrix
-                inputTransitions = self.input_matrix[j]
-                for k in range(0, len(inputTransitions)):
-                    thisTransition = inputTransitions[k]
-                    if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (
-                            thisTransition[0],
-                            thisStateNumber,
-                        )
-                self.input_matrix[j] = inputTransitions
-
-                # start matrix
-                inputTransitions = self.global_timers.start_matrix[j]
-                for k in range(0, len(inputTransitions)):
-                    thisTransition = inputTransitions[k]
-                    if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (
-                            thisTransition[0],
-                            thisStateNumber,
-                        )
-                self.global_timers.start_matrix[j] = inputTransitions
-
-                # end matrix
-                inputTransitions = self.global_timers.end_matrix[j]
-                for k in range(0, len(inputTransitions)):
-                    thisTransition = inputTransitions[k]
-                    if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (
-                            thisTransition[0],
-                            thisStateNumber,
-                        )
-                self.global_timers.end_matrix[j] = inputTransitions
-
-                # global counters
-                inputTransitions = self.global_counters.matrix[j]
-                for k in range(0, len(inputTransitions)):
-                    thisTransition = inputTransitions[k]
-                    if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (
-                            thisTransition[0],
-                            thisStateNumber,
-                        )
-                self.global_counters.matrix[j] = inputTransitions
-
-                # conditions
-                inputTransitions = self.conditions.matrix[j]
-                for k in range(0, len(inputTransitions)):
-                    thisTransition = inputTransitions[k]
-                    if thisTransition[1] == undeclaredStateNumber:
-                        inputTransitions[k] = (
-                            thisTransition[0],
-                            thisStateNumber,
-                        )
-                self.conditions.matrix[j] = inputTransitions
+                if self.state_timer_matrix[j] == undeclared_number:
+                    self.state_timer_matrix[j] = actual_number
+                for matrix in [
+                    self.input_matrix,
+                    self.global_timers.start_matrix,
+                    self.global_timers.end_matrix,
+                    self.global_counters.matrix,
+                    self.conditions.matrix,
+                ]:
+                    self._replace_in_matrix(matrix, j, undeclared_number, actual_number)
 
         # Check to make sure all states in manifest exist
         logger.debug(
