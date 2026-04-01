@@ -444,7 +444,7 @@ class BpodCOMProtocol(BpodBase):
         trial_end_timestamp = trial_end_micros / float(
             self.hardware.DEFAULT_FREQUENCY_DIVIDER
         )
-        trial_time_from_micros = trial_end_timestamp - self.trial_start_timestamp
+        trial_time_from_micros = trial_end_timestamp - self.raspberry_trial_start
         trial_time_from_cycles = n_hw_timer_cyles / self.hardware.cycle_frequency
         discrepancy = abs(trial_time_from_micros - trial_time_from_cycles) * 1000
 

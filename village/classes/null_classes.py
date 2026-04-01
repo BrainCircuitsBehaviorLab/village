@@ -4,11 +4,16 @@ from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
+from village.classes.trial_recorder import TrialRecorder
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
 class NullBpod:
+    def __init__(self) -> None:
+        self.recorder = TrialRecorder(same_clock=False)
+        self._current_trial = None
+
     def close(self) -> None:
         pass
 
@@ -39,14 +44,6 @@ class NullStateMachine:
         state_change_conditions: Any = {},
         output_actions: Any = (),
     ) -> None:
-        """Adds a state to the state machine.
-
-        Args:
-            state_name (Any): Name of the state.
-            state_timer (float): Duration of the state in seconds.
-            state_change_conditions (Any): Conditions to transition to other states.
-            output_actions (Any): Actions to perform in this state.
-        """
         pass
 
     def set_global_timer(
@@ -62,32 +59,11 @@ class NullStateMachine:
         send_events: int = 1,
         oneset_triggers: Any | None = None,
     ) -> None:
-        """Configures a global timer.
-
-        Args:
-            timer_id (Any): ID of the timer.
-            timer_duration (Any): Duration of the timer.
-            on_set_delay (int): Delay before the timer starts.
-            channel (Any | None): Output channel to link.
-            on_message (int): Message when timer starts.
-            off_message (int): Message when timer ends.
-            loop_mode (int): Loop mode.
-            loop_intervals (int): Interval between loops.
-            send_events (int): Whether to send events.
-            oneset_triggers (Any | None): Triggers to set.
-        """
         pass
 
     def set_condition(
         self, condition_number: Any, condition_channel: Any, channel_value: Any
     ) -> None:
-        """Sets a condition for the state machine.
-
-        Args:
-            condition_number (Any): The condition ID.
-            condition_channel (Any): The channel to check.
-            channel_value (Any): The value to match.
-        """
         pass
 
     def set_global_counter(
@@ -101,11 +77,6 @@ class NullSoftCodeToBpod:
         pass
 
     def kill(self) -> None:
-        pass
-
-
-class NullSession:
-    def current_trial(self) -> None:
         pass
 
 
