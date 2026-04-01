@@ -436,13 +436,18 @@ class BpodCOMProtocol(BpodBase):
         return response * self.hardware.times_scale_factor
 
     def _bpodcom_read_timestamps(self):
-
-        data = self._arcom.read_bytes_array(12)
-
-        n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[:4]))
-        trial_end_micros = ArduinoTypes.cvt_uint64(
-            b"".join(data[4:12])
-        )  # / float(self.hardware.DEFAULT_FREQUENCY_DIVIDER)
+        if self.hardware.live_timestamps:
+            # LIVE_TIMESTAMPS == 1: firmware sends 16 bytes
+            # [CurrentTime(4)] [nCyclesCompleted(4)] [MatrixEndTimeMicros(8)]
+            data = self._arcom.read_bytes_array(16)
+            n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[4:8]))
+            trial_end_micros = ArduinoTypes.cvt_uint64(b"".join(data[8:16]))
+        else:
+            # LIVE_TIMESTAMPS == 0: firmware sends 12 bytes
+            # [nCyclesCompleted(4)] [MatrixEndTimeMicros(8)]
+            data = self._arcom.read_bytes_array(12)
+            n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[:4]))
+            trial_end_micros = ArduinoTypes.cvt_uint64(b"".join(data[4:12]))
         trial_end_timestamp = trial_end_micros / float(
             self.hardware.DEFAULT_FREQUENCY_DIVIDER
         )
@@ -628,4 +633,3 @@ class BpodCOMProtocol(BpodBase):
             [ord(SendMessageHeader.SEND_TO_HW_SERIAL), channel_number, value]
         )
         self._arcom.write_array(bytes2send)
-
