@@ -52,11 +52,9 @@ class TrainingProtocolBase:
         if self.settings.next_task == "-1":
             raise TrainingError("The variable next_task is required (must be a string)")
         if self.settings.refractory_period < 0:
-            raise TrainingError(
-                """
+            raise TrainingError("""
                 The variable refractory_period is required (must be a positive integer)
-                """
-            )
+                """)
         if self.settings.minimum_duration < 0:
             raise TrainingError(
                 "The variable minimum_duration is required (must be a positive float)"
