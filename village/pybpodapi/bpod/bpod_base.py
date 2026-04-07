@@ -135,15 +135,8 @@ class BpodBase(object):
 
         if firmware_version < self.target_firmware:
             raise BpodErrorException(
-                """Error: Old firmware detected.
-                Please update Bpod firmware to version 22 and try again."""
-            )
-
-        if firmware_version > self.target_firmware:
-            print("Firmware version is new: ", firmware_version)
-            raise BpodErrorException(
-                """Error: Future firmware detected.
-                Please change Bpod firmware to version 22 and try again."""
+                f"Error: Old firmware detected. Found version {firmware_version}, "
+                f"expected >= {self.target_firmware}. Update Bpod firmware and retry."
             )
 
         self._hardware.firmware_version = firmware_version

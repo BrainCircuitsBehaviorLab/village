@@ -242,6 +242,10 @@ class BpodCOMProtocol(BpodBase):
         max_serial_events = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of events per serial channel: %s", max_serial_events)
 
+        if hardware.firmware_version >= 23:
+            serial_message_max_bytes = self._arcom.read_uint8()
+            logger.debug("Read serial message max bytes: %s", serial_message_max_bytes)
+
         n_global_timers = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of global timers: %s", n_global_timers)
 
