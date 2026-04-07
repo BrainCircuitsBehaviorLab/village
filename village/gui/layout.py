@@ -624,6 +624,7 @@ class Layout(QGridLayout):
         if manager.state == State.WAIT:
             manager.detection_change = True
             manager.state = State.SYNC
+            manager.after_session_flag = True
             log.info("Going to SYNC State")
             manager.state = State.SYNC
         else:
