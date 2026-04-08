@@ -905,6 +905,25 @@
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.abstract_classes.ScaleBase.real_weight_inference">
+<span class="sig-name descname"><span class="pre">real_weight_inference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#ScaleBase.real_weight_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Determines if a sequence of weight measurements represents a stable weight.</p>
+<p>Conditions to call it a real weight:
+- standard deviation of the last 5 measurements is</p>
+<blockquote>
+<div><p>smaller than 10% of the threshold</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(True, median_weight) if stable, else (False, 0.0).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[bool, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1454,7 +1473,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.classes.abstract_classes.CameraBase.start_preview_window">
-<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='140646066939024'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='140694727246160'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/abstract_classes.html#CameraBase.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Starts the preview window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1693,6 +1712,7 @@
 <li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase.tare"><code class="docutils literal notranslate"><span class="pre">ScaleBase.tare()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase.calibrate"><code class="docutils literal notranslate"><span class="pre">ScaleBase.calibrate()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase.get_weight"><code class="docutils literal notranslate"><span class="pre">ScaleBase.get_weight()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.abstract_classes.ScaleBase.real_weight_inference"><code class="docutils literal notranslate"><span class="pre">ScaleBase.real_weight_inference()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#village.classes.abstract_classes.TempSensorBase"><code class="docutils literal notranslate"><span class="pre">TempSensorBase</span></code></a><ul>
@@ -1796,7 +1816,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=5dd5f124"></script>
+</div><script src="../_static/documentation_options.js?v=0b7950ab"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

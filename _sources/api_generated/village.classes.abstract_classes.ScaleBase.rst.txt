@@ -19,6 +19,7 @@ ScaleBase
       ~ScaleBase.__init__
       ~ScaleBase.calibrate
       ~ScaleBase.get_weight
+      ~ScaleBase.real_weight_inference
       ~ScaleBase.tare
    
    
