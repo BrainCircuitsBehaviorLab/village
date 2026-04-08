@@ -6,13 +6,13 @@ from typing import List
 import numpy as np
 import smbus2
 
-from village.classes.abstract_classes import ScaleBase
+from village.classes.null_classes import NullScale
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
-class Scale(ScaleBase):
+class Scale(NullScale):
     """Interface for an I2C scale sensor.
 
     Args:
