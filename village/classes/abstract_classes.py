@@ -223,6 +223,19 @@ class ScaleBase:
             float: The weight reading (default 0.0).
         """
         return 0.0
+    
+    def real_weight_inference(self) -> tuple[bool, float]:
+        """Determines if a sequence of weight measurements represents a stable weight.
+
+        Conditions to call it a real weight:
+        - standard deviation of the last 5 measurements is
+            smaller than 10% of the threshold
+
+        Returns:
+            tuple[bool, float]: (True, median_weight) if stable, else (False, 0.0).
+        """
+
+        return (False, 0.0)
 
 
 class TempSensorBase:

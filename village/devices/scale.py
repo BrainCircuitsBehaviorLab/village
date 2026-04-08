@@ -154,7 +154,7 @@ class Scale(ScaleBase):
         median_weight = np.median(self.weights_list[-5:])
         std_weight = np.std(self.weights_list[-5:])
 
-        if std_weight < 0.1 * self.threshold:
+        if std_weight < 0.1 * self.min:
             self.weights_list = []
             return (True, median_weight)
         else:
