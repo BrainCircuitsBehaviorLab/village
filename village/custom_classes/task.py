@@ -8,10 +8,10 @@ import numpy as np
 import pandas as pd
 
 from village.classes.collection import Collection
-from village.classes.enums import Active, Save, ControllerEnum
+from village.classes.enums import Active, ControllerEnum, Save
 from village.classes.null_classes import NullCamera
-from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
 from village.controllers.controller import Controller
+from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
 from village.devices.sound_device import sound_device
 from village.pybpodapi.hardware.events import EventName
 from village.pybpodapi.hardware.output_channels import OutputChannel
@@ -424,7 +424,7 @@ class Task:
         columns_to_drop = [
             item
             for item in df4.columns
-            if type(item) == tuple
+            if isinstance(item, tuple)
             and (item[1].startswith("Tup") or item[1].startswith("_Transition"))
         ]
         df4.drop(columns=columns_to_drop, inplace=True)
@@ -438,7 +438,7 @@ class Task:
         df4.drop(columns=columns_to_drop2, inplace=True)
 
         df4.columns = [
-            item[1] + "_" + item[0] if type(item) == tuple else item
+            item[1] + "_" + item[0] if isinstance(item, tuple) else item
             for item in df4.columns
         ]
 

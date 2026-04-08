@@ -161,14 +161,16 @@ class Scale(NullScale):
             return (False, 0.0)
 
 
-def get_scale(address: str, min_threshold: float, max_threshold: float) -> ScaleBase:
+def get_scale(
+    address: str, min_threshold: float, max_threshold: float
+) -> Scale | NullScale:
     """Factory function to initialize the Scale.
 
     Args:
         address (str): The I2C address of the scale.
 
     Returns:
-        ScaleBase: An initialized Scale instance or a base class on failure.
+        Scale | NullScale: An initialized Scale instance or a null scale on failure.
     """
     try:
         scale = Scale(
@@ -178,7 +180,7 @@ def get_scale(address: str, min_threshold: float, max_threshold: float) -> Scale
         return scale
     except Exception:
         log.error("Could not initialize scale", exception=traceback.format_exc())
-        return ScaleBase()
+        return NullScale()
 
 
 scale = get_scale(

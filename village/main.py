@@ -39,10 +39,10 @@ import time
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
-from village.devices.camera import cam_box, cam_corridor
-from village.controllers.bpod_controller import BpodController
 from village.controllers.arduino_controller import ArduinoController
+from village.controllers.bpod_controller import BpodController
 from village.controllers.controller import Controller
+from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
 from village.devices.scale import scale
