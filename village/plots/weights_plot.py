@@ -4,6 +4,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.figure import Figure
+from village.settings import settings
 
 
 def weights_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
@@ -47,15 +48,10 @@ def weights_plot(df: pd.DataFrame, width: float, height: float) -> Figure:
     rows = math.ceil(n_subjects / cols)
 
     # Global x/y limits for consistency across subplots
-    x_min, x_max = df["date"].min(), df["date"].max()
-
-    q1 = df["weight"].quantile(0.25)
-    q3 = df["weight"].quantile(0.75)
-    iqr = q3 - q1
-    lower = q1 - 1.5 * iqr
-    upper = q3 + 1.5 * iqr
-    df_clean = df[(df["weight"] >= lower) & (df["weight"] <= upper)].copy()
-    y_min, y_max = df_clean["weight"].min(), df_clean["weight"].max()
+    x_min = df["date"].min()
+    x_max = df["date"].max()
+    y_min = settings.get("MIN_WEIGHT_THRESHOLD")
+    y_max = settings.get("MAX_WEIGHT_THRESHOLD")
 
     fig, axes = plt.subplots(rows, cols, figsize=(width, height), squeeze=False)
 
