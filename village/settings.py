@@ -376,10 +376,20 @@ limits for this duration (in seconds).""",
 of seconds prior to a detection.""",
     ),
     Setting(
-        "WEIGHT_THRESHOLD",
+        "MIN_WEIGHT_THRESHOLD",
         10.0,
         float,
-        "The minimum weight in grams to consider that the animal is on the scale.",
+        """Minimum weight (g) considered a valid measurement. Values below this
+threshold are discarded as noise or as the animal being only partially on the scale
+(not properly positioned).""",
+    ),
+    Setting(
+        "MAX_WEIGHT_THRESHOLD",
+        40.0,
+        float,
+        """Maximum weight (g) considered a valid measurement. Values above this
+threshold are discarded as they likely reflect movement artifacts
+(e.g., running or jumping), resulting in overestimated weight.""",
     ),
     Setting(
         "REPEAT_TARE_TIME",

@@ -43,7 +43,7 @@ from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
-from village.devices.scale import real_weight_inference, scale
+from village.devices.scale import scale
 from village.devices.sound_device import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
@@ -113,7 +113,6 @@ def system_run(bevavior_window: QWidget) -> None:
     cam_corridor.start_recording()
 
     corridor_video_duration = float(settings.get("CORRIDOR_VIDEO_DURATION"))
-    weight_threshold = float(settings.get("WEIGHT_THRESHOLD"))
 
     def background_checks() -> None:
         """Performs periodic background checks for errors, storage,
@@ -364,21 +363,16 @@ def system_run(bevavior_window: QWidget) -> None:
                         subject=manager.subject.name,
                     )
                     manager.state = State.SAVE_INSIDE
-                elif weight > weight_threshold:
+                else:
                     if (
                         not cam_corridor.area_2_empty()
                         and cam_corridor.area_3_empty()
                         and cam_corridor.area_4_empty()
                     ):
-                        manager.measuring_weight_list.append(weight)
-                        ok, weight_value = real_weight_inference(
-                            manager.measuring_weight_list,
-                            weight_threshold,
-                        )
+                        ok, weight_value = scale.real_weight_inference()
                         if ok:
                             manager.weight = weight_value
                             manager.getting_weights = False
-                            manager.measuring_weight_list = []
                             manager.state = State.EXIT_UNSAVED
                             log.info(
                                 "Subject back home: " + str(manager.weight) + " g",
@@ -428,21 +422,16 @@ def system_run(bevavior_window: QWidget) -> None:
                     log.alarm(text, subject=manager.subject.name)
                     manager.max_time_counter += 1
 
-                elif weight > weight_threshold:
+                else:
                     if (
                         not cam_corridor.area_2_empty()
                         and cam_corridor.area_3_empty()
                         and cam_corridor.area_4_empty()
                     ):
-                        manager.measuring_weight_list.append(weight)
-                        ok, weight_value = real_weight_inference(
-                            manager.measuring_weight_list,
-                            weight_threshold,
-                        )
+                        ok, weight_value = scale.real_weight_inference()
                         if ok:
                             manager.weight = weight_value
                             manager.getting_weights = False
-                            manager.measuring_weight_list = []
                             manager.state = State.EXIT_SAVED
                             log.info(
                                 "Subject back home: " + str(manager.weight) + " g",

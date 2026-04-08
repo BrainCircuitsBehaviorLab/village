@@ -128,7 +128,6 @@ class Manager:
         self.change_cycle_flag = False
         self.after_session_flag = False
         self.getting_weights = False
-        self.measuring_weight_list: list[float] = []
         self.log_weight = False
         self.taring_scale = False
 
