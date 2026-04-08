@@ -1,0 +1,32 @@
+﻿main
+====
+
+.. automodule:: village.main
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      main
+      system_run
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
