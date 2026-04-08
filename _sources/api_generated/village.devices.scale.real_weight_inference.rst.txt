@@ -1,6 +1,0 @@
-real\_weight\_inference
-=======================
-
-.. currentmodule:: village.devices.scale
-
-.. autofunction:: real_weight_inference
