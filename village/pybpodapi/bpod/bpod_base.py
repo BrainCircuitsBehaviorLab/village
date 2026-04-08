@@ -1,26 +1,26 @@
 # mypy: ignore-errors
+# Adapted from pybpodapi (MIT License)
+# Original authors: Ricardo Ribeiro, Carlos Mão de Ferro, Joshua Sanders, Luís Teixeira
+# https://github.com/pybpod/pybpod-api
+
 import logging
 import math
 import socket
 import time
 
-from village.pybpodapi.bpod.hardware.channels import ChannelName, ChannelType
-from village.pybpodapi.bpod.hardware.events import EventName
-from village.pybpodapi.bpod.hardware.hardware import Hardware
-from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
-from village.pybpodapi.com.messaging.event_occurrence import EventOccurrence
-from village.pybpodapi.com.messaging.event_resume import EventResume
-from village.pybpodapi.com.messaging.state_transition import StateTransition
-from village.pybpodapi.com.messaging.trial import Trial
-from village.pybpodapi.com.messaging.value import ValueMessage
-from village.pybpodapi.exceptions.bpod_error import BpodErrorException
-from village.pybpodapi.session import Session
+from village.classes.trial_recorder import TrialRecorder
+from village.pybpodapi.bpod.trial import EventOccurrence, Trial
+from village.pybpodapi.hardware.channels import ChannelType
+from village.pybpodapi.hardware.hardware import Hardware
 from village.scripts.time_utils import time_utils
-from village.settings import settings
 
 from .non_blockingsocketreceive import NonBlockingSocketReceive
 
 logger = logging.getLogger(__name__)
+
+
+class BpodErrorException(Exception):
+    pass
 
 
 class BpodBase(object):
@@ -34,48 +34,36 @@ class BpodBase(object):
     uploaded to Bpod box
     """
 
-    class Events(EventName):
-        pass
-
-    class OutputChannels(OutputChannel):
-        pass
-
     class ChannelTypes(ChannelType):
         pass
 
-    class ChannelNames(ChannelName):
-        pass
-
-    CHECK_STATE_MACHINE_COUNTER = 0
-
     def __init__(
         self,
-        serial_port=None,
-        sync_channel=None,
-        sync_mode=None,
-        net_port=None,
+        serial_port,
+        baudrate,
+        sync_channel,
+        sync_mode,
+        net_port,
+        target_firmware,
+        bnc_ports,
+        behavior_ports,
     ):
-        self._session = self.create_session()
+        self.recorder = TrialRecorder(same_clock=False)
+        self._current_trial = None
+        self._trial_count = 0
 
-        self.serial_port = (
-            serial_port if serial_port is not None else settings.get("CONTROLLER_PORT")
-        )
-        self.baudrate = settings.get("BPOD_BAUDRATE")
-        self.sync_channel = (
-            sync_channel
-            if sync_channel is not None
-            else settings.get("BPOD_SYNC_CHANNEL")
-        )
-        self.sync_mode = (
-            sync_mode if sync_mode is not None else settings.get("BPOD_SYNC_MODE")
-        )
-        self.net_port = (
-            net_port if net_port is not None else settings.get("BPOD_NET_PORT")
-        )
+        self.serial_port = serial_port
+        self.baudrate = baudrate
+        self.sync_channel = sync_channel
+        self.sync_mode = sync_mode
+        self.net_port = net_port
+        self.target_firmware = target_firmware
+        self.bnc_ports = bnc_ports
+        self.behavior_ports = behavior_ports
         self._hardware = Hardware()  # type: Hardware
         self.bpod_modules = None
         self.bpod_start_timestamp = None
-        self.difference = 0
+        self.raspberry_trial_start = 0.0
         self._new_sma_sent = False  # type: bool
         self._skip_all_trials = False
 
@@ -145,17 +133,10 @@ class BpodBase(object):
         # check the firmware version
         firmware_version, machine_type = self._bpodcom_firmware_version()
 
-        if firmware_version < settings.get("BPOD_TARGET_FIRMWARE"):
+        if firmware_version < self.target_firmware:
             raise BpodErrorException(
-                """Error: Old firmware detected.
-                Please update Bpod firmware to version 22 and try again."""
-            )
-
-        if firmware_version > settings.get("BPOD_TARGET_FIRMWARE"):
-            print("Firmware version is new: ", firmware_version)
-            raise BpodErrorException(
-                """Error: Future firmware detected.
-                Please change Bpod firmware to version 22 and try again."""
+                f"Error: Old firmware detected. Found version {firmware_version}, "
+                f"expected >= {self.target_firmware}. Update Bpod firmware and retry."
             )
 
         self._hardware.firmware_version = firmware_version
@@ -191,17 +172,17 @@ class BpodBase(object):
         """
         Close connection with Bpod
         """
-        # if hasattr(settings, 'PYBPOD_VARSNAMES'):
-        #     for varname in settings.PYBPOD_VARSNAMES:
-        #         self.session += ValueMessage(varname, getattr(settings, varname))
-
         self._bpodcom_disconnect()
 
-        del self._session
+        self.recorder.close()
 
         if self.socketin is not None:
             self.socketin.close()
             self.sock.close()
+
+    def __del__(self):
+        if hasattr(self, "recorder"):
+            self.recorder.close()
 
     def stop_trial(self):
         self._bpodcom_stop_trial()
@@ -218,7 +199,7 @@ class BpodBase(object):
         self._hardware.setup(self.bpod_modules)
 
     def register_value(self, name, value):
-        self._session += ValueMessage(name, value)
+        self.recorder.add_value(name, value)
 
     def send_state_machine(self, sma, run_asap=None):
         """
@@ -279,24 +260,25 @@ class BpodBase(object):
         if self._skip_all_trials is True:
             return False
 
-        self.session += Trial(sma)
+        self._current_trial = Trial(sma)
+        self._trial_count += 1
 
-        logger.info("Running state machine, trial %s", len(self.session.trials))
+        logger.info("Running state machine, trial %s", self._trial_count)
 
         self.trial_timestamps = []
         # Store the trial timestamps in case bpod is using live_timestamps
 
         self._bpodcom_run_state_machine()
-        self.trial_start_timepc = time_utils.now()
+        self.raspberry_trial_start = time_utils.now().timestamp()
 
         if self._new_sma_sent:
             try:
                 status = self._bpodcom_state_machine_installation_status()
                 if status:
                     self._new_sma_sent = False
-                    trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
+                    bpod_trial_start = self._bpodcom_get_trial_timestamp_start()
                 else:
-                    self._session += ValueMessage("COM_ERROR", "waiting 1000 ms")
+                    self.recorder.add_value("COM_ERROR", "waiting 1000 ms")
                     self.com_error = True
                     time.sleep(1)
                     self._arcom.serial_object.reset_input_buffer()
@@ -304,12 +286,12 @@ class BpodBase(object):
                     self.send_state_machine(sma)
                     self.trial_timestamps = []
                     self._bpodcom_run_state_machine()
-                    self.trial_start_timepc = time_utils.now()
+                    self.raspberry_trial_start = time_utils.now().timestamp()
                     status = self._bpodcom_state_machine_installation_status()
                     self._new_sma_sent = False
-                    trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
+                    bpod_trial_start = self._bpodcom_get_trial_timestamp_start()
             except Exception:
-                self._session += ValueMessage("COM_ERROR", "waiting 1000 ms")
+                self.recorder.add_value("COM_ERROR", "waiting 1000 ms")
                 self.com_error = True
                 time.sleep(1)
                 self._arcom.serial_object.reset_input_buffer()
@@ -317,20 +299,18 @@ class BpodBase(object):
                 self.send_state_machine(sma)
                 self.trial_timestamps = []
                 self._bpodcom_run_state_machine()
-                self.trial_start_timepc = time_utils.now()
+                self.raspberry_trial_start = time_utils.now().timestamp()
                 status = self._bpodcom_state_machine_installation_status()
                 self._new_sma_sent = False
-                trial_start_timestamp = self._bpodcom_get_trial_timestamp_start()
+                bpod_trial_start = self._bpodcom_get_trial_timestamp_start()
 
         if self.bpod_start_timestamp is None:
-            self.bpod_start_timestamp = trial_start_timestamp
+            self.bpod_start_timestamp = bpod_trial_start
 
-        self.trial_start_timestamp = self.trial_start_timepc.timestamp()
-
-        self.difference = trial_start_timestamp - self.trial_start_timestamp
-
-        self._session += StateTransition(sma.state_names[0], self.trial_start_timestamp)
-
+        self.recorder.start_trial(
+            controller_timestamp=0.0, raspberry_timestamp=self.raspberry_trial_start
+        )
+        self.recorder.enter_state(sma.state_names[0], 0.0)
         # create a list of executed states
         state_change_indexes = []
 
@@ -363,7 +343,7 @@ class BpodBase(object):
 
         if not interrupt_task:
             self.__update_timestamps(sma, state_change_indexes)
-            self.session.add_trial_events()
+            self.__record_trial(sma)
 
         logger.info("Publishing Bpod trial")
 
@@ -476,8 +456,6 @@ class BpodBase(object):
             self._bpodcom_module_write(module_index - 1, msg)
 
     # PRIVATE METHODS
-    def create_session(self):
-        return Session()
 
     def __process_opcode(self, sma, opcode, data, state_change_indexes):
         """
@@ -492,7 +470,7 @@ class BpodBase(object):
         :return:
         """
 
-        current_trial = self.session.current_trial
+        current_trial = self._current_trial
 
         if opcode == 1:  # Read events
             n_current_events = data
@@ -508,11 +486,11 @@ class BpodBase(object):
                 if event_id == 255:
                     sma.is_running = False
                 else:
-                    self._session += EventOccurrence(
-                        event_id,
-                        sma.hardware.channels.get_event_name(event_id),
-                        event_timestamp + self.trial_start_timestamp,
+                    event_name = sma.hardware.channels.get_event_name(event_id)
+                    current_trial.add_event(
+                        EventOccurrence(event_id, event_name, event_timestamp)
                     )
+                    self.recorder.add_event(event_name, event_timestamp)
                     self.trial_timestamps.append(event_timestamp)
 
                     # input matrix
@@ -606,11 +584,7 @@ class BpodBase(object):
 
             if transition_event_found and not math.isnan(sma.current_state):
                 state_name = sma.state_names[sma.current_state]
-                try:
-                    time = event_timestamp + self.trial_start_timestamp
-                except:  # noqa: E722
-                    time = 10000
-                self._session += StateTransition(state_name, time)
+                self.recorder.enter_state(state_name, event_timestamp)
 
         elif opcode == 2:  # Handle soft code
             self.softcode_handler_function(data)
@@ -623,12 +597,9 @@ class BpodBase(object):
         :param list state_change_indexes:
         """
 
-        current_trial = self.session.current_trial
-        current_trial.trial_start_timestamp = (
-            self.trial_start_timestamp
-        )  # start timestamp of first trial
+        current_trial = self._current_trial
+        current_trial.raspberry_trial_start = self.raspberry_trial_start
         current_trial.bpod_start_timestamp = self.bpod_start_timestamp
-        current_trial.difference = self.difference
 
         trial_end_timestamp, discrepancy = self._bpodcom_read_timestamps()
         current_trial.trial_end_timestamp = trial_end_timestamp
@@ -644,14 +615,39 @@ class BpodBase(object):
             # update the timestamps of the events
             for event, timestamp in zip(current_trial.events_occurrences, timestamps):
                 event.host_timestamp = timestamp
-                e = EventResume(
-                    event.event_id, event.event_name, host_timestamp=timestamp
-                )
-                self.session += e
 
         current_trial.event_timestamps = timestamps
         current_trial.state_timestamps += [timestamps[i] for i in state_change_indexes]
         current_trial.state_timestamps += timestamps[-1:]
+
+    def __record_trial(self, sma):
+        """
+        Finalizes the trial in the TrialRecorder.
+        States and events are already recorded in real-time during the trial loop.
+        Here we close the last state, mark trial end, and register unvisited states.
+        """
+        current_trial = self._current_trial
+
+        # Track which states were visited (for unvisited NaN entries)
+        visited_states = [0] * sma.total_states_added
+        for state_idx in current_trial.states:
+            visited_states[state_idx] = 1
+
+        # Close last state and mark trial end
+        if len(current_trial.state_timestamps) > 1:
+            self.recorder.end_trial(current_trial.state_timestamps[-1])
+
+        # Add unvisited states with NaN
+        for i in range(sma.total_states_added):
+            if not visited_states[i]:
+                state_name = sma.state_names[i]
+                key_start = f"STATE_{state_name}_START"
+                key_end = f"STATE_{state_name}_END"
+                if key_start not in self.recorder._states_start:
+                    self.recorder._states_start[key_start] = [float("nan")]
+                    self.recorder._states_end[key_end] = [float("nan")]
+
+        logger.debug("Trial recorded: %s event types", len(self.recorder._events))
 
     def find_module_by_name(self, name):
         """
@@ -663,13 +659,6 @@ class BpodBase(object):
         return None
 
     # PROPERTIES
-    @property
-    def session(self):
-        return self._session
-
-    @session.setter
-    def session(self, value):
-        self._session = value
 
     @property
     def hardware(self):

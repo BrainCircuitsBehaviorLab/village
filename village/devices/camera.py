@@ -22,7 +22,7 @@ except Exception:
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.abstract_classes import CameraBase
+from village.classes.null_classes import NullCamera
 from village.manager import manager
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
@@ -81,7 +81,7 @@ class LowFreqQPicamera2(QPicamera2):
 
 
 # the camera class
-class Camera(CameraBase):
+class Camera:
     """Controls a Picamera2 device, handles recording, and performs real-time detection.
 
     Attributes:
@@ -187,7 +187,9 @@ class Camera(CameraBase):
         self.cam.configure(self.config)
         self.path_video = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".mp4")
         self.path_csv = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".csv")
-        self.path_picture = os.path.join(settings.get("DATA_DIRECTORY"), name + ".jpg")
+        self.path_picture = os.path.join(
+            settings.get("SYSTEM_DIRECTORY"), name + ".jpg"
+        )
         self.output = FfmpegOutput(self.path_video)
         self.filename = ""
         self.cam.pre_callback = self.pre_process
@@ -608,7 +610,8 @@ class Camera(CameraBase):
                 x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
             )
 
-        manager.camera_trigger.trigger(self)
+        if manager.camera_trigger is not None:
+            manager.camera_trigger.trigger(self)
 
     def detect_black(self) -> None:
         """Detects black objects in defined areas using thresholding."""
@@ -1002,8 +1005,8 @@ class Camera(CameraBase):
             return True
 
     def areas_box_ok(self) -> None:
-        """Checks box areas for allowed/prohibited detections and logs alarms
-        if needed."""
+        """Checks box areas for allowed/prohibited detections and logs
+        alarms if needed."""
         pixels_allowed = 0
         pixels_not_allowed = 0
 
@@ -1029,7 +1032,7 @@ class Camera(CameraBase):
                 self.prohibited_detections = 0
                 if self.box_alarm_timer.has_elapsed():
                     log.alarm(
-                        "1 mouse in prohibited area. Area: " + str(pixels_not_allowed)
+                        "1 subject in prohibited area. Area: " + str(pixels_not_allowed)
                     )
 
     def area_1_empty(self) -> bool:
@@ -1053,7 +1056,7 @@ class Camera(CameraBase):
         self.cam.capture_file(self.path_picture)
 
 
-def get_camera(index: int, framerate: int, name: str) -> CameraBase:
+def get_camera(index: int, framerate: int, name: str) -> Camera | NullCamera:
     """Factory function to initialize a Camera.
 
     Args:
@@ -1062,7 +1065,7 @@ def get_camera(index: int, framerate: int, name: str) -> CameraBase:
         name (str): Camera name.
 
     Returns:
-        CameraBase: An initialized Camera or base class on failure.
+        CameraBase: An initialized Camera or null class on failure.
     """
     try:
         cam = Camera(index, framerate, name)
@@ -1070,7 +1073,7 @@ def get_camera(index: int, framerate: int, name: str) -> CameraBase:
         return cam
     except Exception:
         log.error("Could not initialize cam " + name, exception=traceback.format_exc())
-        return CameraBase()
+        return NullCamera()
 
 
 cam_corridor = get_camera(

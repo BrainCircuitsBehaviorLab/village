@@ -85,15 +85,6 @@ class ArCOM(object):
     """
 
     def open(self, serial_port, baudrate=115200, timeout=1):
-        """
-        Open serial connection
-        :param serialPortName:
-        :param baudRate:
-        :return:
-        """
-        # TODO check this value
-        # baudrate = 4000000
-        # baudrate = 256000
         self.serial_object = serial.Serial(
             serial_port, baudrate=baudrate, timeout=timeout
         )
@@ -118,19 +109,11 @@ class ArCOM(object):
             print("Bpod connection ERROR. Check USB cable.")
             # return self.serial_object.inWaiting()
 
-    ##############################################################
-    ## WRITE #####################################################
-    ##############################################################
-
     def write_char(self, value):
         self.serial_object.write(str.encode(value))
 
     def write_array(self, array):
         self.serial_object.write(array)
-
-    ##############################################################
-    ## READ BYTE #################################################
-    ##############################################################
 
     def read_byte(self):
         message_bytes = self.serial_object.read(ArduinoTypes.BYTE.size)
@@ -142,34 +125,29 @@ class ArCOM(object):
         return message_bytes.decode("utf-8")
 
     def read_uint8(self):
-        message_bytes = self.serial_object.read(ArduinoTypes.UINT8.size)
-        # logger.debug("Read %s bytes: %s", len(message_bytes), message_bytes)
-        message = int.from_bytes(message_bytes, byteorder="little")
-        return message
+        return int.from_bytes(
+            self.serial_object.read(ArduinoTypes.UINT8.size), byteorder="little"
+        )
 
     def read_uint16(self):
-        message_bytes = self.serial_object.read(ArduinoTypes.UINT16.size)
-        # logger.debug("Read %s bytes: %s", ArduinoTypes.UINT16.size, message_bytes)
-        message = int.from_bytes(message_bytes, byteorder="little")
-        return message
+        return int.from_bytes(
+            self.serial_object.read(ArduinoTypes.UINT16.size), byteorder="little"
+        )
 
     def read_uint32(self):
-        message_bytes = self.serial_object.read(ArduinoTypes.UINT32.size)
-        # logger.debug("Read %s bytes: %s", ArduinoTypes.UINT32.size, message_bytes)
-        message = int.from_bytes(message_bytes, byteorder="little")
-        return message
+        return int.from_bytes(
+            self.serial_object.read(ArduinoTypes.UINT32.size), byteorder="little"
+        )
 
     def read_uint64(self):
-        message_bytes = self.serial_object.read(ArduinoTypes.UINT64.size)
-        # logger.debug("Read %s bytes: %s", ArduinoTypes.UINT32.size, message_bytes)
-        message = int.from_bytes(message_bytes, byteorder="little")
-        return message
+        return int.from_bytes(
+            self.serial_object.read(ArduinoTypes.UINT64.size), byteorder="little"
+        )
 
     def read_float32(self):
-        message_bytes = self.serial_object.read(ArduinoTypes.FLOAT32.size)
-        # logger.debug("Read %s bytes: %s", ArduinoTypes.UINT32.size, message_bytes)
-        message = struct.unpack("<f", message_bytes)
-        return message[0]
+        return struct.unpack("<f", self.serial_object.read(ArduinoTypes.FLOAT32.size))[
+            0
+        ]
 
     ##############################################################
     ## READ ARRAY ################################################

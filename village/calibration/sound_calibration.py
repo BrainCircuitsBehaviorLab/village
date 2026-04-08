@@ -29,7 +29,8 @@ class SoundCalibration:
     def run(self) -> None:
         """Executes the sound calibration process.
 
-        Generates sound, loads it to the specified speaker, plays it, and handles errors.
+        Generates sound, loads it to the specified speaker, plays it,
+        and handles errors.
         """
         try:
             generator = manager.sound_calibration_functions[self.sound_index]
@@ -51,7 +52,8 @@ class SoundCalibration:
         """Runs the calibration process in a separate thread.
 
         Args:
-            daemon (bool, optional): Whether to run as a daemon thread. Defaults to True.
+            daemon (bool, optional): Whether to run as a daemon thread.
+            Defaults to True.
         """
         self.process = Thread(target=self.run, daemon=daemon)
         self.process.start()

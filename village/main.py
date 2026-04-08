@@ -39,7 +39,9 @@ import time
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
-from village.devices.bpod import bpod
+from village.controllers.arduino_controller import ArduinoController
+from village.controllers.bpod_controller import BpodController
+from village.controllers.controller import Controller
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
@@ -50,6 +52,7 @@ from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
 from village.manager import manager
 from village.scripts.error_queue import error_queue
+from village.scripts.import_all import import_all
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
@@ -72,13 +75,21 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 
 
 # init
-manager.task.bpod = bpod
+controller_type = settings.get("BEHAVIOR_CONTROLLER")
+if controller_type == "bpod":
+    controller = BpodController()
+elif controller_type == "arduino":
+    controller = ArduinoController()
+else:
+    controller = Controller()
+
+manager.task.controller = controller
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor
-manager.import_all_tasks()
+import_all(manager)
 manager.send_heartbeat()
 manager.errors = (
-    bpod.error
+    controller.error
     + cam_corridor.error
     + cam_box.error
     + motor1.error
@@ -126,7 +137,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     device, error = error_queue.get_nowait()
                     if device == "sound" and sound_alarm_timer.has_elapsed():
                         log.alarm(
-                            "Error in sound_device",
+                            "Error in sound device",
                             exception=error,
                             subject=manager.subject.name,
                         )
@@ -233,7 +244,8 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_AUTO:
                 # Automatically launching the task
-                if manager.launch_task_auto(cam_box):
+                manager.cam_box = cam_box
+                if manager.launch_task_auto():
                     manager.detection_change = True
                     manager.state = State.RUN_FIRST
                     log.info("Going to RUN_FIRST State")
@@ -408,7 +420,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     + manager.max_time_counter * 3600
                 ):
                     text = (
-                        "The subject has been in the box for "
+                        "The subject has been in the box for too long. "
                         + str(manager.task.chrono.get_seconds())
                         + " seconds. "
                     )
@@ -461,7 +473,8 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_MANUAL:
                 # Manually launching the task
-                if manager.launch_task_manual(cam_box):
+                manager.cam_box = cam_box
+                if manager.launch_task_manual():
                     manager.detection_change = True
                     manager.state = State.RUN_MANUAL
                     log.info("Going to RUN_MANUAL State")

@@ -1,14 +1,13 @@
 # mypy: ignore-errors
 import logging
 
-from village.pybpodapi.bpod.bpod_base import BpodBase
-from village.pybpodapi.bpod.hardware.channels import ChannelType
+from village.pybpodapi.bpod.bpod_base import BpodBase, BpodErrorException
 from village.pybpodapi.bpod_modules.bpod_module import BpodModule
 from village.pybpodapi.com.arcom import ArCOM, ArduinoTypes
-from village.pybpodapi.com.protocol.recv_msg_headers import ReceiveMessageHeader
-from village.pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
-from village.pybpodapi.exceptions.bpod_error import BpodErrorException
-from village.settings import Active, settings
+from village.pybpodapi.com.recv_msg_headers import ReceiveMessageHeader
+from village.pybpodapi.com.send_msg_headers import SendMessageHeader
+from village.pybpodapi.hardware.channels import ChannelType
+from village.settings import Active
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +27,21 @@ class BpodCOMProtocol(BpodBase):
 
     """
 
-    def __init__(self, serial_port=None, sync_channel=None, sync_mode=None):
-        super(BpodCOMProtocol, self).__init__(serial_port, sync_channel, sync_mode)
+    def __init__(
+        self,
+        serial_port,
+        baudrate,
+        sync_channel,
+        sync_mode,
+        net_port,
+        target_firmware,
+        bnc_ports,
+        behavior_ports,
+    ):
+        super(BpodCOMProtocol, self).__init__(
+            serial_port, baudrate, sync_channel, sync_mode,
+            net_port, target_firmware, bnc_ports, behavior_ports,
+        )
 
         self._arcom = None  # type: ArCOM
         self.bpod_com_ready = False
@@ -118,9 +130,6 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Disconnect result (%s)", str(res))
         return res
-
-    # def __bpodcom_check_com_ready(self):
-    #    if not self.bpod_com_ready: self.open()
 
     def _bpodcom_handshake(self):
         """
@@ -233,6 +242,10 @@ class BpodCOMProtocol(BpodBase):
         max_serial_events = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of events per serial channel: %s", max_serial_events)
 
+        if hardware.firmware_version >= 23:
+            serial_message_max_bytes = self._arcom.read_uint8()
+            logger.debug("Read serial message max bytes: %s", serial_message_max_bytes)
+
         n_global_timers = self._arcom.read_uint8()  # type: int
         logger.debug("Read number of global timers: %s", n_global_timers)
 
@@ -277,15 +290,13 @@ class BpodCOMProtocol(BpodBase):
         hardware.inputs_enabled = [0] * len(hardware.inputs)
 
         for j, i in enumerate(hardware.bnc_inputports_indexes):
-            hardware.inputs_enabled[i] = settings.get("BPOD_BNC_PORTS")[j] == Active.ON
+            hardware.inputs_enabled[i] = self.bnc_ports[j] == Active.ON
 
         for j, i in enumerate(hardware.wired_inputports_indexes):
             hardware.inputs_enabled[i] = False
 
         for j, i in enumerate(hardware.behavior_inputports_indexes):
-            hardware.inputs_enabled[i] = (
-                settings.get("BPOD_BEHAVIOR_PORTS")[j] == Active.ON
-            )
+            hardware.inputs_enabled[i] = self.behavior_ports[j] == Active.ON
 
         logger.debug("Requesting ports enabling (%s)", SendMessageHeader.ENABLE_PORTS)
         logger.debug(
@@ -338,9 +349,6 @@ class BpodCOMProtocol(BpodBase):
         Send soft code
         """
         logger.debug("Echo softcode")
-        self._arcom.write_char(SendMessageHeader.ECHO_SOFTCODE)
-        self._arcom.write_char(softcode)
-
         bytes2send = ArduinoTypes.get_uint8_array(
             [ord(SendMessageHeader.ECHO_SOFTCODE), softcode]
         )
@@ -395,7 +403,6 @@ class BpodCOMProtocol(BpodBase):
         :param list(int) message:
         :param list(int) ThirtyTwoBitMessage:
         """
-        # self.__bpodcom_check_com_ready()
 
         self._arcom.write_array(message)
 
@@ -403,7 +410,6 @@ class BpodCOMProtocol(BpodBase):
         """
         Request to run state machine now
         """
-        # self.__bpodcom_check_com_ready()
 
         logger.debug(
             "Requesting state machine run (%s)",
@@ -434,17 +440,22 @@ class BpodCOMProtocol(BpodBase):
         return response * self.hardware.times_scale_factor
 
     def _bpodcom_read_timestamps(self):
-
-        data = self._arcom.read_bytes_array(12)
-
-        n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[:4]))
-        trial_end_micros = ArduinoTypes.cvt_uint64(
-            b"".join(data[4:12])
-        )  # / float(self.hardware.DEFAULT_FREQUENCY_DIVIDER)
+        if self.hardware.live_timestamps:
+            # LIVE_TIMESTAMPS == 1: firmware sends 16 bytes
+            # [CurrentTime(4)] [nCyclesCompleted(4)] [MatrixEndTimeMicros(8)]
+            data = self._arcom.read_bytes_array(16)
+            n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[4:8]))
+            trial_end_micros = ArduinoTypes.cvt_uint64(b"".join(data[8:16]))
+        else:
+            # LIVE_TIMESTAMPS == 0: firmware sends 12 bytes
+            # [nCyclesCompleted(4)] [MatrixEndTimeMicros(8)]
+            data = self._arcom.read_bytes_array(12)
+            n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[:4]))
+            trial_end_micros = ArduinoTypes.cvt_uint64(b"".join(data[4:12]))
         trial_end_timestamp = trial_end_micros / float(
             self.hardware.DEFAULT_FREQUENCY_DIVIDER
         )
-        trial_time_from_micros = trial_end_timestamp - self.trial_start_timestamp
+        trial_time_from_micros = trial_end_timestamp - self.raspberry_trial_start
         trial_time_from_cycles = n_hw_timer_cyles / self.hardware.cycle_frequency
         discrepancy = abs(trial_time_from_micros - trial_time_from_cycles) * 1000
 
@@ -456,7 +467,6 @@ class BpodCOMProtocol(BpodBase):
 
         :rtype: bool
         """
-        # self.__bpodcom_check_com_ready()
 
         response = self._arcom.read_uint8()  # type: int
 
@@ -535,7 +545,6 @@ class BpodCOMProtocol(BpodBase):
         :param
         :rtype: bool
         """
-        # self.__bpodcom_check_com_ready()
 
         if isinstance(serial_channel, BpodModule):
             serial_channel = serial_channel.serial_port
@@ -628,82 +637,3 @@ class BpodCOMProtocol(BpodBase):
             [ord(SendMessageHeader.SEND_TO_HW_SERIAL), channel_number, value]
         )
         self._arcom.write_array(bytes2send)
-
-    @property
-    def hardware(self):
-        # self.__bpodcom_check_com_ready()
-        return BpodBase.hardware.fget(self)
-
-    @property
-    def modules(self):
-        # self.__bpodcom_check_com_ready()
-        return BpodBase.modules.fget(self)
-
-    # @property
-    # def inputs(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.inputs.fget(self)
-
-    # @property
-    # def outputs(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.outputs.fget(self)
-
-    # @property
-    # def channels(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.channels.fget(self)
-
-    # @property
-    # def max_states(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.max_states.fget(self)
-
-    # @property
-    # def max_serial_events(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.max_serial_events.fget(self)
-
-    # @property
-    # def inputs_enabled(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.inputs_enabled.fget(self)
-
-    # @property
-    # def cycle_period(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.cycle_period.fget(self)
-
-    # @property
-    # def n_global_timers(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.n_global_timers.fget(self)
-
-    # @property
-    # def n_global_counters(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.n_global_counters.fget(self)
-
-    # @property
-    # def n_conditions(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.n_conditions.fget(self)
-
-    # @property
-    # def n_uart_channels(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.n_uart_channels.fget(self)
-
-    # @property
-    # def firmware_version(self):
-    #   return BpodBase.firmware_version.fget(self)
-
-    # @property
-    # def machine_type(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.machine_type.fget(self)
-
-    # @property
-    # def cycle_frequency(self):
-    #   self.__bpodcom_check_com_ready()
-    #   return BpodBase.cycle_frequency.fget(self)

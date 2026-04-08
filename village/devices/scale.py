@@ -6,13 +6,13 @@ from typing import List
 import numpy as np
 import smbus2
 
-from village.classes.abstract_classes import ScaleBase
+from village.classes.null_classes import NullScale
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
-class Scale(ScaleBase):
+class Scale(NullScale):
     """Interface for an I2C scale sensor.
 
     Args:
@@ -159,14 +159,16 @@ class Scale(ScaleBase):
             return (False, 0.0)
 
 
-def get_scale(address: str, min_threshold: float, max_threshold: float) -> ScaleBase:
+def get_scale(
+    address: str, min_threshold: float, max_threshold: float
+) -> Scale | NullScale:
     """Factory function to initialize the Scale.
 
     Args:
         address (str): The I2C address of the scale.
 
     Returns:
-        ScaleBase: An initialized Scale instance or a base class on failure.
+        Scale | NullScale: An initialized Scale instance or a null scale on failure.
     """
     try:
         scale = Scale(
@@ -176,7 +178,7 @@ def get_scale(address: str, min_threshold: float, max_threshold: float) -> Scale
         return scale
     except Exception:
         log.error("Could not initialize scale", exception=traceback.format_exc())
-        return ScaleBase()
+        return NullScale()
 
 
 scale = get_scale(
