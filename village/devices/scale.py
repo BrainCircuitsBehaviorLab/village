@@ -142,7 +142,7 @@ class Scale(ScaleBase):
 
         Conditions to call it a real weight:
         - standard deviation of the last 5 measurements is
-            smaller than 10% of the threshold
+            smaller than 10% of the minimum threshold
 
         Returns:
             tuple[bool, float]: (True, median_weight) if stable, else (False, 0.0).
@@ -151,7 +151,7 @@ class Scale(ScaleBase):
         if len(self.weights_list) < 8:
             return (False, 0.0)
 
-        median_weight = np.median(self.weights_list[-5:])
+        median_weight = round(np.median(self.weights_list[-5:]), 2)
         std_weight = np.std(self.weights_list[-5:])
 
         if std_weight < 0.1 * self.min:
