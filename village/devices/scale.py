@@ -15,6 +15,11 @@ from village.settings import settings
 class Scale(ScaleBase):
     """Interface for an I2C scale sensor.
 
+    Args:
+        address (str): The I2C address of the scale as a hex string (e.g., "0x2A").
+        min_threshold (float): The minimum weight threshold for valid measurements.
+        max_threshold (float): The maximum weight threshold for valid measurements.
+
     Attributes:
         I2C_ADDR (int): The I2C address of the scale.
         REG_DATA_GET_RAM_DATA (int): Register address for getting raw data.
@@ -25,6 +30,8 @@ class Scale(ScaleBase):
         error (str): Error message if any.
         error_message_timer (time_utils.Timer): Timer to limit error logging frequency.
         alarm_timer (time_utils.Timer): Timer for non-responsive alarms.
+        min (float): Minimum weight threshold.
+        max (float): Maximum weight threshold.
     """
 
     def __init__(
@@ -154,7 +161,7 @@ class Scale(ScaleBase):
             return (False, 0.0)
 
 
-def get_scale(address: str) -> ScaleBase:
+def get_scale(address: str, min_threshold: float, max_threshold: float) -> ScaleBase:
     """Factory function to initialize the Scale.
 
     Args:
@@ -164,7 +171,9 @@ def get_scale(address: str) -> ScaleBase:
         ScaleBase: An initialized Scale instance or a base class on failure.
     """
     try:
-        scale = Scale(address=address)
+        scale = Scale(
+            address=address, min_threshold=min_threshold, max_threshold=max_threshold
+        )
         log.info("Scale successfully initialized")
         return scale
     except Exception:
