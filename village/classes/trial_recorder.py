@@ -58,14 +58,12 @@ class TrialRecorder:
         self._csv_writer.writerow(self.CSV_COLUMNS)
         self._csv_file.flush()
 
-    def _to_absolute(self, controller_timestamp: float | None) -> float | None:
+    def _to_absolute(self, controller_timestamp: float) -> float:
         """Convert a controller timestamp to absolute raspberry time.
 
         If same_clock=True, returns timestamp unchanged.
         If same_clock=False, adds the offset computed in start_trial.
         """
-        if controller_timestamp is None:
-            return None
         if self._same_clock:
             return controller_timestamp
         return controller_timestamp + self._time_offset
