@@ -150,6 +150,8 @@ class Task:
         Initializes the state machine, runs it, collects data, and performs
         post-trial updates.
         """
+        print("do trial")
+        print(self.controller.type)
         if self.controller.type == ControllerEnum.BPOD:
             self.controller.create_state_machine()
             self.cam_box.trial = self.current_trial
@@ -190,9 +192,9 @@ class Task:
 
         if hasattr(self.controller, "bpod"):
             if hasattr(self.controller.bpod, "com_error"):
-                if self.bpod.com_error:
+                if self.controller.bpod.com_error:
                     self.register_value("COM_ERROR", 1)
-                    self.bpod.com_error = False
+                    self.controller.bpod.com_error = False
 
         self.register_value("TRIAL", None)
 
@@ -229,7 +231,7 @@ class Task:
                     subject=self.subject,
                     exception=traceback.format_exc(),
                 )
-                save == Save.ERROR
+                save = Save.ERROR
             if save == Save.YES:
                 try:
                     self.training.df = self.subject_df

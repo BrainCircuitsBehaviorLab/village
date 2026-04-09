@@ -1,6 +1,8 @@
 import csv
-from datetime import datetime
+from pathlib import Path
 from typing import Any
+
+from village.settings import settings
 
 
 class TrialRecorder:
@@ -49,7 +51,7 @@ class TrialRecorder:
         self._ordered_events: list[str] = []
         self._values: dict[str, Any] = {}
 
-        self._csv_file = open(csv_path, "w", newline="")
+        self._csv_file = open(self._csv_path, "w", newline="")
         self._csv_writer = csv.writer(
             self._csv_file, delimiter=";", lineterminator="\n"
         )

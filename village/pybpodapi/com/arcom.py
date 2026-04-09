@@ -152,13 +152,14 @@ class ArCOM(object):
     ##############################################################
     ## READ ARRAY ################################################
     ##############################################################
-
+   
     def read_bytes_array(self, array_len=1):
-        message_array = []
-        for pos in range(0, array_len):
-            message_bytes = self.read_byte()
-            message_array.append(message_bytes)
-        return message_array
+        data = self.serial_object.read(array_len)
+        if len(data) != array_len:
+            raise IOError(
+                f"read_bytes_array: expected {array_len} bytes, got {len(data)}"
+            )
+        return [bytes([b]) for b in data]
 
     def read_char_array(self, array_len=1):
         message_array = []

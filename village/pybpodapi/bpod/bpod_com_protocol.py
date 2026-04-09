@@ -218,7 +218,7 @@ class BpodCOMProtocol(BpodBase):
         logger.debug("Get timestamp transmission")
 
         self._arcom.write_char(SendMessageHeader.GET_TIMESTAMP_TRANSMISSION)
-        return self._arcom.read_byte()
+        return self._arcom.read_uint8()
 
     def _bpodcom_hardware_description(self, hardware):
         """
@@ -440,18 +440,14 @@ class BpodCOMProtocol(BpodBase):
         return response * self.hardware.times_scale_factor
 
     def _bpodcom_read_timestamps(self):
-        if self.hardware.live_timestamps:
-            # LIVE_TIMESTAMPS == 1: firmware sends 16 bytes
-            # [CurrentTime(4)] [nCyclesCompleted(4)] [MatrixEndTimeMicros(8)]
-            data = self._arcom.read_bytes_array(16)
-            n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[4:8]))
-            trial_end_micros = ArduinoTypes.cvt_uint64(b"".join(data[8:16]))
-        else:
-            # LIVE_TIMESTAMPS == 0: firmware sends 12 bytes
-            # [nCyclesCompleted(4)] [MatrixEndTimeMicros(8)]
-            data = self._arcom.read_bytes_array(12)
-            n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[:4]))
-            trial_end_micros = ArduinoTypes.cvt_uint64(b"".join(data[4:12]))
+        # Firmware always sends 12 bytes here:
+        # [nCyclesCompleted(4)][MatrixEndTimeMicros(8)]
+        # LIVE_TIMESTAMPS=1: firmware sends 16 bytes total but CurrentTime(4) is already
+        # consumed by _bpodcom_read_event_timestamp for the final 255 event.
+        # LIVE_TIMESTAMPS=0: firmware sends 12 bytes directly.
+        data = self._arcom.read_bytes_array(12)
+        n_hw_timer_cyles = ArduinoTypes.cvt_uint32(b"".join(data[:4]))
+        trial_end_micros = ArduinoTypes.cvt_uint64(b"".join(data[4:12]))
         trial_end_timestamp = trial_end_micros / float(
             self.hardware.DEFAULT_FREQUENCY_DIVIDER
         )

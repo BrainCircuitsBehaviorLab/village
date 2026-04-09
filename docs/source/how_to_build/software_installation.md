@@ -28,7 +28,7 @@ Follow the instructions on this page if you prefer a manual installation. The pr
 2. Connect the fan.
 3. Connect the Ethernet cable if you are going to use an Ethernet connection.
 4. If your SD card has the OS preinstalled, jump to step 4.
-5. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi OS][OS]
+5. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi OS][OS]. Don't customize it, we will do it later.
 6. Insert the SD card and start the Raspberry Pi.
 7. Select your country and keyboard language and choose English as the general language.
 8. Type `pi` as the username and choose the password you want.
@@ -46,10 +46,9 @@ sudo apt full-upgrade
 ```
 
 ### Installing Needed Libraries
+0. The OS comes with python 3.13 pre-installed.
 
 1. Install OpenCV (the library used for video processing).
-The precompiled version of OpenCV that works reliably with Picamera2 depends on NumPy 1,
-even though NumPy 2 has been available for some time.
 
 ```
 sudo apt install -y python3-opencv
@@ -65,6 +64,7 @@ sudo apt-get install libportaudio2
 3. Install PyQT5 multimedia
 
 ```
+sudo apt install python-pyqt5
 sudo apt install python3-pyqt5.qtmultimedia
 sudo apt install libqt5multimedia5-plugins
 ```
@@ -90,30 +90,21 @@ python -m venv --system-site-packages ~/.env
 source ~/.env/bin/activate
 ```
 
-3. Install the required libraries with pip. Because OpenCV depends on NumPy 1 (not NumPy 2),
-we need to use specific compatible versions of SciPy and Calplot.
-If NumPy 2 is accidentally installed via pip, you can remove it with: `pip uninstall numpy`
-This will uninstall only the pip-installed version (NumPy 2), while keeping the
-system version (NumPy 1) that was installed via apt.
+3. Install the required libraries with pip. 
 
 ```
 pip install python-dateutil
 pip install setuptools_scm
 pip install sounddevice
 pip install python-telegram-bot
-pip install scipy==1.11.4
+pip install scipy
 pip install gpiod
 pip install fire
 pip install pyserial
 pip install pandas
 pip install seaborn
-pip install calplot==0.1.7
+pip install calplot
 ```
-
-### Changing Preferences
-
-1. Enable auto-login by clicking on `Preferences` -> `Raspberry Pi Configuration` -> `Auto login`.
-2. Add CPU monitors to the toolbar: Right-click on the toolbar, select `Add/Remove Panel Items`, and click `Add`. Select `CPU Temperature Monitor` and `CPU Usage monitor`.
 
 ### Screen Settings
 
@@ -123,52 +114,43 @@ pip install calplot==0.1.7
 sudo raspi-config
 ```
 
-2. Go to `Display Options` and disable blanking.
-3. Go to `Advanced Options` and select X11 (instead of Wayland).
+2. Go to `Advanced Options` and select X11 (instead of Wayland).
 
 Then, you need to configure the system to recognize a screen even if none is physically connected, so the software renders properly when accessed remotely. If you want to use an additional screen to present stimuli in the behavioral box, you need to set the system to work with two screens.
 
-4. Modify the file: `/boot/firmware/cmdline.txt`
+3. Modify the file: `/boot/firmware/cmdline.txt`
 
 ```
 sudo nano /boot/firmware/cmdline.txt
 ```
 
-5. Add the following text: `vc4.force_hotplug=1 video=HDMI-A-1:1600x900@60D` if you are using only one screen, or `vc4.force_hotplug=3 video=HDMI-A-1:1600x900@60D video=HDMI-A-2:1280x720@60D` if you are using two screens.
+4. Add the following text: `vc4.force_hotplug=1 video=HDMI-A-1:1600x900@60D` if you are using only one screen, or `vc4.force_hotplug=3 video=HDMI-A-1:1600x900@60D video=HDMI-A-2:1280x720@60D` if you are using two screens.
 
 Explanation of values: (=1 makes the system operate as if a screen is connected to HDMI 1). (=2 makes the system operate as if a screen is connected to HDMI 2). (=3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2). HDMI-A-1 and HDMI-A-2 are used to specify the desired resolution.
 
-6. After every reboot, the system will recognize two screens at the specified resolution. You can change the screen resolution (or resolutions) at any time in: `Preferences` ->
+5. After every reboot, the system will recognize two screens at the specified resolution. You can change the screen resolution (or resolutions) at any time in: `Preferences` ->
  `Screen Configuration`.
 
-### I2C Communication
+6. Reboot the system to use X11.
 
-The temperature sensor and the weight sensor are connected to the I2C pins of the Raspberry.
 
-1. Run the `raspi-config`.
+### Changing Preferences
 
-```
-sudo raspi-config
-```
+1. Enable auto-login by clicking on `Preferences` -> `Control Centre` -> `System` -> `Auto login`.
+2. Enable the following interfaces: SPI, I2C, Serial Port. The rest of the options should be disabled. By clicking on `Preferences` -> `Control Centre` -> `Interfaces` .
+3. Set Sceen Blanking OFF and On-screen keyboard DISABLED by clicking on `Preferences` -> `Control Centre` -> `Display`.
+4. Add CPU monitors to the toolbar: Right-click on the toolbar, select `Add/Remove Panel Items`, and click `Add`. Select `CPU Temperature Monitor` and `CPU Usage monitor`.
 
-2. Go to `Interface Options` and enable I2C.
 
-### Serial Communication
 
-The rfid sensor communicates using the serial port of the Raspberry.
+### Accessing UART Pin for Communication
 
-1. Go to `Preferences` and then `Raspberry Pi Configuration` and check that these options are enabled:
-SPI, I2c, Serial Port. The rest of the options should be disabled.
+To allow the use of the UART Pin for communication with the sensors you need to edit the file `/boot/firmware/config.txt`:
 
-### Accessing Pins via Hardware (for Servos) and Using UART Pin for Communication
-
-To access the pins via hardware (faster and less jittery than software access), and to allow the use of the UART Pin for communication with the sensors you need to change two settings:
-
-1. Edit the `/boot/firmware/config.txt` file to include the following:
+1. Edit with ` sudo nano /boot/firmware/config.txt` to include the following:
 
 ```
 [all]
-dtoverlay=pwm-2chan,pin=12,pin2=13,func=4,func2=4
 enable_uart=1
 ```
 
@@ -207,9 +189,9 @@ Now, whenever the Bpod device is connected to the specified USB port, it will co
 
 ### Grant Permissions for Maximum Process Priority
 
-To allow your Python script to run with the highest priority, you need to grant special permissions to the Python interpreter. Replace python3.11 with the actual Python version you are using if it’s different.
+To allow your Python script to run with the highest priority, you need to grant special permissions to the Python interpreter. Replace python3.13 with the actual Python version you are using if it’s different.
 ```
-sudo setcap cap_sys_nice=eip /usr/bin/python3.11
+sudo setcap cap_sys_nice=eip /usr/bin/python3.13
 ```
 This command gives Python permission to change its own scheduling priority without needing to run as root.
 
@@ -265,7 +247,10 @@ pip install -e .
 ```
 
 6. You’re ready to start the system by simply running the `main.py` file.
-```python /home/pi/village/village/main.py```
+
+```
+python /home/pi/village/village/main.py
+```
 
 ### Create an Alias and Run the Training Village
 

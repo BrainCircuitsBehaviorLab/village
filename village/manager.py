@@ -36,6 +36,7 @@ from village.scripts import utils
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
+from village.controllers.controller import Controller
 
 if TYPE_CHECKING:
     from village.custom_classes.camera_trigger_base import CameraTriggerBase
@@ -76,6 +77,7 @@ class Manager:
         """Initializes the Manager with default settings and initializes collections."""
         self.subject = Subject()
         self.task = Task()
+        self.controller = Controller()
         self.training: TrainingProtocolBase = TrainingProtocolBase()
         self.subject_plot: SubjectPlotBase = SubjectPlotBase()
         self.session_plot: SessionPlotBase = SessionPlotBase()
@@ -411,6 +413,7 @@ class Manager:
     def run_task(self) -> None:
         """Executes the task logic and handles exceptions/errors during execution."""
         try:
+            self.task.controller = self.controller
             self.task.controller.connect(self.functions)
             self.task.run()
         except Exception:
