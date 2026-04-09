@@ -32,9 +32,7 @@ class TrialRecorder:
     CSV_COLUMNS = ["TRIAL", "START", "END", "MSG", "VALUE"]
 
     def __init__(self, same_clock: bool = True) -> None:
-        self._csv_path = str(
-            Path(settings.get("SESSIONS_DIRECTORY"), "session.csv")
-        )
+        self._csv_path = str(Path(settings.get("SESSIONS_DIRECTORY"), "session.csv"))
         self._csv_file = None
         self._csv_writer = None
         self._trial_number: int = 0
@@ -68,7 +66,9 @@ class TrialRecorder:
             return controller_timestamp
         return controller_timestamp + self._time_offset
 
-    def start_trial(self, controller_timestamp: float, raspberry_timestamp: float) -> None:
+    def start_trial(
+        self, controller_timestamp: float, raspberry_timestamp: float
+    ) -> None:
         """Mark the beginning of a new trial.
 
         Args:
@@ -86,6 +86,7 @@ class TrialRecorder:
             self._time_offset = 0.0
 
         self._trial_start = round(raspberry_timestamp, 4)
+        self._trial_end = 0.0
         self._current_state = None
         self._current_state_start = None
         self._states_start = {}
@@ -146,6 +147,22 @@ class TrialRecorder:
         timestamp_str = f"{abs_ts:.4f}"
         self._write_csv_row(timestamp_str, "", "TRIAL_END", "")
 
+        self._write_csv_row(
+            f"{self._trial_start:.4f}",
+            timestamp_str,
+            "TRIAL",
+            "",
+        )
+
+        for state, start_times in self._states_start.items():
+            end_times = self._states_end.get(state.replace("START", "END"), [])
+            for start, end in zip(start_times, end_times):
+                self._write_csv_row(
+                    f"{start:.4f}",
+                    f"{end:.4f}",
+                    state.replace("_START", ""),
+                    "",
+                )
 
     def get_trial_data(self) -> dict:
         """Returns the fully processed trial_data dict ready for Task.
@@ -184,25 +201,30 @@ class TrialRecorder:
         """Close the currently open state with the given end timestamp."""
         if self._current_state is not None and self._current_state_start is not None:
             if f"STATE_{self._current_state}_START" not in self._states_start:
-                self._states_start[f"STATE_{self._current_state}_START"] = [self._current_state_start]
+                self._states_start[f"STATE_{self._current_state}_START"] = [
+                    self._current_state_start
+                ]
             else:
-                self._states_start[f"STATE_{self._current_state}_START"].append(self._current_state_start)
+                self._states_start[f"STATE_{self._current_state}_START"].append(
+                    self._current_state_start
+                )
             if f"STATE_{self._current_state}_END" not in self._states_end:
-                self._states_end[f"STATE_{self._current_state}_END"] = [round(timestamp, 4)]
+                self._states_end[f"STATE_{self._current_state}_END"] = [
+                    round(timestamp, 4)
+                ]
             else:
-                self._states_end[f"STATE_{self._current_state}_END"].append(round(timestamp, 4))
+                self._states_end[f"STATE_{self._current_state}_END"].append(
+                    round(timestamp, 4)
+                )
             self._current_state = None
             self._current_state_start = None
 
-    def _write_csv_row(
-        self, start: str, end: str, msg: str, value: str
-    ) -> None:
+    def _write_csv_row(self, start: str, end: str, msg: str, value: str) -> None:
         """Write a row to the raw CSV file."""
         if self._csv_writer:
-            self._csv_writer.writerow(
-                [self._trial_number, start, end, msg, value]
-            )
-            self._csv_file.flush() 
+            self._csv_writer.writerow([self._trial_number, start, end, msg, value])
+            if self._csv_file:
+                self._csv_file.flush()
 
     def __del__(self) -> None:
         self.close()

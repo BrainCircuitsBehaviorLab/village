@@ -13,7 +13,6 @@ class Controller:
         self.error = ""
         self.recorder: TrialRecorder = TrialRecorder()
 
-
     def connect(self, functions: list[Callable]) -> None:
         """Connects to the Bpod and initializes session.
 
@@ -25,7 +24,6 @@ class Controller:
 
     def get_trial_data(self) -> dict:
         return self.recorder.get_trial_data()
-
 
     def add_state(
         self,

@@ -150,8 +150,6 @@ class Task:
         Initializes the state machine, runs it, collects data, and performs
         post-trial updates.
         """
-        print("do trial")
-        print(self.controller.type)
         if self.controller.type == ControllerEnum.BPOD:
             self.controller.create_state_machine()
             self.cam_box.trial = self.current_trial
@@ -195,8 +193,6 @@ class Task:
                 if self.controller.bpod.com_error:
                     self.register_value("COM_ERROR", 1)
                     self.controller.bpod.com_error = False
-
-        self.register_value("TRIAL", None)
 
     def disconnect_and_save(self, run_mode: str) -> Tuple[Save, float, int, int, str]:
         """Stops the task, disconnects devices, and saves session data.
