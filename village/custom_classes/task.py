@@ -330,7 +330,7 @@ class Task:
                 duration = float(non_nan_values.iloc[-1] - non_nan_values.iloc[0])
                 duration = round(duration, 4)
 
-            self.raw_df.to_csv(self.raw_session_path, index=None, header=True, sep=";")
+            self.raw_df.to_csv(self.raw_session_path, index=False, header=True, sep=";")
 
             trials = self.session_df.shape[0]
 
