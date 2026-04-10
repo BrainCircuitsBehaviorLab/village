@@ -90,7 +90,7 @@ python -m venv --system-site-packages ~/.env
 source ~/.env/bin/activate
 ```
 
-3. Install the required libraries with pip. 
+3. Install the required libraries with pip.
 
 ```
 pip install python-dateutil
@@ -138,7 +138,7 @@ Explanation of values: (=1 makes the system operate as if a screen is connected 
 
 1. Enable auto-login by clicking on `Preferences` -> `Control Centre` -> `System` -> `Auto login`.
 2. Enable the following interfaces: SPI, I2C, Serial Port. The rest of the options should be disabled. By clicking on `Preferences` -> `Control Centre` -> `Interfaces` .
-3. Set Sceen Blanking OFF and On-screen keyboard DISABLED by clicking on `Preferences` -> `Control Centre` -> `Display`.
+3. Set Screen Blanking OFF and On-screen keyboard DISABLED by clicking on `Preferences` -> `Control Centre` -> `Display`.
 4. Add CPU monitors to the toolbar: Right-click on the toolbar, select `Add/Remove Panel Items`, and click `Add`. Select `CPU Temperature Monitor` and `CPU Usage monitor`.
 
 

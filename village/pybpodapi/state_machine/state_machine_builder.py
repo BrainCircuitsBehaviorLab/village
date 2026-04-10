@@ -20,9 +20,7 @@ class StateMachineBuilder(StateMachineBase):
 
     def _replace_in_matrix(self, matrix, j, old_state, new_state):
         transitions = matrix[j]
-        matrix[j] = [
-            (t[0], new_state) if t[1] == old_state else t for t in transitions
-        ]
+        matrix[j] = [(t[0], new_state) if t[1] == old_state else t for t in transitions]
 
     def update_state_numbers(self):
         """

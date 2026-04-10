@@ -24,6 +24,7 @@ from village.classes.null_classes import (
     NullCamera,
 )
 from village.classes.subject import Subject
+from village.controllers.controller import Controller
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
@@ -36,7 +37,6 @@ from village.scripts import utils
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
-from village.controllers.controller import Controller
 
 if TYPE_CHECKING:
     from village.custom_classes.camera_trigger_base import CameraTriggerBase

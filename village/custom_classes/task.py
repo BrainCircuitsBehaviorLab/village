@@ -4,7 +4,6 @@ from pathlib import Path
 from threading import Thread
 from typing import TYPE_CHECKING, Any, Tuple
 
-import numpy as np
 import pandas as pd
 
 from village.classes.collection import Collection
@@ -395,7 +394,6 @@ class Task:
                     subject=self.subject,
                 )
             return 0.0, 0, 0, False
-
 
     @classmethod
     def get_name(cls) -> str:

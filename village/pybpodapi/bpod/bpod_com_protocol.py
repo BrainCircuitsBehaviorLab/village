@@ -39,8 +39,14 @@ class BpodCOMProtocol(BpodBase):
         behavior_ports,
     ):
         super(BpodCOMProtocol, self).__init__(
-            serial_port, baudrate, sync_channel, sync_mode,
-            net_port, target_firmware, bnc_ports, behavior_ports,
+            serial_port,
+            baudrate,
+            sync_channel,
+            sync_mode,
+            net_port,
+            target_firmware,
+            bnc_ports,
+            behavior_ports,
         )
 
         self._arcom = None  # type: ArCOM

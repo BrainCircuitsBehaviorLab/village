@@ -152,7 +152,7 @@ class ArCOM(object):
     ##############################################################
     ## READ ARRAY ################################################
     ##############################################################
-   
+
     def read_bytes_array(self, array_len=1):
         data = self.serial_object.read(array_len)
         if len(data) != array_len:

@@ -404,12 +404,12 @@ class Layout(QGridLayout):
             )
             self.online_or_force_button.setEnabled(False)
         elif manager.state == State.WAIT:
-            self.stop_button.setText("WAIT FOR SUBJECT EXIT")
+            self.stop_button.setText("AWAIT SUBJECT EXIT")
             text = (
                 "The system thinks there is no subject in the box (currently in WAIT) "
                 + "but there is one. Use this to make the system wait for the "
                 + "subject to exit."
-                )
+            )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
             self.online_or_force_button.setText("FORCE SYNC")

@@ -38,7 +38,7 @@ import time
 
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.enums import Active, State, ControllerEnum
+from village.classes.enums import Active, ControllerEnum, State
 from village.controllers.arduino_controller import ArduinoController
 from village.controllers.bpod_controller import BpodController
 from village.controllers.controller import Controller
@@ -76,12 +76,13 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 
 # init
 controller_type = settings.get("BEHAVIOR_CONTROLLER")
-if controller_type == ControllerEnum.BPOD:
+if controller_type == ControllerEnum.RASPBERRY:
+    controller = Controller()
+elif controller_type == ControllerEnum.BPOD:
     controller = BpodController()
 elif controller_type == ControllerEnum.ARDUINO:
     controller = ArduinoController()
-else:
-    controller = Controller()
+
 
 manager.controller = controller
 log.telegram_bot = telegram_bot

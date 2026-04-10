@@ -76,7 +76,7 @@ class TrialRecorder:
         Args:
             controller_timestamp: Controller clock value at trial start.
                 If same_clock=True, this is the raspberry time directly.
-                Only used when same_clock=False. 
+                Only used when same_clock=False.
             raspberry_timestamp: Raspberry time (UNIX epoch in seconds).
                 The offset is computed as:
                 offset = raspberry_timestamp - controller_timestamp

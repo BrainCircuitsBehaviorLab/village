@@ -40,7 +40,6 @@ class Hardware(object):
 
         self.pos_global_timer_trig = 0
 
-
     def setup(self, modules):
         """
         Set up hardware based on hardware description obtained from Bpod device
@@ -89,7 +88,6 @@ class Hardware(object):
                 n_inputs_enabled=len([idx for idx in self.inputs_enabled if idx == 1]),
             )
         )
-
 
     @property
     def cycle_frequency(self):

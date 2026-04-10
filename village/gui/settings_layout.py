@@ -319,7 +319,6 @@ class SettingsLayout(Layout):
         if auto:
             return True
         elif self.save_button.isEnabled():
-
             reply = QMessageBox.question(
                 self.window,
                 "Save changes",
@@ -427,7 +426,6 @@ class SettingsLayout(Layout):
                 old_value = str(settings.get("SYSTEM_NAME"))
 
                 if s.key == "SYSTEM_NAME" and value != old_value:
-
                     if re.fullmatch(r"[A-Za-z0-9_-]+", value):
                         text = (
                             "Are you sure you want to change the system name?\n"
@@ -728,7 +726,6 @@ class SettingsLayout(Layout):
                     value, row, column + width, size1, 2, self.settings_changed
                 )
             if s.key in (
-                "BPOD_TARGET_FIRMWARE",
                 "APP_DIRECTORY",
                 "DATA_DIRECTORY",
                 "VIDEOS_DIRECTORY",
@@ -759,7 +756,7 @@ class SettingsLayout(Layout):
                     2,
                     self.settings_changed,
                 )
-                if s.key == "SCREEN_RESOLUTION":
+                if s.key in ("SCREEN_RESOLUTION", "BPOD_TARGET_FIRMWARE"):
                     line_edit.setReadOnly(True)
                     line_edit.setDisabled(True)
                 line_edit.setProperty("type", type)

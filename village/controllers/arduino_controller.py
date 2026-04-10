@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Callable
 
 from village.classes.enums import ControllerEnum
 from village.controllers.controller import Controller
@@ -22,4 +22,3 @@ class ArduinoController(Controller):
         """
         self.functions = functions
         self.connected = True
-
