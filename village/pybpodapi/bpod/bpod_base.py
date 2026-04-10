@@ -8,7 +8,7 @@ import math
 import socket
 import time
 
-from village.classes.trial_recorder import TrialRecorder
+from village.controllers.trial_recorder import TrialRecorder
 from village.pybpodapi.bpod.trial import EventOccurrence, Trial
 from village.pybpodapi.hardware.channels import ChannelType
 from village.pybpodapi.hardware.hardware import Hardware
@@ -133,10 +133,10 @@ class BpodBase(object):
         # check the firmware version
         firmware_version, machine_type = self._bpodcom_firmware_version()
 
-        if firmware_version < self.target_firmware:
+        if firmware_version not in self.target_firmware:
             raise BpodErrorException(
-                f"Error: Old firmware detected. Found version {firmware_version}, "
-                f"expected >= {self.target_firmware}. Update Bpod firmware and retry."
+                f"Error: Old Bpod firmware detected. Found version {firmware_version}, "
+                f"expected one of {self.target_firmware}. Update firmware and retry."
             )
 
         self._hardware.firmware_version = firmware_version

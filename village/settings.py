@@ -474,9 +474,9 @@ bpod_settings = [
     ),
     Setting(
         "BPOD_TARGET_FIRMWARE",
-        22,
-        int,
-        """This system is compatible only with this Bpod firmware version. If you have
+        [22, 23],
+        list[int],
+        """This system is compatible only with these Bpod firmware versions. If you have
 a different version, please update it by following the instructions at sanworks.com.""",
     ),
     Setting(

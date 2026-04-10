@@ -85,7 +85,7 @@ class BpodController(Controller):
         self.recorder = self.bpod.recorder  # Share recorder with Bpod
         self.connected = True
         self.functions = functions
-        self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
+        self.bpod.softcode_handler_function = self.execute_function  # type: ignore
 
     def add_state(
         self,
@@ -229,16 +229,7 @@ class BpodController(Controller):
             value=value,
         )
 
-    def softcode_handler_function(self, data: int) -> None:
-        """Handles regular softcode callbacks.
-
-        Args:
-            data (int): The softcode data value (1-99).
-        """
-        if 1 <= data <= 99:
-            self.functions[data]()
-
-    def led(self, i: int, close: bool) -> None:
+    def led(self, i: int, close: bool = False) -> None:
         """Triggers an LED in a separate thread.
 
         Args:
@@ -268,7 +259,7 @@ class BpodController(Controller):
         if close:
             self.close()
 
-    def water(self, i: int, close: bool) -> None:
+    def water(self, i: int, close: bool = False) -> None:
         """Triggers a water valve in a separate thread.
 
         Args:
@@ -297,7 +288,7 @@ class BpodController(Controller):
         if close:
             self.close()
 
-    def poke(self, i: int, close: bool) -> None:
+    def poke(self, i: int, close: bool = False) -> None:
         """Simulates a poke event in a separate thread.
 
         Args:

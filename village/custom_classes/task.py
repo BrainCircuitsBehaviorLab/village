@@ -55,7 +55,6 @@ class Task:
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.current_trial: int = 1
-        self.current_trial_states: list = []
         self.touch_response: list = []
         self.system_name: str = settings.get("SYSTEM_NAME")
         self.date: str = time_utils.now_string()
@@ -107,6 +106,14 @@ class Task:
         raise TaskError("The method close(self) is required")
 
     # DO NOT OVERWRITE THESE METHODS
+    def execute_function(self, i: int) -> None:
+        """Executes a registered function.
+
+        Args:
+            i (int): The function index (1-99).
+        """
+        self.controller.execute_function(i)
+
     def send_softcode_to_bpod(self, code: int) -> None:
         """Sends a softcode to the Bpod device.
 
@@ -180,7 +187,7 @@ class Task:
             name (str): The name of the value (column header).
             value (Any): The value to store.
         """
-        self.controller.register_value(name, value)
+        self.controller.recorder.add_value(name, value)
         self.trial_data[name] = value
 
     def register_default_values(self) -> None:
@@ -389,96 +396,6 @@ class Task:
                 )
             return 0.0, 0, 0, False
 
-    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Transforms raw session data into a wide format suitable for analysis.
-
-        Args:
-            df (pd.DataFrame): Raw dataframe.
-
-        Returns:
-            pd.DataFrame: Transformed dataframe.
-        """
-
-        def make_list(x) -> Any | float | str:
-            if x.size <= 1:
-                return x
-            elif x.isnull().all():
-                return np.nan
-            else:
-                return ",".join([str(x.iloc[i]) for i in range(len(x))])
-
-        df0 = df
-        df0["idx"] = range(1, len(df0) + 1)
-        df1 = df0.set_index("idx")
-        df2 = df1.pivot_table(
-            index="TRIAL", columns="MSG", values=["START", "END"], aggfunc=make_list
-        )
-
-        df3 = df1.pivot_table(
-            index="TRIAL",
-            columns="MSG",
-            values="VALUE",
-            aggfunc=lambda x: x if x.size == 1 else x.iloc[0],
-        )
-        df4 = pd.concat([df2, df3], axis=1, sort=False)
-
-        columns_to_drop = [
-            item
-            for item in df4.columns
-            if isinstance(item, tuple)
-            and (item[1].startswith("Tup") or item[1].startswith("_Transition"))
-        ]
-        df4.drop(columns=columns_to_drop, inplace=True)
-
-        columns_to_drop2 = [
-            col
-            for col in df4.columns
-            if isinstance(col, str)
-            and (col.startswith("Tup") or col.startswith("_Transition"))
-        ]
-        df4.drop(columns=columns_to_drop2, inplace=True)
-
-        df4.columns = [
-            item[1] + "_" + item[0] if isinstance(item, tuple) else item
-            for item in df4.columns
-        ]
-
-        df4.replace("", np.nan, inplace=True)
-        df4.dropna(subset=["TRIAL_END"], inplace=True)
-        df4["trial"] = range(1, len(df4) + 1)
-
-        list_of_columns = df4.columns
-
-        start_list = [item for item in list_of_columns if item.endswith("_START")]
-        end_list = [item for item in list_of_columns if item.endswith("_END")]
-        other_list = [
-            item
-            for item in list_of_columns
-            if item not in start_list and item not in end_list
-        ]
-
-        states_list = []
-        for item in start_list:
-            states_list.append(item)
-            for item2 in end_list:
-                if item2.startswith(item[:-5]):
-                    states_list.append(item2)
-
-        new_list = [
-            "date",
-            "trial",
-            "subject",
-            "task",
-            "system_name",
-            "TRIAL_START",
-            "TRIAL_END",
-        ]
-        new_list += states_list + other_list
-        new_list = pd.Series(new_list).drop_duplicates().tolist()
-
-        df4 = df4[new_list]
-
-        return df4
 
     @classmethod
     def get_name(cls) -> str:

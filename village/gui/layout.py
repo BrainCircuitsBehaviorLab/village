@@ -380,8 +380,8 @@ class Layout(QGridLayout):
         elif manager.state.can_go_to_wait():
             self.stop_button.setText("GO TO WAIT STATE")
             text = (
-                "If the systems thinks there is a subject in the corridor or the "
-                + "box, but there isn't, you can force going to the WAIT state."
+                "The system thinks there is a subject in the box, but there isn't. "
+                + "Use this to return to WAIT state."
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
@@ -404,9 +404,14 @@ class Layout(QGridLayout):
             )
             self.online_or_force_button.setEnabled(False)
         elif manager.state == State.WAIT:
-            self.stop_button.setText("STOP TASK")
-            self.stop_button.setToolTip("Stop a running task")
-            self.stop_button.setEnabled(False)
+            self.stop_button.setText("WAIT FOR SUBJECT EXIT")
+            text = (
+                "The system thinks there is no subject in the box (currently in WAIT) "
+                + "but there is one. Use this to make the system wait for the "
+                + "subject to exit."
+                )
+            self.stop_button.setToolTip(text)
+            self.stop_button.setEnabled(True)
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
                 "Force synchronisation with external device or server"
@@ -610,6 +615,9 @@ class Layout(QGridLayout):
             log.info("Going to WAIT State")
         elif manager.state.can_stop_syncing():
             manager.after_session.cancel_event.set()
+        elif manager.state == State.WAIT:
+            manager.state = State.WAIT_EXIT
+            log.info("Going to WAIT_EXIT State")
         self.update_gui()
 
     def close_online_plot_window(self) -> None:

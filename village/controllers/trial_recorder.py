@@ -59,6 +59,7 @@ class TrialRecorder:
 
     def _to_absolute(self, controller_timestamp: float) -> float:
         """Convert a controller timestamp to absolute raspberry time.
+        Round to 4 decimals so that data is easier to read and occupies less space.
 
         If same_clock=True, returns timestamp unchanged.
         If same_clock=False, adds the offset computed in start_trial.
@@ -75,8 +76,9 @@ class TrialRecorder:
         Args:
             controller_timestamp: Controller clock value at trial start.
                 If same_clock=True, this is the raspberry time directly.
+                Only used when same_clock=False. 
             raspberry_timestamp: Raspberry time (UNIX epoch in seconds).
-                Only used when same_clock=False. The offset is computed as:
+                The offset is computed as:
                 offset = raspberry_timestamp - controller_timestamp
         """
         self._trial_number += 1

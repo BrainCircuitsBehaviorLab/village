@@ -1,7 +1,7 @@
 from typing import Any, Callable
 
 from village.classes.enums import ControllerEnum
-from village.classes.trial_recorder import TrialRecorder
+from village.controllers.trial_recorder import TrialRecorder
 
 
 class Controller:
@@ -26,6 +26,15 @@ class Controller:
         self, date: str, trial: int, subject: str, name: str, system_name: str
     ) -> dict:
         return self.recorder.get_trial_data(date, trial, subject, name, system_name)
+
+    def execute_function(self, i: int) -> None:
+        """Executes a registered function.
+
+        Args:
+            i (int): The function index (1-99).
+        """
+        if 1 <= i <= 99:
+            self.functions[i]()
 
     def add_state(
         self,
@@ -106,15 +115,6 @@ class Controller:
         """Sends and runs the current state machine on the Bpod."""
         pass
 
-    def register_value(self, name: str, value: Any) -> None:
-        """Registers a value with the session recorder.
-
-        Args:
-            name (str): The name of the value.
-            value (Any): The value to register.
-        """
-        self.recorder.add_value(name, value)
-
     def send_softcode_to_bpod(self, idx: int) -> None:
         """Handles sending a softcode to the bpod.
 
@@ -138,15 +138,6 @@ class Controller:
             message (str | tuple): The override message string or tuple.
         """
         pass
-
-    def softcode_handler_function(self, data: int) -> None:
-        """Handles regular softcode callbacks.
-
-        Args:
-            data (int): The softcode data value (1-99).
-        """
-        if 1 <= data <= 99:
-            self.functions[data]()
 
     def led(self, i: int, close: bool) -> None:
         """Triggers an LED in a separate thread.

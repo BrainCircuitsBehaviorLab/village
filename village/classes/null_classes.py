@@ -4,7 +4,7 @@ from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
-from village.classes.trial_recorder import TrialRecorder
+from village.controllers.trial_recorder import TrialRecorder
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -114,7 +114,7 @@ class NullScale:
             float: The weight reading (default 0.0).
         """
         return 0.0
-    
+
     def real_weight_inference(self) -> tuple[bool, float]:
         """Determines if a sequence of weight measurements represents a stable weight.
 
