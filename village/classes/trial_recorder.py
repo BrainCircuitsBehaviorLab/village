@@ -41,6 +41,7 @@ class TrialRecorder:
 
         # Current trial state
         self._trial_start: float | None = None
+        self._trial_end: float | None = None
         self._current_state: str | None = None
         self._current_state_start: float | None = None
         self._states_start: dict[str, list[float]] = {}
@@ -63,8 +64,8 @@ class TrialRecorder:
         If same_clock=False, adds the offset computed in start_trial.
         """
         if self._same_clock:
-            return controller_timestamp
-        return controller_timestamp + self._time_offset
+            return round(controller_timestamp, 4)
+        return round(controller_timestamp + self._time_offset, 4)
 
     def start_trial(
         self, controller_timestamp: float, raspberry_timestamp: float
@@ -86,7 +87,6 @@ class TrialRecorder:
             self._time_offset = 0.0
 
         self._trial_start = round(raspberry_timestamp, 4)
-        self._trial_end = 0.0
         self._current_state = None
         self._current_state_start = None
         self._states_start = {}
@@ -107,7 +107,7 @@ class TrialRecorder:
         abs_ts = self._to_absolute(controller_timestamp)
         self._close_current_state(abs_ts)
         self._current_state = state_name
-        self._current_state_start = round(abs_ts, 4)
+        self._current_state_start = abs_ts
         timestamp_str = f"{abs_ts:.4f}"
         self._write_csv_row(timestamp_str, "", f"_Transition_to_{state_name}", "")
 
@@ -121,7 +121,7 @@ class TrialRecorder:
         abs_ts = self._to_absolute(controller_timestamp)
         if event_name not in self._events:
             self._events[event_name] = []
-        self._events[event_name].append(round(abs_ts, 4))
+        self._events[event_name].append(abs_ts)
         self._ordered_events.append(event_name)
         timestamp_str = f"{abs_ts:.4f}"
         self._write_csv_row(timestamp_str, "", event_name, "")
@@ -144,6 +144,7 @@ class TrialRecorder:
         """
         abs_ts = self._to_absolute(controller_timestamp)
         self._close_current_state(abs_ts)
+        self._trial_end = abs_ts
         timestamp_str = f"{abs_ts:.4f}"
         self._write_csv_row(timestamp_str, "", "TRIAL_END", "")
 
@@ -164,7 +165,9 @@ class TrialRecorder:
                     "",
                 )
 
-    def get_trial_data(self) -> dict:
+    def get_trial_data(
+        self, date: str, trial: int, subject: str, name: str, system_name: str
+    ) -> dict:
         """Returns the fully processed trial_data dict ready for Task.
 
         Includes TRIAL_START, TRIAL_END, state start/end times, event
@@ -173,19 +176,36 @@ class TrialRecorder:
         Returns:
             dict: Processed trial data.
         """
-        trial_data: dict[str, Any] = {"TRIAL_START": self._trial_start}
+        trial_data: dict[str, Any] = {
+            "date": date,
+            "trial": trial,
+            "subject": subject,
+            "task": name,
+            "system_name": system_name,
+        }
+        trial_data["TRIAL_START"] = self._trial_start
+        trial_data["TRIAL_END"] = self._trial_end
+
+        # States
+        interleaved = {}
+        for state, start_times in self._states_start.items():
+            interleaved[state] = start_times
+            end_key = state.replace("START", "END")
+            if end_key in self._states_end:
+                interleaved[end_key] = self._states_end[end_key]
+
+        trial_data.update(interleaved)
 
         # Events
         trial_data.update(self._events)
 
-        # States
-        trial_data.update(self._states_start)
-        trial_data.update(self._states_end)
-
-        # Custom values
-        trial_data.update(self._values)
-
         trial_data["ordered_list_of_events"] = self._ordered_events
+
+        self._write_csv_row("", "", "date", date)
+        self._write_csv_row("", "", "trial", str(trial))
+        self._write_csv_row("", "", "subject", subject)
+        self._write_csv_row("", "", "task", name)
+        self._write_csv_row("", "", "system_name", system_name)
 
         return trial_data
 
@@ -209,13 +229,9 @@ class TrialRecorder:
                     self._current_state_start
                 )
             if f"STATE_{self._current_state}_END" not in self._states_end:
-                self._states_end[f"STATE_{self._current_state}_END"] = [
-                    round(timestamp, 4)
-                ]
+                self._states_end[f"STATE_{self._current_state}_END"] = [timestamp]
             else:
-                self._states_end[f"STATE_{self._current_state}_END"].append(
-                    round(timestamp, 4)
-                )
+                self._states_end[f"STATE_{self._current_state}_END"].append(timestamp)
             self._current_state = None
             self._current_state_start = None
 

@@ -23,9 +23,6 @@ class ArduinoController(Controller):
         self.functions = functions
         self.connected = True
 
-    def get_trial_data(self) -> dict:
-        return self.recorder.get_trial_data()
-
     def add_state(
         self,
         state_name: Any,

@@ -87,16 +87,6 @@ class BpodController(Controller):
         self.functions = functions
         self.bpod.softcode_handler_function = self.softcode_handler_function  # type: ignore
 
-    def get_trial_data(self) -> dict:
-        trial_data = self.recorder.get_trial_data()
-        # Use Bpod's event occurrences for precise hardware ordering
-        if self.bpod._current_trial is not None:
-            trial_data["ordered_list_of_events"] = [
-                e.event_name
-                for e in self.bpod._current_trial.events_occurrences
-            ]
-        return trial_data
-
     def add_state(
         self,
         state_name: Any,
@@ -247,7 +237,6 @@ class BpodController(Controller):
         """
         if 1 <= data <= 99:
             self.functions[data]()
-
 
     def led(self, i: int, close: bool) -> None:
         """Triggers an LED in a separate thread.

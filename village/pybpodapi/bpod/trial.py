@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 class EventOccurrence:
     event_id: int
     event_name: str
-    host_timestamp: float = None
+    host_timestamp: float
 
 
 class Trial:

@@ -22,8 +22,10 @@ class Controller:
         self.functions = functions
         self.connected = True
 
-    def get_trial_data(self) -> dict:
-        return self.recorder.get_trial_data()
+    def get_trial_data(
+        self, date: str, trial: int, subject: str, name: str, system_name: str
+    ) -> dict:
+        return self.recorder.get_trial_data(date, trial, subject, name, system_name)
 
     def add_state(
         self,

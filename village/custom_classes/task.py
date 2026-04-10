@@ -158,7 +158,9 @@ class Task:
         else:
             self.cam_box.trial = self.current_trial
             self.create_trial()
-        self.trial_data = self.controller.get_trial_data()
+        self.trial_data = self.controller.get_trial_data(
+            self.date, self.current_trial, self.subject, self.name, self.system_name
+        )
         self.after_trial()
         self.register_default_values()
         self.concatenate_trial_data()
@@ -183,10 +185,11 @@ class Task:
 
     def register_default_values(self) -> None:
         """Registers standard session metadata values (task, subject, system, date)."""
-        self.register_value("task", self.name)
-        self.register_value("subject", self.subject)
-        self.register_value("system_name", self.system_name)
         self.register_value("date", self.date)
+        self.register_value("trial", self.current_trial)
+        self.register_value("subject", self.subject)
+        self.register_value("task", self.name)
+        self.register_value("system_name", self.system_name)
 
         if hasattr(self.controller, "bpod"):
             if hasattr(self.controller.bpod, "com_error"):
