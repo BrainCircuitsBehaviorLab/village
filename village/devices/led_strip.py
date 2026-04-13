@@ -37,6 +37,7 @@ led_strip = get_led_strip()
 
 if __name__ == "__main__":
     import time
+    led_strip = get_led_strip(num_leds=300)
     led_strip.set_led_color(0, 255, 0, 0)
     led_strip.update_strip()
     time.sleep(1)
@@ -46,5 +47,15 @@ if __name__ == "__main__":
     led_strip.set_led_color(0, 0, 0, 255)
     led_strip.update_strip()
     time.sleep(1)
+    led_strip.clear_strip()
+    led_strip.update_strip()
+
+    _n = [0, 50, 100, 150, 160]
+    for n in _n:
+        led_strip = get_led_strip(num_leds=300)
+        led_strip.set_led_color(n, 255, 255, 255)
+        led_strip.update_strip()
+        time.sleep(1)
+
     led_strip.clear_strip()
     led_strip.update_strip()
