@@ -1,0 +1,32 @@
+NullTelegramBot
+===============
+
+.. currentmodule:: village.classes.null_classes
+
+.. autoclass:: NullTelegramBot
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NullTelegramBot.__init__
+      ~NullTelegramBot.alarm
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NullTelegramBot.error
+   
+   

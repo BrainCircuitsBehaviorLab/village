@@ -1,0 +1,27 @@
+NullSoftCodeToBpod
+==================
+
+.. currentmodule:: village.classes.null_classes
+
+.. autoclass:: NullSoftCodeToBpod
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NullSoftCodeToBpod.__init__
+      ~NullSoftCodeToBpod.kill
+      ~NullSoftCodeToBpod.send
+   
+   
+
+   
+   
+   
