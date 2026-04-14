@@ -181,7 +181,14 @@ html_theme_options = {
     "secondary_sidebar_items": ["page-toc"],
     "show_nav_level": 2,
     "navbar_align": "left",
+    "color_mode": "light",
 }
+
+# Same sidebar (left nav) on all pages
+html_sidebars = {
+    "**": ["sidebar-nav-bs"],
+}
+
 html_permalinks = False
 
 
