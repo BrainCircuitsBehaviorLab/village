@@ -77,7 +77,7 @@ class BpodController:
         self.softcode_to_bpod = SoftCodeToBpod(net_port=settings.get("BPOD_NET_PORT"))
         self.recorder = self.bpod_hardware.recorder
         self.connected = True
-        self.bpod_hardware.softcode_handler_function = handler_function
+        self.bpod_hardware.softcode_handler_function = handler_function  # type: ignore
 
     def add_state(
         self,

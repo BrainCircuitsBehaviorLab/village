@@ -56,7 +56,8 @@ class TasksLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        """Draws the tasks layout elements, including task selection list and settings."""
+        """Draws the tasks layout elements, including task
+        selection list and settings."""
         self.line_edits: dict[str, LineEdit] = {}
         self.tasks_button.setDisabled(True)
 

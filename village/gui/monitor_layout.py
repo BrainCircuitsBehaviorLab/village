@@ -22,7 +22,14 @@ from PyQt5.QtWidgets import (
     QWizardPage,
 )
 
-from village.classes.enums import Actions, Active, ControllerEnum, Cycle, Info, ScreenActive
+from village.classes.enums import (
+    Actions,
+    Active,
+    ControllerEnum,
+    Cycle,
+    Info,
+    ScreenActive,
+)
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import Motor, motor1, motor2
 from village.devices.scale import scale
@@ -817,12 +824,13 @@ class PortsLayout(Layout):
         self.disable_all()
         QTimer.singleShot(1500, self.enable_all)
 
-        if not manager.task.controller.connected:
-            manager.task.controller.connect(manager.functions)
+        if not manager.task.bpod.connected:
+            manager.task.functions = manager.functions
+            manager.task.bpod.connect(manager.task.execute_function)
             close = True
         else:
             close = False
-        manager.task.controller.led(i, close)
+        manager.task.bpod.led(i, close)
 
     def water_clicked(self, i=0) -> None:
         """Delivers water for a specific port.
@@ -833,12 +841,13 @@ class PortsLayout(Layout):
         self.disable_all()
         QTimer.singleShot(1500, self.enable_all)
 
-        if not manager.task.controller.connected:
-            manager.task.controller.connect(manager.functions)
+        if not manager.task.bpod.connected:
+            manager.task.functions = manager.functions
+            manager.task.bpod.connect(manager.task.execute_function)
             close = True
         else:
             close = False
-        manager.task.controller.water(i, close)
+        manager.task.bpod.water(i, close)
 
 
 class VirtualMouseLayout(Layout):
@@ -923,20 +932,19 @@ class VirtualMouseLayout(Layout):
         Args:
             i (int): Port index (1-based).
         """
-        if not manager.task.controller.connected:
-            manager.task.controller.connect(manager.functions)
+        if not manager.task.bpod.connected:
+            manager.task.functions = manager.functions
+            manager.task.bpod.connect(manager.task.execute_function)
             close = True
         else:
             close = False
-        manager.task.controller.poke(i, close)
+        manager.task.bpod.poke(i, close)
 
     def touch_clicked(self) -> None:
         """Simulates a touch action at the specified coordinates."""
-        x = self.x_line_edit.text()
-        y = self.y_line_edit.text()
         try:
-            x = int(x)
-            y = int(y)
+            x = int(self.x_line_edit.text())
+            y = int(self.y_line_edit.text())
             if x >= 0 and y >= 0:
                 print(x, y)
                 # TODO touch screen

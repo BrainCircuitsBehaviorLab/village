@@ -115,8 +115,10 @@ class BehaviorWindow(QOpenGLWidget):
 
         Args:
             draw_fn (Optional[Callable]): The function to call during paint events.
-            image (str | None, optional): Filename of an image to load. Defaults to None.
-            video (str | None, optional): Filename of a video to load. Defaults to None.
+            image (str | None, optional): Filename of an image to load.
+            Defaults to None.
+            video (str | None, optional): Filename of a video to load.
+            Defaults to None.
         """
         self.stop_drawing()
         if image is not None:

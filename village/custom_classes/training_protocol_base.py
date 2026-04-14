@@ -26,7 +26,8 @@ class Settings:
 class TrainingProtocolBase:
     """Base class for defining training protocols and managing settings.
 
-    Training protocols dictate how settings change over sessions based on subject performance.
+    Training protocols dictate how settings change over sessions based on subject
+    performance.
     """
 
     def __init__(self) -> None:

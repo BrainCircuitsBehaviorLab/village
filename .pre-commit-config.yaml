@@ -1,4 +1,4 @@
-exclude: 'conf.py'
+exclude: 'conf\.py|^village/pybpodapi/v2\.(2|3)/'
 
 # Configuring https://pre-commit.ci/
 ci:

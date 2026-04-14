@@ -13,8 +13,7 @@ class ArduinoController:
         self.error = ""
 
     def connect(self) -> None:
-        """Connects to the Arduino and initializes session.
-        """
+        """Connects to the Arduino and initializes session."""
         self.connected = True
 
     def close(self) -> None:
