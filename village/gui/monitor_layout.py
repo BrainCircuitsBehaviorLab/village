@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import (
     QWizardPage,
 )
 
-from village.classes.enums import Actions, Active, Cycle, Info, ScreenActive
+from village.classes.enums import Actions, Active, ControllerEnum, Cycle, Info, ScreenActive
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import Motor, motor1, motor2
 from village.devices.scale import scale
@@ -414,7 +414,12 @@ class MonitorLayout(Layout):
         )
 
         key = "ACTIONS"
-        possible_values = Actions.values()
+        if manager.controller_type == ControllerEnum.BPOD:
+            possible_values = Actions.values()
+        else:
+            possible_values = [Actions.CORRIDOR.value, Actions.FUNCTIONS.value]
+            if manager.actions in (Actions.PORTS, Actions.VIRTUAL_MOUSE):
+                manager.actions = Actions.CORRIDOR
         index = Actions.get_index_from_value(manager.actions)
         text = (
             "Perform actions on the corridor, in the behavior ports or run "

@@ -12,6 +12,7 @@ from village.classes.collection import Collection
 from village.classes.enums import (
     Actions,
     Active,
+    ControllerEnum,
     Cycle,
     DataTable,
     Info,
@@ -24,7 +25,8 @@ from village.classes.null_classes import (
     NullCamera,
 )
 from village.classes.subject import Subject
-from village.controllers.controller import Controller
+from village.controllers.arduino_controller import ArduinoController
+from village.controllers.bpod_controller import BpodController
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
@@ -52,6 +54,8 @@ class Manager:
         subject (Subject): Instance of Subject class.
         task (Task): Instance of Task class.
         training (Training): Instance of Training class.
+        bpod (BpodController): Instance of BpodController class.
+        arduino (ArduinoController): Instance of ArduinoController class.
         state (State): Current state of the system.
         table (DataTable): Data table type.
         rfid_reader (Active): RFID reader settings.
@@ -77,7 +81,6 @@ class Manager:
         """Initializes the Manager with default settings and initializes collections."""
         self.subject = Subject()
         self.task = Task()
-        self.controller = Controller()
         self.training: TrainingProtocolBase = TrainingProtocolBase()
         self.subject_plot: SubjectPlotBase = SubjectPlotBase()
         self.session_plot: SessionPlotBase = SessionPlotBase()
@@ -110,6 +113,15 @@ class Manager:
         self.rt_session_path = str(
             Path(settings.get("SESSIONS_DIRECTORY"), "session.csv")
         )
+
+        # init
+        self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod = BpodController()
+            self.errors = self.bpod.error
+        elif self.controller_type == ControllerEnum.ARDUINO:
+            self.arduino = ArduinoController()
+            self.errors = self.arduino.error
 
         self.update_cycle()
         utils.download_github_repositories(settings.get("GITHUB_REPOSITORY_EXAMPLES"))
@@ -336,6 +348,8 @@ class Manager:
             self.task.cam_box.show_time_info = True
         try:
             self.weight = np.nan
+            self.task.controller_type = self.controller_type
+            self.task.functions = self.functions
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -383,6 +397,8 @@ class Manager:
                 self.task.maximum_number_of_trials = 100000000
                 self.task.water_calibration = self.water_calibration
                 self.task.sound_calibration = self.sound_calibration
+                self.task.controller_type = self.controller_type
+                self.task.functions = self.functions
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -413,8 +429,14 @@ class Manager:
     def run_task(self) -> None:
         """Executes the task logic and handles exceptions/errors during execution."""
         try:
-            self.task.controller = self.controller
-            self.task.controller.connect(self.functions)
+            if self.controller_type == ControllerEnum.BPOD:
+                self.task.bpod = self.bpod
+                self.task.bpod.connect(self.task.execute_function)
+                self.task.recorder = self.bpod.recorder
+            elif self.controller_type == ControllerEnum.ARDUINO:
+                self.task.arduino = self.arduino
+                self.task.arduino.connect()
+                self.task.recorder = self.arduino.recorder
             self.task.run()
         except Exception:
             if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:

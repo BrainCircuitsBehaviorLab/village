@@ -1,24 +1,22 @@
-from typing import Callable
-
-from village.classes.enums import ControllerEnum
-from village.controllers.controller import Controller
+from village.controllers.trial_recorder import TrialRecorder
 
 
-class ArduinoController(Controller):
+class ArduinoController:
     def __init__(self) -> None:
         super().__init__()
 
-        self.type = ControllerEnum.ARDUINO
+        self.connected = False
+        self.recorder = TrialRecorder(same_clock=False)
         self.check_connection()
 
-    def check_connection(self):
+    def check_connection(self) -> None:
         self.error = ""
 
-    def connect(self, functions: list[Callable]) -> None:
+    def connect(self) -> None:
         """Connects to the Arduino and initializes session.
-
-        Args:
-            functions (list[Callable]): List of callback functions for softcodes.
         """
-        self.functions = functions
         self.connected = True
+
+    def close(self) -> None:
+        """Closes the Arduino connection and session."""
+        self.connected = False

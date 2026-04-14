@@ -4,14 +4,12 @@ from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
-from village.controllers.trial_recorder import TrialRecorder
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
 class NullBpod:
     def __init__(self) -> None:
-        self.recorder = TrialRecorder(same_clock=False)
         self._current_trial = None
 
     def close(self) -> None:

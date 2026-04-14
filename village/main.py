@@ -38,10 +38,7 @@ import time
 
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.enums import Active, ControllerEnum, State
-from village.controllers.arduino_controller import ArduinoController
-from village.controllers.bpod_controller import BpodController
-from village.controllers.controller import Controller
+from village.classes.enums import Active, State
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.motor import motor1, motor2
 from village.devices.rfid import rfid
@@ -74,24 +71,12 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 # faulthandler.enable()
 
 
-# init
-controller_type = settings.get("BEHAVIOR_CONTROLLER")
-if controller_type == ControllerEnum.RASPBERRY:
-    controller = Controller()
-elif controller_type == ControllerEnum.BPOD:
-    controller = BpodController()
-elif controller_type == ControllerEnum.ARDUINO:
-    controller = ArduinoController()
-
-
-manager.controller = controller
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor
 import_all(manager)
 manager.send_heartbeat()
-manager.errors = (
-    controller.error
-    + cam_corridor.error
+manager.errors += (
+    cam_corridor.error
     + cam_box.error
     + motor1.error
     + motor2.error

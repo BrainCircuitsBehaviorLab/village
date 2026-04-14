@@ -3,13 +3,12 @@ import time
 import traceback
 from typing import Any, Callable
 
-from village.classes.enums import ControllerEnum
 from village.classes.null_classes import (
     NullBpod,
     NullSoftCodeToBpod,
     NullStateMachine,
 )
-from village.controllers.controller import Controller
+from village.controllers.trial_recorder import TrialRecorder
 from village.pybpodapi.bpod.bpod_com_protocol_modules import (
     BpodCOMProtocolModules as Bpod,
 )
@@ -25,19 +24,17 @@ from village.scripts.parse_bpod_messages import (
 from village.settings import settings
 
 
-class BpodController(Controller):
+class BpodController:
     def __init__(self) -> None:
         super().__init__()
 
-        self.type = ControllerEnum.BPOD
-        self.bpod: Bpod | NullBpod = NullBpod()
+        self.bpod_hardware: Bpod | NullBpod = NullBpod()
         self.sma: StateMachine | NullStateMachine = NullStateMachine()
         self.softcode_to_bpod: SoftCodeToBpod | NullSoftCodeToBpod = (
             NullSoftCodeToBpod()
         )
         self.connected = False
-        self.functions: list[Callable] = []
-
+        self.recorder = TrialRecorder(same_clock=False)
         self.check_connection()
 
     def _make_bpod(self) -> Bpod:
@@ -52,40 +49,35 @@ class BpodController(Controller):
             behavior_ports=settings.get("BPOD_BEHAVIOR_PORTS"),
         )
 
-    def check_connection(self):
+    def check_connection(self) -> None:
         try:
-            self.bpod = self._make_bpod()
+            self.bpod_hardware = self._make_bpod()
             self.error = ""
             log.info("Bpod successfully initialized")
-            self.bpod.close()
+            self.bpod_hardware.close()
         except Exception:
             time.sleep(0.1)
             try:
-                self.bpod = self._make_bpod()
+                self.bpod_hardware = self._make_bpod()
                 self.error = ""
                 log.info("Bpod successfully initialized")
-                self.bpod.close()
+                self.bpod_hardware.close()
             except Exception:
                 self.error = "Error connecting to Bpod"
                 log.error("Could not initialize bpod", exception=traceback.format_exc())
 
-    def connect(self, functions: list[Callable]) -> None:
-        """Connects to the Bpod and initializes session.
-
-        Args:
-            functions (list[Callable]): List of callback functions for softcodes.
-        """
+    def connect(self, handler_function: Callable) -> None:
+        """Connects to the Bpod and initializes session."""
         try:
-            self.bpod = self._make_bpod()
+            self.bpod_hardware = self._make_bpod()
         except Exception:
             time.sleep(0.1)
-            self.bpod = self._make_bpod()
-        self.sma = StateMachine(self.bpod)
+            self.bpod_hardware = self._make_bpod()
+        self.sma = StateMachine(self.bpod_hardware)
         self.softcode_to_bpod = SoftCodeToBpod(net_port=settings.get("BPOD_NET_PORT"))
-        self.recorder = self.bpod.recorder  # Share recorder with Bpod
+        self.recorder = self.bpod_hardware.recorder
         self.connected = True
-        self.functions = functions
-        self.bpod.softcode_handler_function = self.execute_function  # type: ignore
+        self.bpod_hardware.softcode_handler_function = handler_function
 
     def add_state(
         self,
@@ -184,12 +176,12 @@ class BpodController(Controller):
 
     def create_state_machine(self) -> None:
         """Creates a new state machine instance."""
-        self.sma = StateMachine(self.bpod)
+        self.sma = StateMachine(self.bpod_hardware)
 
     def send_and_run_state_machine(self) -> None:
         """Sends and runs the current state machine on the Bpod."""
-        self.bpod.send_state_machine(self.sma)
-        self.bpod.run_state_machine(self.sma)
+        self.bpod_hardware.send_state_machine(self.sma)
+        self.bpod_hardware.run_state_machine(self.sma)
 
     def send_softcode_to_bpod(self, idx: int) -> None:
         """Handles sending a softcode to the bpod.
@@ -207,7 +199,7 @@ class BpodController(Controller):
         """
         channel_name, channel_number, value = parse_input_to_tuple_override(message)
 
-        self.bpod.manual_override(
+        self.bpod_hardware.manual_override(
             channel_type=Bpod.ChannelTypes.INPUT,
             channel_name=channel_name,
             channel_number=channel_number,
@@ -222,7 +214,7 @@ class BpodController(Controller):
         """
         channel_name, channel_number, value = parse_output_to_tuple_override(message)
 
-        self.bpod.manual_override(
+        self.bpod_hardware.manual_override(
             channel_type=Bpod.ChannelTypes.OUTPUT,
             channel_name=channel_name,
             channel_number=channel_number,
@@ -337,6 +329,6 @@ class BpodController(Controller):
         """Closes the Bpod connection."""
         self.connected = False
         try:
-            self.bpod.close()
+            self.bpod_hardware.close()
         except AttributeError:
             pass

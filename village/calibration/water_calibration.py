@@ -1,4 +1,4 @@
-from village.custom_classes.task import Event, Task
+from village.custom_classes.task import BpodEvent, Task
 
 
 class WaterCalibration(Task):
@@ -27,13 +27,13 @@ class WaterCalibration(Task):
             self.controller.add_state(
                 state_name=self.states[i],
                 state_timer=self.times[i],
-                state_change_conditions={Event.Tup: self.wait_states[i]},
+                state_change_conditions={BpodEvent.Tup: self.wait_states[i]},
                 output_actions=self.outputs[i],
             )
             self.controller.add_state(
                 state_name=self.wait_states[i],
                 state_timer=0.1,
-                state_change_conditions={Event.Tup: self.states[i + 1]},
+                state_change_conditions={BpodEvent.Tup: self.states[i + 1]},
                 output_actions=[],
             )
 

@@ -63,7 +63,7 @@ def measure_softcode_latency(bpod: BpodWithLatencyTest, n_trials: int = 100):
         t0 = time.perf_counter()
 
         # "Ping" to Bpod
-        bpod.mybpod.bpod.echo_softcode(1)
+        bpod.mybpod.bpod_hardware.echo_softcode(1)
 
         # Wait for echo (opcode == 2)
         ok = bpod._softcode_event.wait(timeout=1.0)

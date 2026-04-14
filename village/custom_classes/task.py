@@ -2,14 +2,16 @@ import json
 import traceback
 from pathlib import Path
 from threading import Thread
-from typing import TYPE_CHECKING, Any, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Tuple
 
 import pandas as pd
 
 from village.classes.collection import Collection
 from village.classes.enums import Active, ControllerEnum, Save
 from village.classes.null_classes import NullCamera
-from village.controllers.controller import Controller
+from village.controllers.arduino_controller import ArduinoController
+from village.controllers.bpod_controller import BpodController
+from village.controllers.trial_recorder import TrialRecorder
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
 from village.devices.sound_device import sound_device
 from village.pybpodapi.hardware.events import EventName
@@ -29,28 +31,129 @@ class TaskError(Exception):
         super().__init__(message)
 
 
-class Event(EventName):
+class BpodEvent(EventName):
     """Enumeration of Bpod event names."""
 
     pass
 
 
-class Output(OutputChannel):
+class BpodOutput(OutputChannel):
     """Enumeration of Bpod output channels."""
 
     pass
 
 
 class Task:
-    """Base class for defining and running behavioral tasks using Bpod.
+    """Base class for defining behavioral tasks.
 
-    This class provides the infrastructure for task management, including
-    communication with Bpod, data logging, session management, and integration
-    with other devices like cameras and sound systems.
+    Subclass ``Task`` to implement your own task. You must override four methods
+    and may optionally call helper methods and read certain attributes during
+    execution.
+
+    ──────────────────────────────────────────────────────────
+    METHODS YOU MUST OVERRIDE
+    ──────────────────────────────────────────────────────────
+
+    start(self) -> None
+        Called once before the trial loop begins.
+        Use it to configure hardware, pre-compute stimuli, open files, etc.
+
+    create_trial(self) -> None
+        Called at the beginning of every trial.
+        Build and send the Bpod state machine here (or set up stimuli for
+        non-Bpod controllers). The state machine runs to completion before
+        ``after_trial`` is called.
+
+    after_trial(self) -> None
+        Called immediately after each trial finishes.
+        Use it to score the animal's performance, update adaptive parameters,
+        and call ``register_value`` to save custom columns to the data file.
+        ``self.trial_data`` is already populated at this point.
+
+    close(self) -> None
+        Called once after the trial loop ends (session finished, forced stop,
+        or error).
+        Use it to close files, stop hardware, release resources.
+
+    ──────────────────────────────────────────────────────────
+    METHODS YOU CAN CALL (do not override)
+    ──────────────────────────────────────────────────────────
+
+    register_value(name: str, value: Any) -> None
+        Saves a custom value to the current trial row in the CSV.
+        Call this inside ``after_trial``.
+
+        Example::
+
+            self.register_value("correct", 1)
+            self.register_value("response_time", 0.432)
+
+    ──────────────────────────────────────────────────────────
+    ATTRIBUTES YOU CAN READ INSIDE YOUR TASK
+    ──────────────────────────────────────────────────────────
+
+    self.trial_data : dict
+        Dictionary populated automatically after each trial with Bpod event
+        timestamps and any values previously registered via ``register_value``.
+        Available inside ``after_trial`` to drive adaptive logic.
+
+        Typical keys: ``"trial"``, ``"subject"``, ``"task"``, ``"date"``,
+        ``"system_name"``, plus every key you have registered with
+        ``register_value``.
+
+        Example::
+
+            def after_trial(self):
+                if self.trial_data.get("correct") == 1:
+                    self.settings.difficulty += 1
+
+    self.current_trial : int
+        1-based index of the trial that just ran (available in both
+        ``create_trial`` and ``after_trial``).
+
+    self.subject : str
+        Name of the subject running the session.
+
+    self.settings : Settings
+        Object that holds all the session parameters defined in the training
+        protocol. Read and write its attributes to implement adaptive training.
+
+    self.sound_calibration.get_sound_gain(speaker, dB, sound_name)
+        to convert a target dB level into a hardware gain value.
+
+        Example::
+
+            gain = self.sound_calibration.get_sound_gain(
+                speaker=1, dB=65.0, sound_name="white_noise"
+            )
+
+    self.water_calibration.get_valve_time(port, volume)
+        to convert a target volume (µl) into the valve open time (seconds).
+
+        Example::
+
+            valve_time = self.water_calibration.get_valve_time(
+                port=1, volume=5.0  # 5 µl
+            )
+
+    self.bpod : BpodController
+        Low-level Bpod interface (state machine construction, sending, etc.).
+        Primarily used inside ``create_trial``.
+
+    self.arduino : ArduinoController
+        Arduino interface for tasks that use an Arduino instead of Bpod.
+
+    self.cam_box : Camera | NullCamera
+        Camera attached to the behaviour box (NullCamera if not configured).
     """
 
     def __init__(self) -> None:
-        self.controller: Controller = Controller()
+        self.controller_type = ControllerEnum.RASPBERRY
+        self.bpod = BpodController()
+        self.arduino = ArduinoController()
+        self.recorder: TrialRecorder = TrialRecorder()
+        self.functions: list[Callable] = []
+
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.current_trial: int = 1
@@ -104,6 +207,17 @@ class Task:
         """Closes the task and releases resources. Must be overridden."""
         raise TaskError("The method close(self) is required")
 
+    # METHODS TO USE IN YOUR TASKS, BUT NOT OVERWRITE
+    def register_value(self, name: str, value: Any) -> None:
+        """Registers a custom value to be saved with the trial data.
+
+        Args:
+            name (str): The name of the value (column header).
+            value (Any): The value to store.
+        """
+        self.recorder.add_value(name, value)
+        self.trial_data[name] = value
+
     # DO NOT OVERWRITE THESE METHODS
     def execute_function(self, i: int) -> None:
         """Executes a registered function.
@@ -111,15 +225,8 @@ class Task:
         Args:
             i (int): The function index (1-99).
         """
-        self.controller.execute_function(i)
-
-    def send_softcode_to_bpod(self, code: int) -> None:
-        """Sends a softcode to the Bpod device.
-
-        Args:
-            code (int): The softcode value to send.
-        """
-        self.controller.send_softcode_to_bpod(code)
+        if 1 <= i <= 99:
+            self.functions[i]()
 
     def run_in_thread(self, daemon: bool = True) -> None:
         """Runs the task in a separate background thread.
@@ -156,15 +263,15 @@ class Task:
         Initializes the state machine, runs it, collects data, and performs
         post-trial updates.
         """
-        if self.controller.type == ControllerEnum.BPOD:
-            self.controller.create_state_machine()
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod.create_state_machine()
             self.cam_box.trial = self.current_trial
             self.create_trial()
-            self.controller.send_and_run_state_machine()
+            self.bpod.send_and_run_state_machine()
         else:
             self.cam_box.trial = self.current_trial
             self.create_trial()
-        self.trial_data = self.controller.get_trial_data(
+        self.trial_data = self.recorder.get_trial_data(
             self.date, self.current_trial, self.subject, self.name, self.system_name
         )
         self.after_trial()
@@ -177,16 +284,6 @@ class Task:
         self.row_df = pd.DataFrame([self.trial_data])
         self.session_df = pd.concat([self.session_df, self.row_df], ignore_index=True)
         self.trial_data = {}
-
-    def register_value(self, name: str, value: Any) -> None:
-        """Registers a custom value to be saved with the trial data.
-
-        Args:
-            name (str): The name of the value (column header).
-            value (Any): The value to store.
-        """
-        self.controller.recorder.add_value(name, value)
-        self.trial_data[name] = value
 
     def disconnect_and_save(self, run_mode: str) -> Tuple[Save, float, int, int, str]:
         """Stops the task, disconnects devices, and saves session data.
@@ -205,7 +302,8 @@ class Task:
         settings_str: str = ""
         self.close()
         sound_device.stop()
-        self.controller.stop()
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod.stop()
         self.cam_box.stop_recording()
         if self.subject != "None":
             try:
@@ -236,7 +334,10 @@ class Task:
                         subject=self.subject,
                         exception=traceback.format_exc(),
                     )
-        self.controller.close()
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod.close()
+        elif self.controller_type == ControllerEnum.ARDUINO:
+            self.arduino.close()
         return save, duration, trials, water, settings_str
 
     def save_json(self, run_mode: str) -> str:
