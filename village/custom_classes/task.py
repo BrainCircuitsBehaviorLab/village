@@ -168,7 +168,6 @@ class Task:
             self.date, self.current_trial, self.subject, self.name, self.system_name
         )
         self.after_trial()
-        self.register_default_values()
         self.concatenate_trial_data()
         self.current_trial += 1
         return
@@ -188,20 +187,6 @@ class Task:
         """
         self.controller.recorder.add_value(name, value)
         self.trial_data[name] = value
-
-    def register_default_values(self) -> None:
-        """Registers standard session metadata values (task, subject, system, date)."""
-        self.register_value("date", self.date)
-        self.register_value("trial", self.current_trial)
-        self.register_value("subject", self.subject)
-        self.register_value("task", self.name)
-        self.register_value("system_name", self.system_name)
-
-        if hasattr(self.controller, "bpod"):
-            if hasattr(self.controller.bpod, "com_error"):
-                if self.controller.bpod.com_error:
-                    self.register_value("COM_ERROR", 1)
-                    self.controller.bpod.com_error = False
 
     def disconnect_and_save(self, run_mode: str) -> Tuple[Save, float, int, int, str]:
         """Stops the task, disconnects devices, and saves session data.
