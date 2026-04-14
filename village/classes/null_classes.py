@@ -1,3 +1,4 @@
+import threading
 from typing import Any, Callable, Optional
 
 from PyQt5.QtGui import QImage
@@ -234,6 +235,7 @@ class NullCamera:
     x_position: int = -1
     y_position: int = -1
     chrono = time_utils.Chrono()
+    trigger_event = threading.Event()
 
     def start_camera(self) -> None:
         """Starts the camera."""

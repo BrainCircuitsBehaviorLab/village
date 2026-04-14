@@ -1,4 +1,5 @@
 import os
+import threading
 import time
 import traceback
 from pprint import pprint
@@ -261,6 +262,7 @@ class Camera:
 
         self.two_mice_detections = 0
         self.prohibited_detections = 0
+        self.trigger_event = threading.Event()
 
         self.area4_alarm_timer = time_utils.Timer(3600)
         self.box_alarm_timer = time_utils.Timer(3600)
@@ -576,14 +578,20 @@ class Camera:
             if self.tracking:
                 self.detect_black_position_contours()
                 if self.x_position != -1:
+                    self.trigger_event.set()
                     self.trigger()
+                else:
+                    self.trigger_event.clear()
             else:
                 self.detect_black()
         else:
             if self.tracking:
                 self.detect_white_position_contours()
                 if self.x_position != -1:
+                    self.trigger_event.set()
                     self.trigger()
+                else:
+                    self.trigger_event.clear()
             else:
                 self.detect_white()
 
