@@ -112,8 +112,6 @@ class Scale(ScaleBase):
                 log.alarm("Scale not responding, please check the connection.")
             return 0
         mean = int(np.mean(values))
-        if all(v == 0 for v in values) and self.alarm_timer.has_elapsed():
-            log.alarm("Scale not responding, please check the connection.")
         return mean
 
     def get_weight(self) -> float:
