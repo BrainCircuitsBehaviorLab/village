@@ -1,6 +1,11 @@
 Protocols & Task Design
 =================================
 
+.. raw:: html
+
+   <script>window.location.replace("protocols/using.html");</script>
+   <noscript><meta http-equiv="refresh" content="0; url=protocols/using.html"></noscript>
+
 .. toctree::
     :maxdepth: 1
 

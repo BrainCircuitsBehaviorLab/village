@@ -30,7 +30,7 @@ mock_core = MagicMock()
 mock_core.pyqtSignal = MockSignal
 mock_core.pyqtSlot = MockSlot
 mock_core.QObject = object
-# Add other widely used QtCore classes to avoid AttributeErrors if needed, 
+# Add other widely used QtCore classes to avoid AttributeErrors if needed,
 # although MagicMock handles attributes automatically.
 # We explicitly set QObject to object to allow inheritance without issues.
 
@@ -163,21 +163,18 @@ html_theme = "shibuya"
 
 html_title = "Training village"
 
-html_logo = "_static/logo.png"
-
 html_theme_options = {
     "light_logo": "logo.png",
     "dark_logo": "logo.png",
     "color_mode": "light",
     "github_url": "https://github.com/BrainCircuitsBehaviorLab/village",
     "nav_links": [
-        {"title": "User Guide", "url": "user_guide_index"},
-        {"title": "How To Build", "url": "how_to_build_index"},
-        {"title": "Initial Configuration", "url": "initial_configuration_index"},
-        {"title": "API", "url": "api_index"},
-        {"title": "Resources", "url": "resources_index"},
+        {"title": "Initial Setup", "url": "initial_setup_index"},
+        {"title": "System Operation", "url": "system_operation_index"},
+        {"title": "Protocol & Task Design", "url": "protocol_index"},
+        {"title": "Troubleshooting & Maintenance", "url": "troubleshooting_index"},
+        {"title": "Developer Resources", "url": "resources_index"},
         {"title": "FAQ", "url": "faq_index"},
-        {"title": "Troubleshooting", "url": "troubleshooting_index"},
     ],
 }
 

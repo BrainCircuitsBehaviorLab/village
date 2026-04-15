@@ -15,11 +15,11 @@ Welcome to The Training Village
    index.rst
    initial_setup_index.rst
    system_operation_index.rst
-   protocols_index.rst
+   protocol_index.rst
    troubleshooting_index.rst
-   faq_index.rst
    api_index.rst
    resources_index.rst
+   faq_index.rst
 
 .. include:: main/welcome.md
    :parser: myst_parser.sphinx_
