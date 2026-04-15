@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="./">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Troubleshooting - Training village</title><link rel="shortcut icon" href="_static/favicon.svg"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="FAQ" href="faq_index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Troubleshooting &amp; Maintenance - Training village</title><link rel="shortcut icon" href="_static/favicon.svg"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Alarm System Overview" href="troubleshooting/alarm.html" /><link rel="prev" title="Custom Interaction Triggers" href="protocols/triggers.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/troubleshooting_index.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -21,7 +21,7 @@
 </style>
     <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/troubleshooting_index.html"/>
-  <meta property="og:title" content="Troubleshooting"/>
+  <meta property="og:title" content="Troubleshooting &amp; Maintenance"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -62,32 +62,39 @@ data-aria-dark="Switch to auto color mode">
     <div class="sy-lside-inner md:sticky">
       <div class="sy-scrollbar p-6">
         <div class="globaltoc" data-expand-depth="0"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="user_guide_index.html">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/started.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/animal_procedures.html">Animal Procedures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/GUI.html">GUI Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/settings.html">Initial Settings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/subjects.html">Create New Subjects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/corridor.html">Calibrate and Test Corridor Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/detection.html">Calibrate and Test Animal Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/create.html">Create a Training Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/state_machine.html">System State Machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/maintenance.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="initial_setup_index.html">Initial Setup</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="how_to_build_index.html">How to Build It</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="how_to_build/list_of_parts.html">List of Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_build/software_installation.html">Software Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_operation_index.html">System Operation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_operation/settings.html">System Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_operation/subject.html">Subject Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_operation/corridor.html">Corridor &amp; Hardware Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_operation/detection.html">Animal Detection Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_operation/system.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="initial_configuration_index.html">Initial Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="initial_configuration/hardware.html">Hardware Connections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="initial_configuration/remote.html">Configure Remote Access</a></li>
-<li class="toctree-l2"><a class="reference internal" href="initial_configuration/telegram.html">Create a Telegram Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="protocols_index.html">Protocols &amp; Task Design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="protocols/using.html">Using Existing Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/task.html">Task Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/functions.html">Core, Audio &amp; Video Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/data.html">Saved Data Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/data.html#trial-data-format">Trial Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/data.html#required-dictionary-structure">Required Dictionary Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/data.html#field-descriptions">Field Descriptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/data.html#complete-example">Complete Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/plots.html">Custom Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols/triggers.html">Custom Interaction Triggers</a></li>
 </ul>
 </li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting &amp; Maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting/troubleshooting.html">General Troubleshooting Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq_index.html">Frequently Asked Questions (FAQ)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api_generated/village.calibration.html">calibration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api_generated/village.calibration.water_calibration.html">water_calibration</a><ul>
@@ -301,13 +308,14 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="resources_index.html">Resources</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="resources/print_files.html">3D Printing Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="resources/code.html">Code Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources_index.html">Developer Resources (DIY)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="resources/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/3D.html">3D Printing &amp; CAD Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/hardware.html">Hardware Assembly Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/software_installation.html">Manual Software Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/ISO.html">ISO Images &amp; Source Code</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="faq_index.html">FAQ</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a></li>
 </ul>
 
         </div>
@@ -319,27 +327,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
-<h3><a href="index.html">Table of Contents</a></h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="user_guide_index.html">User Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how_to_build_index.html">How to Build It</a></li>
-<li class="toctree-l1"><a class="reference internal" href="initial_configuration_index.html">Initial Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api_index.html">API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="resources_index.html">Resources</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq_index.html">FAQ</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#temperature-or-weight-sensor-connection-error">Temperature or Weight Sensor Connection Error</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#wrong-numpy-version">Wrong numpy version</a></li>
-</ul>
-</li>
-</ul>
-<div class="sy-deprecated">
-  You are using <code>relations.html</code> in <code>html_sidebars</code>. This
-  configuration does not work with Shibuya, which is why you're seeing this message.
-  Please see <a href="https://shibuya.lepture.com/customisation/sidebar/">
-  documentation on sidebar customisation in Shibuya</a> for more details.
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -355,7 +343,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="1" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Troubleshooting</strong>
+        <strong itemprop="name">Troubleshooting &amp; Maintenance</strong>
         <meta itemprop="position" content="2" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -403,48 +391,15 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="troubleshooting">
-<h1>Troubleshooting</h1>
-<section id="temperature-or-weight-sensor-connection-error">
-<h2>Temperature or Weight Sensor Connection Error</h2>
-<p>The system is configured to work with address = 0x45 for the temperature sensor (DFRobot HX711) and address = 0x48 for the weight sensor (CQRobot SHT31). If you are using different models or if the devices are not recognized, follow these steps to verify that the addresses are correct:</p>
-<ol class="arabic simple">
-<li><p>Check that the devices are correctly connected to the raspberry.</p></li>
-<li><p>Install the detection tools:</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">i2c</span><span class="o">-</span><span class="n">tools</span>
-</span></pre></div>
+          <section id="troubleshooting-maintenance">
+<h1>Troubleshooting &amp; Maintenance</h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting/troubleshooting.html">General Troubleshooting Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+</ul>
 </div>
-<ol class="arabic simple" start="3">
-<li><p>Run the tools:</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
-</span></pre></div>
-</div>
-<ol class="arabic simple" start="4">
-<li><p>Change the addresses in the python code by modifying the corresponding settings in
-<code class="docutils literal notranslate"><span class="pre">village/settings.py</span></code> (extra_settings).</p></li>
-</ol>
-<p><br><br><br></p>
-</section>
-<section id="wrong-numpy-version">
-<h2>Wrong numpy version</h2>
-<p>If you get an error about an incompatible NumPy version, it may be because installing another package that depends on NumPy automatically pulled NumPy 2 via pip.
-If NumPy 2 was installed by mistake, you can remove it with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">numpy</span>
-</span></pre></div>
-</div>
-<p>This removes only the pip-installed version (NumPy 2), while keeping the system version (NumPy 1) that was installed via apt.
-Next, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">package</span><span class="o">-</span><span class="n">name</span>
-</span></pre></div>
-</div>
-<p>to remove the package that caused NumPy 2 to be installed.
-Then install a specific version of that package that is compatible with NumPy 1, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">pip</span> <span class="n">install</span> <span class="n">package</span><span class="o">-</span><span class="n">name</span><span class="o">==&lt;</span><span class="n">version</span><span class="o">&gt;</span>
-</span></pre></div>
-</div>
-</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -453,10 +408,18 @@ Then install a specific version of that package that is compatible with NumPy 1,
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="faq_index.html">
+    <a href="protocols/triggers.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">FAQ</div></div>
+        <span>Previous</span><div class="title">Custom Interaction Triggers</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="troubleshooting/alarm.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Alarm System Overview</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
     </a>
   </div></div></div>
     </div>
@@ -482,7 +445,7 @@ Then install a specific version of that package that is compatible with NumPy 1,
     </div>
   </div>
 </footer>
-      <script src="_static/documentation_options.js?v=a0a58753"></script>
+      <script src="_static/documentation_options.js?v=d6ea090c"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

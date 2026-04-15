@@ -3,7 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-What Is The Training Village?
+:layout: landing
+
+Welcome to The Training Village
 =================================
 
 .. toctree::
@@ -11,13 +13,13 @@ What Is The Training Village?
    :maxdepth: 2
 
    index.rst
-   user_guide_index.rst
-   how_to_build_index.rst
-   initial_configuration_index.rst
+   initial_setup_index.rst
+   system_operation_index.rst
+   protocols_index.rst
+   troubleshooting_index.rst
+   faq_index.rst
    api_index.rst
    resources_index.rst
-   faq_index.rst
-   troubleshooting_index.rst
 
-.. include:: main/what_is.md
+.. include:: main/welcome.md
    :parser: myst_parser.sphinx_
