@@ -159,34 +159,32 @@ exclude_patterns = [
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "pydata_sphinx_theme"
+html_theme = "shibuya"
 
 html_title = "Training village"
 
 html_logo = "_static/logo.png"
 
 html_theme_options = {
-    "navbar_start": ["navbar-logo"],
-    "navbar_center": ["navbar-nav"],
-    "navbar_end": ["search-button", "navbar-icon-links"],
-    "icon_links": [
-        {
-            "name": "GitHub",
-            "url": "https://github.com/BrainCircuitsBehaviorLab/village",
-            "icon": "fa-brands fa-github",
-        }
-    ],
-    "show_prev_next": True,
-    "navigation_with_keys": True,
-    "secondary_sidebar_items": ["page-toc"],
-    "show_nav_level": 2,
-    "navbar_align": "left",
+    "light_logo": "logo.png",
+    "dark_logo": "logo.png",
     "color_mode": "light",
+    "github_url": "https://github.com/BrainCircuitsBehaviorLab/village",
+    "nav_links": [
+        {"title": "User Guide", "url": "user_guide_index"},
+        {"title": "How To Build", "url": "how_to_build_index"},
+        {"title": "Initial Configuration", "url": "initial_configuration_index"},
+        {"title": "API", "url": "api_index"},
+        {"title": "Resources", "url": "resources_index"},
+        {"title": "FAQ", "url": "faq_index"},
+        {"title": "Troubleshooting", "url": "troubleshooting_index"},
+    ],
 }
 
-# Same sidebar (left nav) on all pages
+# Landing layout for home, default sidebar for everything else
 html_sidebars = {
-    "**": ["sidebar-nav-bs"],
+    "index": [],
+    "**": ["globaltoc.html", "relations.html"],
 }
 
 html_permalinks = False
