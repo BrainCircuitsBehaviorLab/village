@@ -1,4 +1,4 @@
-## Animal Procedures
+## Animal Handling & Procedures
 
 ### Microchip implantation
 

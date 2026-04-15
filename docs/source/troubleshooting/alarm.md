@@ -1,4 +1,4 @@
-## Receive and Respond to Telegram Alarms
+## Alarm System Overview
 
 ### Interrogate the system
 You can use various commands to retrieve information from the system. Simply type these commands in a private chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).

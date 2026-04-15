@@ -1,3 +1,5 @@
+## Frequently Asked Questions (FAQ)
+
 <br>
 
 - **For which kind of behavioral tasks is the Training Village suited for? For which tasks is not suited?** The system is best suited for tasks that require a long training period (2-3 months) and that you benefit from repeating for many sessions (e.g. longitudinal studies across months). They also need to be reward based tasks (foraging, addiction, perceptual decision making, memory, navigation, etc) to motivate the animals to work on the task day after day. Tasks based on punishments or aversive stimuli will not work as the mice will have no reason to enter into the behavioral box once they learn about it. The system is also optimal to study the learning process in a given task:  by setting a pre-fixed training pipeline you will be able to compare the progress in task performance during the learning phase not just across animals in the same batch, but, in principle, also across animal batches, something which is very hard when humans intervene in the training.

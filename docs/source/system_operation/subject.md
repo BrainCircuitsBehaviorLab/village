@@ -1,4 +1,4 @@
-## Create New Subjects
+## Subject Management
 
 To create a new subject, some data is required: a unique name, the tag ID of its RFID capsule, and its baseline weight. To obtain the RFID tag, place the animal in the corridor area where the RFID reader is located. Go to the `MONITOR` screen and ensure the `RFID reader` is activated. The animal should be detected, and its tag will appear in a log message at the bottom of the screen. To view this message, make sure `SYSTEM_INFO` is selected so that the log appears at the bottom.
 

@@ -1,4 +1,4 @@
-## GUI Overview
+## GUI & Interface Overview
 
 Launch the GUI by entering the following command in a terminal:
 

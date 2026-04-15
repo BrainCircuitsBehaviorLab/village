@@ -1,4 +1,4 @@
-## Getting Started
+## Prerequisites & Requirements
 
 ### Preliminary Steps
 If you have purchased a Training Village from us, you will receive all the necessary parts for assembly, which requires only a screwdriver. Assembly is straightforward and can be easily completed by following these [instructions][INSTRUCTIONS].

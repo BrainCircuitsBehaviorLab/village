@@ -181,10 +181,9 @@ html_theme_options = {
     ],
 }
 
-# Landing layout for home, default sidebar for everything else
 html_sidebars = {
     "index": [],
-    "**": ["globaltoc.html", "relations.html"],
+    "**": ["sidebars/localtoc.html"],
 }
 
 html_permalinks = False

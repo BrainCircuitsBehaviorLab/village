@@ -1,4 +1,4 @@
-## Calibrate and Test Animal Detection
+## Animal Detection Setup
 
 An automated animal detection algorithm operates continuously on both the corridor camera and the behavioral box camera. The algorithm processes each image by converting it to black-and-white pixels based on a set luminance threshold (pixels above the threshold are marked white, and those below are marked black). By counting the black pixels, the system determines whether a specific area is empty, contains one mouse, or holds multiple animals.
 

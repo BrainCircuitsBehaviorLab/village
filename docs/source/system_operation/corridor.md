@@ -1,4 +1,4 @@
-## Calibrate and Test Corridor Components
+## Corridor & Hardware Calibration
 
 The corridor elements must be calibrated. Navigate to the `MONITOR` Screen:
 

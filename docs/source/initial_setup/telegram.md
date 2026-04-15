@@ -1,4 +1,4 @@
-## Create a Telegram Bot
+## Telegram Bot Integration
 1. Install **Telegram** on your phone and open the app.
 
 2. In the search bar, type **@BotFather** and select it.

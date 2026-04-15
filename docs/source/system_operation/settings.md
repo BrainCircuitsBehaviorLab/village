@@ -1,4 +1,4 @@
-## Initial Settings
+## System Settings
 
 Some initial settings must be configured before the system can be used. Go to the `SETTINGS` screen and adjust the following parameters:
 

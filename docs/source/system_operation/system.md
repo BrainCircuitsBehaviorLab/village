@@ -1,4 +1,4 @@
-## System State Machine
+## System Logic (State Machine)
 
 [![State machine](/_static/states.png)](/_static/states.png)
 

@@ -1,4 +1,4 @@
-# Create a Training Protocol
+# Creating New Protocols
 
 ## Project Structure
 

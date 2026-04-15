@@ -1,6 +1,11 @@
-Troubleshooting
+Troubleshooting & Maintenance
 =================================
 
 
-.. include:: /troubleshooting/troubleshooting.md
-   :parser: myst_parser.sphinx_
+.. toctree::
+    :maxdepth: 1
+
+    troubleshooting/alarm.md
+    troubleshooting/troubleshooting.md
+    troubleshooting/cleaning.md
+
