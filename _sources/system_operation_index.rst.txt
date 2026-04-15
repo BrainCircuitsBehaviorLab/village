@@ -1,6 +1,11 @@
 System Operation
 =================================
 
+.. raw:: html
+
+   <script>window.location.replace("system_operation/GUI.html");</script>
+   <noscript><meta http-equiv="refresh" content="0; url=system_operation/GUI.html"></noscript>
+
 .. toctree::
     :maxdepth: 1
 
