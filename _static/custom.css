@@ -1,0 +1,22 @@
+/* Always expand all sidebar sections */
+.globaltoc .toctree-l1 > ul {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+/* Section titles: not clickable, styled as labels */
+.globaltoc .toctree-l1 > a {
+    pointer-events: none;
+    cursor: default;
+    font-weight: 700;
+    opacity: 0.6;
+    text-decoration: none !important;
+}
+
+/* Hide any expand/collapse toggle arrows on section titles */
+.globaltoc .toctree-l1 > a::after,
+.globaltoc .toctree-l1 > a::before {
+    display: none !important;
+}
