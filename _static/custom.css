@@ -1,3 +1,8 @@
+/* Wider landing page content */
+.sy-content-container {
+    max-width: 1400px !important;
+}
+
 /* Always expand all sidebar sections */
 .globaltoc .toctree-l1 > ul {
     display: block !important;
@@ -13,6 +18,7 @@
     font-weight: 700;
     opacity: 0.6;
     text-decoration: none !important;
+    color: #8B00FF !important;
 }
 
 /* Hide any expand/collapse toggle arrows on section titles */

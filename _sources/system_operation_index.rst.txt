@@ -16,4 +16,3 @@ System Operation
     system_operation/detection.md
     system_operation/animal.md
     system_operation/system.md
-

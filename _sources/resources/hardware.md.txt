@@ -2,9 +2,10 @@
 
 
 
-.. image:: _static/render.png
-   :width: 100%
-   :align: center
+```{image} ../_static/render.png
+:width: 100%
+:align: center
+```
 
 
 We provide comprehensive instructions to help you build the Training Village system,
