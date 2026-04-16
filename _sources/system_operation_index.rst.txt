@@ -1,4 +1,4 @@
-System Operation
+SYSTEM OPERATION
 =================================
 
 .. raw:: html

@@ -21,8 +21,8 @@ run_village
 This command activates a Python environment (.env) and runs the file `/home/raspberry/village/village/main.py` which will start the program and display the GUI.
 
 
-[INSTRUCTIONS]: /how_to_build/assembly_instructions.md
-[CONFIGURE]: /initial_configuration_index.rst
-[PLANS]: /how_to_build/list_of_parts.md
+[INSTRUCTIONS]: /resources/hardware.md
+[CONFIGURE]: /initial_setup_index.rst
+[PLANS]: /resources/list_of_parts.md
 [ISO]: /resources/ISO.md
-[SOFTWARE]: /how_to_build/software_installation.md
+[SOFTWARE]: /resources/software_installation.md

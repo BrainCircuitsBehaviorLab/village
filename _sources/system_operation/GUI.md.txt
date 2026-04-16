@@ -81,8 +81,8 @@ A more detailed description of these tables, including how and where they are sa
 List of all modifiable settings. Hover over each item for more information.
 
 [TROUBLE]: /troubleshooting/troubleshooting.md
-[STATES]: /user_guide/states.md
-[DETECTION]: /user_guide/detection.md
-[TEST]: /user_guide/test.md
-[CREATE]: /user_guide/create.md
-[DATA]: /user_guide/data.md
+[STATES]: /system_operation/system.md
+[DETECTION]: /system_operation/detection.md
+[TEST]: /protocols/using.md
+[CREATE]: /protocols/creating.md
+[DATA]: /protocols/data.md

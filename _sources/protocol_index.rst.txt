@@ -1,4 +1,4 @@
-Protocols & Task Design
+PROTOCOL & TASK DESIGN
 =================================
 
 .. raw:: html
