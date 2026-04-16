@@ -621,6 +621,7 @@ class Camera(CameraBase):
             )
 
         manager.camera_trigger.trigger(self)
+        manager.camera_draw.draw(self)
 
     def detect_black(self) -> None:
         """Detects black objects in defined areas using thresholding."""
