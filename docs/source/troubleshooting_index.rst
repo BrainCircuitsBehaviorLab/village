@@ -1,4 +1,4 @@
-Troubleshooting & Maintenance
+TROUBLESHOOTING & MAINTENANCE
 =================================
 
 .. raw:: html

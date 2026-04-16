@@ -9,4 +9,4 @@ FAQ
 .. toctree::
     :maxdepth: 1
 
-    faq_index2.rst
+    faq/faq.md

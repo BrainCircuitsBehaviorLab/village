@@ -1,4 +1,4 @@
-RESOURCES
+HARDWARE RESOURCES (DIY)
 =================================
 
 .. raw:: html
@@ -9,5 +9,6 @@ RESOURCES
 .. toctree::
     :maxdepth: 1
 
-    hardware.rst
-    software.rst
+    resources/list_of_parts.md
+    resources/3D.md
+    resources/hardware.md

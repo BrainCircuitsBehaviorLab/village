@@ -11,19 +11,29 @@ import sys
 import setuptools_scm  # type: ignore
 from unittest.mock import MagicMock
 
+
 # Manually mock PyQt5 to avoid infinite recursion in sphinx-autodoc-typehints
 # when unwrapping pyqtSignal/pyqtSlot.
 class MockSignal:
-    def __init__(self, *args, **kwargs): pass
-    def connect(self, *args, **kwargs): pass
-    def emit(self, *args, **kwargs): pass
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def connect(self, *args, **kwargs):
+        pass
+
+    def emit(self, *args, **kwargs):
+        pass
+
 
 class MockSlot:
-    def __init__(self, *args, **kwargs): pass
+    def __init__(self, *args, **kwargs):
+        pass
+
     def __call__(self, *args, **kwargs):
         if len(args) == 1 and callable(args[0]):
             return args[0]
         return self
+
 
 mock_qt = MagicMock()
 mock_core = MagicMock()
@@ -76,10 +86,10 @@ sys.path.insert(0, os.path.abspath("../.."))
 
 # Autodoc configuration to handle circular imports
 autodoc_default_options = {
-    'members': True,
-    'member-order': 'bysource',
-    'undoc-members': True,
-    'show-inheritance': True,
+    "members": True,
+    "member-order": "bysource",
+    "undoc-members": True,
+    "show-inheritance": True,
 }
 
 # Don't execute code during import (helps avoid circular import side effects)
@@ -133,7 +143,7 @@ myst_enable_extensions = [
 # Automatically add anchors to markdown headings
 myst_heading_anchors = 3
 
-suppress_warnings = ['autosummary', 'ref.duplicate']
+suppress_warnings = ["autosummary", "ref.duplicate"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -170,8 +180,8 @@ html_theme_options = {
     "github_url": "https://github.com/BrainCircuitsBehaviorLab/village",
     "nav_links": [
         {"title": "Documentation", "url": "initial_setup/prerequisites"},
-        {"title": "API Reference", "url": "api_index"},
-        {"title": "Resources", "url": "resources_index"},
+        {"title": "API", "url": "api_index"},
+        {"title": "Resources", "url": "resources/list_of_parts"},
         {"title": "FAQ", "url": "faq/faq"},
     ],
 }
@@ -211,4 +221,4 @@ linkcheck_anchors_ignore_for_url = [
 
 autosectionlabel_prefix_document = True
 
-suppress_warnings = ["docutils"]
+suppress_warnings = ["docutils", "image.not_readable", "myst.header"]

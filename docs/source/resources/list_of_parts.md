@@ -120,8 +120,8 @@ for detailed guidance on how to assemble the Training Village system.
 - [**USB extension 30 cm**](https://www.tiendatec.es/electronica/cables/usb/715-alargador-extensor-microusb-h-microusb-m-30cm-8407150350009.html), x1 - 1.95€
 - [**HDMI wire 2m**](https://www.tiendatec.es/raspberry-pi/cables/1173-cable-micro-hdmi-tipo-d-2m-negro-oficial-raspberry-pi-8472496016445.html), micro HDMI to HDMI 2m, x1 - 8.95€
 
-[3D]: /resources/print_files.md
+[3D]: /resources/3D.md
 [CAD]: /_static/cad.zip
-[ASSEMBLY]: /how_to_build/assembly_instructions.md
+[ASSEMBLY]: /resources/hardware.md
 
 <br>

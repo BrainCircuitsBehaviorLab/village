@@ -46,4 +46,4 @@ It is possible to define up to 4 areas within the behavioral box. These areas ca
 The process for configuring these values is similar to that of the corridor camera.
 In the example image, the corridor and the touchscreen area are elevated and represent the zones where animals are expected to be. The blue and red zones, on the floor, should remain free of animals unless one has jumped into them.
 
-[SETTINGS]: /user_guide/GUI.md#settings
+[SETTINGS]: /system_operation/GUI.md#settings

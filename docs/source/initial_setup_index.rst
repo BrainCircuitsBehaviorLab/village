@@ -1,4 +1,4 @@
-Initial Setup
+INITIAL SETUP
 =================================
 
 .. raw:: html
