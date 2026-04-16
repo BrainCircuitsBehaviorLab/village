@@ -5,8 +5,9 @@
 
 :layout: landing
 
-Welcome to The Training Village
-=================================
+.. raw:: html
+
+   <h1 style="text-align: center; font-size: 2.8rem;">Welcome to The Training Village</h1>
 
 .. toctree::
    :hidden:
