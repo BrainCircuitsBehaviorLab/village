@@ -10,11 +10,9 @@ Protocols & Task Design
     :maxdepth: 1
 
     protocols/using.md
-    protocols/creatin.md
+    protocols/creating.md
     protocols/task.md
     protocols/functions.md
     protocols/data.md
     protocols/plots.md
     protocols/triggers.md
-
-
