@@ -2,11 +2,11 @@
 
 
 
-## Trial Data Format
+### Trial Data Format
 
 If you are **not** using the `pybpodapi` library, you must implement a method that returns trial data as a dictionary with the **exact** structure described below. This dictionary must be returned at the end of each trial.
 
-## Required Dictionary Structure
+### Required Dictionary Structure
 
 ```python
 {
@@ -16,7 +16,7 @@ If you are **not** using the `pybpodapi` library, you must implement a method th
 }
 ```
 
-## Field Descriptions
+### Field Descriptions
 
 ### `"Trial start timestamp"` → `float`
 
@@ -65,7 +65,7 @@ Example:
 }
 ```
 
-## Complete Example
+### Complete Example
 
 ```python
 from datetime import datetime

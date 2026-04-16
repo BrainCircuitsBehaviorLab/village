@@ -164,12 +164,15 @@ html_theme = "shibuya"
 html_title = "Training village"
 
 html_theme_options = {
-    "light_logo": "_static/logo.png",
-    "dark_logo": "_static/logo.png",
+    "light_logo": "_static/logo_light.png",
+    "dark_logo": "_static/logo_dark.png",
     "color_mode": "light",
     "github_url": "https://github.com/BrainCircuitsBehaviorLab/village",
     "nav_links": [
         {"title": "Documentation", "url": "initial_setup/prerequisites"},
+        {"title": "API Reference", "url": "api/index"},
+        {"title": "Resources", "url": "resources/index"},
+        {"title": "FAQ", "url": "faq/faq.md"},
     ],
 }
 

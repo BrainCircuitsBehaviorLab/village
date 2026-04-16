@@ -7,10 +7,18 @@
 
 
 # Training Village
-![Alt text](./resources/village.png)
+
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/source/_static/logo_dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="./docs/source/_static/logo_light.svg">
+    <img alt="Training Village" src="./resources/village.png" width="400">
+  </picture>
+</div>
 
 <div align="center">
 
-[![view - Documentation](https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge)](https://braincircuitsbehaviorlab.github.io/village/)
+[![Website](https://img.shields.io/badge/view-Website-blue?style=for-the-badge)](https://braincircuitsbehaviorlab.github.io/village/)
+[![Documentation](https://img.shields.io/badge/Documentation-8A2BE2?style=for-the-badge)](https://braincircuitsbehaviorlab.github.io/village/initial_setup/prerequisites)
 
 </div>
