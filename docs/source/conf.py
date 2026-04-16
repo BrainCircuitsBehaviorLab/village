@@ -192,6 +192,8 @@ html_sidebars = {
 }
 
 html_permalinks = False
+html_show_copyright = False
+html_show_sphinx = False
 
 
 # Redirect the webpage to another URL
