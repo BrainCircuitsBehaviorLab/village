@@ -218,6 +218,7 @@ class Camera(CameraBase):
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
         self.pre_process_timestamps: list[float] = []
+        self.items_to_draw: dict[str, Any] = {}
 
         if self.change:
             self.set_properties()

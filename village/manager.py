@@ -27,6 +27,7 @@ from village.classes.enums import (
 from village.classes.subject import Subject
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
+from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
@@ -80,6 +81,7 @@ class Manager:
         self.after_session: AfterSessionBase = AfterSessionBase()
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
+        self.camera_draw: CameraDrawBase = CameraDrawBase()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
@@ -340,6 +342,10 @@ class Manager:
                             z = cls()
                             self.camera_trigger = z
                             camera_trigger_correct = True
+                    elif issubclass(cls, CameraDrawBase) and cls != CameraDrawBase:
+                        if hasattr(cls, "draw") and callable(getattr(cls, "draw")):
+                            c = cls()
+                            self.camera_draw = c
 
             except Exception:
                 log.error(
