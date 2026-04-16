@@ -1,5 +1,6 @@
 /* Wider content */
-.sy-container {
+.sy-container,
+.sy-content {
     max-width: 1400px !important;
 }
 
