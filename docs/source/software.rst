@@ -1,4 +1,4 @@
-SOFTWARE RESOURCES (DIY)
+SOFTWARE RESOURCES
 =================================
 
 .. raw:: html
