@@ -1,3 +1,21 @@
+/* Prevent horizontal scroll from full-bleed sections */
+html {
+    overflow-x: hidden;
+}
+
+/* Full-width background, content stays at normal width */
+.full-bleed {
+    position: relative;
+    z-index: 0;
+}
+.full-bleed::before {
+    content: '';
+    position: absolute;
+    inset: 0 -100vw;
+    background: inherit;
+    z-index: -1;
+}
+
 /* Normal font size in table cells */
 .sy-content td, .sy-content th {
     font-size: 1rem !important;
