@@ -11,7 +11,7 @@
 <li><strong>Welfare:</strong> Eliminates human handling and transport, providing the stable and predictable conditions required for optimal cognitive testing.</li>
 <li><strong>Productivity:</strong> A single system supports 10–12 animals simultaneously, significantly reducing labor hours.</li>
 <li><strong>Real-Time Monitoring:</strong> Access live feeds via VNC and receive instant status updates or alerts through Telegram.</li>
-<li><strong>Open-Source &amp; Flexible:</strong> Designed to integrate with your specific protocols (Python-compatible). Fully open-source under <a href="https://www.gnu.org/licenses/quick-guide-gplv3.pdf">GPL version 3</a> and <a href="https://oshwa.org/resources/open-source-hardware-definition/">OSHW version 1</a> licenses. Access the source code on <a href="https://github.com/BrainCircuitsBehaviorLab/village/">GitHub</a> and find detailed assembly plans in the <a href="/resources_index.rst">Resources</a> section.</li>
+<li><strong>Open-Source &amp; Flexible:</strong> Designed to integrate with your specific protocols (Python-compatible). Fully open-source under <a href="https://www.gnu.org/licenses/quick-guide-gplv3.pdf">GPL version 3</a> and <a href="https://oshwa.org/resources/open-source-hardware-definition/">OSHW version 1</a> licenses. Access the source code on <a href="https://github.com/BrainCircuitsBehaviorLab/village/">GitHub</a> and find detailed assembly plans in the <a href="resources_index.html">Resources</a> section.</li>
 </ul>
 </td>
 </tr>

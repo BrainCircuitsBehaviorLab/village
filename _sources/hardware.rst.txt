@@ -1,4 +1,4 @@
-HARDWARE RESOURCES (DIY)
+HARDWARE RESOURCES
 =================================
 
 .. raw:: html
