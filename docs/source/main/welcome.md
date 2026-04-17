@@ -1,16 +1,18 @@
 <!-- ── SECTION 1: Intro ── -->
-<div style="background: #f7f5ff; padding: 0.5rem 2rem; margin-bottom: 4px;">
+<div class="full-bleed" style="background: #f7f5ff; padding: 0.5rem 2rem; margin-bottom: 4px;">
 <table style="border-collapse: collapse; border: none; width: 100%;">
 <tr>
-<td style="border: none; width: 45%; vertical-align: top; padding-right: 30px;">
+<td style="border: none; width: 50%; vertical-align: middle; padding-right: 30px;">
 <img src="_static/illustration.png" style="width: 100%;" alt="Training Village">
 </td>
 <td style="border: none; vertical-align: top;">
-<p>The Training Village is a system designed for the continuous automated training of rodents in complex cognitive tasks. In the system, RFID-tagged animals live in groups and access individually the behavioral box (e.g. an operant chamber) to perform tasks at any time, rain or shine.</p>
-<p>The Training Village is designed to wrap around your own task protocols and integrate with your behavioral control system although we provide it in tandem with a general-purpose touchscreen chamber and some standard task protocols run by BPod (by <a href="https://sanworks.io">Sanworks</a>).</p>
-<p>Because the system is running 24/7, it is designed to be remotely controlled. It can be accessed at any time to check on the system's status or to monitor the state of the animals through various cameras viewing the entry corridor and the inside of the behavioral box. Additionally, a configurable alert system integrated with Telegram allows users to receive real-time notifications regarding system status or the conditions of the animals.</p>
-<p>By completely removing direct human intervention in the behavioral testing, the Training Village can decrease the stress of the animals caused by transportation and handling, providing the stable and predictable conditions that are optimal for animal cognitive testing. Moreover, the automatisation of the full process can impact positively in the work of the researchers carrying out these experiments which can be very repetitive and boring.</p>
-<p>The Training Village is freely available, and legally protected by <a href="https://www.gnu.org/licenses/quick-guide-gplv3.pdf">GPL version 3</a> and <a href="https://oshwa.org/resources/open-source-hardware-definition/">OSHW version 1</a> licenses.</p>
+<p>The Training Village is a 24/7 ecosystem for the automated training of rodents in complex cognitive tasks. Animals live in social groups and can individually access an operant chamber at any time—24/7, year-round—monitored via integrated RFID and video camera tracking.</p>
+<ul>
+<li><strong>Welfare:</strong> Eliminates human handling and transport, providing the stable and predictable conditions required for optimal cognitive testing.</li>
+<li><strong>Productivity:</strong> A single system supports 10–12 animals simultaneously, significantly reducing labor hours.</li>
+<li><strong>Real-Time Monitoring:</strong> Access live feeds via VNC and receive instant status updates or alerts through Telegram.</li>
+<li><strong>Open-Source &amp; Flexible:</strong> Designed to integrate with your specific protocols (Python-compatible). Fully open-source under <a href="https://www.gnu.org/licenses/quick-guide-gplv3.pdf">GPL version 3</a> and <a href="https://oshwa.org/resources/open-source-hardware-definition/">OSHW version 1</a> licenses.</li>
+</ul>
 </td>
 </tr>
 </table>
@@ -24,7 +26,7 @@
 </div>
 
 <!-- ── SECTION 3: How Does It Work? ── -->
-<div style="background: #f7f5ff; padding: 2rem 2rem 0.5rem 2rem; margin-bottom: 4px;">
+<div class="full-bleed" style="background: #f7f5ff; padding: 2rem 2rem 0.5rem 2rem; margin-bottom: 4px;">
 <h1 style="font-size: 1.6rem;">How Does It Work?</h1>
 <table style="border-collapse: collapse; border: none; width: 100%;">
 <tr>
@@ -33,6 +35,8 @@
 </td>
 <td style="border: none; vertical-align: top;">
 <p>The system is composed of several key components: the housing where the animals live, the behavioral box where tasks are performed, and the corridor that regulates access to the behavioral box.</p>
+<p>The Training Village is designed to wrap around your own task protocols and integrate with your behavioral control system although we provide it in tandem with a general-purpose touchscreen chamber and some standard task protocols run by BPod (by <a href="https://sanworks.io">Sanworks</a>).</p>
+<p>Training Village is an open-source project. You can find the code in our <a href="https://github.com/BrainCircuitsBehaviorLab/village/">GitHub repository</a> and all the necessary resources to build it in the <a href="/resources_index.rst">resources section</a>.</p>
 <h2>The Housing</h2>
 <p>The animals live together in one or more cages, which promotes better welfare. Any type of cage can be used, as long as it is connected to the corridor via a tube. We offer a solution with 2 or 4 cages connected by transparent acrylic tubes, which can serve different purposes (e.g., one cage with food, another for nesting). Optionally, RFID sensors can be installed in the tubes connecting the cages (<a href="https://elifesciences.org/articles/19532">Eco-HAB</a>) to gather more data on the animals' social behavior.</p>
 <h2>The Corridor</h2>
@@ -56,7 +60,7 @@
 </div>
 
 <!-- ── SECTION 5: Citing ── -->
-<div style="background: #f7f5ff; padding: 2rem 2rem 1.5rem 2rem; margin-bottom: 4px;">
+<div class="full-bleed" style="background: #f7f5ff; padding: 2rem 2rem 1.5rem 2rem; margin-bottom: 4px;">
 <h1 style="font-size: 1.6rem;">Citing Training Village</h1>
 <p>If you use <strong>Training Village</strong>, please cite:</p>
 <p>Serrano-Porcar, B., Marin, R., Rodríguez, J., Barezzi, C., Vasoya, H., Kean, D., Pottinger, D., Taylor, A., Martínez Vergara, H., &amp; de la Rocha, J. (2026).<br>
@@ -66,8 +70,7 @@
 
 <!-- ── SECTION 6: About the Project ── -->
 <div style="padding: 2.5rem 2rem; margin-bottom: 4px;">
-<h1 style="font-size: 1.6rem;">About the Project</h1>
-<p>Training Village is an open-source project. You can find the code in our <a href="https://github.com/BrainCircuitsBehaviorLab/village/">GitHub repository</a> and all the necessary resources to build it in the <a href="/resources_index.rst">resources section</a>.</p>
+
 <p><strong>Developed by:</strong></p>
 <a href="https://braincircuitsbehavior.org"
 style="color:#8B00FF; font-size:24px; font-weight:normal;
@@ -79,6 +82,4 @@ BRAIN CIRCUITS AND BEHAVIOR LAB
   <img src="_static/AEI.png" alt="AEI logo" style="height: 70px;">
   <img src="_static/ERC.png" alt="ERC logo" style="height: 70px;">
   <img src="_static/CELLEX.png" alt="Cellex logo" style="height: 70px;">
-</div>
-<p>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></p>
 </div>
