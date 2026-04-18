@@ -249,6 +249,7 @@ class Task:
 
     def run(self) -> None:
         """Runs the task in the main thread until completion or forced stop."""
+        self.chrono.reset()
         self.start()
         while (
             self.current_trial <= self.maximum_number_of_trials
