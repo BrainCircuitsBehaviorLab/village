@@ -19,8 +19,8 @@ task
       :toctree:
       :template: custom_class_template.rst
    
-      BpodEvent
-      BpodOutput
+      Event
+      Output
       Task
    
    

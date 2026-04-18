@@ -1,0 +1,39 @@
+TelegramBot
+===========
+
+.. currentmodule:: village.devices.telegram_bot
+
+.. autoclass:: TelegramBot
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TelegramBot.__init__
+      ~TelegramBot.alarm
+      ~TelegramBot.botloop
+      ~TelegramBot.botloop_starttask
+      ~TelegramBot.cam
+      ~TelegramBot.main
+      ~TelegramBot.plot
+      ~TelegramBot.report
+      ~TelegramBot.start
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TelegramBot.error
+   
+   

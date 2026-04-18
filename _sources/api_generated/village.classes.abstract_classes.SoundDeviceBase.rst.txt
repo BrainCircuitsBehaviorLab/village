@@ -1,0 +1,36 @@
+SoundDeviceBase
+===============
+
+.. currentmodule:: village.classes.abstract_classes
+
+.. autoclass:: SoundDeviceBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SoundDeviceBase.__init__
+      ~SoundDeviceBase.load
+      ~SoundDeviceBase.load_wav
+      ~SoundDeviceBase.play
+      ~SoundDeviceBase.stop
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SoundDeviceBase.error
+      ~SoundDeviceBase.samplerate
+   
+   

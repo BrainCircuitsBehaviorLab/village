@@ -1,0 +1,38 @@
+abstract\_classes
+=================
+
+.. automodule:: village.classes.abstract_classes
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      CameraBase
+      EventBase
+      MotorBase
+      PyBpodBase
+      ScaleBase
+      SoundDeviceBase
+      TelegramBotBase
+      TempSensorBase
+   
+   
+
+   
+   
+   
+
+
+

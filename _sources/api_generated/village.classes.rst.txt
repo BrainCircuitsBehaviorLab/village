@@ -28,9 +28,9 @@
    :template: custom_module_template.rst
    :recursive:
 
+   abstract_classes
    collection
    enums
-   null_classes
    settings_class
    subject
 

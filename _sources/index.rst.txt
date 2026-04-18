@@ -3,21 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-:layout: landing
-
-.. raw:: html
-
-   <h1 style="text-align: center; font-size: 2.8rem;">Welcome to The Training Village</h1>
-   <p style="text-align: center; font-size: 1.2rem; margin-top: -1rem; opacity: 0.75;">Continuous testing of rodents in cognitive tasks</p>
+What Is The Training Village?
+=================================
 
 .. toctree::
    :hidden:
-   :maxdepth: 3
+   :maxdepth: 2
 
-   documentation_index.rst
+   index.rst
+   user_guide_index.rst
+   how_to_build_index.rst
+   initial_configuration_index.rst
    api_index.rst
    resources_index.rst
    faq_index.rst
+   troubleshooting_index.rst
 
-.. include:: main/welcome.md
+.. include:: main/what_is.md
    :parser: myst_parser.sphinx_

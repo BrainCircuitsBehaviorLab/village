@@ -1,124 +1,261 @@
-<!DOCTYPE html>
-<html lang="en" data-accent-color="violet" data-content_root="../">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>time_utils - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="TimeUtils" href="village.scripts.time_utils.TimeUtils.html" /><link rel="prev" title="remove_old_data" href="village.scripts.safe_removal_of_data.remove_old_data.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.scripts.time_utils.html" /><script>
-    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
-    setColorMode(localStorage._theme||"light");
-  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
-    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=29b12738" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="TimeUtils" href="village.scripts.time_utils.TimeUtils.html"><link rel="prev" title="remove_old_data" href="village.scripts.safe_removal_of_data.remove_old_data.html">
+        <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.scripts.time_utils.html">
+        <link rel="prefetch" href="../_static/logo.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/favicon.svg"><!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
+        <title>time_utils - Training village</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    
+    
+
+
 <style>
-:root {
-  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-}
-</style>
-    <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.scripts.time_utils.html"/>
-  <meta property="og:title" content="time_utils"/>
-    <meta name="twitter:card" content="summary"/>
-  </head>
-<body><div class="sy-head">
-  <div class="sy-head-blur"></div>
-  <div class="sy-head-inner sy-container mx-auto">
-    <a class="sy-head-brand" href="../index.html">
-      <img class="light-logo" src="../_static/logo_light.svg" alt="village" height="28" loading="lazy" />
-      <img class="dark-logo" src="../_static/logo_dark.svg" alt="village" height="28" loading="lazy" />
-      <strong>village</strong>
-    </a>
-    <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"><ul><li class="link"><a href="../initial_setup/prerequisites.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
-      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
-  <input type="text" name="q" placeholder="Search" />
-  <kbd>/</kbd>
-</form><div class="sy-head-socials">
-  <a href="https://github.com/BrainCircuitsBehaviorLab/village" aria-label="GitHub">
-    <iconify-icon icon="simple-icons:github"></iconify-icon>
-  </a></div></div>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
     </div>
-    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
-data-aria-auto="Switch to light color mode"
-data-aria-light="Switch to dark color mode"
-data-aria-dark="Switch to auto color mode">
-<i class="i-lucide theme-icon"></i>
-</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
-        <div class="hamburger">
-          <span class="hamburger_1"></span>
-          <span class="hamburger_2"></span>
-          <span class="hamburger_3"></span>
-        </div>
-      </button>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Training village</div></a>
     </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo.png" alt="Logo"/>
   </div>
-</div>
-<div class="sy-page sy-container flex mx-auto">
-  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
-    <div class="sy-lside-inner md:sticky">
-      <div class="sy-scrollbar p-6">
-        <div class="globaltoc" data-expand-depth="0"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/prerequisites.html">Prerequisites &amp; Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/first_time.html">First-Time Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/access.html">Remote Access Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/telegram.html">Telegram Bot Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/backup.html">Data Persistence &amp; Backups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/heartbeat.html">Remote Heartbeat Signals</a></li>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide_index.html">User Guide</a><input aria-label="Toggle navigation of User Guide" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/animal_procedures.html">Animal Procedures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/GUI.html">GUI Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/settings.html">Initial Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/subjects.html">Create New Subjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/corridor.html">Calibrate and Test Corridor Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/detection.html">Calibrate and Test Animal Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/create.html">Create a Training Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/state_machine.html">System State Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/alarms.html">Receive and Respond to Telegram Alarms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/maintenance.html">Maintenance</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor &amp; Hardware Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_to_build_index.html">How to Build It</a><input aria-label="Toggle navigation of How to Build It" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/assembly_instructions.html">Assembly Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how_to_build/software_installation.html">Software Installation</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/using.html">Using Existing Protocols</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Creating New Protocols</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Core, Audio &amp; Video Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/triggers.html">Custom Interaction Triggers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../initial_configuration_index.html">Initial Configuration</a><input aria-label="Toggle navigation of Initial Configuration" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/hardware.html">Hardware Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/remote.html">Configure Remote Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initial_configuration/telegram.html">Create a Telegram Bot</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">TROUBLESHOOTING &amp; MAINTENANCE</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">General Troubleshooting Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api_index.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.calibration.html">calibration</a><input aria-label="Toggle navigation of calibration" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a><input aria-label="Toggle navigation of sound_calibration" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.water_calibration.html">water_calibration</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.calibration.water_calibration.html">water_calibration</a><input aria-label="Toggle navigation of water_calibration" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.water_calibration.WaterCalibration.html">WaterCalibration</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.classes.html">classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.classes.collection.html">collection</a><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.classes.html">classes</a><input aria-label="Toggle navigation of classes" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.abstract_classes.html">abstract_classes</a><input aria-label="Toggle navigation of abstract_classes" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.CameraBase.html">CameraBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.EventBase.html">EventBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.MotorBase.html">MotorBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.PyBpodBase.html">PyBpodBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.ScaleBase.html">ScaleBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.SoundDeviceBase.html">SoundDeviceBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.TelegramBotBase.html">TelegramBotBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.abstract_classes.TempSensorBase.html">TempSensorBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.collection.html">collection</a><input aria-label="Toggle navigation of collection" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.collection.Collection.html">Collection</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.classes.enums.html">enums</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.enums.html">enums</a><input aria-label="Toggle navigation of enums" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Actions.html">Actions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Active.html">Active</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.AreaActive.html">AreaActive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Color.html">Color</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.ControllerEnum.html">ControllerEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Controller.html">Controller</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Cycle.html">Cycle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.DataTable.html">DataTable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Info.html">Info</a></li>
@@ -129,59 +266,50 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.SyncType.html">SyncType</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.classes.null_classes.html">null_classes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullBpod.html">NullBpod</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCamera.html">NullCamera</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCollection.html">NullCollection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullMotor.html">NullMotor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullScale.html">NullScale</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullSoftCodeToBpod.html">NullSoftCodeToBpod</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullSoundDevice.html">NullSoundDevice</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullStateMachine.html">NullStateMachine</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullTelegramBot.html">NullTelegramBot</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullTempSensor.html">NullTempSensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.classes.settings_class.html">settings_class</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.settings_class.html">settings_class</a><input aria-label="Toggle navigation of settings_class" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.settings_class.Setting.html">Setting</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.settings_class.Settings.html">Settings</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.classes.subject.html">subject</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.classes.subject.html">subject</a><input aria-label="Toggle navigation of subject" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.subject.Subject.html">Subject</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.custom_classes.html">custom_classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.after_session_base.html">after_session_base</a><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.custom_classes.html">custom_classes</a><input aria-label="Toggle navigation of custom_classes" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.after_session_base.html">after_session_base</a><input aria-label="Toggle navigation of after_session_base" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><input aria-label="Toggle navigation of camera_trigger_base" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.change_cycle_base.html">change_cycle_base</a><input aria-label="Toggle navigation of change_cycle_base" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.change_cycle_base.ChangeCycleBase.html">ChangeCycleBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.online_plot_base.html">online_plot_base</a><input aria-label="Toggle navigation of online_plot_base" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.online_plot_base.OnlinePlotBase.html">OnlinePlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.session_plot_base.html">session_plot_base</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.session_plot_base.html">session_plot_base</a><input aria-label="Toggle navigation of session_plot_base" class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.session_plot_base.SessionPlotBase.html">SessionPlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.subject_plot_base.html">subject_plot_base</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.subject_plot_base.html">subject_plot_base</a><input aria-label="Toggle navigation of subject_plot_base" class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task.html">task</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.task.html">task</a><input aria-label="Toggle navigation of task" class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.Event.html">Event</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.Output.html">Output</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.Task.html">Task</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.custom_classes.training_protocol_base.html">training_protocol_base</a><input aria-label="Toggle navigation of training_protocol_base" class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
@@ -189,94 +317,138 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.devices.html">devices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.motor.html">motor</a><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.devices.html">devices</a><input aria-label="Toggle navigation of devices" class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.bpod.html">bpod</a><input aria-label="Toggle navigation of bpod" class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.bpod.get_bpod.html">get_bpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.bpod.PyBpod.html">PyBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.bpod.SoftCode.html">SoftCode</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.camera.html">camera</a><input aria-label="Toggle navigation of camera" class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.motor.html">motor</a><input aria-label="Toggle navigation of motor" class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.scale.html">scale</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.rfid.html">rfid</a><input aria-label="Toggle navigation of rfid" class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.rfid.Rfid.html">Rfid</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.scale.html">scale</a><input aria-label="Toggle navigation of scale" class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.scale.Scale.html">Scale</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.sound_device.html">sound_device</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.sound_device.html">sound_device</a><input aria-label="Toggle navigation of sound_device" class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.temp_sensor.html">temp_sensor</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.telegram_bot.html">telegram_bot</a><input aria-label="Toggle navigation of telegram_bot" class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.devices.temp_sensor.html">temp_sensor</a><input aria-label="Toggle navigation of temp_sensor" class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.plots.html">plots</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.plots.corridor_plot.html">corridor_plot</a><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.gui.html">gui</a><input aria-label="Toggle navigation of gui" class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.gui.gui.html">gui</a><input aria-label="Toggle navigation of gui" class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.gui.Gui.html">Gui</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a><input aria-label="Toggle navigation of monitor_layout" class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.gui.sound_calibration_layout.html">sound_calibration_layout</a><input aria-label="Toggle navigation of sound_calibration_layout" class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.sound_calibration_layout.DummyTask.html">DummyTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.tasks_layout.html">tasks_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.water_calibration_layout.html">water_calibration_layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.plots.html">plots</a><input aria-label="Toggle navigation of plots" class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.plots.corridor_plot.html">corridor_plot</a><input aria-label="Toggle navigation of corridor_plot" class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.plots.sound_calibration_plot.html">sound_calibration_plot</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.plots.sound_calibration_plot.html">sound_calibration_plot</a><input aria-label="Toggle navigation of sound_calibration_plot" class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.sound_calibration_plot.sound_calibration_plot.html">sound_calibration_plot</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.plots.temperatures_plot.html">temperatures_plot</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.plots.temperatures_plot.html">temperatures_plot</a><input aria-label="Toggle navigation of temperatures_plot" class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.temperatures_plot.temperatures_plot.html">temperatures_plot</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.plots.water_calibration_plot.html">water_calibration_plot</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.plots.water_calibration_plot.html">water_calibration_plot</a><input aria-label="Toggle navigation of water_calibration_plot" class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.water_calibration_plot.water_calibration_plot.html">water_calibration_plot</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.plots.weights_plot.html">weights_plot</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.plots.weights_plot.html">weights_plot</a><input aria-label="Toggle navigation of weights_plot" class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.weights_plot.weights_plot.html">weights_plot</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.screen.html">screen</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.screen.video_worker.html">video_worker</a><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.screen.html">screen</a><input aria-label="Toggle navigation of screen" class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" role="switch" type="checkbox"/><label for="toctree-checkbox-42"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.screen.behavior_window.html">behavior_window</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.screen.video_worker.html">video_worker</a><input aria-label="Toggle navigation of video_worker" class="toctree-checkbox" id="toctree-checkbox-43" name="toctree-checkbox-43" role="switch" type="checkbox"/><label for="toctree-checkbox-43"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="village.scripts.html">scripts</a><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="village.scripts.html">scripts</a><input aria-label="Toggle navigation of scripts" checked="" class="toctree-checkbox" id="toctree-checkbox-44" name="toctree-checkbox-44" role="switch" type="checkbox"/><label for="toctree-checkbox-44"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.error_queue.html">error_queue</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><input aria-label="Toggle navigation of global_csv_for_subject" class="toctree-checkbox" id="toctree-checkbox-45" name="toctree-checkbox-45" role="switch" type="checkbox"/><label for="toctree-checkbox-45"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.log.html">log</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.log.html">log</a><input aria-label="Toggle navigation of log" class="toctree-checkbox" id="toctree-checkbox-46" name="toctree-checkbox-46" role="switch" type="checkbox"/><label for="toctree-checkbox-46"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.log.Log.html">Log</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><input aria-label="Toggle navigation of parse_bpod_messages" class="toctree-checkbox" id="toctree-checkbox-47" name="toctree-checkbox-47" role="switch" type="checkbox"/><label for="toctree-checkbox-47"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.playground.html">playground</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.playground.html">playground</a><input aria-label="Toggle navigation of playground" class="toctree-checkbox" id="toctree-checkbox-48" name="toctree-checkbox-48" role="switch" type="checkbox"/><label for="toctree-checkbox-48"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.playground.measure_softcode_latency.html">measure_softcode_latency</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.rsync_to_hard_drive.html">rsync_to_hard_drive</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.rsync_to_hard_drive.html">rsync_to_hard_drive</a><input aria-label="Toggle navigation of rsync_to_hard_drive" class="toctree-checkbox" id="toctree-checkbox-49" name="toctree-checkbox-49" role="switch" type="checkbox"/><label for="toctree-checkbox-49"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.rsync_to_hard_drive.main.html">main</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.rsync_to_hard_drive.run_rsync_local.html">run_rsync_local</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.rsync_to_server.html">rsync_to_server</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.rsync_to_server.html">rsync_to_server</a><input aria-label="Toggle navigation of rsync_to_server" class="toctree-checkbox" id="toctree-checkbox-50" name="toctree-checkbox-50" role="switch" type="checkbox"/><label for="toctree-checkbox-50"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.rsync_to_server.main.html">main</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.rsync_to_server.run_rsync.html">run_rsync</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.safe_removal_of_data.html">safe_removal_of_data</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.safe_removal_of_data.html">safe_removal_of_data</a><input aria-label="Toggle navigation of safe_removal_of_data" class="toctree-checkbox" id="toctree-checkbox-51" name="toctree-checkbox-51" role="switch" type="checkbox"/><label for="toctree-checkbox-51"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.safe_removal_of_data.check_files_for_backup_local.html">check_files_for_backup_local</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.safe_removal_of_data.check_files_for_backup_remote.html">check_files_for_backup_remote</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.safe_removal_of_data.main.html">main</a></li>
@@ -285,11 +457,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.safe_removal_of_data.remove_old_data.html">remove_old_data</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">time_utils</a><ul>
+<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">time_utils</a><input aria-label="Toggle navigation of time_utils" checked="" class="toctree-checkbox" id="toctree-checkbox-52" name="toctree-checkbox-52" role="switch" type="checkbox"/><label for="toctree-checkbox-52"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.utils.html">utils</a><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="village.scripts.utils.html">utils</a><input aria-label="Toggle navigation of utils" class="toctree-checkbox" id="toctree-checkbox-53" name="toctree-checkbox-53" role="switch" type="checkbox"/><label for="toctree-checkbox-53"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.calculate_active_hours.html">calculate_active_hours</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.change_directory_settings.html">change_directory_settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.change_system_directory_settings.html">change_system_directory_settings</a></li>
@@ -311,170 +483,62 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.manager.html">manager</a><input aria-label="Toggle navigation of manager" class="toctree-checkbox" id="toctree-checkbox-54" name="toctree-checkbox-54" role="switch" type="checkbox"/><label for="toctree-checkbox-54"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.manager.Manager.html">Manager</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../hardware.html">HARDWARE RESOURCES</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../resources/list_of_parts.html">List of Parts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/3D.html">3D Printing &amp; CAD Files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/hardware.html">Hardware Assembly Guide</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/ISO.html">ISO Images &amp; Source Code</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="village.main.html">main</a><input aria-label="Toggle navigation of main" class="toctree-checkbox" id="toctree-checkbox-55" name="toctree-checkbox-55" role="switch" type="checkbox"/><label for="toctree-checkbox-55"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.main.system_run.html">system_run</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../faq_index2.html">FAQ</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../resources_index.html">Resources</a><input aria-label="Toggle navigation of Resources" class="toctree-checkbox" id="toctree-checkbox-56" name="toctree-checkbox-56" role="switch" type="checkbox"/><label for="toctree-checkbox-56"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../resources/print_files.html">3D Printing Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources/code.html">Code Repository</a></li>
 </ul>
 </li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting_index.html">Troubleshooting</a></li>
 </ul>
 
-        </div>
+</div>
+</div>
+
       </div>
+      
     </div>
   </aside>
-  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
-  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
-    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
-      <i class="i-lucide close"></i>
-    </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils"><code class="docutils literal notranslate"><span class="pre">TimeUtils</span></code></a><ul>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.sync"><code class="docutils literal notranslate">sync()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now"><code class="docutils literal notranslate">now()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.get_time_monotonic"><code class="docutils literal notranslate">get_time_monotonic()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now_timestamp"><code class="docutils literal notranslate">now_timestamp()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.monotonic_ns_to_timestamps"><code class="docutils literal notranslate">monotonic_ns_to_timestamps()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_in_future_seconds"><code class="docutils literal notranslate">time_in_future_seconds()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.hours_ago"><code class="docutils literal notranslate">hours_ago()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.date_from_previous_weekday"><code class="docutils literal notranslate">date_from_previous_weekday()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_since_day_started"><code class="docutils literal notranslate">time_since_day_started()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.seconds_since_start"><code class="docutils literal notranslate">seconds_since_start()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now_string"><code class="docutils literal notranslate">now_string()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now_string_for_filename"><code class="docutils literal notranslate">now_string_for_filename()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.string_from_date"><code class="docutils literal notranslate">string_from_date()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.string_from_timestamp"><code class="docutils literal notranslate">string_from_timestamp()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.filename_string_from_date"><code class="docutils literal notranslate">filename_string_from_date()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.date_from_string"><code class="docutils literal notranslate">date_from_string()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_from_setting_string"><code class="docutils literal notranslate">time_from_setting_string()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.date_from_path"><code class="docutils literal notranslate">date_from_path()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.days_ago_init_times"><code class="docutils literal notranslate">days_ago_init_times()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.tomorrow_init_time"><code class="docutils literal notranslate">tomorrow_init_time()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.range_24_hours"><code class="docutils literal notranslate">range_24_hours()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.measure_time"><code class="docutils literal notranslate">measure_time()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.find_closest_file_and_seconds"><code class="docutils literal notranslate">find_closest_file_and_seconds()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.format_duration"><code class="docutils literal notranslate">format_duration()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.get_sorted_videos"><code class="docutils literal notranslate">get_sorted_videos()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.next_video_path"><code class="docutils literal notranslate">next_video_path()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.previous_video_path"><code class="docutils literal notranslate">previous_video_path()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono"><code class="docutils literal notranslate">Chrono</span></code></a><ul>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.reset"><code class="docutils literal notranslate">Chrono.reset()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.get_time"><code class="docutils literal notranslate">Chrono.get_time()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.get_seconds"><code class="docutils literal notranslate">Chrono.get_seconds()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.get_milliseconds"><code class="docutils literal notranslate">Chrono.get_milliseconds()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Timer"><code class="docutils literal notranslate">Timer</span></code></a><ul>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Timer.has_elapsed"><code class="docutils literal notranslate">Timer.has_elapsed()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Timer.ten_seconds_elapsed"><code class="docutils literal notranslate">Timer.ten_seconds_elapsed()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Timer.reset"><code class="docutils literal notranslate">Timer.reset()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.HourChangeDetector"><code class="docutils literal notranslate">HourChangeDetector</span></code></a><ul>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.HourChangeDetector.has_hour_changed"><code class="docutils literal notranslate">HourChangeDetector.has_hour_changed()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.CycleChangeDetector"><code class="docutils literal notranslate">CycleChangeDetector</span></code></a><ul>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.CycleChangeDetector.has_cycle_changed"><code class="docutils literal notranslate">CycleChangeDetector.has_cycle_changed()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.TimestampTracker"><code class="docutils literal notranslate">TimestampTracker</span></code></a><ul>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.TimestampTracker.add_timestamp"><code class="docutils literal notranslate">TimestampTracker.add_timestamp()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.TimestampTracker.trigger_empty"><code class="docutils literal notranslate">TimestampTracker.trigger_empty()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div></div>
-  </aside>
-  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
-  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
-<div class="sy-breadcrumbs" role="navigation">
-  <div class="sy-breadcrumbs-inner flex items-center">
-    <div class="md:hidden mr-3">
-      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
-        <i class="i-lucide menu"></i>
-      </button>
-    </div>
-    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../index.html"><span itemprop="name">village</span></a>
-        <span>/</span>
-        <meta itemprop="position" content="1" />
-      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../api_index.html"><span itemprop="name">API</span></a>
-        <span>/</span>
-        <meta itemprop="position" content="2" />
-      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="village.scripts.html"><span itemprop="name">scripts</span></a>
-        <span>/</span>
-        <meta itemprop="position" content="3" />
-      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">time_utils</strong>
-        <meta itemprop="position" content="4" />
-      </li></ol>
-    <div class="xl:hidden ml-1">
-      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
-        aria-expanded="false">
-        <i class="i-lucide outdent"></i>
-      </button>
-    </div>
-  </div>
-</div><div class="flex flex-col break-words justify-between">
-      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
-  <div class="copy-page-wrapper relative pb-4 lg:absolute lg:top-8 lg:right-6 xl:right-12">
-  <div id="copy-page-trigger">
-    <button
-      type="button"
-      class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.scripts.time_utils.rst.txt"
-    >
-      <i class="i-lucide" data-icon="copy"></i>
-      <span>Copy page</span>
-    </button>
-    <button class="js-menu px-2 py-1" type="button" aria-label="More actions"
-      aria-haspopup="menu" aria-expanded="false" aria-controls="copy-page-content">
-      <i class="i-lucide chevron-down"></i>
-    </button>
-  </div>
-  <div id="copy-page-content" role="menu" aria-orientation="vertical" aria-hidden="true">
-    <div role="presentation">
-      <div class="flex flex-col" role="group">
-        <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.scripts.time_utils.rst.txt">
-          <span class="iconify-icon">
-            <i class="i-lucide" data-icon="copy"></i>
-          </span>
-          <span>Copy page</span>
-        </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.scripts.time_utils.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
-            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.scripts.time_utils.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
-          <iconify-icon icon="bi:openai"></iconify-icon>
-          <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.scripts.time_utils.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
-          <iconify-icon icon="bi:claude"></iconify-icon>
-          <span>Open in Claude</span>
-        </a></div>
-    </div>
-  </div>
-</div><article class="yue" role="main">
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/api_generated/village.scripts.time_utils.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
           <section id="module-village.scripts.time_utils">
 <span id="time-utils"></span><h1>time_utils</h1>
 <p class="rubric">Classes</p>
@@ -1067,46 +1131,133 @@ data-aria-dark="Switch to auto color mode">
 
 </section>
 
-        </article><button class="back-to-top" type="button">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
-  </svg>
-  <span>Back to top</span>
-</button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="village.scripts.safe_removal_of_data.remove_old_data.html">
-      <i class="i-lucide chevron-left"></i>
-      <div class="page-info">
-        <span>Previous</span><div class="title">remove_old_data</div></div>
-    </a>
-  </div><div class="navigation-next">
-    <a href="village.scripts.time_utils.TimeUtils.html">
-      <div class="page-info">
-        <span>Next</span>
-        <div class="title">TimeUtils</div>
+        </article>
       </div>
-      <i class="i-lucide chevron-right"></i>
-    </a>
-  </div></div></div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="village.scripts.time_utils.TimeUtils.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">TimeUtils</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="village.scripts.safe_removal_of_data.remove_old_data.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">remove_old_data</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Rafael Marin, Balma Serrano, Hernando Vergara, Jaime de la Rocha
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
     </div>
-  </main>
-</div>
-<footer class="sy-foot">
-  <div class="sy-foot-inner sy-container mx-auto">
-    <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright">
-        <p>© <a href="https://braincircuitsbehavior.org">Brain Circuits and Behavior Lab</a></p>
-        <p>Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://shibuya.lepture.com">Shibuya theme</a>.</p>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">time_utils</a><ul>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils"><code class="docutils literal notranslate"><span class="pre">TimeUtils</span></code></a><ul>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.sync"><code class="docutils literal notranslate"><span class="pre">TimeUtils.sync()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now"><code class="docutils literal notranslate"><span class="pre">TimeUtils.now()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.get_time_monotonic"><code class="docutils literal notranslate"><span class="pre">TimeUtils.get_time_monotonic()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now_timestamp"><code class="docutils literal notranslate"><span class="pre">TimeUtils.now_timestamp()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.monotonic_ns_to_timestamps"><code class="docutils literal notranslate"><span class="pre">TimeUtils.monotonic_ns_to_timestamps()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_in_future_seconds"><code class="docutils literal notranslate"><span class="pre">TimeUtils.time_in_future_seconds()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.hours_ago"><code class="docutils literal notranslate"><span class="pre">TimeUtils.hours_ago()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.date_from_previous_weekday"><code class="docutils literal notranslate"><span class="pre">TimeUtils.date_from_previous_weekday()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_since_day_started"><code class="docutils literal notranslate"><span class="pre">TimeUtils.time_since_day_started()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.seconds_since_start"><code class="docutils literal notranslate"><span class="pre">TimeUtils.seconds_since_start()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now_string"><code class="docutils literal notranslate"><span class="pre">TimeUtils.now_string()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.now_string_for_filename"><code class="docutils literal notranslate"><span class="pre">TimeUtils.now_string_for_filename()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.string_from_date"><code class="docutils literal notranslate"><span class="pre">TimeUtils.string_from_date()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.string_from_timestamp"><code class="docutils literal notranslate"><span class="pre">TimeUtils.string_from_timestamp()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.filename_string_from_date"><code class="docutils literal notranslate"><span class="pre">TimeUtils.filename_string_from_date()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.date_from_string"><code class="docutils literal notranslate"><span class="pre">TimeUtils.date_from_string()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.time_from_setting_string"><code class="docutils literal notranslate"><span class="pre">TimeUtils.time_from_setting_string()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.date_from_path"><code class="docutils literal notranslate"><span class="pre">TimeUtils.date_from_path()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.days_ago_init_times"><code class="docutils literal notranslate"><span class="pre">TimeUtils.days_ago_init_times()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.tomorrow_init_time"><code class="docutils literal notranslate"><span class="pre">TimeUtils.tomorrow_init_time()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.range_24_hours"><code class="docutils literal notranslate"><span class="pre">TimeUtils.range_24_hours()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.measure_time"><code class="docutils literal notranslate"><span class="pre">TimeUtils.measure_time()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.find_closest_file_and_seconds"><code class="docutils literal notranslate"><span class="pre">TimeUtils.find_closest_file_and_seconds()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.format_duration"><code class="docutils literal notranslate"><span class="pre">TimeUtils.format_duration()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.get_sorted_videos"><code class="docutils literal notranslate"><span class="pre">TimeUtils.get_sorted_videos()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.next_video_path"><code class="docutils literal notranslate"><span class="pre">TimeUtils.next_video_path()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.previous_video_path"><code class="docutils literal notranslate"><span class="pre">TimeUtils.previous_video_path()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Chrono</span></code></a><ul>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.reset"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Chrono.reset()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.get_time"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Chrono.get_time()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.get_seconds"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Chrono.get_seconds()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Chrono.get_milliseconds"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Chrono.get_milliseconds()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Timer"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Timer</span></code></a><ul>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Timer.has_elapsed"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Timer.has_elapsed()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Timer.ten_seconds_elapsed"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Timer.ten_seconds_elapsed()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.Timer.reset"><code class="docutils literal notranslate"><span class="pre">TimeUtils.Timer.reset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.HourChangeDetector"><code class="docutils literal notranslate"><span class="pre">TimeUtils.HourChangeDetector</span></code></a><ul>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.HourChangeDetector.has_hour_changed"><code class="docutils literal notranslate"><span class="pre">TimeUtils.HourChangeDetector.has_hour_changed()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.CycleChangeDetector"><code class="docutils literal notranslate"><span class="pre">TimeUtils.CycleChangeDetector</span></code></a><ul>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.CycleChangeDetector.has_cycle_changed"><code class="docutils literal notranslate"><span class="pre">TimeUtils.CycleChangeDetector.has_cycle_changed()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.TimestampTracker"><code class="docutils literal notranslate"><span class="pre">TimeUtils.TimestampTracker</span></code></a><ul>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.TimestampTracker.add_timestamp"><code class="docutils literal notranslate"><span class="pre">TimeUtils.TimestampTracker.add_timestamp()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.time_utils.TimeUtils.TimestampTracker.trigger_empty"><code class="docutils literal notranslate"><span class="pre">TimeUtils.TimestampTracker.trigger_empty()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
       </div>
-      <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
-        <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
-        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
-      </div>
-    </div>
+      
+      
+    </aside>
   </div>
-</footer>
-      <script src="../_static/documentation_options.js?v=b9ffa242"></script>
-      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-      <script src="../_static/shibuya.js?v=cac61aee"></script></body>
+</div><script src="../_static/documentation_options.js?v=d7dfa6d9"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
 </html>

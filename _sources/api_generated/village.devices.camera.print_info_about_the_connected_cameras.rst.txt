@@ -1,0 +1,6 @@
+print\_info\_about\_the\_connected\_cameras
+===========================================
+
+.. currentmodule:: village.devices.camera
+
+.. autofunction:: print_info_about_the_connected_cameras

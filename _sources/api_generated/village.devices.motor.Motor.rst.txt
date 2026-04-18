@@ -27,4 +27,12 @@ Motor
 
    
    
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Motor.close_angle
+      ~Motor.error
+      ~Motor.open_angle
+   
    

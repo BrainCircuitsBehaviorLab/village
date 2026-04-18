@@ -1,0 +1,43 @@
+DummyTask
+=========
+
+.. currentmodule:: village.gui.sound_calibration_layout
+
+.. autoclass:: DummyTask
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DummyTask.__init__
+      ~DummyTask.after_trial
+      ~DummyTask.close
+      ~DummyTask.concatenate_trial_data
+      ~DummyTask.create_paths
+      ~DummyTask.create_trial
+      ~DummyTask.disconnect_and_save
+      ~DummyTask.do_trial
+      ~DummyTask.get_name
+      ~DummyTask.get_trial_data
+      ~DummyTask.register_default_values
+      ~DummyTask.register_value
+      ~DummyTask.run
+      ~DummyTask.run_in_thread
+      ~DummyTask.save_csv
+      ~DummyTask.save_json
+      ~DummyTask.send_softcode_to_bpod
+      ~DummyTask.start
+      ~DummyTask.transform
+   
+   
+
+   
+   
+   

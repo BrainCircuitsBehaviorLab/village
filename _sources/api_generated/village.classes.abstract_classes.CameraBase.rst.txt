@@ -1,0 +1,64 @@
+CameraBase
+==========
+
+.. currentmodule:: village.classes.abstract_classes
+
+.. autoclass:: CameraBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CameraBase.__init__
+      ~CameraBase.area_1_empty
+      ~CameraBase.area_2_empty
+      ~CameraBase.area_3_empty
+      ~CameraBase.area_4_empty
+      ~CameraBase.areas_corridor_ok
+      ~CameraBase.pre_process
+      ~CameraBase.print_info_about_config
+      ~CameraBase.start_camera
+      ~CameraBase.start_preview_window
+      ~CameraBase.start_recording
+      ~CameraBase.stop_camera
+      ~CameraBase.stop_preview_window
+      ~CameraBase.stop_recording
+      ~CameraBase.take_picture
+      ~CameraBase.write_text
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CameraBase.annotation
+      ~CameraBase.area1
+      ~CameraBase.area1_is_triggered
+      ~CameraBase.area2
+      ~CameraBase.area2_is_triggered
+      ~CameraBase.area3
+      ~CameraBase.area3_is_triggered
+      ~CameraBase.area4
+      ~CameraBase.area4_is_triggered
+      ~CameraBase.areas
+      ~CameraBase.change
+      ~CameraBase.chrono
+      ~CameraBase.error
+      ~CameraBase.is_recording
+      ~CameraBase.path_picture
+      ~CameraBase.show_time_info
+      ~CameraBase.trial
+      ~CameraBase.x_position
+      ~CameraBase.y_position
+   
+   

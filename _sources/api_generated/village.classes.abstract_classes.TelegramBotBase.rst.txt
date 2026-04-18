@@ -1,0 +1,32 @@
+TelegramBotBase
+===============
+
+.. currentmodule:: village.classes.abstract_classes
+
+.. autoclass:: TelegramBotBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TelegramBotBase.__init__
+      ~TelegramBotBase.alarm
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TelegramBotBase.error
+   
+   

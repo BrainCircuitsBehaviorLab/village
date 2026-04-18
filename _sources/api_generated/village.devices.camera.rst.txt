@@ -1,0 +1,41 @@
+camera
+======
+
+.. automodule:: village.devices.camera
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      get_camera
+      print_info_about_the_connected_cameras
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      Camera
+      LowFreqQPicamera2
+   
+   
+
+   
+   
+   
+
+
+

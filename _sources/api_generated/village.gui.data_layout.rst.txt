@@ -1,0 +1,23 @@
+data\_layout
+============
+
+.. automodule:: village.gui.data_layout
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

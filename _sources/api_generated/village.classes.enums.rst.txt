@@ -23,7 +23,7 @@ enums
       Active
       AreaActive
       Color
-      ControllerEnum
+      Controller
       Cycle
       DataTable
       Info

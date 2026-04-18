@@ -1,0 +1,87 @@
+Camera
+======
+
+.. currentmodule:: village.devices.camera
+
+.. autoclass:: Camera
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Camera.__init__
+      ~Camera.area_1_empty
+      ~Camera.area_2_empty
+      ~Camera.area_3_empty
+      ~Camera.area_4_empty
+      ~Camera.areas_box_ok
+      ~Camera.areas_corridor_ok
+      ~Camera.detect_and_trigger
+      ~Camera.detect_black
+      ~Camera.detect_black_position_components
+      ~Camera.detect_black_position_contours
+      ~Camera.detect_white
+      ~Camera.detect_white_position_components
+      ~Camera.detect_white_position_contours
+      ~Camera.draw_detection
+      ~Camera.draw_position
+      ~Camera.draw_rectangles
+      ~Camera.draw_thresholded_black
+      ~Camera.draw_thresholded_white
+      ~Camera.get_gray_frame
+      ~Camera.pre_process
+      ~Camera.print_info_about_config
+      ~Camera.reset_values
+      ~Camera.restart_camera
+      ~Camera.save_csv
+      ~Camera.set_properties
+      ~Camera.start_camera
+      ~Camera.start_preview_window
+      ~Camera.start_recording
+      ~Camera.stop_camera
+      ~Camera.stop_preview_window
+      ~Camera.stop_recording
+      ~Camera.take_picture
+      ~Camera.trigger
+      ~Camera.watchdog_tick
+      ~Camera.write_csv
+      ~Camera.write_pixel_detection
+      ~Camera.write_text
+      ~Camera.write_texts
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Camera.annotation
+      ~Camera.area1
+      ~Camera.area1_is_triggered
+      ~Camera.area2
+      ~Camera.area2_is_triggered
+      ~Camera.area3
+      ~Camera.area3_is_triggered
+      ~Camera.area4
+      ~Camera.area4_is_triggered
+      ~Camera.areas
+      ~Camera.change
+      ~Camera.chrono
+      ~Camera.error
+      ~Camera.is_recording
+      ~Camera.path_picture
+      ~Camera.show_time_info
+      ~Camera.trial
+      ~Camera.x_position
+      ~Camera.y_position
+   
+   

@@ -30,7 +30,6 @@
 
    error_queue
    global_csv_for_subject
-   import_all
    log
    parse_bpod_messages
    playground

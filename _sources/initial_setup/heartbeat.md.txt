@@ -1,4 +1,0 @@
-## Remote Heartbeat Signals
-
-
-<br>

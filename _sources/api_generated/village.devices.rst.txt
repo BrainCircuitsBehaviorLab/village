@@ -28,6 +28,7 @@
    :template: custom_module_template.rst
    :recursive:
 
+   bpod
    camera
    motor
    rfid

@@ -1,0 +1,33 @@
+TempSensorBase
+==============
+
+.. currentmodule:: village.classes.abstract_classes
+
+.. autoclass:: TempSensorBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TempSensorBase.__init__
+      ~TempSensorBase.get_temperature
+      ~TempSensorBase.start
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TempSensorBase.error
+   
+   

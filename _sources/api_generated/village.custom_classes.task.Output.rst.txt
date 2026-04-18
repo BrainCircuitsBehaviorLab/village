@@ -1,0 +1,168 @@
+Output
+======
+
+.. currentmodule:: village.custom_classes.task
+
+.. autoclass:: Output
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Output.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Output.BNC1High
+      ~Output.BNC1Low
+      ~Output.BNC2High
+      ~Output.BNC2Low
+      ~Output.GlobalCounter1Reset
+      ~Output.GlobalCounter2Reset
+      ~Output.GlobalCounter3Reset
+      ~Output.GlobalCounter4Reset
+      ~Output.GlobalCounter5Reset
+      ~Output.GlobalTimer1Cancel
+      ~Output.GlobalTimer1Trig
+      ~Output.GlobalTimer2Cancel
+      ~Output.GlobalTimer2Trig
+      ~Output.GlobalTimer3Cancel
+      ~Output.GlobalTimer3Trig
+      ~Output.GlobalTimer4Cancel
+      ~Output.GlobalTimer4Trig
+      ~Output.GlobalTimer5Cancel
+      ~Output.GlobalTimer5Trig
+      ~Output.PWM1
+      ~Output.PWM2
+      ~Output.PWM3
+      ~Output.PWM4
+      ~Output.PWM5
+      ~Output.PWM6
+      ~Output.PWM7
+      ~Output.PWM8
+      ~Output.Serial1
+      ~Output.Serial2
+      ~Output.Serial3
+      ~Output.Serial4
+      ~Output.Serial5
+      ~Output.SoftCode1
+      ~Output.SoftCode10
+      ~Output.SoftCode11
+      ~Output.SoftCode12
+      ~Output.SoftCode13
+      ~Output.SoftCode14
+      ~Output.SoftCode15
+      ~Output.SoftCode16
+      ~Output.SoftCode17
+      ~Output.SoftCode18
+      ~Output.SoftCode19
+      ~Output.SoftCode2
+      ~Output.SoftCode20
+      ~Output.SoftCode21
+      ~Output.SoftCode22
+      ~Output.SoftCode23
+      ~Output.SoftCode24
+      ~Output.SoftCode25
+      ~Output.SoftCode26
+      ~Output.SoftCode27
+      ~Output.SoftCode28
+      ~Output.SoftCode29
+      ~Output.SoftCode3
+      ~Output.SoftCode30
+      ~Output.SoftCode31
+      ~Output.SoftCode32
+      ~Output.SoftCode33
+      ~Output.SoftCode34
+      ~Output.SoftCode35
+      ~Output.SoftCode36
+      ~Output.SoftCode37
+      ~Output.SoftCode38
+      ~Output.SoftCode39
+      ~Output.SoftCode4
+      ~Output.SoftCode40
+      ~Output.SoftCode41
+      ~Output.SoftCode42
+      ~Output.SoftCode43
+      ~Output.SoftCode44
+      ~Output.SoftCode45
+      ~Output.SoftCode46
+      ~Output.SoftCode47
+      ~Output.SoftCode48
+      ~Output.SoftCode49
+      ~Output.SoftCode5
+      ~Output.SoftCode50
+      ~Output.SoftCode51
+      ~Output.SoftCode52
+      ~Output.SoftCode53
+      ~Output.SoftCode54
+      ~Output.SoftCode55
+      ~Output.SoftCode56
+      ~Output.SoftCode57
+      ~Output.SoftCode58
+      ~Output.SoftCode59
+      ~Output.SoftCode6
+      ~Output.SoftCode60
+      ~Output.SoftCode61
+      ~Output.SoftCode62
+      ~Output.SoftCode63
+      ~Output.SoftCode64
+      ~Output.SoftCode65
+      ~Output.SoftCode66
+      ~Output.SoftCode67
+      ~Output.SoftCode68
+      ~Output.SoftCode69
+      ~Output.SoftCode7
+      ~Output.SoftCode70
+      ~Output.SoftCode71
+      ~Output.SoftCode72
+      ~Output.SoftCode73
+      ~Output.SoftCode74
+      ~Output.SoftCode75
+      ~Output.SoftCode76
+      ~Output.SoftCode77
+      ~Output.SoftCode78
+      ~Output.SoftCode79
+      ~Output.SoftCode8
+      ~Output.SoftCode80
+      ~Output.SoftCode81
+      ~Output.SoftCode82
+      ~Output.SoftCode83
+      ~Output.SoftCode84
+      ~Output.SoftCode85
+      ~Output.SoftCode86
+      ~Output.SoftCode87
+      ~Output.SoftCode88
+      ~Output.SoftCode89
+      ~Output.SoftCode9
+      ~Output.SoftCode90
+      ~Output.SoftCode91
+      ~Output.SoftCode92
+      ~Output.SoftCode93
+      ~Output.SoftCode94
+      ~Output.SoftCode95
+      ~Output.SoftCode96
+      ~Output.SoftCode97
+      ~Output.SoftCode98
+      ~Output.Valve1
+      ~Output.Valve2
+      ~Output.Valve3
+      ~Output.Valve4
+      ~Output.Valve5
+      ~Output.Valve6
+      ~Output.Valve7
+      ~Output.Valve8
+   
+   

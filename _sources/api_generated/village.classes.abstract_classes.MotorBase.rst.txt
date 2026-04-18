@@ -1,0 +1,35 @@
+MotorBase
+=========
+
+.. currentmodule:: village.classes.abstract_classes
+
+.. autoclass:: MotorBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MotorBase.__init__
+      ~MotorBase.close
+      ~MotorBase.open
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MotorBase.close_angle
+      ~MotorBase.error
+      ~MotorBase.open_angle
+   
+   

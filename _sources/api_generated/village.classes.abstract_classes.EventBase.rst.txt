@@ -1,0 +1,27 @@
+EventBase
+=========
+
+.. currentmodule:: village.classes.abstract_classes
+
+.. autoclass:: EventBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventBase.__init__
+      ~EventBase.log
+      ~EventBase.log_temp
+   
+   
+
+   
+   
+   
