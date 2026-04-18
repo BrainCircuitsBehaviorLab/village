@@ -1,6 +1,14 @@
-Troubleshooting
+TROUBLESHOOTING & MAINTENANCE
 =================================
 
+.. raw:: html
 
-.. include:: /troubleshooting/troubleshooting.md
-   :parser: myst_parser.sphinx_
+   <script>window.location.replace("troubleshooting/alarm.html");</script>
+   <noscript><meta http-equiv="refresh" content="0; url=troubleshooting/alarm.html"></noscript>
+
+.. toctree::
+    :maxdepth: 1
+
+    troubleshooting/alarm.md
+    troubleshooting/troubleshooting.md
+    troubleshooting/cleaning.md

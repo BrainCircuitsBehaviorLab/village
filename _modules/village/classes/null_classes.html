@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>village.classes.null_classes - Training village</title><link rel="shortcut icon" href="../../../_static/favicon.svg"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/classes/null_classes.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"light");
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=44020203" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=29b12738" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/classes/null_classes.html"/>
+  <meta property="og:title" content="village.classes.null_classes"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../../index.html">
+      <img class="light-logo" src="../../../_static/logo_light.svg" alt="village" height="28" loading="lazy" />
+      <img class="dark-logo" src="../../../_static/logo_dark.svg" alt="village" height="28" loading="lazy" />
+      <strong>village</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../../../initial_setup/prerequisites.html">Documentation</a></li><li class="link"><a href="../../../api_index.html">API</a></li><li class="link"><a href="../../../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../../../faq/faq.html">FAQ</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/BrainCircuitsBehaviorLab/village" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation_index.html">DOCUMENTATION</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../initial_setup_index.html">INITIAL SETUP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../initial_setup/prerequisites.html">Prerequisites &amp; Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../initial_setup/first_time.html">First-Time Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../initial_setup/access.html">Remote Access Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../initial_setup/telegram.html">Telegram Bot Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../initial_setup/backup.html">Data Persistence &amp; Backups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../initial_setup/heartbeat.html">Remote Heartbeat Signals</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../system_operation_index.html">SYSTEM OPERATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/settings.html">System Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/corridor.html">Corridor &amp; Hardware Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/detection.html">Animal Detection Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/system.html">System Logic (State Machine)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/using.html">Using Existing Protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/creating.html">Creating New Protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/functions.html">Core, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/data.html">Saved Data Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/plots.html">Custom Plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/triggers.html">Custom Interaction Triggers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting_index.html">TROUBLESHOOTING &amp; MAINTENANCE</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting/troubleshooting.html">General Troubleshooting Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_index.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.water_calibration.html">water_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.water_calibration.WaterCalibration.html">WaterCalibration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.collection.html">collection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.collection.Collection.html">Collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.enums.html">enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ControllerEnum.html">ControllerEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Save.html">Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.SyncType.html">SyncType</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.html">null_classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html">NullSoftCodeToBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullSoundDevice.html">NullSoundDevice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullStateMachine.html">NullStateMachine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullTelegramBot.html">NullTelegramBot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullTempSensor.html">NullTempSensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.html">settings_class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.subject.html">subject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.subject.Subject.html">Subject</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.custom_classes.html">custom_classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.after_session_base.html">after_session_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.change_cycle_base.ChangeCycleBase.html">ChangeCycleBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html">OnlinePlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.session_plot_base.html">session_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.session_plot_base.SessionPlotBase.html">SessionPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.subject_plot_base.html">subject_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.html">task</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.Task.html">Task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor.html">motor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.Motor.html">Motor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.scale.html">scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.Scale.html">Scale</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.html">sound_device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.plots.html">plots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.plots.corridor_plot.html">corridor_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.plots.sound_calibration_plot.html">sound_calibration_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.plots.sound_calibration_plot.sound_calibration_plot.html">sound_calibration_plot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.plots.temperatures_plot.temperatures_plot.html">temperatures_plot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.plots.water_calibration_plot.html">water_calibration_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.plots.water_calibration_plot.water_calibration_plot.html">water_calibration_plot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.plots.weights_plot.html">weights_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.plots.weights_plot.weights_plot.html">weights_plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.screen.video_worker.html">video_worker</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.scripts.html">scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.log.html">log</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.log.Log.html">Log</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.playground.html">playground</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.playground.measure_softcode_latency.html">measure_softcode_latency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.rsync_to_hard_drive.html">rsync_to_hard_drive</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.rsync_to_hard_drive.main.html">main</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.rsync_to_hard_drive.run_rsync_local.html">run_rsync_local</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.rsync_to_server.html">rsync_to_server</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.rsync_to_server.main.html">main</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.rsync_to_server.run_rsync.html">run_rsync</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.safe_removal_of_data.html">safe_removal_of_data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.safe_removal_of_data.check_files_for_backup_local.html">check_files_for_backup_local</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.safe_removal_of_data.check_files_for_backup_remote.html">check_files_for_backup_remote</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.safe_removal_of_data.main.html">main</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.safe_removal_of_data.parse_timestamp_from_filename.html">parse_timestamp_from_filename</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.safe_removal_of_data.remove_file.html">remove_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.safe_removal_of_data.remove_old_data.html">remove_old_data</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.utils.html">utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.calculate_active_hours.html">calculate_active_hours</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.change_directory_settings.html">change_directory_settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.change_system_directory_settings.html">change_system_directory_settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.create_directories.html">create_directories</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.create_directories_from_path.html">create_directories_from_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.create_pixmap.html">create_pixmap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.delete_all_elements_from_layout.html">delete_all_elements_from_layout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.download_github_repositories.html">download_github_repositories</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.get_x_value_interp.html">get_x_value_interp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.has_low_disk_space.html">has_low_disk_space</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.interpolate.html">interpolate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.is_active.html">is_active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.is_active_regular.html">is_active_regular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.reformat_trial_data.html">reformat_trial_data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.setup_logging.html">setup_logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.transform_raw_to_clean.html">transform_raw_to_clean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.validate_subject_name.html">validate_subject_name</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../resources_index.html">RESOURCES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../hardware.html">HARDWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../resources/list_of_parts.html">List of Parts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../resources/3D.html">3D Printing &amp; CAD Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../resources/hardware.html">Hardware Assembly Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../software.html">SOFTWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../resources/software_installation.html">Manual Software Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../resources/ISO.html">ISO Images &amp; Source Code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq_index.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq_index2.html">FAQ</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../../index.html"><span itemprop="name">village</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">village.classes.null_classes</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <h1>Source code for village.classes.null_classes</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QImage</span>
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QWidget</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Active</span>
+</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+</span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+</span><span data-line="10">
+</span><span data-line="11">
+<div class="viewcode-block" id="NullBpod">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullBpod.html#village.classes.null_classes.NullBpod">[docs]</a>
+</span><span data-line="12"><span class="k">class</span><span class="w"> </span><span class="nc">NullBpod</span><span class="p">:</span>
+<div class="viewcode-block" id="NullBpod.__init__">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullBpod.html#village.classes.null_classes.NullBpod.__init__">[docs]</a>
+</span><span data-line="13">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="14">        <span class="bp">self</span><span class="o">.</span><span class="n">_current_trial</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+</span><span data-line="15">
+<div class="viewcode-block" id="NullBpod.close">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullBpod.html#village.classes.null_classes.NullBpod.close">[docs]</a>
+</span><span data-line="16">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="17">        <span class="k">pass</span></div>
+
+</span><span data-line="18">
+<div class="viewcode-block" id="NullBpod.send_state_machine">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullBpod.html#village.classes.null_classes.NullBpod.send_state_machine">[docs]</a>
+</span><span data-line="19">    <span class="k">def</span><span class="w"> </span><span class="nf">send_state_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sma</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="20">        <span class="k">pass</span></div>
+
+</span><span data-line="21">
+<div class="viewcode-block" id="NullBpod.run_state_machine">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullBpod.html#village.classes.null_classes.NullBpod.run_state_machine">[docs]</a>
+</span><span data-line="22">    <span class="k">def</span><span class="w"> </span><span class="nf">run_state_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sma</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="23">        <span class="k">pass</span></div>
+
+</span><span data-line="24">
+<div class="viewcode-block" id="NullBpod.register_value">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullBpod.html#village.classes.null_classes.NullBpod.register_value">[docs]</a>
+</span><span data-line="25">    <span class="k">def</span><span class="w"> </span><span class="nf">register_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="26">        <span class="k">pass</span></div>
+
+</span><span data-line="27">
+<div class="viewcode-block" id="NullBpod.manual_override">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullBpod.html#village.classes.null_classes.NullBpod.manual_override">[docs]</a>
+</span><span data-line="28">    <span class="k">def</span><span class="w"> </span><span class="nf">manual_override</span><span class="p">(</span>
+</span><span data-line="29">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="30">        <span class="n">channel_type</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span data-line="31">        <span class="n">channel_name</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span data-line="32">        <span class="n">channel_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span data-line="33">        <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span data-line="34">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="35">        <span class="k">pass</span></div>
+</div>
+
+</span><span data-line="36">
+</span><span data-line="37">
+<div class="viewcode-block" id="NullStateMachine">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullStateMachine.html#village.classes.null_classes.NullStateMachine">[docs]</a>
+</span><span data-line="38"><span class="k">class</span><span class="w"> </span><span class="nc">NullStateMachine</span><span class="p">:</span>
+<div class="viewcode-block" id="NullStateMachine.add_state">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullStateMachine.html#village.classes.null_classes.NullStateMachine.add_state">[docs]</a>
+</span><span data-line="39">    <span class="k">def</span><span class="w"> </span><span class="nf">add_state</span><span class="p">(</span>
+</span><span data-line="40">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="41">        <span class="n">state_name</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span data-line="42">        <span class="n">state_timer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="43">        <span class="n">state_change_conditions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">{},</span>
+</span><span data-line="44">        <span class="n">output_actions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">(),</span>
+</span><span data-line="45">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="46">        <span class="k">pass</span></div>
+
+</span><span data-line="47">
+<div class="viewcode-block" id="NullStateMachine.set_global_timer">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullStateMachine.html#village.classes.null_classes.NullStateMachine.set_global_timer">[docs]</a>
+</span><span data-line="48">    <span class="k">def</span><span class="w"> </span><span class="nf">set_global_timer</span><span class="p">(</span>
+</span><span data-line="49">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="50">        <span class="n">timer_id</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span data-line="51">        <span class="n">timer_duration</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span data-line="52">        <span class="n">on_set_delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="53">        <span class="n">channel</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="54">        <span class="n">on_message</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span><span data-line="55">        <span class="n">off_message</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="56">        <span class="n">loop_mode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="57">        <span class="n">loop_intervals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="58">        <span class="n">send_events</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span><span data-line="59">        <span class="n">oneset_triggers</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="60">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="61">        <span class="k">pass</span></div>
+
+</span><span data-line="62">
+<div class="viewcode-block" id="NullStateMachine.set_condition">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullStateMachine.html#village.classes.null_classes.NullStateMachine.set_condition">[docs]</a>
+</span><span data-line="63">    <span class="k">def</span><span class="w"> </span><span class="nf">set_condition</span><span class="p">(</span>
+</span><span data-line="64">        <span class="bp">self</span><span class="p">,</span> <span class="n">condition_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">condition_channel</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">channel_value</span><span class="p">:</span> <span class="n">Any</span>
+</span><span data-line="65">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="66">        <span class="k">pass</span></div>
+
+</span><span data-line="67">
+<div class="viewcode-block" id="NullStateMachine.set_global_counter">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullStateMachine.html#village.classes.null_classes.NullStateMachine.set_global_counter">[docs]</a>
+</span><span data-line="68">    <span class="k">def</span><span class="w"> </span><span class="nf">set_global_counter</span><span class="p">(</span>
+</span><span data-line="69">        <span class="bp">self</span><span class="p">,</span> <span class="n">counter_number</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">target_event</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">Any</span>
+</span><span data-line="70">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="71">        <span class="k">pass</span></div>
+</div>
+
+</span><span data-line="72">
+</span><span data-line="73">
+<div class="viewcode-block" id="NullSoftCodeToBpod">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html#village.classes.null_classes.NullSoftCodeToBpod">[docs]</a>
+</span><span data-line="74"><span class="k">class</span><span class="w"> </span><span class="nc">NullSoftCodeToBpod</span><span class="p">:</span>
+<div class="viewcode-block" id="NullSoftCodeToBpod.send">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html#village.classes.null_classes.NullSoftCodeToBpod.send">[docs]</a>
+</span><span data-line="75">    <span class="k">def</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="76">        <span class="k">pass</span></div>
+
+</span><span data-line="77">
+<div class="viewcode-block" id="NullSoftCodeToBpod.kill">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html#village.classes.null_classes.NullSoftCodeToBpod.kill">[docs]</a>
+</span><span data-line="78">    <span class="k">def</span><span class="w"> </span><span class="nf">kill</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="79">        <span class="k">pass</span></div>
+</div>
+
+</span><span data-line="80">
+</span><span data-line="81">
+<div class="viewcode-block" id="NullTelegramBot">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTelegramBot.html#village.classes.null_classes.NullTelegramBot">[docs]</a>
+</span><span data-line="82"><span class="k">class</span><span class="w"> </span><span class="nc">NullTelegramBot</span><span class="p">:</span>
+</span><span data-line="83">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the telegram_bot &quot;</span>
+</span><span data-line="84">
+<div class="viewcode-block" id="NullTelegramBot.alarm">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTelegramBot.html#village.classes.null_classes.NullTelegramBot.alarm">[docs]</a>
+</span><span data-line="85">    <span class="k">def</span><span class="w"> </span><span class="nf">alarm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="86"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends an alarm message.</span>
+</span><span data-line="87">
+</span><span data-line="88"><span class="sd">        Args:</span>
+</span><span data-line="89"><span class="sd">            message (str): The alarm message.</span>
+</span><span data-line="90"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="91">        <span class="k">return</span></div>
+</div>
+
+</span><span data-line="92">
+</span><span data-line="93">
+<div class="viewcode-block" id="NullScale">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale">[docs]</a>
+</span><span data-line="94"><span class="k">class</span><span class="w"> </span><span class="nc">NullScale</span><span class="p">:</span>
+</span><span data-line="95">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the scale &quot;</span>
+</span><span data-line="96">
+<div class="viewcode-block" id="NullScale.tare">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale.tare">[docs]</a>
+</span><span data-line="97">    <span class="k">def</span><span class="w"> </span><span class="nf">tare</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="98"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Tares the scale.&quot;&quot;&quot;</span>
+</span><span data-line="99">        <span class="k">return</span></div>
+
+</span><span data-line="100">
+<div class="viewcode-block" id="NullScale.calibrate">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale.calibrate">[docs]</a>
+</span><span data-line="101">    <span class="k">def</span><span class="w"> </span><span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="102"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calibrates the scale using a known weight.</span>
+</span><span data-line="103">
+</span><span data-line="104"><span class="sd">        Args:</span>
+</span><span data-line="105"><span class="sd">            weight (float): The known weight.</span>
+</span><span data-line="106"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="107">        <span class="k">return</span></div>
+
+</span><span data-line="108">
+<div class="viewcode-block" id="NullScale.get_weight">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale.get_weight">[docs]</a>
+</span><span data-line="109">    <span class="k">def</span><span class="w"> </span><span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="110"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current weight.</span>
+</span><span data-line="111">
+</span><span data-line="112"><span class="sd">        Returns:</span>
+</span><span data-line="113"><span class="sd">            float: The weight reading (default 0.0).</span>
+</span><span data-line="114"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="115">        <span class="k">return</span> <span class="mf">0.0</span></div>
+
+</span><span data-line="116">
+<div class="viewcode-block" id="NullScale.real_weight_inference">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale.real_weight_inference">[docs]</a>
+</span><span data-line="117">    <span class="k">def</span><span class="w"> </span><span class="nf">real_weight_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+</span><span data-line="118"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines if a sequence of weight measurements represents a stable weight.</span>
+</span><span data-line="119">
+</span><span data-line="120"><span class="sd">        Conditions to call it a real weight:</span>
+</span><span data-line="121"><span class="sd">        - standard deviation of the last 5 measurements is</span>
+</span><span data-line="122"><span class="sd">            smaller than 10% of the threshold</span>
+</span><span data-line="123">
+</span><span data-line="124"><span class="sd">        Returns:</span>
+</span><span data-line="125"><span class="sd">            tuple[bool, float]: (True, median_weight) if stable, else (False, 0.0).</span>
+</span><span data-line="126"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="127">
+</span><span data-line="128">        <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span></div>
+</div>
+
+</span><span data-line="129">
+</span><span data-line="130">
+<div class="viewcode-block" id="NullTempSensor">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTempSensor.html#village.classes.null_classes.NullTempSensor">[docs]</a>
+</span><span data-line="131"><span class="k">class</span><span class="w"> </span><span class="nc">NullTempSensor</span><span class="p">:</span>
+</span><span data-line="132">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the temp_sensor &quot;</span>
+</span><span data-line="133">
+<div class="viewcode-block" id="NullTempSensor.start">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTempSensor.html#village.classes.null_classes.NullTempSensor.start">[docs]</a>
+</span><span data-line="134">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="135"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the sensor.&quot;&quot;&quot;</span>
+</span><span data-line="136">        <span class="k">return</span></div>
+
+</span><span data-line="137">
+<div class="viewcode-block" id="NullTempSensor.get_temperature">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTempSensor.html#village.classes.null_classes.NullTempSensor.get_temperature">[docs]</a>
+</span><span data-line="138">    <span class="k">def</span><span class="w"> </span><span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+</span><span data-line="139"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets temperature and humidity.</span>
+</span><span data-line="140">
+</span><span data-line="141"><span class="sd">        Returns:</span>
+</span><span data-line="142"><span class="sd">            tuple[float, float, str]: Temperature, humidity, and formatted string.</span>
+</span><span data-line="143"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="144">        <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;&quot;</span></div>
+</div>
+
+</span><span data-line="145">
+</span><span data-line="146">
+<div class="viewcode-block" id="NullMotor">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullMotor.html#village.classes.null_classes.NullMotor">[docs]</a>
+</span><span data-line="147"><span class="k">class</span><span class="w"> </span><span class="nc">NullMotor</span><span class="p">:</span>
+</span><span data-line="148">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the motor &quot;</span>
+</span><span data-line="149">    <span class="n">open_angle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="150">    <span class="n">close_angle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="151">
+<div class="viewcode-block" id="NullMotor.open">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullMotor.html#village.classes.null_classes.NullMotor.open">[docs]</a>
+</span><span data-line="152">    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="153"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Opens the motor/device.&quot;&quot;&quot;</span>
+</span><span data-line="154">        <span class="k">return</span></div>
+
+</span><span data-line="155">
+<div class="viewcode-block" id="NullMotor.close">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullMotor.html#village.classes.null_classes.NullMotor.close">[docs]</a>
+</span><span data-line="156">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="157"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes the motor/device.&quot;&quot;&quot;</span>
+</span><span data-line="158">        <span class="k">return</span></div>
+</div>
+
+</span><span data-line="159">
+</span><span data-line="160">
+<div class="viewcode-block" id="NullSoundDevice">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullSoundDevice.html#village.classes.null_classes.NullSoundDevice">[docs]</a>
+</span><span data-line="161"><span class="k">class</span><span class="w"> </span><span class="nc">NullSoundDevice</span><span class="p">:</span>
+</span><span data-line="162">    <span class="n">samplerate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">44100</span>
+</span><span data-line="163">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="164">        <span class="s2">&quot;&quot;</span>
+</span><span data-line="165">        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SOUNDCARD&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">OFF</span>
+</span><span data-line="166">        <span class="k">else</span> <span class="s2">&quot;Error connecting to the sound_device &quot;</span>
+</span><span data-line="167">    <span class="p">)</span>
+</span><span data-line="168">
+<div class="viewcode-block" id="NullSoundDevice.load">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullSoundDevice.html#village.classes.null_classes.NullSoundDevice.load">[docs]</a>
+</span><span data-line="169">    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="170"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads sound data.</span>
+</span><span data-line="171">
+</span><span data-line="172"><span class="sd">        Args:</span>
+</span><span data-line="173"><span class="sd">            load (Any): Left channel data or similar.</span>
+</span><span data-line="174"><span class="sd">            right (Any): Right channel data.</span>
+</span><span data-line="175"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="176">        <span class="k">return</span></div>
+
+</span><span data-line="177">
+<div class="viewcode-block" id="NullSoundDevice.play">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullSoundDevice.html#village.classes.null_classes.NullSoundDevice.play">[docs]</a>
+</span><span data-line="178">    <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="179"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Plays the loaded sound.&quot;&quot;&quot;</span>
+</span><span data-line="180">        <span class="k">return</span></div>
+
+</span><span data-line="181">
+<div class="viewcode-block" id="NullSoundDevice.stop">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullSoundDevice.html#village.classes.null_classes.NullSoundDevice.stop">[docs]</a>
+</span><span data-line="182">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="183"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops sound playback.&quot;&quot;&quot;</span>
+</span><span data-line="184">        <span class="k">return</span></div>
+
+</span><span data-line="185">
+<div class="viewcode-block" id="NullSoundDevice.load_wav">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullSoundDevice.html#village.classes.null_classes.NullSoundDevice.load_wav">[docs]</a>
+</span><span data-line="186">    <span class="k">def</span><span class="w"> </span><span class="nf">load_wav</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="187"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a WAV file.</span>
+</span><span data-line="188">
+</span><span data-line="189"><span class="sd">        Args:</span>
+</span><span data-line="190"><span class="sd">            file (str): Path or name of the WAV file.</span>
+</span><span data-line="191"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="192">        <span class="k">return</span></div>
+</div>
+
+</span><span data-line="193">
+</span><span data-line="194">
+<div class="viewcode-block" id="NullCollection">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCollection.html#village.classes.null_classes.NullCollection">[docs]</a>
+</span><span data-line="195"><span class="k">class</span><span class="w"> </span><span class="nc">NullCollection</span><span class="p">:</span>
+<div class="viewcode-block" id="NullCollection.log">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCollection.html#village.classes.null_classes.NullCollection.log">[docs]</a>
+</span><span data-line="196">    <span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="197"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Logs a generic event.</span>
+</span><span data-line="198">
+</span><span data-line="199"><span class="sd">        Args:</span>
+</span><span data-line="200"><span class="sd">            date (str): Date/time string.</span>
+</span><span data-line="201"><span class="sd">            type (str): Event type.</span>
+</span><span data-line="202"><span class="sd">            subject (str): Subject name.</span>
+</span><span data-line="203"><span class="sd">            description (str): Description.</span>
+</span><span data-line="204"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="205">        <span class="k">return</span></div>
+
+</span><span data-line="206">
+<div class="viewcode-block" id="NullCollection.log_temp">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCollection.html#village.classes.null_classes.NullCollection.log_temp">[docs]</a>
+</span><span data-line="207">    <span class="k">def</span><span class="w"> </span><span class="nf">log_temp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">humidity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="208"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Logs temperature and humidity data.</span>
+</span><span data-line="209">
+</span><span data-line="210"><span class="sd">        Args:</span>
+</span><span data-line="211"><span class="sd">            date (str): Date/time string.</span>
+</span><span data-line="212"><span class="sd">            temperature (float): Temperature value.</span>
+</span><span data-line="213"><span class="sd">            humidity (float): Humidity value.</span>
+</span><span data-line="214"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="215">        <span class="k">return</span></div>
+</div>
+
+</span><span data-line="216">
+</span><span data-line="217">
+<div class="viewcode-block" id="NullCamera">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera">[docs]</a>
+</span><span data-line="218"><span class="k">class</span><span class="w"> </span><span class="nc">NullCamera</span><span class="p">:</span>
+</span><span data-line="219">    <span class="n">area1</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="220">    <span class="n">area2</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="221">    <span class="n">area3</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="222">    <span class="n">area4</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="223">    <span class="n">areas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="224">    <span class="n">area1_is_triggered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="225">    <span class="n">area2_is_triggered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="226">    <span class="n">area3_is_triggered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="227">    <span class="n">area4_is_triggered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="228">    <span class="n">change</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="229">    <span class="n">annotation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="230">    <span class="n">path_picture</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="231">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the camera &quot;</span>
+</span><span data-line="232">    <span class="n">trial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span data-line="233">    <span class="n">is_recording</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="234">    <span class="n">show_time_info</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="235">    <span class="n">x_position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span data-line="236">    <span class="n">y_position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span data-line="237">    <span class="n">chrono</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">Chrono</span><span class="p">()</span>
+</span><span data-line="238">    <span class="n">trigger_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+</span><span data-line="239">
+<div class="viewcode-block" id="NullCamera.start_camera">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.start_camera">[docs]</a>
+</span><span data-line="240">    <span class="k">def</span><span class="w"> </span><span class="nf">start_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="241"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the camera.&quot;&quot;&quot;</span>
+</span><span data-line="242">        <span class="k">return</span></div>
+
+</span><span data-line="243">
+<div class="viewcode-block" id="NullCamera.stop_camera">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.stop_camera">[docs]</a>
+</span><span data-line="244">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="245"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the camera.&quot;&quot;&quot;</span>
+</span><span data-line="246">        <span class="k">return</span></div>
+
+</span><span data-line="247">
+<div class="viewcode-block" id="NullCamera.start_preview_window">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.start_preview_window">[docs]</a>
+</span><span data-line="248">    <span class="k">def</span><span class="w"> </span><span class="nf">start_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QWidget</span><span class="p">:</span>
+</span><span data-line="249"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the preview window.</span>
+</span><span data-line="250">
+</span><span data-line="251"><span class="sd">        Returns:</span>
+</span><span data-line="252"><span class="sd">            QWidget: A QWidget for the preview.</span>
+</span><span data-line="253"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="254">        <span class="k">return</span> <span class="n">QWidget</span><span class="p">()</span></div>
+
+</span><span data-line="255">
+<div class="viewcode-block" id="NullCamera.stop_preview_window">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.stop_preview_window">[docs]</a>
+</span><span data-line="256">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="257"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the preview window.&quot;&quot;&quot;</span>
+</span><span data-line="258">        <span class="k">return</span></div>
+
+</span><span data-line="259">
+<div class="viewcode-block" id="NullCamera.start_recording">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.start_recording">[docs]</a>
+</span><span data-line="260">    <span class="k">def</span><span class="w"> </span><span class="nf">start_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">path_csv</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="261"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts recording.</span>
+</span><span data-line="262">
+</span><span data-line="263"><span class="sd">        Args:</span>
+</span><span data-line="264"><span class="sd">            path_video (str): Path for video file.</span>
+</span><span data-line="265"><span class="sd">            path_csv (str): Path for CSV data.</span>
+</span><span data-line="266"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="267">        <span class="k">return</span></div>
+
+</span><span data-line="268">
+<div class="viewcode-block" id="NullCamera.stop_recording">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.stop_recording">[docs]</a>
+</span><span data-line="269">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="270"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops recording.&quot;&quot;&quot;</span>
+</span><span data-line="271">        <span class="k">return</span></div>
+
+</span><span data-line="272">
+<div class="viewcode-block" id="NullCamera.print_info_about_config">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.print_info_about_config">[docs]</a>
+</span><span data-line="273">    <span class="k">def</span><span class="w"> </span><span class="nf">print_info_about_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="274"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints camera configuration info.&quot;&quot;&quot;</span>
+</span><span data-line="275">        <span class="k">return</span></div>
+
+</span><span data-line="276">
+<div class="viewcode-block" id="NullCamera.pre_process">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.pre_process">[docs]</a>
+</span><span data-line="277">    <span class="k">def</span><span class="w"> </span><span class="nf">pre_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="278"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocessing callback for frames.</span>
+</span><span data-line="279">
+</span><span data-line="280"><span class="sd">        Args:</span>
+</span><span data-line="281"><span class="sd">            request: The request object.</span>
+</span><span data-line="282"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="283">        <span class="k">return</span></div>
+
+</span><span data-line="284">
+<div class="viewcode-block" id="NullCamera.write_text">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.write_text">[docs]</a>
+</span><span data-line="285">    <span class="k">def</span><span class="w"> </span><span class="nf">write_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="286"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes text annotation to the frame.</span>
+</span><span data-line="287">
+</span><span data-line="288"><span class="sd">        Args:</span>
+</span><span data-line="289"><span class="sd">            text (str): The text to write.</span>
+</span><span data-line="290"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="291">        <span class="k">return</span></div>
+
+</span><span data-line="292">
+<div class="viewcode-block" id="NullCamera.areas_corridor_ok">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.areas_corridor_ok">[docs]</a>
+</span><span data-line="293">    <span class="k">def</span><span class="w"> </span><span class="nf">areas_corridor_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="294"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks corridor areas status.</span>
+</span><span data-line="295">
+</span><span data-line="296"><span class="sd">        Returns:</span>
+</span><span data-line="297"><span class="sd">            bool: True if OK.</span>
+</span><span data-line="298"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="299">        <span class="k">return</span> <span class="kc">True</span></div>
+
+</span><span data-line="300">
+<div class="viewcode-block" id="NullCamera.area_1_empty">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.area_1_empty">[docs]</a>
+</span><span data-line="301">    <span class="k">def</span><span class="w"> </span><span class="nf">area_1_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="302"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 1 is empty.</span>
+</span><span data-line="303">
+</span><span data-line="304"><span class="sd">        Returns:</span>
+</span><span data-line="305"><span class="sd">            bool: True if empty.</span>
+</span><span data-line="306"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="307">        <span class="k">return</span> <span class="kc">True</span></div>
+
+</span><span data-line="308">
+<div class="viewcode-block" id="NullCamera.area_2_empty">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.area_2_empty">[docs]</a>
+</span><span data-line="309">    <span class="k">def</span><span class="w"> </span><span class="nf">area_2_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="310"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 2 is empty.</span>
+</span><span data-line="311">
+</span><span data-line="312"><span class="sd">        Returns:</span>
+</span><span data-line="313"><span class="sd">            bool: True if empty.</span>
+</span><span data-line="314"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="315">        <span class="k">return</span> <span class="kc">True</span></div>
+
+</span><span data-line="316">
+<div class="viewcode-block" id="NullCamera.area_3_empty">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.area_3_empty">[docs]</a>
+</span><span data-line="317">    <span class="k">def</span><span class="w"> </span><span class="nf">area_3_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="318"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 3 is empty.</span>
+</span><span data-line="319">
+</span><span data-line="320"><span class="sd">        Returns:</span>
+</span><span data-line="321"><span class="sd">            bool: True if empty.</span>
+</span><span data-line="322"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="323">        <span class="k">return</span> <span class="kc">True</span></div>
+
+</span><span data-line="324">
+<div class="viewcode-block" id="NullCamera.area_4_empty">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.area_4_empty">[docs]</a>
+</span><span data-line="325">    <span class="k">def</span><span class="w"> </span><span class="nf">area_4_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="326"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 4 is empty.</span>
+</span><span data-line="327">
+</span><span data-line="328"><span class="sd">        Returns:</span>
+</span><span data-line="329"><span class="sd">            bool: True if empty.</span>
+</span><span data-line="330"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="331">        <span class="k">return</span> <span class="kc">True</span></div>
+
+</span><span data-line="332">
+<div class="viewcode-block" id="NullCamera.take_picture">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.take_picture">[docs]</a>
+</span><span data-line="333">    <span class="k">def</span><span class="w"> </span><span class="nf">take_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="334"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes a picture.&quot;&quot;&quot;</span>
+</span><span data-line="335">        <span class="k">return</span></div>
+</div>
+
+</span><span data-line="336">
+</span><span data-line="337">
+</span><span data-line="338"><span class="k">class</span><span class="w"> </span><span class="nc">NullBehaviorWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+</span><span data-line="339">    <span class="n">background_color</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="340">
+</span><span data-line="341">    <span class="k">def</span><span class="w"> </span><span class="nf">start_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="342"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the drawing mode.&quot;&quot;&quot;</span>
+</span><span data-line="343">        <span class="k">return</span>
+</span><span data-line="344">
+</span><span data-line="345">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="346"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the drawing mode.&quot;&quot;&quot;</span>
+</span><span data-line="347">        <span class="k">return</span>
+</span><span data-line="348">
+</span><span data-line="349">    <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_function</span><span class="p">(</span>
+</span><span data-line="350">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="351">        <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
+</span><span data-line="352">        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="353">        <span class="n">video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="354">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="355"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a drawing function and media.</span>
+</span><span data-line="356">
+</span><span data-line="357"><span class="sd">        Args:</span>
+</span><span data-line="358"><span class="sd">            draw_fn (Optional[Callable]): The drawing function.</span>
+</span><span data-line="359"><span class="sd">            image (str | None): Image path.</span>
+</span><span data-line="360"><span class="sd">            video (str | None): Video path.</span>
+</span><span data-line="361"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="362">        <span class="k">return</span>
+</span><span data-line="363">
+</span><span data-line="364">    <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="365"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an image.</span>
+</span><span data-line="366">
+</span><span data-line="367"><span class="sd">        Args:</span>
+</span><span data-line="368"><span class="sd">            file (str): The file path.</span>
+</span><span data-line="369"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="370">        <span class="k">return</span>
+</span><span data-line="371">
+</span><span data-line="372">    <span class="k">def</span><span class="w"> </span><span class="nf">load_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="373"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a video.</span>
+</span><span data-line="374">
+</span><span data-line="375"><span class="sd">        Args:</span>
+</span><span data-line="376"><span class="sd">            file (str): The file path.</span>
+</span><span data-line="377"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="378">        <span class="k">return</span>
+</span><span data-line="379">
+</span><span data-line="380">    <span class="k">def</span><span class="w"> </span><span class="nf">get_video_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
+</span><span data-line="381"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current video frame.</span>
+</span><span data-line="382">
+</span><span data-line="383"><span class="sd">        Returns:</span>
+</span><span data-line="384"><span class="sd">            Optional[QImage]: The current frame as a QImage.</span>
+</span><span data-line="385"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="386">        <span class="k">return</span> <span class="kc">None</span>
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright">
+        <p>© <a href="https://braincircuitsbehavior.org">Brain Circuits and Behavior Lab</a></p>
+        <p>Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://shibuya.lepture.com">Shibuya theme</a>.</p>
+      </div>
+      <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
+        <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
+        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+      <script src="../../../_static/documentation_options.js?v=d5b23a3d"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="../../../_static/shibuya.js?v=cac61aee"></script></body>
+</html>

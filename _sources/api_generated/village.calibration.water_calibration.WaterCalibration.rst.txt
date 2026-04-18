@@ -24,17 +24,14 @@ WaterCalibration
       ~WaterCalibration.create_trial
       ~WaterCalibration.disconnect_and_save
       ~WaterCalibration.do_trial
+      ~WaterCalibration.execute_function
       ~WaterCalibration.get_name
-      ~WaterCalibration.get_trial_data
-      ~WaterCalibration.register_default_values
       ~WaterCalibration.register_value
       ~WaterCalibration.run
       ~WaterCalibration.run_in_thread
       ~WaterCalibration.save_csv
       ~WaterCalibration.save_json
-      ~WaterCalibration.send_softcode_to_bpod
       ~WaterCalibration.start
-      ~WaterCalibration.transform
    
    
 

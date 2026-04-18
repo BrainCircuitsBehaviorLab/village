@@ -1,0 +1,168 @@
+BpodOutput
+==========
+
+.. currentmodule:: village.custom_classes.task
+
+.. autoclass:: BpodOutput
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BpodOutput.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BpodOutput.BNC1High
+      ~BpodOutput.BNC1Low
+      ~BpodOutput.BNC2High
+      ~BpodOutput.BNC2Low
+      ~BpodOutput.GlobalCounter1Reset
+      ~BpodOutput.GlobalCounter2Reset
+      ~BpodOutput.GlobalCounter3Reset
+      ~BpodOutput.GlobalCounter4Reset
+      ~BpodOutput.GlobalCounter5Reset
+      ~BpodOutput.GlobalTimer1Cancel
+      ~BpodOutput.GlobalTimer1Trig
+      ~BpodOutput.GlobalTimer2Cancel
+      ~BpodOutput.GlobalTimer2Trig
+      ~BpodOutput.GlobalTimer3Cancel
+      ~BpodOutput.GlobalTimer3Trig
+      ~BpodOutput.GlobalTimer4Cancel
+      ~BpodOutput.GlobalTimer4Trig
+      ~BpodOutput.GlobalTimer5Cancel
+      ~BpodOutput.GlobalTimer5Trig
+      ~BpodOutput.PWM1
+      ~BpodOutput.PWM2
+      ~BpodOutput.PWM3
+      ~BpodOutput.PWM4
+      ~BpodOutput.PWM5
+      ~BpodOutput.PWM6
+      ~BpodOutput.PWM7
+      ~BpodOutput.PWM8
+      ~BpodOutput.Serial1
+      ~BpodOutput.Serial2
+      ~BpodOutput.Serial3
+      ~BpodOutput.Serial4
+      ~BpodOutput.Serial5
+      ~BpodOutput.SoftCode1
+      ~BpodOutput.SoftCode10
+      ~BpodOutput.SoftCode11
+      ~BpodOutput.SoftCode12
+      ~BpodOutput.SoftCode13
+      ~BpodOutput.SoftCode14
+      ~BpodOutput.SoftCode15
+      ~BpodOutput.SoftCode16
+      ~BpodOutput.SoftCode17
+      ~BpodOutput.SoftCode18
+      ~BpodOutput.SoftCode19
+      ~BpodOutput.SoftCode2
+      ~BpodOutput.SoftCode20
+      ~BpodOutput.SoftCode21
+      ~BpodOutput.SoftCode22
+      ~BpodOutput.SoftCode23
+      ~BpodOutput.SoftCode24
+      ~BpodOutput.SoftCode25
+      ~BpodOutput.SoftCode26
+      ~BpodOutput.SoftCode27
+      ~BpodOutput.SoftCode28
+      ~BpodOutput.SoftCode29
+      ~BpodOutput.SoftCode3
+      ~BpodOutput.SoftCode30
+      ~BpodOutput.SoftCode31
+      ~BpodOutput.SoftCode32
+      ~BpodOutput.SoftCode33
+      ~BpodOutput.SoftCode34
+      ~BpodOutput.SoftCode35
+      ~BpodOutput.SoftCode36
+      ~BpodOutput.SoftCode37
+      ~BpodOutput.SoftCode38
+      ~BpodOutput.SoftCode39
+      ~BpodOutput.SoftCode4
+      ~BpodOutput.SoftCode40
+      ~BpodOutput.SoftCode41
+      ~BpodOutput.SoftCode42
+      ~BpodOutput.SoftCode43
+      ~BpodOutput.SoftCode44
+      ~BpodOutput.SoftCode45
+      ~BpodOutput.SoftCode46
+      ~BpodOutput.SoftCode47
+      ~BpodOutput.SoftCode48
+      ~BpodOutput.SoftCode49
+      ~BpodOutput.SoftCode5
+      ~BpodOutput.SoftCode50
+      ~BpodOutput.SoftCode51
+      ~BpodOutput.SoftCode52
+      ~BpodOutput.SoftCode53
+      ~BpodOutput.SoftCode54
+      ~BpodOutput.SoftCode55
+      ~BpodOutput.SoftCode56
+      ~BpodOutput.SoftCode57
+      ~BpodOutput.SoftCode58
+      ~BpodOutput.SoftCode59
+      ~BpodOutput.SoftCode6
+      ~BpodOutput.SoftCode60
+      ~BpodOutput.SoftCode61
+      ~BpodOutput.SoftCode62
+      ~BpodOutput.SoftCode63
+      ~BpodOutput.SoftCode64
+      ~BpodOutput.SoftCode65
+      ~BpodOutput.SoftCode66
+      ~BpodOutput.SoftCode67
+      ~BpodOutput.SoftCode68
+      ~BpodOutput.SoftCode69
+      ~BpodOutput.SoftCode7
+      ~BpodOutput.SoftCode70
+      ~BpodOutput.SoftCode71
+      ~BpodOutput.SoftCode72
+      ~BpodOutput.SoftCode73
+      ~BpodOutput.SoftCode74
+      ~BpodOutput.SoftCode75
+      ~BpodOutput.SoftCode76
+      ~BpodOutput.SoftCode77
+      ~BpodOutput.SoftCode78
+      ~BpodOutput.SoftCode79
+      ~BpodOutput.SoftCode8
+      ~BpodOutput.SoftCode80
+      ~BpodOutput.SoftCode81
+      ~BpodOutput.SoftCode82
+      ~BpodOutput.SoftCode83
+      ~BpodOutput.SoftCode84
+      ~BpodOutput.SoftCode85
+      ~BpodOutput.SoftCode86
+      ~BpodOutput.SoftCode87
+      ~BpodOutput.SoftCode88
+      ~BpodOutput.SoftCode89
+      ~BpodOutput.SoftCode9
+      ~BpodOutput.SoftCode90
+      ~BpodOutput.SoftCode91
+      ~BpodOutput.SoftCode92
+      ~BpodOutput.SoftCode93
+      ~BpodOutput.SoftCode94
+      ~BpodOutput.SoftCode95
+      ~BpodOutput.SoftCode96
+      ~BpodOutput.SoftCode97
+      ~BpodOutput.SoftCode98
+      ~BpodOutput.Valve1
+      ~BpodOutput.Valve2
+      ~BpodOutput.Valve3
+      ~BpodOutput.Valve4
+      ~BpodOutput.Valve5
+      ~BpodOutput.Valve6
+      ~BpodOutput.Valve7
+      ~BpodOutput.Valve8
+   
+   

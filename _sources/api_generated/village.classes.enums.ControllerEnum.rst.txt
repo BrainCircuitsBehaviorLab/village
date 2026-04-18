@@ -1,0 +1,36 @@
+ControllerEnum
+==============
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: ControllerEnum
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ControllerEnum.keys
+      ~ControllerEnum.values
+      ~ControllerEnum.get_index_from_value
+      ~ControllerEnum.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ControllerEnum.BPOD
+      ~ControllerEnum.ARDUINO
+      ~ControllerEnum.RASPBERRY
+   
+   

@@ -24,10 +24,4 @@ TempSensor
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~TempSensor.error
-   
    
