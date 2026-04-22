@@ -574,6 +574,7 @@ class Camera(CameraBase):
                 self.write_csv()
                 if self.name == "BOX" and self.is_recording:
                     self.areas_box_ok()
+        manager.camera_draw.draw(self)
 
     def get_gray_frame(self) -> None:
         """Converts the current frame to grayscale."""
@@ -621,7 +622,6 @@ class Camera(CameraBase):
             )
 
         manager.camera_trigger.trigger(self)
-        manager.camera_draw.draw(self)
 
     def detect_black(self) -> None:
         """Detects black objects in defined areas using thresholding."""

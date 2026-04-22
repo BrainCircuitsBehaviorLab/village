@@ -908,6 +908,44 @@ class VirtualMouseLayout(Layout):
             self.y_line_edit.hide()
             self.touch.hide()
 
+        self.auto_no_mouse_button = self.create_and_add_button(
+            "▶  AutoNoMouse",
+            2, 18, 14, 2,
+            self.auto_no_mouse_clicked,
+            "Start/stop the automated virtual-mouse agent",
+            color="lightblue",
+        )
+        self.create_and_add_label(
+            "p correct L", 4, 18, 10, 2, "black",
+            description="P(correct | reward LEFT)",
+        )
+        self.p_left_edit = self.create_and_add_line_edit(
+            "0.80", 4, 28, 4, 2, lambda: None
+        )
+        self.create_and_add_label(
+            "p correct R", 6, 18, 10, 2, "black",
+            description="P(correct | reward RIGHT)",
+        )
+        self.p_right_edit = self.create_and_add_line_edit(
+            "0.80", 6, 28, 4, 2, lambda: None
+        )
+        self.create_and_add_label(
+            "N inject", 8, 18, 10, 2, "black",
+            description="Number of mock trials to inject",
+        )
+        self.n_inject_edit = self.create_and_add_line_edit(
+            "10", 8, 28, 4, 2, lambda: None
+        )
+        self.create_and_add_button(
+            "Inject Trials",
+            10, 18, 14, 2,
+            self._inject_trials,
+            "Inject N trials using p correct L/R into session_df",
+            color="lightgreen",
+        )
+
+        self._anm = None
+
     def coordinates_changed(self) -> None:
         """Handles changes in the coordinate fields."""
         return
@@ -938,6 +976,55 @@ class VirtualMouseLayout(Layout):
         except Exception:
             self.x_line_edit.setText("0")
             self.y_line_edit.setText("0")
+
+    def _get_p(self, edit, default: float = 0.80) -> float:
+        try:
+            v = float(edit.text())
+            return max(0.0, min(1.0, v))
+        except ValueError:
+            edit.setText(str(default))
+            return default
+
+    def _get_p_left(self) -> float:
+        return self._get_p(self.p_left_edit)
+
+    def _get_p_right(self) -> float:
+        return self._get_p(self.p_right_edit)
+
+    def _get_n_inject(self) -> int:
+        try:
+            v = int(self.n_inject_edit.text())
+            return max(1, v)
+        except ValueError:
+            self.n_inject_edit.setText("10")
+            return 10
+
+    def auto_no_mouse_clicked(self) -> None:
+        """Toggle AutoNoMouse on/off."""
+        if self._anm is not None and self._anm.running:
+            self._anm.stop()
+            self._anm = None
+            self.auto_no_mouse_button.setText("▶  AutoNoMouse")
+            self.auto_no_mouse_button.setStyleSheet(
+                "background-color: lightblue;"
+            )
+            return
+
+        self._anm = manager.auto_no_mouse(
+            manager.task,
+            accuracy_left=self._get_p_left(),
+            accuracy_right=self._get_p_right(),
+        )
+        self._anm.start()
+        self.auto_no_mouse_button.setText("■  AutoNoMouse")
+        self.auto_no_mouse_button.setStyleSheet("background-color: salmon;")
+
+    def _inject_trials(self) -> None:
+        p_l, p_r = self._get_p_left(), self._get_p_right()
+        injector = manager.auto_no_mouse(
+            manager.task, accuracy_left=p_l, accuracy_right=p_r
+        )
+        injector.inject_trials(self._get_n_inject(), p_l, p_r)
 
 
 class FunctionsLayout(Layout):

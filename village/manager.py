@@ -26,6 +26,7 @@ from village.classes.enums import (
 )
 from village.classes.subject import Subject
 from village.custom_classes.after_session_base import AfterSessionBase
+from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
@@ -82,6 +83,7 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
+        self.auto_no_mouse: type = AutoNoMouse_Base
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
@@ -346,6 +348,11 @@ class Manager:
                         if hasattr(cls, "draw") and callable(getattr(cls, "draw")):
                             c = cls()
                             self.camera_draw = c
+                    elif (
+                        issubclass(cls, AutoNoMouse_Base)
+                        and cls != AutoNoMouse_Base
+                    ):
+                        self.auto_no_mouse = cls
 
             except Exception:
                 log.error(
