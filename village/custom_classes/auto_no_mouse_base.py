@@ -46,8 +46,8 @@ class AutoNoMouse_Base:
         return self._thread is not None and self._thread.is_alive()
 
     def _run(self) -> None:
-        keep_go = self.task.current_trial <= self.task.maximum_number_of_trials
-        while (not self._stop_event.is_set() and keep_go):
+        while (not self._stop_event.is_set() and
+               self.task.current_trial <= self.task.maximum_number_of_trials):
             self.run_trial()
 
     def run_trial(self) -> None:
