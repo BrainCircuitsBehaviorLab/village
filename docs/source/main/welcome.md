@@ -1,17 +1,18 @@
 <!-- ── SECTION 1: Intro ── -->
 <div style="padding: 0.5rem 2rem; margin-bottom: 4px;">
+<p>The Training Village is a system designed for the continuous, automated training of rodents in complex cognitive tasks. RFID-tagged animals live in groups and individually access an operant box to perform tasks at any time, 24/7.</p>
 <table style="border-collapse: collapse; border: none; width: 100%;">
 <tr>
 <td style="border: none; width: 50%; vertical-align: middle; padding-right: 30px;">
 <img src="_static/illustration.png" style="width: 100%;" alt="Training Village">
 </td>
 <td style="border: none; vertical-align: top;">
-<p>The Training Village is designed for the continuous, automated training of rodents in complex cognitive tasks. RFID-tagged animals live in social groups and individually access an operant box at any time, 24/7.</p>
-<ul>
-<li><strong>Welfare:</strong> Eliminates human handling and transport, providing the stable and predictable conditions required for optimal cognitive testing.</li>
-<li><strong>Productivity:</strong> A single system supports 10–12 animals simultaneously, significantly reducing labor hours.</li>
-<li><strong>Real-Time Monitoring:</strong> Access live feeds via VNC and receive instant status updates or alerts through Telegram.</li>
-<li><strong>Open-Source &amp; Flexible:</strong> Designed to integrate with your specific protocols (Python-compatible). Fully open-source under <a href="https://www.gnu.org/licenses/quick-guide-gplv3.pdf">GPL version 3</a> and <a href="https://oshwa.org/resources/open-source-hardware-definition/">OSHW version 1</a> licenses. Access the source code on <a href="https://github.com/BrainCircuitsBehaviorLab/village/">GitHub</a> and find detailed assembly plans in the <a href="resources_index.html">Resources</a> section.</li>
+<ul class="purple-bullets">
+<li><strong style="font-size: 1.1rem; color: #8B00FF;">Flexibility:</strong> Designed to integrate with your specific Python protocols and behavioral control system. It is fully compatible with <a href="https://sanworks.io">Bpod (Sanworks)</a> or <a href="https://www.arduino.cc">Arduino</a> as your primary task controllers.</li>
+<li><strong style="font-size: 1.1rem; color: #8B00FF;">Productivity:</strong> A single setup supports 10–12 animals simultaneously, significantly reducing manual labor hours.</li>
+<li><strong style="font-size: 1.1rem; color: #8B00FF;">Welfare:</strong> Enhances animal well-being by allowing animals to live in social groups and by eliminating human handling and transport, providing the stable and predictable conditions required for optimal cognitive testing.</li>
+<li><strong style="font-size: 1.1rem; color: #8B00FF;">Real-Time Monitoring:</strong> Check animal status at any time via integrated cameras. Receive instant updates and alerts directly through Telegram.</li>
+<li><strong style="font-size: 1.1rem; color: #8B00FF;">Open-Source:</strong> Fully open-source under <a href="https://www.gnu.org/licenses/quick-guide-gplv3.pdf">GPL v.3</a> and <a href="https://oshwa.org/resources/open-source-hardware-definition/">OSHW v.1</a> licenses. Access the source code on <a href="https://github.com/BrainCircuitsBehaviorLab/village/">GitHub</a> and find detailed assembly plans in the <a href="resources_index.html">Resources</a> section.</li>
 </ul>
 </td>
 </tr>
@@ -31,12 +32,24 @@
 <!-- ── SECTION 3: How Does It Work? (text) ── -->
 <div style="padding: 2rem 2rem 1.5rem 2rem; margin-bottom: 4px;">
 <h1 style="font-size: 1.6rem;">How Does It Work?</h1>
-
-<p>Animals reside in social groups within multiple cages connected by transparent tubes, creating specialized zones for nesting, feeding, and social interaction. These cages lead directly to the Access Corridor, the system’s "brain." This module uses RFID identification, video cameras, a precision weight scale, and a dual-door mechanism to manage controlled, single-animal entries into the Operant Box.</p>
-<p>The entire process is orchestrated by a Raspberry Pi equipped with a custom Plug-and-Play HAT (Hardware Attached on Top), which connects all sensors and actuators within the corridor. The Raspberry Pi manages all electronic signals, controls the cameras, and runs the core system software. After each task, the system automatically synchronizes data to a server or external drive and updates the specific training parameters for that subject. The system remains fully accessible via remote control at all times.</p>
-<p>The Training Village is highly versatile and can be used with any operant box controlled by Python scripts. While the system is perfectly integrated with Bpod (Sanworks) for task control, other controllers like Arduino can also be implemented. Crucially, the system operates without the need for an external PC; peripherals such as sound cards or touchscreens for stimulus presentation are controlled directly by the Raspberry Pi with negligible latency.</p>
-<p>The platform is easily extensible to meet advanced research needs. For example, it can integrate Wireless Optogenetics (<a href="https://www.neurolux.org">NEUROLUX</a>) or facilitate deep social behavior analysis by incorporating additional RFID antennas to track animal movement within the home cages (<a href="https://elifesciences.org/articles/19532">ECO-HAB</a>).</p>
-
+<table style="border-collapse: collapse; border: none; width: 100%; margin-bottom: 1rem;">
+<tr>
+<td style="border: none; width: 30%; vertical-align: middle; padding-right: 20px;">
+<img src="_static/raspberry_hat.png" style="width: 100%;" alt="Raspberry Pi HAT">
+</td>
+<td style="border: none; vertical-align: middle;">
+<p>The system is managed by a <a href="https://www.raspberrypi.com">Raspberry Pi</a>, selected for its reliability, low power consumption, and efficiency. This core unit is equipped with a custom Plug-and-Play HAT (Hardware Attached on Top), which seamlessly connects all sensors and actuators within the corridor.</p>
+</td>
+</tr>
+</table>
+<p><strong style="font-size: 1.1rem; color: #8B00FF;">Social Living &amp; Identification —</strong> Animals reside in social groups within one or more home cages. When an animal enters the access corridor, the setup utilizes RFID identification and a video camera to recognize the subject. A precision dual-door mechanism, orchestrated by the Raspberry Pi, ensures a controlled, single-animal entry into the Operant Box.</p>
+<p><strong style="font-size: 1.1rem; color: #8B00FF;">The Training Session —</strong> Once the animal is inside, the task logic and hardware—such as behavioral water ports—are typically managed by Bpod or Arduino. Simultaneously, the Raspberry Pi performs real-time camera-based tracking, allowing the animal's position to trigger specific experimental events. Additionally, it provides the high-level processing power required for peripherals like touchscreens or sound cards, ensuring stimulus presentation with negligible latency.</p>
+<p><strong style="font-size: 1.1rem; color: #8B00FF;">Return &amp; Data Synchronization —</strong> After the session, the animal returns to its social group. All data is automatically synchronized to a server or external drive, and the training parameters for that specific subject are updated. This ensures the animal advances through its training protocols without any manual intervention.</p>
+<p><strong style="font-size: 1.1rem; color: #8B00FF;">Modular &amp; Extensible —</strong> The platform is built to grow with your research:</p>
+<ul>
+<li><strong>Social Behavior:</strong> Optional RFID sensors can be installed in the connecting tubes (<a href="https://elifesciences.org/articles/19532">Eco-HAB</a>) to track movement and facilitate deep social behavior analysis.</li>
+<li><strong>Wireless Optogenetics:</strong> The setup supports seamless integration with wireless optogenetic implants (<a href="https://www.neurolux.org">NEUROLUX</a>).</li>
+</ul>
 </div>
 
 <!-- ── SECTION 4: How Does It Work? (image) ── -->

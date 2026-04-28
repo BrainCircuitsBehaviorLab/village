@@ -8,7 +8,7 @@ We provide the Raspberry Pi along with an SD card that contains both the operati
 Once assembled, simply insert the SD card into the Raspberry Pi, and you can proceed with the system [configuration][CONFIGURE], including setting up remote access over the internet and backups.
 
 ### Build-It-Yourself
-If you prefer to build the Training Village yourself, start by reviewing the complete list of required parts and the plans for all 3D-printable pieces [here][PLANS]. Once you have your own Raspberry Pi, you can either [download][ISO] an image of the SD card to copy onto your device or [install everything from scratch][SOFTWARE].
+If you prefer to build the Training Village yourself, start by reviewing the complete list of required parts and the plans for all 3D-printable pieces [here][PLANS]. Once you have your own Raspberry Pi, you can either [download][IMAGE] an image of the SD card to copy onto your device or [install everything from scratch][SOFTWARE].
 
 ### Launching the System
 Once the system is built and remote access is configured, the keyboard, mouse, and screen can be disconnected, unless a screen is needed in the behavioral box. From this point on, the system will be managed entirely from an external computer connected remotely.
@@ -24,5 +24,5 @@ This command activates a Python environment (.env) and runs the file `/home/rasp
 [INSTRUCTIONS]: /resources/hardware.md
 [CONFIGURE]: /initial_setup_index.rst
 [PLANS]: /resources/list_of_parts.md
-[ISO]: /resources/ISO.md
+[IMAGE]: /resources/image.md
 [SOFTWARE]: /resources/software_installation.md

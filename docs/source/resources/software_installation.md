@@ -1,6 +1,6 @@
 ## Manual Software Installation
 
-You can download a ready-to-use ISO image containing the operating system (Raspberry Pi OS) along with all necessary libraries and Python code pre-installed [here][ISO].
+You can download a ready-to-use disk image containing the operating system (Raspberry Pi OS) along with all necessary libraries and Python code pre-installed [here][IMAGE].
 
 Follow the instructions on this page if you prefer a manual installation. The process can be challenging, so proceed only if you have a basic understanding of Linux distributions and are comfortable using the terminal.
 
@@ -279,7 +279,7 @@ village
 ```
 
 [OS]: https://www.raspberrypi.com/software/
-[ISO]: https://www.raspberrypi.com/software/
+[IMAGE]: image.md
 [UPDATE]: https://www.raspberrypi.com/documentation/computers/os.html
 
 <br>

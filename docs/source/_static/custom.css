@@ -16,6 +16,12 @@ html {
     z-index: -1;
 }
 
+/* Purple enlarged bullets */
+ul.purple-bullets li::marker {
+    color: #8B00FF;
+    font-size: 1.4em;
+}
+
 /* Normal font size in table cells */
 .sy-content td, .sy-content th {
     font-size: 1rem !important;
