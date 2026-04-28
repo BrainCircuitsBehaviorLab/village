@@ -8,7 +8,7 @@
 .. raw:: html
 
    <h1 style="text-align: center; font-size: 2.8rem;">Welcome to The Training Village</h1>
-   <p style="text-align: center; font-size: 1.2rem; margin-top: -1rem; opacity: 0.75;">Continuous testing of rodents in cognitive tasks</p>
+   <p style="text-align: center; font-size: 1.2rem; margin-top: -1rem; color: #8B00FF;">Continuous testing of rodents in cognitive tasks</p>
 
 .. toctree::
    :hidden:

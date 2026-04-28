@@ -10,4 +10,4 @@ SOFTWARE RESOURCES
     :maxdepth: 1
 
     resources/software_installation.md
-    resources/ISO.md
+    resources/image.md
