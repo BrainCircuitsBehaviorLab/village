@@ -51,7 +51,7 @@ class Label(QLabel):
         else:
             style += "; background-color: " + background + "}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 9pt}"
+            style += "QToolTip {background-color: white; color: black; font-size: 8pt}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         if right_aligment:
@@ -101,7 +101,7 @@ class PushButton(QPushButton):
         super().__init__(text)
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 9pt}"
+            style += "QToolTip {background-color: white; color: black; font-size: 8pt}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         self.pressed.connect(action)
@@ -142,7 +142,7 @@ class ToggleButton(QPushButton):
         color = "darkgray" if self.value == "OFF" else self.color
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if self.description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 9pt}"
+            style += "QToolTip {background-color: white; color: black; font-size: 8pt}"
             self.setToolTip(self.description)
         self.setStyleSheet(style)
 
@@ -184,7 +184,7 @@ class ComboBox(QComboBox):
         """Updates the combo box styling."""
         color = "darkgray" if self.value == "OFF" else "lightgray"
         self.setStyleSheet(
-            "QComboBox {background-color: " + color + "; font-size: 9pt}"
+            "QComboBox {background-color: " + color + "; font-size: 8pt}"
         )
 
     def handleTextChanged(self, value: str) -> None:

@@ -29,9 +29,9 @@ class Gui:
         """Initializes the GUI application."""
         self.q_app = QApplication.instance()
         self.q_app.setStyle("Fusion")
-        self.q_app.setFont(QFont("DejaVu Sans", 9))
+        self.q_app.setFont(QFont("DejaVu Sans", 8))
         self.q_app.setStyleSheet(
-            "* { font-family: 'DejaVu Sans'; font-size: 9pt; }"
+            "* { font-family: 'DejaVu Sans'; font-size: 8pt; }"
             "QLineEdit:disabled { background-color: #f0f0f0; }"
         )
 
