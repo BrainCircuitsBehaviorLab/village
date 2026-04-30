@@ -1393,19 +1393,20 @@ class InfoLayout(Layout):
         self.events_table.setSelectionMode(QTableWidget.SingleSelection)
         self.events_table.setWordWrap(False)
         self.events_table.verticalHeader().setVisible(False)
-        self.events_table.verticalHeader().setDefaultSectionSize(16)
+        self.events_table.verticalHeader().setDefaultSectionSize(13)
         self.events_table.horizontalHeader().setStretchLastSection(True)
+        self.events_table.horizontalHeader().setDefaultSectionSize(13)
         self.events_table.horizontalHeader().setSectionResizeMode(
-            QHeaderView.ResizeToContents
+            QHeaderView.Interactive
         )
-        self.events_table.setFixedSize(198 * self.column_width, 15 * self.row_height)
+        self.events_table.setFixedSize(198 * self.column_width, 16 * self.row_height)
         f = QFont("Monospace")
         f.setStyleHint(QFont.TypeWriter)
         self.events_table.setFont(f)
         self.events_table.cellDoubleClicked.connect(
             lambda row, _: self.on_row_double_clicked(row)
         )
-        self.addWidget(self.events_table, 2, 2, 15, 198)
+        self.addWidget(self.events_table, 1, 2, 16, 198)
         self.update_gui()
 
     def update_gui(self) -> None:
@@ -1431,6 +1432,11 @@ class InfoLayout(Layout):
                 if color:
                     item.setBackground(color)
                 self.events_table.setItem(i, j, item)
+
+        col_widths = {"date": 130, "type": 60, "subject": 80}
+        for j, col in enumerate(columns):
+            if col in col_widths:
+                self.events_table.setColumnWidth(j, col_widths[col])
 
         self.events_table.scrollToBottom()
 
