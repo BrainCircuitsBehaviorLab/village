@@ -1393,6 +1393,7 @@ class InfoLayout(Layout):
         self.events_table.setSelectionMode(QTableWidget.SingleSelection)
         self.events_table.setWordWrap(False)
         self.events_table.verticalHeader().setVisible(False)
+        self.events_table.verticalHeader().setMinimumSectionSize(1)
         self.events_table.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.events_table.verticalHeader().setDefaultSectionSize(13)
         self.events_table.horizontalHeader().setStretchLastSection(True)
@@ -1433,6 +1434,9 @@ class InfoLayout(Layout):
                 if color:
                     item.setBackground(color)
                 self.events_table.setItem(i, j, item)
+
+        for i in range(len(df)):
+            self.events_table.setRowHeight(i, 13)
 
         col_widths = {"date": 130, "type": 60, "subject": 80}
         for j, col in enumerate(columns):
