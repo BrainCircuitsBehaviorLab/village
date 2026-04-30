@@ -30,6 +30,7 @@ class Gui:
         self.q_app = QApplication.instance()
         self.q_app.setStyle("Fusion")
         self.q_app.setFont(QFont("DejaVu Sans", 9))
+        print(f"[DEBUG] font: {self.q_app.font().family()}, {self.q_app.font().pointSize()}pt")
         self.q_app.setStyleSheet("QLineEdit:disabled {background-color: #f0f0f0;}")
 
         # put a pretty icon
