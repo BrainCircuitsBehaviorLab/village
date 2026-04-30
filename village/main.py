@@ -27,9 +27,11 @@ fmt.setSwapBehavior(QSurfaceFormat.DoubleBuffer)
 
 QSurfaceFormat.setDefaultFormat(fmt)
 
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication
 
 q_app = QApplication.instance() or QApplication(sys.argv)
+q_app.setFont(QFont("DejaVu Sans", 9))
 
 import gc
 import queue
