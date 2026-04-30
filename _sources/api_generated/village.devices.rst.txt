@@ -29,6 +29,7 @@
    :recursive:
 
    camera
+   chip
    motor
    rfid
    scale

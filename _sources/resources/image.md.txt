@@ -13,10 +13,11 @@ Here you can download a disk image containing the operating system (Raspberry Pi
 
 1. Download the [Training Village Disk Image][LINK]
 2. Open Raspberry Pi Imager
-3. Click Choose OS → scroll down → Use custom image → select the downloaded file
-4. Click Choose Storage → select your SD card
-5. Click Write and wait for it to finish (Raspberry Pi Imager will verify the image automatically)
-6. Insert the SD card into your Raspberry Pi and power it on. On the first boot the system will automatically expand the partition to fill the SD card — this takes about a minute.
+3. Select Raspberry Pi 5.
+4. Click Choose OS → scroll down → Use custom image → select the downloaded file
+5. Click Choose Storage → select your SD card
+6. Click Write and wait for it to finish (Raspberry Pi Imager will verify the image automatically)
+7. Insert the SD card into your Raspberry Pi and power it on. On the first boot the system will automatically expand the partition to fill the SD card — this takes about a minute.
 
 
 ### Source Code

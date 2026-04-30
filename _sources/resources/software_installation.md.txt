@@ -104,6 +104,7 @@ pip install pyserial
 pip install pandas
 pip install seaborn
 pip install calplot
+pip install PCA9685-smbus2
 ```
 
 ### Screen Settings

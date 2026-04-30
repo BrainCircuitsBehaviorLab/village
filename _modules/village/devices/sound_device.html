@@ -402,11 +402,11 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="19"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieves a list of available sound device names.</span>
 </span><span data-line="20">
 </span><span data-line="21"><span class="sd">    Returns:</span>
-</span><span data-line="22"><span class="sd">        list[str]: A list of device names.</span>
+</span><span data-line="22"><span class="sd">        list[str]: A list of device names, or [&quot;No device&quot;] if none are found.</span>
 </span><span data-line="23"><span class="sd">    &quot;&quot;&quot;</span>
 </span><span data-line="24">    <span class="n">devices</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">query_devices</span><span class="p">()</span>
 </span><span data-line="25">    <span class="n">devices_str</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">]</span>
-</span><span data-line="26">    <span class="k">return</span> <span class="n">devices_str</span></div>
+</span><span data-line="26">    <span class="k">return</span> <span class="n">devices_str</span> <span class="k">if</span> <span class="n">devices_str</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;No device&quot;</span><span class="p">]</span></div>
 
 </span><span data-line="27">
 </span><span data-line="28">
@@ -658,7 +658,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=e994fb21"></script>
+      <script src="../../../_static/documentation_options.js?v=78df40fc"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
