@@ -1393,6 +1393,7 @@ class InfoLayout(Layout):
         self.events_table.setSelectionMode(QTableWidget.SingleSelection)
         self.events_table.setWordWrap(False)
         self.events_table.verticalHeader().setVisible(False)
+        self.events_table.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.events_table.verticalHeader().setDefaultSectionSize(13)
         self.events_table.horizontalHeader().setStretchLastSection(True)
         self.events_table.horizontalHeader().setDefaultSectionSize(13)
@@ -1438,7 +1439,10 @@ class InfoLayout(Layout):
             if col in col_widths:
                 self.events_table.setColumnWidth(j, col_widths[col])
 
-        self.events_table.scrollToBottom()
+        scrollbar = self.events_table.verticalScrollBar()
+        at_bottom = scrollbar.value() >= scrollbar.maximum() - 2
+        if at_bottom:
+            self.events_table.scrollToBottom()
 
     def on_row_double_clicked(self, row: int) -> None:
         """Shows full row data in a dialog on double-click."""
