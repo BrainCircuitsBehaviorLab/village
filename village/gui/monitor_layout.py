@@ -4,6 +4,7 @@ import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
+import pandas as pd
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QColor, QFont, QPixmap
 from PyQt5.QtWidgets import (
@@ -1381,7 +1382,7 @@ class InfoLayout(Layout):
             columns (int): Number of columns.
         """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self._events_df = None
+        self._events_df: pd.DataFrame = pd.DataFrame()
         self.draw()
 
     def draw(self) -> None:
@@ -1392,25 +1393,24 @@ class InfoLayout(Layout):
         self.events_table.setSelectionMode(QTableWidget.SingleSelection)
         self.events_table.setWordWrap(False)
         self.events_table.verticalHeader().setVisible(False)
+        self.events_table.verticalHeader().setDefaultSectionSize(16)
         self.events_table.horizontalHeader().setStretchLastSection(True)
         self.events_table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeToContents
         )
-        self.events_table.setFixedSize(
-            198 * self.column_width, 17 * self.row_height
-        )
+        self.events_table.setFixedSize(198 * self.column_width, 15 * self.row_height)
         f = QFont("Monospace")
         f.setStyleHint(QFont.TypeWriter)
         self.events_table.setFont(f)
         self.events_table.cellDoubleClicked.connect(
             lambda row, _: self.on_row_double_clicked(row)
         )
-        self.addWidget(self.events_table, 0, 2, 17, 198)
+        self.addWidget(self.events_table, 2, 2, 15, 198)
         self.update_gui()
 
     def update_gui(self) -> None:
         """Updates the displayed events logs."""
-        self._events_df = manager.events.df.tail(16).reset_index(drop=True)
+        self._events_df = manager.events.df.tail(30).reset_index(drop=True)
         df = self._events_df
 
         if df.empty:
@@ -1437,7 +1437,7 @@ class InfoLayout(Layout):
     def on_row_double_clicked(self, row: int) -> None:
         """Shows full row data in a dialog on double-click."""
         df = self._events_df
-        if df is None or df.empty or row >= len(df):
+        if df.empty or row >= len(df):
             return
         row_data = df.iloc[row]
         text = "\n".join(f"{k}: {v}" for k, v in row_data.items())
