@@ -1,21 +1,24 @@
 from __future__ import annotations
 
-import html
 import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QFont, QPixmap
+from PyQt5.QtGui import QColor, QFont, QPixmap
 from PyQt5.QtWidgets import (
     QDialog,
     QHBoxLayout,
+    QHeaderView,
     QLabel,
     QLineEdit,
     QMessageBox,
     QPushButton,
     QScrollArea,
     QStackedLayout,
+    QTableWidget,
+    QTableWidgetItem,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
     QWizard,
@@ -1362,6 +1365,13 @@ class CorridorLayout(Layout):
 class InfoLayout(Layout):
     """Layout for displaying system information logs."""
 
+    ROW_COLORS = {
+        "START": QColor("#e6f2ff"),
+        "END": QColor("#e6f2ff"),
+        "ERROR": QColor("#ffe6e6"),
+        "ALARM": QColor("#ffe6e6"),
+    }
+
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         """Initializes the InfoLayout.
 
@@ -1371,67 +1381,82 @@ class InfoLayout(Layout):
             columns (int): Number of columns.
         """
         super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self._events_df = None
         self.draw()
 
     def draw(self) -> None:
-        """Draws the info text area."""
-        self.events_text: QLabel = self.create_and_add_label("", 0, 2, 198, 17, "black")
-        self.events_text.setTextFormat(Qt.RichText)
-        self.events_text.setTextInteractionFlags(Qt.TextSelectableByMouse)
-        self.events_text.setWordWrap(False)
+        """Draws the events table."""
+        self.events_table = QTableWidget()
+        self.events_table.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.events_table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.events_table.setSelectionMode(QTableWidget.SingleSelection)
+        self.events_table.setWordWrap(False)
+        self.events_table.verticalHeader().setVisible(False)
+        self.events_table.horizontalHeader().setStretchLastSection(True)
+        self.events_table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeToContents
+        )
+        self.events_table.setFixedSize(
+            198 * self.column_width, 17 * self.row_height
+        )
         f = QFont("Monospace")
         f.setStyleHint(QFont.TypeWriter)
-        self.events_text.setFont(f)
+        self.events_table.setFont(f)
+        self.events_table.cellDoubleClicked.connect(
+            lambda row, _: self.on_row_double_clicked(row)
+        )
+        self.addWidget(self.events_table, 0, 2, 17, 198)
         self.update_gui()
 
     def update_gui(self) -> None:
         """Updates the displayed events logs."""
-        df_tail = manager.events.df.tail(16)
-        html_table = self.events_df_to_html(df_tail)
-        self.events_text.setText(html_table)
-
-    @staticmethod
-    def events_df_to_html(df) -> str:
-        """Converts the events DataFrame to an HTML table string.
-
-        Args:
-            df (pd.DataFrame): The events DataFrame.
-
-        Returns:
-            str: HTML representation of the table.
-        """
-        ROW_BG = {
-            "INFO": None,
-            "START": "#e6f2ff",
-            "END": "#e6f2ff",
-            "ERROR": "#ffe6e6",
-            "ALARM": "#ffe6e6",
-        }
+        self._events_df = manager.events.df.tail(16).reset_index(drop=True)
+        df = self._events_df
 
         if df.empty:
-            return "<i>No events</i>"
+            self.events_table.setRowCount(0)
+            return
 
-        headers = list(df.columns)
-        rows_html = []
+        columns = list(df.columns)
+        self.events_table.setColumnCount(len(columns))
+        self.events_table.setHorizontalHeaderLabels(columns)
+        self.events_table.setRowCount(len(df))
 
-        for _, row in df.iterrows():
-            t = str(row.get("type", "")).upper() if "type" in df.columns else ""
-            bg = ROW_BG.get(t)
-            style = f"background-color:{bg};" if bg else ""
+        for i, (_, row) in enumerate(df.iterrows()):
+            t = str(row.get("type", "")).upper()
+            color = self.ROW_COLORS.get(t)
+            for j, col in enumerate(columns):
+                item = QTableWidgetItem(str(row.get(col, "")))
+                item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+                if color:
+                    item.setBackground(color)
+                self.events_table.setItem(i, j, item)
 
-            tds = "".join(
-                f"<td style='padding:2px 6px; white-space:nowrap;'>"
-                f"{html.escape(str(row.get(col, '')))}</td>"
-                for col in headers
-            )
-            rows_html.append(f"<tr style='{style}'>{tds}</tr>")
+        self.events_table.scrollToBottom()
 
-        table = (
-            "<table cellspacing='0' cellpadding='0' "
-            "style='border-collapse:collapse; font-family:monospace; font-size:8pt;'>"
-            f"<tbody>{''.join(rows_html)}</tbody></table>"
-        )
-        return table
+    def on_row_double_clicked(self, row: int) -> None:
+        """Shows full row data in a dialog on double-click."""
+        df = self._events_df
+        if df is None or df.empty or row >= len(df):
+            return
+        row_data = df.iloc[row]
+        text = "\n".join(f"{k}: {v}" for k, v in row_data.items())
+        self.show_text_dialog(text)
+
+    def show_text_dialog(self, text: str) -> None:
+        """Shows a read-only dialog with the given text."""
+        dialog = QDialog(self.window)
+        dialog.setWindowTitle("")
+        layout = QVBoxLayout(dialog)
+        text_edit = QTextEdit()
+        text_edit.setReadOnly(True)
+        text_edit.setPlainText(text)
+        layout.addWidget(text_edit)
+        btn = QPushButton("OK")
+        btn.clicked.connect(dialog.accept)
+        layout.addWidget(btn)
+        dialog.resize(500, 400)
+        dialog.exec_()
 
 
 class CorridorPlotLayout(Layout):
