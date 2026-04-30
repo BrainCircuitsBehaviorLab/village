@@ -19,6 +19,7 @@ You'll need to 3D print the following parts to build the Training Village system
 - **Cage connectors**
   - Tunnel connectors (x6)
   - Cage connectors (x7)
+  - Connector blockers (x3)
 
 [Download all the 3D printing files here][3D]
 
@@ -26,17 +27,15 @@ You'll need to 3D print the following parts to build the Training Village system
 
 Below are the CAD files for the parts that need to be CNC machined:
 
-- **Transparent Acrylic 4mm Components**:
+- **4mm Transparent Acrylic**:
   - **Corridor Lid** (x1): The lid that covers the corridor.
   - **Corridor Lid Stops** (x3): These stops ensure that the mice cannot push up the corridor
   lid and escape the system.
 
-- **White Acrylic 3mm Components**:
-  - **Base** (x1): The foundation where the Training Village is mounted. There are 2 versions, small base that uses 2 homecages, and large base that uses 4 homecages.
+- **3mm Matte White Acrylic**:
+  - **Base** (x1): The foundation where the Training Village is mounted. Available in two
+    versions: small (2 home cages) and large (4 home cages).
   - **Doors** (x2): CNC machined doors for the system.
-  - **Blockers** (x7): These blockers are used during maintenance to keep the mice inside the
-  system without needing to handle them. They fit into a slot on each cage connector,
-  preventing the mice from exiting when the tubes are disconnected.
 
 [Download all the CAD files here][CAD]
 

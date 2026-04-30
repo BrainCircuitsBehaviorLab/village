@@ -19,11 +19,11 @@ def get_sound_devices() -> list[str]:
     """Retrieves a list of available sound device names.
 
     Returns:
-        list[str]: A list of device names.
+        list[str]: A list of device names, or ["No device"] if none are found.
     """
     devices = sd.query_devices()
     devices_str = [d["name"] for d in devices]
-    return devices_str
+    return devices_str if devices_str else ["No device"]
 
 
 class SoundDevice:
