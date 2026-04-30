@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from PyQt5.QtGui import QGuiApplication, QIcon
+from PyQt5.QtGui import QFont, QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
 from village.classes.enums import ScreenActive
@@ -29,6 +29,7 @@ class Gui:
         """Initializes the GUI application."""
         self.q_app = QApplication.instance()
         self.q_app.setStyle("Fusion")
+        self.q_app.setFont(QFont("DejaVu Sans", 9))
         self.q_app.setStyleSheet("QLineEdit:disabled {background-color: #f0f0f0;}")
 
         # put a pretty icon

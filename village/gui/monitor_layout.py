@@ -1428,7 +1428,7 @@ class InfoLayout(Layout):
 
         table = (
             "<table cellspacing='0' cellpadding='0' "
-            "style='border-collapse:collapse; font-family:monospace; font-size:12px;'>"
+            "style='border-collapse:collapse; font-family:monospace; font-size:9pt;'>"
             f"<tbody>{''.join(rows_html)}</tbody></table>"
         )
         return table
