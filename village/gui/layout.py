@@ -335,8 +335,8 @@ class Layout(QGridLayout):
         self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
             1,
-            158,
-            14,
+            146,
+            18,
             2,
             self.online_or_force_button_clicked,
             "Show live plots while a task is running",
@@ -346,8 +346,8 @@ class Layout(QGridLayout):
         self.stop_button = self.create_and_add_button(
             "",
             1,
-            172,
-            14,
+            164,
+            18,
             2,
             self.stop_button_clicked,
             "Stop a running task",
@@ -357,8 +357,8 @@ class Layout(QGridLayout):
         self.exit_button = self.create_and_add_button(
             "EXIT",
             1,
-            186,
-            14,
+            182,
+            18,
             2,
             self.exit_button_clicked,
             "Exit the application",
