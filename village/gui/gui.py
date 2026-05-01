@@ -55,11 +55,18 @@ class Gui:
     def create_behavior_window(self) -> None:
         """Creates and configures the behavior window on the secondary monitor."""
         # get the resolution of the secondary monitor
-        screen = QGuiApplication.screens()[1]
-        geometry = screen.geometry()
+        try:
+            screen = QGuiApplication.screens()[1]
+            geometry = screen.geometry()
 
-        self.behavior_window = BehaviorWindow(geometry)
-        settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
+            self.behavior_window = BehaviorWindow(geometry)
+            settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
+        except IndexError:
+            log.error(
+                "Secondary screen not detected. "
+                "Behavior window will not be displayed."
+            )
+            self.behavior_window = NullBehaviorWindow()
 
     def exit_app(self) -> None:
         """Exits the application gracefully.
