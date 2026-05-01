@@ -746,6 +746,7 @@ settings = Settings(
 # settings.set("DEFAULT_CODE_DIRECTORY", default_code_directory)
 # settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "OFF")
 # settings.restore_factory_settings()
+# settings.create_factory_settings()
 # settings.restore_visual_settings()
 # settings.restore_directory_settings()
 # settings.print()

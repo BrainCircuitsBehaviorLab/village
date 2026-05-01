@@ -1,6 +1,6 @@
 import time
 
-from PCA9685_smbus2 import PCA9685
+from PCA9685_smbus2 import PCA9685  # type: ignore
 
 # Init
 pwm = PCA9685.PCA9685(i2c_bus=1, address=0x40)

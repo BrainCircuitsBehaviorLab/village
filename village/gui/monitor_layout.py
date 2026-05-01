@@ -1118,7 +1118,7 @@ class CorridorLayout(Layout):
             row (int): The row position.
             column (int): The column position.
         """
-        width = 8
+        width = 9
         for direction in ("empty_limit", "subject_limit"):
             lb = LabelButtons(name, direction, row, column, width, "black", self)
             self.lbs.append(lb)
@@ -1144,7 +1144,7 @@ class CorridorLayout(Layout):
             "bottom",
             "threshold",
         ):
-            lb = LabelButtons(name, direction, row, column, 6, color, self)
+            lb = LabelButtons(name, direction, row, column, 7, color, self)
             self.lbs.append(lb)
             row += 2
 
@@ -1175,7 +1175,7 @@ class CorridorLayout(Layout):
                 direction,
                 row,
                 column,
-                6,
+                7,
                 color,
                 self,
                 width_res=width_res,
@@ -1188,11 +1188,11 @@ class CorridorLayout(Layout):
         """Draws camera adjustment options."""
         row = 2
         column = 79
-        width = 12
+        width = 9
         color = "black"
 
         self.label_corridor: Label = self.create_and_add_label(
-            "CORRIDOR ADJUSTMENTS", row, column, 17, 2, color
+            "CORRIDOR ADJUSTMENTS", row, column, 18, 2, color
         )
         row += 2
 
@@ -1217,7 +1217,7 @@ class CorridorLayout(Layout):
         width = 9
 
         self.label_box: Label = self.create_and_add_label(
-            "BOX ADJUSTMENTS", row, column, 17, 2, color
+            "BOX ADJUSTMENTS", row, column, 18, 2, color
         )
         row += 2
 
