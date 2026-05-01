@@ -202,9 +202,17 @@ class TableView(QTableView):
                     text = text.replace("  |  ", "\n")
                     QMessageBox.information(self, "", text)
         else:
-            text = str(index.data())
-            text = text.replace("  |  ", "\n")
-            self.show_text_dialog(text)
+            model = self._model()
+            row = index.row()
+            num_cols = model.columnCount()
+            lines = []
+            for col in range(num_cols):
+                header = model.headerData(col, Qt.Horizontal, Qt.DisplayRole)
+                value = str(model.data(model.index(row, col), Qt.DisplayRole))
+                value = value.replace("  |  ", "\n  ")
+                lines.append(f"{header}: {value}")
+            self.show_text_dialog("\n".join(lines))
+            self.clearSelection()
 
     def save_changes_in_df(self, update: bool = True) -> None:
         model = self._model()

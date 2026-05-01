@@ -273,7 +273,8 @@ class Camera:
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
 
         self.cam.start()
-        self.watchdog_timer.start()
+        if self.name == "CORRIDOR":
+            self.watchdog_timer.start()
 
     def set_properties(self) -> None:
         """Updates camera detection properties from settings."""
@@ -341,18 +342,9 @@ class Camera:
         self.detection_size = settings.get("DETECTION_CIRCLE_SIZE")
 
         # lens position, sharpness and contrast settings
-        if self.name == "CORRIDOR" and manager.day:
-            lensposition = settings.get("LENS_POSITION_" + self.name)[0]
-            sharpness = settings.get("SHARPNESS_" + self.name)[0]
-            contrast = settings.get("CONTRAST_" + self.name)[0]
-        elif self.name == "CORRIDOR":
-            lensposition = settings.get("LENS_POSITION_" + self.name)[1]
-            sharpness = settings.get("SHARPNESS_" + self.name)[1]
-            contrast = settings.get("CONTRAST_" + self.name)[1]
-        else:
-            lensposition = settings.get("LENS_POSITION_" + self.name)
-            sharpness = settings.get("SHARPNESS_" + self.name)
-            contrast = settings.get("CONTRAST_" + self.name)
+        lensposition = settings.get("LENS_POSITION_" + self.name)
+        sharpness = settings.get("SHARPNESS_" + self.name)
+        contrast = settings.get("CONTRAST_" + self.name)
 
         self.cam.set_controls({"LensPosition": lensposition})
         self.cam.set_controls({"Sharpness": sharpness})
@@ -400,6 +392,9 @@ class Camera:
         self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
         self.show_time_info = True
+        self.camera_timestamp = time_utils.now_timestamp()
+        if self.name == "BOX":
+            self.watchdog_timer.start()
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_recording(self) -> None:
@@ -408,6 +403,8 @@ class Camera:
             self.is_recording = False
             self.cam.stop_encoder()
             self.save_csv()
+        if self.name == "BOX":
+            self.watchdog_timer.stop()
         self.show_time_info = False
         self.reset_values()
 
@@ -1076,6 +1073,10 @@ def get_camera(index: int, framerate: int, name: str) -> Camera | NullCamera:
         CameraBase: An initialized Camera or null class on failure.
     """
     try:
+        available = Picamera2.global_camera_info()
+        if index >= len(available):
+            log.info("Cam " + name + " not found at index " + str(index))
+            return NullCamera()
         cam = Camera(index, framerate, name)
         log.info("Cam " + name + " successfully initialized")
         return cam

@@ -90,14 +90,8 @@ class LabelButtons:
             "threshold": 4,
             "empty_limit": 0,
             "subject_limit": 1,
-            "lens_position_day": 0,
-            "lens_position_night": 1,
             "lens_position": -1,
-            "sharpness_day": 0,
-            "sharpness_night": 1,
             "sharpness": -1,
-            "contrast_day": 0,
-            "contrast_night": 1,
             "contrast": -1,
         }
         self.mapping_dict_max = {
@@ -108,14 +102,8 @@ class LabelButtons:
             "threshold": 255,
             "empty_limit": 1000000,
             "subject_limit": 1000000,
-            "lens_position_day": 10,
-            "lens_position_night": 10,
             "lens_position": 10,
-            "sharpness_day": 16,
-            "sharpness_night": 16,
             "sharpness": 16,
-            "contrast_day": 16,
-            "contrast_night": 16,
             "contrast": 16,
         }
         self.mapping_dict_increase = {
@@ -126,14 +114,8 @@ class LabelButtons:
             "threshold": "\u2191",
             "empty_limit": "\u2191",
             "subject_limit": "\u2191",
-            "lens_position_day": "\u2191",
-            "lens_position_night": "\u2191",
             "lens_position": "\u2191",
-            "sharpness_day": "\u2191",
-            "sharpness_night": "\u2191",
             "sharpness": "\u2191",
-            "contrast_day": "\u2191",
-            "contrast_night": "\u2191",
             "contrast": "\u2191",
         }
         self.mapping_dict_decrease = {
@@ -144,14 +126,8 @@ class LabelButtons:
             "threshold": "\u2193",
             "empty_limit": "\u2193",
             "subject_limit": "\u2193",
-            "lens_position_day": "\u2193",
-            "lens_position_night": "\u2193",
             "lens_position": "\u2193",
-            "sharpness_day": "\u2193",
-            "sharpness_night": "\u2193",
             "sharpness": "\u2193",
-            "contrast_day": "\u2193",
-            "contrast_night": "\u2193",
             "contrast": "\u2193",
         }
 
@@ -1220,42 +1196,21 @@ class CorridorLayout(Layout):
         )
         row += 2
 
-        for direction in ("lens_position_day", "lens_position_night"):
-            lb = LabelButtons(
-                "LENS_POSITION_CORRIDOR",
-                direction,
-                row,
-                column,
-                width,
-                color,
-                self,
-            )
-            self.lbs.append(lb)
-            row += 2
-        for direction in ("sharpness_day", "sharpness_night"):
-            lb = LabelButtons(
-                "SHARPNESS_CORRIDOR",
-                direction,
-                row,
-                column,
-                width,
-                color,
-                self,
-            )
-            self.lbs.append(lb)
-            row += 2
-        for direction in ("contrast_day", "contrast_night"):
-            lb = LabelButtons(
-                "CONTRAST_CORRIDOR",
-                direction,
-                row,
-                column,
-                width,
-                color,
-                self,
-            )
-            self.lbs.append(lb)
-            row += 2
+        lb = LabelButtons(
+            "LENS_POSITION_CORRIDOR", "lens_position", row, column, width, color, self
+        )
+        self.lbs.append(lb)
+        row += 2
+        lb = LabelButtons(
+            "SHARPNESS_CORRIDOR", "sharpness", row, column, width, color, self
+        )
+        self.lbs.append(lb)
+        row += 2
+        lb = LabelButtons(
+            "CONTRAST_CORRIDOR", "contrast", row, column, width, color, self
+        )
+        self.lbs.append(lb)
+        row += 2
 
         row = 2
         column = 104
@@ -1455,7 +1410,9 @@ class InfoLayout(Layout):
             return
         row_data = df.iloc[row]
         text = "\n".join(f"{k}: {v}" for k, v in row_data.items())
+        text = text.replace("  |  ", "\n")
         self.show_text_dialog(text)
+        self.events_table.clearSelection()
 
     def show_text_dialog(self, text: str) -> None:
         """Shows a read-only dialog with the given text."""

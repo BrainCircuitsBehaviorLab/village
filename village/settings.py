@@ -612,9 +612,9 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
     ),
     Setting(
         "LENS_POSITION_CORRIDOR",
-        [1.0, 1.0],
-        list[float],
-        "The lens position of the corridor camera (day, night).",
+        1.0,
+        float,
+        "The lens position of the corridor camera.",
     ),
     Setting(
         "LENS_POSITION_BOX",
@@ -624,9 +624,9 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
     ),
     Setting(
         "SHARPNESS_CORRIDOR",
-        [1.0, 1.0],
-        list[float],
-        "The sharpness of the corridor camera (day, night).",
+        1.0,
+        float,
+        "The sharpness of the corridor camera.",
     ),
     Setting(
         "SHARPNESS_BOX",
@@ -636,9 +636,9 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
     ),
     Setting(
         "CONTRAST_CORRIDOR",
-        [1.0, 1.0],
-        list[float],
-        "The contrast of the corridor camera (day, night).",
+        1.0,
+        float,
+        "The contrast of the corridor camera.",
     ),
     Setting(
         "CONTRAST_BOX",
