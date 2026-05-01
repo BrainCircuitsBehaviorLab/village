@@ -159,5 +159,5 @@ def get_motor(pin: int, angles: list[int]) -> Motor | NullMotor:
         return NullMotor()
 
 
-motor1 = get_motor(settings.get("MOTOR1_PIN"), settings.get("MOTOR1_VALUES"))
-motor2 = get_motor(settings.get("MOTOR2_PIN"), settings.get("MOTOR2_VALUES"))
+motor1 = get_motor(settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES"))
+motor2 = get_motor(settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES"))

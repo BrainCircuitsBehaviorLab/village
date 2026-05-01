@@ -98,48 +98,23 @@ class SettingsLayout(Layout):
                 row += 2
 
             row += 1
-            name = "SOUND SETTINGS"
+            name = "CAMERA SETTINGS"
             label = self.create_and_add_label(name, row, column1, length, 2, "black")
+            label.setProperty("type", name)
             row += 2
-            s = settings.sound_settings[0]
-            self.create_label_and_value(row, column1, s, "", width=width1)
-
-        if (
-            all and settings.get("USE_SOUNDCARD") == Active.ON
-        ) or modify == "SOUND SETTINGS":
-            row = row1 + 15
-            name = "SOUND SETTINGS"
-            for s in settings.sound_settings[1:]:
-                self.create_label_and_value(row, column1, s, name, width=width1)
+            for s in settings.cam_framerate_settings:
+                self.create_label_and_value(row, column1, s, name, width=width4)
                 row += 2
 
-        if all:
-            row = row1 + 20
-            name = "SCREEN SETTINGS"
+            row += 1
+            name = "CORRIDOR SETTINGS"
             label = self.create_and_add_label(name, row, column1, length, 2, "black")
+            label.setProperty("type", name)
             row += 2
-            s = settings.screen_settings[0]
-            self.create_label_and_value(row, column1, s, "", width=width1)
-
-        if (
-            all and settings.get("USE_SCREEN") != ScreenActive.OFF
-        ) or modify == "SCREEN SETTINGS":
-            row = row1 + 24
-            name = "SCREEN SETTINGS"
-            for s in settings.screen_settings[1:]:
-                self.create_label_and_value(row, column1, s, name, width=width1)
+            for s in settings.corridor_settings:
+                self.create_label_and_value(row, column4, s, name, width=width4)
                 row += 2
 
-        if (
-            all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
-        ) or modify == "TOUCHSCREEN SETTINGS":
-            row = row1 + 28
-            name = "TOUCHSCREEN SETTINGS"
-            for s in settings.touchscreen_settings:
-                self.create_label_and_value(row, column1, s, name, width=width1)
-                row += 2
-
-        if all:
             # second column
             row = row1
             name = "TELEGRAM SETTINGS"
@@ -200,71 +175,95 @@ class SettingsLayout(Layout):
                 row += 2
 
             row += 1
-            name = "HOURLY ALARMS"
+            name = "EXTRA SETTINGS"
             label = self.create_and_add_label(name, row, column3, length, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.hourly_alarm_settings:
-                self.create_label_and_value(row, column3, s, name, width=width3)
-                row += 2
-
-            row += 1
-            name = "TWICE-DAILY ALARMS"
-            label = self.create_and_add_label(name, row, column3, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.cycle_alarm_settings:
-                self.create_label_and_value(row, column3, s, name, width=width3)
-                row += 2
-
-            row += 1
-            name = "END-SESSION ALARMS"
-            label = self.create_and_add_label(name, row, column3, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.session_alarm_settings:
-                self.create_label_and_value(row, column3, s, name, width=width3)
+            for s in settings.extra_settings:
+                self.create_label_and_value(row, column3, s, name, width=width4)
                 row += 2
 
             # fourth column
             row = row1
-            name = "CAMERA SETTINGS"
+            name = "HOURLY ALARMS"
             label = self.create_and_add_label(name, row, column4, length, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.cam_framerate_settings:
-                self.create_label_and_value(row, column4, s, name, width=width4)
+            for s in settings.hourly_alarm_settings:
+                self.create_label_and_value(row, column4, s, name, width=width3)
                 row += 2
 
             row += 1
-            name = "CORRIDOR SETTINGS"
+            name = "TWICE-DAILY ALARMS"
             label = self.create_and_add_label(name, row, column4, length, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.corridor_settings:
-                self.create_label_and_value(row, column4, s, name, width=width4)
+            for s in settings.cycle_alarm_settings:
+                self.create_label_and_value(row, column4, s, name, width=width3)
                 row += 2
 
             row += 1
-            name = "EXTRA SETTINGS"
+            name = "END-SESSION ALARMS"
             label = self.create_and_add_label(name, row, column4, length, 2, "black")
             label.setProperty("type", name)
             row += 2
-            for s in settings.extra_settings:
-                self.create_label_and_value(row, column4, s, name, width=width4)
+            for s in settings.session_alarm_settings:
+                self.create_label_and_value(row, column4, s, name, width=width3)
                 row += 2
 
-            # fifth column
-            row = 5
+            row += 1
             name = "VISUAL SETTINGS"
-            label = self.create_and_add_label(name, row, column5, length, 2, "black")
+            label = self.create_and_add_label(name, row, column4, length, 2, "black")
             label.setProperty("type", name)
             row += 2
             for s in settings.visual_settings:
-                self.create_label_and_value(row, column5, s, name, width=width5)
+                self.create_label_and_value(row, column4, s, name, width=width5)
                 row += 2
 
-            row = 23
+            # fifth column
+            row = row1
+            name = "SOUND SETTINGS"
+            label = self.create_and_add_label(name, row, column5, length, 2, "black")
+            row += 2
+            s = settings.sound_settings[0]
+            self.create_label_and_value(row, column5, s, "", width=width1)
+
+        if (
+            all and settings.get("USE_SOUNDCARD") == Active.ON
+        ) or modify == "SOUND SETTINGS":
+            row = row1 + 7
+            name = "SOUND SETTINGS"
+            for s in settings.sound_settings[1:]:
+                self.create_label_and_value(row, column5, s, name, width=width1)
+                row += 2
+
+        if all:
+            row = row1 + 12
+            name = "SCREEN SETTINGS"
+            label = self.create_and_add_label(name, row, column5, length, 2, "black")
+            row += 2
+            s = settings.screen_settings[0]
+            self.create_label_and_value(row, column5, s, "", width=width1)
+
+        if (
+            all and settings.get("USE_SCREEN") != ScreenActive.OFF
+        ) or modify == "SCREEN SETTINGS":
+            row = row1 + 16
+            name = "SCREEN SETTINGS"
+            for s in settings.screen_settings[1:]:
+                self.create_label_and_value(row, column5, s, name, width=width1)
+                row += 2
+
+        if (
+            all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
+        ) or modify == "TOUCHSCREEN SETTINGS":
+            row = row1 + 20
+            name = "TOUCHSCREEN SETTINGS"
+            for s in settings.touchscreen_settings:
+                self.create_label_and_value(row, column5, s, name, width=width1)
+                row += 2
+
+            row = row1 + 26
             name = "CONTROLLER SETTINGS"
             label = self.create_and_add_label(name, row, column5, length, 2, "black")
             label.setProperty("type", name)
@@ -277,7 +276,7 @@ class SettingsLayout(Layout):
             all and settings.get("BEHAVIOR_CONTROLLER") == ControllerEnum.BPOD
         ) or modify == "BPOD SETTINGS":
             name = "BPOD SETTINGS"
-            row = row1 + 24
+            row = row1 + 28
             for s in settings.bpod_settings:
                 self.create_label_and_value(row, column5, s, name, width=width5)
                 row += 2
@@ -378,8 +377,14 @@ class SettingsLayout(Layout):
             "HEALTHCHECKS_URL",
             "PROJECT_DIRECTORY",
             "CONTROLLER_PORT",
-            "MOTOR1_PIN",
-            "MOTOR2_PIN",
+            "MOTOR1_CORRIDOR_INDEX",
+            "MOTOR2_CORRIDOR_INDEX",
+            "MOTOR1_BOX_INDEX",
+            "MOTOR2_BOX_INDEX",
+            "VISIBLE_LIGHT_CORRIDOR_INDEX",
+            "IR_LIGHT_CORRIDOR_INDEX",
+            "VISIBLE_LIGHT_BOX_INDEX",
+            "IR_LIGHT_BOX_INDEX",
             "SCALE_ADDRESS",
             "TEMP_SENSOR_ADDRESS",
             "CAM_BOX_INDEX",

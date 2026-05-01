@@ -220,15 +220,37 @@ if you don't need to specify a particular port for the SSH connection.""",
 ]
 
 device_settings = [
-    Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1."),
-    Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2."),
-    Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
-    Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
     Setting(
-        "CAM_BOX_INDEX",
-        0,
+        "MOTOR1_CORRIDOR_INDEX", 12, int, "The index of the motor 1 of the corridor."
+    ),
+    Setting(
+        "MOTOR2_CORRIDOR_INDEX", 13, int, "The index of the motor 2 of the corridor."
+    ),
+    Setting("MOTOR1_BOX_INDEX", 12, int, "The index of the motor 1 of the box."),
+    Setting("MOTOR2_BOX_INDEX", 13, int, "The index of the motor 2 of the box."),
+    Setting(
+        "VISIBLE_LIGHT_CORRIDOR_INDEX",
+        12,
         int,
-        "The index (0, 1) of the box camera.",
+        "The index of the visible light of the corridor.",
+    ),
+    Setting(
+        "IR_LIGHT_CORRIDOR_INDEX",
+        13,
+        int,
+        "The index of the infrared light of the corridor.",
+    ),
+    Setting(
+        "VISIBLE_LIGHT_BOX_INDEX",
+        12,
+        int,
+        "The index of the visible light of the box.",
+    ),
+    Setting(
+        "IR_LIGHT_BOX_INDEX",
+        13,
+        int,
+        "The index of the infrared light of the box.",
     ),
     Setting(
         "CAM_CORRIDOR_INDEX",
@@ -236,6 +258,14 @@ device_settings = [
         int,
         "The index (0, 1) of the corridor camera.",
     ),
+    Setting(
+        "CAM_BOX_INDEX",
+        0,
+        int,
+        "The index (0, 1) of the box camera.",
+    ),
+    Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
+    Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
 ]
 
 
