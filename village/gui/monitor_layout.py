@@ -339,7 +339,7 @@ class MonitorLayout(Layout):
         _tab_style = (
             "QTabWidget::tab-bar { alignment: center; }"
             "QTabBar::tab { background: #d0d0d0; font-weight: bold;"
-            " padding: 6px 24px; min-width: 100px;"
+            " padding: 6px 16px;"
             " border: 1px solid #aaaaaa; border-bottom: none;"
             " border-radius: 4px 4px 0 0; margin-right: 2px; }"
             "QTabBar::tab:selected { background: steelblue; color: white;"
@@ -384,7 +384,7 @@ class MonitorLayout(Layout):
         self.tab_widget.setStyleSheet(
             "QTabWidget::tab-bar { alignment: center; }"
             "QTabBar::tab { background: #d0d0d0; font-weight: bold;"
-            " padding: 6px 24px; min-width: 120px;"
+            " padding: 6px 16px;"
             " border: 1px solid #aaaaaa; border-bottom: none;"
             " border-radius: 4px 4px 0 0; margin-right: 2px; }"
             "QTabBar::tab:selected { background: steelblue; color: white;"
@@ -396,7 +396,6 @@ class MonitorLayout(Layout):
         self.tab_widget.addTab(self.page7, "PLOT")
         self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
-        self.addWidget(self.tab_widget, 33, 0, 18, 200)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
             "RFID reader: ", 6, 84, 12, 2, "black"
@@ -455,6 +454,8 @@ class MonitorLayout(Layout):
 
         self.addWidget(self.qpicamera2_corridor, 5, 0, 28, 80)
         self.addWidget(self.qpicamera2_box, 5, 120, 28, 80)
+        self.addWidget(self.tab_widget, 33, 0, 18, 200)
+        self.tab_widget.raise_()
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
         """Toggles the cycle setting.
@@ -1347,7 +1348,7 @@ class InfoLayout(Layout):
         self.events_table.horizontalHeader().setSectionResizeMode(
             QHeaderView.Interactive
         )
-        self.events_table.setFixedSize(198 * self.column_width, 16 * self.row_height)
+        self.events_table.setMinimumWidth(198 * self.column_width)
         f = QFont("Monospace")
         f.setStyleHint(QFont.TypeWriter)
         f.setPointSize(11)
