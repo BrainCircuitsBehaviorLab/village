@@ -77,6 +77,7 @@ class SettingsLayout(Layout):
 
     def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
+        self._highlight_nav_button(self.settings_button)
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
         self.critical_changes = False
@@ -303,6 +304,12 @@ class SettingsLayout(Layout):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
             if use_screen == ScreenActive.TOUCHSCREEN:
+                row += 1
+                sub = self.create_and_add_label(
+                    "TOUCH SETTINGS", row, C_COL, C_LABEL_W, 2, "black"
+                )
+                sub.setProperty("type", name)
+                row += 2
                 for s in settings.touchscreen_settings:
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2

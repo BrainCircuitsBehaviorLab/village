@@ -897,6 +897,28 @@ class Layout(QGridLayout):
         self.addWidget(combo_box, row, column, height, width)
         return combo_box
 
+    def _highlight_nav_button(self, active_button: QPushButton) -> None:
+        """Highlights the active navigation button in steelblue."""
+        nav_buttons = [
+            self.main_button,
+            self.monitor_button,
+            self.tasks_button,
+            self.data_button,
+            self.water_calibration_button,
+            self.sound_calibration_button,
+            self.settings_button,
+        ]
+        for btn in nav_buttons:
+            if btn is active_button:
+                btn.setStyleSheet(
+                    "QPushButton {background-color: steelblue; color: white;"
+                    " font-weight: bold}"
+                )
+            else:
+                btn.setStyleSheet(
+                    "QPushButton {background-color: lightgray; font-weight: bold}"
+                )
+
     def update_gui(self) -> None:
         """Updates the GUI elements (placeholder base method)."""
         pass

@@ -614,6 +614,7 @@ class DataLayout(Layout):
             window (GuiWindow): The parent window.
         """
         super().__init__(window)
+        self._highlight_nav_button(self.data_button)
         self.draw()
 
     def draw(self) -> None:

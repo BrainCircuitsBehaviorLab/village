@@ -49,6 +49,7 @@ class TasksLayout(Layout):
             window (GuiWindow): The parent window.
         """
         super().__init__(window)
+        self._highlight_nav_button(self.tasks_button)
         self.window = window
         self.selected = ""
         self.testing_training = False

@@ -1,4 +1,5 @@
 import csv
+import os
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +51,7 @@ class TrialRecorder:
         self._ordered_events: list[str] = []
         self._values: dict[str, Any] = {}
 
+        os.makedirs(os.path.dirname(self._csv_path), exist_ok=True)
         self._csv_file = open(self._csv_path, "w", newline="")
         self._csv_writer = csv.writer(
             self._csv_file, delimiter=";", lineterminator="\n"

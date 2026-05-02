@@ -289,6 +289,7 @@ class MonitorLayout(Layout):
             window (GuiWindow): The parent window.
         """
         super().__init__(window)
+        self._highlight_nav_button(self.monitor_button)
         self.draw()
 
     def draw(self) -> None:

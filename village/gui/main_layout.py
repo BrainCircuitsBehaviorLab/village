@@ -24,6 +24,7 @@ class MainLayout(Layout):
             drawing on startup. Defaults to False.
         """
         super().__init__(window)
+        self._highlight_nav_button(self.main_button)
         self.first_draw = first_draw
         self.draw()
 

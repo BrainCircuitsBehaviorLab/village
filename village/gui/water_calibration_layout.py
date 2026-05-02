@@ -35,6 +35,7 @@ class WaterCalibrationLayout(Layout):
             window (GuiWindow): The parent window.
         """
         super().__init__(window)
+        self._highlight_nav_button(self.water_calibration_button)
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
         self.draw()
