@@ -1,0 +1,28 @@
+Gui
+===
+
+.. currentmodule:: village.gui.gui
+
+.. autoclass:: Gui
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Gui.__init__
+      ~Gui.create_behavior_window
+      ~Gui.exit_app
+      ~Gui.reload_app
+   
+   
+
+   
+   
+   

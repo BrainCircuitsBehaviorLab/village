@@ -1,0 +1,28 @@
+SoundCalibration
+================
+
+.. currentmodule:: village.calibration.sound_calibration
+
+.. autoclass:: SoundCalibration
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SoundCalibration.__init__
+      ~SoundCalibration.close
+      ~SoundCalibration.run
+      ~SoundCalibration.run_in_thread
+   
+   
+
+   
+   
+   
