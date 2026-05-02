@@ -153,9 +153,9 @@ class SettingsLayout(Layout):
             self._pending[self.list_of_toggle_buttons_settings[i].key] = [
                 tb.text() for tb in list_tb
             ]
-        with suppress(AttributeError):
+        with suppress(AttributeError, RuntimeError):
             self._pending["SOUND_DEVICE"] = self.sound_device_combobox.currentText()
-        with suppress(AttributeError):
+        with suppress(AttributeError, RuntimeError):
             self._pending["PROJECT_DIRECTORY"] = (
                 self.project_directory_combobox.currentText()
             )
