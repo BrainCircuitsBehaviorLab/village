@@ -19,6 +19,7 @@ from PyQt5.QtWidgets import (
     QStackedLayout,
     QTableWidget,
     QTableWidgetItem,
+    QTabWidget,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -343,9 +344,6 @@ class MonitorLayout(Layout):
         self.central_layout.addWidget(self.page3)
         self.central_layout.addWidget(self.page4)
 
-        self.bottom_layout = QStackedLayout()
-        self.addLayout(self.bottom_layout, 34, 0, 17, 200)
-
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
         self.page5Layout = InfoLayout(self.window, 17, 200)
@@ -361,9 +359,18 @@ class MonitorLayout(Layout):
         self.page7Layout = CorridorPlotLayout(self.window, 17, 200)
         self.page7.setLayout(self.page7Layout)
 
-        self.bottom_layout.addWidget(self.page5)
-        self.bottom_layout.addWidget(self.page6)
-        self.bottom_layout.addWidget(self.page7)
+        self.tab_widget = QTabWidget()
+        self.tab_widget.setStyleSheet(
+            "QTabBar::tab { background: #d0d0d0; font-weight: bold;"
+            " padding: 4px 12px; }"
+            "QTabBar::tab:selected { background: steelblue; color: white; }"
+            "QTabBar::tab:hover { background: #b0c4de; }"
+        )
+        self.tab_widget.addTab(self.page5, "SYSTEM INFO")
+        self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
+        self.tab_widget.addTab(self.page7, "DETECTION PLOT")
+        self.tab_widget.currentChanged.connect(self.on_tab_changed)
+        self.addWidget(self.tab_widget, 33, 0, 18, 200)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
             "RFID reader: ", 6, 84, 12, 2, "black"
@@ -426,24 +433,8 @@ class MonitorLayout(Layout):
             color="white",
         )
 
-        key = "INFO"
-        possible_values = Info.values()
-        index = Info.get_index_from_value(manager.info)
-        self.info_button = self.create_and_add_toggle_button(
-            key,
-            33,
-            87,
-            26,
-            2,
-            possible_values,
-            index,
-            self.toggle_info_button,
-            "Info and values of the cameras or info about the system",
-            color="white",
-        )
-
         index = Info.get_index_from_string(manager.info.value)
-        self.bottom_layout.setCurrentIndex(index)
+        self.tab_widget.setCurrentIndex(index)
 
         index = Actions.get_index_from_string(manager.actions.value)
         self.central_layout.setCurrentIndex(index)
@@ -494,18 +485,12 @@ class MonitorLayout(Layout):
         self.actions_button.raise_()
         self.update_gui()
 
-    def toggle_info_button(self, value: str, key: str) -> None:
-        """Toggles the info view mode.
-
-        Args:
-            value (str): The new info value.
-            key (str): The setting key.
-        """
-        manager.info = Info[value]
-        settings.set(key, value)
-        index = Info.get_index_from_string(value)
-        self.bottom_layout.setCurrentIndex(index)
-        self.info_button.raise_()
+    def on_tab_changed(self, index: int) -> None:
+        """Handles tab selection for the bottom info panel."""
+        info_values = Info.values()
+        if index < len(info_values):
+            manager.info = Info[info_values[index]]
+            settings.set("INFO", info_values[index])
         self.update_gui()
 
     def update_gui(self) -> None:
