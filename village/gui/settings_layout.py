@@ -27,18 +27,17 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 
-row1 = 5
-column1 = 1
-column2 = 31
-column3 = 76
-column4 = 140
-column5 = 171
-width1 = 20
-width2 = 17
-width3 = 15
-width4 = 21
-width5 = 22
-length = 22
+# ── Left menu panel ────────────────────────────────────────────────────────────
+MENU_COL = 1
+MENU_WIDTH = 22
+
+# ── Right content panel ────────────────────────────────────────────────────────
+C_COL = 25       # content start column
+C_ROW = 5        # content start row
+C_LABEL_W = 22   # label width (≡ old `length`)
+C_VAL_OFF = 22   # offset from C_COL to value widget column
+
+# ── Value widget size constants ────────────────────────────────────────────────
 size1 = 6
 size2 = 45
 size3 = 14
@@ -46,277 +45,307 @@ size4 = 11
 small_box = 4
 mini_box = 3
 
+MENU_SECTIONS = [
+    "MAIN SETTINGS",
+    "SOUND SETTINGS",
+    "SCREEN SETTINGS",
+    "CAMERA SETTINGS",
+    "CORRIDOR SETTINGS",
+    "CONTROLLER SETTINGS",
+    "TELEGRAM SETTINGS",
+    "DIRECTORY SETTINGS",
+    "SYNC SETTINGS",
+    "HOURLY ALARMS",
+    "TWICE-DAILY ALARMS",
+    "END-SESSION ALARMS",
+    "VISUAL SETTINGS",
+    "DEVICE ADDRESSES",
+    "EXTRA SETTINGS",
+]
+
 
 class SettingsLayout(Layout):
     """Layout for viewing and modifying application settings."""
 
     def __init__(self, window: GuiWindow) -> None:
-        """Initializes the SettingsLayout.
-
-        Args:
-            window (GuiWindow): The parent window.
-        """
         super().__init__(window)
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
         self.critical_changes = False
+        self._current_section: str = MENU_SECTIONS[0]
+        self._menu_buttons: dict[str, Any] = {}
         self.draw(all=True, modify="")
 
-    def draw(self, all: bool, modify) -> None:
-        """Draws the settings layout elements.
+    # ── Tracking lists ─────────────────────────────────────────────────────────
 
-        Args:
-            all (bool): Whether to redraw all settings.
-            modify (str): The specific group of settings to modify, if any.
-        """
+    def _init_tracking_lists(self) -> None:
+        self.line_edits: list[LineEdit] = []
+        self.line_edits_settings: list[Setting] = []
+        self.time_edits: list[TimeEdit] = []
+        self.time_edits_settings: list[Setting] = []
+        self.toggle_buttons: list[ToggleButton] = []
+        self.toggle_buttons_settings: list[Setting] = []
+        self.list_of_line_edits: list[list[LineEdit]] = []
+        self.list_of_line_edits_settings: list[Setting] = []
+        self.list_of_toggle_buttons: list[list[ToggleButton]] = []
+        self.list_of_toggle_buttons_settings: list[Setting] = []
+
+    # ── Content area lifecycle ─────────────────────────────────────────────────
+
+    def _destroy_content(self) -> None:
+        """Removes all content-area widgets from the layout and clears tracking lists."""
+        for i in reversed(range(self.count())):
+            item = self.itemAt(i)
+            if item and item.widget():
+                w = item.widget()
+                if w.property("content_area"):
+                    self.removeWidget(w)
+                    w.deleteLater()
+        self._init_tracking_lists()
+
+    def _tag_content_widgets(self, from_index: int) -> None:
+        """Tags all widgets added since from_index as belonging to the content area."""
+        for i in range(from_index, self.count()):
+            item = self.itemAt(i)
+            if item and item.widget():
+                item.widget().setProperty("content_area", True)
+
+    # ── Top-level draw ─────────────────────────────────────────────────────────
+
+    def draw(self, all: bool, modify: str) -> None:
         self.settings_button.setDisabled(True)
 
         if all:
-            self.line_edits: list[LineEdit] = []
-            self.line_edits_settings: list[Setting] = []
+            self._init_tracking_lists()
+            self._draw_static_chrome()
+            self._current_section = MENU_SECTIONS[0]
+            self._highlight_menu(MENU_SECTIONS[0])
+            self.draw_section(MENU_SECTIONS[0])
+        else:
+            # Partial redraw when a toggle changes conditional content
+            self._destroy_content()
+            self.draw_section(self._current_section)
 
-            self.time_edits: list[TimeEdit] = []
-            self.time_edits_settings: list[Setting] = []
+    # ── Static chrome (menu + action buttons) ─────────────────────────────────
 
-            self.toggle_buttons: list[ToggleButton] = []
-            self.toggle_buttons_settings: list[Setting] = []
+    def _draw_static_chrome(self) -> None:
+        # Menu panel background
+        bg = self.create_and_add_label(
+            "", C_ROW, MENU_COL, MENU_WIDTH, 46, "black", background="#e8e8e8"
+        )
+        bg.lower()
 
-            self.list_of_line_edits: list[list[LineEdit]] = []
-            self.list_of_line_edits_settings: list[Setting] = []
+        # Separator line
+        sep = self.create_and_add_label(
+            "", C_ROW, MENU_COL + MENU_WIDTH, 1, 46, "black", background="#aaaaaa"
+        )
+        sep.lower()
 
-            self.list_of_toggle_buttons: list[list[ToggleButton]] = []
-            self.list_of_toggle_buttons_settings: list[Setting] = []
+        # Menu buttons
+        self._menu_buttons = {}
+        for i, name in enumerate(MENU_SECTIONS):
+            btn = self.create_and_add_button(
+                name,
+                C_ROW + i * 3,
+                MENU_COL,
+                MENU_WIDTH,
+                2,
+                lambda checked=False, n=name: self.select_section(n),
+                name,
+                "#d0d0d0",
+            )
+            self._menu_buttons[name] = btn
 
-            # first column
-            row = row1
-            name = "MAIN SETTINGS"
-            label = self.create_and_add_label(name, row, column1, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
+        # Action buttons (fixed at bottom of content area)
+        self.save_button = self.create_and_add_button(
+            "SAVE THE SETTINGS",
+            47,
+            C_COL,
+            30,
+            2,
+            self.save_button_clicked,
+            "Apply and save the settings",
+            "powderblue",
+        )
+        self.save_button.setDisabled(True)
+
+        self.restore_button = self.create_and_add_button(
+            "RESTORE FACTORY SETTINGS",
+            47,
+            C_COL + 31,
+            30,
+            2,
+            self.restore_button_clicked,
+            "Restore the factory settings",
+            "lightcoral",
+        )
+        self.restore_button.clicked.connect(self.restore_button_clicked)
+
+    def _highlight_menu(self, selected: str) -> None:
+        for name, btn in self._menu_buttons.items():
+            if name == selected:
+                btn.setStyleSheet(
+                    "QPushButton {background-color: steelblue; color: white;"
+                    " font-weight: bold}"
+                )
+            else:
+                btn.setStyleSheet(
+                    "QPushButton {background-color: #d0d0d0; font-weight: bold}"
+                )
+
+    # ── Section selection ──────────────────────────────────────────────────────
+
+    def select_section(self, name: str) -> None:
+        if name == self._current_section:
+            return
+        if self.save_button.isEnabled():
+            reply = QMessageBox.question(
+                self.window,
+                "Save changes",
+                "Do you want to save the changes?",
+                QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                QMessageBox.Save,
+            )
+            if reply == QMessageBox.Save:
+                self.save_button_clicked()
+            elif reply == QMessageBox.Cancel:
+                return
+        self._destroy_content()
+        self._current_section = name
+        self._highlight_menu(name)
+        self.draw_section(name)
+
+    # ── Section content drawing ────────────────────────────────────────────────
+
+    def draw_section(self, name: str) -> None:
+        """Draws the settings for the given section in the content area."""
+        before = self.count()
+        row = C_ROW
+
+        title = self.create_and_add_label(name, row, C_COL, C_LABEL_W, 2, "black")
+        title.setProperty("type", name)
+        row += 2
+
+        if name == "MAIN SETTINGS":
             for s in settings.main_settings:
-                self.create_label_and_value(row, column1, s, name, width=width1 - 5)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-            row += 1
-            name = "CAMERA SETTINGS"
-            label = self.create_and_add_label(name, row, column1, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.cam_framerate_settings:
-                self.create_label_and_value(row, column1, s, name, width=width1)
-                row += 2
-
-            row += 1
-            name = "CORRIDOR SETTINGS"
-            label = self.create_and_add_label(name, row, column1, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
-            for s in settings.corridor_settings:
-                self.create_label_and_value(row, column1, s, name, width=width1)
-                row += 2
-
-            # second column
-            row = row1
-            name = "SOUND SETTINGS"
-            label = self.create_and_add_label(name, row, column2, length, 2, "black")
-            row += 2
+        elif name == "SOUND SETTINGS":
             s = settings.sound_settings[0]
-            self.create_label_and_value(row, column2, s, "", width=width2)
-
-        if (
-            all and settings.get("USE_SOUNDCARD") == Active.ON
-        ) or modify == "SOUND SETTINGS":
-            row = row1 + 4
-            name = "SOUND SETTINGS"
-            for s in settings.sound_settings[1:]:
-                self.create_label_and_value(row, column2, s, name, width=width2)
-                row += 2
-
-        if all:
-            row = row1 + 9
-            name = "SCREEN SETTINGS"
-            label = self.create_and_add_label(name, row, column2, length, 2, "black")
+            self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
             row += 2
+            if settings.get("USE_SOUNDCARD") == Active.ON:
+                for s in settings.sound_settings[1:]:
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
+
+        elif name == "SCREEN SETTINGS":
             s = settings.screen_settings[0]
-            self.create_label_and_value(row, column2, s, "", width=width2)
-
-        if (
-            all and settings.get("USE_SCREEN") != ScreenActive.OFF
-        ) or modify == "SCREEN SETTINGS":
-            row = row1 + 13
-            name = "SCREEN SETTINGS"
-            for s in settings.screen_settings[1:]:
-                self.create_label_and_value(row, column2, s, name, width=width2)
-                row += 2
-
-        if (
-            all and settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
-        ) or modify == "TOUCHSCREEN SETTINGS":
-            row = row1 + 17
-            name = "TOUCHSCREEN SETTINGS"
-            for s in settings.touchscreen_settings:
-                self.create_label_and_value(row, column2, s, name, width=width2)
-                row += 2
-
-        if all:
-            row = row1 + 22
-            name = "CONTROLLER SETTINGS"
-            label = self.create_and_add_label(name, row, column2, length, 2, "black")
-            label.setProperty("type", name)
+            self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
             row += 2
+            use_screen = settings.get("USE_SCREEN")
+            if use_screen != ScreenActive.OFF:
+                for s in settings.screen_settings[1:]:
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
+            if use_screen == ScreenActive.TOUCHSCREEN:
+                for s in settings.touchscreen_settings:
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
+
+        elif name == "CAMERA SETTINGS":
+            for s in settings.cam_framerate_settings:
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                row += 2
+
+        elif name == "CORRIDOR SETTINGS":
+            for s in settings.corridor_settings:
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                row += 2
+
+        elif name == "CONTROLLER SETTINGS":
             for s in settings.controller_settings:
-                self.create_label_and_value(row, column2, s, name, width=width2)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
-
-        if (
-            all and settings.get("BEHAVIOR_CONTROLLER") == ControllerEnum.BPOD
-        ) or modify == "BPOD SETTINGS":
-            name = "BPOD SETTINGS"
-            row = row1 + 28
-            for s in settings.bpod_settings:
-                self.create_label_and_value(row, column2, s, name, width=width2)
+            if settings.get("BEHAVIOR_CONTROLLER") == ControllerEnum.BPOD:
+                row += 1
+                sub = self.create_and_add_label(
+                    "BPOD SETTINGS", row, C_COL, C_LABEL_W, 2, "black"
+                )
+                sub.setProperty("type", name)
                 row += 2
+                for s in settings.bpod_settings:
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
 
-            # third column
-            row = row1
-            name = "TELEGRAM SETTINGS"
-            label = self.create_and_add_label(name, row, column3, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
+        elif name == "TELEGRAM SETTINGS":
             for s in settings.telegram_settings:
-                self.create_label_and_value(row, column3, s, name, width=width3)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-        if all or modify == "DIRECTORY SETTINGS":
-            row = row1 + 9
-            name = "DIRECTORY SETTINGS"
-            label = self.create_and_add_label(name, row, column3, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
+        elif name == "DIRECTORY SETTINGS":
             for s in settings.directory_settings:
                 if s.key == "APP_DIRECTORY":
                     continue
-                self.create_label_and_value(row, column3, s, name, width=width3)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-        if all:
-            row += 1
-            name = "SYNC SETTINGS"
-            label = self.create_and_add_label(name, row, column3, length, 2, "black")
-            row += 2
+        elif name == "SYNC SETTINGS":
             s = settings.sync_settings[0]
-            self.create_label_and_value(row, column3, s, "", width=width3)
-
-        if (
-            all and settings.get("SYNC_TYPE") != SyncType.OFF
-        ) or modify == "SYNC SETTINGS":
-            row = row1 + 30
-            name = "SYNC SETTINGS"
-            for s in settings.sync_settings[1:]:
-                self.create_label_and_value(row, column3, s, name, width=width3)
-                row += 2
-
-        if (
-            all and settings.get("SYNC_TYPE") == SyncType.SERVER
-        ) or modify == "SERVER SETTINGS":
-            row = row1 + 38
-            name = "SERVER SETTINGS"
-            for s in settings.server_settings:
-                self.create_label_and_value(row, column3, s, name, width=width3)
-                row += 2
-
-        if all:
-            # fourth column
-            row = row1
-            name = "HOURLY ALARMS"
-            label = self.create_and_add_label(name, row, column4, length, 2, "black")
-            label.setProperty("type", name)
+            self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
             row += 2
+            sync_type = settings.get("SYNC_TYPE")
+            if sync_type != SyncType.OFF:
+                for s in settings.sync_settings[1:]:
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
+            if sync_type == SyncType.SERVER:
+                row += 1
+                sub = self.create_and_add_label(
+                    "SERVER SETTINGS", row, C_COL, C_LABEL_W, 2, "black"
+                )
+                sub.setProperty("type", name)
+                row += 2
+                for s in settings.server_settings:
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
+
+        elif name == "HOURLY ALARMS":
             for s in settings.hourly_alarm_settings:
-                self.create_label_and_value(row, column4, s, name, width=width4)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-            row += 1
-            name = "TWICE-DAILY ALARMS"
-            label = self.create_and_add_label(name, row, column4, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
+        elif name == "TWICE-DAILY ALARMS":
             for s in settings.cycle_alarm_settings:
-                self.create_label_and_value(row, column4, s, name, width=width4)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-            row += 1
-            name = "END-SESSION ALARMS"
-            label = self.create_and_add_label(name, row, column4, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
+        elif name == "END-SESSION ALARMS":
             for s in settings.session_alarm_settings:
-                self.create_label_and_value(row, column4, s, name, width=width4)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-            row += 1
-            name = "VISUAL SETTINGS"
-            label = self.create_and_add_label(name, row, column4, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
+        elif name == "VISUAL SETTINGS":
             for s in settings.visual_settings:
-                self.create_label_and_value(row, column4, s, name, width=width4)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-        if all:
-            # fifth column
-            row = row1
-            name = "DEVICE ADDRESSES"
-            label = self.create_and_add_label(name, row, column5, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
+        elif name == "DEVICE ADDRESSES":
             for s in settings.device_settings:
-                self.create_label_and_value(row, column5, s, name, width=width5)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-            row += 1
-            name = "EXTRA SETTINGS"
-            label = self.create_and_add_label(name, row, column5, length, 2, "black")
-            label.setProperty("type", name)
-            row += 2
+        elif name == "EXTRA SETTINGS":
             for s in settings.extra_settings:
-                self.create_label_and_value(row, column5, s, name, width=width5)
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-        if all:
-            self.save_button = self.create_and_add_button(
-                "SAVE THE SETTINGS",
-                46,
-                176,
-                22,
-                2,
-                self.save_button_clicked,
-                "Apply and save the settings",
-                "powderblue",
-            )
-            self.save_button.setDisabled(True)
+        self._tag_content_widgets(before)
 
-            self.restore_button = self.create_and_add_button(
-                "RESTORE FACTORY SETTINGS",
-                48,
-                176,
-                22,
-                2,
-                self.restore_button_clicked,
-                "Restore the factory settings",
-                "lightcoral",
-            )
-            self.restore_button.clicked.connect(self.restore_button_clicked)
+    # ── Layout change guard ────────────────────────────────────────────────────
 
     def change_layout(self, auto: bool = False) -> bool:
-        """Handles layout changes, prompting to save if needed.
-
-        Args:
-            auto (bool): If True, forces the change without prompt. Defaults to False.
-
-        Returns:
-            bool: True if layout change is allowed, False otherwise.
-        """
         if auto:
             return True
         elif self.save_button.isEnabled():
@@ -327,7 +356,6 @@ class SettingsLayout(Layout):
                 QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
                 QMessageBox.Save,
             )
-
             if reply == QMessageBox.Save:
                 self.save_button.setDisabled(True)
                 self.save_button_clicked()
@@ -340,27 +368,17 @@ class SettingsLayout(Layout):
         else:
             return True
 
-    def settings_changed(self, value: str = "", key: str = "") -> None:
-        """Marks settings as changed and enables the save button.
+    # ── Settings changed / save / restore ─────────────────────────────────────
 
-        Args:
-            value (str): The new value (optional).
-            key (str): The key of the setting changed (optional).
-        """
+    def settings_changed(self, value: str = "", key: str = "") -> None:
         manager.changing_settings = True
         self.update_status_label_buttons()
         self.save_button.setEnabled(True)
 
     def save_button_clicked(self) -> None:
-        """Handles the save button click."""
         self.save(changing_project=False)
 
-    def save(self, changing_project) -> None:
-        """Saves current settings to disk.
-
-        Args:
-            changing_project (bool): Whether the project directory is being changed.
-        """
+    def save(self, changing_project: bool) -> None:
         sync_directory = self.create_sync_directory()
 
         self.save_button.setDisabled(True)
@@ -438,7 +456,7 @@ class SettingsLayout(Layout):
                             "Are you sure you want to change the system name?\n"
                             + "It is not recommended to do this if you have "
                             + "already started collecting data for an experiment.\n"
-                            + "Although the system’s data directory will "
+                            + "Although the system's data directory will "
                             + " be renamed automatically, some data may already have "
                             + "been saved in CSV files using the previous "
                             + "system name."
@@ -456,18 +474,16 @@ class SettingsLayout(Layout):
                             if reply == QMessageBox.Yes:
                                 settings.set(s.key, value)
                                 utils.change_system_directory_settings()
-                                modify = "DIRECTORY SETTINGS"
-                                self.remove("DIRECTORY SETTINGS")
-                                self.draw(all=False, modify=modify)
+                                self._destroy_content()
+                                self.draw_section("DIRECTORY SETTINGS")
                                 self.critical_changes = True
                             else:
                                 line_edit.setText(old_value)
                         else:
                             settings.set(s.key, value)
                             utils.change_system_directory_settings()
-                            modify = "DIRECTORY SETTINGS"
-                            self.remove("DIRECTORY SETTINGS")
-                            self.draw(all=False, modify=modify)
+                            self._destroy_content()
+                            self.draw_section("DIRECTORY SETTINGS")
                     else:
                         text = "Invalid system name. "
                         text += "It must not contain spaces or special characters."
@@ -486,7 +502,6 @@ class SettingsLayout(Layout):
                     line_edit.setText(str(value_float))
                 except ValueError:
                     line_edit.setText(str(settings.get(s.key)))
-
             elif s.value_type == int:
                 try:
                     value_int = round(float(line_edit.text()))
@@ -535,7 +550,6 @@ class SettingsLayout(Layout):
 
         for i, list_toggle in enumerate(self.list_of_toggle_buttons):
             s = self.list_of_toggle_buttons_settings[i]
-
             values = [field.text() for field in list_toggle]
             settings.set(s.key, values)
 
@@ -550,7 +564,7 @@ class SettingsLayout(Layout):
         cam_corridor.change = True
         cam_box.change = True
 
-        try:  # can fail if we are changing the system name
+        try:
             log.info("Settings modified.")
         except Exception:
             pass
@@ -559,18 +573,12 @@ class SettingsLayout(Layout):
             text = (
                 "Some of the setting changes require a system restart to take effect."
             )
-            QMessageBox.information(
-                self.window,
-                "Restart",
-                text,
-            )
-
+            QMessageBox.information(self.window, "Restart", text)
             self.window.reload_app()
 
         self.critical_changes = False
 
     def restore_button_clicked(self) -> None:
-        """Prompts to restore factory settings and applies if confirmed."""
         reply = QMessageBox.question(
             self.window,
             "Restore factory settings",
@@ -578,29 +586,21 @@ class SettingsLayout(Layout):
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.No,
         )
-
         if reply == QMessageBox.Yes:
             log.info("Restoring factory settings.")
             settings.restore_factory_settings()
             self.window.create_settings_layout()
 
+    # ── Widget factory for a single setting ───────────────────────────────────
+
     def create_label_and_value(
         self, row: int, column: int, s: Setting, type: Any, width: int = 0
     ) -> None:
-        """Creates a UI element for a specific setting.
-
-        Args:
-            row (int): Row index.
-            column (int): Column index.
-            s (Setting): The setting object.
-            type (Any): The group type of the setting.
-            width (int, optional): Width offset for the value widget. Defaults to 0.
-        """
         label = self.create_and_add_label(
             s.key,
             row,
             column,
-            length,
+            C_LABEL_W,
             2,
             "black",
             bold=False,
@@ -683,7 +683,6 @@ class SettingsLayout(Layout):
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width, size2, 2, self.settings_changed
                 )
-
             elif s.key == "CODE_DIRECTORY":
                 new_value = os.path.join(settings.get("PROJECT_DIRECTORY"), "code")
                 line_edit = self.create_and_add_line_edit(
@@ -703,7 +702,6 @@ class SettingsLayout(Layout):
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width, size2, 2, self.settings_changed
                 )
-
             elif s.key in [
                 "SERVER_USER",
                 "SERVER_HOST",
@@ -720,11 +718,7 @@ class SettingsLayout(Layout):
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width, size3, 2, self.settings_changed
                 )
-            elif s.key in (
-                "SYSTEM_NAME",
-                "SAMPLERATE",
-                "TOUCH_INTERVAL",
-            ):
+            elif s.key in ("SYSTEM_NAME", "SAMPLERATE", "TOUCH_INTERVAL"):
                 line_edit = self.create_and_add_line_edit(
                     value, row, column + width, size4, 2, self.settings_changed
                 )
@@ -747,20 +741,11 @@ class SettingsLayout(Layout):
             line_edit.setProperty("type", type)
             self.line_edits.append(line_edit)
             self.line_edits_settings.append(s)
+
         elif s.value_type == list[int]:
             values = settings.get(s.key)
             line_edits = []
             c = column
-            if s.key == "CAM_BOX_RESOLUTION":
-                c = column - 2
-            elif s.key in (
-                "COLOR_AREA1",
-                "COLOR_AREA2",
-                "COLOR_AREA3",
-                "COLOR_AREA4",
-                "COLOR_DETECTION",
-            ):
-                c = column - 6
             for i, v in enumerate(values):
                 value = str(v)
                 line_edit = self.create_and_add_line_edit(
@@ -778,13 +763,13 @@ class SettingsLayout(Layout):
                 line_edits.append(line_edit)
             self.list_of_line_edits.append(line_edits)
             self.list_of_line_edits_settings.append(s)
+
         elif s.value_type == list[Active]:
             values_list: list[Active] = settings.get(s.key)
             toggle_buttons = []
             for i, v in enumerate(values_list):
                 possible_values = settings.get_values(s.key)
                 index = settings.get_indices(s.key)[i]
-
                 toggle_button = self.create_and_add_toggle_button(
                     s.key,
                     row,
@@ -800,6 +785,7 @@ class SettingsLayout(Layout):
                 toggle_buttons.append(toggle_button)
             self.list_of_toggle_buttons.append(toggle_buttons)
             self.list_of_toggle_buttons_settings.append(s)
+
         else:
             possible_values = settings.get_values(s.key)
             index = settings.get_index(s.key)
@@ -823,17 +809,28 @@ class SettingsLayout(Layout):
                 self.toggle_button_changed,
                 s.description,
             )
-
             toggle_button.setProperty("type", type)
             self.toggle_buttons.append(toggle_button)
             self.toggle_buttons_settings.append(s)
 
-    def create_sync_directory(self) -> str:
-        """Determines the synchronization directory path.
+    # ── Toggle button handler ──────────────────────────────────────────────────
 
-        Returns:
-            str: The full path to the sync directory.
-        """
+    def toggle_button_changed(self, value: str, key: str) -> None:
+        self.settings_changed(value, key)
+        # Keys that show/hide sub-settings within their section
+        conditional_keys = {
+            "USE_SOUNDCARD": "SOUND SETTINGS",
+            "USE_SCREEN": "SCREEN SETTINGS",
+            "BEHAVIOR_CONTROLLER": "CONTROLLER SETTINGS",
+            "SYNC_TYPE": "SYNC SETTINGS",
+        }
+        if conditional_keys.get(key) == self._current_section:
+            self._destroy_content()
+            self.draw_section(self._current_section)
+
+    # ── Helpers ────────────────────────────────────────────────────────────────
+
+    def create_sync_directory(self) -> str:
         directory = os.path.basename(settings.get("PROJECT_DIRECTORY"))
         index = next(
             (
@@ -843,63 +840,18 @@ class SettingsLayout(Layout):
             ),
             0,
         )
-        sync_destination = self.line_edits[index].text()
-        new_value = os.path.join(sync_destination, directory + "_data")
-        return new_value
+        sync_destination = (
+            self.line_edits[index].text()
+            if self.line_edits
+            else settings.get("SYNC_DESTINATION")
+        )
+        return os.path.join(sync_destination, directory + "_data")
 
     def change_sound_device(self, value: str, key: str) -> None:
-        """Handles changes to the sound device selection.
-
-        Args:
-            value (str): The new sound device name.
-            key (str): The setting key (unused).
-        """
         self.settings_changed(value, key)
-
-    def toggle_button_changed(self, value: str, key: str) -> None:
-        """Handles changes to toggle buttons and updates the UI accordingly.
-
-        Args:
-            value (str): The new value.
-            key (str): The setting key.
-        """
-        modify = ""
-        if value == "OFF" and key == "USE_SOUNDCARD":
-            self.remove("SOUND SETTINGS")
-        elif value == "ON" and key == "USE_SOUNDCARD":
-            modify = "SOUND SETTINGS"
-        elif value == "OFF" and key == "USE_SCREEN":
-            self.remove("SCREEN SETTINGS")
-            self.remove("TOUCHSCREEN SETTINGS")
-        elif value == "SCREEN" and key == "USE_SCREEN":
-            modify = "SCREEN SETTINGS"
-        elif value == "TOUCHSCREEN" and key == "USE_SCREEN":
-            modify = "TOUCHSCREEN SETTINGS"
-        elif value == "ARDUINO" and key == "BEHAVIOR_CONTROLLER":
-            self.remove("BPOD SETTINGS")
-        elif value == "RASPBERRY" and key == "BEHAVIOR_CONTROLLER":
-            self.remove("BPOD SETTINGS")
-        elif value == "BPOD" and key == "BEHAVIOR_CONTROLLER":
-            modify = "BPOD SETTINGS"
-        elif value == "HD" and key == "SYNC_TYPE":
-            modify = "SYNC SETTINGS"
-            self.remove("SERVER SETTINGS")
-        elif value == "SERVER" and key == "SYNC_TYPE":
-            modify = "SERVER SETTINGS"
-        elif value == "OFF" and key == "SYNC_TYPE":
-            self.remove("SYNC SETTINGS")
-            self.remove("SERVER SETTINGS")
-
-        self.settings_changed(value, key)
-        if modify != "":
-            self.draw(all=False, modify=modify)
 
     def remove(self, name: str) -> None:
-        """Removes a group of settings from the UI.
-
-        Args:
-            name (str): The group name to remove.
-        """
+        """Legacy remove method – kept for compatibility."""
         for i in reversed(range(len(self.line_edits))):
             if self.line_edits[i].property("type") == name:
                 self.line_edits.pop(i)
@@ -923,12 +875,6 @@ class SettingsLayout(Layout):
         self.delete_optional_widgets(name)
 
     def change_project_directory(self, value: str, key: str) -> None:
-        """Handles changing the project directory, including creating a new project.
-
-        Args:
-            value (str): The new directory path or "NEW".
-            key (str): The setting key (unused).
-        """
         if value == "NEW":
             text, ok = QInputDialog.getText(
                 self.window,
@@ -961,7 +907,6 @@ class SettingsLayout(Layout):
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No,
             )
-
             if reply == QMessageBox.Yes:
                 self.save(changing_project=True)
                 utils.change_directory_settings(value)
@@ -973,17 +918,8 @@ class SettingsLayout(Layout):
                 )
                 self.project_directory_combobox.blockSignals(False)
 
-    def create_project_directory(self, path) -> bool:
-        """Creates the directory structure for a new project.
-
-        Args:
-            path (str): The path for the new project.
-
-        Returns:
-            bool: True if creation was successful.
-        """
+    def create_project_directory(self, path: str) -> bool:
         return utils.create_directories_from_path(path)
 
     def update_gui(self) -> None:
-        """Updates the GUI elements."""
         self.update_status_label_buttons()
