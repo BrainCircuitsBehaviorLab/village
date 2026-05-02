@@ -361,16 +361,18 @@ class MonitorLayout(Layout):
 
         self.tab_widget = QTabWidget()
         self.tab_widget.setStyleSheet(
+            "QTabWidget::tab-bar { alignment: center; }"
             "QTabBar::tab { background: #d0d0d0; font-weight: bold;"
             " padding: 4px 12px; }"
             "QTabBar::tab:selected { background: steelblue; color: white; }"
             "QTabBar::tab:hover { background: #b0c4de; }"
         )
-        self.tab_widget.addTab(self.page5, "SYSTEM INFO")
+        self.tab_widget.tabBar().setExpanding(False)
+        self.tab_widget.addTab(self.page5, "INFO")
+        self.tab_widget.addTab(self.page7, "PLOT")
         self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
-        self.tab_widget.addTab(self.page7, "DETECTION PLOT")
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
-        self.addWidget(self.tab_widget, 33, 0, 18, 200)
+        self.addWidget(self.tab_widget, 32, 0, 19, 200)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
             "RFID reader: ", 6, 84, 12, 2, "black"
@@ -487,10 +489,12 @@ class MonitorLayout(Layout):
 
     def on_tab_changed(self, index: int) -> None:
         """Handles tab selection for the bottom info panel."""
-        info_values = Info.values()
-        if index < len(info_values):
-            manager.info = Info[info_values[index]]
-            settings.set("INFO", info_values[index])
+        # Tab order: 0=INFO(SYSTEM_INFO), 1=PLOT(DETECTION_PLOT), 2=DETECTION_SETTINGS
+        tab_to_info = {0: "SYSTEM_INFO", 1: "DETECTION_PLOT", 2: "DETECTION_SETTINGS"}
+        info_key = tab_to_info.get(index)
+        if info_key:
+            manager.info = Info[info_key]
+            settings.set("INFO", info_key)
         self.update_gui()
 
     def update_gui(self) -> None:

@@ -47,21 +47,31 @@ mini_box = 3
 
 MENU_SECTIONS = [
     "MAIN SETTINGS",
+    "CONTROLLER SETTINGS",
     "SOUND SETTINGS",
     "SCREEN SETTINGS",
     "CAMERA SETTINGS",
     "CORRIDOR SETTINGS",
-    "CONTROLLER SETTINGS",
-    "TELEGRAM SETTINGS",
-    "DIRECTORY SETTINGS",
     "SYNC SETTINGS",
-    "HOURLY ALARMS",
-    "TWICE-DAILY ALARMS",
-    "END-SESSION ALARMS",
-    "VISUAL SETTINGS",
+    "TELEGRAM SETTINGS",
+    "ADVANCED SETTINGS",
     "DEVICE ADDRESSES",
-    "EXTRA SETTINGS",
 ]
+
+MENU_TOOLTIPS: dict[str, str] = {
+    "MAIN SETTINGS": ("Main settings and project configuration."),
+    "CONTROLLER SETTINGS": ("Behavior controller type (Bpod, Arduino, Raspberry)."),
+    "SOUND SETTINGS": "Soundcard and audio device configuration.",
+    "SCREEN SETTINGS": ("Screen or touchscreen configuration for behavioral stimuli."),
+    "CAMERA SETTINGS": ("Camera framerates, resolution and tracking settings."),
+    "CORRIDOR SETTINGS": (
+        "Detection thresholds, weight limits and timing for corridor access."
+    ),
+    "SYNC SETTINGS": "Data synchronization to external drive or remote server.",
+    "TELEGRAM SETTINGS": ("Telegram and alarm settings for notifications."),
+    "ADVANCED SETTINGS": ("Advanced and visual settings."),
+    "DEVICE ADDRESSES": ("Addresses for connected hardware devices."),
+}
 
 # Keys whose toggle value affects what is shown within their section
 _CONDITIONAL_KEYS: dict[str, str] = {
@@ -217,7 +227,7 @@ class SettingsLayout(Layout):
                 MENU_WIDTH,
                 2,
                 lambda checked=False, n=name: self.select_section(n),
-                name,
+                MENU_TOOLTIPS.get(name, name),
                 "#d0d0d0",
             )
             self._menu_buttons[name] = btn
@@ -284,6 +294,17 @@ class SettingsLayout(Layout):
             for s in settings.main_settings:
                 self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
+            row += 1
+            sub = self.create_and_add_label(
+                "PROJECT", row, C_COL, C_LABEL_W, 2, "black"
+            )
+            sub.setProperty("type", name)
+            row += 2
+            for s in settings.directory_settings:
+                if s.key == "APP_DIRECTORY":
+                    continue
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                row += 2
 
         elif name == "SOUND SETTINGS":
             s = settings.sound_settings[0]
@@ -339,18 +360,6 @@ class SettingsLayout(Layout):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
-        elif name == "TELEGRAM SETTINGS":
-            for s in settings.telegram_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
-
-        elif name == "DIRECTORY SETTINGS":
-            for s in settings.directory_settings:
-                if s.key == "APP_DIRECTORY":
-                    continue
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
-
         elif name == "SYNC SETTINGS":
             s = settings.sync_settings[0]
             self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
@@ -371,23 +380,35 @@ class SettingsLayout(Layout):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
-        elif name == "HOURLY ALARMS":
+        elif name == "TELEGRAM SETTINGS":
+            for s in settings.telegram_settings:
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                row += 2
+            row += 1
+            sub = self.create_and_add_label(
+                "HOURLY ALARMS", row, C_COL, C_LABEL_W, 2, "black"
+            )
+            sub.setProperty("type", name)
+            row += 2
             for s in settings.hourly_alarm_settings:
                 self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
-
-        elif name == "TWICE-DAILY ALARMS":
+            row += 1
+            sub = self.create_and_add_label(
+                "TWICE-DAILY ALARMS", row, C_COL, C_LABEL_W, 2, "black"
+            )
+            sub.setProperty("type", name)
+            row += 2
             for s in settings.cycle_alarm_settings:
                 self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
-
-        elif name == "END-SESSION ALARMS":
+            row += 1
+            sub = self.create_and_add_label(
+                "END-SESSION ALARMS", row, C_COL, C_LABEL_W, 2, "black"
+            )
+            sub.setProperty("type", name)
+            row += 2
             for s in settings.session_alarm_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
-
-        elif name == "VISUAL SETTINGS":
-            for s in settings.visual_settings:
                 self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
@@ -396,8 +417,17 @@ class SettingsLayout(Layout):
                 self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 
-        elif name == "EXTRA SETTINGS":
+        elif name == "ADVANCED SETTINGS":
             for s in settings.extra_settings:
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                row += 2
+            row += 1
+            sub = self.create_and_add_label(
+                "VISUAL SETTINGS", row, C_COL, C_LABEL_W, 2, "black"
+            )
+            sub.setProperty("type", name)
+            row += 2
+            for s in settings.visual_settings:
                 self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                 row += 2
 

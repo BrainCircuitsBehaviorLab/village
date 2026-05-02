@@ -376,6 +376,9 @@ class Layout(QGridLayout):
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
             self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}"
+            )
             self.online_or_force_button.setText("ONLINE PLOTS")
             self.online_or_force_button.setToolTip(
                 "Show live plots while a task is running"
@@ -389,6 +392,9 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(
+                "QPushButton {background-color: powderblue; font-weight: bold}"
+            )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
                 "Force synchronisation with external device or server"
@@ -402,34 +408,36 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}"
+            )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
                 "Force synchronisation with external device or server"
             )
             self.online_or_force_button.setEnabled(False)
-        elif manager.state == State.WAIT:
-            self.stop_button.setText("AWAIT SUBJECT EXIT")
+        else:
+            self.stop_button.setText("WAIT FOR SUBJECT EXIT")
             text = (
                 "The system thinks there is no subject in the box (currently in WAIT) "
                 + "but there is one. Use this to make the system wait for the "
                 + "subject to exit."
             )
             self.stop_button.setToolTip(text)
-            self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(
+                "QPushButton {background-color: powderblue; font-weight: bold}"
+            )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
                 "Force synchronisation with external device or server"
             )
-            self.online_or_force_button.setEnabled(True)
-        else:
-            self.stop_button.setText("STOP TASK")
-            self.stop_button.setToolTip("Stop a running task")
-            self.stop_button.setEnabled(False)
-            self.online_or_force_button.setText("FORCE SYNC")
-            self.online_or_force_button.setToolTip(
-                "Force synchronisation with external device or server"
-            )
-            self.online_or_force_button.setEnabled(False)
+
+            if manager.state == State.WAIT:
+                self.stop_button.setEnabled(False)
+                self.online_or_force_button.setEnabled(True)
+            else:
+                self.stop_button.setEnabled(True)
+                self.online_or_force_button.setEnabled(False)
 
     def exit_button_clicked(self) -> None:
         """Handles exit button click, confirming exit and saving data if needed."""
