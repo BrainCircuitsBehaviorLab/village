@@ -16,7 +16,6 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QPushButton,
     QScrollArea,
-    QStackedLayout,
     QTableWidget,
     QTableWidgetItem,
     QTabWidget,
@@ -305,8 +304,6 @@ class MonitorLayout(Layout):
 
         self.central_widget = QWidget(self.window)
         self.bottom_widget = QWidget(self.window)
-        self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 12, 83, 19, 34)
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
@@ -339,10 +336,34 @@ class MonitorLayout(Layout):
         self.page4Layout = VirtualMouseLayout(self.window, 19, 34)
         self.page4.setLayout(self.page4Layout)
 
-        self.central_layout.addWidget(self.page1)
-        self.central_layout.addWidget(self.page2)
-        self.central_layout.addWidget(self.page3)
-        self.central_layout.addWidget(self.page4)
+        _tab_style = (
+            "QTabWidget::tab-bar { alignment: center; }"
+            "QTabBar::tab { background: #d0d0d0; font-weight: bold;"
+            " padding: 6px 24px; min-width: 100px;"
+            " border: 1px solid #aaaaaa; border-bottom: none;"
+            " border-radius: 4px 4px 0 0; margin-right: 2px; }"
+            "QTabBar::tab:selected { background: steelblue; color: white;"
+            " border-color: steelblue; }"
+            "QTabBar::tab:hover { background: #b0c4de; }"
+        )
+        self.actions_tab_widget = QTabWidget()
+        self.actions_tab_widget.setStyleSheet(_tab_style)
+        self.actions_tab_widget.tabBar().setExpanding(False)
+
+        self._actions_tab_map: list[str] = []
+        self.actions_tab_widget.addTab(self.page1, "CORRIDOR")
+        self._actions_tab_map.append("CORRIDOR")
+        if manager.controller_type == ControllerEnum.BPOD:
+            self.actions_tab_widget.addTab(self.page2, "PORTS")
+            self._actions_tab_map.append("PORTS")
+        self.actions_tab_widget.addTab(self.page3, "FUNCTIONS")
+        self._actions_tab_map.append("FUNCTIONS")
+        if manager.controller_type == ControllerEnum.BPOD:
+            self.actions_tab_widget.addTab(self.page4, "VIRTUAL MOUSE")
+            self._actions_tab_map.append("VIRTUAL_MOUSE")
+
+        self.actions_tab_widget.currentChanged.connect(self.on_actions_tab_changed)
+        self.addWidget(self.actions_tab_widget, 11, 83, 21, 34)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
@@ -363,8 +384,11 @@ class MonitorLayout(Layout):
         self.tab_widget.setStyleSheet(
             "QTabWidget::tab-bar { alignment: center; }"
             "QTabBar::tab { background: #d0d0d0; font-weight: bold;"
-            " padding: 4px 12px; }"
-            "QTabBar::tab:selected { background: steelblue; color: white; }"
+            " padding: 6px 24px; min-width: 120px;"
+            " border: 1px solid #aaaaaa; border-bottom: none;"
+            " border-radius: 4px 4px 0 0; margin-right: 2px; }"
+            "QTabBar::tab:selected { background: steelblue; color: white;"
+            " border-color: steelblue; }"
             "QTabBar::tab:hover { background: #b0c4de; }"
         )
         self.tab_widget.tabBar().setExpanding(False)
@@ -372,7 +396,7 @@ class MonitorLayout(Layout):
         self.tab_widget.addTab(self.page7, "PLOT")
         self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
-        self.addWidget(self.tab_widget, 32, 0, 19, 200)
+        self.addWidget(self.tab_widget, 33, 0, 18, 200)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
             "RFID reader: ", 6, 84, 12, 2, "black"
@@ -410,36 +434,18 @@ class MonitorLayout(Layout):
             "Cycle of the corridor: AUTO, DAY, NIGHT",
         )
 
-        key = "ACTIONS"
-        if manager.controller_type == ControllerEnum.BPOD:
-            possible_values = Actions.values()
-        else:
-            possible_values = [Actions.CORRIDOR.value, Actions.FUNCTIONS.value]
+        if manager.controller_type != ControllerEnum.BPOD:
             if manager.actions in (Actions.PORTS, Actions.VIRTUAL_MOUSE):
                 manager.actions = Actions.CORRIDOR
-        index = Actions.get_index_from_value(manager.actions)
-        text = (
-            "Perform actions on the corridor, in the behavior ports or run "
-            + "user-defined python functions."
-        )
-        self.actions_button = self.create_and_add_toggle_button(
-            key,
-            11,
-            87,
-            26,
-            2,
-            possible_values,
-            index,
-            self.toggle_actions_button,
-            text,
-            color="white",
-        )
 
         index = Info.get_index_from_string(manager.info.value)
         self.tab_widget.setCurrentIndex(index)
 
-        index = Actions.get_index_from_string(manager.actions.value)
-        self.central_layout.setCurrentIndex(index)
+        actions_key = manager.actions.name
+        if actions_key in self._actions_tab_map:
+            self.actions_tab_widget.setCurrentIndex(
+                self._actions_tab_map.index(actions_key)
+            )
 
         self.qpicamera2_corridor = cam_corridor.start_preview_window()
         self.qpicamera2_box = cam_box.start_preview_window()
@@ -473,18 +479,12 @@ class MonitorLayout(Layout):
         settings.set(key, value)
         self.update_status_label_buttons()
 
-    def toggle_actions_button(self, value: str, key: str) -> None:
-        """Toggles the action mode.
-
-        Args:
-            value (str): The new action value.
-            key (str): The setting key.
-        """
-        manager.actions = Actions[value]
-        settings.set(key, value)
-        index = Actions.get_index_from_string(value)
-        self.central_layout.setCurrentIndex(index)
-        self.actions_button.raise_()
+    def on_actions_tab_changed(self, index: int) -> None:
+        """Handles tab selection for the central actions panel."""
+        if index < len(self._actions_tab_map):
+            value = self._actions_tab_map[index]
+            manager.actions = Actions[value]
+            settings.set("ACTIONS", value)
         self.update_gui()
 
     def on_tab_changed(self, index: int) -> None:
@@ -1340,15 +1340,17 @@ class InfoLayout(Layout):
         self.events_table.verticalHeader().setVisible(False)
         self.events_table.verticalHeader().setMinimumSectionSize(1)
         self.events_table.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
-        self.events_table.verticalHeader().setDefaultSectionSize(13)
+        self.events_table.verticalHeader().setDefaultSectionSize(26)
+        self.events_table.horizontalHeader().setVisible(False)
         self.events_table.horizontalHeader().setStretchLastSection(True)
-        self.events_table.horizontalHeader().setDefaultSectionSize(13)
+        self.events_table.horizontalHeader().setDefaultSectionSize(26)
         self.events_table.horizontalHeader().setSectionResizeMode(
             QHeaderView.Interactive
         )
         self.events_table.setFixedSize(198 * self.column_width, 16 * self.row_height)
         f = QFont("Monospace")
         f.setStyleHint(QFont.TypeWriter)
+        f.setPointSize(11)
         self.events_table.setFont(f)
         self.events_table.cellDoubleClicked.connect(
             lambda row, _: self.on_row_double_clicked(row)
@@ -1381,7 +1383,7 @@ class InfoLayout(Layout):
                 self.events_table.setItem(i, j, item)
 
         for i in range(len(df)):
-            self.events_table.setRowHeight(i, 13)
+            self.events_table.setRowHeight(i, 26)
 
         col_widths = {"date": 130, "type": 60, "subject": 80}
         for j, col in enumerate(columns):
