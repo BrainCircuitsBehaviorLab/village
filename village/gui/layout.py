@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Callable
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTime
-from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
+from PyQt5.QtGui import QCloseEvent, QFont, QPixmap, QWheelEvent
 from PyQt5.QtWidgets import (
     QComboBox,
     QDialog,
@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QPushButton,
+    QTabBar,
     QTimeEdit,
     QVBoxLayout,
 )
@@ -27,6 +28,23 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
+
+
+class NavTabProxy:
+    """Proxy for a nav QTabBar tab, exposing a QPushButton-compatible interface."""
+
+    def __init__(self, tab_bar: QTabBar, index: int) -> None:
+        self._bar = tab_bar
+        self._idx = index
+
+    def setDisabled(self, disabled: bool) -> None:
+        self._bar.setTabEnabled(self._idx, not disabled)
+
+    def setEnabled(self, enabled: bool) -> None:
+        self._bar.setTabEnabled(self._idx, enabled)
+
+    def isEnabled(self) -> bool:
+        return self._bar.isTabEnabled(self._idx)
 
 
 class Label(QLabel):
@@ -260,77 +278,45 @@ class Layout(QGridLayout):
             "", 1, 0, 158, 2, "black", background="powderblue"
         )
 
-        size = 18
-
-        self.main_button = self.create_and_add_button(
-            "MAIN",
-            3,
-            0,
-            size,
-            2,
-            self.main_button_clicked,
-            "Go to the main menu",
+        _nav_items = [
+            ("MAIN", "Go to the main menu"),
+            ("MONITOR", "Go to the monitor menu"),
+            ("TASKS", "Go to the tasks menu"),
+            ("DATA", "Go to the data menu"),
+            ("WATER CALIBRATION", "Go to the water calibration menu"),
+            ("SOUND CALIBRATION", "Go to the sound calibration menu"),
+            ("SETTINGS", "Go to the settings menu"),
+        ]
+        self._nav_inhibit = False
+        self.nav_tab_bar = QTabBar()
+        _nav_font = QFont("DejaVu Sans Condensed", 8)
+        _nav_font.setBold(True)
+        self.nav_tab_bar.setFont(_nav_font)
+        self.nav_tab_bar.setStyleSheet(
+            "QTabBar::tab { background: lightgray;"
+            " padding: 4px 12px;"
+            " border: 1px solid #aaaaaa; border-bottom: none;"
+            " border-radius: 4px 4px 0 0; margin-right: 2px; }"
+            "QTabBar::tab:selected { background: steelblue; color: white;"
+            " border-color: steelblue; }"
+            "QTabBar::tab:selected:disabled { background: steelblue; color: white; }"
+            "QTabBar::tab:hover:!selected { background: #b0c4de; }"
+            "QTabBar::tab:disabled { background: #cccccc; color: #999999; }"
+            "QToolTip { background-color: white; color: black; font-size: 8pt; }"
         )
+        for label, tooltip in _nav_items:
+            idx = self.nav_tab_bar.addTab(label)
+            self.nav_tab_bar.setTabToolTip(idx, tooltip)
+        self.nav_tab_bar.currentChanged.connect(self._on_nav_tab_changed)
+        self.addWidget(self.nav_tab_bar, 3, 0, 2, 200)
 
-        self.monitor_button = self.create_and_add_button(
-            "MONITOR",
-            3,
-            size,
-            size,
-            2,
-            self.monitor_button_clicked,
-            "Go to the monitor menu",
-        )
-
-        self.tasks_button = self.create_and_add_button(
-            "TASKS",
-            3,
-            2 * size,
-            size,
-            2,
-            self.tasks_button_clicked,
-            "Go to the tasks menu",
-        )
-
-        self.data_button = self.create_and_add_button(
-            "DATA",
-            3,
-            3 * size,
-            size,
-            2,
-            self.data_button_clicked,
-            "Go to the data menu",
-        )
-
-        self.water_calibration_button = self.create_and_add_button(
-            "WATER CALIBRATION",
-            3,
-            4 * size,
-            size,
-            2,
-            self.water_calibration_button_clicked,
-            "Go to the water calibration menu",
-        )
-
-        self.sound_calibration_button = self.create_and_add_button(
-            "SOUND CALIBRATION",
-            3,
-            5 * size,
-            size,
-            2,
-            self.sound_calibration_button_clicked,
-            "Go to the sound calibration menu",
-        )
-
-        self.settings_button = self.create_and_add_button(
-            "SETTINGS",
-            3,
-            6 * size,
-            size,
-            2,
-            self.settings_button_clicked,
-            "Go to the setting menu",
-        )
+        self.main_button = NavTabProxy(self.nav_tab_bar, 0)
+        self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)
+        self.tasks_button = NavTabProxy(self.nav_tab_bar, 2)
+        self.data_button = NavTabProxy(self.nav_tab_bar, 3)
+        self.water_calibration_button = NavTabProxy(self.nav_tab_bar, 4)
+        self.sound_calibration_button = NavTabProxy(self.nav_tab_bar, 5)
+        self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
         self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
@@ -905,31 +891,27 @@ class Layout(QGridLayout):
         self.addWidget(combo_box, row, column, height, width)
         return combo_box
 
-    def _highlight_nav_button(self, active_button: QPushButton) -> None:
-        """Highlights the active navigation button in steelblue."""
-        nav_buttons = [
-            self.main_button,
-            self.monitor_button,
-            self.tasks_button,
-            self.data_button,
-            self.water_calibration_button,
-            self.sound_calibration_button,
-            self.settings_button,
+    def _on_nav_tab_changed(self, index: int) -> None:
+        """Dispatches tab click to the appropriate navigation action."""
+        if self._nav_inhibit:
+            return
+        actions: list[Callable[[], None]] = [
+            self.main_button_clicked,
+            self.monitor_button_clicked,
+            self.tasks_button_clicked,
+            self.data_button_clicked,
+            self.water_calibration_button_clicked,
+            self.sound_calibration_button_clicked,
+            self.settings_button_clicked,
         ]
-        tooltip_style = (
-            "QToolTip {background-color: white; color: black; font-size: 8pt}"
-        )
-        for btn in nav_buttons:
-            if btn is active_button:
-                btn.setStyleSheet(
-                    "QPushButton {background-color: steelblue; color: white;"
-                    " font-weight: bold}" + tooltip_style
-                )
-            else:
-                btn.setStyleSheet(
-                    "QPushButton {background-color: lightgray; font-weight: bold}"
-                    + tooltip_style
-                )
+        if 0 <= index < len(actions):
+            actions[index]()
+
+    def _highlight_nav_button(self, active_button: NavTabProxy) -> None:
+        """Selects the active navigation tab."""
+        self._nav_inhibit = True
+        self.nav_tab_bar.setCurrentIndex(active_button._idx)
+        self._nav_inhibit = False
 
     def update_gui(self) -> None:
         """Updates the GUI elements (placeholder base method)."""
