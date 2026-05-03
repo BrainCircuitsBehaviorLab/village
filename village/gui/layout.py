@@ -369,7 +369,7 @@ class Layout(QGridLayout):
 
     def update_status_label_buttons(self) -> None:
         """Updates the status label and button states based on manager state."""
-
+        _tt = "QToolTip {background-color: white; color: black; font-size: 8pt}"
         manager.update_text()
         self.status_label.setText(manager.text)
         if manager.state.can_stop_task():
@@ -377,7 +377,7 @@ class Layout(QGridLayout):
             self.stop_button.setToolTip("Stop a running task")
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}"
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("ONLINE PLOTS")
             self.online_or_force_button.setToolTip(
@@ -393,7 +393,7 @@ class Layout(QGridLayout):
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: powderblue; font-weight: bold}"
+                "QPushButton {background-color: powderblue; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
@@ -409,7 +409,7 @@ class Layout(QGridLayout):
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}"
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
@@ -425,7 +425,7 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: powderblue; font-weight: bold}"
+                "QPushButton {background-color: powderblue; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
@@ -916,15 +916,19 @@ class Layout(QGridLayout):
             self.sound_calibration_button,
             self.settings_button,
         ]
+        tooltip_style = (
+            "QToolTip {background-color: white; color: black; font-size: 8pt}"
+        )
         for btn in nav_buttons:
             if btn is active_button:
                 btn.setStyleSheet(
                     "QPushButton {background-color: steelblue; color: white;"
-                    " font-weight: bold}"
+                    " font-weight: bold}" + tooltip_style
                 )
             else:
                 btn.setStyleSheet(
                     "QPushButton {background-color: lightgray; font-weight: bold}"
+                    + tooltip_style
                 )
 
     def update_gui(self) -> None:

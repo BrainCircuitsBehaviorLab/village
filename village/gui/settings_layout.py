@@ -5,7 +5,8 @@ import re
 from contextlib import suppress
 from typing import TYPE_CHECKING, Any
 
-from PyQt5.QtWidgets import QInputDialog, QMessageBox
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QInputDialog, QMessageBox, QTabBar
 
 from village.classes.enums import (
     Active,
@@ -92,7 +93,6 @@ class SettingsLayout(Layout):
         manager.changing_settings = False
         self.critical_changes = False
         self._current_section: str = MENU_SECTIONS[0]
-        self._menu_buttons: dict[str, Any] = {}
         # Uncommitted UI values buffered across section switches
         self._pending: dict[str, Any] = {}
         self.draw(all=True, modify="")
@@ -209,28 +209,30 @@ class SettingsLayout(Layout):
     # ── Static chrome ──────────────────────────────────────────────────────────
 
     def _draw_static_chrome(self) -> None:
-        bg = self.create_and_add_label(
-            "", C_ROW, MENU_COL, MENU_WIDTH, 46, "black", background="#e8e8e8"
+        self.menu_tab_bar = QTabBar()
+        self.menu_tab_bar.setShape(QTabBar.RoundedWest)
+        self.menu_tab_bar.setExpanding(False)
+        tab_font = QFont("DejaVu Sans Condensed", 8)
+        tab_font.setBold(True)
+        self.menu_tab_bar.setFont(tab_font)
+        self.menu_tab_bar.setStyleSheet(
+            "QTabBar::tab {"
+            " background: #d0d0d0;"
+            " padding: 8px 10px;"
+            " border: 1px solid #aaaaaa; border-right: none;"
+            " border-radius: 4px 0 0 4px; margin-bottom: 2px; }"
+            "QTabBar::tab:selected { background: steelblue; color: white;"
+            " border-color: steelblue; }"
+            "QTabBar::tab:hover { background: #b0c4de; }"
+            "QToolTip { background-color: white; color: black; font-size: 8pt; }"
         )
-        bg.lower()
-        sep = self.create_and_add_label(
-            "", C_ROW, MENU_COL + MENU_WIDTH, 1, 46, "black", background="#aaaaaa"
+        for name in MENU_SECTIONS:
+            idx = self.menu_tab_bar.addTab(name)
+            self.menu_tab_bar.setTabToolTip(idx, MENU_TOOLTIPS.get(name, name))
+        self.menu_tab_bar.currentChanged.connect(
+            lambda i: self.select_section(MENU_SECTIONS[i])
         )
-        sep.lower()
-
-        self._menu_buttons = {}
-        for i, name in enumerate(MENU_SECTIONS):
-            btn = self.create_and_add_button(
-                name,
-                C_ROW + i * 3,
-                MENU_COL,
-                MENU_WIDTH,
-                2,
-                lambda checked=False, n=name: self.select_section(n),
-                MENU_TOOLTIPS.get(name, name),
-                "#d0d0d0",
-            )
-            self._menu_buttons[name] = btn
+        self.addWidget(self.menu_tab_bar, C_ROW, MENU_COL, 46, MENU_WIDTH + 2)
 
         self.save_button = self.create_and_add_button(
             "SAVE THE SETTINGS",
@@ -257,16 +259,9 @@ class SettingsLayout(Layout):
         self.restore_button.clicked.connect(self.restore_button_clicked)
 
     def _highlight_menu(self, selected: str) -> None:
-        for name, btn in self._menu_buttons.items():
-            if name == selected:
-                btn.setStyleSheet(
-                    "QPushButton {background-color: steelblue; color: white;"
-                    " font-weight: bold}"
-                )
-            else:
-                btn.setStyleSheet(
-                    "QPushButton {background-color: #d0d0d0; font-weight: bold}"
-                )
+        idx = MENU_SECTIONS.index(selected)
+        if self.menu_tab_bar.currentIndex() != idx:
+            self.menu_tab_bar.setCurrentIndex(idx)
 
     # ── Section selection ──────────────────────────────────────────────────────
 

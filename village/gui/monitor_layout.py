@@ -338,17 +338,20 @@ class MonitorLayout(Layout):
 
         _tab_style = (
             "QTabWidget::tab-bar { alignment: center; }"
-            "QTabBar::tab { background: #d0d0d0; font-weight: bold;"
-            " padding: 6px 16px;"
+            "QTabBar::tab { background: #d0d0d0;"
+            " padding: 6px 4px;"
             " border: 1px solid #aaaaaa; border-bottom: none;"
             " border-radius: 4px 4px 0 0; margin-right: 2px; }"
             "QTabBar::tab:selected { background: steelblue; color: white;"
             " border-color: steelblue; }"
             "QTabBar::tab:hover { background: #b0c4de; }"
         )
+        _tab_font = QFont("DejaVu Sans Condensed", 8)
+        _tab_font.setBold(True)
         self.actions_tab_widget = QTabWidget()
         self.actions_tab_widget.setStyleSheet(_tab_style)
         self.actions_tab_widget.tabBar().setExpanding(False)
+        self.actions_tab_widget.tabBar().setFont(_tab_font)
 
         self._actions_tab_map: list[str] = []
         self.actions_tab_widget.addTab(self.page1, "CORRIDOR")
@@ -363,7 +366,7 @@ class MonitorLayout(Layout):
             self._actions_tab_map.append("VIRTUAL_MOUSE")
 
         self.actions_tab_widget.currentChanged.connect(self.on_actions_tab_changed)
-        self.addWidget(self.actions_tab_widget, 11, 83, 21, 34)
+        self.addWidget(self.actions_tab_widget, 11, 81, 20, 38)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
@@ -381,17 +384,9 @@ class MonitorLayout(Layout):
         self.page7.setLayout(self.page7Layout)
 
         self.tab_widget = QTabWidget()
-        self.tab_widget.setStyleSheet(
-            "QTabWidget::tab-bar { alignment: center; }"
-            "QTabBar::tab { background: #d0d0d0; font-weight: bold;"
-            " padding: 6px 16px;"
-            " border: 1px solid #aaaaaa; border-bottom: none;"
-            " border-radius: 4px 4px 0 0; margin-right: 2px; }"
-            "QTabBar::tab:selected { background: steelblue; color: white;"
-            " border-color: steelblue; }"
-            "QTabBar::tab:hover { background: #b0c4de; }"
-        )
+        self.tab_widget.setStyleSheet(_tab_style)
         self.tab_widget.tabBar().setExpanding(False)
+        self.tab_widget.tabBar().setFont(_tab_font)
         self.tab_widget.addTab(self.page5, "INFO")
         self.tab_widget.addTab(self.page7, "PLOT")
         self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
@@ -454,7 +449,7 @@ class MonitorLayout(Layout):
 
         self.addWidget(self.qpicamera2_corridor, 5, 0, 28, 80)
         self.addWidget(self.qpicamera2_box, 5, 120, 28, 80)
-        self.addWidget(self.tab_widget, 33, 0, 18, 200)
+        self.addWidget(self.tab_widget, 32, 0, 18, 200)
         self.tab_widget.raise_()
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
@@ -551,13 +546,13 @@ class MotorLayout(Layout):
 
     def draw(self) -> None:
         """Draws the motor control buttons and scale options."""
-        self.draw_motor_buttons("MOTOR1", 2, 2, motor1)
-        self.draw_motor_buttons("MOTOR2", 2, 18, motor2)
+        self.draw_motor_buttons("MOTOR1", 1, 3, motor1)
+        self.draw_motor_buttons("MOTOR2", 1, 20, motor2)
 
         self.change_angles: PushButton = self.create_and_add_button(
             "CHANGE MOTOR ANGLES",
-            6,
-            6,
+            5,
+            8,
             22,
             2,
             self.change_angles_clicked,
@@ -565,8 +560,8 @@ class MotorLayout(Layout):
         )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            9,
-            6,
+            8,
+            8,
             22,
             2,
             self.calibrate_scale_clicked,
@@ -574,8 +569,8 @@ class MotorLayout(Layout):
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            11,
-            6,
+            10,
+            8,
             22,
             2,
             self.tare_scale_clicked,
@@ -583,8 +578,8 @@ class MotorLayout(Layout):
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            13,
-            6,
+            12,
+            8,
             22,
             2,
             self.get_weight_clicked,
@@ -592,8 +587,8 @@ class MotorLayout(Layout):
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            16,
-            6,
+            15,
+            8,
             22,
             2,
             self.get_temperature_clicked,
@@ -635,7 +630,7 @@ class MotorLayout(Layout):
         motor2_close_val = settings.get("MOTOR2_VALUES")[1]
         self.reply = QDialog()
         self.reply.setWindowTitle("Motor angles")
-        x = self.column_width * 83
+        x = self.column_width * 84
         y = self.row_height * 19
         width = self.column_width * 32
         height = self.row_height * 12
@@ -756,8 +751,8 @@ class PortsLayout(Layout):
         for i in range(8):
             button1 = self.create_and_add_button(
                 "LED" + str(i + 1),
-                i * 2 + 2,
-                2,
+                i * 2 + 1,
+                3,
                 14,
                 2,
                 partial(self.led_clicked, i + 1),
@@ -767,8 +762,8 @@ class PortsLayout(Layout):
 
             button2 = self.create_and_add_button(
                 "WATER" + str(i + 1),
-                i * 2 + 2,
-                18,
+                i * 2 + 1,
+                20,
                 14,
                 2,
                 partial(self.water_clicked, i + 1),
@@ -841,8 +836,8 @@ class VirtualMouseLayout(Layout):
         for i in range(8):
             button = self.create_and_add_button(
                 "POKE" + str(i + 1),
-                i * 2 + 2,
-                2,
+                i * 2 + 1,
+                3,
                 14,
                 2,
                 partial(self.poke_clicked, i + 1),
@@ -853,7 +848,7 @@ class VirtualMouseLayout(Layout):
         self.x_label = self.create_and_add_label(
             "X coordinate",
             2,
-            22,
+            24,
             12,
             2,
             "black",
@@ -863,7 +858,7 @@ class VirtualMouseLayout(Layout):
         self.y_label = self.create_and_add_label(
             "Y coordinate",
             6,
-            22,
+            24,
             12,
             2,
             "black",
@@ -871,15 +866,15 @@ class VirtualMouseLayout(Layout):
         )
 
         self.x_line_edit = self.create_and_add_line_edit(
-            "0", 4, 21, 8, 2, self.coordinates_changed
+            "0", 4, 24, 8, 2, self.coordinates_changed
         )
         self.y_line_edit = self.create_and_add_line_edit(
-            "0", 8, 21, 8, 2, self.coordinates_changed
+            "0", 8, 24, 8, 2, self.coordinates_changed
         )
         self.touch = self.create_and_add_button(
             "TOUCH SCREEN",
             11,
-            18,
+            21,
             14,
             2,
             self.touch_clicked,
@@ -942,8 +937,8 @@ class FunctionsLayout(Layout):
     def draw(self) -> None:
         """Draws the function buttons."""
         for i in range(98):
-            row = i // 2 * 2 + 1
-            column = 2 if i % 2 == 0 else 14
+            row = i // 2 * 2
+            column = 4 if i % 2 == 0 else 17
             button = self.create_and_add_button(
                 "FUNCTION" + str(i + 1),
                 row,
