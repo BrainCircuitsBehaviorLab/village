@@ -289,23 +289,23 @@ class Manager:
             project_text = ""
 
         self.text = (
-            "     SYSTEM STATE: "
+            "   SYSTEM STATE: "
             + state_name
             + " ("
             + state_description
-            + ")                    "
+            + ")         "
             + "SUBJECT: "
             + subject_name
-            + "                    "
+            + "         "
             + "TASK: "
             + task_name
-            + "                    "
-            + "RFID_READER: "
+            + "         "
+            + "RFID: "
             + rfid_reader_name
-            + "                    "
+            + "         "
             + "CYCLE: "
             + cycle_text
-            + "                    "
+            + "         "
             + "PROJECT: "
             + project_text
         )

@@ -257,14 +257,14 @@ class Layout(QGridLayout):
     def create_common_elements(self) -> None:
         """Creates the navigation menu buttons common to all main layouts."""
         self.status_label = self.create_and_add_label(
-            "", 3, 0, 200, 2, "white", background="black"
+            "", 1, 0, 158, 2, "black", background="powderblue"
         )
 
         size = 18
 
         self.main_button = self.create_and_add_button(
             "MAIN",
-            1,
+            3,
             0,
             size,
             2,
@@ -274,7 +274,7 @@ class Layout(QGridLayout):
 
         self.monitor_button = self.create_and_add_button(
             "MONITOR",
-            1,
+            3,
             size,
             size,
             2,
@@ -284,7 +284,7 @@ class Layout(QGridLayout):
 
         self.tasks_button = self.create_and_add_button(
             "TASKS",
-            1,
+            3,
             2 * size,
             size,
             2,
@@ -294,7 +294,7 @@ class Layout(QGridLayout):
 
         self.data_button = self.create_and_add_button(
             "DATA",
-            1,
+            3,
             3 * size,
             size,
             2,
@@ -304,7 +304,7 @@ class Layout(QGridLayout):
 
         self.water_calibration_button = self.create_and_add_button(
             "WATER CALIBRATION",
-            1,
+            3,
             4 * size,
             size,
             2,
@@ -314,7 +314,7 @@ class Layout(QGridLayout):
 
         self.sound_calibration_button = self.create_and_add_button(
             "SOUND CALIBRATION",
-            1,
+            3,
             5 * size,
             size,
             2,
@@ -324,7 +324,7 @@ class Layout(QGridLayout):
 
         self.settings_button = self.create_and_add_button(
             "SETTINGS",
-            1,
+            3,
             6 * size,
             size,
             2,
@@ -335,18 +335,18 @@ class Layout(QGridLayout):
         self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
             1,
-            146,
-            18,
+            158,
+            14,
             2,
             self.online_or_force_button_clicked,
             "Show live plots while a task is running",
-            "powderblue",
+            "white",
         )
 
         self.stop_button = self.create_and_add_button(
             "",
             1,
-            164,
+            172,
             18,
             2,
             self.stop_button_clicked,
@@ -357,8 +357,8 @@ class Layout(QGridLayout):
         self.exit_button = self.create_and_add_button(
             "EXIT",
             1,
-            182,
-            18,
+            190,
+            10,
             2,
             self.exit_button_clicked,
             "Exit the application",
@@ -393,7 +393,7 @@ class Layout(QGridLayout):
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: powderblue; font-weight: bold}" + _tt
+                "QPushButton {background-color: white; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
@@ -425,7 +425,7 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: powderblue; font-weight: bold}" + _tt
+                "QPushButton {background-color: white; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
