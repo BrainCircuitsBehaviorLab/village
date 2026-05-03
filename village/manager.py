@@ -293,19 +293,19 @@ class Manager:
             + state_name
             + " ("
             + state_description
-            + ")         "
+            + ")               "
             + "SUBJECT: "
             + subject_name
-            + "         "
+            + "               "
             + "TASK: "
             + task_name
-            + "         "
+            + "               "
             + "RFID: "
             + rfid_reader_name
-            + "         "
+            + "               "
             + "CYCLE: "
             + cycle_text
-            + "         "
+            + "               "
             + "PROJECT: "
             + project_text
         )

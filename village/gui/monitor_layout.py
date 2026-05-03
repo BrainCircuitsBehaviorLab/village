@@ -294,9 +294,9 @@ class MonitorLayout(Layout):
 
     def draw(self) -> None:
         """Draws the monitor layout elements."""
-        rectangle = QWidget()
-        rectangle.setStyleSheet("background-color: lightgray;")
-        self.addWidget(rectangle, 5, 0, 30, 200)
+        # rectangle = QWidget()
+        # rectangle.setStyleSheet("background-color: lightgray;")
+        # self.addWidget(rectangle, 6, 0, 30, 200)
 
         self.buttons: list[QPushButton] = []
 
@@ -307,12 +307,12 @@ class MonitorLayout(Layout):
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = MotorLayout(self.window, 19, 34)
+        self.page1Layout = MotorLayout(self.window, 18, 34)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = PortsLayout(self.window, 19, 34)
+        self.page2Layout = PortsLayout(self.window, 18, 34)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
@@ -333,7 +333,7 @@ class MonitorLayout(Layout):
 
         self.page4 = QWidget(self.central_widget)
         self.page4.setStyleSheet("background-color:white")
-        self.page4Layout = VirtualMouseLayout(self.window, 19, 34)
+        self.page4Layout = VirtualMouseLayout(self.window, 18, 34)
         self.page4.setLayout(self.page4Layout)
 
         _tab_style = (
@@ -366,21 +366,21 @@ class MonitorLayout(Layout):
             self._actions_tab_map.append("VIRTUAL_MOUSE")
 
         self.actions_tab_widget.currentChanged.connect(self.on_actions_tab_changed)
-        self.addWidget(self.actions_tab_widget, 11, 81, 20, 38)
+        self.addWidget(self.actions_tab_widget, 12, 81, 20, 38)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
-        self.page5Layout = InfoLayout(self.window, 17, 200)
+        self.page5Layout = InfoLayout(self.window, 16, 200)
         self.page5.setLayout(self.page5Layout)
 
         self.page6 = QWidget(self.bottom_widget)
         self.page6.setStyleSheet("background-color:white")
-        self.page6Layout = CorridorLayout(self.window, 17, 200)
+        self.page6Layout = CorridorLayout(self.window, 16, 200)
         self.page6.setLayout(self.page6Layout)
 
         self.page7 = QWidget(self.bottom_widget)
         self.page7.setStyleSheet("background-color:white")
-        self.page7Layout = CorridorPlotLayout(self.window, 17, 200)
+        self.page7Layout = CorridorPlotLayout(self.window, 16, 200)
         self.page7.setLayout(self.page7Layout)
 
         self.tab_widget = QTabWidget()
@@ -393,14 +393,14 @@ class MonitorLayout(Layout):
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID reader: ", 6, 84, 12, 2, "black"
+            "RFID reader: ", 7, 84, 12, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
         index = Active.get_index_from_value(manager.rfid_reader)
         self.rfid_reader_button = self.create_and_add_toggle_button(
             key,
-            6,
+            7,
             94,
             20,
             2,
@@ -411,14 +411,14 @@ class MonitorLayout(Layout):
         )
 
         self.cycle_label: Label = self.create_and_add_label(
-            "Cycle: ", 8, 84, 12, 2, "black"
+            "Cycle: ", 9, 84, 12, 2, "black"
         )
         key = "CYCLE"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(manager.cycle)
         self.cycle_button = self.create_and_add_toggle_button(
             key,
-            8,
+            9,
             94,
             20,
             2,
@@ -447,9 +447,9 @@ class MonitorLayout(Layout):
         self.qpicamera2_corridor.setFixedSize(640, 480)
         self.qpicamera2_box.setFixedSize(640, 480)
 
-        self.addWidget(self.qpicamera2_corridor, 5, 0, 28, 80)
-        self.addWidget(self.qpicamera2_box, 5, 120, 28, 80)
-        self.addWidget(self.tab_widget, 32, 0, 18, 200)
+        self.addWidget(self.qpicamera2_corridor, 6, 0, 28, 80)
+        self.addWidget(self.qpicamera2_box, 6, 120, 28, 80)
+        self.addWidget(self.tab_widget, 33, 0, 18, 200)
         self.tab_widget.raise_()
 
     def toggle_cycle_button(self, value: str, key: str) -> None:
@@ -986,9 +986,6 @@ class CorridorLayout(Layout):
         """Draws the corridor configuration options."""
         self.lbs: list[LabelButtons] = []
 
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 121)
-
         self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 2, self.color_area1_str)
         self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 21, self.color_area2_str)
         self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 40, self.color_area3_str)
@@ -999,6 +996,9 @@ class CorridorLayout(Layout):
         self.draw_area_buttons_box("AREA3_BOX", 2, 165, self.color_area3_str)
         self.draw_area_buttons_box("AREA4_BOX", 2, 184, self.color_area4_str)
         self.draw_camera_options()
+
+        self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
+        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 121)
 
         key = "USAGE1_BOX"
         possible_values = settings.get_values(key)
@@ -1243,6 +1243,12 @@ class CorridorLayout(Layout):
         self.lbs.append(lb)
         row += 2
 
+    def _camera_changed(self, box: bool = True, corridor: bool = False) -> None:
+        if box:
+            cam_box.change = True
+        if corridor:
+            cam_corridor.change = True
+
     def toggle_area1_box(self, value: str, key: str) -> None:
         """Toggles area 1 box usage.
 
@@ -1251,7 +1257,7 @@ class CorridorLayout(Layout):
             key (str): The setting key.
         """
         settings.set(key, value)
-        cam_box.change = True
+        self._camera_changed(box=True)
 
     def toggle_area2_box(self, value: str, key: str) -> None:
         """Toggles area 2 box usage.
@@ -1261,7 +1267,7 @@ class CorridorLayout(Layout):
             key (str): The setting key.
         """
         settings.set(key, value)
-        cam_box.change = True
+        self._camera_changed(box=True)
 
     def toggle_area3_box(self, value: str, key: str) -> None:
         """Toggles area 3 box usage.
@@ -1271,7 +1277,7 @@ class CorridorLayout(Layout):
             key (str): The setting key.
         """
         settings.set(key, value)
-        cam_box.change = True
+        self._camera_changed(box=True)
 
     def toggle_area4_box(self, value: str, key: str) -> None:
         """Toggles area 4 box usage.
@@ -1281,7 +1287,7 @@ class CorridorLayout(Layout):
             key (str): The setting key.
         """
         settings.set(key, value)
-        cam_box.change = True
+        self._camera_changed(box=True)
 
     def toggle_corridor(self, value: str, key: str) -> None:
         """Toggles corridor detection view.
@@ -1291,7 +1297,7 @@ class CorridorLayout(Layout):
             key (str): The setting key.
         """
         settings.set(key, value)
-        cam_corridor.change = True
+        self._camera_changed(corridor=True)
 
     def toggle_box(self, value: str, key: str) -> None:
         """Toggles box detection view.
@@ -1301,7 +1307,7 @@ class CorridorLayout(Layout):
             key (str): The setting key.
         """
         settings.set(key, value)
-        cam_box.change = True
+        self._camera_changed(box=True)
 
 
 class InfoLayout(Layout):

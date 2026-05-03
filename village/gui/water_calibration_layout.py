@@ -83,7 +83,7 @@ class WaterCalibrationLayout(Layout):
         # ports
         for i in range(8):
             self.create_and_add_label(
-                "port" + str(i + 1), 10 + 2 * i, 2, 8, 2, "black", bold=False
+                "port" + str(i + 1), 11 + 2 * i, 2, 8, 2, "black", bold=False
             )
 
         for i in range(8):
@@ -94,7 +94,7 @@ class WaterCalibrationLayout(Layout):
         # input
         self.calibration_input_label = self.create_and_add_label(
             "CALIBRATION INPUT",
-            6,
+            7,
             5,
             20,
             2,
@@ -121,7 +121,7 @@ class WaterCalibrationLayout(Layout):
         # first input variable
         self.time_label = self.create_and_add_label(
             "TIME(s)",
-            8,
+            9,
             8,
             12,
             2,
@@ -131,7 +131,7 @@ class WaterCalibrationLayout(Layout):
         )
         for i in range(8):
             line_edit = self.create_and_add_line_edit(
-                "0", 10 + 2 * i, 7, 8, 2, self.calibration_changed
+                "0", 11 + 2 * i, 7, 8, 2, self.calibration_changed
             )
             self.time_line_edits.append(line_edit)
 
@@ -154,7 +154,7 @@ class WaterCalibrationLayout(Layout):
         # iterations
         self.iterations_label = self.create_and_add_label(
             "ITERATIONS",
-            13,
+            14,
             19,
             12,
             2,
@@ -163,7 +163,7 @@ class WaterCalibrationLayout(Layout):
             description="Number of iterations.",
         )
         self.iterations_line_edit = self.create_and_add_line_edit(
-            "100", 15, 19, 8, 2, self.calibration_changed
+            "100", 16, 19, 8, 2, self.calibration_changed
         )
 
         self.iterations_label2 = self.create_and_add_label(
@@ -183,7 +183,7 @@ class WaterCalibrationLayout(Layout):
         # first button
         self.calibrate_button = self.create_and_add_button(
             "CALIBRATE ->",
-            17,
+            18,
             17,
             12,
             2,
@@ -208,7 +208,7 @@ class WaterCalibrationLayout(Layout):
         # output
         self.calibration_output_label = self.create_and_add_label(
             "CALIBRATION OUTPUT",
-            6,
+            7,
             28,
             20,
             2,
@@ -245,7 +245,7 @@ class WaterCalibrationLayout(Layout):
         )
         for i in range(8):
             line_edit = self.create_and_add_line_edit(
-                "0", 10 + 2 * i, 31, 8, 2, self.calibration_weighted
+                "0", 11 + 2 * i, 31, 8, 2, self.calibration_weighted
             )
             line_edit.setDisabled(True)
             self.total_weight_line_edits.append(line_edit)
@@ -270,7 +270,7 @@ class WaterCalibrationLayout(Layout):
         # output water delivered
         self.water_delivered_label = self.create_and_add_label(
             "WATER DELIVERED(ul)",
-            8,
+            9,
             46,
             20,
             2,
@@ -280,7 +280,7 @@ class WaterCalibrationLayout(Layout):
         )
         for i in range(8):
             label = self.create_and_add_label(
-                "0", 10 + 2 * i, 45, 18, 2, "black", bold=False
+                "0", 11 + 2 * i, 45, 18, 2, "black", bold=False
             )
             label.setAlignment(Qt.AlignCenter)
             self.water_delivered_labels.append(label)
@@ -305,7 +305,7 @@ class WaterCalibrationLayout(Layout):
         # button or third output variable
         self.add_button = self.create_and_add_button(
             "ADD ->",
-            17,
+            18,
             66,
             15,
             2,
@@ -389,11 +389,11 @@ class WaterCalibrationLayout(Layout):
         self.scroll_area.setWidget(widget)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.addWidget(self.scroll_area, 5, 85, 46, 36)
+        self.addWidget(self.scroll_area, 6, 85, 46, 36)
 
         # plot layout
         self.plot_layout = CalibrationPlotLayout(self.window, 38, 79, self)
-        self.addLayout(self.plot_layout, 5, 121, 38, 79)
+        self.addLayout(self.plot_layout, 6, 121, 38, 79)
 
     def change_layout(self, auto: bool = False) -> bool:
         """Handles layout changes, prompting to save if calibration is unsaved.

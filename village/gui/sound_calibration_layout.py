@@ -89,11 +89,11 @@ class SoundCalibrationLayout(Layout):
         text += "selection."
 
         self.sound_label = self.create_and_add_label(
-            "SOUND", 8, 2, 12, 2, "black", bold=False, description=text
+            "SOUND", 9, 2, 12, 2, "black", bold=False, description=text
         )
         values = [f.__name__ for f in manager.sound_calibration_functions]
         self.sound_combo = self.create_and_add_combo_box(
-            "sound", 10, 2, 30, 2, values, 0, self.calibration_changed
+            "sound", 11, 2, 30, 2, values, 0, self.calibration_changed
         )
 
         self.sound_label2 = self.create_and_add_label(
@@ -104,11 +104,11 @@ class SoundCalibrationLayout(Layout):
         )
 
         self.speaker_label = self.create_and_add_label(
-            "SPEAKER", 13, 2, 12, 2, "black", bold=False
+            "SPEAKER", 14, 2, 12, 2, "black", bold=False
         )
         self.speaker_combo = self.create_and_add_combo_box(
             "speaker",
-            15,
+            16,
             2,
             10,
             2,
@@ -126,7 +126,7 @@ class SoundCalibrationLayout(Layout):
 
         self.calibration_input_label = self.create_and_add_label(
             "CALIBRATION INPUT",
-            6,
+            7,
             2,
             20,
             2,
@@ -153,7 +153,7 @@ class SoundCalibrationLayout(Layout):
         # first input variable
         self.gain_label = self.create_and_add_label(
             "GAIN(0-1)",
-            13,
+            14,
             14,
             12,
             2,
@@ -162,7 +162,7 @@ class SoundCalibrationLayout(Layout):
             description="Gain value between 0 and 1",
         )
         self.gain_line_edit = self.create_and_add_line_edit(
-            "0", 15, 14, 8, 2, self.calibration_changed
+            "0", 16, 14, 8, 2, self.calibration_changed
         )
 
         self.dB_expected_label2 = self.create_and_add_label(
@@ -183,10 +183,10 @@ class SoundCalibrationLayout(Layout):
         # duration
         text = "The duration of the sound in seconds."
         self.duration_label = self.create_and_add_label(
-            "DURATION(s)", 13, 23, 12, 2, "black", bold=False, description=text
+            "DURATION(s)", 14, 23, 12, 2, "black", bold=False, description=text
         )
         self.duration_line_edit = self.create_and_add_line_edit(
-            "1", 15, 24, 8, 2, self.calibration_changed
+            "1", 16, 24, 8, 2, self.calibration_changed
         )
 
         self.duration_label2 = self.create_and_add_label(
@@ -199,7 +199,7 @@ class SoundCalibrationLayout(Layout):
         # first button
         self.calibrate_button = self.create_and_add_button(
             "CALIBRATE ->",
-            15,
+            16,
             36,
             12,
             2,
@@ -224,7 +224,7 @@ class SoundCalibrationLayout(Layout):
         # output
         self.calibration_output_label = self.create_and_add_label(
             "CALIBRATION OUTPUT",
-            6,
+            7,
             51,
             20,
             2,
@@ -238,10 +238,10 @@ class SoundCalibrationLayout(Layout):
 
         # output dB obtained
         self.dB_obtained_label = self.create_and_add_label(
-            "dB OBTAINED", 13, 51, 17, 2, "black", bold=False, description="Measured dB"
+            "dB OBTAINED", 14, 51, 17, 2, "black", bold=False, description="Measured dB"
         )
         self.dB_obtained_line_edit = self.create_and_add_line_edit(
-            "0", 15, 51, 8, 2, self.calibration_measured
+            "0", 16, 51, 8, 2, self.calibration_measured
         )
         self.dB_obtained_line_edit.setDisabled(True)
 
@@ -261,7 +261,7 @@ class SoundCalibrationLayout(Layout):
         # calibrate add button
         self.add_button = self.create_and_add_button(
             "ADD ->",
-            15,
+            16,
             66,
             15,
             2,
@@ -342,11 +342,11 @@ class SoundCalibrationLayout(Layout):
         self.scroll_area.setWidget(widget)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.addWidget(self.scroll_area, 5, 85, 46, 36)
+        self.addWidget(self.scroll_area, 6, 85, 46, 36)
 
         # plot layout
         self.plot_layout = CalibrationPlotLayout(self.window, 36, 87, self)
-        self.addLayout(self.plot_layout, 5, 121, 38, 79)
+        self.addLayout(self.plot_layout, 6, 121, 38, 79)
 
     def change_layout(self, auto: bool = False) -> bool:
         if auto:

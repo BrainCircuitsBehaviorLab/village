@@ -38,6 +38,10 @@ class NavTabProxy:
         self._idx = index
 
     def setDisabled(self, disabled: bool) -> None:
+        # Disabling the currently selected tab causes QTabBar to auto-advance
+        # to the next tab, firing currentChanged during construction. Skip it.
+        if disabled and self._bar.currentIndex() == self._idx:
+            return
         self._bar.setTabEnabled(self._idx, not disabled)
 
     def setEnabled(self, enabled: bool) -> None:
@@ -275,7 +279,7 @@ class Layout(QGridLayout):
     def create_common_elements(self) -> None:
         """Creates the navigation menu buttons common to all main layouts."""
         self.status_label = self.create_and_add_label(
-            "", 1, 0, 158, 2, "black", background="powderblue"
+            "", 1, 0, 200, 2, "black", background="powderblue"
         )
 
         _nav_items = [
@@ -288,12 +292,13 @@ class Layout(QGridLayout):
             ("SETTINGS", "Go to the settings menu"),
         ]
         self.nav_tab_bar = QTabBar()
-        _nav_font = QFont("DejaVu Sans Condensed", 8)
+        _nav_font = QFont("DejaVu Sans Condensed", 10)
         _nav_font.setBold(True)
         self.nav_tab_bar.setFont(_nav_font)
+        self.nav_tab_bar.setExpanding(False)
         self.nav_tab_bar.setStyleSheet(
             "QTabBar::tab { background: lightgray;"
-            " padding: 4px 12px;"
+            " padding: 6px 30px;"
             " border: 1px solid #aaaaaa; border-bottom: none;"
             " border-radius: 4px 4px 0 0; margin-right: 2px; }"
             "QTabBar::tab:selected { background: steelblue; color: white;"
@@ -307,7 +312,7 @@ class Layout(QGridLayout):
             idx = self.nav_tab_bar.addTab(label)
             self.nav_tab_bar.setTabToolTip(idx, tooltip)
         self.nav_tab_bar.currentChanged.connect(self._on_nav_tab_changed)
-        self.addWidget(self.nav_tab_bar, 3, 0, 2, 200)
+        self.addWidget(self.nav_tab_bar, 4, 0, 2, 200)
 
         self.main_button = NavTabProxy(self.nav_tab_bar, 0)
         self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)
@@ -319,9 +324,9 @@ class Layout(QGridLayout):
 
         self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
-            1,
-            158,
-            14,
+            4,
+            150,
+            16,
             2,
             self.online_or_force_button_clicked,
             "Show live plots while a task is running",
@@ -330,9 +335,9 @@ class Layout(QGridLayout):
 
         self.stop_button = self.create_and_add_button(
             "",
-            1,
-            172,
-            18,
+            4,
+            166,
+            22,
             2,
             self.stop_button_clicked,
             "Stop a running task",
@@ -341,9 +346,9 @@ class Layout(QGridLayout):
 
         self.exit_button = self.create_and_add_button(
             "EXIT",
-            1,
-            190,
-            10,
+            4,
+            188,
+            12,
             2,
             self.exit_button_clicked,
             "Exit the application",
@@ -369,6 +374,9 @@ class Layout(QGridLayout):
                 "Show live plots while a task is running"
             )
             self.online_or_force_button.setEnabled(True)
+            self.online_or_force_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+            )
         elif manager.state.can_go_to_wait():
             self.stop_button.setText("GO TO WAIT STATE")
             text = (
@@ -378,13 +386,16 @@ class Layout(QGridLayout):
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: white; font-weight: bold}" + _tt
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
                 "Force synchronisation with external device or server"
             )
             self.online_or_force_button.setEnabled(False)
+            self.online_or_force_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+            )
         elif manager.state.can_stop_syncing():
             self.stop_button.setText("STOP SYNC")
             text = (
@@ -401,6 +412,9 @@ class Layout(QGridLayout):
                 "Force synchronisation with external device or server"
             )
             self.online_or_force_button.setEnabled(False)
+            self.online_or_force_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+            )
         else:
             self.stop_button.setText("WAIT FOR SUBJECT EXIT")
             text = (
@@ -410,18 +424,21 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: white; font-weight: bold}" + _tt
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
                 "Force synchronisation with external device or server"
             )
+            self.online_or_force_button.setStyleSheet(
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
+            )
 
             if manager.state == State.WAIT:
-                self.stop_button.setEnabled(False)
+                self.stop_button.setEnabled(True)
                 self.online_or_force_button.setEnabled(True)
             else:
-                self.stop_button.setEnabled(True)
+                self.stop_button.setEnabled(False)
                 self.online_or_force_button.setEnabled(False)
 
     def exit_button_clicked(self) -> None:
@@ -893,6 +910,8 @@ class Layout(QGridLayout):
     def _on_nav_tab_changed(self, index: int) -> None:
         """Dispatches tab click to the appropriate navigation action."""
         if "layout" not in self.window.__dict__:
+            return
+        if self.window.layout is not self:
             return
         actions: list[Callable[[], None]] = [
             self.main_button_clicked,

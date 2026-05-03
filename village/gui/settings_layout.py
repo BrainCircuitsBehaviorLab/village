@@ -34,7 +34,7 @@ MENU_WIDTH = 22
 
 # ── Right content panel ────────────────────────────────────────────────────────
 C_COL = 27  # content start column
-C_ROW = 5  # content start row
+C_ROW = 7  # content start row
 C_LABEL_W = 22  # label width
 C_VAL_OFF = 22  # offset from C_COL to value widget column
 

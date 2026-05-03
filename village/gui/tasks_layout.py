@@ -64,7 +64,7 @@ class TasksLayout(Layout):
 
         self.run_task_button = self.create_and_add_button(
             "RUN TASK",
-            6,
+            8,
             92,
             16,
             2,
@@ -75,7 +75,7 @@ class TasksLayout(Layout):
 
         self.task_buttons: list[PushButton] = []
 
-        row = 6
+        row = 7
         self.create_and_add_label("TRAINING PROTOCOL", row, 4, 20, 2, "black")
         row += 2
         self.training_button = self.create_and_add_button(
@@ -89,7 +89,7 @@ class TasksLayout(Layout):
         )
 
         self.left_layout = QVBoxLayout()
-        self.addLayout(self.left_layout, 10, 2, 40, 38)
+        self.addLayout(self.left_layout, 11, 2, 39, 38)
 
         self.central_layout = QVBoxLayout()
         self.addLayout(self.central_layout, 10, 45, 40, 65)
@@ -123,9 +123,9 @@ class TasksLayout(Layout):
         # Create the General tab and its scroll area
         self.restart_tab_panel()
 
-        row = 0
+        row = 1
         self.left_sub_layout.create_and_add_label("TASKS", row, 2, 20, 2, "black")
-        row += 2
+        row += 1
         for key, value in manager.tasks.items():
             button = self.left_sub_layout.create_and_add_button(
                 key,
