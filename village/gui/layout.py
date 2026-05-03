@@ -287,7 +287,6 @@ class Layout(QGridLayout):
             ("SOUND CALIBRATION", "Go to the sound calibration menu"),
             ("SETTINGS", "Go to the settings menu"),
         ]
-        self._nav_inhibit = False
         self.nav_tab_bar = QTabBar()
         _nav_font = QFont("DejaVu Sans Condensed", 8)
         _nav_font.setBold(True)
@@ -893,7 +892,7 @@ class Layout(QGridLayout):
 
     def _on_nav_tab_changed(self, index: int) -> None:
         """Dispatches tab click to the appropriate navigation action."""
-        if self._nav_inhibit:
+        if "layout" not in self.window.__dict__:
             return
         actions: list[Callable[[], None]] = [
             self.main_button_clicked,
@@ -909,9 +908,9 @@ class Layout(QGridLayout):
 
     def _highlight_nav_button(self, active_button: NavTabProxy) -> None:
         """Selects the active navigation tab."""
-        self._nav_inhibit = True
+        self.nav_tab_bar.blockSignals(True)
         self.nav_tab_bar.setCurrentIndex(active_button._idx)
-        self._nav_inhibit = False
+        self.nav_tab_bar.blockSignals(False)
 
     def update_gui(self) -> None:
         """Updates the GUI elements (placeholder base method)."""
