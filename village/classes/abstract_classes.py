@@ -223,7 +223,7 @@ class ScaleBase:
             float: The weight reading (default 0.0).
         """
         return 0.0
-    
+
     def real_weight_inference(self) -> tuple[bool, float]:
         """Determines if a sequence of weight measurements represents a stable weight.
 
