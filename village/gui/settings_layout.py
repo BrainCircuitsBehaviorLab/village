@@ -210,7 +210,7 @@ class SettingsLayout(Layout):
 
     def _draw_static_chrome(self) -> None:
         self.menu_list = QListWidget()
-        tab_font = QFont("DejaVu Sans Condensed", 8)
+        tab_font = QFont("DejaVu Sans Condensed", 9)
         tab_font.setBold(True)
         self.menu_list.setFont(tab_font)
         self.menu_list.setStyleSheet(
@@ -525,6 +525,10 @@ class SettingsLayout(Layout):
             "SERVER_HOST",
             "SERVER_PORT",
             "OLD_VERSION",
+            "CHIP_CORRIDOR_ADDRESS",
+            "CHIP_BOX_ADDRESS",
+            "SCALE_ADDRESS",
+            "TEMP_SENSOR_ADDRESS",
         ]
 
         # Keys in the current section's tracking lists (will be processed with

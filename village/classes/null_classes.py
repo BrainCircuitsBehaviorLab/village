@@ -147,8 +147,8 @@ class NullTempSensor:
 class NullChip:
     error: str = "Error connecting to the chip "
 
-    def set_pwm_freq(self, channel: int, on: int, off: int) -> None:
-        """Sets the PWM frequency.
+    def set_pwm(self, channel: int, on: int, off: int) -> None:
+        """Sets the cycle.
 
         Args:
             channel (int): The PWM channel.

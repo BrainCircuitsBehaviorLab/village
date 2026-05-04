@@ -31,7 +31,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication
 
 q_app = QApplication.instance() or QApplication(sys.argv)
-q_app.setFont(QFont("DejaVu Sans", 9))
+q_app.setFont(QFont("DejaVu Sans Condensed", 9))
 
 import gc
 import queue

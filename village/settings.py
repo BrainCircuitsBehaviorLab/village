@@ -265,9 +265,9 @@ device_settings = [
         "The index (0, 1) of the box camera.",
     ),
     Setting(
-        "CHIP_CORRIDOR_ADDRESS", "0x40", str, "The address of the corridor PWM chip."
+        "CHIP_CORRIDOR_ADDRESS", "0x55", str, "The address of the corridor PWM chip."
     ),
-    Setting("CHIP_BOX_ADDRESS", "0x41", str, "The address of the box PWM chip."),
+    Setting("CHIP_BOX_ADDRESS", "0x56", str, "The address of the box PWM chip."),
     Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
     Setting("TEMP_SENSOR_ADDRESS", "0x44", str, "The address of the temp sensor."),
 ]

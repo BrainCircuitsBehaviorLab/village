@@ -1,16 +1,17 @@
+import traceback
+
 from PCA9685_smbus2 import PCA9685  # type: ignore
 
 from village.classes.enums import Active
-from village.classes.null_classes import NullChip
+from village.classes.null_classes import NullChip, NullMotor
+from village.devices.motor_old import MotorOld
+from village.scripts.log import log
 from village.settings import settings
-
-if settings.get("OLD_VERSION") == Active.ON:
-    from village.devices.motor import MotorOld
 
 # Init (50 Hz for servos)
 try:
     pwm_corridor = PCA9685.PCA9685(
-        i2c_bus=1, address=int(settings.get("CHIP_CORRIDOR_ADDRESS"), 16)
+        interface=1, address=int(settings.get("CHIP_CORRIDOR_ADDRESS"), 16)
     )
     pwm_corridor.set_pwm_freq(50)
     error_corridor = ""
@@ -20,7 +21,7 @@ except Exception:
 
 try:
     pwm_box = PCA9685.PCA9685(
-        i2c_bus=1, address=int(settings.get("CHIP_BOX_ADDRESS"), 16)
+        interface=1, address=int(settings.get("CHIP_BOX_ADDRESS"), 16)
     )
     pwm_box.set_pwm_freq(50)
     error_box = ""
@@ -94,7 +95,7 @@ def get_motor(channel: int, angles: list[int]) -> Motor:
     return motor
 
 
-def get_motor_old(channel: int, angles: list[int]) -> MotorOld:
+def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
     """Factory function to create and initialize a Motor instance.
 
     Args:
@@ -105,12 +106,17 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld:
         Motor: An initialized Motor instance.
     """
 
-    motor = MotorOld(pin=channel, angles=angles)
-    return motor
+    try:
+        motor = MotorOld(pin=channel, angles=angles)
+        log.info("Motor successfully initialized")
+        return motor
+    except Exception:
+        log.error("Could not initialize motor", exception=traceback.format_exc())
+        return NullMotor()
 
 
-motor_corridor1: Motor | MotorOld
-motor_corridor2: Motor | MotorOld
+motor_corridor1: Motor | MotorOld | NullMotor
+motor_corridor2: Motor | MotorOld | NullMotor
 
 motor_box1 = get_motor(settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_VALUES"))
 motor_box2 = get_motor(settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_VALUES"))

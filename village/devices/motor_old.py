@@ -1,10 +1,7 @@
 import os
 import time
-import traceback
 
-from village.classes.null_classes import NullMotor
 from village.scripts.log import log
-from village.settings import settings
 
 
 def find_pwmchip(target_device="1f00098000.pwm") -> str:
@@ -137,31 +134,3 @@ class MotorOld:
     def close(self) -> None:
         """Moves the motor to the close position."""
         self.set(self.transform(self.close_angle))
-
-
-def get_motor(pin: int, angles: list[int]) -> MotorOld | NullMotor:
-    """Factory function to create and initialize a Motor instance.
-
-    Args:
-        pin (int): The GPIO pin number.
-        angles (list[int]): A list containing [open_angle, close_angle].
-
-    Returns:
-        MotorBase: An initialized Motor instance or a dummy MotorBase if
-        initialization fails.
-    """
-    try:
-        motor = MotorOld(pin=pin, angles=angles)
-        log.info("Motor successfully initialized")
-        return motor
-    except Exception:
-        log.error("Could not initialize motor", exception=traceback.format_exc())
-        return NullMotor()
-
-
-motor_corridor1 = get_motor(
-    settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES")
-)
-motor_corridor2 = get_motor(
-    settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES")
-)

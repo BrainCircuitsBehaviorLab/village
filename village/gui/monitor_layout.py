@@ -46,7 +46,7 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.classes.null_classes import NullMotor
-    from village.devices.motor import MotorOld
+    from village.devices.motor_old import MotorOld
     from village.gui.gui_window import GuiWindow
 
 
@@ -346,7 +346,7 @@ class MonitorLayout(Layout):
             " border-color: steelblue; }"
             "QTabBar::tab:hover { background: #b0c4de; }"
         )
-        _tab_font = QFont("DejaVu Sans Condensed", 8)
+        _tab_font = QFont("DejaVu Sans Condensed", 9)
         _tab_font.setBold(True)
         self.actions_tab_widget = QTabWidget()
         self.actions_tab_widget.setStyleSheet(_tab_style)
