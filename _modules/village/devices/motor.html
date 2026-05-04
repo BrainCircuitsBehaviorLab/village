@@ -136,6 +136,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.html">null_classes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
@@ -208,7 +209,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor.html">motor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.Motor.html">Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a><ul>
@@ -240,20 +241,11 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.gui.Gui.html">Gui</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui_window.html">gui_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.layout.html">layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.html">monitor_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.sound_calibration_layout.html">sound_calibration_layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.sound_calibration_layout.DummyTask.html">DummyTask</a></li>
@@ -368,11 +360,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.manager.Manager.html">Manager</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.main.html">main</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.main.main.html">main</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.main.system_run.html">system_run</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../resources_index.html">RESOURCES</a><ul>
@@ -478,9 +465,9 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="33">
 </span><span data-line="34">
-<div class="viewcode-block" id="Motor">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.Motor.html#village.devices.motor.Motor">[docs]</a>
-</span><span data-line="35"><span class="k">class</span><span class="w"> </span><span class="nc">Motor</span><span class="p">:</span>
+<div class="viewcode-block" id="MotorOld">
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld">[docs]</a>
+</span><span data-line="35"><span class="k">class</span><span class="w"> </span><span class="nc">MotorOld</span><span class="p">:</span>
 </span><span data-line="36"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Controls a motor via PWM.</span>
 </span><span data-line="37">
 </span><span data-line="38"><span class="sd">    Attributes:</span>
@@ -494,8 +481,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="46"><span class="sd">        chip (str): The path to the PWM chip.</span>
 </span><span data-line="47"><span class="sd">    &quot;&quot;&quot;</span>
 </span><span data-line="48">
-<div class="viewcode-block" id="Motor.__init__">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.Motor.html#village.devices.motor.Motor.__init__">[docs]</a>
+<div class="viewcode-block" id="MotorOld.__init__">
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.__init__">[docs]</a>
 </span><span data-line="49">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pin</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="50"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Motor.</span>
 </span><span data-line="51">
@@ -533,8 +520,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="83">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error Invalid Pin&quot;</span><span class="p">)</span></div>
 
 </span><span data-line="84">
-<div class="viewcode-block" id="Motor.enable">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.Motor.html#village.devices.motor.Motor.enable">[docs]</a>
+<div class="viewcode-block" id="MotorOld.enable">
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.enable">[docs]</a>
 </span><span data-line="85">    <span class="k">def</span><span class="w"> </span><span class="nf">enable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="86"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Enables or disables the motor PWM.</span>
 </span><span data-line="87">
@@ -560,8 +547,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="106">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
 </span><span data-line="107">            <span class="k">pass</span>
 </span><span data-line="108">
-<div class="viewcode-block" id="Motor.set">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.Motor.html#village.devices.motor.Motor.set">[docs]</a>
+<div class="viewcode-block" id="MotorOld.set">
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.set">[docs]</a>
 </span><span data-line="109">    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_time_ns</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="110"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the duty cycle in nanoseconds.</span>
 </span><span data-line="111">
@@ -575,8 +562,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="119">        <span class="p">)</span></div>
 
 </span><span data-line="120">
-<div class="viewcode-block" id="Motor.transform">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.Motor.html#village.devices.motor.Motor.transform">[docs]</a>
+<div class="viewcode-block" id="MotorOld.transform">
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.transform">[docs]</a>
 </span><span data-line="121">    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 </span><span data-line="122"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms an angle to a PWM duty cycle in nanoseconds.</span>
 </span><span data-line="123">
@@ -590,15 +577,15 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="131">        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="mi">2000000</span> <span class="o">+</span> <span class="mi">500000</span><span class="p">)</span></div>
 
 </span><span data-line="132">
-<div class="viewcode-block" id="Motor.open">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.Motor.html#village.devices.motor.Motor.open">[docs]</a>
+<div class="viewcode-block" id="MotorOld.open">
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.open">[docs]</a>
 </span><span data-line="133">    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="134"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the motor to the open position.&quot;&quot;&quot;</span>
 </span><span data-line="135">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_angle</span><span class="p">))</span></div>
 
 </span><span data-line="136">
-<div class="viewcode-block" id="Motor.close">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.Motor.html#village.devices.motor.Motor.close">[docs]</a>
+<div class="viewcode-block" id="MotorOld.close">
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.close">[docs]</a>
 </span><span data-line="137">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="138"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the motor to the close position.&quot;&quot;&quot;</span>
 </span><span data-line="139">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span><span class="p">))</span></div>
@@ -608,7 +595,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="141">
 <div class="viewcode-block" id="get_motor">
 <a class="viewcode-back" href="../../../api_generated/village.devices.motor.get_motor.html#village.devices.motor.get_motor">[docs]</a>
-</span><span data-line="142"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor</span><span class="p">(</span><span class="n">pin</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">NullMotor</span><span class="p">:</span>
+</span><span data-line="142"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor</span><span class="p">(</span><span class="n">pin</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span><span class="p">:</span>
 </span><span data-line="143"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to create and initialize a Motor instance.</span>
 </span><span data-line="144">
 </span><span data-line="145"><span class="sd">    Args:</span>
@@ -620,7 +607,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="151"><span class="sd">        initialization fails.</span>
 </span><span data-line="152"><span class="sd">    &quot;&quot;&quot;</span>
 </span><span data-line="153">    <span class="k">try</span><span class="p">:</span>
-</span><span data-line="154">        <span class="n">motor</span> <span class="o">=</span> <span class="n">Motor</span><span class="p">(</span><span class="n">pin</span><span class="o">=</span><span class="n">pin</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="n">angles</span><span class="p">)</span>
+</span><span data-line="154">        <span class="n">motor</span> <span class="o">=</span> <span class="n">MotorOld</span><span class="p">(</span><span class="n">pin</span><span class="o">=</span><span class="n">pin</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="n">angles</span><span class="p">)</span>
 </span><span data-line="155">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Motor successfully initialized&quot;</span><span class="p">)</span>
 </span><span data-line="156">        <span class="k">return</span> <span class="n">motor</span>
 </span><span data-line="157">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -629,8 +616,12 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="160">
 </span><span data-line="161">
-</span><span data-line="162"><span class="n">motor1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">))</span>
-</span><span data-line="163"><span class="n">motor2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">))</span>
+</span><span data-line="162"><span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="163">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">)</span>
+</span><span data-line="164"><span class="p">)</span>
+</span><span data-line="165"><span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="166">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">)</span>
+</span><span data-line="167"><span class="p">)</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -655,7 +646,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=87249a7b"></script>
+      <script src="../../../_static/documentation_options.js?v=12dff410"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

@@ -1,0 +1,32 @@
+NullChip
+========
+
+.. currentmodule:: village.classes.null_classes
+
+.. autoclass:: NullChip
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NullChip.__init__
+      ~NullChip.set_pwm_freq
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NullChip.error
+   
+   

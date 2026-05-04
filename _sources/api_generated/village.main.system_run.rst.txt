@@ -1,6 +1,0 @@
-system\_run
-===========
-
-.. currentmodule:: village.main
-
-.. autofunction:: system_run

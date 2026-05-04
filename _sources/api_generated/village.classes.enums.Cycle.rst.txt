@@ -30,7 +30,7 @@ Cycle
    .. autosummary::
    
       ~Cycle.AUTO
-      ~Cycle.DAY
-      ~Cycle.NIGHT
+      ~Cycle.ON
+      ~Cycle.OFF
    
    

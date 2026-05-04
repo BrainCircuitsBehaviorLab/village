@@ -30,7 +30,7 @@ Actions
    .. autosummary::
    
       ~Actions.CORRIDOR
-      ~Actions.PORTS
+      ~Actions.BOX
       ~Actions.FUNCTIONS
       ~Actions.VIRTUAL_MOUSE
    

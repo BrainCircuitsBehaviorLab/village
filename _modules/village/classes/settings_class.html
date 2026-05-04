@@ -136,6 +136,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.html">null_classes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
@@ -208,7 +209,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor.html">motor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.Motor.html">Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a><ul>
@@ -240,20 +241,11 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.gui.Gui.html">Gui</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui_window.html">gui_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.layout.html">layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.html">monitor_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.sound_calibration_layout.html">sound_calibration_layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.sound_calibration_layout.DummyTask.html">DummyTask</a></li>
@@ -366,11 +358,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.manager.html">manager</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.manager.Manager.html">Manager</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.main.html">main</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.main.main.html">main</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.main.system_run.html">system_run</a></li>
 </ul>
 </li>
 </ul>
@@ -618,9 +605,9 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="156">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
 </span><span data-line="157">
-<div class="viewcode-block" id="Settings.create_factory_settings">
-<a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.create_factory_settings">[docs]</a>
-</span><span data-line="158">    <span class="k">def</span><span class="w"> </span><span class="nf">create_factory_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Settings.restore_all_settings">
+<a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.restore_all_settings">[docs]</a>
+</span><span data-line="158">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_all_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="159"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize all settings with their factory defaults in QSettings.&quot;&quot;&quot;</span>
 </span><span data-line="160">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
 </span><span data-line="161">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
@@ -644,7 +631,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="173"><span class="sd">        Otherwise, adds any new settings that are missing.</span>
 </span><span data-line="174"><span class="sd">        &quot;&quot;&quot;</span>
 </span><span data-line="175">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FIRST_LAUNCH&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="176">            <span class="bp">self</span><span class="o">.</span><span class="n">create_factory_settings</span><span class="p">()</span>
+</span><span data-line="176">            <span class="bp">self</span><span class="o">.</span><span class="n">restore_all_settings</span><span class="p">()</span>
 </span><span data-line="177">        <span class="k">else</span><span class="p">:</span>
 </span><span data-line="178">            <span class="bp">self</span><span class="o">.</span><span class="n">add_new_settings</span><span class="p">()</span></div>
 
@@ -838,7 +825,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=87249a7b"></script>
+      <script src="../../../_static/documentation_options.js?v=12dff410"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

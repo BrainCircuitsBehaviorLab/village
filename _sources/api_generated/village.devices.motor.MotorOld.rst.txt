@@ -1,9 +1,9 @@
-Motor
-=====
+MotorOld
+========
 
 .. currentmodule:: village.devices.motor
 
-.. autoclass:: Motor
+.. autoclass:: MotorOld
    :members:
    :show-inheritance:
    :inherited-members:
@@ -16,12 +16,12 @@ Motor
 
    .. autosummary::
    
-      ~Motor.__init__
-      ~Motor.close
-      ~Motor.enable
-      ~Motor.open
-      ~Motor.set
-      ~Motor.transform
+      ~MotorOld.__init__
+      ~MotorOld.close
+      ~MotorOld.enable
+      ~MotorOld.open
+      ~MotorOld.set
+      ~MotorOld.transform
    
    
 

@@ -28,7 +28,7 @@ motor
       :toctree:
       :template: custom_class_template.rst
    
-      Motor
+      MotorOld
    
    
 

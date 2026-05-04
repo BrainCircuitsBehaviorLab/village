@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Manager - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="main" href="village.main.html" /><link rel="prev" title="manager" href="village.manager.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Manager - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="RESOURCES" href="../resources_index.html" /><link rel="prev" title="manager" href="village.manager.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.manager.Manager.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -136,6 +136,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.classes.null_classes.html">null_classes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCollection.html">NullCollection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullMotor.html">NullMotor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullScale.html">NullScale</a></li>
@@ -208,7 +209,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor.html">motor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.Motor.html">Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
@@ -240,20 +241,11 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.gui.html">gui</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.gui.Gui.html">Gui</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.gui_window.html">gui_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.sound_calibration_layout.html">sound_calibration_layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.gui.sound_calibration_layout.DummyTask.html">DummyTask</a></li>
@@ -368,11 +360,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Manager</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.main.html">main</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.main.main.html">main</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.main.system_run.html">system_run</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -417,9 +404,12 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.manager.Manager.state"><code class="docutils literal notranslate">state</span></code></a></li>
 <li><a class="reference internal" href="#village.manager.Manager.table"><code class="docutils literal notranslate">table</span></code></a></li>
 <li><a class="reference internal" href="#village.manager.Manager.rfid_reader"><code class="docutils literal notranslate">rfid_reader</span></code></a></li>
-<li><a class="reference internal" href="#village.manager.Manager.cycle"><code class="docutils literal notranslate">cycle</span></code></a></li>
 <li><a class="reference internal" href="#village.manager.Manager.info"><code class="docutils literal notranslate">info</span></code></a></li>
 <li><a class="reference internal" href="#village.manager.Manager.actions"><code class="docutils literal notranslate">actions</span></code></a></li>
+<li><a class="reference internal" href="#village.manager.Manager.visible_corridor_cycle"><code class="docutils literal notranslate">visible_corridor_cycle</span></code></a></li>
+<li><a class="reference internal" href="#village.manager.Manager.ir_corridor_cycle"><code class="docutils literal notranslate">ir_corridor_cycle</span></code></a></li>
+<li><a class="reference internal" href="#village.manager.Manager.visible_box_cycle"><code class="docutils literal notranslate">visible_box_cycle</span></code></a></li>
+<li><a class="reference internal" href="#village.manager.Manager.ir_box_cycle"><code class="docutils literal notranslate">ir_box_cycle</span></code></a></li>
 <li><a class="reference internal" href="#village.manager.Manager.cycle_text"><code class="docutils literal notranslate">cycle_text</span></code></a></li>
 <li><a class="reference internal" href="#village.manager.Manager.text"><code class="docutils literal notranslate">text</span></code></a></li>
 <li><a class="reference internal" href="#village.manager.Manager.day"><code class="docutils literal notranslate">day</span></code></a></li>
@@ -626,17 +616,6 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.manager.Manager.cycle">
-<span class="sig-name descname"><span class="pre">cycle</span></span></dt>
-<dd><p>Current cycle settings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="village.classes.enums.Cycle.html#village.classes.enums.Cycle" title="village.classes.enums.Cycle">Cycle</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="village.manager.Manager.info">
 <span class="sig-name descname"><span class="pre">info</span></span></dt>
 <dd><p>Information settings.</p>
@@ -654,6 +633,50 @@ data-aria-dark="Switch to auto color mode">
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="village.classes.enums.Actions.html#village.classes.enums.Actions" title="village.classes.enums.Actions">Actions</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.manager.Manager.visible_corridor_cycle">
+<span class="sig-name descname"><span class="pre">visible_corridor_cycle</span></span></dt>
+<dd><p>Visible light cycle of the corridor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="village.classes.enums.Cycle.html#village.classes.enums.Cycle" title="village.classes.enums.Cycle">Cycle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.manager.Manager.ir_corridor_cycle">
+<span class="sig-name descname"><span class="pre">ir_corridor_cycle</span></span></dt>
+<dd><p>Infrared light cycle of the corridor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="village.classes.enums.Cycle.html#village.classes.enums.Cycle" title="village.classes.enums.Cycle">Cycle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.manager.Manager.visible_box_cycle">
+<span class="sig-name descname"><span class="pre">visible_box_cycle</span></span></dt>
+<dd><p>Visible light cycle of the box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="village.classes.enums.Cycle.html#village.classes.enums.Cycle" title="village.classes.enums.Cycle">Cycle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.manager.Manager.ir_box_cycle">
+<span class="sig-name descname"><span class="pre">ir_box_cycle</span></span></dt>
+<dd><p>Infrared light cycle of the box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="village.classes.enums.Cycle.html#village.classes.enums.Cycle" title="village.classes.enums.Cycle">Cycle</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1125,10 +1148,10 @@ and recent activity.</p>
         <span>Previous</span><div class="title">manager</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="village.main.html">
+    <a href="../resources_index.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">main</div>
+        <div class="title">RESOURCES</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -1150,7 +1173,7 @@ and recent activity.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=87249a7b"></script>
+      <script src="../_static/documentation_options.js?v=12dff410"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

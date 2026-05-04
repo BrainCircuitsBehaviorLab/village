@@ -136,6 +136,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">null_classes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCollection.html">NullCollection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullMotor.html">NullMotor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullScale.html">NullScale</a></li>
@@ -208,7 +209,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor.html">motor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.Motor.html">Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
@@ -240,20 +241,11 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.gui.html">gui</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.gui.Gui.html">Gui</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.gui_window.html">gui_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.sound_calibration_layout.html">sound_calibration_layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.gui.sound_calibration_layout.DummyTask.html">DummyTask</a></li>
@@ -368,11 +360,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.manager.Manager.html">Manager</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.main.html">main</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.main.main.html">main</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.main.system_run.html">system_run</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -445,6 +432,11 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.classes.null_classes.NullTempSensor.error"><code class="docutils literal notranslate">error</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullTempSensor.start"><code class="docutils literal notranslate">start()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullTempSensor.get_temperature"><code class="docutils literal notranslate">get_temperature()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#village.classes.null_classes.NullChip"><code class="docutils literal notranslate"><span class="pre">NullChip</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.null_classes.NullChip.error"><code class="docutils literal notranslate">error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.NullChip.set_pwm_freq"><code class="docutils literal notranslate">set_pwm_freq()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullMotor"><code class="docutils literal notranslate"><span class="pre">NullMotor</span></code></a><ul>
@@ -592,28 +584,31 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera" title="village.classes.null_classes.NullCamera"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullCamera</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullCollection.html#village.classes.null_classes.NullCollection" title="village.classes.null_classes.NullCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullCollection</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullChip.html#village.classes.null_classes.NullChip" title="village.classes.null_classes.NullChip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullChip</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullMotor.html#village.classes.null_classes.NullMotor" title="village.classes.null_classes.NullMotor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullMotor</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullCollection.html#village.classes.null_classes.NullCollection" title="village.classes.null_classes.NullCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullCollection</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale" title="village.classes.null_classes.NullScale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullScale</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullMotor.html#village.classes.null_classes.NullMotor" title="village.classes.null_classes.NullMotor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullMotor</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullSoftCodeToBpod.html#village.classes.null_classes.NullSoftCodeToBpod" title="village.classes.null_classes.NullSoftCodeToBpod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullSoftCodeToBpod</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale" title="village.classes.null_classes.NullScale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullScale</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullSoundDevice.html#village.classes.null_classes.NullSoundDevice" title="village.classes.null_classes.NullSoundDevice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullSoundDevice</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullSoftCodeToBpod.html#village.classes.null_classes.NullSoftCodeToBpod" title="village.classes.null_classes.NullSoftCodeToBpod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullSoftCodeToBpod</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullStateMachine.html#village.classes.null_classes.NullStateMachine" title="village.classes.null_classes.NullStateMachine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullStateMachine</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullSoundDevice.html#village.classes.null_classes.NullSoundDevice" title="village.classes.null_classes.NullSoundDevice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullSoundDevice</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullTelegramBot.html#village.classes.null_classes.NullTelegramBot" title="village.classes.null_classes.NullTelegramBot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullTelegramBot</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullStateMachine.html#village.classes.null_classes.NullStateMachine" title="village.classes.null_classes.NullStateMachine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullStateMachine</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullTempSensor.html#village.classes.null_classes.NullTempSensor" title="village.classes.null_classes.NullTempSensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullTempSensor</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.NullTelegramBot.html#village.classes.null_classes.NullTelegramBot" title="village.classes.null_classes.NullTelegramBot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullTelegramBot</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.NullTempSensor.html#village.classes.null_classes.NullTempSensor" title="village.classes.null_classes.NullTempSensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NullTempSensor</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -800,6 +795,32 @@ data-aria-dark="Switch to auto color mode">
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple[float, float, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.null_classes.NullChip">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">NullChip</span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullChip"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.null_classes.NullChip.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">chip</span> <span class="pre">'</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.null_classes.NullChip.set_pwm_freq">
+<span class="sig-name descname"><span class="pre">set_pwm_freq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">off</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullChip.set_pwm_freq"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sets the PWM frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<em>int</em>) – The PWM channel.</p></li>
+<li><p><strong>on</strong> (<em>int</em>) – The on time in ticks.</p></li>
+<li><p><strong>off</strong> (<em>int</em>) – The off time in ticks.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -1030,7 +1051,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.trigger_event">
-<span class="sig-name descname"><span class="pre">trigger_event</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;threading.Event</span> <span class="pre">at</span> <span class="pre">0x7fca676affd0:</span> <span class="pre">unset&gt;</span></span></dt>
+<span class="sig-name descname"><span class="pre">trigger_event</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;threading.Event</span> <span class="pre">at</span> <span class="pre">0x7f3c213763d0:</span> <span class="pre">unset&gt;</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1047,7 +1068,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.start_preview_window">
-<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='140507301555536'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCamera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='139896237814224'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCamera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Starts the preview window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1230,7 +1251,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=87249a7b"></script>
+      <script src="../_static/documentation_options.js?v=12dff410"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

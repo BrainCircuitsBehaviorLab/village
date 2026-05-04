@@ -136,6 +136,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.classes.null_classes.html">null_classes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCollection.html">NullCollection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullMotor.html">NullMotor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullScale.html">NullScale</a></li>
@@ -208,7 +209,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor.html">motor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.Motor.html">Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
@@ -240,20 +241,11 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.gui.html">gui</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.gui.Gui.html">Gui</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.gui_window.html">gui_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.sound_calibration_layout.html">sound_calibration_layout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.gui.sound_calibration_layout.DummyTask.html">DummyTask</a></li>
@@ -366,11 +358,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.manager.html">manager</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.manager.Manager.html">Manager</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="village.main.html">main</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.main.main.html">main</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.main.system_run.html">system_run</a></li>
 </ul>
 </li>
 </ul>
@@ -1445,7 +1432,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.devices.camera.Camera.start_preview_window">
-<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='140507301555536'&gt;</span></span></span><a class="reference internal" href="../_modules/village/devices/camera.html#Camera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='139896237814224'&gt;</span></span></span><a class="reference internal" href="../_modules/village/devices/camera.html#Camera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Starts a low-frequency preview window for the GUI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1581,7 +1568,7 @@ alarms if needed.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=87249a7b"></script>
+      <script src="../_static/documentation_options.js?v=12dff410"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

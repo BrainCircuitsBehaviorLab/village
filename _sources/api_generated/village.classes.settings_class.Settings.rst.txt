@@ -19,7 +19,6 @@ Settings
       ~Settings.__init__
       ~Settings.add_new_settings
       ~Settings.check_settings
-      ~Settings.create_factory_settings
       ~Settings.get
       ~Settings.get_description
       ~Settings.get_index
@@ -28,6 +27,7 @@ Settings
       ~Settings.get_type
       ~Settings.get_values
       ~Settings.print
+      ~Settings.restore_all_settings
       ~Settings.restore_directory_settings
       ~Settings.restore_factory_settings
       ~Settings.restore_visual_settings

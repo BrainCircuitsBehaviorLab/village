@@ -21,6 +21,7 @@ null\_classes
    
       NullBpod
       NullCamera
+      NullChip
       NullCollection
       NullMotor
       NullScale
