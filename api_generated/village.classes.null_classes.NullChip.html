@@ -206,10 +206,9 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.motor.html">motor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.MotorOld.html">MotorOld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
@@ -398,7 +397,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.classes.null_classes.NullChip"><code class="docutils literal notranslate"><span class="pre">NullChip</span></code></a><ul>
 <li><a class="reference internal" href="#village.classes.null_classes.NullChip.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullChip.error"><code class="docutils literal notranslate">error</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullChip.set_pwm_freq"><code class="docutils literal notranslate">set_pwm_freq()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.NullChip.set_pwm"><code class="docutils literal notranslate">set_pwm()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -496,8 +495,8 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullChip.__init__" title="village.classes.null_classes.NullChip.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullChip.set_pwm_freq" title="village.classes.null_classes.NullChip.set_pwm_freq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_pwm_freq</span></code></a>(channel, on, off)</p></td>
-<td><p>Sets the PWM frequency.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullChip.set_pwm" title="village.classes.null_classes.NullChip.set_pwm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_pwm</span></code></a>(channel, on, off)</p></td>
+<td><p>Sets the cycle.</p></td>
 </tr>
 </tbody>
 </table>
@@ -518,9 +517,9 @@ data-aria-dark="Switch to auto color mode">
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullChip.set_pwm_freq">
-<span class="sig-name descname"><span class="pre">set_pwm_freq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">off</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullChip.set_pwm_freq"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Sets the PWM frequency.</p>
+<dt class="sig sig-object py" id="village.classes.null_classes.NullChip.set_pwm">
+<span class="sig-name descname"><span class="pre">set_pwm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">off</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullChip.set_pwm"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sets the cycle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -573,7 +572,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=12dff410"></script>
+      <script src="../_static/documentation_options.js?v=8afc8b28"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

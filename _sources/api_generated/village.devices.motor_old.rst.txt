@@ -1,7 +1,7 @@
-motor
-=====
+motor\_old
+==========
 
-.. automodule:: village.devices.motor
+.. automodule:: village.devices.motor_old
 
    
    
@@ -16,7 +16,6 @@ motor
       :template: custom_base_template.rst
    
       find_pwmchip
-      get_motor
    
    
 

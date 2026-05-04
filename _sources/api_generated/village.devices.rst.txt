@@ -30,7 +30,7 @@
 
    camera
    chip
-   motor
+   motor_old
    rfid
    scale
    sound_device

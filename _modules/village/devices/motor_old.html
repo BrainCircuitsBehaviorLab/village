@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>village.devices.motor - Training village</title><link rel="shortcut icon" href="../../../_static/favicon.svg"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/devices/motor.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>village.devices.motor_old - Training village</title><link rel="shortcut icon" href="../../../_static/favicon.svg"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/devices/motor_old.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
@@ -20,8 +20,8 @@
 }
 </style>
     <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/devices/motor.html"/>
-  <meta property="og:title" content="village.devices.motor"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/devices/motor_old.html"/>
+  <meta property="og:title" content="village.devices.motor_old"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -206,10 +206,9 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor.html">motor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.MotorOld.html">MotorOld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a><ul>
@@ -414,7 +413,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">village.devices.motor</strong>
+        <strong itemprop="name">village.devices.motor_old</strong>
         <meta itemprop="position" content="3" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -427,201 +426,167 @@ data-aria-dark="Switch to auto color mode">
 </div><div class="flex flex-col break-words justify-between">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
-          <h1>Source code for village.devices.motor</h1><div class="highlight"><pre>
+          <h1>Source code for village.devices.motor_old</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.null_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullMotor</span>
-</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
-</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
-</span><span data-line="8">
-</span><span data-line="9">
+</span><span data-line="3">
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+</span><span data-line="5">
+</span><span data-line="6">
 <div class="viewcode-block" id="find_pwmchip">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.find_pwmchip.html#village.devices.motor.find_pwmchip">[docs]</a>
-</span><span data-line="10"><span class="k">def</span><span class="w"> </span><span class="nf">find_pwmchip</span><span class="p">(</span><span class="n">target_device</span><span class="o">=</span><span class="s2">&quot;1f00098000.pwm&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="11"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Finds the PWM chip path for a given target device.</span>
-</span><span data-line="12">
-</span><span data-line="13"><span class="sd">    Args:</span>
-</span><span data-line="14"><span class="sd">        target_device (str): The target device name to look for.</span>
-</span><span data-line="15"><span class="sd">        Defaults to &quot;1f00098000.pwm&quot;.</span>
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor_old.find_pwmchip.html#village.devices.motor_old.find_pwmchip">[docs]</a>
+</span><span data-line="7"><span class="k">def</span><span class="w"> </span><span class="nf">find_pwmchip</span><span class="p">(</span><span class="n">target_device</span><span class="o">=</span><span class="s2">&quot;1f00098000.pwm&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="8"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Finds the PWM chip path for a given target device.</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="sd">    Args:</span>
+</span><span data-line="11"><span class="sd">        target_device (str): The target device name to look for.</span>
+</span><span data-line="12"><span class="sd">        Defaults to &quot;1f00098000.pwm&quot;.</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="sd">    Returns:</span>
+</span><span data-line="15"><span class="sd">        str: The path to the PWM chip or raises RuntimeError if not found.</span>
 </span><span data-line="16">
-</span><span data-line="17"><span class="sd">    Returns:</span>
-</span><span data-line="18"><span class="sd">        str: The path to the PWM chip or raises RuntimeError if not found.</span>
-</span><span data-line="19">
-</span><span data-line="20"><span class="sd">    Raises:</span>
-</span><span data-line="21"><span class="sd">        RuntimeError: If no valid PWM chip is found.</span>
-</span><span data-line="22"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="23">    <span class="k">for</span> <span class="n">chip</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;/sys/class/pwm&quot;</span><span class="p">):</span>
-</span><span data-line="24">        <span class="k">if</span> <span class="n">chip</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;pwmchip&quot;</span><span class="p">):</span>
-</span><span data-line="25">            <span class="n">devlink</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/sys/class/pwm&quot;</span><span class="p">,</span> <span class="n">chip</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">)</span>
-</span><span data-line="26">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="27">                <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">readlink</span><span class="p">(</span><span class="n">devlink</span><span class="p">))</span>
-</span><span data-line="28">                <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">target_device</span><span class="p">:</span>
-</span><span data-line="29">                    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/sys/class/pwm&quot;</span><span class="p">,</span> <span class="n">chip</span><span class="p">)</span>
-</span><span data-line="30">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="31">                <span class="k">continue</span>
-</span><span data-line="32">    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No valid PWM chip found! Update target_device if needed.&quot;</span><span class="p">)</span></div>
+</span><span data-line="17"><span class="sd">    Raises:</span>
+</span><span data-line="18"><span class="sd">        RuntimeError: If no valid PWM chip is found.</span>
+</span><span data-line="19"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="20">    <span class="k">for</span> <span class="n">chip</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;/sys/class/pwm&quot;</span><span class="p">):</span>
+</span><span data-line="21">        <span class="k">if</span> <span class="n">chip</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;pwmchip&quot;</span><span class="p">):</span>
+</span><span data-line="22">            <span class="n">devlink</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/sys/class/pwm&quot;</span><span class="p">,</span> <span class="n">chip</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">)</span>
+</span><span data-line="23">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="24">                <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">readlink</span><span class="p">(</span><span class="n">devlink</span><span class="p">))</span>
+</span><span data-line="25">                <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">target_device</span><span class="p">:</span>
+</span><span data-line="26">                    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/sys/class/pwm&quot;</span><span class="p">,</span> <span class="n">chip</span><span class="p">)</span>
+</span><span data-line="27">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="28">                <span class="k">continue</span>
+</span><span data-line="29">    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No valid PWM chip found! Update target_device if needed.&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="33">
-</span><span data-line="34">
+</span><span data-line="30">
+</span><span data-line="31">
 <div class="viewcode-block" id="MotorOld">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld">[docs]</a>
-</span><span data-line="35"><span class="k">class</span><span class="w"> </span><span class="nc">MotorOld</span><span class="p">:</span>
-</span><span data-line="36"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Controls a motor via PWM.</span>
-</span><span data-line="37">
-</span><span data-line="38"><span class="sd">    Attributes:</span>
-</span><span data-line="39"><span class="sd">        pin (int): The GPIO pin number used for the motor.</span>
-</span><span data-line="40"><span class="sd">        pinIdx (int): The index of the pin in the internal configuration lists.</span>
-</span><span data-line="41"><span class="sd">        pwmx (list[int]): Mapping of pin indices to PWM channels.</span>
-</span><span data-line="42"><span class="sd">        flag (bool): State flag indicating if the motor is enabled.</span>
-</span><span data-line="43"><span class="sd">        open_angle (int): The angle for the open position.</span>
-</span><span data-line="44"><span class="sd">        close_angle (int): The angle for the close position.</span>
-</span><span data-line="45"><span class="sd">        error (str): Error message if any.</span>
-</span><span data-line="46"><span class="sd">        chip (str): The path to the PWM chip.</span>
-</span><span data-line="47"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="48">
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor_old.MotorOld.html#village.devices.motor_old.MotorOld">[docs]</a>
+</span><span data-line="32"><span class="k">class</span><span class="w"> </span><span class="nc">MotorOld</span><span class="p">:</span>
+</span><span data-line="33"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Controls a motor via PWM.</span>
+</span><span data-line="34">
+</span><span data-line="35"><span class="sd">    Attributes:</span>
+</span><span data-line="36"><span class="sd">        pin (int): The GPIO pin number used for the motor.</span>
+</span><span data-line="37"><span class="sd">        pinIdx (int): The index of the pin in the internal configuration lists.</span>
+</span><span data-line="38"><span class="sd">        pwmx (list[int]): Mapping of pin indices to PWM channels.</span>
+</span><span data-line="39"><span class="sd">        flag (bool): State flag indicating if the motor is enabled.</span>
+</span><span data-line="40"><span class="sd">        open_angle (int): The angle for the open position.</span>
+</span><span data-line="41"><span class="sd">        close_angle (int): The angle for the close position.</span>
+</span><span data-line="42"><span class="sd">        error (str): Error message if any.</span>
+</span><span data-line="43"><span class="sd">        chip (str): The path to the PWM chip.</span>
+</span><span data-line="44"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="45">
 <div class="viewcode-block" id="MotorOld.__init__">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.__init__">[docs]</a>
-</span><span data-line="49">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pin</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="50"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Motor.</span>
-</span><span data-line="51">
-</span><span data-line="52"><span class="sd">        Args:</span>
-</span><span data-line="53"><span class="sd">            pin (int): The GPIO pin number.</span>
-</span><span data-line="54"><span class="sd">            angles (list[int]): A list containing [open_angle, close_angle].</span>
-</span><span data-line="55"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="56">        <span class="bp">self</span><span class="o">.</span><span class="n">pin</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="57">        <span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-</span><span data-line="59">        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="60">        <span class="bp">self</span><span class="o">.</span><span class="n">open_angle</span> <span class="o">=</span> <span class="n">angles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="61">        <span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span> <span class="o">=</span> <span class="n">angles</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</span><span data-line="62">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="63">        <span class="n">pins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">]</span>
-</span><span data-line="64">        <span class="n">afunc</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a0&quot;</span><span class="p">,</span> <span class="s2">&quot;a0&quot;</span><span class="p">,</span> <span class="s2">&quot;a0&quot;</span><span class="p">,</span> <span class="s2">&quot;a0&quot;</span><span class="p">,</span> <span class="s2">&quot;a3&quot;</span><span class="p">,</span> <span class="s2">&quot;a3&quot;</span><span class="p">]</span>
-</span><span data-line="65">
-</span><span data-line="66">        <span class="c1"># Detect pwmchip dynamically!</span>
-</span><span data-line="67">        <span class="bp">self</span><span class="o">.</span><span class="n">chip</span> <span class="o">=</span> <span class="n">find_pwmchip</span><span class="p">()</span>
-</span><span data-line="68">        <span class="k">if</span> <span class="n">pin</span> <span class="ow">in</span> <span class="n">pins</span><span class="p">:</span>
-</span><span data-line="69">            <span class="bp">self</span><span class="o">.</span><span class="n">pin</span> <span class="o">=</span> <span class="n">pin</span>
-</span><span data-line="70">            <span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span> <span class="o">=</span> <span class="n">pins</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
-</span><span data-line="71">            <span class="c1"># let&#39;s set pin ctrl</span>
-</span><span data-line="72">            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/usr/bin/pinctrl set </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pin</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">afunc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span data-line="73">            <span class="c1"># let export pin</span>
-</span><span data-line="74">            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/pwm</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
-</span><span data-line="75">                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/export&quot;</span><span class="p">)</span>
-</span><span data-line="76">            <span class="c1"># CLOCK AT 1gHZ  let put period to 20ms</span>
-</span><span data-line="77">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
-</span><span data-line="78">            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo 20000000 &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/pwm</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">/period&quot;</span><span class="p">)</span>
-</span><span data-line="79">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-</span><span data-line="80">            <span class="bp">self</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-</span><span data-line="81">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="82">            <span class="bp">self</span><span class="o">.</span><span class="n">pin</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="83">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error Invalid Pin&quot;</span><span class="p">)</span></div>
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor_old.MotorOld.html#village.devices.motor_old.MotorOld.__init__">[docs]</a>
+</span><span data-line="46">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pin</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="47"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Motor.</span>
+</span><span data-line="48">
+</span><span data-line="49"><span class="sd">        Args:</span>
+</span><span data-line="50"><span class="sd">            pin (int): The GPIO pin number.</span>
+</span><span data-line="51"><span class="sd">            angles (list[int]): A list containing [open_angle, close_angle].</span>
+</span><span data-line="52"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="53">        <span class="bp">self</span><span class="o">.</span><span class="n">pin</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="54">        <span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="55">        <span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</span><span data-line="56">        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="57">        <span class="bp">self</span><span class="o">.</span><span class="n">open_angle</span> <span class="o">=</span> <span class="n">angles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span> <span class="o">=</span> <span class="n">angles</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span><span data-line="59">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="60">        <span class="n">pins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">]</span>
+</span><span data-line="61">        <span class="n">afunc</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a0&quot;</span><span class="p">,</span> <span class="s2">&quot;a0&quot;</span><span class="p">,</span> <span class="s2">&quot;a0&quot;</span><span class="p">,</span> <span class="s2">&quot;a0&quot;</span><span class="p">,</span> <span class="s2">&quot;a3&quot;</span><span class="p">,</span> <span class="s2">&quot;a3&quot;</span><span class="p">]</span>
+</span><span data-line="62">
+</span><span data-line="63">        <span class="c1"># Detect pwmchip dynamically!</span>
+</span><span data-line="64">        <span class="bp">self</span><span class="o">.</span><span class="n">chip</span> <span class="o">=</span> <span class="n">find_pwmchip</span><span class="p">()</span>
+</span><span data-line="65">        <span class="k">if</span> <span class="n">pin</span> <span class="ow">in</span> <span class="n">pins</span><span class="p">:</span>
+</span><span data-line="66">            <span class="bp">self</span><span class="o">.</span><span class="n">pin</span> <span class="o">=</span> <span class="n">pin</span>
+</span><span data-line="67">            <span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span> <span class="o">=</span> <span class="n">pins</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+</span><span data-line="68">            <span class="c1"># let&#39;s set pin ctrl</span>
+</span><span data-line="69">            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/usr/bin/pinctrl set </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pin</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">afunc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="70">            <span class="c1"># let export pin</span>
+</span><span data-line="71">            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/pwm</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+</span><span data-line="72">                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/export&quot;</span><span class="p">)</span>
+</span><span data-line="73">            <span class="c1"># CLOCK AT 1gHZ  let put period to 20ms</span>
+</span><span data-line="74">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+</span><span data-line="75">            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo 20000000 &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/pwm</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">/period&quot;</span><span class="p">)</span>
+</span><span data-line="76">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</span><span data-line="77">            <span class="bp">self</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</span><span data-line="78">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="79">            <span class="bp">self</span><span class="o">.</span><span class="n">pin</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="80">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error Invalid Pin&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="84">
+</span><span data-line="81">
 <div class="viewcode-block" id="MotorOld.enable">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.enable">[docs]</a>
-</span><span data-line="85">    <span class="k">def</span><span class="w"> </span><span class="nf">enable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="86"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Enables or disables the motor PWM.</span>
-</span><span data-line="87">
-</span><span data-line="88"><span class="sd">        Args:</span>
-</span><span data-line="89"><span class="sd">            flag (bool): True to enable, False to disable.</span>
-</span><span data-line="90"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="91">        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span>
-</span><span data-line="92">        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
-</span><span data-line="93">            <span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">)</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/pwm</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">/enable&quot;</span>
-</span><span data-line="94">        <span class="p">)</span></div>
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor_old.MotorOld.html#village.devices.motor_old.MotorOld.enable">[docs]</a>
+</span><span data-line="82">    <span class="k">def</span><span class="w"> </span><span class="nf">enable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="83"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Enables or disables the motor PWM.</span>
+</span><span data-line="84">
+</span><span data-line="85"><span class="sd">        Args:</span>
+</span><span data-line="86"><span class="sd">            flag (bool): True to enable, False to disable.</span>
+</span><span data-line="87"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="88">        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span>
+</span><span data-line="89">        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
+</span><span data-line="90">            <span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">)</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/pwm</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">/enable&quot;</span>
+</span><span data-line="91">        <span class="p">)</span></div>
 
-</span><span data-line="95">
-</span><span data-line="96">    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="97"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up PWM resources and resets pin control.&quot;&quot;&quot;</span>
-</span><span data-line="98">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="99">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="100">                <span class="c1"># ok take PWM out</span>
-</span><span data-line="101">                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/unexport&quot;</span><span class="p">)</span>
-</span><span data-line="102">                <span class="c1"># disable PWM Pin</span>
-</span><span data-line="103">                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/usr/bin/pinctrl set </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pin</span><span class="si">}</span><span class="s2"> no&quot;</span><span class="p">)</span>
-</span><span data-line="104">        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-</span><span data-line="105">            <span class="k">pass</span>  <span class="c1"># interpreter shutdown</span>
-</span><span data-line="106">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="107">            <span class="k">pass</span>
-</span><span data-line="108">
+</span><span data-line="92">
+</span><span data-line="93">    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="94"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up PWM resources and resets pin control.&quot;&quot;&quot;</span>
+</span><span data-line="95">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="96">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="97">                <span class="c1"># ok take PWM out</span>
+</span><span data-line="98">                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/unexport&quot;</span><span class="p">)</span>
+</span><span data-line="99">                <span class="c1"># disable PWM Pin</span>
+</span><span data-line="100">                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/usr/bin/pinctrl set </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pin</span><span class="si">}</span><span class="s2"> no&quot;</span><span class="p">)</span>
+</span><span data-line="101">        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+</span><span data-line="102">            <span class="k">pass</span>  <span class="c1"># interpreter shutdown</span>
+</span><span data-line="103">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="104">            <span class="k">pass</span>
+</span><span data-line="105">
 <div class="viewcode-block" id="MotorOld.set">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.set">[docs]</a>
-</span><span data-line="109">    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_time_ns</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="110"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the duty cycle in nanoseconds.</span>
-</span><span data-line="111">
-</span><span data-line="112"><span class="sd">        Args:</span>
-</span><span data-line="113"><span class="sd">            on_time_ns (int): The high time in nanoseconds.</span>
-</span><span data-line="114"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="115">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">:</span>
-</span><span data-line="116">            <span class="bp">self</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="117">        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
-</span><span data-line="118">            <span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="n">on_time_ns</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/pwm</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">/duty_cycle&quot;</span>
-</span><span data-line="119">        <span class="p">)</span></div>
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor_old.MotorOld.html#village.devices.motor_old.MotorOld.set">[docs]</a>
+</span><span data-line="106">    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_time_ns</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="107"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the duty cycle in nanoseconds.</span>
+</span><span data-line="108">
+</span><span data-line="109"><span class="sd">        Args:</span>
+</span><span data-line="110"><span class="sd">            on_time_ns (int): The high time in nanoseconds.</span>
+</span><span data-line="111"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="112">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">:</span>
+</span><span data-line="113">            <span class="bp">self</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="114">        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
+</span><span data-line="115">            <span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="n">on_time_ns</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">chip</span><span class="si">}</span><span class="s2">/pwm</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pwmx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pinIdx</span><span class="p">]</span><span class="si">}</span><span class="s2">/duty_cycle&quot;</span>
+</span><span data-line="116">        <span class="p">)</span></div>
 
-</span><span data-line="120">
+</span><span data-line="117">
 <div class="viewcode-block" id="MotorOld.transform">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.transform">[docs]</a>
-</span><span data-line="121">    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span data-line="122"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms an angle to a PWM duty cycle in nanoseconds.</span>
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor_old.MotorOld.html#village.devices.motor_old.MotorOld.transform">[docs]</a>
+</span><span data-line="118">    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="119"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms an angle to a PWM duty cycle in nanoseconds.</span>
+</span><span data-line="120">
+</span><span data-line="121"><span class="sd">        Args:</span>
+</span><span data-line="122"><span class="sd">            value (int): The angle in degrees (0-180).</span>
 </span><span data-line="123">
-</span><span data-line="124"><span class="sd">        Args:</span>
-</span><span data-line="125"><span class="sd">            value (int): The angle in degrees (0-180).</span>
-</span><span data-line="126">
-</span><span data-line="127"><span class="sd">        Returns:</span>
-</span><span data-line="128"><span class="sd">            int: The duty cycle in nanoseconds (500000 - 2500000).</span>
-</span><span data-line="129"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="130">        <span class="c1"># 0 to 180 degrees -&gt; 500000 to 2500000 ns</span>
-</span><span data-line="131">        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="mi">2000000</span> <span class="o">+</span> <span class="mi">500000</span><span class="p">)</span></div>
+</span><span data-line="124"><span class="sd">        Returns:</span>
+</span><span data-line="125"><span class="sd">            int: The duty cycle in nanoseconds (500000 - 2500000).</span>
+</span><span data-line="126"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="127">        <span class="c1"># 0 to 180 degrees -&gt; 500000 to 2500000 ns</span>
+</span><span data-line="128">        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="mi">2000000</span> <span class="o">+</span> <span class="mi">500000</span><span class="p">)</span></div>
 
-</span><span data-line="132">
+</span><span data-line="129">
 <div class="viewcode-block" id="MotorOld.open">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.open">[docs]</a>
-</span><span data-line="133">    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="134"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the motor to the open position.&quot;&quot;&quot;</span>
-</span><span data-line="135">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_angle</span><span class="p">))</span></div>
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor_old.MotorOld.html#village.devices.motor_old.MotorOld.open">[docs]</a>
+</span><span data-line="130">    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="131"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the motor to the open position.&quot;&quot;&quot;</span>
+</span><span data-line="132">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_angle</span><span class="p">))</span></div>
 
-</span><span data-line="136">
+</span><span data-line="133">
 <div class="viewcode-block" id="MotorOld.close">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.MotorOld.html#village.devices.motor.MotorOld.close">[docs]</a>
-</span><span data-line="137">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="138"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the motor to the close position.&quot;&quot;&quot;</span>
-</span><span data-line="139">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span><span class="p">))</span></div>
+<a class="viewcode-back" href="../../../api_generated/village.devices.motor_old.MotorOld.html#village.devices.motor_old.MotorOld.close">[docs]</a>
+</span><span data-line="134">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="135"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the motor to the close position.&quot;&quot;&quot;</span>
+</span><span data-line="136">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span><span class="p">))</span></div>
 </div>
 
-</span><span data-line="140">
-</span><span data-line="141">
-<div class="viewcode-block" id="get_motor">
-<a class="viewcode-back" href="../../../api_generated/village.devices.motor.get_motor.html#village.devices.motor.get_motor">[docs]</a>
-</span><span data-line="142"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor</span><span class="p">(</span><span class="n">pin</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span><span class="p">:</span>
-</span><span data-line="143"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to create and initialize a Motor instance.</span>
-</span><span data-line="144">
-</span><span data-line="145"><span class="sd">    Args:</span>
-</span><span data-line="146"><span class="sd">        pin (int): The GPIO pin number.</span>
-</span><span data-line="147"><span class="sd">        angles (list[int]): A list containing [open_angle, close_angle].</span>
-</span><span data-line="148">
-</span><span data-line="149"><span class="sd">    Returns:</span>
-</span><span data-line="150"><span class="sd">        MotorBase: An initialized Motor instance or a dummy MotorBase if</span>
-</span><span data-line="151"><span class="sd">        initialization fails.</span>
-</span><span data-line="152"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="153">    <span class="k">try</span><span class="p">:</span>
-</span><span data-line="154">        <span class="n">motor</span> <span class="o">=</span> <span class="n">MotorOld</span><span class="p">(</span><span class="n">pin</span><span class="o">=</span><span class="n">pin</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="n">angles</span><span class="p">)</span>
-</span><span data-line="155">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Motor successfully initialized&quot;</span><span class="p">)</span>
-</span><span data-line="156">        <span class="k">return</span> <span class="n">motor</span>
-</span><span data-line="157">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="158">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not initialize motor&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
-</span><span data-line="159">        <span class="k">return</span> <span class="n">NullMotor</span><span class="p">()</span></div>
-
-</span><span data-line="160">
-</span><span data-line="161">
-</span><span data-line="162"><span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
-</span><span data-line="163">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">)</span>
-</span><span data-line="164"><span class="p">)</span>
-</span><span data-line="165"><span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
-</span><span data-line="166">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">)</span>
-</span><span data-line="167"><span class="p">)</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -646,7 +611,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=12dff410"></script>
+      <script src="../../../_static/documentation_options.js?v=8afc8b28"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

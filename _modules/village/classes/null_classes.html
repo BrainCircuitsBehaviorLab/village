@@ -206,10 +206,9 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor.html">motor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor.MotorOld.html">MotorOld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a><ul>
@@ -654,10 +653,10 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="147"><span class="k">class</span><span class="w"> </span><span class="nc">NullChip</span><span class="p">:</span>
 </span><span data-line="148">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the chip &quot;</span>
 </span><span data-line="149">
-<div class="viewcode-block" id="NullChip.set_pwm_freq">
-<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullChip.html#village.classes.null_classes.NullChip.set_pwm_freq">[docs]</a>
-</span><span data-line="150">    <span class="k">def</span><span class="w"> </span><span class="nf">set_pwm_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">on</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="151"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the PWM frequency.</span>
+<div class="viewcode-block" id="NullChip.set_pwm">
+<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullChip.html#village.classes.null_classes.NullChip.set_pwm">[docs]</a>
+</span><span data-line="150">    <span class="k">def</span><span class="w"> </span><span class="nf">set_pwm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">on</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="151"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the cycle.</span>
 </span><span data-line="152">
 </span><span data-line="153"><span class="sd">        Args:</span>
 </span><span data-line="154"><span class="sd">            channel (int): The PWM channel.</span>
@@ -1014,7 +1013,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=12dff410"></script>
+      <script src="../../../_static/documentation_options.js?v=8afc8b28"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

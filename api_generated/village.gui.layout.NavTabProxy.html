@@ -206,10 +206,9 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.motor.html">motor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.MotorOld.html">MotorOld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
@@ -483,12 +482,12 @@ data-aria-dark="Switch to auto color mode">
 <h1>NavTabProxy</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="village.gui.layout.NavTabProxy">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">NavTabProxy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tab_bar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QTabBar'</span> <span class="pre">id='139896213741200'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/gui/layout.html#NavTabProxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">NavTabProxy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tab_bar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QTabBar'</span> <span class="pre">id='139993318461776'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/gui/layout.html#NavTabProxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Proxy for a nav QTabBar tab, exposing a QPushButton-compatible interface.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="village.gui.layout.NavTabProxy.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tab_bar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QTabBar'</span> <span class="pre">id='139896213741200'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/gui/layout.html#NavTabProxy.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tab_bar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QTabBar'</span> <span class="pre">id='139993318461776'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/gui/layout.html#NavTabProxy.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -566,7 +565,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=12dff410"></script>
+      <script src="../_static/documentation_options.js?v=8afc8b28"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

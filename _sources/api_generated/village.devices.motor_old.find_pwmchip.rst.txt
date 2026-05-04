@@ -1,6 +1,6 @@
 find\_pwmchip
 =============
 
-.. currentmodule:: village.devices.motor
+.. currentmodule:: village.devices.motor_old
 
 .. autofunction:: find_pwmchip

@@ -17,7 +17,7 @@ NullChip
    .. autosummary::
    
       ~NullChip.__init__
-      ~NullChip.set_pwm_freq
+      ~NullChip.set_pwm
    
    
 

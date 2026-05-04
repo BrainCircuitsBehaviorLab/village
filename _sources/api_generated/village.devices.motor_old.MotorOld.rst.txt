@@ -1,7 +1,7 @@
 MotorOld
 ========
 
-.. currentmodule:: village.devices.motor
+.. currentmodule:: village.devices.motor_old
 
 .. autoclass:: MotorOld
    :members:

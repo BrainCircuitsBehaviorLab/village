@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>motor - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="find_pwmchip" href="village.devices.motor.find_pwmchip.html" /><link rel="prev" title="LowFreqQPicamera2" href="village.devices.camera.LowFreqQPicamera2.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.devices.motor.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>motor_old - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="find_pwmchip" href="village.devices.motor_old.find_pwmchip.html" /><link rel="prev" title="LowFreqQPicamera2" href="village.devices.camera.LowFreqQPicamera2.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.devices.motor_old.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -20,8 +20,8 @@
 }
 </style>
     <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.devices.motor.html"/>
-  <meta property="og:title" content="motor"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.devices.motor_old.html"/>
+  <meta property="og:title" content="motor_old"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -206,10 +206,9 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">motor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.find_pwmchip.html">find_pwmchip</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.get_motor.html">get_motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor.MotorOld.html">MotorOld</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
@@ -395,24 +394,23 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.devices.motor.find_pwmchip"><code class="docutils literal notranslate"><span class="pre">find_pwmchip()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld"><code class="docutils literal notranslate"><span class="pre">MotorOld</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.pin"><code class="docutils literal notranslate">pin</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.pinIdx"><code class="docutils literal notranslate">pinIdx</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.pwmx"><code class="docutils literal notranslate">pwmx</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.flag"><code class="docutils literal notranslate">flag</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.open_angle"><code class="docutils literal notranslate">open_angle</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.close_angle"><code class="docutils literal notranslate">close_angle</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.error"><code class="docutils literal notranslate">error</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.chip"><code class="docutils literal notranslate">chip</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.enable"><code class="docutils literal notranslate">enable()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.set"><code class="docutils literal notranslate">set()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.transform"><code class="docutils literal notranslate">transform()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.open"><code class="docutils literal notranslate">open()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.motor.MotorOld.close"><code class="docutils literal notranslate">close()</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.find_pwmchip"><code class="docutils literal notranslate"><span class="pre">find_pwmchip()</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld"><code class="docutils literal notranslate"><span class="pre">MotorOld</span></code></a><ul>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.pin"><code class="docutils literal notranslate">pin</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.pinIdx"><code class="docutils literal notranslate">pinIdx</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.pwmx"><code class="docutils literal notranslate">pwmx</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.flag"><code class="docutils literal notranslate">flag</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.open_angle"><code class="docutils literal notranslate">open_angle</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.close_angle"><code class="docutils literal notranslate">close_angle</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.error"><code class="docutils literal notranslate">error</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.chip"><code class="docutils literal notranslate">chip</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.enable"><code class="docutils literal notranslate">enable()</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.set"><code class="docutils literal notranslate">set()</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.transform"><code class="docutils literal notranslate">transform()</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.open"><code class="docutils literal notranslate">open()</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.motor_old.MotorOld.close"><code class="docutils literal notranslate">close()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#village.devices.motor.get_motor"><code class="docutils literal notranslate"><span class="pre">get_motor()</span></code></a></li>
 </ul>
 </div></div>
   </aside>
@@ -438,7 +436,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">motor</strong>
+        <strong itemprop="name">motor_old</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -455,7 +453,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor.rst.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor_old.rst.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -469,34 +467,31 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor.rst.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor_old.rst.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
-            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor_old.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
+            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor_old.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.motor_old.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="module-village.devices.motor">
-<span id="motor"></span><h1>motor</h1>
+          <section id="module-village.devices.motor_old">
+<span id="motor-old"></span><h1>motor_old</h1>
 <p class="rubric">Functions</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.devices.motor.find_pwmchip.html#village.devices.motor.find_pwmchip" title="village.devices.motor.find_pwmchip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_pwmchip</span></code></a>([target_device])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html#village.devices.motor_old.find_pwmchip" title="village.devices.motor_old.find_pwmchip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_pwmchip</span></code></a>([target_device])</p></td>
 <td><p>Finds the PWM chip path for a given target device.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.devices.motor.get_motor.html#village.devices.motor.get_motor" title="village.devices.motor.get_motor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_motor</span></code></a>(pin, angles)</p></td>
-<td><p>Factory function to create and initialize a Motor instance.</p></td>
 </tr>
 </tbody>
 </table>
@@ -505,15 +500,15 @@ data-aria-dark="Switch to auto color mode">
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.devices.motor.MotorOld.html#village.devices.motor.MotorOld" title="village.devices.motor.MotorOld"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MotorOld</span></code></a>(pin, angles)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.devices.motor_old.MotorOld.html#village.devices.motor_old.MotorOld" title="village.devices.motor_old.MotorOld"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MotorOld</span></code></a>(pin, angles)</p></td>
 <td><p>Controls a motor via PWM.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="village.devices.motor.find_pwmchip">
-<span class="sig-name descname"><span class="pre">find_pwmchip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1f00098000.pwm'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/village/devices/motor.html#find_pwmchip"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.devices.motor_old.find_pwmchip">
+<span class="sig-name descname"><span class="pre">find_pwmchip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1f00098000.pwm'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/village/devices/motor_old.html#find_pwmchip"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Finds the PWM chip path for a given target device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -535,12 +530,12 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MotorOld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/devices/motor.html#MotorOld"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MotorOld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/devices/motor_old.html#MotorOld"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Controls a motor via PWM.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.pin">
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.pin">
 <span class="sig-name descname"><span class="pre">pin</span></span></dt>
 <dd><p>The GPIO pin number used for the motor.</p>
 <dl class="field-list simple">
@@ -551,7 +546,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.pinIdx">
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.pinIdx">
 <span class="sig-name descname"><span class="pre">pinIdx</span></span></dt>
 <dd><p>The index of the pin in the internal configuration lists.</p>
 <dl class="field-list simple">
@@ -562,7 +557,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.pwmx">
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.pwmx">
 <span class="sig-name descname"><span class="pre">pwmx</span></span></dt>
 <dd><p>Mapping of pin indices to PWM channels.</p>
 <dl class="field-list simple">
@@ -573,7 +568,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.flag">
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.flag">
 <span class="sig-name descname"><span class="pre">flag</span></span></dt>
 <dd><p>State flag indicating if the motor is enabled.</p>
 <dl class="field-list simple">
@@ -584,7 +579,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.open_angle">
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.open_angle">
 <span class="sig-name descname"><span class="pre">open_angle</span></span></dt>
 <dd><p>The angle for the open position.</p>
 <dl class="field-list simple">
@@ -595,7 +590,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.close_angle">
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.close_angle">
 <span class="sig-name descname"><span class="pre">close_angle</span></span></dt>
 <dd><p>The angle for the close position.</p>
 <dl class="field-list simple">
@@ -606,7 +601,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.error">
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.error">
 <span class="sig-name descname"><span class="pre">error</span></span></dt>
 <dd><p>Error message if any.</p>
 <dl class="field-list simple">
@@ -617,7 +612,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.chip">
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.chip">
 <span class="sig-name descname"><span class="pre">chip</span></span></dt>
 <dd><p>The path to the PWM chip.</p>
 <dl class="field-list simple">
@@ -628,8 +623,8 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.enable">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/motor.html#MotorOld.enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.enable">
+<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/motor_old.html#MotorOld.enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Enables or disables the motor PWM.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -639,8 +634,8 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">on_time_ns</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/motor.html#MotorOld.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">on_time_ns</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/motor_old.html#MotorOld.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Sets the duty cycle in nanoseconds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -650,8 +645,8 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/village/devices/motor.html#MotorOld.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/village/devices/motor_old.html#MotorOld.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Transforms an angle to a PWM duty cycle in nanoseconds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -667,38 +662,17 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.open">
-<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/motor.html#MotorOld.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/motor_old.html#MotorOld.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Moves the motor to the open position.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.motor.MotorOld.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/motor.html#MotorOld.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.devices.motor_old.MotorOld.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/motor_old.html#MotorOld.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Moves the motor to the close position.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.devices.motor.get_motor">
-<span class="sig-name descname"><span class="pre">get_motor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="village.devices.motor.MotorOld.html#village.devices.motor.MotorOld" title="village.devices.motor.MotorOld"><span class="pre">MotorOld</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="village.classes.null_classes.NullMotor.html#village.classes.null_classes.NullMotor" title="village.classes.null_classes.NullMotor"><span class="pre">NullMotor</span></a></span></span><a class="reference internal" href="../_modules/village/devices/motor.html#get_motor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Factory function to create and initialize a Motor instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pin</strong> (<em>int</em>) – The GPIO pin number.</p></li>
-<li><p><strong>angles</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – A list containing [open_angle, close_angle].</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An initialized Motor instance or a dummy MotorBase if
-initialization fails.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>MotorBase</p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>
@@ -715,7 +689,7 @@ initialization fails.</p>
         <span>Previous</span><div class="title">LowFreqQPicamera2</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="village.devices.motor.find_pwmchip.html">
+    <a href="village.devices.motor_old.find_pwmchip.html">
       <div class="page-info">
         <span>Next</span>
         <div class="title">find_pwmchip</div>
@@ -740,7 +714,7 @@ initialization fails.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=12dff410"></script>
+      <script src="../_static/documentation_options.js?v=8afc8b28"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
