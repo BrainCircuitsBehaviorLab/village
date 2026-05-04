@@ -144,6 +144,20 @@ class NullTempSensor:
         return 0.0, 0.0, ""
 
 
+class NullChip:
+    error: str = "Error connecting to the chip "
+
+    def set_pwm_freq(self, channel: int, on: int, off: int) -> None:
+        """Sets the PWM frequency.
+
+        Args:
+            channel (int): The PWM channel.
+            on (int): The on time in ticks.
+            off (int): The off time in ticks.
+        """
+        return
+
+
 class NullMotor:
     error: str = "Error connecting to the motor "
     open_angle: int = 0

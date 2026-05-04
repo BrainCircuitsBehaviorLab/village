@@ -32,7 +32,7 @@ def find_pwmchip(target_device="1f00098000.pwm") -> str:
     raise RuntimeError("No valid PWM chip found! Update target_device if needed.")
 
 
-class Motor:
+class MotorOld:
     """Controls a motor via PWM.
 
     Attributes:
@@ -139,7 +139,7 @@ class Motor:
         self.set(self.transform(self.close_angle))
 
 
-def get_motor(pin: int, angles: list[int]) -> Motor | NullMotor:
+def get_motor(pin: int, angles: list[int]) -> MotorOld | NullMotor:
     """Factory function to create and initialize a Motor instance.
 
     Args:
@@ -151,7 +151,7 @@ def get_motor(pin: int, angles: list[int]) -> Motor | NullMotor:
         initialization fails.
     """
     try:
-        motor = Motor(pin=pin, angles=angles)
+        motor = MotorOld(pin=pin, angles=angles)
         log.info("Motor successfully initialized")
         return motor
     except Exception:
@@ -159,5 +159,9 @@ def get_motor(pin: int, angles: list[int]) -> Motor | NullMotor:
         return NullMotor()
 
 
-motor1 = get_motor(settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES"))
-motor2 = get_motor(settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES"))
+motor_corridor1 = get_motor(
+    settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES")
+)
+motor_corridor2 = get_motor(
+    settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES")
+)

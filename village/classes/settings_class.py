@@ -155,7 +155,7 @@ class Settings:
         for s in self.directory_settings:
             self.saved_settings.setValue(s.key, s.value)
 
-    def create_factory_settings(self) -> None:
+    def restore_all_settings(self) -> None:
         """Initialize all settings with their factory defaults in QSettings."""
         for s in self.all_settings:
             self.saved_settings.setValue(s.key, s.value)
@@ -173,7 +173,7 @@ class Settings:
         Otherwise, adds any new settings that are missing.
         """
         if self.get("FIRST_LAUNCH") is None:
-            self.create_factory_settings()
+            self.restore_all_settings()
         else:
             self.add_new_settings()
 

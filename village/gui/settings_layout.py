@@ -524,6 +524,7 @@ class SettingsLayout(Layout):
             "SERVER_USER",
             "SERVER_HOST",
             "SERVER_PORT",
+            "OLD_VERSION",
         ]
 
         # Keys in the current section's tracking lists (will be processed with

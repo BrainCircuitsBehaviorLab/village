@@ -63,7 +63,7 @@ class BpodController:
                 log.info("Bpod successfully initialized")
                 self.bpod_hardware.close()
             except Exception:
-                self.error = "Error connecting to Bpod"
+                self.error = "Error connecting to Bpod "
                 log.error("Could not initialize bpod", exception=traceback.format_exc())
 
     def connect(self, handler_function: Callable) -> None:

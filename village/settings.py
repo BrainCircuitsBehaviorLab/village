@@ -264,8 +264,12 @@ device_settings = [
         int,
         "The index (0, 1) of the box camera.",
     ),
+    Setting(
+        "CHIP_CORRIDOR_ADDRESS", "0x40", str, "The address of the corridor PWM chip."
+    ),
+    Setting("CHIP_BOX_ADDRESS", "0x41", str, "The address of the box PWM chip."),
     Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
-    Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
+    Setting("TEMP_SENSOR_ADDRESS", "0x44", str, "The address of the temp sensor."),
 ]
 
 
@@ -462,6 +466,13 @@ preventing unnecessary processing.""",
         100,
         int,
         "The DPI of the matplotlib plots.",
+    ),
+    Setting(
+        "OLD_VERSION",
+        "OFF",
+        Active,
+        """Use the old version of the Hardware Attached on Top (HAT) that only has
+        2 servo motors and no LEDs.""",
     ),
 ]
 
@@ -742,7 +753,10 @@ hidden_settings = [
         "Factor to transform electric signal to grams.",
     ),
     Setting("RFID_READER", "ON", Active, "The RFID reader status."),
-    Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)."),
+    Setting("VISIBLE_CORRIDOR", "ON", Cycle, "The visible light of the corridor."),
+    Setting("IR_CORRIDOR", "ON", Cycle, "The infrared light of the corridor."),
+    Setting("VISIBLE_BOX", "ON", Cycle, "The visible light of the box."),
+    Setting("IR_BOX", "OFF", Cycle, "The infrared light of the box."),
     Setting("INFO", "SYSTEM_INFO", Info, "The information status."),
     Setting("ACTIONS", "CORRIDOR", Actions, "The actions status."),
 ]
@@ -775,8 +789,8 @@ settings = Settings(
 # settings.set("DEFAULT_PROJECT_NAME", default_project_name)
 # settings.set("DEFAULT_CODE_DIRECTORY", default_code_directory)
 # settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "OFF")
+# settings.restore_all_settings()
 # settings.restore_factory_settings()
-# settings.create_factory_settings()
 # settings.restore_visual_settings()
 # settings.restore_directory_settings()
 # settings.print()

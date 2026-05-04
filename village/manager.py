@@ -59,9 +59,12 @@ class Manager:
         state (State): Current state of the system.
         table (DataTable): Data table type.
         rfid_reader (Active): RFID reader settings.
-        cycle (Cycle): Current cycle settings.
         info (Info): Information settings.
         actions (Actions): Actions settings.
+        visible_corridor_cycle (Cycle): Visible light cycle of the corridor.
+        ir_corridor_cycle (Cycle): Infrared light cycle of the corridor.
+        visible_box_cycle (Cycle): Visible light cycle of the box.
+        ir_box_cycle (Cycle): Infrared light cycle of the box.
         cycle_text (str): Text representation of the current cycle.
         text (str): Current system text.
         day (bool): Indicates if it's day.
@@ -93,7 +96,10 @@ class Manager:
         self.calibrating: bool = False
         self.table: DataTable = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
-        self.cycle: Cycle = settings.get("CYCLE")
+        self.visible_corridor_cycle: Cycle = settings.get("VISIBLE_CORRIDOR")
+        self.ir_corridor_cycle: Cycle = settings.get("IR_CORRIDOR")
+        self.visible_box_cycle: Cycle = settings.get("VISIBLE_BOX")
+        self.ir_box_cycle: Cycle = settings.get("IR_BOX")
         self.info: Info = settings.get("INFO")
         self.actions: Actions = settings.get("ACTIONS")
         self.cycle_text: str = ""
@@ -246,32 +252,24 @@ class Manager:
 
     def update_cycle(self) -> None:
         """Updates the day/night cycle state based on current time and settings."""
-        match self.cycle:
-            case Cycle.DAY:
+        day = time_utils.time_from_setting_string(settings.get("DAYTIME"))
+        night = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
+        now = time_utils.now().time()
+
+        if day < night:
+            if day < now < night:
                 self.cycle_text = "DAY"
                 self.day = True
-            case Cycle.NIGHT:
+            else:
                 self.cycle_text = "NIGHT"
                 self.day = False
-            case Cycle.AUTO:
-                day = time_utils.time_from_setting_string(settings.get("DAYTIME"))
-                night = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
-                now = time_utils.now().time()
-
-                if day < night:
-                    if day < now < night:
-                        self.cycle_text = "AUTO (DAY)"
-                        self.day = True
-                    else:
-                        self.cycle_text = "AUTO (NIGHT)"
-                        self.day = False
-                else:
-                    if day < now or now < night:
-                        self.cycle_text = "AUTO (DAY)"
-                        self.day = True
-                    else:
-                        self.cycle_text = "AUTO (NIGHT)"
-                        self.day = False
+        else:
+            if day < now or now < night:
+                self.cycle_text = "DAY"
+                self.day = True
+            else:
+                self.cycle_text = "NIGHT"
+                self.day = False
 
     def update_text(self) -> None:
         """Updates the status text with current system state, subject, task,

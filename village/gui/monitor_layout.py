@@ -30,12 +30,11 @@ from village.classes.enums import (
     Actions,
     Active,
     ControllerEnum,
-    Cycle,
     Info,
     ScreenActive,
 )
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.motor import Motor, motor1, motor2
+from village.devices.chip import Motor, motor_corridor1, motor_corridor2
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
@@ -47,6 +46,7 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.classes.null_classes import NullMotor
+    from village.devices.motor import MotorOld
     from village.gui.gui_window import GuiWindow
 
 
@@ -357,8 +357,8 @@ class MonitorLayout(Layout):
         self.actions_tab_widget.addTab(self.page1, "CORRIDOR")
         self._actions_tab_map.append("CORRIDOR")
         if manager.controller_type == ControllerEnum.BPOD:
-            self.actions_tab_widget.addTab(self.page2, "PORTS")
-            self._actions_tab_map.append("PORTS")
+            self.actions_tab_widget.addTab(self.page2, "BOX")
+            self._actions_tab_map.append("BOX")
         self.actions_tab_widget.addTab(self.page3, "FUNCTIONS")
         self._actions_tab_map.append("FUNCTIONS")
         if manager.controller_type == ControllerEnum.BPOD:
@@ -413,23 +413,23 @@ class MonitorLayout(Layout):
         self.cycle_label: Label = self.create_and_add_label(
             "Cycle: ", 9, 84, 12, 2, "black"
         )
-        key = "CYCLE"
-        possible_values = Cycle.values()
-        index = Cycle.get_index_from_value(manager.cycle)
-        self.cycle_button = self.create_and_add_toggle_button(
-            key,
-            9,
-            94,
-            20,
-            2,
-            possible_values,
-            index,
-            self.toggle_cycle_button,
-            "Cycle of the corridor: AUTO, DAY, NIGHT",
-        )
+        # key = "CYCLE"
+        # possible_values = Cycle.values()
+        # index = Cycle.get_index_from_value(manager.cycle)
+        # self.cycle_button = self.create_and_add_toggle_button(
+        #     key,
+        #     9,
+        #     94,
+        #     20,
+        #     2,
+        #     possible_values,
+        #     index,
+        #     self.toggle_cycle_button,
+        #     "Cycle of the corridor: AUTO, DAY, NIGHT",
+        # )
 
         if manager.controller_type != ControllerEnum.BPOD:
-            if manager.actions in (Actions.PORTS, Actions.VIRTUAL_MOUSE):
+            if manager.actions in (Actions.BOX, Actions.VIRTUAL_MOUSE):
                 manager.actions = Actions.CORRIDOR
 
         index = Info.get_index_from_string(manager.info.value)
@@ -452,17 +452,17 @@ class MonitorLayout(Layout):
         self.addWidget(self.tab_widget, 33, 0, 18, 200)
         self.tab_widget.raise_()
 
-    def toggle_cycle_button(self, value: str, key: str) -> None:
-        """Toggles the cycle setting.
+    # def toggle_cycle_button(self, value: str, key: str) -> None:
+    #     """Toggles the cycle setting.
 
-        Args:
-            value (str): The new cycle value.
-            key (str): The setting key.
-        """
-        manager.cycle = Cycle[value]
-        settings.set(key, value)
-        self.update_status_label_buttons()
-        cam_corridor.change = True
+    #     Args:
+    #         value (str): The new cycle value.
+    #         key (str): The setting key.
+    #     """
+    #     manager.cycle = Cycle[value]
+    #     settings.set(key, value)
+    #     self.update_status_label_buttons()
+    #     cam_corridor.change = True
 
     def toggle_rfid_reader_button(self, value: str, key: str) -> None:
         """Toggles the RFID reader setting.
@@ -546,8 +546,8 @@ class MotorLayout(Layout):
 
     def draw(self) -> None:
         """Draws the motor control buttons and scale options."""
-        self.draw_motor_buttons("MOTOR1", 1, 3, motor1)
-        self.draw_motor_buttons("MOTOR2", 1, 20, motor2)
+        self.draw_motor_buttons("MOTOR1", 1, 3, motor_corridor1)
+        self.draw_motor_buttons("MOTOR2", 1, 20, motor_corridor2)
 
         self.change_angles: PushButton = self.create_and_add_button(
             "CHANGE MOTOR ANGLES",
@@ -596,7 +596,7 @@ class MotorLayout(Layout):
         )
 
     def draw_motor_buttons(
-        self, name: str, row: int, column: int, motor: Motor | NullMotor
+        self, name: str, row: int, column: int, motor: Motor | MotorOld | NullMotor
     ) -> None:
         """Draws buttons for a specific motor.
 
@@ -604,7 +604,7 @@ class MotorLayout(Layout):
             name (str): The motor name.
             row (int): The row position.
             column (int): The column position.
-            motor (MotorBase): The motor object.
+            motor (Motor | MotorOld | NullMotor): The motor object.
         """
         open_name: str = "OPEN " + name
         open_door: PushButton = self.create_and_add_button(
@@ -691,10 +691,10 @@ class MotorLayout(Layout):
                 val4 = int(motor2_close_val)
             settings.set("MOTOR1_VALUES", (val1, val2))
             settings.set("MOTOR2_VALUES", (val3, val4))
-            motor1.open_angle = val1
-            motor1.close_angle = val2
-            motor2.open_angle = val3
-            motor2.close_angle = val4
+            motor_corridor1.open_angle = val1
+            motor_corridor1.close_angle = val2
+            motor_corridor2.open_angle = val3
+            motor_corridor2.close_angle = val4
 
     def calibrate_scale_clicked(self) -> None:
         """Opens the scale calibration wizard."""

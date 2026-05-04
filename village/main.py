@@ -42,7 +42,12 @@ from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.motor import motor1, motor2
+from village.devices.chip import (
+    motor_box1,
+    motor_box2,
+    motor_corridor1,
+    motor_corridor2,
+)
 from village.devices.rfid import rfid
 from village.devices.scale import scale
 from village.devices.sound_device import sound_device
@@ -80,8 +85,10 @@ manager.send_heartbeat()
 manager.errors += (
     cam_corridor.error
     + cam_box.error
-    + motor1.error
-    + motor2.error
+    + motor_corridor1.error
+    + motor_corridor2.error
+    + motor_box1.error
+    + motor_box2.error
     + scale.error
     + temp_sensor.error
     + sound_device.error
@@ -108,6 +115,7 @@ def system_run(bevavior_window: QWidget) -> None:
     plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
     sound_alarm_timer = time_utils.Timer(3600)
     video_alarm_timer = time_utils.Timer(3600)
+    old_version = settings.get("OLD_VERSION") == Active.ON
 
     cam_corridor.start_recording()
 
@@ -226,8 +234,8 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.ACCESS:
                 # Closing door1, opening door2
                 gc.disable()
-                motor1.close()
-                motor2.open()
+                motor_corridor1.close()
+                motor_corridor2.open()
                 manager.state = State.LAUNCH_AUTO
 
             case State.LAUNCH_AUTO:
@@ -278,7 +286,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.CLOSE_DOOR2:
                 # Closing door2
-                motor2.close()
+                motor_corridor2.close()
                 log.info("Going to RUN_CLOSED State")
                 manager.state = State.RUN_CLOSED
 
@@ -298,7 +306,7 @@ def system_run(bevavior_window: QWidget) -> None:
                         )
                         manager.state = State.OPEN_DOOR2_STOP
                         log.info("Going to OPEN_DOOR2_STOP State")
-                elif id == manager.subject.tag and id != "":
+                elif id == manager.subject.tag and id != "" and old_version:
                     log.alarm(
                         "Wrong RFID detection: "
                         + " The main subject was detected in the corridor when it"
@@ -322,7 +330,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Opening door2
                 scale.tare()
                 tare_timer.reset()
-                motor2.open()
+                motor_corridor2.open()
                 manager.state = State.RUN_OPENED
                 log.info("Going to RUN_OPENED State")
 
@@ -381,8 +389,8 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
-                motor2.close()
-                motor1.open()
+                motor_corridor2.close()
+                motor_corridor1.open()
                 manager.state = State.SAVE_OUTSIDE
 
             case State.SAVE_OUTSIDE:
@@ -441,15 +449,15 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
                 log.info("The subject has returned home.", subject=manager.subject.name)
-                motor2.close()
-                motor1.open()
+                motor_corridor2.close()
+                motor_corridor1.open()
                 manager.sessions_summary.change_last_entry("weight", manager.weight)
                 manager.state = State.SYNC
                 log.info("Going to SYNC State")
 
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
-                motor2.open()
+                motor_corridor2.open()
                 manager.rfid_reader = Active.OFF
                 manager.rfid_changed = True
                 manager.state = State.SAVE_INSIDE

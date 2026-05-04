@@ -192,13 +192,13 @@ class State(SuperEnum):
 
 class Cycle(SuperEnum):
     AUTO = "AUTO"
-    DAY = "DAY"
-    NIGHT = "NIGHT"
+    ON = "ON"
+    OFF = "OFF"
 
 
 class Actions(SuperEnum):
     CORRIDOR = "CORRIDOR"
-    PORTS = "PORTS"
+    BOX = "BOX"
     FUNCTIONS = "FUNCTIONS"
     VIRTUAL_MOUSE = "VIRTUAL_MOUSE"
 
