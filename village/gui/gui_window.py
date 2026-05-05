@@ -101,6 +101,14 @@ class GuiWindow(QWidget):
         self.layout = WaterCalibrationLayout(self)
         self.setLayout(self.layout)
 
+    def create_camera_calibration_layout(self) -> None:
+        """Switches the current view to the Camera Calibration Layout."""
+        from village.gui.camera_calibration_layout import CameraCalibrationLayout
+        utils.delete_all_elements_from_layout(self.layout)
+        QObjectCleanupHandler().add(self.layout)
+        self.layout = CameraCalibrationLayout(self)
+        self.setLayout(self.layout)
+
     def create_sound_calibration_layout(self) -> None:
         """Switches the current view to the Sound Calibration Layout."""
         utils.delete_all_elements_from_layout(self.layout)

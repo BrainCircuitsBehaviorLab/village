@@ -328,6 +328,16 @@ class Layout(QGridLayout):
             "Go to the setting menu",
         )
 
+        self.camera_calibration_button = self.create_and_add_button(
+            "CAMERA CALIBRATION",
+            1,
+            7 * size,
+            size,
+            2,
+            self.camera_calibration_button_clicked,
+            "Go to the camera calibration menu",
+        )
+
         self.online_plots_button = self.create_and_add_button(
             "ONLINE PLOTS",
             1,
@@ -536,6 +546,24 @@ class Layout(QGridLayout):
                     self.window,
                     "CALIBRATION",
                     text,
+                )
+
+    def camera_calibration_button_clicked(self) -> None:
+        """Handles camera calibration button click."""
+        if self.change_layout():
+            if manager.state in [State.WAIT, State.MANUAL_MODE]:
+                manager.state = State.MANUAL_MODE
+                manager.reset_subject_task_training()
+                self.close_online_plot_window()
+                self.window.create_camera_calibration_layout()
+            else:
+                text = (
+                    "Camera calibration is not available while a subject"
+                    " is in the box, a detection is ongoing,"
+                    " or data is syncing."
+                )
+                QMessageBox.information(
+                    self.window, "CAMERA CALIBRATION", text
                 )
 
     def settings_button_clicked(self) -> None:
