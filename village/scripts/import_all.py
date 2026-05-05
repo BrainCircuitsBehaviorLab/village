@@ -15,6 +15,8 @@ from village.custom_classes.task import Task
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
 from village.settings import settings
+from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.camera_draw_base import CameraDrawBase
 
 
 def import_all(manager) -> None:
@@ -144,6 +146,15 @@ def import_all(manager) -> None:
                         z = cls()
                         manager.camera_trigger = z
                         camera_trigger_correct = True
+                elif issubclass(cls, CameraDrawBase) and cls != CameraDrawBase:
+                        if hasattr(cls, "draw") and callable(getattr(cls, "draw")):
+                            c = cls()
+                            manager.camera_draw = c
+                elif (
+                    issubclass(cls, AutoNoMouse_Base)
+                    and cls != AutoNoMouse_Base
+                ):
+                    manager.auto_no_mouse = cls
 
         except Exception:
             log.error(

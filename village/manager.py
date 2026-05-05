@@ -28,6 +28,9 @@ from village.classes.subject import Subject
 from village.controllers.arduino_controller import ArduinoController
 from village.controllers.bpod_controller import BpodController
 from village.custom_classes.after_session_base import AfterSessionBase
+from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.camera_trigger_base import CameraTriggerBase
+from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
@@ -90,7 +93,9 @@ class Manager:
         self.online_plot: OnlinePlotBase = OnlinePlotBase()
         self.after_session: AfterSessionBase = AfterSessionBase()
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
-        self.camera_trigger: CameraTriggerBase | None = None
+        self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
+        self.camera_draw: CameraDrawBase = CameraDrawBase()
+        self.auto_no_mouse: type = AutoNoMouse_Base
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
@@ -762,7 +767,7 @@ class Manager:
 
         self.send_heartbeat()
 
-    def run_softcode_fuction(self, number: int) -> None:
+    def run_softcode_function(self, number: int) -> None:
         """Runs a user-defined softcode function.
 
         Args:

@@ -218,6 +218,8 @@ class Camera:
         self.x_positions: list[int] = []
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
+        self.pre_process_timestamps: list[float] = []
+        self.items_to_draw: dict[str, Any] = {}
 
         if self.change:
             self.set_properties()
@@ -563,6 +565,7 @@ class Camera:
                 self.write_csv()
                 if self.name == "BOX" and self.is_recording:
                     self.areas_box_ok()
+        manager.camera_draw.draw(self)
 
     def get_gray_frame(self) -> None:
         """Converts the current frame to grayscale."""
