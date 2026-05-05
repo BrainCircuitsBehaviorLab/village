@@ -1,0 +1,30 @@
+Rfid
+====
+
+.. currentmodule:: village.devices.rfid
+
+.. autoclass:: Rfid
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Rfid.__init__
+      ~Rfid.clean_old_ids
+      ~Rfid.get_id
+      ~Rfid.read_serial
+      ~Rfid.stop
+      ~Rfid.update_multiple
+   
+   
+
+   
+   
+   

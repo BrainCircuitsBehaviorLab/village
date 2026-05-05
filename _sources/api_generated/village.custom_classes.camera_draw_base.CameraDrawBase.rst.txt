@@ -1,0 +1,26 @@
+CameraDrawBase
+==============
+
+.. currentmodule:: village.custom_classes.camera_draw_base
+
+.. autoclass:: CameraDrawBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CameraDrawBase.__init__
+      ~CameraDrawBase.draw
+   
+   
+
+   
+   
+   

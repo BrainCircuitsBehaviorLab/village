@@ -1,0 +1,23 @@
+settings\_layout
+================
+
+.. automodule:: village.gui.settings_layout
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
