@@ -1,4 +1,10 @@
-from village.classes.abstract_classes import CameraBase
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from village.devices.camera import Camera
+    from village.classes.null_classes import NullCamera
 
 
 class CameraDrawBase:
@@ -11,9 +17,9 @@ class CameraDrawBase:
         """Initializes the CameraDrawBase instance."""
         self.name = "Camera Draw"
 
-    def draw(self, cam: CameraBase) -> None:
+    def draw(self, cam: Camera | NullCamera) -> None:
         """Draws on the camera frame based on the camera's state.
         Args:
-            cam (CameraBase): The camera instance providing the frame and state.
+            cam (Camera | NullCamera): The camera instance providing the frame and state.
         """
         pass
