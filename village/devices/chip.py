@@ -31,7 +31,8 @@ except Exception:
 
 
 class Motor:
-    def __init__(self, channel: int, angles: list[int]) -> None:
+    def __init__(self, channel: int, angles: list[int], pwm) -> None:
+        self.pwm = pwm
         self.channel = channel
         self.open_angle = angles[0]
         self.close_angle = angles[1]
@@ -45,7 +46,7 @@ class Motor:
         # map 0–180° → 1ms–2ms
         pulse_ms = 1 + angle / 180.0
         ticks = self.servo_pulse(pulse_ms)
-        pwm_corridor.set_pwm(self.channel, 0, ticks)
+        self.pwm.set_pwm(self.channel, 0, ticks)
 
     def open(self) -> None:
         """Moves the motor to the open position."""
@@ -57,19 +58,15 @@ class Motor:
 
 
 class LED:
-    def __init__(self, channel: int) -> None:
+    def __init__(self, channel: int, nchannels: int, pwm) -> None:
         self.channel = channel
-
-    def servo_pulse(self, ms: float) -> int:
-        # 20 ms period → 4096 ticks
-        return int(ms * 4096 / 20)
+        self.nchannels = nchannels
+        self.pwm = pwm
 
     def set(self, value: float) -> None:
-        on_time_ms = 1 + value  # 1ms to 2ms
-        off_time_ms = 20 - on_time_ms
-        on_ticks = self.servo_pulse(on_time_ms)
-        off_ticks = self.servo_pulse(off_time_ms)
-        pwm_corridor.set_pwm(self.channel, on_ticks, off_ticks)
+        ticks = int(4095 * (1 - value))
+        for c in range(self.channel, self.channel + self.nchannels):
+            pwm_corridor.set_pwm(self.channel, 0, ticks)
 
     def on(self) -> None:
         """Turns the LED on."""
@@ -80,7 +77,7 @@ class LED:
         self.set(0.0)
 
 
-def get_motor(channel: int, angles: list[int]) -> Motor:
+def get_motor(channel: int, angles: list[int], pwm) -> Motor:
     """Factory function to create and initialize a Motor instance.
 
     Args:
@@ -91,7 +88,7 @@ def get_motor(channel: int, angles: list[int]) -> Motor:
         Motor: An initialized Motor instance.
     """
 
-    motor = Motor(channel=channel, angles=angles)
+    motor = Motor(channel=channel, angles=angles, pwm=pwm)
     return motor
 
 
@@ -118,12 +115,12 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
 motor_corridor1: Motor | MotorOld | NullMotor
 motor_corridor2: Motor | MotorOld | NullMotor
 
-motor_box1 = get_motor(settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_VALUES"))
-motor_box2 = get_motor(settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_VALUES"))
-visible_light_corridor = LED(settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"))
-ir_light_corridor = LED(settings.get("IR_LIGHT_CORRIDOR_INDEX"))
-visible_light_box = LED(settings.get("VISIBLE_LIGHT_BOX_INDEX"))
-ir_light_box = LED(settings.get("IR_LIGHT_BOX_INDEX"))
+motor_box1 = get_motor(settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_VALUES"), pwm_box)
+motor_box2 = get_motor(settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_VALUES"), pwm_box)
+visible_light_corridor = LED(settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"), 1, pwm_corridor)
+ir_light_corridor = LED(settings.get("IR_LIGHT_CORRIDOR_INDEX"), 4, pwm_corridor)
+visible_light_box = LED(settings.get("VISIBLE_LIGHT_BOX_INDEX"), 1, pwm_box)
+ir_light_box = LED(settings.get("IR_LIGHT_BOX_INDEX"), 4, pwm_box)
 
 if settings.get("OLD_VERSION") == Active.ON:
     motor_corridor1 = get_motor_old(
@@ -134,10 +131,10 @@ if settings.get("OLD_VERSION") == Active.ON:
     )
 else:
     motor_corridor1 = get_motor(
-        settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES")
+        settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES"), pwm_corridor
     )
     motor_corridor2 = get_motor(
-        settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES")
+        settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES"), pwm_corridor
     )
     motor_corridor1.error = error_corridor
     motor_box1.error = error_box

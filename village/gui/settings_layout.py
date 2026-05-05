@@ -33,18 +33,18 @@ MENU_COL = 1
 MENU_WIDTH = 22
 
 # ── Right content panel ────────────────────────────────────────────────────────
-C_COL = 27  # content start column
+C_COL = 28  # content start column
 C_ROW = 7  # content start row
-C_LABEL_W = 22  # label width
-C_VAL_OFF = 22  # offset from C_COL to value widget column
+C_LABEL_W = 23  # label width
+C_VAL_OFF = 23  # offset from C_COL to value widget column
 
 # ── Value widget size constants ────────────────────────────────────────────────
-size1 = 6
+size1 = 14
 size2 = 45
 size3 = 14
-size4 = 11
-small_box = 4
-mini_box = 3
+size4 = 14
+small_box = 7
+mini_box = 7
 
 MENU_SECTIONS = [
     "MAIN SETTINGS",
@@ -223,7 +223,7 @@ class SettingsLayout(Layout):
             "QListWidget::item:selected { background: steelblue; color: white;"
             " border-color: steelblue; }"
             "QListWidget::item:hover { background: #b0c4de; border-color: #b0c4de; }"
-            "QToolTip { background-color: white; color: black; font-size: 8pt; }"
+            "QToolTip { background-color: white; color: black; font-size: 9pt; }"
         )
         self.menu_list.setSpacing(1)
         for name in MENU_SECTIONS:
@@ -756,7 +756,7 @@ class SettingsLayout(Layout):
                 s.key,
                 row,
                 column + width,
-                size4,
+                size2,
                 2,
                 possible_values,
                 index,

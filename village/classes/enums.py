@@ -204,9 +204,9 @@ class Actions(SuperEnum):
 
 
 class Info(SuperEnum):
-    SYSTEM_INFO = "SYSTEM_INFO"
+    INFO = "INFO"
+    PLOT = "PLOT"
     DETECTION_SETTINGS = "DETECTION_SETTINGS"
-    DETECTION_PLOT = "DETECTION_PLOT"
 
 
 class DataTable(SuperEnum):

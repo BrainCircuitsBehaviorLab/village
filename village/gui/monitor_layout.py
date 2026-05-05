@@ -30,11 +30,12 @@ from village.classes.enums import (
     Actions,
     Active,
     ControllerEnum,
+    Cycle,
     Info,
     ScreenActive,
 )
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.chip import Motor, motor_corridor1, motor_corridor2
+from village.devices.chip import Motor, motor_corridor1, motor_corridor2, motor_box1, motor_box2,visible_light_box, visible_light_corridor, ir_light_box, ir_light_corridor
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
@@ -80,7 +81,6 @@ class LabelButtons:
         """
         self.name = name
         self.direction = direction
-        self.short_name = name.split("_")[0]
 
         self.mapping_dict_index = {
             "left": 0,
@@ -267,7 +267,8 @@ class LabelButtons:
         self.timer_increase2.stop()
         self.timer_decrease2.stop()
 
-        if self.name in ["LENS_POSITION_BOX", "SHARPNESS_BOX", "CONTRAST_BOX"]:
+        if self.name in ["LENS_POSITION_BOX", "SHARPNESS_BOX", "CONTRAST_BOX", 
+                         "LENS_POSITION_CORRIDOR", "SHARPNESS_CORRIDOR", "CONTRAST_CORRIDOR"]:
             settings.set(self.name, self.label_value)
         else:
             coords = settings.get(self.name)
@@ -307,12 +308,12 @@ class MonitorLayout(Layout):
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = MotorLayout(self.window, 18, 34)
+        self.page1Layout = MotorLayout(self.window, 23, 36)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = PortsLayout(self.window, 18, 34)
+        self.page2Layout = PortsLayout(self.window, 23, 36)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
@@ -323,7 +324,7 @@ class MonitorLayout(Layout):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.page3_sub_widget = QWidget()
-        self.page3_sub_layout = FunctionsLayout(self.window, 16, 26)
+        self.page3_sub_layout = FunctionsLayout(self.window, 21, 28)
         self.page3_sub_widget.setLayout(self.page3_sub_layout)
 
         self.scroll_area.setWidget(self.page3_sub_widget)
@@ -333,7 +334,7 @@ class MonitorLayout(Layout):
 
         self.page4 = QWidget(self.central_widget)
         self.page4.setStyleSheet("background-color:white")
-        self.page4Layout = VirtualMouseLayout(self.window, 18, 34)
+        self.page4Layout = VirtualMouseLayout(self.window, 23, 36)
         self.page4.setLayout(self.page4Layout)
 
         _tab_style = (
@@ -366,7 +367,7 @@ class MonitorLayout(Layout):
             self._actions_tab_map.append("VIRTUAL_MOUSE")
 
         self.actions_tab_widget.currentChanged.connect(self.on_actions_tab_changed)
-        self.addWidget(self.actions_tab_widget, 12, 81, 20, 38)
+        self.addWidget(self.actions_tab_widget, 7, 80, 25, 40)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
@@ -392,27 +393,9 @@ class MonitorLayout(Layout):
         self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
 
-        self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID reader: ", 7, 84, 12, 2, "black"
-        )
-        key = "RFID_READER"
-        possible_values = Active.values()
-        index = Active.get_index_from_value(manager.rfid_reader)
-        self.rfid_reader_button = self.create_and_add_toggle_button(
-            key,
-            7,
-            94,
-            20,
-            2,
-            possible_values,
-            index,
-            self.toggle_rfid_reader_button,
-            "Activation of the RFID reader: ON, OFF",
-        )
-
-        self.cycle_label: Label = self.create_and_add_label(
-            "Cycle: ", 9, 84, 12, 2, "black"
-        )
+        # self.cycle_label: Label = self.create_and_add_label(
+        #     "Cycle: ", 9, 84, 12, 2, "black"
+        # )
         # key = "CYCLE"
         # possible_values = Cycle.values()
         # index = Cycle.get_index_from_value(manager.cycle)
@@ -464,17 +447,6 @@ class MonitorLayout(Layout):
     #     self.update_status_label_buttons()
     #     cam_corridor.change = True
 
-    def toggle_rfid_reader_button(self, value: str, key: str) -> None:
-        """Toggles the RFID reader setting.
-
-        Args:
-            value (str): The new RFID reader value.
-            key (str): The setting key.
-        """
-        manager.rfid_reader = Active[value]
-        settings.set(key, value)
-        self.update_status_label_buttons()
-
     def on_actions_tab_changed(self, index: int) -> None:
         """Handles tab selection for the central actions panel."""
         if index < len(self._actions_tab_map):
@@ -485,8 +457,8 @@ class MonitorLayout(Layout):
 
     def on_tab_changed(self, index: int) -> None:
         """Handles tab selection for the bottom info panel."""
-        # Tab order: 0=INFO(SYSTEM_INFO), 1=PLOT(DETECTION_PLOT), 2=DETECTION_SETTINGS
-        tab_to_info = {0: "SYSTEM_INFO", 1: "DETECTION_PLOT", 2: "DETECTION_SETTINGS"}
+        # Tab order: 0=INFO, 1=PLOT, 2=DETECTION_SETTINGS
+        tab_to_info = {0: "INFO", 1: "PLOT", 2: "DETECTION_SETTINGS"}
         info_key = tab_to_info.get(index)
         if info_key:
             manager.info = Info[info_key]
@@ -496,21 +468,14 @@ class MonitorLayout(Layout):
     def update_gui(self) -> None:
         """Updates the GUI and its components."""
         self.update_status_label_buttons()
-        if manager.rfid_changed:
-            manager.rfid_changed = False
-            self.rfid_reader_button.index = Active.get_index_from_value(
-                manager.rfid_reader
-            )
-            self.rfid_reader_button.value = self.rfid_reader_button.possible_values[
-                self.rfid_reader_button.index
-            ]
-            self.rfid_reader_button.update_style()
+        if manager.actions == Actions.CORRIDOR:
+            self.page1Layout.update_gui()
         match manager.info:
-            case manager.info.SYSTEM_INFO:
+            case manager.info.INFO:
                 self.page5Layout.update_gui()
             case manager.info.DETECTION_SETTINGS:
                 self.page6Layout.update_gui()
-            case manager.info.DETECTION_PLOT:
+            case manager.info.PLOT:
                 if manager.detection_change:
                     manager.detection_change = False
                     self.page7Layout.update_gui()
@@ -546,50 +511,104 @@ class MotorLayout(Layout):
 
     def draw(self) -> None:
         """Draws the motor control buttons and scale options."""
-        self.draw_motor_buttons("MOTOR1", 1, 3, motor_corridor1)
-        self.draw_motor_buttons("MOTOR2", 1, 20, motor_corridor2)
+        self.draw_motor_buttons("MOTOR1", 9, 2, motor_corridor1)
+        self.draw_motor_buttons("MOTOR2", 14, 2, motor_corridor2)
+
+        self.rfid_reader_label: Label = self.create_and_add_label(
+            "RFID reader: ", 1, 9, 12, 2, "black"
+        )
+        key = "RFID_READER"
+        possible_values = Active.values()
+        index = Active.get_index_from_value(manager.rfid_reader)
+        self.rfid_reader_button = self.create_and_add_toggle_button(
+            key,
+            1,
+            20,
+            10,
+            2,
+            possible_values,
+            index,
+            self.toggle_rfid_reader_button,
+            "Activation of the RFID reader: ON, OFF",
+        )
+
+        self.visible_label: Label = self.create_and_add_label(
+            "Visible light: ", 4, 9, 12, 2, "black"
+        )
+        key = "VISIBLE_CORRIDOR"
+        possible_values = Cycle.values()
+        index = Cycle.get_index_from_value(manager.visible_corridor_cycle)
+        self.visible_button = self.create_and_add_toggle_button(
+            key,
+            4,
+            20,
+            10,
+            2,
+            possible_values,
+            index,
+            self.toggle_visible_button,
+            "Visible light in the corridor: ON, OFF, AUTO",
+        )
+
+        self.ir_label: Label = self.create_and_add_label(
+            "IR light: ", 6, 9, 12, 2, "black"
+        )
+        key = "IR_CORRIDOR"
+        possible_values = Cycle.values()
+        index = Cycle.get_index_from_value(manager.ir_corridor_cycle)
+        self.ir_button = self.create_and_add_toggle_button(
+            key,
+            6,
+            20,
+            10,
+            2,
+            possible_values,
+            index,
+            self.toggle_ir_button,
+            "Infrared light in the corridor: ON, OFF, AUTO",
+        )
 
         self.change_angles: PushButton = self.create_and_add_button(
-            "CHANGE MOTOR ANGLES",
-            5,
-            8,
-            22,
+            "SET MOTOR ANGLES",
+            19,
+            2,
+            16,
             2,
             self.change_angles_clicked,
             "Modify the angle values for the motors.",
         )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            8,
-            8,
+            9,
             22,
+            16,
             2,
             self.calibrate_scale_clicked,
             "Calibrate the scale using a known weight",
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            10,
-            8,
+            11,
             22,
+            16,
             2,
             self.tare_scale_clicked,
             "Tare the scale to zero",
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            12,
-            8,
+            14,
             22,
+            16,
             2,
             self.get_weight_clicked,
             "Get the weight in grams",
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            15,
-            8,
+            16,
             22,
+            16,
             2,
             self.get_temperature_clicked,
             "Get the temperature and humidity",
@@ -608,15 +627,48 @@ class MotorLayout(Layout):
         """
         open_name: str = "OPEN " + name
         open_door: PushButton = self.create_and_add_button(
-            open_name, row, column, 14, 2, motor.open, "Open the door"
+            open_name, row, column, 16, 2, motor.open, "Open the door"
         )
         close_name: str = "CLOSE " + name
         close_door: PushButton = self.create_and_add_button(
-            close_name, row + 2, column, 14, 2, motor.close, "Close the door"
+            close_name, row + 2, column, 16, 2, motor.close, "Close the door"
         )
 
         self.buttons.append(open_door)
         self.buttons.append(close_door)
+
+    def toggle_rfid_reader_button(self, value: str, key: str) -> None:
+        """Toggles the RFID reader setting.
+
+        Args:
+            value (str): The new RFID reader value.
+            key (str): The setting key.
+        """
+        manager.rfid_reader = Active[value]
+        settings.set(key, value)
+        self.update_status_label_buttons()
+
+    def toggle_visible_button(self, value: str, key: str) -> None:
+        manager.visible_corridor_cycle = Cycle[value]
+        settings.set(key, value)
+        match value:
+            case "OFF":
+                visible_light_corridor.on()
+            case "ON":
+                visible_light_corridor.off()
+            case "AUTO":
+                pass
+
+    def toggle_ir_button(self, value: str, key: str) -> None:
+        manager.ir_corridor_cycle = Cycle[value]
+        settings.set(key, value)
+        match value:
+            case "OFF":
+                ir_light_corridor.on()
+            case "ON":
+                ir_light_corridor.off()
+            case "AUTO":
+                pass
 
     def tare_scale_clicked(self) -> None:
         """Initiates scale taring."""
@@ -729,6 +781,17 @@ class MotorLayout(Layout):
     def get_temperature_clicked(self) -> None:
         """Gets the current temperature and humidity."""
         _, _, temp_str = temp_sensor.get_temperature()
+
+    def update_gui(self) -> None:
+        if manager.rfid_changed:
+            manager.rfid_changed = False
+            self.rfid_reader_button.index = Active.get_index_from_value(
+                manager.rfid_reader
+            )
+            self.rfid_reader_button.value = self.rfid_reader_button.possible_values[
+                self.rfid_reader_button.index
+            ]
+            self.rfid_reader_button.update_style()
 
 
 class PortsLayout(Layout):
@@ -987,14 +1050,14 @@ class CorridorLayout(Layout):
         self.lbs: list[LabelButtons] = []
 
         self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 2, self.color_area1_str)
-        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 21, self.color_area2_str)
-        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 40, self.color_area3_str)
-        self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 59, self.color_area4_str)
+        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 22, self.color_area2_str)
+        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 42, self.color_area3_str)
+        self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 62, self.color_area4_str)
 
-        self.draw_area_buttons_box("AREA1_BOX", 2, 127, self.color_area1_str)
-        self.draw_area_buttons_box("AREA2_BOX", 2, 146, self.color_area2_str)
-        self.draw_area_buttons_box("AREA3_BOX", 2, 165, self.color_area3_str)
-        self.draw_area_buttons_box("AREA4_BOX", 2, 184, self.color_area4_str)
+        self.draw_area_buttons_box("AREA1_BOX", 2, 123, self.color_area1_str)
+        self.draw_area_buttons_box("AREA2_BOX", 2, 143, self.color_area2_str)
+        self.draw_area_buttons_box("AREA3_BOX", 2, 163, self.color_area3_str)
+        self.draw_area_buttons_box("AREA4_BOX", 2, 183, self.color_area4_str)
         self.draw_camera_options()
 
         self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
@@ -1006,7 +1069,7 @@ class CorridorLayout(Layout):
         self.area1_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            126,
+            123,
             17,
             2,
             possible_values,
@@ -1021,7 +1084,7 @@ class CorridorLayout(Layout):
         self.area2_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            145,
+            143,
             17,
             2,
             possible_values,
@@ -1036,7 +1099,7 @@ class CorridorLayout(Layout):
         self.area3_box_button = self.create_and_add_toggle_button(
             key,
             14,
-            164,
+            163,
             17,
             2,
             possible_values,
@@ -1060,36 +1123,40 @@ class CorridorLayout(Layout):
             "If animals are allowed to be in this area",
         )
 
+        self.detection_corridor_label: Label = self.create_and_add_label(
+            "View detection corridor: ", 0, 55, 20, 2, "black"
+        )
         key = "VIEW_DETECTION_CORRIDOR"
         possible_values = settings.get_values(key)
         index = settings.get_index(key)
         self.button_corridor = self.create_and_add_toggle_button(
             key,
             0,
-            55,
-            25,
+            75,
+            5,
             2,
             possible_values,
             index,
             self.toggle_corridor,
             "View the detection in the corridor",
-            complete_name=True,
         )
 
+        self.detection_box_label: Label = self.create_and_add_label(
+            "View detection box: ", 0, 179, 20, 2, "black"
+        )
         key = "VIEW_DETECTION_BOX"
         possible_values = settings.get_values(key)
         index = settings.get_index(key)
         self.button_box = self.create_and_add_toggle_button(
             key,
             0,
-            175,
-            25,
+            195,
+            5,
             2,
             possible_values,
             index,
             self.toggle_box,
             "View the detection in the box",
-            complete_name=True,
         )
 
     def close(self) -> None:
@@ -1104,7 +1171,7 @@ class CorridorLayout(Layout):
             row (int): The row position.
             column (int): The column position.
         """
-        width = 9
+        width = 10
         for direction in ("empty_limit", "subject_limit"):
             lb = LabelButtons(name, direction, row, column, width, "black", self)
             self.lbs.append(lb)
@@ -1130,7 +1197,7 @@ class CorridorLayout(Layout):
             "bottom",
             "threshold",
         ):
-            lb = LabelButtons(name, direction, row, column, 7, color, self)
+            lb = LabelButtons(name, direction, row, column, 8, color, self)
             self.lbs.append(lb)
             row += 2
 
@@ -1161,7 +1228,7 @@ class CorridorLayout(Layout):
                 direction,
                 row,
                 column,
-                7,
+                8,
                 color,
                 self,
                 width_res=width_res,
@@ -1173,12 +1240,12 @@ class CorridorLayout(Layout):
     def draw_camera_options(self) -> None:
         """Draws camera adjustment options."""
         row = 2
-        column = 79
-        width = 9
+        column = 81
+        width = 10
         color = "black"
 
         self.label_corridor: Label = self.create_and_add_label(
-            "CORRIDOR ADJUSTMENTS", row, column, 18, 2, color
+            "CORRIDOR ADJUSTMENTS", row, column, 20, 2, color
         )
         row += 2
 
@@ -1199,8 +1266,8 @@ class CorridorLayout(Layout):
         row += 2
 
         row = 2
-        column = 104
-        width = 9
+        column = 102
+        width = 10
 
         self.label_box: Label = self.create_and_add_label(
             "BOX ADJUSTMENTS", row, column, 18, 2, color
@@ -1339,6 +1406,7 @@ class InfoLayout(Layout):
         self.events_table.setSelectionBehavior(QTableWidget.SelectRows)
         self.events_table.setSelectionMode(QTableWidget.SingleSelection)
         self.events_table.setWordWrap(False)
+        self.events_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.events_table.verticalHeader().setVisible(False)
         self.events_table.verticalHeader().setMinimumSectionSize(1)
         self.events_table.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
@@ -1362,7 +1430,7 @@ class InfoLayout(Layout):
 
     def update_gui(self) -> None:
         """Updates the displayed events logs."""
-        self._events_df = manager.events.df.tail(30).reset_index(drop=True)
+        self._events_df = manager.events.df.tail(10).reset_index(drop=True)
         df = self._events_df
 
         if df.empty:
@@ -1391,11 +1459,6 @@ class InfoLayout(Layout):
         for j, col in enumerate(columns):
             if col in col_widths:
                 self.events_table.setColumnWidth(j, col_widths[col])
-
-        scrollbar = self.events_table.verticalScrollBar()
-        at_bottom = scrollbar.value() >= scrollbar.maximum() - 2
-        if at_bottom:
-            self.events_table.scrollToBottom()
 
     def on_row_double_clicked(self, row: int) -> None:
         """Shows full row data in a dialog on double-click."""

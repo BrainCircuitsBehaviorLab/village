@@ -235,7 +235,7 @@ class WaterCalibrationLayout(Layout):
         # output total weight
         self.total_weight_label = self.create_and_add_label(
             "TOTAL WEIGHT(g)",
-            8,
+            9,
             29,
             17,
             2,

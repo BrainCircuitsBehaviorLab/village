@@ -253,18 +253,6 @@ device_settings = [
         "The index of the infrared light of the box.",
     ),
     Setting(
-        "CAM_CORRIDOR_INDEX",
-        1,
-        int,
-        "The index (0, 1) of the corridor camera.",
-    ),
-    Setting(
-        "CAM_BOX_INDEX",
-        0,
-        int,
-        "The index (0, 1) of the box camera.",
-    ),
-    Setting(
         "CHIP_CORRIDOR_ADDRESS", "0x55", str, "The address of the corridor PWM chip."
     ),
     Setting("CHIP_BOX_ADDRESS", "0x56", str, "The address of the box PWM chip."),
@@ -348,6 +336,18 @@ completed any trials.""",
 ]
 
 cam_fixed_settings = [
+    Setting(
+        "CAM_CORRIDOR_INDEX",
+        1,
+        int,
+        "The index (0, 1) of the corridor camera.",
+    ),
+    Setting(
+        "CAM_BOX_INDEX",
+        0,
+        int,
+        "The index (0, 1) of the box camera.",
+    ),
     Setting(
         "CAM_BOX_TRACKING_POSITION",
         "ON",
@@ -757,7 +757,7 @@ hidden_settings = [
     Setting("IR_CORRIDOR", "ON", Cycle, "The infrared light of the corridor."),
     Setting("VISIBLE_BOX", "ON", Cycle, "The visible light of the box."),
     Setting("IR_BOX", "OFF", Cycle, "The infrared light of the box."),
-    Setting("INFO", "SYSTEM_INFO", Info, "The information status."),
+    Setting("INFO", "INFO", Info, "The information status."),
     Setting("ACTIONS", "CORRIDOR", Actions, "The actions status."),
 ]
 
