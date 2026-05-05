@@ -29,8 +29,8 @@ Info
 
    .. autosummary::
    
-      ~Info.SYSTEM_INFO
+      ~Info.INFO
+      ~Info.PLOT
       ~Info.DETECTION_SETTINGS
-      ~Info.DETECTION_PLOT
    
    
