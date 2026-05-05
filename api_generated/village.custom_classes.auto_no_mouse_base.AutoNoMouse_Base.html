@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>layout - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="NavTabProxy" href="village.gui.layout.NavTabProxy.html" /><link rel="prev" title="data_layout" href="village.gui.data_layout.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.gui.layout.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AutoNoMouse_Base - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="change_cycle_base" href="village.custom_classes.change_cycle_base.html" /><link rel="prev" title="auto_no_mouse_base" href="village.custom_classes.auto_no_mouse_base.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -20,8 +20,8 @@
 }
 </style>
     <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.gui.layout.html"/>
-  <meta property="og:title" content="layout"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html"/>
+  <meta property="og:title" content="AutoNoMouse_Base"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -102,10 +102,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.calibration.water_calibration.html">water_calibration</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.water_calibration.WaterCalibration.html">WaterCalibration</a></li>
 </ul>
@@ -134,6 +130,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.classes.null_classes.html">null_classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.LEDStripBase.html">LEDStripBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCamera.html">NullCamera</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullChip.html">NullChip</a></li>
@@ -158,13 +155,13 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.custom_classes.html">custom_classes</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="village.custom_classes.html">custom_classes</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.after_session_base.html">after_session_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.html">auto_no_mouse_base</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">AutoNoMouse_Base</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
@@ -199,20 +196,9 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.devices.html">devices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.camera.html">camera</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.get_camera.html">get_camera</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.Camera.html">Camera</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.rfid.Rfid.html">Rfid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.scale.html">scale</a><ul>
@@ -226,11 +212,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.telegram_bot.html">telegram_bot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -238,22 +219,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="village.gui.html">gui</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.sound_calibration_layout.html">sound_calibration_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.sound_calibration_layout.DummyTask.html">DummyTask</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.tasks_layout.html">tasks_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.water_calibration_layout.html">water_calibration_layout</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
@@ -278,7 +244,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.screen.html">screen</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -289,10 +254,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.error_queue.html">error_queue</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.global_csv_for_subject.main.html">main</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.import_all.html">import_all</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.scripts.import_all.import_all.html">import_all</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.log.html">log</a><ul>
@@ -355,10 +316,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.manager.html">manager</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.manager.Manager.html">Manager</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -394,10 +351,17 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.gui.layout.NavTabProxy"><code class="docutils literal notranslate"><span class="pre">NavTabProxy</span></code></a><ul>
-<li><a class="reference internal" href="#village.gui.layout.NavTabProxy.setDisabled"><code class="docutils literal notranslate">setDisabled()</span></code></a></li>
-<li><a class="reference internal" href="#village.gui.layout.NavTabProxy.setEnabled"><code class="docutils literal notranslate">setEnabled()</span></code></a></li>
-<li><a class="reference internal" href="#village.gui.layout.NavTabProxy.isEnabled"><code class="docutils literal notranslate">isEnabled()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base"><code class="docutils literal notranslate"><span class="pre">AutoNoMouse_Base</span></code></a><ul>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.start"><code class="docutils literal notranslate">start()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.stop"><code class="docutils literal notranslate">stop()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.running"><code class="docutils literal notranslate">running</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.run_trial"><code class="docutils literal notranslate">run_trial()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trial"><code class="docutils literal notranslate">inject_trial()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trials"><code class="docutils literal notranslate">inject_trials()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.poke"><code class="docutils literal notranslate">poke()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.set_position"><code class="docutils literal notranslate">set_position()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.wait"><code class="docutils literal notranslate">wait()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -421,12 +385,16 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="village.gui.html"><span itemprop="name">gui</span></a>
+        <a itemprop="item" href="village.custom_classes.html"><span itemprop="name">custom_classes</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">layout</strong>
+        <a itemprop="item" href="village.custom_classes.auto_no_mouse_base.html"><span itemprop="name">auto_no_mouse_base</span></a>
+        <span>/</span>
         <meta itemprop="position" content="4" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">AutoNoMouse_Base</strong>
+        <meta itemprop="position" content="5" />
       </li></ol>
     <div class="xl:hidden ml-1">
       <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
@@ -442,7 +410,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.layout.rst.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.rst.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -456,54 +424,131 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.layout.rst.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.rst.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.layout.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
-            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.layout.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
+            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.layout.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="module-village.gui.layout">
-<span id="layout"></span><h1>layout</h1>
-<p class="rubric">Classes</p>
+          <section id="autonomouse-base">
+<h1>AutoNoMouse_Base</h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">AutoNoMouse_Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.custom_classes.task.Task.html#village.custom_classes.task.Task" title="village.custom_classes.task.Task"><span class="pre">Task</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for automated task execution without a real animal.</p>
+<p>To be subclassed in task folder.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.custom_classes.task.Task.html#village.custom_classes.task.Task" title="village.custom_classes.task.Task"><span class="pre">Task</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.gui.layout.NavTabProxy.html#village.gui.layout.NavTabProxy" title="village.gui.layout.NavTabProxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NavTabProxy</span></code></a>(tab_bar, index)</p></td>
-<td><p>Proxy for a nav QTabBar tab, exposing a QPushButton-compatible interface.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.__init__" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(task)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trial" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inject_trial</span></code></a>([p_correct_left, p_correct_right])</p></td>
+<td><p>Override in subclass.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trials" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inject_trials</span></code></a>(n[, p_correct_left, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.poke" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.poke"><code class="xref py py-obj docutils literal notranslate"><span class="pre">poke</span></code></a>(port[, duration])</p></td>
+<td><p>Simulate a nose-poke in and out on port.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.run_trial" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.run_trial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_trial</span></code></a>()</p></td>
+<td><p>Override in subclass.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.set_position" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.set_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_position</span></code></a>(x, y)</p></td>
+<td><p>Update the virtual animal's position and trace.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.start" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.stop" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.stop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.wait" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.wait"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait</span></code></a>(seconds)</p></td>
+<td><p>Sleep for <em>seconds</em>, waking early if stop() is called.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="village.gui.layout.NavTabProxy">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">NavTabProxy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tab_bar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QTabBar'</span> <span class="pre">id='140637983096976'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/gui/layout.html#NavTabProxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Proxy for a nav QTabBar tab, exposing a QPushButton-compatible interface.</p>
+<p class="rubric">Attributes</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.running" title="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.running"><code class="xref py py-obj docutils literal notranslate"><span class="pre">running</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.gui.layout.NavTabProxy.setDisabled">
-<span class="sig-name descname"><span class="pre">setDisabled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">disabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/gui/layout.html#NavTabProxy.setDisabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.gui.layout.NavTabProxy.setEnabled">
-<span class="sig-name descname"><span class="pre">setEnabled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/gui/layout.html#NavTabProxy.setEnabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.running">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">running</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.gui.layout.NavTabProxy.isEnabled">
-<span class="sig-name descname"><span class="pre">isEnabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/gui/layout.html#NavTabProxy.isEnabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.run_trial">
+<span class="sig-name descname"><span class="pre">run_trial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.run_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Override in subclass. Sequence of actions to perform for
+one trial, e.g. pokes and position updates.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trial">
+<span class="sig-name descname"><span class="pre">inject_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_correct_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_correct_right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.inject_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Override in subclass.
+Append one mock trial row directly to session_df.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trials">
+<span class="sig-name descname"><span class="pre">inject_trials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_correct_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_correct_right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.inject_trials"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.poke">
+<span class="sig-name descname"><span class="pre">poke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.poke"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Simulate a nose-poke in and out on port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.set_position">
+<span class="sig-name descname"><span class="pre">set_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.set_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Update the virtual animal’s position and trace.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouse_Base.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sleep for <em>seconds</em>, waking early if stop() is called.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -515,16 +560,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="village.gui.data_layout.html">
+    <a href="village.custom_classes.auto_no_mouse_base.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">data_layout</div></div>
+        <span>Previous</span><div class="title">auto_no_mouse_base</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="village.gui.layout.NavTabProxy.html">
+    <a href="village.custom_classes.change_cycle_base.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">NavTabProxy</div>
+        <div class="title">change_cycle_base</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -546,7 +591,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=74d3c05a"></script>
+      <script src="../_static/documentation_options.js?v=ef5ef445"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

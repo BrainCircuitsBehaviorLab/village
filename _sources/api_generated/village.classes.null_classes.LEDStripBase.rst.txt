@@ -1,0 +1,35 @@
+LEDStripBase
+============
+
+.. currentmodule:: village.classes.null_classes
+
+.. autoclass:: LEDStripBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LEDStripBase.__init__
+      ~LEDStripBase.clear_strip
+      ~LEDStripBase.set_led_color
+      ~LEDStripBase.update_strip
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~LEDStripBase.error
+      ~LEDStripBase.num_leds
+   
+   

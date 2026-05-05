@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>rfid - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Rfid" href="village.devices.rfid.Rfid.html" /><link rel="prev" title="MotorOld" href="village.devices.motor_old.MotorOld.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.devices.rfid.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>LEDStripBase - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="NullBpod" href="village.classes.null_classes.NullBpod.html" /><link rel="prev" title="null_classes" href="village.classes.null_classes.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.classes.null_classes.LEDStripBase.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -20,8 +20,8 @@
 }
 </style>
     <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.devices.rfid.html"/>
-  <meta property="og:title" content="rfid"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.classes.null_classes.LEDStripBase.html"/>
+  <meta property="og:title" content="LEDStripBase"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -102,17 +102,13 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.calibration.water_calibration.html">water_calibration</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.water_calibration.WaterCalibration.html">WaterCalibration</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.classes.html">classes</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="village.classes.html">classes</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="village.classes.collection.html">collection</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.collection.Collection.html">Collection</a></li>
 </ul>
@@ -133,7 +129,8 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.SyncType.html">SyncType</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.classes.null_classes.html">null_classes</a><ul>
+<li class="toctree-l3 current"><a class="reference internal" href="village.classes.null_classes.html">null_classes</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">LEDStripBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCamera.html">NullCamera</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullChip.html">NullChip</a></li>
@@ -163,8 +160,8 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.html">auto_no_mouse_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html">AutoNoMouse_Base</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
@@ -198,21 +195,10 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="village.devices.html">devices</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="village.devices.camera.html">camera</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.get_camera.html">get_camera</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.Camera.html">Camera</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="village.devices.html">devices</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">rfid</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.rfid.Rfid.html">Rfid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.scale.html">scale</a><ul>
@@ -226,11 +212,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.telegram_bot.html">telegram_bot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -238,22 +219,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.sound_calibration_layout.html">sound_calibration_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.sound_calibration_layout.DummyTask.html">DummyTask</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.tasks_layout.html">tasks_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.water_calibration_layout.html">water_calibration_layout</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
@@ -278,7 +244,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.screen.html">screen</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -289,10 +254,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.error_queue.html">error_queue</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.global_csv_for_subject.main.html">main</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.import_all.html">import_all</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.scripts.import_all.import_all.html">import_all</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.log.html">log</a><ul>
@@ -355,10 +316,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.manager.html">manager</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.manager.Manager.html">Manager</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -394,22 +351,13 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid"><code class="docutils literal notranslate"><span class="pre">Rfid</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.port"><code class="docutils literal notranslate">port</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.baudrate"><code class="docutils literal notranslate">baudrate</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.multiple"><code class="docutils literal notranslate">multiple</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.time_detections"><code class="docutils literal notranslate">time_detections</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.id"><code class="docutils literal notranslate">id</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.id_history"><code class="docutils literal notranslate">id_history</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.reading"><code class="docutils literal notranslate">reading</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.s"><code class="docutils literal notranslate">s</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.thread"><code class="docutils literal notranslate">thread</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.running"><code class="docutils literal notranslate">running</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.read_serial"><code class="docutils literal notranslate">read_serial()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.clean_old_ids"><code class="docutils literal notranslate">clean_old_ids()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.update_multiple"><code class="docutils literal notranslate">update_multiple()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.stop"><code class="docutils literal notranslate">stop()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.get_id"><code class="docutils literal notranslate">get_id()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.LEDStripBase"><code class="docutils literal notranslate"><span class="pre">LEDStripBase</span></code></a><ul>
+<li><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.error"><code class="docutils literal notranslate">error</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.num_leds"><code class="docutils literal notranslate">num_leds</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.set_led_color"><code class="docutils literal notranslate">set_led_color()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.update_strip"><code class="docutils literal notranslate">update_strip()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.clear_strip"><code class="docutils literal notranslate">clear_strip()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -433,12 +381,16 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="village.devices.html"><span itemprop="name">devices</span></a>
+        <a itemprop="item" href="village.classes.html"><span itemprop="name">classes</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">rfid</strong>
+        <a itemprop="item" href="village.classes.null_classes.html"><span itemprop="name">null_classes</span></a>
+        <span>/</span>
         <meta itemprop="position" content="4" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">LEDStripBase</strong>
+        <meta itemprop="position" content="5" />
       </li></ol>
     <div class="xl:hidden ml-1">
       <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
@@ -454,7 +406,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.rfid.rst.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.classes.null_classes.LEDStripBase.rst.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -468,193 +420,93 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.rfid.rst.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.classes.null_classes.LEDStripBase.rst.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.rfid.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
-            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.rfid.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.classes.null_classes.LEDStripBase.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
+            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.classes.null_classes.LEDStripBase.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.devices.rfid.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.classes.null_classes.LEDStripBase.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="module-village.devices.rfid">
-<span id="rfid"></span><h1>rfid</h1>
-<p class="rubric">Classes</p>
+          <section id="ledstripbase">
+<h1>LEDStripBase</h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="village.classes.null_classes.LEDStripBase">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">LEDStripBase</span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#LEDStripBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for LED strip</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.null_classes.LEDStripBase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.devices.rfid.Rfid.html#village.devices.rfid.Rfid" title="village.devices.rfid.Rfid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rfid</span></code></a>([port, baudrate])</p></td>
-<td><p>Handles RFID reader communication via serial port.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.__init__" title="village.classes.null_classes.LEDStripBase.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.clear_strip" title="village.classes.null_classes.LEDStripBase.clear_strip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_strip</span></code></a>()</p></td>
+<td><p>Clear all LEDs</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.set_led_color" title="village.classes.null_classes.LEDStripBase.set_led_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_led_color</span></code></a>(index, red, green, blue)</p></td>
+<td><p>Set the color of a specific LED</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.update_strip" title="village.classes.null_classes.LEDStripBase.update_strip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_strip</span></code></a>()</p></td>
+<td><p>Update the LED strip to show changes</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Rfid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/dev/ttyAMA0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Handles RFID reader communication via serial port.</p>
+<p class="rubric">Attributes</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.error" title="village.classes.null_classes.LEDStripBase.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.LEDStripBase.num_leds" title="village.classes.null_classes.LEDStripBase.num_leds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">num_leds</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.port">
-<span class="sig-name descname"><span class="pre">port</span></span></dt>
-<dd><p>Serial port path.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.baudrate">
-<span class="sig-name descname"><span class="pre">baudrate</span></span></dt>
-<dd><p>Serial baudrate.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.multiple">
-<span class="sig-name descname"><span class="pre">multiple</span></span></dt>
-<dd><p>Whether multiple tags where detected recently-ish.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.time_detections">
-<span class="sig-name descname"><span class="pre">time_detections</span></span></dt>
-<dd><p>Time window in seconds to check for duplicate IDs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.id">
-<span class="sig-name descname"><span class="pre">id</span></span></dt>
-<dd><p>The most recently read RFID tag ID.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.id_history">
-<span class="sig-name descname"><span class="pre">id_history</span></span></dt>
-<dd><p>History of read IDs and timestamps.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Deque[tuple[str, datetime]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.reading">
-<span class="sig-name descname"><span class="pre">reading</span></span></dt>
-<dd><p>Flag to control reading loop</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">(not</span> <span class="pre">used</span> <span class="pre">in</span> <span class="pre">loop,</span> <span class="pre">running</span> <span class="pre">is</span> <span class="pre">used).</span></span></dt>
+<dt class="sig sig-object py" id="village.classes.null_classes.LEDStripBase.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LED</span> <span class="pre">strip</span> <span class="pre">not</span> <span class="pre">available.'</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.s">
-<span class="sig-name descname"><span class="pre">s</span></span></dt>
-<dd><p>The serial connection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>serial.Serial</p>
-</dd>
-</dl>
-</dd></dl>
+<dt class="sig sig-object py" id="village.classes.null_classes.LEDStripBase.num_leds">
+<span class="sig-name descname"><span class="pre">num_leds</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></span></dt>
+<dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.thread">
-<span class="sig-name descname"><span class="pre">thread</span></span></dt>
-<dd><p>Background thread for reading serial data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>threading.Thread</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.running">
-<span class="sig-name descname"><span class="pre">running</span></span></dt>
-<dd><p>Flag to control the background thread.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.null_classes.LEDStripBase.set_led_color">
+<span class="sig-name descname"><span class="pre">set_led_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">red</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">green</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#LEDStripBase.set_led_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Set the color of a specific LED</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.read_serial">
-<span class="sig-name descname"><span class="pre">read_serial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.read_serial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reads data from the serial port in a background loop.</p>
+<dt class="sig sig-object py" id="village.classes.null_classes.LEDStripBase.update_strip">
+<span class="sig-name descname"><span class="pre">update_strip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#LEDStripBase.update_strip"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Update the LED strip to show changes</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.clean_old_ids">
-<span class="sig-name descname"><span class="pre">clean_old_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.clean_old_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Removes IDs from history that are older than <cite>time_detections</cite>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.update_multiple">
-<span class="sig-name descname"><span class="pre">update_multiple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.update_multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Updates the <cite>multiple</cite> flag if more than one unique ID is in history.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.stop">
-<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Stops the serial reading thread.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.get_id">
-<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.get_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Retrieves the current RFID tag ID and multiple status.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A tuple containing the ID (str) and whether multiple tags
-were detected (bool).
-Returns (“”, False) if reading is disabled.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple[str, bool]</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="village.classes.null_classes.LEDStripBase.clear_strip">
+<span class="sig-name descname"><span class="pre">clear_strip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#LEDStripBase.clear_strip"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Clear all LEDs</p>
 </dd></dl>
 
 </dd></dl>
@@ -667,16 +519,16 @@ Returns (“”, False) if reading is disabled.</p>
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="village.devices.motor_old.MotorOld.html">
+    <a href="village.classes.null_classes.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">MotorOld</div></div>
+        <span>Previous</span><div class="title">null_classes</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="village.devices.rfid.Rfid.html">
+    <a href="village.classes.null_classes.NullBpod.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Rfid</div>
+        <div class="title">NullBpod</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -698,7 +550,7 @@ Returns (“”, False) if reading is disabled.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=74d3c05a"></script>
+      <script src="../_static/documentation_options.js?v=ef5ef445"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

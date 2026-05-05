@@ -1,7 +1,7 @@
-sound\_calibration\_layout
-==========================
+auto\_no\_mouse\_base
+=====================
 
-.. automodule:: village.gui.sound_calibration_layout
+.. automodule:: village.custom_classes.auto_no_mouse_base
 
    
    
@@ -19,7 +19,7 @@ sound\_calibration\_layout
       :toctree:
       :template: custom_class_template.rst
    
-      DummyTask
+      AutoNoMouse_Base
    
    
 

@@ -30,6 +30,7 @@
 
    camera
    chip
+   led_strip
    motor_old
    rfid
    scale

@@ -19,6 +19,7 @@ null\_classes
       :toctree:
       :template: custom_class_template.rst
    
+      LEDStripBase
       NullBpod
       NullCamera
       NullChip
