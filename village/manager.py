@@ -25,12 +25,12 @@ from village.classes.null_classes import (
     NullCamera,
 )
 from village.classes.subject import Subject
-from village.controllers.arduino_controller import ArduinoController
-from village.controllers.bpod_controller import BpodController
+from village.controllers.arduino_controller import arduino
+from village.controllers.bpod_controller import bpod
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
-from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
+from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
@@ -44,7 +44,6 @@ from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 if TYPE_CHECKING:
-    from village.custom_classes.camera_trigger_base import CameraTriggerBase
     from village.devices.camera import Camera
     from village.screen.behavior_window import BehaviorWindow
 
@@ -95,7 +94,7 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
-        self.auto_no_mouse: type = AutoNoMouse_Base
+        self.auto_no_mouse: AutoNoMouse_Base = AutoNoMouse_Base()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
@@ -126,20 +125,21 @@ class Manager:
         )
 
         # init
-        self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
-        if self.controller_type == ControllerEnum.BPOD:
-            self.bpod = BpodController()
-            self.errors = self.bpod.error
-        elif self.controller_type == ControllerEnum.ARDUINO:
-            self.arduino = ArduinoController()
-            self.errors = self.arduino.error
-
         self.update_cycle()
         utils.download_github_repositories(settings.get("GITHUB_REPOSITORY_EXAMPLES"))
         utils.create_directories()
         self.create_collections()
         log.event = self.events
         log.temp = self.temperatures
+        self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod = bpod
+            self.bpod.check_connection()
+            self.errors = self.bpod.error
+        elif self.controller_type == ControllerEnum.ARDUINO:
+            self.arduino = arduino
+            self.arduino.check_connection()
+            self.errors = self.arduino.error
         self.detections = time_utils.TimestampTracker(
             hours=int(settings.get("NO_DETECTION_HOURS") or 6)
         )

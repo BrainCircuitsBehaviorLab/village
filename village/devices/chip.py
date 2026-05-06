@@ -115,9 +115,15 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
 motor_corridor1: Motor | MotorOld | NullMotor
 motor_corridor2: Motor | MotorOld | NullMotor
 
-motor_box1 = get_motor(settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_VALUES"), pwm_box)
-motor_box2 = get_motor(settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_VALUES"), pwm_box)
-visible_light_corridor = LED(settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"), 1, pwm_corridor)
+motor_box1 = get_motor(
+    settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_VALUES"), pwm_box
+)
+motor_box2 = get_motor(
+    settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_VALUES"), pwm_box
+)
+visible_light_corridor = LED(
+    settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"), 1, pwm_corridor
+)
 ir_light_corridor = LED(settings.get("IR_LIGHT_CORRIDOR_INDEX"), 4, pwm_corridor)
 visible_light_box = LED(settings.get("VISIBLE_LIGHT_BOX_INDEX"), 1, pwm_box)
 ir_light_box = LED(settings.get("IR_LIGHT_BOX_INDEX"), 4, pwm_box)
@@ -131,10 +137,14 @@ if settings.get("OLD_VERSION") == Active.ON:
     )
 else:
     motor_corridor1 = get_motor(
-        settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES"), pwm_corridor
+        settings.get("MOTOR1_CORRIDOR_INDEX"),
+        settings.get("MOTOR1_VALUES"),
+        pwm_corridor,
     )
     motor_corridor2 = get_motor(
-        settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES"), pwm_corridor
+        settings.get("MOTOR2_CORRIDOR_INDEX"),
+        settings.get("MOTOR2_VALUES"),
+        pwm_corridor,
     )
     motor_corridor1.error = error_corridor
     motor_box1.error = error_box

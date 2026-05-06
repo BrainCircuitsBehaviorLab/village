@@ -34,8 +34,15 @@ from village.classes.enums import (
     Info,
     ScreenActive,
 )
+from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.chip import Motor, motor_corridor1, motor_corridor2, motor_box1, motor_box2,visible_light_box, visible_light_corridor, ir_light_box, ir_light_corridor
+from village.devices.chip import (
+    Motor,
+    ir_light_corridor,
+    motor_corridor1,
+    motor_corridor2,
+    visible_light_corridor,
+)
 from village.devices.scale import scale
 from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
@@ -267,8 +274,14 @@ class LabelButtons:
         self.timer_increase2.stop()
         self.timer_decrease2.stop()
 
-        if self.name in ["LENS_POSITION_BOX", "SHARPNESS_BOX", "CONTRAST_BOX", 
-                         "LENS_POSITION_CORRIDOR", "SHARPNESS_CORRIDOR", "CONTRAST_CORRIDOR"]:
+        if self.name in [
+            "LENS_POSITION_BOX",
+            "SHARPNESS_BOX",
+            "CONTRAST_BOX",
+            "LENS_POSITION_CORRIDOR",
+            "SHARPNESS_CORRIDOR",
+            "CONTRAST_CORRIDOR",
+        ]:
             settings.set(self.name, self.label_value)
         else:
             coords = settings.get(self.name)
@@ -953,27 +966,45 @@ class VirtualMouseLayout(Layout):
 
         self.auto_no_mouse_button = self.create_and_add_button(
             "▶  AutoNoMouse",
-            2, 18, 14, 2,
+            2,
+            18,
+            14,
+            2,
             self.auto_no_mouse_clicked,
             "Start/stop the automated virtual-mouse agent",
             color="lightblue",
         )
         self.create_and_add_label(
-            "p correct L", 4, 18, 10, 2, "black",
+            "p correct L",
+            4,
+            18,
+            10,
+            2,
+            "black",
             description="P(correct | reward LEFT)",
         )
         self.p_left_edit = self.create_and_add_line_edit(
             "0.80", 4, 28, 4, 2, lambda: None
         )
         self.create_and_add_label(
-            "p correct R", 6, 18, 10, 2, "black",
+            "p correct R",
+            6,
+            18,
+            10,
+            2,
+            "black",
             description="P(correct | reward RIGHT)",
         )
         self.p_right_edit = self.create_and_add_line_edit(
             "0.80", 6, 28, 4, 2, lambda: None
         )
         self.create_and_add_label(
-            "N inject", 8, 18, 10, 2, "black",
+            "N inject",
+            8,
+            18,
+            10,
+            2,
+            "black",
             description="Number of mock trials to inject",
         )
         self.n_inject_edit = self.create_and_add_line_edit(
@@ -981,13 +1012,16 @@ class VirtualMouseLayout(Layout):
         )
         self.create_and_add_button(
             "Inject Trials",
-            10, 18, 14, 2,
+            10,
+            18,
+            14,
+            2,
             self._inject_trials,
             "Inject N trials using p correct L/R into session_df",
             color="lightgreen",
         )
 
-        self._anm = None
+        self._anm: AutoNoMouse_Base | None = None
 
     def coordinates_changed(self) -> None:
         """Handles changes in the coordinate fields."""
@@ -1047,25 +1081,23 @@ class VirtualMouseLayout(Layout):
             self._anm.stop()
             self._anm = None
             self.auto_no_mouse_button.setText("▶  AutoNoMouse")
-            self.auto_no_mouse_button.setStyleSheet(
-                "background-color: lightblue;"
-            )
+            self.auto_no_mouse_button.setStyleSheet("background-color: lightblue;")
             return
 
-        self._anm = manager.auto_no_mouse(
-            manager.task,
-            accuracy_left=self._get_p_left(),
-            accuracy_right=self._get_p_right(),
-        )
+        self._anm = manager.auto_no_mouse
+        self._anm.task = manager.task
+        self._anm.accuracy_left = self._get_p_left()
+        self._anm.accuracy_right = self._get_p_right()
         self._anm.start()
         self.auto_no_mouse_button.setText("■  AutoNoMouse")
         self.auto_no_mouse_button.setStyleSheet("background-color: salmon;")
 
     def _inject_trials(self) -> None:
         p_l, p_r = self._get_p_left(), self._get_p_right()
-        injector = manager.auto_no_mouse(
-            manager.task, accuracy_left=p_l, accuracy_right=p_r
-        )
+        injector = manager.auto_no_mouse
+        injector.task = manager.task
+        injector.accuracy_left = p_l
+        injector.accuracy_right = p_r
         injector.inject_trials(self._get_n_inject(), p_l, p_r)
 
 

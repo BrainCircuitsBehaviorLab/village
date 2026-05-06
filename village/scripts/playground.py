@@ -3,7 +3,7 @@ import statistics
 import threading
 import time
 
-from village.controllers.bpod_controller import BpodController
+from village.controllers.bpod_controller import bpod
 
 
 class BpodWithLatencyTest:
@@ -13,7 +13,7 @@ class BpodWithLatencyTest:
         """Initializes the test class with a Bpod instance and
         synchronization events."""
         print(1)
-        self.mybpod = BpodController()
+        self.mybpod = bpod
         print(2)
 
         # Events to synchronize the benchmark

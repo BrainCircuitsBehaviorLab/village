@@ -9,8 +9,8 @@ import pandas as pd
 from village.classes.collection import Collection
 from village.classes.enums import Active, ControllerEnum, Save
 from village.classes.null_classes import NullCamera
-from village.controllers.arduino_controller import ArduinoController
-from village.controllers.bpod_controller import BpodController
+from village.controllers.arduino_controller import arduino
+from village.controllers.bpod_controller import bpod
 from village.controllers.trial_recorder import TrialRecorder
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
 from village.devices.sound_device import sound_device
@@ -149,8 +149,8 @@ class Task:
 
     def __init__(self) -> None:
         self.controller_type = ControllerEnum.RASPBERRY
-        self.bpod = BpodController()
-        self.arduino = ArduinoController()
+        self.bpod = bpod
+        self.arduino = arduino
         self.recorder: TrialRecorder = TrialRecorder()
         self.functions: list[Callable] = []
 
@@ -189,6 +189,9 @@ class Task:
 
         self.sound_calibration: Collection = Collection("", [], [])
         self.water_calibration: Collection = Collection("", [], [])
+
+        self.current_x = 0.0
+        self.current_y = 0.0
 
     # OVERWRITE THESE METHODS IN YOUR TASKS
     def start(self) -> None:

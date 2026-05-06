@@ -7,7 +7,6 @@ class ArduinoController:
 
         self.connected = False
         self.recorder = TrialRecorder(same_clock=False)
-        self.check_connection()
 
     def check_connection(self) -> None:
         self.error = ""
@@ -19,3 +18,6 @@ class ArduinoController:
     def close(self) -> None:
         """Closes the Arduino connection and session."""
         self.connected = False
+
+
+arduino = ArduinoController()

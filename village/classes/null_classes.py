@@ -250,6 +250,7 @@ class NullCamera:
     y_position: int = -1
     chrono = time_utils.Chrono()
     trigger_event = threading.Event()
+    items_to_draw: dict[str, Any]
 
     def start_camera(self) -> None:
         """Starts the camera."""

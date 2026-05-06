@@ -6,6 +6,8 @@ import sys
 import traceback
 
 from village.custom_classes.after_session_base import AfterSessionBase
+from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
@@ -15,8 +17,6 @@ from village.custom_classes.task import Task
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
 from village.settings import settings
-from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
-from village.custom_classes.camera_draw_base import CameraDrawBase
 
 
 def import_all(manager) -> None:
@@ -32,6 +32,8 @@ def import_all(manager) -> None:
     after_session_found = 0
     change_cycle_found = 0
     camera_trigger_found = 0
+    camera_draw_found = 0
+    auto_no_mouse_found = 0
     training_correct = False
     session_plot_correct = False
     subject_plot_correct = False
@@ -39,6 +41,8 @@ def import_all(manager) -> None:
     after_session_correct = False
     change_cycle_correct = False
     camera_trigger_correct = False
+    camera_draw_correct = False
+    auto_no_mouse_correct = False
     functions_path = ""
     sound_path = ""
 
@@ -147,14 +151,17 @@ def import_all(manager) -> None:
                         manager.camera_trigger = z
                         camera_trigger_correct = True
                 elif issubclass(cls, CameraDrawBase) and cls != CameraDrawBase:
-                        if hasattr(cls, "draw") and callable(getattr(cls, "draw")):
-                            c = cls()
-                            manager.camera_draw = c
-                elif (
-                    issubclass(cls, AutoNoMouse_Base)
-                    and cls != AutoNoMouse_Base
-                ):
-                    manager.auto_no_mouse = cls
+                    camera_draw_found += 1
+                    if camera_draw_found == 1:
+                        c = cls()
+                        manager.camera_draw = c
+                        camera_draw_correct = True
+                elif issubclass(cls, AutoNoMouse_Base) and cls != AutoNoMouse_Base:
+                    auto_no_mouse_found += 1
+                    if auto_no_mouse_found == 1:
+                        d = cls()
+                        manager.auto_no_mouse = d
+                        auto_no_mouse_correct = True
 
         except Exception:
             log.error(
@@ -167,42 +174,32 @@ def import_all(manager) -> None:
         log.info("Training protocol successfully imported")
     elif training_found > 1:
         log.error("Multiple training protocols found")
-    if session_plot_found == 0:
-        log.info("Custom Session plot not found, using default")
-    elif session_plot_found == 1 and session_plot_correct:
-        log.info("Custom Session plot successfully imported")
-    elif session_plot_found > 1:
-        log.error("Multiple session plots found")
-    if subject_plot_found == 0:
-        log.info("Custom Subject plot not found, using default")
-    elif subject_plot_found == 1 and subject_plot_correct:
-        log.info("Custom Subject plot successfully imported")
-    elif subject_plot_found > 1:
-        log.error("Multiple subject plots found")
-    if online_plot_found == 0:
-        log.info("Custom Online plot not found, using default")
-    elif online_plot_found == 1 and online_plot_correct:
-        log.info("Custom Online plot successfully imported")
-    elif online_plot_found > 1:
-        log.error("Multiple online plots found")
-    if after_session_found == 0:
-        log.info("Custom After Session Run not found, using default")
-    elif after_session_found == 1 and after_session_correct:
-        log.info("Custom After Session Run successfully imported")
-    elif after_session_found > 1:
-        log.error("Multiple After Session Run found")
-    if change_cycle_found == 0:
-        log.info("Custom Change Cycle Run not found, using default")
-    elif change_cycle_found == 1 and change_cycle_correct:
-        log.info("Custom Change Cycle Run successfully imported")
-    elif change_cycle_found > 1:
-        log.error("Multiple Change Cycle Run found")
-    if camera_trigger_found == 0:
-        log.info("Custom Camera Trigger not found, using default")
-    elif camera_trigger_found == 1 and camera_trigger_correct:
-        log.info("Custom Camera Trigger successfully imported")
-    elif camera_trigger_found > 1:
-        log.error("Multiple Camera Trigger found")
+
+    items = [
+        ("Session plot", session_plot_found, session_plot_correct),
+        ("Subject plot", subject_plot_found, subject_plot_correct),
+        ("Online plot", online_plot_found, online_plot_correct),
+        ("After Session Run", after_session_found, after_session_correct),
+        ("Change Cycle Run", change_cycle_found, change_cycle_correct),
+        ("Camera Trigger", camera_trigger_found, camera_trigger_correct),
+        ("Camera Draw", camera_draw_found, camera_draw_correct),
+        ("Auto No Mouse", auto_no_mouse_found, auto_no_mouse_correct),
+    ]
+
+    defaults, customs = [], []
+    for name, found, correct in items:
+        if found > 1:
+            log.error("Multiple %s found", name)
+        elif found == 0:
+            defaults.append(name)
+        elif correct:
+            customs.append(name)
+
+    if defaults:
+        log.info("Using default: " + ", ".join(defaults))
+    if customs:
+        log.info("Using custom: " + ", ".join(customs))
+
     manager.tasks = dict(sorted(tasks.items()))
     number_of_tasks = len(tasks)
     if number_of_tasks == 0:

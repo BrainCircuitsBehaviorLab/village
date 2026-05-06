@@ -35,7 +35,6 @@ class BpodController:
         )
         self.connected = False
         self.recorder = TrialRecorder(same_clock=False)
-        self.check_connection()
 
     def _make_bpod(self) -> Bpod:
         return Bpod(
@@ -332,3 +331,6 @@ class BpodController:
             self.bpod_hardware.close()
         except AttributeError:
             pass
+
+
+bpod = BpodController()
