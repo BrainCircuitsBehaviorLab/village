@@ -441,7 +441,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
 </span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span data-line="5">
-</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.controllers.bpod_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">BpodController</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.controllers.bpod_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">bpod</span>
 </span><span data-line="7">
 </span><span data-line="8">
 <div class="viewcode-block" id="BpodWithLatencyTest">
@@ -455,7 +455,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="13"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the test class with a Bpod instance and</span>
 </span><span data-line="14"><span class="sd">        synchronization events.&quot;&quot;&quot;</span>
 </span><span data-line="15">        <span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span data-line="16">        <span class="bp">self</span><span class="o">.</span><span class="n">mybpod</span> <span class="o">=</span> <span class="n">BpodController</span><span class="p">()</span>
+</span><span data-line="16">        <span class="bp">self</span><span class="o">.</span><span class="n">mybpod</span> <span class="o">=</span> <span class="n">bpod</span>
 </span><span data-line="17">        <span class="nb">print</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </span><span data-line="18">
 </span><span data-line="19">        <span class="c1"># Events to synchronize the benchmark</span>
@@ -563,7 +563,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=8a47411d"></script>
+      <script src="../../../_static/documentation_options.js?v=338b7be9"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

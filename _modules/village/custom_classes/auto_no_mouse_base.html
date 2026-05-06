@@ -438,28 +438,28 @@ data-aria-dark="Switch to auto color mode">
           <h1>Source code for village.custom_classes.auto_no_mouse_base</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-</span><span data-line="6">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
-</span><span data-line="7">
-</span><span data-line="8">
+</span><span data-line="3">
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
+</span><span data-line="5">
+</span><span data-line="6">
 <div class="viewcode-block" id="AutoNoMouse_Base">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base">[docs]</a>
-</span><span data-line="9"><span class="k">class</span><span class="w"> </span><span class="nc">AutoNoMouse_Base</span><span class="p">:</span>
-</span><span data-line="10"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for automated task execution without a real animal.</span>
-</span><span data-line="11">
-</span><span data-line="12"><span class="sd">    To be subclassed in task folder.</span>
-</span><span data-line="13"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="14">
+</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">AutoNoMouse_Base</span><span class="p">:</span>
+</span><span data-line="8"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for automated task execution without a real animal.</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="sd">    To be subclassed in task folder.</span>
+</span><span data-line="11"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="12">
 <div class="viewcode-block" id="AutoNoMouse_Base.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.__init__">[docs]</a>
-</span><span data-line="15">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="16">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
-</span><span data-line="17">        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="18">        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
-</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">:</span> <span class="n">deque</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">25</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
-</span><span data-line="20">        <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+</span><span data-line="13">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="14">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span>
+</span><span data-line="15">        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="16">        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+</span><span data-line="17">        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">:</span> <span class="n">deque</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">25</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
+</span><span data-line="18">        <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy_left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span><span data-line="20">        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy_right</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span></div>
 
 </span><span data-line="21">
 <div class="viewcode-block" id="AutoNoMouse_Base.start">
@@ -495,60 +495,64 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="46">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
 </span><span data-line="47">
 </span><span data-line="48">    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="49">        <span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span>
-</span><span data-line="50">               <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">maximum_number_of_trials</span><span class="p">):</span>
-</span><span data-line="51">            <span class="bp">self</span><span class="o">.</span><span class="n">run_trial</span><span class="p">()</span>
-</span><span data-line="52">
+</span><span data-line="49">        <span class="k">while</span> <span class="p">(</span>
+</span><span data-line="50">            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
+</span><span data-line="51">            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">maximum_number_of_trials</span>
+</span><span data-line="52">        <span class="p">):</span>
+</span><span data-line="53">            <span class="bp">self</span><span class="o">.</span><span class="n">run_trial</span><span class="p">()</span>
+</span><span data-line="54">
 <div class="viewcode-block" id="AutoNoMouse_Base.run_trial">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.run_trial">[docs]</a>
-</span><span data-line="53">    <span class="k">def</span><span class="w"> </span><span class="nf">run_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="54"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Override in subclass. Sequence of actions to perform for</span>
-</span><span data-line="55"><span class="sd">        one trial, e.g. pokes and position updates. &quot;&quot;&quot;</span>
-</span><span data-line="56">        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span></div>
+</span><span data-line="55">    <span class="k">def</span><span class="w"> </span><span class="nf">run_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="56"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Override in subclass. Sequence of actions to perform for</span>
+</span><span data-line="57"><span class="sd">        one trial, e.g. pokes and position updates.&quot;&quot;&quot;</span>
+</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span></div>
 
-</span><span data-line="57">
+</span><span data-line="59">
 <div class="viewcode-block" id="AutoNoMouse_Base.inject_trial">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trial">[docs]</a>
-</span><span data-line="58">    <span class="k">def</span><span class="w"> </span><span class="nf">inject_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_correct_left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-</span><span data-line="59">                     <span class="n">p_correct_right</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="60"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Override in subclass.</span>
-</span><span data-line="61"><span class="sd">        Append one mock trial row directly to session_df.&quot;&quot;&quot;</span>
-</span><span data-line="62">        <span class="k">pass</span></div>
+</span><span data-line="60">    <span class="k">def</span><span class="w"> </span><span class="nf">inject_trial</span><span class="p">(</span>
+</span><span data-line="61">        <span class="bp">self</span><span class="p">,</span> <span class="n">p_correct_left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">p_correct_right</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span><span data-line="62">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="63"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Override in subclass.</span>
+</span><span data-line="64"><span class="sd">        Append one mock trial row directly to session_df.&quot;&quot;&quot;</span>
+</span><span data-line="65">        <span class="k">pass</span></div>
 
-</span><span data-line="63">
+</span><span data-line="66">
 <div class="viewcode-block" id="AutoNoMouse_Base.inject_trials">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.inject_trials">[docs]</a>
-</span><span data-line="64">    <span class="k">def</span><span class="w"> </span><span class="nf">inject_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p_correct_left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-</span><span data-line="65">                      <span class="n">p_correct_right</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="66">        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-</span><span data-line="67">            <span class="bp">self</span><span class="o">.</span><span class="n">inject_trial</span><span class="p">(</span><span class="n">p_correct_left</span><span class="p">,</span> <span class="n">p_correct_right</span><span class="p">)</span></div>
+</span><span data-line="67">    <span class="k">def</span><span class="w"> </span><span class="nf">inject_trials</span><span class="p">(</span>
+</span><span data-line="68">        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p_correct_left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">p_correct_right</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span><span data-line="69">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="70">        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span data-line="71">            <span class="bp">self</span><span class="o">.</span><span class="n">inject_trial</span><span class="p">(</span><span class="n">p_correct_left</span><span class="p">,</span> <span class="n">p_correct_right</span><span class="p">)</span></div>
 
-</span><span data-line="68">
+</span><span data-line="72">
 <div class="viewcode-block" id="AutoNoMouse_Base.poke">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.poke">[docs]</a>
-</span><span data-line="69">    <span class="k">def</span><span class="w"> </span><span class="nf">poke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="70"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Simulate a nose-poke in and out on port.&quot;&quot;&quot;</span>
-</span><span data-line="71">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">manual_override_input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Port</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">In&quot;</span><span class="p">)</span>
-</span><span data-line="72">        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
-</span><span data-line="73">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">manual_override_input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Port</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">Out&quot;</span><span class="p">)</span></div>
+</span><span data-line="73">    <span class="k">def</span><span class="w"> </span><span class="nf">poke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="74"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Simulate a nose-poke in and out on port.&quot;&quot;&quot;</span>
+</span><span data-line="75">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">manual_override_input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Port</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">In&quot;</span><span class="p">)</span>
+</span><span data-line="76">        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
+</span><span data-line="77">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">manual_override_input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Port</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">Out&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="74">
+</span><span data-line="78">
 <div class="viewcode-block" id="AutoNoMouse_Base.set_position">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.set_position">[docs]</a>
-</span><span data-line="75">    <span class="k">def</span><span class="w"> </span><span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="76"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the virtual animal&#39;s position and trace.&quot;&quot;&quot;</span>
-</span><span data-line="77">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">current_x</span> <span class="o">=</span> <span class="n">x</span>
-</span><span data-line="78">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">current_y</span> <span class="o">=</span> <span class="n">y</span>
-</span><span data-line="79">        <span class="n">pt</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
-</span><span data-line="80">        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">pt</span>
-</span><span data-line="81">        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span></div>
+</span><span data-line="79">    <span class="k">def</span><span class="w"> </span><span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="80"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the virtual animal&#39;s position and trace.&quot;&quot;&quot;</span>
+</span><span data-line="81">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">current_x</span> <span class="o">=</span> <span class="n">x</span>
+</span><span data-line="82">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">current_y</span> <span class="o">=</span> <span class="n">y</span>
+</span><span data-line="83">        <span class="n">pt</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+</span><span data-line="84">        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">pt</span>
+</span><span data-line="85">        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span></div>
 
-</span><span data-line="82">
+</span><span data-line="86">
 <div class="viewcode-block" id="AutoNoMouse_Base.wait">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html#village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.wait">[docs]</a>
-</span><span data-line="83">    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="84"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sleep for *seconds*, waking early if stop() is called.&quot;&quot;&quot;</span>
-</span><span data-line="85">        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span></div>
+</span><span data-line="87">    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="88"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sleep for *seconds*, waking early if stop() is called.&quot;&quot;&quot;</span>
+</span><span data-line="89">        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span></div>
 </div>
 
 </span></pre></div>
@@ -575,7 +579,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=8a47411d"></script>
+      <script src="../../../_static/documentation_options.js?v=338b7be9"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

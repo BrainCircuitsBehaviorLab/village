@@ -61,5 +61,6 @@ NullCamera
       ~NullCamera.trigger_event
       ~NullCamera.x_position
       ~NullCamera.y_position
+      ~NullCamera.items_to_draw
    
    

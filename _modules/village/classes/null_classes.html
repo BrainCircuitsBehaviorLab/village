@@ -804,229 +804,230 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="250">    <span class="n">y_position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 </span><span data-line="251">    <span class="n">chrono</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">Chrono</span><span class="p">()</span>
 </span><span data-line="252">    <span class="n">trigger_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
-</span><span data-line="253">
+</span><span data-line="253">    <span class="n">items_to_draw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span><span data-line="254">
 <div class="viewcode-block" id="NullCamera.start_camera">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.start_camera">[docs]</a>
-</span><span data-line="254">    <span class="k">def</span><span class="w"> </span><span class="nf">start_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="255"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the camera.&quot;&quot;&quot;</span>
-</span><span data-line="256">        <span class="k">return</span></div>
+</span><span data-line="255">    <span class="k">def</span><span class="w"> </span><span class="nf">start_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="256"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the camera.&quot;&quot;&quot;</span>
+</span><span data-line="257">        <span class="k">return</span></div>
 
-</span><span data-line="257">
+</span><span data-line="258">
 <div class="viewcode-block" id="NullCamera.stop_camera">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.stop_camera">[docs]</a>
-</span><span data-line="258">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="259"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the camera.&quot;&quot;&quot;</span>
-</span><span data-line="260">        <span class="k">return</span></div>
+</span><span data-line="259">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="260"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the camera.&quot;&quot;&quot;</span>
+</span><span data-line="261">        <span class="k">return</span></div>
 
-</span><span data-line="261">
+</span><span data-line="262">
 <div class="viewcode-block" id="NullCamera.start_preview_window">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.start_preview_window">[docs]</a>
-</span><span data-line="262">    <span class="k">def</span><span class="w"> </span><span class="nf">start_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QWidget</span><span class="p">:</span>
-</span><span data-line="263"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the preview window.</span>
-</span><span data-line="264">
-</span><span data-line="265"><span class="sd">        Returns:</span>
-</span><span data-line="266"><span class="sd">            QWidget: A QWidget for the preview.</span>
-</span><span data-line="267"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="268">        <span class="k">return</span> <span class="n">QWidget</span><span class="p">()</span></div>
+</span><span data-line="263">    <span class="k">def</span><span class="w"> </span><span class="nf">start_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QWidget</span><span class="p">:</span>
+</span><span data-line="264"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the preview window.</span>
+</span><span data-line="265">
+</span><span data-line="266"><span class="sd">        Returns:</span>
+</span><span data-line="267"><span class="sd">            QWidget: A QWidget for the preview.</span>
+</span><span data-line="268"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="269">        <span class="k">return</span> <span class="n">QWidget</span><span class="p">()</span></div>
 
-</span><span data-line="269">
+</span><span data-line="270">
 <div class="viewcode-block" id="NullCamera.stop_preview_window">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.stop_preview_window">[docs]</a>
-</span><span data-line="270">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="271"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the preview window.&quot;&quot;&quot;</span>
-</span><span data-line="272">        <span class="k">return</span></div>
+</span><span data-line="271">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_preview_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="272"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the preview window.&quot;&quot;&quot;</span>
+</span><span data-line="273">        <span class="k">return</span></div>
 
-</span><span data-line="273">
+</span><span data-line="274">
 <div class="viewcode-block" id="NullCamera.start_recording">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.start_recording">[docs]</a>
-</span><span data-line="274">    <span class="k">def</span><span class="w"> </span><span class="nf">start_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">path_csv</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="275"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts recording.</span>
-</span><span data-line="276">
-</span><span data-line="277"><span class="sd">        Args:</span>
-</span><span data-line="278"><span class="sd">            path_video (str): Path for video file.</span>
-</span><span data-line="279"><span class="sd">            path_csv (str): Path for CSV data.</span>
-</span><span data-line="280"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="281">        <span class="k">return</span></div>
+</span><span data-line="275">    <span class="k">def</span><span class="w"> </span><span class="nf">start_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">path_csv</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="276"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts recording.</span>
+</span><span data-line="277">
+</span><span data-line="278"><span class="sd">        Args:</span>
+</span><span data-line="279"><span class="sd">            path_video (str): Path for video file.</span>
+</span><span data-line="280"><span class="sd">            path_csv (str): Path for CSV data.</span>
+</span><span data-line="281"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="282">        <span class="k">return</span></div>
 
-</span><span data-line="282">
+</span><span data-line="283">
 <div class="viewcode-block" id="NullCamera.stop_recording">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.stop_recording">[docs]</a>
-</span><span data-line="283">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="284"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops recording.&quot;&quot;&quot;</span>
-</span><span data-line="285">        <span class="k">return</span></div>
+</span><span data-line="284">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="285"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops recording.&quot;&quot;&quot;</span>
+</span><span data-line="286">        <span class="k">return</span></div>
 
-</span><span data-line="286">
+</span><span data-line="287">
 <div class="viewcode-block" id="NullCamera.print_info_about_config">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.print_info_about_config">[docs]</a>
-</span><span data-line="287">    <span class="k">def</span><span class="w"> </span><span class="nf">print_info_about_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="288"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints camera configuration info.&quot;&quot;&quot;</span>
-</span><span data-line="289">        <span class="k">return</span></div>
+</span><span data-line="288">    <span class="k">def</span><span class="w"> </span><span class="nf">print_info_about_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="289"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints camera configuration info.&quot;&quot;&quot;</span>
+</span><span data-line="290">        <span class="k">return</span></div>
 
-</span><span data-line="290">
+</span><span data-line="291">
 <div class="viewcode-block" id="NullCamera.pre_process">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.pre_process">[docs]</a>
-</span><span data-line="291">    <span class="k">def</span><span class="w"> </span><span class="nf">pre_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="292"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocessing callback for frames.</span>
-</span><span data-line="293">
-</span><span data-line="294"><span class="sd">        Args:</span>
-</span><span data-line="295"><span class="sd">            request: The request object.</span>
-</span><span data-line="296"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="297">        <span class="k">return</span></div>
+</span><span data-line="292">    <span class="k">def</span><span class="w"> </span><span class="nf">pre_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="293"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocessing callback for frames.</span>
+</span><span data-line="294">
+</span><span data-line="295"><span class="sd">        Args:</span>
+</span><span data-line="296"><span class="sd">            request: The request object.</span>
+</span><span data-line="297"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="298">        <span class="k">return</span></div>
 
-</span><span data-line="298">
+</span><span data-line="299">
 <div class="viewcode-block" id="NullCamera.write_text">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.write_text">[docs]</a>
-</span><span data-line="299">    <span class="k">def</span><span class="w"> </span><span class="nf">write_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="300"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes text annotation to the frame.</span>
-</span><span data-line="301">
-</span><span data-line="302"><span class="sd">        Args:</span>
-</span><span data-line="303"><span class="sd">            text (str): The text to write.</span>
-</span><span data-line="304"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="305">        <span class="k">return</span></div>
+</span><span data-line="300">    <span class="k">def</span><span class="w"> </span><span class="nf">write_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="301"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes text annotation to the frame.</span>
+</span><span data-line="302">
+</span><span data-line="303"><span class="sd">        Args:</span>
+</span><span data-line="304"><span class="sd">            text (str): The text to write.</span>
+</span><span data-line="305"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="306">        <span class="k">return</span></div>
 
-</span><span data-line="306">
+</span><span data-line="307">
 <div class="viewcode-block" id="NullCamera.areas_corridor_ok">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.areas_corridor_ok">[docs]</a>
-</span><span data-line="307">    <span class="k">def</span><span class="w"> </span><span class="nf">areas_corridor_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="308"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks corridor areas status.</span>
-</span><span data-line="309">
-</span><span data-line="310"><span class="sd">        Returns:</span>
-</span><span data-line="311"><span class="sd">            bool: True if OK.</span>
-</span><span data-line="312"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="313">        <span class="k">return</span> <span class="kc">True</span></div>
+</span><span data-line="308">    <span class="k">def</span><span class="w"> </span><span class="nf">areas_corridor_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="309"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks corridor areas status.</span>
+</span><span data-line="310">
+</span><span data-line="311"><span class="sd">        Returns:</span>
+</span><span data-line="312"><span class="sd">            bool: True if OK.</span>
+</span><span data-line="313"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="314">        <span class="k">return</span> <span class="kc">True</span></div>
 
-</span><span data-line="314">
+</span><span data-line="315">
 <div class="viewcode-block" id="NullCamera.area_1_empty">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.area_1_empty">[docs]</a>
-</span><span data-line="315">    <span class="k">def</span><span class="w"> </span><span class="nf">area_1_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="316"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 1 is empty.</span>
-</span><span data-line="317">
-</span><span data-line="318"><span class="sd">        Returns:</span>
-</span><span data-line="319"><span class="sd">            bool: True if empty.</span>
-</span><span data-line="320"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="321">        <span class="k">return</span> <span class="kc">True</span></div>
+</span><span data-line="316">    <span class="k">def</span><span class="w"> </span><span class="nf">area_1_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="317"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 1 is empty.</span>
+</span><span data-line="318">
+</span><span data-line="319"><span class="sd">        Returns:</span>
+</span><span data-line="320"><span class="sd">            bool: True if empty.</span>
+</span><span data-line="321"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="322">        <span class="k">return</span> <span class="kc">True</span></div>
 
-</span><span data-line="322">
+</span><span data-line="323">
 <div class="viewcode-block" id="NullCamera.area_2_empty">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.area_2_empty">[docs]</a>
-</span><span data-line="323">    <span class="k">def</span><span class="w"> </span><span class="nf">area_2_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="324"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 2 is empty.</span>
-</span><span data-line="325">
-</span><span data-line="326"><span class="sd">        Returns:</span>
-</span><span data-line="327"><span class="sd">            bool: True if empty.</span>
-</span><span data-line="328"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="329">        <span class="k">return</span> <span class="kc">True</span></div>
+</span><span data-line="324">    <span class="k">def</span><span class="w"> </span><span class="nf">area_2_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="325"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 2 is empty.</span>
+</span><span data-line="326">
+</span><span data-line="327"><span class="sd">        Returns:</span>
+</span><span data-line="328"><span class="sd">            bool: True if empty.</span>
+</span><span data-line="329"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="330">        <span class="k">return</span> <span class="kc">True</span></div>
 
-</span><span data-line="330">
+</span><span data-line="331">
 <div class="viewcode-block" id="NullCamera.area_3_empty">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.area_3_empty">[docs]</a>
-</span><span data-line="331">    <span class="k">def</span><span class="w"> </span><span class="nf">area_3_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="332"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 3 is empty.</span>
-</span><span data-line="333">
-</span><span data-line="334"><span class="sd">        Returns:</span>
-</span><span data-line="335"><span class="sd">            bool: True if empty.</span>
-</span><span data-line="336"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="337">        <span class="k">return</span> <span class="kc">True</span></div>
+</span><span data-line="332">    <span class="k">def</span><span class="w"> </span><span class="nf">area_3_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="333"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 3 is empty.</span>
+</span><span data-line="334">
+</span><span data-line="335"><span class="sd">        Returns:</span>
+</span><span data-line="336"><span class="sd">            bool: True if empty.</span>
+</span><span data-line="337"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="338">        <span class="k">return</span> <span class="kc">True</span></div>
 
-</span><span data-line="338">
+</span><span data-line="339">
 <div class="viewcode-block" id="NullCamera.area_4_empty">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.area_4_empty">[docs]</a>
-</span><span data-line="339">    <span class="k">def</span><span class="w"> </span><span class="nf">area_4_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="340"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 4 is empty.</span>
-</span><span data-line="341">
-</span><span data-line="342"><span class="sd">        Returns:</span>
-</span><span data-line="343"><span class="sd">            bool: True if empty.</span>
-</span><span data-line="344"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="345">        <span class="k">return</span> <span class="kc">True</span></div>
+</span><span data-line="340">    <span class="k">def</span><span class="w"> </span><span class="nf">area_4_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="341"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if area 4 is empty.</span>
+</span><span data-line="342">
+</span><span data-line="343"><span class="sd">        Returns:</span>
+</span><span data-line="344"><span class="sd">            bool: True if empty.</span>
+</span><span data-line="345"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="346">        <span class="k">return</span> <span class="kc">True</span></div>
 
-</span><span data-line="346">
+</span><span data-line="347">
 <div class="viewcode-block" id="NullCamera.take_picture">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullCamera.html#village.classes.null_classes.NullCamera.take_picture">[docs]</a>
-</span><span data-line="347">    <span class="k">def</span><span class="w"> </span><span class="nf">take_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="348"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes a picture.&quot;&quot;&quot;</span>
-</span><span data-line="349">        <span class="k">return</span></div>
+</span><span data-line="348">    <span class="k">def</span><span class="w"> </span><span class="nf">take_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="349"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes a picture.&quot;&quot;&quot;</span>
+</span><span data-line="350">        <span class="k">return</span></div>
 </div>
 
-</span><span data-line="350">
 </span><span data-line="351">
-</span><span data-line="352"><span class="k">class</span><span class="w"> </span><span class="nc">NullBehaviorWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
-</span><span data-line="353">    <span class="n">background_color</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="354">
-</span><span data-line="355">    <span class="k">def</span><span class="w"> </span><span class="nf">start_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="356"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the drawing mode.&quot;&quot;&quot;</span>
-</span><span data-line="357">        <span class="k">return</span>
-</span><span data-line="358">
-</span><span data-line="359">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="360"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the drawing mode.&quot;&quot;&quot;</span>
-</span><span data-line="361">        <span class="k">return</span>
-</span><span data-line="362">
-</span><span data-line="363">    <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_function</span><span class="p">(</span>
-</span><span data-line="364">        <span class="bp">self</span><span class="p">,</span>
-</span><span data-line="365">        <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
-</span><span data-line="366">        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="367">        <span class="n">video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="368">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="369"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a drawing function and media.</span>
-</span><span data-line="370">
-</span><span data-line="371"><span class="sd">        Args:</span>
-</span><span data-line="372"><span class="sd">            draw_fn (Optional[Callable]): The drawing function.</span>
-</span><span data-line="373"><span class="sd">            image (str | None): Image path.</span>
-</span><span data-line="374"><span class="sd">            video (str | None): Video path.</span>
-</span><span data-line="375"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="376">        <span class="k">return</span>
-</span><span data-line="377">
-</span><span data-line="378">    <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="379"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an image.</span>
-</span><span data-line="380">
-</span><span data-line="381"><span class="sd">        Args:</span>
-</span><span data-line="382"><span class="sd">            file (str): The file path.</span>
-</span><span data-line="383"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="384">        <span class="k">return</span>
-</span><span data-line="385">
-</span><span data-line="386">    <span class="k">def</span><span class="w"> </span><span class="nf">load_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="387"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a video.</span>
-</span><span data-line="388">
-</span><span data-line="389"><span class="sd">        Args:</span>
-</span><span data-line="390"><span class="sd">            file (str): The file path.</span>
-</span><span data-line="391"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="392">        <span class="k">return</span>
-</span><span data-line="393">
-</span><span data-line="394">    <span class="k">def</span><span class="w"> </span><span class="nf">get_video_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
-</span><span data-line="395"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current video frame.</span>
-</span><span data-line="396">
-</span><span data-line="397"><span class="sd">        Returns:</span>
-</span><span data-line="398"><span class="sd">            Optional[QImage]: The current frame as a QImage.</span>
-</span><span data-line="399"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="400">        <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="401">
+</span><span data-line="352">
+</span><span data-line="353"><span class="k">class</span><span class="w"> </span><span class="nc">NullBehaviorWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+</span><span data-line="354">    <span class="n">background_color</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="355">
+</span><span data-line="356">    <span class="k">def</span><span class="w"> </span><span class="nf">start_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="357"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the drawing mode.&quot;&quot;&quot;</span>
+</span><span data-line="358">        <span class="k">return</span>
+</span><span data-line="359">
+</span><span data-line="360">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="361"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the drawing mode.&quot;&quot;&quot;</span>
+</span><span data-line="362">        <span class="k">return</span>
+</span><span data-line="363">
+</span><span data-line="364">    <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_function</span><span class="p">(</span>
+</span><span data-line="365">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="366">        <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
+</span><span data-line="367">        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="368">        <span class="n">video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="369">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="370"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a drawing function and media.</span>
+</span><span data-line="371">
+</span><span data-line="372"><span class="sd">        Args:</span>
+</span><span data-line="373"><span class="sd">            draw_fn (Optional[Callable]): The drawing function.</span>
+</span><span data-line="374"><span class="sd">            image (str | None): Image path.</span>
+</span><span data-line="375"><span class="sd">            video (str | None): Video path.</span>
+</span><span data-line="376"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="377">        <span class="k">return</span>
+</span><span data-line="378">
+</span><span data-line="379">    <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="380"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an image.</span>
+</span><span data-line="381">
+</span><span data-line="382"><span class="sd">        Args:</span>
+</span><span data-line="383"><span class="sd">            file (str): The file path.</span>
+</span><span data-line="384"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="385">        <span class="k">return</span>
+</span><span data-line="386">
+</span><span data-line="387">    <span class="k">def</span><span class="w"> </span><span class="nf">load_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="388"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a video.</span>
+</span><span data-line="389">
+</span><span data-line="390"><span class="sd">        Args:</span>
+</span><span data-line="391"><span class="sd">            file (str): The file path.</span>
+</span><span data-line="392"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="393">        <span class="k">return</span>
+</span><span data-line="394">
+</span><span data-line="395">    <span class="k">def</span><span class="w"> </span><span class="nf">get_video_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
+</span><span data-line="396"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current video frame.</span>
+</span><span data-line="397">
+</span><span data-line="398"><span class="sd">        Returns:</span>
+</span><span data-line="399"><span class="sd">            Optional[QImage]: The current frame as a QImage.</span>
+</span><span data-line="400"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="401">        <span class="k">return</span> <span class="kc">None</span>
 </span><span data-line="402">
+</span><span data-line="403">
 <div class="viewcode-block" id="LEDStripBase">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.LEDStripBase.html#village.classes.null_classes.LEDStripBase">[docs]</a>
-</span><span data-line="403"><span class="k">class</span><span class="w"> </span><span class="nc">LEDStripBase</span><span class="p">:</span>
-</span><span data-line="404"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for LED strip&quot;&quot;&quot;</span>
-</span><span data-line="405">
-</span><span data-line="406">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;LED strip not available.&quot;</span>
-</span><span data-line="407">    <span class="n">num_leds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-</span><span data-line="408">
+</span><span data-line="404"><span class="k">class</span><span class="w"> </span><span class="nc">LEDStripBase</span><span class="p">:</span>
+</span><span data-line="405"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for LED strip&quot;&quot;&quot;</span>
+</span><span data-line="406">
+</span><span data-line="407">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;LED strip not available.&quot;</span>
+</span><span data-line="408">    <span class="n">num_leds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span data-line="409">
 <div class="viewcode-block" id="LEDStripBase.set_led_color">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.LEDStripBase.html#village.classes.null_classes.LEDStripBase.set_led_color">[docs]</a>
-</span><span data-line="409">    <span class="k">def</span><span class="w"> </span><span class="nf">set_led_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">red</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="410"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the color of a specific LED&quot;&quot;&quot;</span>
-</span><span data-line="411">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dummy LED </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> changed to </span><span class="si">{</span><span class="p">(</span><span class="n">red</span><span class="p">,</span><span class="w"> </span><span class="n">green</span><span class="p">,</span><span class="w"> </span><span class="n">blue</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</span><span data-line="410">    <span class="k">def</span><span class="w"> </span><span class="nf">set_led_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">red</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="411"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the color of a specific LED&quot;&quot;&quot;</span>
+</span><span data-line="412">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dummy LED </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> changed to </span><span class="si">{</span><span class="p">(</span><span class="n">red</span><span class="p">,</span><span class="w"> </span><span class="n">green</span><span class="p">,</span><span class="w"> </span><span class="n">blue</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="412">
+</span><span data-line="413">
 <div class="viewcode-block" id="LEDStripBase.update_strip">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.LEDStripBase.html#village.classes.null_classes.LEDStripBase.update_strip">[docs]</a>
-</span><span data-line="413">    <span class="k">def</span><span class="w"> </span><span class="nf">update_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="414"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the LED strip to show changes&quot;&quot;&quot;</span>
-</span><span data-line="415">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip updated&quot;</span><span class="p">)</span></div>
+</span><span data-line="414">    <span class="k">def</span><span class="w"> </span><span class="nf">update_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="415"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the LED strip to show changes&quot;&quot;&quot;</span>
+</span><span data-line="416">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip updated&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="416">
+</span><span data-line="417">
 <div class="viewcode-block" id="LEDStripBase.clear_strip">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.LEDStripBase.html#village.classes.null_classes.LEDStripBase.clear_strip">[docs]</a>
-</span><span data-line="417">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="418"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all LEDs&quot;&quot;&quot;</span>
-</span><span data-line="419">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip cleared&quot;</span><span class="p">)</span></div>
+</span><span data-line="418">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="419"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all LEDs&quot;&quot;&quot;</span>
+</span><span data-line="420">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip cleared&quot;</span><span class="p">)</span></div>
 </div>
 
 </span></pre></div>
@@ -1053,7 +1054,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=8a47411d"></script>
+      <script src="../../../_static/documentation_options.js?v=338b7be9"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

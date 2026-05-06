@@ -444,17 +444,17 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
 </span><span data-line="7">
 </span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.after_session_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AfterSessionBase</span>
-</span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraTriggerBase</span>
-</span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.change_cycle_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChangeCycleBase</span>
-</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.online_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnlinePlotBase</span>
-</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.session_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionPlotBase</span>
-</span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.subject_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubjectPlotBase</span>
-</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
-</span><span data-line="15"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.training_protocol_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingProtocolBase</span>
-</span><span data-line="16"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
-</span><span data-line="17"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
-</span><span data-line="18"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.auto_no_mouse_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoNoMouse_Base</span>
-</span><span data-line="19"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_draw_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraDrawBase</span>
+</span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.auto_no_mouse_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoNoMouse_Base</span>
+</span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_draw_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraDrawBase</span>
+</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraTriggerBase</span>
+</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.change_cycle_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChangeCycleBase</span>
+</span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.online_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnlinePlotBase</span>
+</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.session_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionPlotBase</span>
+</span><span data-line="15"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.subject_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubjectPlotBase</span>
+</span><span data-line="16"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
+</span><span data-line="17"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.training_protocol_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingProtocolBase</span>
+</span><span data-line="18"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+</span><span data-line="19"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 </span><span data-line="20">
 </span><span data-line="21">
 <div class="viewcode-block" id="import_all">
@@ -472,185 +472,182 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="32">    <span class="n">after_session_found</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span data-line="33">    <span class="n">change_cycle_found</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span data-line="34">    <span class="n">camera_trigger_found</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="35">    <span class="n">training_correct</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="36">    <span class="n">session_plot_correct</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="37">    <span class="n">subject_plot_correct</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="38">    <span class="n">online_plot_correct</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="39">    <span class="n">after_session_correct</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="40">    <span class="n">change_cycle_correct</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="41">    <span class="n">camera_trigger_correct</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="42">    <span class="n">functions_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="43">    <span class="n">sound_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="44">
-</span><span data-line="45">    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
-</span><span data-line="46">        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-</span><span data-line="47">            <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="s2">&quot;softcode_functions.py&quot;</span><span class="p">:</span>
-</span><span data-line="48">                <span class="n">functions_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-</span><span data-line="49">            <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="s2">&quot;sound_functions.py&quot;</span><span class="p">:</span>
-</span><span data-line="50">                <span class="n">sound_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-</span><span data-line="51">            <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
-</span><span data-line="52">                <span class="n">python_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
-</span><span data-line="53">
-</span><span data-line="54">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">functions_path</span><span class="p">):</span>
-</span><span data-line="55">        <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;custom_module&quot;</span>
-</span><span data-line="56">        <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">functions_path</span><span class="p">)</span>
-</span><span data-line="57">        <span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="p">:</span>
-</span><span data-line="58">            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
-</span><span data-line="59">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="60">                <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
-</span><span data-line="61">                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
-</span><span data-line="62">                    <span class="n">func_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;function</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span data-line="63">                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">func_name</span><span class="p">):</span>
-</span><span data-line="64">                        <span class="n">manager</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
-</span><span data-line="65">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="66">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="67">                    <span class="s2">&quot;Couldn&#39;t import softcode functions&quot;</span><span class="p">,</span>
-</span><span data-line="68">                    <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
-</span><span data-line="69">                <span class="p">)</span>
-</span><span data-line="70">
-</span><span data-line="71">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sound_path</span><span class="p">):</span>
-</span><span data-line="72">        <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;custom_module2&quot;</span>
-</span><span data-line="73">        <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">sound_path</span><span class="p">)</span>
-</span><span data-line="74">        <span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="p">:</span>
-</span><span data-line="75">            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
-</span><span data-line="76">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="77">                <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
-</span><span data-line="78">                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;sound_calibration_functions&quot;</span><span class="p">):</span>
-</span><span data-line="79">                    <span class="n">manager</span><span class="o">.</span><span class="n">sound_calibration_functions</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
-</span><span data-line="80">                        <span class="n">module</span><span class="p">,</span> <span class="s2">&quot;sound_calibration_functions&quot;</span>
-</span><span data-line="81">                    <span class="p">)</span>
-</span><span data-line="82">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="83">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="84">                    <span class="s2">&quot;Couldn&#39;t import sound calibration functions&quot;</span><span class="p">,</span>
-</span><span data-line="85">                    <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
-</span><span data-line="86">                <span class="p">)</span>
-</span><span data-line="87">
-</span><span data-line="88">    <span class="k">for</span> <span class="n">python_file</span> <span class="ow">in</span> <span class="n">python_files</span><span class="p">:</span>
-</span><span data-line="89">        <span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">python_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
-</span><span data-line="90">        <span class="n">module_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">relative_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="91">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="92">            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
-</span><span data-line="93">            <span class="n">clsmembers</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">)</span>
-</span><span data-line="94">            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">clsmembers</span><span class="p">:</span>
-</span><span data-line="95">                <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">!=</span> <span class="n">module_name</span><span class="p">:</span>
-</span><span data-line="96">                    <span class="k">continue</span>
-</span><span data-line="97">
-</span><span data-line="98">                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">Task</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">Task</span><span class="p">:</span>
-</span><span data-line="99">                    <span class="n">name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
-</span><span data-line="100">                    <span class="n">_</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="101">                    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
-</span><span data-line="102">                        <span class="n">tasks</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
-</span><span data-line="103">                <span class="k">elif</span> <span class="p">(</span>
-</span><span data-line="104">                    <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">TrainingProtocolBase</span><span class="p">)</span>
-</span><span data-line="105">                    <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">TrainingProtocolBase</span>
-</span><span data-line="106">                <span class="p">):</span>
-</span><span data-line="107">                    <span class="n">training_found</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="108">                    <span class="k">if</span> <span class="n">training_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="109">                        <span class="n">t</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="110">                        <span class="n">t</span><span class="o">.</span><span class="n">copy_settings</span><span class="p">()</span>
-</span><span data-line="111">                        <span class="n">manager</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="n">t</span>
-</span><span data-line="112">                        <span class="n">training_correct</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="113">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">SessionPlotBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">SessionPlotBase</span><span class="p">:</span>
-</span><span data-line="114">                    <span class="n">session_plot_found</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="115">                    <span class="k">if</span> <span class="n">session_plot_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="116">                        <span class="n">p</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="117">                        <span class="n">manager</span><span class="o">.</span><span class="n">session_plot</span> <span class="o">=</span> <span class="n">p</span>
-</span><span data-line="118">                        <span class="n">session_plot_correct</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="119">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">SubjectPlotBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">SubjectPlotBase</span><span class="p">:</span>
-</span><span data-line="120">                    <span class="n">subject_plot_found</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="121">                    <span class="k">if</span> <span class="n">subject_plot_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="122">                        <span class="n">s</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="123">                        <span class="n">manager</span><span class="o">.</span><span class="n">subject_plot</span> <span class="o">=</span> <span class="n">s</span>
-</span><span data-line="124">                        <span class="n">subject_plot_correct</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="125">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">OnlinePlotBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">OnlinePlotBase</span><span class="p">:</span>
-</span><span data-line="126">                    <span class="n">online_plot_found</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="127">                    <span class="k">if</span> <span class="n">online_plot_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="128">                        <span class="n">o</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="129">                        <span class="n">manager</span><span class="o">.</span><span class="n">online_plot</span> <span class="o">=</span> <span class="n">o</span>
-</span><span data-line="130">                        <span class="n">online_plot_correct</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="131">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">AfterSessionBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">AfterSessionBase</span><span class="p">:</span>
-</span><span data-line="132">                    <span class="n">after_session_found</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="133">                    <span class="k">if</span> <span class="n">after_session_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="134">                        <span class="n">a</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="135">                        <span class="n">manager</span><span class="o">.</span><span class="n">after_session</span> <span class="o">=</span> <span class="n">a</span>
-</span><span data-line="136">                        <span class="n">after_session_correct</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="137">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ChangeCycleBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">ChangeCycleBase</span><span class="p">:</span>
-</span><span data-line="138">                    <span class="n">change_cycle_found</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="139">                    <span class="k">if</span> <span class="n">change_cycle_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="140">                        <span class="n">y</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="141">                        <span class="n">manager</span><span class="o">.</span><span class="n">change_cycle</span> <span class="o">=</span> <span class="n">y</span>
-</span><span data-line="142">                        <span class="n">change_cycle_correct</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="143">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">CameraTriggerBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">CameraTriggerBase</span><span class="p">:</span>
-</span><span data-line="144">                    <span class="n">camera_trigger_found</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="145">                    <span class="k">if</span> <span class="n">camera_trigger_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="146">                        <span class="n">z</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="147">                        <span class="n">manager</span><span class="o">.</span><span class="n">camera_trigger</span> <span class="o">=</span> <span class="n">z</span>
-</span><span data-line="148">                        <span class="n">camera_trigger_correct</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="149">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">CameraDrawBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">CameraDrawBase</span><span class="p">:</span>
-</span><span data-line="150">                        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;draw&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;draw&quot;</span><span class="p">)):</span>
-</span><span data-line="151">                            <span class="n">c</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-</span><span data-line="152">                            <span class="n">manager</span><span class="o">.</span><span class="n">camera_draw</span> <span class="o">=</span> <span class="n">c</span>
-</span><span data-line="153">                <span class="k">elif</span> <span class="p">(</span>
-</span><span data-line="154">                    <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">AutoNoMouse_Base</span><span class="p">)</span>
-</span><span data-line="155">                    <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">AutoNoMouse_Base</span>
-</span><span data-line="156">                <span class="p">):</span>
-</span><span data-line="157">                    <span class="n">manager</span><span class="o">.</span><span class="n">auto_no_mouse</span> <span class="o">=</span> <span class="bp">cls</span>
-</span><span data-line="158">
-</span><span data-line="159">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="160">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="161">                <span class="s2">&quot;Couldn&#39;t import &quot;</span> <span class="o">+</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
-</span><span data-line="162">            <span class="p">)</span>
-</span><span data-line="163">            <span class="k">continue</span>
-</span><span data-line="164">    <span class="k">if</span> <span class="n">training_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="165">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Training protocol not found&quot;</span><span class="p">)</span>
-</span><span data-line="166">    <span class="k">elif</span> <span class="n">training_found</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">training_correct</span><span class="p">:</span>
-</span><span data-line="167">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Training protocol successfully imported&quot;</span><span class="p">)</span>
-</span><span data-line="168">    <span class="k">elif</span> <span class="n">training_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="169">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple training protocols found&quot;</span><span class="p">)</span>
-</span><span data-line="170">    <span class="k">if</span> <span class="n">session_plot_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="171">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Session plot not found, using default&quot;</span><span class="p">)</span>
-</span><span data-line="172">    <span class="k">elif</span> <span class="n">session_plot_found</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">session_plot_correct</span><span class="p">:</span>
-</span><span data-line="173">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Session plot successfully imported&quot;</span><span class="p">)</span>
-</span><span data-line="174">    <span class="k">elif</span> <span class="n">session_plot_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="175">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple session plots found&quot;</span><span class="p">)</span>
-</span><span data-line="176">    <span class="k">if</span> <span class="n">subject_plot_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="177">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Subject plot not found, using default&quot;</span><span class="p">)</span>
-</span><span data-line="178">    <span class="k">elif</span> <span class="n">subject_plot_found</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">subject_plot_correct</span><span class="p">:</span>
-</span><span data-line="179">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Subject plot successfully imported&quot;</span><span class="p">)</span>
-</span><span data-line="180">    <span class="k">elif</span> <span class="n">subject_plot_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="181">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple subject plots found&quot;</span><span class="p">)</span>
-</span><span data-line="182">    <span class="k">if</span> <span class="n">online_plot_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="183">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Online plot not found, using default&quot;</span><span class="p">)</span>
-</span><span data-line="184">    <span class="k">elif</span> <span class="n">online_plot_found</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">online_plot_correct</span><span class="p">:</span>
-</span><span data-line="185">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Online plot successfully imported&quot;</span><span class="p">)</span>
-</span><span data-line="186">    <span class="k">elif</span> <span class="n">online_plot_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="187">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple online plots found&quot;</span><span class="p">)</span>
-</span><span data-line="188">    <span class="k">if</span> <span class="n">after_session_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="189">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom After Session Run not found, using default&quot;</span><span class="p">)</span>
-</span><span data-line="190">    <span class="k">elif</span> <span class="n">after_session_found</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">after_session_correct</span><span class="p">:</span>
-</span><span data-line="191">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom After Session Run successfully imported&quot;</span><span class="p">)</span>
-</span><span data-line="192">    <span class="k">elif</span> <span class="n">after_session_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="193">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple After Session Run found&quot;</span><span class="p">)</span>
-</span><span data-line="194">    <span class="k">if</span> <span class="n">change_cycle_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="195">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Change Cycle Run not found, using default&quot;</span><span class="p">)</span>
-</span><span data-line="196">    <span class="k">elif</span> <span class="n">change_cycle_found</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">change_cycle_correct</span><span class="p">:</span>
-</span><span data-line="197">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Change Cycle Run successfully imported&quot;</span><span class="p">)</span>
-</span><span data-line="198">    <span class="k">elif</span> <span class="n">change_cycle_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="199">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple Change Cycle Run found&quot;</span><span class="p">)</span>
-</span><span data-line="200">    <span class="k">if</span> <span class="n">camera_trigger_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="201">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Camera Trigger not found, using default&quot;</span><span class="p">)</span>
-</span><span data-line="202">    <span class="k">elif</span> <span class="n">camera_trigger_found</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">camera_trigger_correct</span><span class="p">:</span>
-</span><span data-line="203">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom Camera Trigger successfully imported&quot;</span><span class="p">)</span>
-</span><span data-line="204">    <span class="k">elif</span> <span class="n">camera_trigger_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="205">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple Camera Trigger found&quot;</span><span class="p">)</span>
-</span><span data-line="206">    <span class="n">manager</span><span class="o">.</span><span class="n">tasks</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">tasks</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
-</span><span data-line="207">    <span class="n">number_of_tasks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
-</span><span data-line="208">    <span class="k">if</span> <span class="n">number_of_tasks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="209">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No tasks could be imported&quot;</span><span class="p">)</span>
-</span><span data-line="210">    <span class="k">elif</span> <span class="n">number_of_tasks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="211">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;1 task successfully imported&quot;</span><span class="p">)</span>
-</span><span data-line="212">    <span class="k">else</span><span class="p">:</span>
-</span><span data-line="213">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">number_of_tasks</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; tasks successfully imported&quot;</span><span class="p">)</span></div>
+</span><span data-line="35">    <span class="n">camera_draw_found</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="36">    <span class="n">auto_no_mouse_found</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="37">    <span class="n">training_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="38">    <span class="n">session_plot_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="39">    <span class="n">subject_plot_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="40">    <span class="n">online_plot_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="41">    <span class="n">after_session_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="42">    <span class="n">change_cycle_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="43">    <span class="n">camera_trigger_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="44">    <span class="n">camera_draw_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="45">    <span class="n">auto_no_mouse_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="46">    <span class="n">functions_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="47">    <span class="n">sound_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="48">
+</span><span data-line="49">    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+</span><span data-line="50">        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+</span><span data-line="51">            <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="s2">&quot;softcode_functions.py&quot;</span><span class="p">:</span>
+</span><span data-line="52">                <span class="n">functions_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+</span><span data-line="53">            <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="s2">&quot;sound_functions.py&quot;</span><span class="p">:</span>
+</span><span data-line="54">                <span class="n">sound_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+</span><span data-line="55">            <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
+</span><span data-line="56">                <span class="n">python_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+</span><span data-line="57">
+</span><span data-line="58">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">functions_path</span><span class="p">):</span>
+</span><span data-line="59">        <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;custom_module&quot;</span>
+</span><span data-line="60">        <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">functions_path</span><span class="p">)</span>
+</span><span data-line="61">        <span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="p">:</span>
+</span><span data-line="62">            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+</span><span data-line="63">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="64">                <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+</span><span data-line="65">                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
+</span><span data-line="66">                    <span class="n">func_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;function</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span data-line="67">                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">func_name</span><span class="p">):</span>
+</span><span data-line="68">                        <span class="n">manager</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
+</span><span data-line="69">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="70">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="71">                    <span class="s2">&quot;Couldn&#39;t import softcode functions&quot;</span><span class="p">,</span>
+</span><span data-line="72">                    <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
+</span><span data-line="73">                <span class="p">)</span>
+</span><span data-line="74">
+</span><span data-line="75">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sound_path</span><span class="p">):</span>
+</span><span data-line="76">        <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;custom_module2&quot;</span>
+</span><span data-line="77">        <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">sound_path</span><span class="p">)</span>
+</span><span data-line="78">        <span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="p">:</span>
+</span><span data-line="79">            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+</span><span data-line="80">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="81">                <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+</span><span data-line="82">                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;sound_calibration_functions&quot;</span><span class="p">):</span>
+</span><span data-line="83">                    <span class="n">manager</span><span class="o">.</span><span class="n">sound_calibration_functions</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+</span><span data-line="84">                        <span class="n">module</span><span class="p">,</span> <span class="s2">&quot;sound_calibration_functions&quot;</span>
+</span><span data-line="85">                    <span class="p">)</span>
+</span><span data-line="86">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="87">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="88">                    <span class="s2">&quot;Couldn&#39;t import sound calibration functions&quot;</span><span class="p">,</span>
+</span><span data-line="89">                    <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
+</span><span data-line="90">                <span class="p">)</span>
+</span><span data-line="91">
+</span><span data-line="92">    <span class="k">for</span> <span class="n">python_file</span> <span class="ow">in</span> <span class="n">python_files</span><span class="p">:</span>
+</span><span data-line="93">        <span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">python_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+</span><span data-line="94">        <span class="n">module_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">relative_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="95">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="96">            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+</span><span data-line="97">            <span class="n">clsmembers</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">)</span>
+</span><span data-line="98">            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">clsmembers</span><span class="p">:</span>
+</span><span data-line="99">                <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">!=</span> <span class="n">module_name</span><span class="p">:</span>
+</span><span data-line="100">                    <span class="k">continue</span>
+</span><span data-line="101">
+</span><span data-line="102">                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">Task</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">Task</span><span class="p">:</span>
+</span><span data-line="103">                    <span class="n">name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+</span><span data-line="104">                    <span class="n">_</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="105">                    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+</span><span data-line="106">                        <span class="n">tasks</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
+</span><span data-line="107">                <span class="k">elif</span> <span class="p">(</span>
+</span><span data-line="108">                    <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">TrainingProtocolBase</span><span class="p">)</span>
+</span><span data-line="109">                    <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">TrainingProtocolBase</span>
+</span><span data-line="110">                <span class="p">):</span>
+</span><span data-line="111">                    <span class="n">training_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="112">                    <span class="k">if</span> <span class="n">training_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="113">                        <span class="n">t</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="114">                        <span class="n">t</span><span class="o">.</span><span class="n">copy_settings</span><span class="p">()</span>
+</span><span data-line="115">                        <span class="n">manager</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="n">t</span>
+</span><span data-line="116">                        <span class="n">training_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="117">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">SessionPlotBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">SessionPlotBase</span><span class="p">:</span>
+</span><span data-line="118">                    <span class="n">session_plot_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="119">                    <span class="k">if</span> <span class="n">session_plot_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="120">                        <span class="n">p</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="121">                        <span class="n">manager</span><span class="o">.</span><span class="n">session_plot</span> <span class="o">=</span> <span class="n">p</span>
+</span><span data-line="122">                        <span class="n">session_plot_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="123">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">SubjectPlotBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">SubjectPlotBase</span><span class="p">:</span>
+</span><span data-line="124">                    <span class="n">subject_plot_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="125">                    <span class="k">if</span> <span class="n">subject_plot_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="126">                        <span class="n">s</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="127">                        <span class="n">manager</span><span class="o">.</span><span class="n">subject_plot</span> <span class="o">=</span> <span class="n">s</span>
+</span><span data-line="128">                        <span class="n">subject_plot_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="129">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">OnlinePlotBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">OnlinePlotBase</span><span class="p">:</span>
+</span><span data-line="130">                    <span class="n">online_plot_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="131">                    <span class="k">if</span> <span class="n">online_plot_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="132">                        <span class="n">o</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="133">                        <span class="n">manager</span><span class="o">.</span><span class="n">online_plot</span> <span class="o">=</span> <span class="n">o</span>
+</span><span data-line="134">                        <span class="n">online_plot_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="135">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">AfterSessionBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">AfterSessionBase</span><span class="p">:</span>
+</span><span data-line="136">                    <span class="n">after_session_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="137">                    <span class="k">if</span> <span class="n">after_session_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="138">                        <span class="n">a</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="139">                        <span class="n">manager</span><span class="o">.</span><span class="n">after_session</span> <span class="o">=</span> <span class="n">a</span>
+</span><span data-line="140">                        <span class="n">after_session_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="141">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ChangeCycleBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">ChangeCycleBase</span><span class="p">:</span>
+</span><span data-line="142">                    <span class="n">change_cycle_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="143">                    <span class="k">if</span> <span class="n">change_cycle_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="144">                        <span class="n">y</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="145">                        <span class="n">manager</span><span class="o">.</span><span class="n">change_cycle</span> <span class="o">=</span> <span class="n">y</span>
+</span><span data-line="146">                        <span class="n">change_cycle_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="147">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">CameraTriggerBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">CameraTriggerBase</span><span class="p">:</span>
+</span><span data-line="148">                    <span class="n">camera_trigger_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="149">                    <span class="k">if</span> <span class="n">camera_trigger_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="150">                        <span class="n">z</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="151">                        <span class="n">manager</span><span class="o">.</span><span class="n">camera_trigger</span> <span class="o">=</span> <span class="n">z</span>
+</span><span data-line="152">                        <span class="n">camera_trigger_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="153">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">CameraDrawBase</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">CameraDrawBase</span><span class="p">:</span>
+</span><span data-line="154">                    <span class="n">camera_draw_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="155">                    <span class="k">if</span> <span class="n">camera_draw_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="156">                        <span class="n">c</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="157">                        <span class="n">manager</span><span class="o">.</span><span class="n">camera_draw</span> <span class="o">=</span> <span class="n">c</span>
+</span><span data-line="158">                        <span class="n">camera_draw_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="159">                <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">AutoNoMouse_Base</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span> <span class="o">!=</span> <span class="n">AutoNoMouse_Base</span><span class="p">:</span>
+</span><span data-line="160">                    <span class="n">auto_no_mouse_found</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="161">                    <span class="k">if</span> <span class="n">auto_no_mouse_found</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="162">                        <span class="n">d</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+</span><span data-line="163">                        <span class="n">manager</span><span class="o">.</span><span class="n">auto_no_mouse</span> <span class="o">=</span> <span class="n">d</span>
+</span><span data-line="164">                        <span class="n">auto_no_mouse_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="165">
+</span><span data-line="166">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="167">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="168">                <span class="s2">&quot;Couldn&#39;t import &quot;</span> <span class="o">+</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+</span><span data-line="169">            <span class="p">)</span>
+</span><span data-line="170">            <span class="k">continue</span>
+</span><span data-line="171">    <span class="k">if</span> <span class="n">training_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="172">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Training protocol not found&quot;</span><span class="p">)</span>
+</span><span data-line="173">    <span class="k">elif</span> <span class="n">training_found</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">training_correct</span><span class="p">:</span>
+</span><span data-line="174">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Training protocol successfully imported&quot;</span><span class="p">)</span>
+</span><span data-line="175">    <span class="k">elif</span> <span class="n">training_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="176">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple training protocols found&quot;</span><span class="p">)</span>
+</span><span data-line="177">
+</span><span data-line="178">    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="179">        <span class="p">(</span><span class="s2">&quot;Session plot&quot;</span><span class="p">,</span> <span class="n">session_plot_found</span><span class="p">,</span> <span class="n">session_plot_correct</span><span class="p">),</span>
+</span><span data-line="180">        <span class="p">(</span><span class="s2">&quot;Subject plot&quot;</span><span class="p">,</span> <span class="n">subject_plot_found</span><span class="p">,</span> <span class="n">subject_plot_correct</span><span class="p">),</span>
+</span><span data-line="181">        <span class="p">(</span><span class="s2">&quot;Online plot&quot;</span><span class="p">,</span> <span class="n">online_plot_found</span><span class="p">,</span> <span class="n">online_plot_correct</span><span class="p">),</span>
+</span><span data-line="182">        <span class="p">(</span><span class="s2">&quot;After Session Run&quot;</span><span class="p">,</span> <span class="n">after_session_found</span><span class="p">,</span> <span class="n">after_session_correct</span><span class="p">),</span>
+</span><span data-line="183">        <span class="p">(</span><span class="s2">&quot;Change Cycle Run&quot;</span><span class="p">,</span> <span class="n">change_cycle_found</span><span class="p">,</span> <span class="n">change_cycle_correct</span><span class="p">),</span>
+</span><span data-line="184">        <span class="p">(</span><span class="s2">&quot;Camera Trigger&quot;</span><span class="p">,</span> <span class="n">camera_trigger_found</span><span class="p">,</span> <span class="n">camera_trigger_correct</span><span class="p">),</span>
+</span><span data-line="185">        <span class="p">(</span><span class="s2">&quot;Camera Draw&quot;</span><span class="p">,</span> <span class="n">camera_draw_found</span><span class="p">,</span> <span class="n">camera_draw_correct</span><span class="p">),</span>
+</span><span data-line="186">        <span class="p">(</span><span class="s2">&quot;Auto No Mouse&quot;</span><span class="p">,</span> <span class="n">auto_no_mouse_found</span><span class="p">,</span> <span class="n">auto_no_mouse_correct</span><span class="p">),</span>
+</span><span data-line="187">    <span class="p">]</span>
+</span><span data-line="188">
+</span><span data-line="189">    <span class="n">defaults</span><span class="p">,</span> <span class="n">customs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+</span><span data-line="190">    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">found</span><span class="p">,</span> <span class="n">correct</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+</span><span data-line="191">        <span class="k">if</span> <span class="n">found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="192">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Multiple </span><span class="si">%s</span><span class="s2"> found&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</span><span data-line="193">        <span class="k">elif</span> <span class="n">found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="194">            <span class="n">defaults</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span><span data-line="195">        <span class="k">elif</span> <span class="n">correct</span><span class="p">:</span>
+</span><span data-line="196">            <span class="n">customs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span><span data-line="197">
+</span><span data-line="198">    <span class="k">if</span> <span class="n">defaults</span><span class="p">:</span>
+</span><span data-line="199">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using default: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">defaults</span><span class="p">))</span>
+</span><span data-line="200">    <span class="k">if</span> <span class="n">customs</span><span class="p">:</span>
+</span><span data-line="201">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using custom: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">customs</span><span class="p">))</span>
+</span><span data-line="202">
+</span><span data-line="203">    <span class="n">manager</span><span class="o">.</span><span class="n">tasks</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">tasks</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+</span><span data-line="204">    <span class="n">number_of_tasks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
+</span><span data-line="205">    <span class="k">if</span> <span class="n">number_of_tasks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="206">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No tasks could be imported&quot;</span><span class="p">)</span>
+</span><span data-line="207">    <span class="k">elif</span> <span class="n">number_of_tasks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="208">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;1 task successfully imported&quot;</span><span class="p">)</span>
+</span><span data-line="209">    <span class="k">else</span><span class="p">:</span>
+</span><span data-line="210">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">number_of_tasks</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; tasks successfully imported&quot;</span><span class="p">)</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -676,7 +673,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=8a47411d"></script>
+      <script src="../../../_static/documentation_options.js?v=338b7be9"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

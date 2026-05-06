@@ -463,12 +463,12 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="25">    <span class="n">NullCamera</span><span class="p">,</span>
 </span><span data-line="26"><span class="p">)</span>
 </span><span data-line="27"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.subject</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subject</span>
-</span><span data-line="28"><span class="kn">from</span><span class="w"> </span><span class="nn">village.controllers.arduino_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArduinoController</span>
-</span><span data-line="29"><span class="kn">from</span><span class="w"> </span><span class="nn">village.controllers.bpod_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">BpodController</span>
+</span><span data-line="28"><span class="kn">from</span><span class="w"> </span><span class="nn">village.controllers.arduino_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">arduino</span>
+</span><span data-line="29"><span class="kn">from</span><span class="w"> </span><span class="nn">village.controllers.bpod_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">bpod</span>
 </span><span data-line="30"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.after_session_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AfterSessionBase</span>
 </span><span data-line="31"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.auto_no_mouse_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoNoMouse_Base</span>
-</span><span data-line="32"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraTriggerBase</span>
-</span><span data-line="33"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_draw_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraDrawBase</span>
+</span><span data-line="32"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_draw_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraDrawBase</span>
+</span><span data-line="33"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraTriggerBase</span>
 </span><span data-line="34"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.change_cycle_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChangeCycleBase</span>
 </span><span data-line="35"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.online_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnlinePlotBase</span>
 </span><span data-line="36"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.session_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionPlotBase</span>
@@ -482,106 +482,106 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="44"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 </span><span data-line="45">
 </span><span data-line="46"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-</span><span data-line="47">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraTriggerBase</span>
-</span><span data-line="48">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">Camera</span>
-</span><span data-line="49">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.screen.behavior_window</span><span class="w"> </span><span class="kn">import</span> <span class="n">BehaviorWindow</span>
+</span><span data-line="47">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">Camera</span>
+</span><span data-line="48">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.screen.behavior_window</span><span class="w"> </span><span class="kn">import</span> <span class="n">BehaviorWindow</span>
+</span><span data-line="49">
 </span><span data-line="50">
-</span><span data-line="51">
 <div class="viewcode-block" id="Manager">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager">[docs]</a>
-</span><span data-line="52"><span class="k">class</span><span class="w"> </span><span class="nc">Manager</span><span class="p">:</span>
-</span><span data-line="53"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="54"><span class="sd">    Data class manages the state and operations related to the village data.</span>
-</span><span data-line="55">
-</span><span data-line="56"><span class="sd">    Attributes:</span>
-</span><span data-line="57"><span class="sd">        subject (Subject): Instance of Subject class.</span>
-</span><span data-line="58"><span class="sd">        task (Task): Instance of Task class.</span>
-</span><span data-line="59"><span class="sd">        training (Training): Instance of Training class.</span>
-</span><span data-line="60"><span class="sd">        bpod (BpodController): Instance of BpodController class.</span>
-</span><span data-line="61"><span class="sd">        arduino (ArduinoController): Instance of ArduinoController class.</span>
-</span><span data-line="62"><span class="sd">        state (State): Current state of the system.</span>
-</span><span data-line="63"><span class="sd">        table (DataTable): Data table type.</span>
-</span><span data-line="64"><span class="sd">        rfid_reader (Active): RFID reader settings.</span>
-</span><span data-line="65"><span class="sd">        info (Info): Information settings.</span>
-</span><span data-line="66"><span class="sd">        actions (Actions): Actions settings.</span>
-</span><span data-line="67"><span class="sd">        visible_corridor_cycle (Cycle): Visible light cycle of the corridor.</span>
-</span><span data-line="68"><span class="sd">        ir_corridor_cycle (Cycle): Infrared light cycle of the corridor.</span>
-</span><span data-line="69"><span class="sd">        visible_box_cycle (Cycle): Visible light cycle of the box.</span>
-</span><span data-line="70"><span class="sd">        ir_box_cycle (Cycle): Infrared light cycle of the box.</span>
-</span><span data-line="71"><span class="sd">        cycle_text (str): Text representation of the current cycle.</span>
-</span><span data-line="72"><span class="sd">        text (str): Current system text.</span>
-</span><span data-line="73"><span class="sd">        day (bool): Indicates if it&#39;s day.</span>
-</span><span data-line="74"><span class="sd">        changing_settings (bool): Indicates if settings are being changed.</span>
-</span><span data-line="75"><span class="sd">        tasks (dict[str, type]): Dictionary of tasks.</span>
-</span><span data-line="76"><span class="sd">        errors (str): Error messages.</span>
-</span><span data-line="77"><span class="sd">        events (Collection): Collection of events.</span>
-</span><span data-line="78"><span class="sd">        sessions_summary (Collection): Collection of session summaries.</span>
-</span><span data-line="79"><span class="sd">        subjects (Collection): Collection of subjects.</span>
-</span><span data-line="80"><span class="sd">        water_calibration (Collection): Collection of water calibration data.</span>
-</span><span data-line="81"><span class="sd">        sound_calibration (Collection): Collection of sound calibration data.</span>
-</span><span data-line="82"><span class="sd">        temperatures (Collection): Collection of temperature data.</span>
-</span><span data-line="83"><span class="sd">        process (Thread): Thread for running tasks.</span>
-</span><span data-line="84"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="85">
+</span><span data-line="51"><span class="k">class</span><span class="w"> </span><span class="nc">Manager</span><span class="p">:</span>
+</span><span data-line="52"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="53"><span class="sd">    Data class manages the state and operations related to the village data.</span>
+</span><span data-line="54">
+</span><span data-line="55"><span class="sd">    Attributes:</span>
+</span><span data-line="56"><span class="sd">        subject (Subject): Instance of Subject class.</span>
+</span><span data-line="57"><span class="sd">        task (Task): Instance of Task class.</span>
+</span><span data-line="58"><span class="sd">        training (Training): Instance of Training class.</span>
+</span><span data-line="59"><span class="sd">        bpod (BpodController): Instance of BpodController class.</span>
+</span><span data-line="60"><span class="sd">        arduino (ArduinoController): Instance of ArduinoController class.</span>
+</span><span data-line="61"><span class="sd">        state (State): Current state of the system.</span>
+</span><span data-line="62"><span class="sd">        table (DataTable): Data table type.</span>
+</span><span data-line="63"><span class="sd">        rfid_reader (Active): RFID reader settings.</span>
+</span><span data-line="64"><span class="sd">        info (Info): Information settings.</span>
+</span><span data-line="65"><span class="sd">        actions (Actions): Actions settings.</span>
+</span><span data-line="66"><span class="sd">        visible_corridor_cycle (Cycle): Visible light cycle of the corridor.</span>
+</span><span data-line="67"><span class="sd">        ir_corridor_cycle (Cycle): Infrared light cycle of the corridor.</span>
+</span><span data-line="68"><span class="sd">        visible_box_cycle (Cycle): Visible light cycle of the box.</span>
+</span><span data-line="69"><span class="sd">        ir_box_cycle (Cycle): Infrared light cycle of the box.</span>
+</span><span data-line="70"><span class="sd">        cycle_text (str): Text representation of the current cycle.</span>
+</span><span data-line="71"><span class="sd">        text (str): Current system text.</span>
+</span><span data-line="72"><span class="sd">        day (bool): Indicates if it&#39;s day.</span>
+</span><span data-line="73"><span class="sd">        changing_settings (bool): Indicates if settings are being changed.</span>
+</span><span data-line="74"><span class="sd">        tasks (dict[str, type]): Dictionary of tasks.</span>
+</span><span data-line="75"><span class="sd">        errors (str): Error messages.</span>
+</span><span data-line="76"><span class="sd">        events (Collection): Collection of events.</span>
+</span><span data-line="77"><span class="sd">        sessions_summary (Collection): Collection of session summaries.</span>
+</span><span data-line="78"><span class="sd">        subjects (Collection): Collection of subjects.</span>
+</span><span data-line="79"><span class="sd">        water_calibration (Collection): Collection of water calibration data.</span>
+</span><span data-line="80"><span class="sd">        sound_calibration (Collection): Collection of sound calibration data.</span>
+</span><span data-line="81"><span class="sd">        temperatures (Collection): Collection of temperature data.</span>
+</span><span data-line="82"><span class="sd">        process (Thread): Thread for running tasks.</span>
+</span><span data-line="83"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="84">
 <div class="viewcode-block" id="Manager.__init__">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.__init__">[docs]</a>
-</span><span data-line="86">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="87"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Manager with default settings and initializes collections.&quot;&quot;&quot;</span>
-</span><span data-line="88">        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-</span><span data-line="89">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span>
-</span><span data-line="90">        <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span> <span class="n">TrainingProtocolBase</span> <span class="o">=</span> <span class="n">TrainingProtocolBase</span><span class="p">()</span>
-</span><span data-line="91">        <span class="bp">self</span><span class="o">.</span><span class="n">subject_plot</span><span class="p">:</span> <span class="n">SubjectPlotBase</span> <span class="o">=</span> <span class="n">SubjectPlotBase</span><span class="p">()</span>
-</span><span data-line="92">        <span class="bp">self</span><span class="o">.</span><span class="n">session_plot</span><span class="p">:</span> <span class="n">SessionPlotBase</span> <span class="o">=</span> <span class="n">SessionPlotBase</span><span class="p">()</span>
-</span><span data-line="93">        <span class="bp">self</span><span class="o">.</span><span class="n">online_plot</span><span class="p">:</span> <span class="n">OnlinePlotBase</span> <span class="o">=</span> <span class="n">OnlinePlotBase</span><span class="p">()</span>
-</span><span data-line="94">        <span class="bp">self</span><span class="o">.</span><span class="n">after_session</span><span class="p">:</span> <span class="n">AfterSessionBase</span> <span class="o">=</span> <span class="n">AfterSessionBase</span><span class="p">()</span>
-</span><span data-line="95">        <span class="bp">self</span><span class="o">.</span><span class="n">change_cycle</span><span class="p">:</span> <span class="n">ChangeCycleBase</span> <span class="o">=</span> <span class="n">ChangeCycleBase</span><span class="p">()</span>
-</span><span data-line="96">        <span class="bp">self</span><span class="o">.</span><span class="n">camera_trigger</span><span class="p">:</span> <span class="n">CameraTriggerBase</span> <span class="o">=</span> <span class="n">CameraTriggerBase</span><span class="p">()</span>
-</span><span data-line="97">        <span class="bp">self</span><span class="o">.</span><span class="n">camera_draw</span><span class="p">:</span> <span class="n">CameraDrawBase</span> <span class="o">=</span> <span class="n">CameraDrawBase</span><span class="p">()</span>
-</span><span data-line="98">        <span class="bp">self</span><span class="o">.</span><span class="n">auto_no_mouse</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">AutoNoMouse_Base</span>
-</span><span data-line="99">        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span> <span class="o">=</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT</span>
-</span><span data-line="100">        <span class="bp">self</span><span class="o">.</span><span class="n">previous_state_wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="101">        <span class="bp">self</span><span class="o">.</span><span class="n">calibrating</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="102">        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">:</span> <span class="n">DataTable</span> <span class="o">=</span> <span class="n">DataTable</span><span class="o">.</span><span class="n">EVENTS</span>
-</span><span data-line="103">        <span class="bp">self</span><span class="o">.</span><span class="n">rfid_reader</span><span class="p">:</span> <span class="n">Active</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RFID_READER&quot;</span><span class="p">)</span>
-</span><span data-line="104">        <span class="bp">self</span><span class="o">.</span><span class="n">visible_corridor_cycle</span><span class="p">:</span> <span class="n">Cycle</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VISIBLE_CORRIDOR&quot;</span><span class="p">)</span>
-</span><span data-line="105">        <span class="bp">self</span><span class="o">.</span><span class="n">ir_corridor_cycle</span><span class="p">:</span> <span class="n">Cycle</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IR_CORRIDOR&quot;</span><span class="p">)</span>
-</span><span data-line="106">        <span class="bp">self</span><span class="o">.</span><span class="n">visible_box_cycle</span><span class="p">:</span> <span class="n">Cycle</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VISIBLE_BOX&quot;</span><span class="p">)</span>
-</span><span data-line="107">        <span class="bp">self</span><span class="o">.</span><span class="n">ir_box_cycle</span><span class="p">:</span> <span class="n">Cycle</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IR_BOX&quot;</span><span class="p">)</span>
-</span><span data-line="108">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">:</span> <span class="n">Info</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
-</span><span data-line="109">        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span> <span class="n">Actions</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ACTIONS&quot;</span><span class="p">)</span>
-</span><span data-line="110">        <span class="bp">self</span><span class="o">.</span><span class="n">cycle_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="111">        <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="112">        <span class="bp">self</span><span class="o">.</span><span class="n">day</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="113">        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-</span><span data-line="114">        <span class="bp">self</span><span class="o">.</span><span class="n">changing_settings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="115">        <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-</span><span data-line="116">        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="117">        <span class="bp">self</span><span class="o">.</span><span class="n">max_time_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span data-line="118">        <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">99</span><span class="p">)]</span>
-</span><span data-line="119">        <span class="bp">self</span><span class="o">.</span><span class="n">sound_calibration_functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="120">        <span class="bp">self</span><span class="o">.</span><span class="n">sound_calibration_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="121">        <span class="bp">self</span><span class="o">.</span><span class="n">raw_session_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-</span><span data-line="122">        <span class="bp">self</span><span class="o">.</span><span class="n">old_session_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-</span><span data-line="123">        <span class="bp">self</span><span class="o">.</span><span class="n">old_session_raw_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-</span><span data-line="124">        <span class="bp">self</span><span class="o">.</span><span class="n">rt_session_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
-</span><span data-line="125">            <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SESSIONS_DIRECTORY&quot;</span><span class="p">),</span> <span class="s2">&quot;session.csv&quot;</span><span class="p">)</span>
-</span><span data-line="126">        <span class="p">)</span>
-</span><span data-line="127">
-</span><span data-line="128">        <span class="c1"># init</span>
-</span><span data-line="129">        <span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BEHAVIOR_CONTROLLER&quot;</span><span class="p">)</span>
-</span><span data-line="130">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span> <span class="o">==</span> <span class="n">ControllerEnum</span><span class="o">.</span><span class="n">BPOD</span><span class="p">:</span>
-</span><span data-line="131">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span> <span class="o">=</span> <span class="n">BpodController</span><span class="p">()</span>
-</span><span data-line="132">            <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">error</span>
-</span><span data-line="133">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span> <span class="o">==</span> <span class="n">ControllerEnum</span><span class="o">.</span><span class="n">ARDUINO</span><span class="p">:</span>
-</span><span data-line="134">            <span class="bp">self</span><span class="o">.</span><span class="n">arduino</span> <span class="o">=</span> <span class="n">ArduinoController</span><span class="p">()</span>
-</span><span data-line="135">            <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arduino</span><span class="o">.</span><span class="n">error</span>
-</span><span data-line="136">
-</span><span data-line="137">        <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">()</span>
-</span><span data-line="138">        <span class="n">utils</span><span class="o">.</span><span class="n">download_github_repositories</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GITHUB_REPOSITORY_EXAMPLES&quot;</span><span class="p">))</span>
-</span><span data-line="139">        <span class="n">utils</span><span class="o">.</span><span class="n">create_directories</span><span class="p">()</span>
-</span><span data-line="140">        <span class="bp">self</span><span class="o">.</span><span class="n">create_collections</span><span class="p">()</span>
-</span><span data-line="141">        <span class="n">log</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span>
-</span><span data-line="142">        <span class="n">log</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperatures</span>
+</span><span data-line="85">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="86"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Manager with default settings and initializes collections.&quot;&quot;&quot;</span>
+</span><span data-line="87">        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span data-line="88">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span>
+</span><span data-line="89">        <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span> <span class="n">TrainingProtocolBase</span> <span class="o">=</span> <span class="n">TrainingProtocolBase</span><span class="p">()</span>
+</span><span data-line="90">        <span class="bp">self</span><span class="o">.</span><span class="n">subject_plot</span><span class="p">:</span> <span class="n">SubjectPlotBase</span> <span class="o">=</span> <span class="n">SubjectPlotBase</span><span class="p">()</span>
+</span><span data-line="91">        <span class="bp">self</span><span class="o">.</span><span class="n">session_plot</span><span class="p">:</span> <span class="n">SessionPlotBase</span> <span class="o">=</span> <span class="n">SessionPlotBase</span><span class="p">()</span>
+</span><span data-line="92">        <span class="bp">self</span><span class="o">.</span><span class="n">online_plot</span><span class="p">:</span> <span class="n">OnlinePlotBase</span> <span class="o">=</span> <span class="n">OnlinePlotBase</span><span class="p">()</span>
+</span><span data-line="93">        <span class="bp">self</span><span class="o">.</span><span class="n">after_session</span><span class="p">:</span> <span class="n">AfterSessionBase</span> <span class="o">=</span> <span class="n">AfterSessionBase</span><span class="p">()</span>
+</span><span data-line="94">        <span class="bp">self</span><span class="o">.</span><span class="n">change_cycle</span><span class="p">:</span> <span class="n">ChangeCycleBase</span> <span class="o">=</span> <span class="n">ChangeCycleBase</span><span class="p">()</span>
+</span><span data-line="95">        <span class="bp">self</span><span class="o">.</span><span class="n">camera_trigger</span><span class="p">:</span> <span class="n">CameraTriggerBase</span> <span class="o">=</span> <span class="n">CameraTriggerBase</span><span class="p">()</span>
+</span><span data-line="96">        <span class="bp">self</span><span class="o">.</span><span class="n">camera_draw</span><span class="p">:</span> <span class="n">CameraDrawBase</span> <span class="o">=</span> <span class="n">CameraDrawBase</span><span class="p">()</span>
+</span><span data-line="97">        <span class="bp">self</span><span class="o">.</span><span class="n">auto_no_mouse</span><span class="p">:</span> <span class="n">AutoNoMouse_Base</span> <span class="o">=</span> <span class="n">AutoNoMouse_Base</span><span class="p">()</span>
+</span><span data-line="98">        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span> <span class="o">=</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT</span>
+</span><span data-line="99">        <span class="bp">self</span><span class="o">.</span><span class="n">previous_state_wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="100">        <span class="bp">self</span><span class="o">.</span><span class="n">calibrating</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="101">        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">:</span> <span class="n">DataTable</span> <span class="o">=</span> <span class="n">DataTable</span><span class="o">.</span><span class="n">EVENTS</span>
+</span><span data-line="102">        <span class="bp">self</span><span class="o">.</span><span class="n">rfid_reader</span><span class="p">:</span> <span class="n">Active</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RFID_READER&quot;</span><span class="p">)</span>
+</span><span data-line="103">        <span class="bp">self</span><span class="o">.</span><span class="n">visible_corridor_cycle</span><span class="p">:</span> <span class="n">Cycle</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VISIBLE_CORRIDOR&quot;</span><span class="p">)</span>
+</span><span data-line="104">        <span class="bp">self</span><span class="o">.</span><span class="n">ir_corridor_cycle</span><span class="p">:</span> <span class="n">Cycle</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IR_CORRIDOR&quot;</span><span class="p">)</span>
+</span><span data-line="105">        <span class="bp">self</span><span class="o">.</span><span class="n">visible_box_cycle</span><span class="p">:</span> <span class="n">Cycle</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VISIBLE_BOX&quot;</span><span class="p">)</span>
+</span><span data-line="106">        <span class="bp">self</span><span class="o">.</span><span class="n">ir_box_cycle</span><span class="p">:</span> <span class="n">Cycle</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IR_BOX&quot;</span><span class="p">)</span>
+</span><span data-line="107">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">:</span> <span class="n">Info</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
+</span><span data-line="108">        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span> <span class="n">Actions</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ACTIONS&quot;</span><span class="p">)</span>
+</span><span data-line="109">        <span class="bp">self</span><span class="o">.</span><span class="n">cycle_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="110">        <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="111">        <span class="bp">self</span><span class="o">.</span><span class="n">day</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="112">        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+</span><span data-line="113">        <span class="bp">self</span><span class="o">.</span><span class="n">changing_settings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="114">        <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+</span><span data-line="115">        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="116">        <span class="bp">self</span><span class="o">.</span><span class="n">max_time_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="117">        <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">99</span><span class="p">)]</span>
+</span><span data-line="118">        <span class="bp">self</span><span class="o">.</span><span class="n">sound_calibration_functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="119">        <span class="bp">self</span><span class="o">.</span><span class="n">sound_calibration_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="120">        <span class="bp">self</span><span class="o">.</span><span class="n">raw_session_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</span><span data-line="121">        <span class="bp">self</span><span class="o">.</span><span class="n">old_session_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</span><span data-line="122">        <span class="bp">self</span><span class="o">.</span><span class="n">old_session_raw_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</span><span data-line="123">        <span class="bp">self</span><span class="o">.</span><span class="n">rt_session_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+</span><span data-line="124">            <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SESSIONS_DIRECTORY&quot;</span><span class="p">),</span> <span class="s2">&quot;session.csv&quot;</span><span class="p">)</span>
+</span><span data-line="125">        <span class="p">)</span>
+</span><span data-line="126">
+</span><span data-line="127">        <span class="c1"># init</span>
+</span><span data-line="128">        <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">()</span>
+</span><span data-line="129">        <span class="n">utils</span><span class="o">.</span><span class="n">download_github_repositories</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GITHUB_REPOSITORY_EXAMPLES&quot;</span><span class="p">))</span>
+</span><span data-line="130">        <span class="n">utils</span><span class="o">.</span><span class="n">create_directories</span><span class="p">()</span>
+</span><span data-line="131">        <span class="bp">self</span><span class="o">.</span><span class="n">create_collections</span><span class="p">()</span>
+</span><span data-line="132">        <span class="n">log</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span>
+</span><span data-line="133">        <span class="n">log</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperatures</span>
+</span><span data-line="134">        <span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BEHAVIOR_CONTROLLER&quot;</span><span class="p">)</span>
+</span><span data-line="135">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span> <span class="o">==</span> <span class="n">ControllerEnum</span><span class="o">.</span><span class="n">BPOD</span><span class="p">:</span>
+</span><span data-line="136">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span> <span class="o">=</span> <span class="n">bpod</span>
+</span><span data-line="137">            <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">check_connection</span><span class="p">()</span>
+</span><span data-line="138">            <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">error</span>
+</span><span data-line="139">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span> <span class="o">==</span> <span class="n">ControllerEnum</span><span class="o">.</span><span class="n">ARDUINO</span><span class="p">:</span>
+</span><span data-line="140">            <span class="bp">self</span><span class="o">.</span><span class="n">arduino</span> <span class="o">=</span> <span class="n">arduino</span>
+</span><span data-line="141">            <span class="bp">self</span><span class="o">.</span><span class="n">arduino</span><span class="o">.</span><span class="n">check_connection</span><span class="p">()</span>
+</span><span data-line="142">            <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arduino</span><span class="o">.</span><span class="n">error</span>
 </span><span data-line="143">        <span class="bp">self</span><span class="o">.</span><span class="n">detections</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">TimestampTracker</span><span class="p">(</span>
 </span><span data-line="144">            <span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NO_DETECTION_HOURS&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">6</span><span class="p">)</span>
 </span><span data-line="145">        <span class="p">)</span>
@@ -1313,7 +1313,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=8a47411d"></script>
+      <script src="../../_static/documentation_options.js?v=338b7be9"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
