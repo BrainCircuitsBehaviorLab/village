@@ -37,6 +37,12 @@ from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
 from village.custom_classes.task import Task
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
+from village.devices.chip import (
+    ir_light_box,
+    ir_light_corridor,
+    visible_light_box,
+    visible_light_corridor,
+)
 from village.devices.temp_sensor import temp_sensor
 from village.scripts import utils
 from village.scripts.log import log
@@ -106,9 +112,7 @@ class Manager:
         self.ir_box_cycle: Cycle = settings.get("IR_BOX")
         self.info: Info = settings.get("INFO")
         self.actions: Actions = settings.get("ACTIONS")
-        self.cycle_text: str = ""
         self.text: str = ""
-        self.day: bool = True
         self.weight: float = np.nan
         self.changing_settings: bool = False
         self.tasks: dict[str, type] = dict()
@@ -125,7 +129,9 @@ class Manager:
         )
 
         # init
-        self.update_cycle()
+        self.cycle_change_detector = time_utils.CycleChangeDetector(
+            settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
+        )
         utils.download_github_repositories(settings.get("GITHUB_REPOSITORY_EXAMPLES"))
         utils.create_directories()
         self.create_collections()
@@ -147,9 +153,6 @@ class Manager:
             hours=int(settings.get("NO_SESSION_HOURS") or 6)
         )
         self.hour_change_detector = time_utils.HourChangeDetector()
-        self.cycle_change_detector = time_utils.CycleChangeDetector(
-            settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
-        )
         self.detection_change = True
         self.error_in_manual_task = False
         self.rfid_changed = False
@@ -255,27 +258,6 @@ class Manager:
             self.subject.subject_series = subject_series
             return True
 
-    def update_cycle(self) -> None:
-        """Updates the day/night cycle state based on current time and settings."""
-        day = time_utils.time_from_setting_string(settings.get("DAYTIME"))
-        night = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
-        now = time_utils.now().time()
-
-        if day < night:
-            if day < now < night:
-                self.cycle_text = "DAY"
-                self.day = True
-            else:
-                self.cycle_text = "NIGHT"
-                self.day = False
-        else:
-            if day < now or now < night:
-                self.cycle_text = "DAY"
-                self.day = True
-            else:
-                self.cycle_text = "NIGHT"
-                self.day = False
-
     def update_text(self) -> None:
         """Updates the status text with current system state, subject, task,
         cycle and project name info."""
@@ -284,7 +266,7 @@ class Manager:
         subject_name = self.subject.name
         task_name = self.task.name
         rfid_reader_name = self.rfid_reader.name
-        cycle_text = self.cycle_text
+        cycle_text = self.cycle_change_detector.cycle_text
         try:
             project_text = settings.get("PROJECT_DIRECTORY")
             project_text = os.path.basename(project_text.rstrip("/"))
@@ -597,9 +579,73 @@ class Manager:
             ]
         )
 
+    def check_corridor_lights(self) -> None:
+        """Checks the state of the corridor lights and sets them based
+        on the current cycle."""
+        cycle = self.cycle_change_detector.cycle_text
+
+        if self.visible_corridor_cycle == Cycle.ON:
+            visible_light_corridor.on()
+        elif self.visible_corridor_cycle == Cycle.OFF:
+            visible_light_corridor.off()
+        elif cycle == "DAY":
+            visible_light_corridor.on()
+        else:
+            visible_light_corridor.off()
+
+        if self.ir_corridor_cycle == Cycle.ON:
+            ir_light_corridor.on()
+        elif self.ir_corridor_cycle == Cycle.OFF:
+            ir_light_corridor.off()
+        elif cycle == "NIGHT":
+            ir_light_corridor.on()
+        else:
+            ir_light_corridor.off()
+
+    def check_box_lights(self) -> None:
+        """Checks the state of the box lights and sets them based
+        on the current state."""
+        task_running = self.state in [
+            State.RUN_FIRST,
+            State.CLOSE_DOOR2,
+            State.OPEN_DOOR2,
+            State.RUN_OPENED,
+            State.RUN_CLOSED,
+            State.SAVE_INSIDE,
+            State.WAIT_EXIT,
+            State.OPEN_DOOR2_STOP,
+            State.RUN_MANUAL,
+        ]
+
+        if self.visible_box_cycle == Cycle.ON:
+            visible_light_box.on()
+        elif self.visible_box_cycle == Cycle.OFF:
+            visible_light_box.off()
+        elif task_running:
+            visible_light_box
+        else:
+            visible_light_box.off()
+
+        if self.ir_box_cycle == Cycle.ON:
+            ir_light_box.on()
+        elif self.ir_box_cycle == Cycle.OFF:
+            ir_light_box.off()
+        elif task_running:
+            ir_light_box.on()
+        else:
+            ir_light_box.off()
+
+    def turn_off_all_lights(self) -> None:
+        """Turns off all corridor and box lights."""
+        visible_light_corridor.off()
+        ir_light_corridor.off()
+        visible_light_box.off()
+        ir_light_box.off()
+
     def cycle_checks(self) -> None:
         """Performs daily cycle checks and logs alarms for missing detections,
         sessions, or syncs."""
+        self.check_corridor_lights()
         text, non_det_subs, non_ses_subs, low_water_subs, sync = self.create_report(24)
         log.alarm(text, report=True)
         if (

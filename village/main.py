@@ -116,6 +116,8 @@ def system_run(bevavior_window: QWidget) -> None:
     sound_alarm_timer = time_utils.Timer(3600)
     video_alarm_timer = time_utils.Timer(3600)
     old_version = settings.get("OLD_VERSION") == Active.ON
+    manager.check_corridor_lights()
+    manager.check_box_lights()
 
     cam_corridor.start_recording()
 
@@ -126,7 +128,6 @@ def system_run(bevavior_window: QWidget) -> None:
         and schedule changes."""
         while True:
             time.sleep(1)
-            manager.update_cycle()
 
             try:
                 while True:
@@ -154,7 +155,6 @@ def system_run(bevavior_window: QWidget) -> None:
                 manager.hourly_checks()
 
             if manager.cycle_change_detector.has_cycle_changed():
-                manager.update_cycle()
                 cam_corridor.change = True
                 manager.cycle_checks()
 
@@ -240,6 +240,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_AUTO:
                 # Automatically launching the task
+                manager.check_box_lights()
                 manager.cam_box = cam_box
                 if manager.launch_task_auto():
                     manager.detection_change = True
@@ -389,6 +390,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
+                manager.check_box_lights()
                 motor_corridor2.close()
                 motor_corridor1.open()
                 manager.state = State.SAVE_OUTSIDE
@@ -448,6 +450,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
+                manager.check_box_lights()
                 log.info("The subject has returned home.", subject=manager.subject.name)
                 motor_corridor2.close()
                 motor_corridor1.open()
@@ -469,6 +472,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_MANUAL:
                 # Manually launching the task
+                manager.check_box_lights()
                 manager.cam_box = cam_box
                 if manager.launch_task_manual():
                     manager.detection_change = True
@@ -491,6 +495,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.SAVE_MANUAL:
                 # Stopping the task, saving the data; the task was manually stopped
+                manager.check_box_lights()
                 manager.disconnect_and_save("Manual")
                 manager.detection_change = True
                 if manager.calibrating:

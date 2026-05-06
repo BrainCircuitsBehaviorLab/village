@@ -38,9 +38,13 @@ from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.chip import (
     Motor,
+    ir_light_box,
     ir_light_corridor,
+    motor_box1,
+    motor_box2,
     motor_corridor1,
     motor_corridor2,
+    visible_light_box,
     visible_light_corridor,
 )
 from village.devices.scale import scale
@@ -321,12 +325,12 @@ class MonitorLayout(Layout):
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = MotorLayout(self.window, 23, 36)
+        self.page1Layout = CorridorLayout(self.window, 23, 36)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = PortsLayout(self.window, 23, 36)
+        self.page2Layout = BoxLayout(self.window, 23, 36)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
@@ -389,7 +393,7 @@ class MonitorLayout(Layout):
 
         self.page6 = QWidget(self.bottom_widget)
         self.page6.setStyleSheet("background-color:white")
-        self.page6Layout = CorridorLayout(self.window, 16, 200)
+        self.page6Layout = DetectionLayout(self.window, 16, 200)
         self.page6.setLayout(self.page6Layout)
 
         self.page7 = QWidget(self.bottom_widget)
@@ -405,24 +409,6 @@ class MonitorLayout(Layout):
         self.tab_widget.addTab(self.page7, "PLOT")
         self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
-
-        # self.cycle_label: Label = self.create_and_add_label(
-        #     "Cycle: ", 9, 84, 12, 2, "black"
-        # )
-        # key = "CYCLE"
-        # possible_values = Cycle.values()
-        # index = Cycle.get_index_from_value(manager.cycle)
-        # self.cycle_button = self.create_and_add_toggle_button(
-        #     key,
-        #     9,
-        #     94,
-        #     20,
-        #     2,
-        #     possible_values,
-        #     index,
-        #     self.toggle_cycle_button,
-        #     "Cycle of the corridor: AUTO, DAY, NIGHT",
-        # )
 
         if manager.controller_type != ControllerEnum.BPOD:
             if manager.actions in (Actions.BOX, Actions.VIRTUAL_MOUSE):
@@ -447,18 +433,6 @@ class MonitorLayout(Layout):
         self.addWidget(self.qpicamera2_box, 6, 120, 28, 80)
         self.addWidget(self.tab_widget, 33, 0, 18, 200)
         self.tab_widget.raise_()
-
-    # def toggle_cycle_button(self, value: str, key: str) -> None:
-    #     """Toggles the cycle setting.
-
-    #     Args:
-    #         value (str): The new cycle value.
-    #         key (str): The setting key.
-    #     """
-    #     manager.cycle = Cycle[value]
-    #     settings.set(key, value)
-    #     self.update_status_label_buttons()
-    #     cam_corridor.change = True
 
     def on_actions_tab_changed(self, index: int) -> None:
         """Handles tab selection for the central actions panel."""
@@ -507,11 +481,11 @@ class MonitorLayout(Layout):
         return True
 
 
-class MotorLayout(Layout):
-    """Layout for controlling motors and scale."""
+class CorridorLayout(Layout):
+    """Layout for controlling lights, motors, and scale in the corridor."""
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
-        """Initializes the MotorLayout.
+        """Initializes the CorridorLayout.
 
         Args:
             window (GuiWindow): The parent window.
@@ -523,7 +497,7 @@ class MotorLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        """Draws the motor control buttons and scale options."""
+        """Draws the motor, scale and LEDs controls."""
         self.draw_motor_buttons("MOTOR1", 9, 2, motor_corridor1)
         self.draw_motor_buttons("MOTOR2", 14, 2, motor_corridor2)
 
@@ -670,7 +644,7 @@ class MotorLayout(Layout):
             case "ON":
                 visible_light_corridor.off()
             case "AUTO":
-                pass
+                manager.check_corridor_lights()
 
     def toggle_ir_button(self, value: str, key: str) -> None:
         manager.ir_corridor_cycle = Cycle[value]
@@ -681,7 +655,7 @@ class MotorLayout(Layout):
             case "ON":
                 ir_light_corridor.off()
             case "AUTO":
-                pass
+                manager.check_corridor_lights()
 
     def tare_scale_clicked(self) -> None:
         """Initiates scale taring."""
@@ -807,11 +781,11 @@ class MotorLayout(Layout):
             self.rfid_reader_button.update_style()
 
 
-class PortsLayout(Layout):
-    """Layout for controlling behavioral ports."""
+class BoxLayout(Layout):
+    """Layout for controlling the box."""
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
-        """Initializes the PortsLayout.
+        """Initializes the BoxLayout.
 
         Args:
             window (GuiWindow): The parent window.
@@ -823,13 +797,62 @@ class PortsLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        """Draws the port control buttons (LED and Water)."""
+        """Draws the motor, scale, LEDs and ports controls."""
+        self.draw_motor_buttons("MOTOR1", 9, 2, motor_box1)
+        self.draw_motor_buttons("MOTOR2", 14, 2, motor_box2)
+
+        self.visible_label: Label = self.create_and_add_label(
+            "Visible light: ", 4, 9, 12, 2, "black"
+        )
+        key = "VISIBLE_BOX"
+        possible_values = Cycle.values()
+        index = Cycle.get_index_from_value(manager.visible_box_cycle)
+        self.visible_button = self.create_and_add_toggle_button(
+            key,
+            4,
+            20,
+            10,
+            2,
+            possible_values,
+            index,
+            self.toggle_visible_button,
+            "Visible light in the box: ON, OFF, AUTO",
+        )
+
+        self.ir_label: Label = self.create_and_add_label(
+            "IR light: ", 6, 9, 12, 2, "black"
+        )
+        key = "IR_BOX"
+        possible_values = Cycle.values()
+        index = Cycle.get_index_from_value(manager.ir_box_cycle)
+        self.ir_button = self.create_and_add_toggle_button(
+            key,
+            6,
+            20,
+            10,
+            2,
+            possible_values,
+            index,
+            self.toggle_ir_button,
+            "Infrared light in the box: ON, OFF, AUTO",
+        )
+
+        self.change_angles: PushButton = self.create_and_add_button(
+            "SET MOTOR ANGLES",
+            19,
+            2,
+            16,
+            2,
+            self.change_angles_clicked,
+            "Modify the angle values for the motors.",
+        )
+
         for i in range(8):
             button1 = self.create_and_add_button(
                 "LED" + str(i + 1),
                 i * 2 + 1,
-                3,
-                14,
+                12,
+                8,
                 2,
                 partial(self.led_clicked, i + 1),
                 "Light the LED" + str(i),
@@ -840,12 +863,131 @@ class PortsLayout(Layout):
                 "WATER" + str(i + 1),
                 i * 2 + 1,
                 20,
-                14,
+                8,
                 2,
                 partial(self.water_clicked, i + 1),
                 "Deliver water for 0.1 seconds" + str(i),
             )
             self.buttons.append(button2)
+
+    def draw_motor_buttons(
+        self, name: str, row: int, column: int, motor: Motor | MotorOld | NullMotor
+    ) -> None:
+        """Draws buttons for a specific motor.
+
+        Args:
+            name (str): The motor name.
+            row (int): The row position.
+            column (int): The column position.
+            motor (Motor | MotorOld | NullMotor): The motor object.
+        """
+        open_name: str = "OPEN " + name
+        open_door: PushButton = self.create_and_add_button(
+            open_name, row, column, 16, 2, motor.open, "Open the door"
+        )
+        close_name: str = "CLOSE " + name
+        close_door: PushButton = self.create_and_add_button(
+            close_name, row + 2, column, 16, 2, motor.close, "Close the door"
+        )
+
+        self.buttons.append(open_door)
+        self.buttons.append(close_door)
+
+    def toggle_visible_button(self, value: str, key: str) -> None:
+        manager.visible_box_cycle = Cycle[value]
+        settings.set(key, value)
+        match value:
+            case "OFF":
+                visible_light_box.on()
+            case "ON":
+                visible_light_box.off()
+            case "AUTO":
+                manager.check_box_lights()
+
+    def toggle_ir_button(self, value: str, key: str) -> None:
+        manager.ir_box_cycle = Cycle[value]
+        settings.set(key, value)
+        match value:
+            case "OFF":
+                ir_light_box.on()
+            case "ON":
+                ir_light_box.off()
+            case "AUTO":
+                manager.check_box_lights()
+
+    def change_angles_clicked(self) -> None:
+        """Opens a dialog to change motor angles."""
+        motor1_open_val = settings.get("MOTOR1_VALUES")[0]
+        motor1_close_val = settings.get("MOTOR1_VALUES")[1]
+        motor2_open_val = settings.get("MOTOR2_VALUES")[0]
+        motor2_close_val = settings.get("MOTOR2_VALUES")[1]
+        self.reply = QDialog()
+        self.reply.setWindowTitle("Motor angles")
+        x = self.column_width * 84
+        y = self.row_height * 19
+        width = self.column_width * 32
+        height = self.row_height * 12
+        self.reply.setGeometry(x, y, width, height)
+        layout = QVBoxLayout()
+
+        label = QLabel("Motor1 open angle:")
+        layout.addWidget(label)
+        self.lineEdit1 = QLineEdit()
+        self.lineEdit1.setPlaceholderText(str(motor1_open_val))
+        layout.addWidget(self.lineEdit1)
+
+        label = QLabel("Motor1 close angle:")
+        layout.addWidget(label)
+        self.lineEdit2 = QLineEdit()
+        self.lineEdit2.setPlaceholderText(str(motor1_close_val))
+        layout.addWidget(self.lineEdit2)
+
+        label = QLabel("Motor2 open angle:")
+        layout.addWidget(label)
+        self.lineEdit3 = QLineEdit()
+        self.lineEdit3.setPlaceholderText(str(motor2_open_val))
+        layout.addWidget(self.lineEdit3)
+
+        label = QLabel("Motor2 close angle:")
+        layout.addWidget(label)
+        self.lineEdit4 = QLineEdit()
+        self.lineEdit4.setPlaceholderText(str(motor2_close_val))
+        layout.addWidget(self.lineEdit4)
+
+        btns_layout = QHBoxLayout()
+        self.btn_ok = QPushButton("CHANGE")
+        self.btn_cancel = QPushButton("CANCEL")
+        btns_layout.addWidget(self.btn_ok)
+        btns_layout.addWidget(self.btn_cancel)
+        layout.addLayout(btns_layout)
+        self.reply.setLayout(layout)
+
+        self.btn_ok.clicked.connect(self.reply.accept)
+        self.btn_cancel.clicked.connect(self.reply.reject)
+
+        if self.reply.exec_():
+            try:
+                val1 = int(self.lineEdit1.text())
+            except ValueError:
+                val1 = int(motor1_open_val)
+            try:
+                val2 = int(self.lineEdit2.text())
+            except ValueError:
+                val2 = int(motor1_close_val)
+            try:
+                val3 = int(self.lineEdit3.text())
+            except ValueError:
+                val3 = int(motor2_open_val)
+            try:
+                val4 = int(self.lineEdit4.text())
+            except ValueError:
+                val4 = int(motor2_close_val)
+            settings.set("MOTOR1_VALUES", (val1, val2))
+            settings.set("MOTOR2_VALUES", (val3, val4))
+            motor_box1.open_angle = val1
+            motor_box1.close_angle = val2
+            motor_box2.open_angle = val3
+            motor_box2.close_angle = val4
 
     def disable_all(self) -> None:
         """Disables all port buttons."""
@@ -923,7 +1065,7 @@ class VirtualMouseLayout(Layout):
 
         self.x_label = self.create_and_add_label(
             "X coordinate",
-            2,
+            12,
             24,
             12,
             2,
@@ -933,7 +1075,7 @@ class VirtualMouseLayout(Layout):
 
         self.y_label = self.create_and_add_label(
             "Y coordinate",
-            6,
+            14,
             24,
             12,
             2,
@@ -942,19 +1084,19 @@ class VirtualMouseLayout(Layout):
         )
 
         self.x_line_edit = self.create_and_add_line_edit(
-            "0", 4, 24, 8, 2, self.coordinates_changed
+            "0", 12, 24, 8, 2, self.coordinates_changed
         )
         self.y_line_edit = self.create_and_add_line_edit(
-            "0", 8, 24, 8, 2, self.coordinates_changed
+            "0", 14, 24, 8, 2, self.coordinates_changed
         )
         self.touch = self.create_and_add_button(
             "TOUCH SCREEN",
-            11,
+            16,
             21,
             14,
             2,
             self.touch_clicked,
-            "Deliver water for 0.1 seconds" + str(i),
+            "Touching the screen at the specified coordinates",
         )
 
         if settings.get("USE_SCREEN") != ScreenActive.TOUCHSCREEN:
@@ -967,7 +1109,7 @@ class VirtualMouseLayout(Layout):
         self.auto_no_mouse_button = self.create_and_add_button(
             "▶  AutoNoMouse",
             2,
-            18,
+            21,
             14,
             2,
             self.auto_no_mouse_clicked,
@@ -977,7 +1119,7 @@ class VirtualMouseLayout(Layout):
         self.create_and_add_label(
             "p correct L",
             4,
-            18,
+            21,
             10,
             2,
             "black",
@@ -989,7 +1131,7 @@ class VirtualMouseLayout(Layout):
         self.create_and_add_label(
             "p correct R",
             6,
-            18,
+            21,
             10,
             2,
             "black",
@@ -1001,7 +1143,7 @@ class VirtualMouseLayout(Layout):
         self.create_and_add_label(
             "N inject",
             8,
-            18,
+            21,
             10,
             2,
             "black",
@@ -1119,8 +1261,8 @@ class FunctionsLayout(Layout):
     def draw(self) -> None:
         """Draws the function buttons."""
         for i in range(98):
-            row = i // 2 * 2
-            column = 4 if i % 2 == 0 else 17
+            row = 1 + i // 2 * 2
+            column = 3 if i % 2 == 0 else 19
             button = self.create_and_add_button(
                 "FUNCTION" + str(i + 1),
                 row,
@@ -1146,11 +1288,11 @@ class FunctionsLayout(Layout):
             )
 
 
-class CorridorLayout(Layout):
+class DetectionLayout(Layout):
     """Layout for configuring corridor settings."""
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
-        """Initializes the CorridorLayout.
+        """Initializes the DetectionLayout.
 
         Args:
             window (GuiWindow): The parent window.

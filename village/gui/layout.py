@@ -123,7 +123,7 @@ class PushButton(QPushButton):
         super().__init__(text)
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if description != "":
-            style += "Tip {background-color: white; color: black; font-size: 9pt}"
+            style += "QToolTip {background-color: white; color: black; font-size: 9pt}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         self.pressed.connect(action)
@@ -467,6 +467,7 @@ class Layout(QGridLayout):
                 QMessageBox.No,
             )
             if reply == QMessageBox.Yes:
+                manager.turn_off_all_lights()
                 self.window.exit_app()
             else:
                 manager.state = old_state

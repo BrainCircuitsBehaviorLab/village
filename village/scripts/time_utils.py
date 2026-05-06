@@ -499,6 +499,8 @@ class TimeUtils:
             except (ValueError, TypeError):
                 self.night_time = datetime.time(20, 0)
             self.last_state = self._get_current_cycle()
+            self.is_day: bool = self.last_state == "day"
+            self.cycle_text: str = "DAY" if self.is_day else "NIGHT"
 
         def _get_current_cycle(self) -> str:
             """Determines current cycle state.
@@ -521,6 +523,8 @@ class TimeUtils:
             current = self._get_current_cycle()
             if current != self.last_state:
                 self.last_state = current
+                self.is_day = current == "day"
+                self.cycle_text = "DAY" if self.is_day else "NIGHT"
                 return True
             return False
 
