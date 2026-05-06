@@ -798,18 +798,18 @@ class BoxLayout(Layout):
 
     def draw(self) -> None:
         """Draws the motor, scale, LEDs and ports controls."""
-        self.draw_motor_buttons("MOTOR1", 9, 2, motor_box1)
-        self.draw_motor_buttons("MOTOR2", 14, 2, motor_box2)
+        self.draw_motor_buttons("MOTOR1", 6, 2, motor_box1)
+        self.draw_motor_buttons("MOTOR2", 11, 2, motor_box2)
 
         self.visible_label: Label = self.create_and_add_label(
-            "Visible light: ", 4, 9, 12, 2, "black"
+            "Visible light: ", 1, 9, 12, 2, "black"
         )
         key = "VISIBLE_BOX"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(manager.visible_box_cycle)
         self.visible_button = self.create_and_add_toggle_button(
             key,
-            4,
+            1,
             20,
             10,
             2,
@@ -820,14 +820,14 @@ class BoxLayout(Layout):
         )
 
         self.ir_label: Label = self.create_and_add_label(
-            "IR light: ", 6, 9, 12, 2, "black"
+            "IR light: ", 3, 9, 12, 2, "black"
         )
         key = "IR_BOX"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(manager.ir_box_cycle)
         self.ir_button = self.create_and_add_toggle_button(
             key,
-            6,
+            3,
             20,
             10,
             2,
@@ -839,7 +839,7 @@ class BoxLayout(Layout):
 
         self.change_angles: PushButton = self.create_and_add_button(
             "SET MOTOR ANGLES",
-            19,
+            16,
             2,
             16,
             2,
@@ -850,8 +850,8 @@ class BoxLayout(Layout):
         for i in range(8):
             button1 = self.create_and_add_button(
                 "LED" + str(i + 1),
-                i * 2 + 1,
-                12,
+                i * 2 + 6,
+                20,
                 8,
                 2,
                 partial(self.led_clicked, i + 1),
@@ -861,8 +861,8 @@ class BoxLayout(Layout):
 
             button2 = self.create_and_add_button(
                 "WATER" + str(i + 1),
-                i * 2 + 1,
-                20,
+                i * 2 + 6,
+                28,
                 8,
                 2,
                 partial(self.water_clicked, i + 1),
@@ -1054,7 +1054,7 @@ class VirtualMouseLayout(Layout):
         for i in range(8):
             button = self.create_and_add_button(
                 "POKE" + str(i + 1),
-                i * 2 + 1,
+                i * 2 + 2,
                 3,
                 14,
                 2,
@@ -1065,9 +1065,9 @@ class VirtualMouseLayout(Layout):
 
         self.x_label = self.create_and_add_label(
             "X coordinate",
-            12,
-            24,
-            12,
+            14,
+            21,
+            10,
             2,
             "black",
             description="X coordinate of the touch screen",
@@ -1075,28 +1075,29 @@ class VirtualMouseLayout(Layout):
 
         self.y_label = self.create_and_add_label(
             "Y coordinate",
-            14,
-            24,
-            12,
+            16,
+            21,
+            10,
             2,
             "black",
             description="Y coordinate of the touch screen",
         )
 
         self.x_line_edit = self.create_and_add_line_edit(
-            "0", 12, 24, 8, 2, self.coordinates_changed
+            "0", 14, 31, 4, 2, self.coordinates_changed
         )
         self.y_line_edit = self.create_and_add_line_edit(
-            "0", 14, 24, 8, 2, self.coordinates_changed
+            "0", 16, 31, 4, 2, self.coordinates_changed
         )
         self.touch = self.create_and_add_button(
-            "TOUCH SCREEN",
-            16,
+            "Touch the screen",
+            18,
             21,
             14,
             2,
             self.touch_clicked,
             "Touching the screen at the specified coordinates",
+            color="lightgreen",
         )
 
         if settings.get("USE_SCREEN") != ScreenActive.TOUCHSCREEN:
@@ -1126,7 +1127,7 @@ class VirtualMouseLayout(Layout):
             description="P(correct | reward LEFT)",
         )
         self.p_left_edit = self.create_and_add_line_edit(
-            "0.80", 4, 28, 4, 2, lambda: None
+            "0.80", 4, 31, 4, 2, lambda: None
         )
         self.create_and_add_label(
             "p correct R",
@@ -1138,7 +1139,7 @@ class VirtualMouseLayout(Layout):
             description="P(correct | reward RIGHT)",
         )
         self.p_right_edit = self.create_and_add_line_edit(
-            "0.80", 6, 28, 4, 2, lambda: None
+            "0.80", 6, 31, 4, 2, lambda: None
         )
         self.create_and_add_label(
             "N inject",
@@ -1150,12 +1151,12 @@ class VirtualMouseLayout(Layout):
             description="Number of mock trials to inject",
         )
         self.n_inject_edit = self.create_and_add_line_edit(
-            "10", 8, 28, 4, 2, lambda: None
+            "10", 8, 31, 4, 2, lambda: None
         )
         self.create_and_add_button(
             "Inject Trials",
             10,
-            18,
+            21,
             14,
             2,
             self._inject_trials,
@@ -1262,7 +1263,7 @@ class FunctionsLayout(Layout):
         """Draws the function buttons."""
         for i in range(98):
             row = 1 + i // 2 * 2
-            column = 3 if i % 2 == 0 else 19
+            column = 5 if i % 2 == 0 else 18
             button = self.create_and_add_button(
                 "FUNCTION" + str(i + 1),
                 row,
