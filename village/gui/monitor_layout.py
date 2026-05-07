@@ -641,9 +641,9 @@ class CorridorLayout(Layout):
         settings.set(key, value)
         match value:
             case "OFF":
-                visible_light_corridor.on()
-            case "ON":
                 visible_light_corridor.off()
+            case "ON":
+                visible_light_corridor.on()
             case "AUTO":
                 manager.check_corridor_lights()
 
@@ -652,9 +652,9 @@ class CorridorLayout(Layout):
         settings.set(key, value)
         match value:
             case "OFF":
-                ir_light_corridor.on()
-            case "ON":
                 ir_light_corridor.off()
+            case "ON":
+                ir_light_corridor.on()
             case "AUTO":
                 manager.check_corridor_lights()
 

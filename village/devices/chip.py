@@ -79,7 +79,7 @@ class LED:
         self.pwm = pwm
 
     def set(self, value: float) -> None:
-        ticks = int(4095 * (1 - value))
+        ticks = int(4095 * value)
         for c in range(self.channel, self.channel + self.nchannels):
             pwm_corridor.set_pwm(self.channel, 0, ticks)
 
