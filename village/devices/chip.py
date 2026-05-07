@@ -10,9 +10,8 @@ from village.settings import settings
 
 # Init (50 Hz for servos)
 if (
-    settings.get("USE_CORRIDOR")
-    == Active.ON & settings.get("OLD_VERSION")
-    == OldVersion.OFF
+    settings.get("USE_CORRIDOR") == Active.ON
+    and settings.get("OLD_VERSION") == OldVersion.OFF
 ):
     try:
         pwm_corridor = PCA9685.PCA9685(

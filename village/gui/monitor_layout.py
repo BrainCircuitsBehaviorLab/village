@@ -380,10 +380,9 @@ class MonitorLayout(Layout):
         self.actions_tab_widget.addTab(self.page3, "FUNCTIONS")
         self._actions_tab_map.append("FUNCTIONS")
         if (
-            manager.controller_type
-            == ControllerEnum.BPOD | settings.get("CAM_BOX_TRACKING_POSITION")
-            == Active.ON | settings.get("USE_SCREEN")
-            == ScreenActive.TOUCHSCREEN
+            manager.controller_type == ControllerEnum.BPOD
+            or settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON
+            or settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
         ):
             self.actions_tab_widget.addTab(self.page4, "VIRTUAL MOUSE")
             self._actions_tab_map.append("VIRTUAL_MOUSE")
@@ -1056,9 +1055,8 @@ class VirtualMouseLayout(Layout):
 
         if manager.controller_type != ControllerEnum.BPOD:
             if (
-                settings.get("CAM_BOX_TRACKING_POSITION")
-                == Active.ON | settings.get("USE_SCREEN")
-                == ScreenActive.TOUCHSCREEN
+                settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON
+                or settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
             ):
                 row_bpod = 2
                 col_bpod = 3
