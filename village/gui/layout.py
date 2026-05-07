@@ -336,7 +336,7 @@ class Layout(QGridLayout):
             3,
             self.online_or_force_button_clicked,
             "Show live plots while a task is running",
-            "white",
+            "lightgray",
         )
 
         self.stop_button = self.create_and_add_button(
@@ -384,7 +384,7 @@ class Layout(QGridLayout):
             )
             self.online_or_force_button.setEnabled(True)
             self.online_or_force_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
             )
         elif manager.state.can_go_to_wait():
             self.stop_button.setText("GO TO WAIT STATE")

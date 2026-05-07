@@ -638,7 +638,7 @@ class CorridorLayout(Layout):
         """
         manager.rfid_reader = Active[value]
         settings.set(key, value)
-        self.update_status_label_buttons()
+        self.window.layout.update_status_label_buttons()
 
     def toggle_visible_button(self, value: str, key: str) -> None:
         manager.visible_corridor_cycle = Cycle[value]

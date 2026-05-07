@@ -179,7 +179,7 @@ def import_all(manager) -> None:
         ("Camera Trigger", camera_trigger_found, camera_trigger_correct),
         ("Camera Draw", camera_draw_found, camera_draw_correct),
         ("Auto No Mouse", auto_no_mouse_found, auto_no_mouse_correct),
-        ("Softcode Functions", direct_functions_found, direct_functions_correct),
+        ("Direct Functions", direct_functions_found, direct_functions_correct),
     ]
 
     defaults, customs = [], []
