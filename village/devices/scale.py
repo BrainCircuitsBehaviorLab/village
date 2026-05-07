@@ -171,7 +171,7 @@ def get_scale(
     Returns:
         Scale | NullScale: An initialized Scale instance or a null scale on failure.
     """
-    if settings.get("USE_CORRIDOR") == Active.OFF:
+    if not manager.use_of_corridor:
         scale = NullScale()
         scale.error = ""
         return scale

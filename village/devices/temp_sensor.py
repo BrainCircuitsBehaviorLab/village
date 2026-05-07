@@ -69,7 +69,7 @@ def get_temp_sensor(address: str) -> TempSensor | NullTempSensor:
     Returns:
         TempSensorBase: An initialized TempSensor or base class on failure.
     """
-    if settings.get("USE_CORRIDOR") == Active.OFF:
+    if not manager.use_of_corridor:
         null_temp_sensor = NullTempSensor()
         null_temp_sensor.error = ""
         return null_temp_sensor

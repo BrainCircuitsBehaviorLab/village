@@ -1075,7 +1075,7 @@ def get_camera(index: int, framerate: int, name: str) -> Camera | NullCamera:
     Returns:
         CameraBase: An initialized Camera or null class on failure.
     """
-    if name == "CORRIDOR" and settings.get("USE_CORRIDOR") == Active.OFF:
+    if name == "CORRIDOR" and manager.use_of_corridor:
         null_camera = NullCamera()
         null_camera.error = ""
         return null_camera

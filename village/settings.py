@@ -41,20 +41,11 @@ only when running standalone Operant Box sessions without the corridor, such as 
 tethered ephys or optogenetics recordings.""",
     ),
     Setting(
-        "USE_BOX",
-        "ON",
-        Active,
-        """Enables the Operant Box subsystem, including the control PCB (LED stimuli,
-running manual sessions in the Operant Box
-(e.g., for tethered ephys or optogenetics recordings).""",
-    ),
-    Setting(
         "USE_BOX_BOARD",
         "ON",
         Active,
         """Enables the Operant Box PCB. This setting allows the Raspberry Pi to control
-some box components, such as LED stimuli, visible/infrared lighting,
-and motors.""",
+some box components, such as LED stimuli, visible/infrared lighting, and motors.""",
     ),
 ]
 

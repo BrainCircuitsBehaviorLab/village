@@ -174,7 +174,7 @@ def get_telegram_bot() -> TelegramBot | NullTelegramBot:
     Returns:
         TelegramBotBase: An initialized TelegramBot instance or base class on failure.
     """
-    if settings.get("USE_CORRIDOR") == Active.OFF:
+    if not manager.use_of_corridor:
         null_telegram_bot = NullTelegramBot()
         null_telegram_bot.error = ""
         return null_telegram_bot

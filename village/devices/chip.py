@@ -7,12 +7,10 @@ from village.classes.null_classes import NullChip, NullMotor
 from village.devices.motor_old import MotorOld
 from village.scripts.log import log
 from village.settings import settings
+from village.manager import manager
 
 # Init (50 Hz for servos)
-if (
-    settings.get("USE_CORRIDOR") == Active.ON
-    and settings.get("OLD_VERSION") == OldVersion.OFF
-):
+if manager.use_of_corridor and not manager.old_version_motor:
     try:
         pwm_corridor = PCA9685.PCA9685(
             interface=1, address=int(settings.get("CHIP_CORRIDOR_ADDRESS"), 16)
@@ -26,10 +24,7 @@ else:
     error_corridor = ""
     pwm_corridor = NullChip()
 
-if (
-    settings.get("USE_BOX_CHIP") == Active.ON
-    and settings.get("OLD_VERSION") == OldVersion.OFF
-):
+if manager.use_of_box_chip and not manager.old_version_motor:
     try:
         pwm_box = PCA9685.PCA9685(
             interface=1, address=int(settings.get("CHIP_BOX_ADDRESS"), 16)
@@ -117,7 +112,7 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
         Motor: An initialized Motor instance.
     """
 
-    if settings.get("USE_CORRIDOR") == Active.OFF:
+    if not manager.use_of_corridor:
         null_motor = NullMotor()
         null_motor.error = ""
         return null_motor
@@ -146,7 +141,7 @@ ir_light_corridor = LED(settings.get("IR_LIGHT_CORRIDOR_INDEX"), 4, pwm_corridor
 visible_light_box = LED(settings.get("VISIBLE_LIGHT_BOX_INDEX"), 1, pwm_box)
 ir_light_box = LED(settings.get("IR_LIGHT_BOX_INDEX"), 4, pwm_box)
 
-if settings.get("OLD_VERSION") != OldVersion.OFF:
+if manager.old_version_motor:
     motor_corridor1 = get_motor_old(
         settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES")
     )
