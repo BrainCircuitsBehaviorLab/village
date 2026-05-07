@@ -85,6 +85,7 @@ no_corridor = [
     "CHIP_CORRIDOR_ADDRESS",
     "SCALE_ADDRESS",
     "TEMP_SENSOR_ADDRESS",
+    "OLD_VERSION",
 ]
 
 no_box_board = [
@@ -155,6 +156,8 @@ class SettingsLayout(Layout):
         hidden: set[str] = set()
         if not manager.use_of_corridor:
             hidden.update({"CORRIDOR SETTINGS", "TELEGRAM SETTINGS"})
+            if not manager.use_of_box_chip:
+                hidden.update({"DEVICE ADDRESSES"})
         return [s for s in MENU_SECTIONS if s not in hidden]
 
     def _should_show(self, key: str) -> bool:
@@ -258,7 +261,7 @@ class SettingsLayout(Layout):
             "QListWidget::item:selected { background: steelblue; color: white;"
             " border-color: steelblue; }"
             "QListWidget::item:hover { background: #b0c4de; border-color: #b0c4de; }"
-            "QToolTip { background-color: white; color: black; font-size: 9pt; }"
+            "QToolTip { background-color: white; color: black; font-size: 10pt; padding: 4px }"
         )
         self.menu_list.setSpacing(1)
         for name in self._active_sections:

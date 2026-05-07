@@ -73,7 +73,7 @@ class Label(QLabel):
         else:
             style += "; background-color: " + background + "}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 9pt}"
+            style += "QToolTip {background-color: white; color: black; font-size: 10pt; padding: 4px}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         if right_aligment:
@@ -123,7 +123,7 @@ class PushButton(QPushButton):
         super().__init__(text)
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 9pt}"
+            style += "QToolTip {background-color: white; color: black; font-size: 10pt; padding: 4px}"
             self.setToolTip(description)
         self.setStyleSheet(style)
         self.pressed.connect(action)
@@ -160,7 +160,7 @@ class ToggleButton(QPushButton):
         color = "darkgray" if self.value == "OFF" else self.color
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if self.description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 9pt}"
+            style += "QToolTip {background-color: white; color: black; font-size: 10pt; padding: 4px}"
             self.setToolTip(self.description)
         self.setStyleSheet(style)
 
@@ -302,7 +302,7 @@ class Layout(QGridLayout):
             "QTabBar::tab:selected:disabled { background: steelblue; color: white; }"
             "QTabBar::tab:hover:!selected { background: #b0c4de; }"
             "QTabBar::tab:disabled { background: #cccccc; color: #999999; }"
-            "QToolTip { background-color: white; color: black; font-size: 9pt; }"
+            "QToolTip { background-color: white; color: black; font-size: 10pt; padding: 4px }"
         )
         for label, tooltip in _nav_items:
             idx = self.nav_tab_bar.addTab(label)
@@ -355,7 +355,7 @@ class Layout(QGridLayout):
 
     def update_status_label_buttons(self) -> None:
         """Updates the status label and button states based on manager state."""
-        _tt = "QToolTip {background-color: white; color: black; font-size: 9pt}"
+        _tt = "QToolTip {background-color: white; color: black; font-size: 10pt; padding: 4px}"
         manager.update_text()
         self.status_label.setText(manager.text)
         if manager.state.can_stop_task():

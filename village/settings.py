@@ -214,13 +214,14 @@ if you don't need to specify a particular port for the SSH connection.""",
 
 device_settings = [
     Setting(
+        "CHIP_CORRIDOR_ADDRESS", "0x55", str, "The address of the corridor PWM chip."
+    ),
+    Setting(
         "MOTOR1_CORRIDOR_INDEX", 12, int, "The index of the motor 1 of the corridor."
     ),
     Setting(
         "MOTOR2_CORRIDOR_INDEX", 13, int, "The index of the motor 2 of the corridor."
     ),
-    Setting("MOTOR1_BOX_INDEX", 12, int, "The index of the motor 1 of the box."),
-    Setting("MOTOR2_BOX_INDEX", 13, int, "The index of the motor 2 of the box."),
     Setting(
         "VISIBLE_LIGHT_CORRIDOR_INDEX",
         12,
@@ -233,6 +234,11 @@ device_settings = [
         int,
         "The index of the infrared light of the corridor.",
     ),
+    Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
+    Setting("TEMP_SENSOR_ADDRESS", "0x44", str, "The address of the temp sensor."),
+    Setting("CHIP_BOX_ADDRESS", "0x56", str, "The address of the box PWM chip."),
+    Setting("MOTOR1_BOX_INDEX", 12, int, "The index of the motor 1 of the box."),
+    Setting("MOTOR2_BOX_INDEX", 13, int, "The index of the motor 2 of the box."),
     Setting(
         "VISIBLE_LIGHT_BOX_INDEX",
         12,
@@ -245,12 +251,6 @@ device_settings = [
         int,
         "The index of the infrared light of the box.",
     ),
-    Setting(
-        "CHIP_CORRIDOR_ADDRESS", "0x55", str, "The address of the corridor PWM chip."
-    ),
-    Setting("CHIP_BOX_ADDRESS", "0x56", str, "The address of the box PWM chip."),
-    Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
-    Setting("TEMP_SENSOR_ADDRESS", "0x44", str, "The address of the temp sensor."),
 ]
 
 

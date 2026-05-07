@@ -372,11 +372,13 @@ class MonitorLayout(Layout):
         self.actions_tab_widget.tabBar().setFont(_tab_font)
 
         self._actions_tab_map: list[str] = []
+        self._tab_map: list[str] = []
         if manager.use_of_corridor:
             self.actions_tab_widget.addTab(self.page1, "CORRIDOR")
             self._actions_tab_map.append("CORRIDOR")
-        self.actions_tab_widget.addTab(self.page2, "BOX")
-        self._actions_tab_map.append("BOX")
+        if manager.use_of_box_chip or manager.controller_type == ControllerEnum.BPOD:
+            self.actions_tab_widget.addTab(self.page2, "BOX")
+            self._actions_tab_map.append("BOX")
         self.actions_tab_widget.addTab(self.page3, "FUNCTIONS")
         self._actions_tab_map.append("FUNCTIONS")
         if (
@@ -395,27 +397,34 @@ class MonitorLayout(Layout):
         self.page5Layout = InfoLayout(self.window, 16, 200)
         self.page5.setLayout(self.page5Layout)
 
-        self.page6 = QWidget(self.bottom_widget)
-        self.page6.setStyleSheet("background-color:white")
-        self.page6Layout = DetectionLayout(self.window, 16, 200)
-        self.page6.setLayout(self.page6Layout)
-
         self.page7 = QWidget(self.bottom_widget)
         self.page7.setStyleSheet("background-color:white")
-        self.page7Layout = CorridorPlotLayout(self.window, 16, 200)
+        self.page7Layout = DetectionLayout(self.window, 16, 200)
         self.page7.setLayout(self.page7Layout)
+
+        self.page6 = QWidget(self.bottom_widget)
+        self.page6.setStyleSheet("background-color:white")
+        self.page6Layout = CorridorPlotLayout(self.window, 16, 200)
+        self.page6.setLayout(self.page6Layout)
 
         self.tab_widget = QTabWidget()
         self.tab_widget.setStyleSheet(_tab_style)
         self.tab_widget.tabBar().setExpanding(False)
         self.tab_widget.tabBar().setFont(_tab_font)
         self.tab_widget.addTab(self.page5, "INFO")
-        self.tab_widget.addTab(self.page7, "PLOT")
-        self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
+        self._tab_map.append("INFO")
+        if manager.use_of_corridor:
+            self.tab_widget.addTab(self.page6, "PLOT")
+            self._tab_map.append("PLOT")
+        self.tab_widget.addTab(self.page7, "DETECTION SETTINGS")
+        self._tab_map.append("DETECTION_SETTINGS")
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
 
-        index = Info.get_index_from_string(manager.info.value)
-        self.tab_widget.setCurrentIndex(index)
+        value_key = manager.info.value
+        if value_key in self._tab_map:
+            self.tab_widget.setCurrentIndex(
+                self._tab_map.index(value_key)
+            )
 
         actions_key = manager.actions.name
         if actions_key in self._actions_tab_map:
@@ -444,12 +453,10 @@ class MonitorLayout(Layout):
 
     def on_tab_changed(self, index: int) -> None:
         """Handles tab selection for the bottom info panel."""
-        # Tab order: 0=INFO, 1=PLOT, 2=DETECTION_SETTINGS
-        tab_to_info = {0: "INFO", 1: "PLOT", 2: "DETECTION_SETTINGS"}
-        info_key = tab_to_info.get(index)
-        if info_key:
-            manager.info = Info[info_key]
-            settings.set("INFO", info_key)
+        if index < len(self._tab_map):
+            value = self._tab_map[index]
+            manager.info = Info[value]
+            settings.set("INFO", value)
         self.update_gui()
 
     def update_gui(self) -> None:
@@ -461,11 +468,11 @@ class MonitorLayout(Layout):
             case manager.info.INFO:
                 self.page5Layout.update_gui()
             case manager.info.DETECTION_SETTINGS:
-                self.page6Layout.update_gui()
+                self.page7Layout.update_gui()
             case manager.info.PLOT:
                 if manager.detection_change:
                     manager.detection_change = False
-                    self.page7Layout.update_gui()
+                    self.page6Layout.update_gui()
 
     def change_layout(self, auto: bool = False) -> bool:
         """Handles layout changes, stopping camera previews.
@@ -798,61 +805,75 @@ class BoxLayout(Layout):
 
     def draw(self) -> None:
         """Draws the motor, scale, LEDs and ports controls."""
-        self.draw_motor_buttons("MOTOR1", 6, 2, motor_box1)
-        self.draw_motor_buttons("MOTOR2", 11, 2, motor_box2)
 
-        self.visible_label: Label = self.create_and_add_label(
-            "Visible light: ", 1, 9, 12, 2, "black"
-        )
-        key = "VISIBLE_BOX"
-        possible_values = Cycle.values()
-        index = Cycle.get_index_from_value(manager.visible_box_cycle)
-        self.visible_button = self.create_and_add_toggle_button(
-            key,
-            1,
-            20,
-            10,
-            2,
-            possible_values,
-            index,
-            self.toggle_visible_button,
-            "Visible light in the box: ON, OFF, AUTO",
-        )
+        if manager.use_of_box_chip:
+            box_row = 1
+            if manager.controller_type == ControllerEnum.BPOD:
+                box_col = 2
+                bpod_row = 6
+                bpod_col = 20
+            else:
+                box_col = 12
+        else:
+            bpod_row = 2
+            bpod_col = 12
 
-        self.ir_label: Label = self.create_and_add_label(
-            "IR light: ", 3, 9, 12, 2, "black"
-        )
-        key = "IR_BOX"
-        possible_values = Cycle.values()
-        index = Cycle.get_index_from_value(manager.ir_box_cycle)
-        self.ir_button = self.create_and_add_toggle_button(
-            key,
-            3,
-            20,
-            10,
-            2,
-            possible_values,
-            index,
-            self.toggle_ir_button,
-            "Infrared light in the box: ON, OFF, AUTO",
-        )
+        if manager.use_of_box_chip:
+            self.draw_motor_buttons("MOTOR1", box_row + 5, box_col, motor_box1)
+            self.draw_motor_buttons("MOTOR2", box_row + 10, box_col, motor_box2)
 
-        self.change_angles: PushButton = self.create_and_add_button(
-            "SET MOTOR ANGLES",
-            16,
-            2,
-            16,
-            2,
-            self.change_angles_clicked,
-            "Modify the angle values for the motors.",
-        )
+            self.visible_label: Label = self.create_and_add_label(
+                "Visible light: ", box_row, 9, 12, 2, "black"
+            )
+            key = "VISIBLE_BOX"
+            possible_values = Cycle.values()
+            index = Cycle.get_index_from_value(manager.visible_box_cycle)
+            self.visible_button = self.create_and_add_toggle_button(
+                key,
+                box_row,
+                20,
+                10,
+                2,
+                possible_values,
+                index,
+                self.toggle_visible_button,
+                "Visible light in the box: ON, OFF, AUTO",
+            )
+
+            self.ir_label: Label = self.create_and_add_label(
+                "IR light: ", box_row + 2, 9, 12, 2, "black"
+            )
+            key = "IR_BOX"
+            possible_values = Cycle.values()
+            index = Cycle.get_index_from_value(manager.ir_box_cycle)
+            self.ir_button = self.create_and_add_toggle_button(
+                key,
+                box_row + 2,
+                20,
+                10,
+                2,
+                possible_values,
+                index,
+                self.toggle_ir_button,
+                "Infrared light in the box: ON, OFF, AUTO",
+            )
+
+            self.change_angles: PushButton = self.create_and_add_button(
+                "SET MOTOR ANGLES",
+                box_row + 15,
+                box_col,
+                16,
+                2,
+                self.change_angles_clicked,
+                "Modify the angle values for the motors.",
+            )
 
         if manager.controller_type == ControllerEnum.BPOD:
             for i in range(8):
                 button1 = self.create_and_add_button(
                     "LED" + str(i + 1),
-                    i * 2 + 6,
-                    20,
+                    i * 2 + bpod_row,
+                    bpod_col,
                     8,
                     2,
                     partial(self.led_clicked, i + 1),
@@ -862,8 +883,8 @@ class BoxLayout(Layout):
 
                 button2 = self.create_and_add_button(
                     "WATER" + str(i + 1),
-                    i * 2 + 6,
-                    28,
+                    i * 2 + bpod_row,
+                    bpod_col + 8,
                     8,
                     2,
                     partial(self.water_clicked, i + 1),
@@ -1053,12 +1074,12 @@ class VirtualMouseLayout(Layout):
     def draw(self) -> None:
         """Draws the virtual mouse controls."""
 
-        if manager.controller_type != ControllerEnum.BPOD:
+        if manager.controller_type == ControllerEnum.BPOD:
+            row_bpod = 2
             if (
                 settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON
                 or settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN
             ):
-                row_bpod = 2
                 col_bpod = 3
                 col_auto = 21
                 col_touch = 21
@@ -1070,6 +1091,16 @@ class VirtualMouseLayout(Layout):
             else:
                 row_bpod = 2
                 col_bpod = 12
+        else:
+            if settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON:
+                col_auto = 12
+                row_auto = 2
+                col_touch = 12
+                row_touch = 14
+            else:
+                row_touch = 2
+                col_touch = 12
+
 
         if manager.controller_type == ControllerEnum.BPOD:
             for i in range(8):
@@ -1091,7 +1122,7 @@ class VirtualMouseLayout(Layout):
                 "▶  AutoNoMouse",
                 row_auto,
                 col_auto,
-                14,
+                15,
                 2,
                 self.auto_no_mouse_clicked,
                 "Start/stop the automated virtual-mouse agent",
@@ -1137,7 +1168,7 @@ class VirtualMouseLayout(Layout):
                 "Inject Trials",
                 row_auto + 8,
                 col_auto,
-                14,
+                15,
                 2,
                 self._inject_trials,
                 "Inject N trials using p correct L/R into session_df",
@@ -1177,7 +1208,7 @@ class VirtualMouseLayout(Layout):
                 "Touch the screen",
                 row_touch + 4,
                 col_touch,
-                14,
+                15,
                 2,
                 self.touch_clicked,
                 "Touching the screen at the specified coordinates",
@@ -1329,18 +1360,36 @@ class DetectionLayout(Layout):
         """Draws the corridor configuration options."""
         self.lbs: list[LabelButtons] = []
 
-        self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 2, self.color_area1_str)
-        self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 22, self.color_area2_str)
-        self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 42, self.color_area3_str)
-        self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 62, self.color_area4_str)
+        if manager.use_of_corridor:
+            self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 2, self.color_area1_str)
+            self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 22, self.color_area2_str)
+            self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 42, self.color_area3_str)
+            self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 62, self.color_area4_str)
+            self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
+
+            self.detection_corridor_label: Label = self.create_and_add_label(
+                "View detection corridor: ", 0, 55, 20, 2, "black"
+            )
+            key = "VIEW_DETECTION_CORRIDOR"
+            possible_values = settings.get_values(key)
+            index = settings.get_index(key)
+            self.button_corridor = self.create_and_add_toggle_button(
+                key,
+                0,
+                75,
+                5,
+                2,
+                possible_values,
+                index,
+                self.toggle_corridor,
+                "View the detection in the corridor",
+        )
 
         self.draw_area_buttons_box("AREA1_BOX", 2, 123, self.color_area1_str)
         self.draw_area_buttons_box("AREA2_BOX", 2, 143, self.color_area2_str)
         self.draw_area_buttons_box("AREA3_BOX", 2, 163, self.color_area3_str)
         self.draw_area_buttons_box("AREA4_BOX", 2, 183, self.color_area4_str)
         self.draw_camera_options()
-
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
         self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 121)
 
         key = "USAGE1_BOX"
@@ -1401,24 +1450,6 @@ class DetectionLayout(Layout):
             index,
             self.toggle_area4_box,
             "If animals are allowed to be in this area",
-        )
-
-        self.detection_corridor_label: Label = self.create_and_add_label(
-            "View detection corridor: ", 0, 55, 20, 2, "black"
-        )
-        key = "VIEW_DETECTION_CORRIDOR"
-        possible_values = settings.get_values(key)
-        index = settings.get_index(key)
-        self.button_corridor = self.create_and_add_toggle_button(
-            key,
-            0,
-            75,
-            5,
-            2,
-            possible_values,
-            index,
-            self.toggle_corridor,
-            "View the detection in the corridor",
         )
 
         self.detection_box_label: Label = self.create_and_add_label(
@@ -1524,26 +1555,27 @@ class DetectionLayout(Layout):
         width = 10
         color = "black"
 
-        self.label_corridor: Label = self.create_and_add_label(
-            "CORRIDOR ADJUSTMENTS", row, column, 20, 2, color
-        )
-        row += 2
+        if manager.use_of_corridor:
+            self.label_corridor: Label = self.create_and_add_label(
+                "CORRIDOR ADJUSTMENTS", row, column, 20, 2, color
+            )
+            row += 2
 
-        lb = LabelButtons(
-            "LENS_POSITION_CORRIDOR", "lens_position", row, column, width, color, self
-        )
-        self.lbs.append(lb)
-        row += 2
-        lb = LabelButtons(
-            "SHARPNESS_CORRIDOR", "sharpness", row, column, width, color, self
-        )
-        self.lbs.append(lb)
-        row += 2
-        lb = LabelButtons(
-            "CONTRAST_CORRIDOR", "contrast", row, column, width, color, self
-        )
-        self.lbs.append(lb)
-        row += 2
+            lb = LabelButtons(
+                "LENS_POSITION_CORRIDOR", "lens_position", row, column, width, color, self
+            )
+            self.lbs.append(lb)
+            row += 2
+            lb = LabelButtons(
+                "SHARPNESS_CORRIDOR", "sharpness", row, column, width, color, self
+            )
+            self.lbs.append(lb)
+            row += 2
+            lb = LabelButtons(
+                "CONTRAST_CORRIDOR", "contrast", row, column, width, color, self
+            )
+            self.lbs.append(lb)
+            row += 2
 
         row = 2
         column = 102
