@@ -2,10 +2,12 @@ import traceback
 
 import smbus2
 
+from village.classes.enums import Active
 from village.classes.null_classes import NullTempSensor
-from village.manager import manager
 from village.scripts.log import log
 from village.settings import settings
+
+use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
 
 
 class TempSensor:
@@ -69,7 +71,7 @@ def get_temp_sensor(address: str) -> TempSensor | NullTempSensor:
     Returns:
         TempSensorBase: An initialized TempSensor or base class on failure.
     """
-    if not manager.use_of_corridor:
+    if not use_of_corridor:
         null_temp_sensor = NullTempSensor()
         null_temp_sensor.error = ""
         return null_temp_sensor

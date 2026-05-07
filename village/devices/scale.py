@@ -6,11 +6,13 @@ from typing import List
 import numpy as np
 import smbus2
 
+from village.classes.enums import Active
 from village.classes.null_classes import NullScale
-from village.manager import manager
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
+
+use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
 
 
 class Scale(NullScale):
@@ -171,7 +173,7 @@ def get_scale(
     Returns:
         Scale | NullScale: An initialized Scale instance or a null scale on failure.
     """
-    if not manager.use_of_corridor:
+    if not use_of_corridor:
         scale = NullScale()
         scale.error = ""
         return scale
