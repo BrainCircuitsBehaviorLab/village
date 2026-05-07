@@ -16,6 +16,7 @@ from village.classes.enums import (
     Cycle,
     DataTable,
     Info,
+    OldVersion,
     Save,
     State,
     SyncType,
@@ -138,8 +139,10 @@ class Manager:
         log.event = self.events
         log.temp = self.temperatures
         self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
-        self.use_of_corridor = settings.get("USE_CORRIDOR") == Active.ON
-        self.use_of_box_chip = settings.get("USE_BOX_BOARD") == Active.ON
+        self.use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
+        self.use_of_box_chip: bool = settings.get("USE_BOX_BOARD") == Active.ON
+        self.old_version_rfid: bool = settings.get("OLD_VERSION") == OldVersion.V01
+        self.old_version_motor: bool = settings.get("OLD_VERSION") != OldVersion.OFF
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod = bpod
             self.bpod.check_connection()

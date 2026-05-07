@@ -2,12 +2,11 @@ import traceback
 
 from PCA9685_smbus2 import PCA9685  # type: ignore
 
-from village.classes.enums import Active, OldVersion
 from village.classes.null_classes import NullChip, NullMotor
 from village.devices.motor_old import MotorOld
+from village.manager import manager
 from village.scripts.log import log
 from village.settings import settings
-from village.manager import manager
 
 # Init (50 Hz for servos)
 if manager.use_of_corridor and not manager.old_version_motor:

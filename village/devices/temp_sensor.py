@@ -2,8 +2,8 @@ import traceback
 
 import smbus2
 
-from village.classes.enums import Active
 from village.classes.null_classes import NullTempSensor
+from village.manager import manager
 from village.scripts.log import log
 from village.settings import settings
 

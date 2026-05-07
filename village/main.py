@@ -40,7 +40,7 @@ import time
 
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.enums import Active, OldVersion, State
+from village.classes.enums import Active, State
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.chip import (
     motor_box1,
@@ -115,8 +115,6 @@ def system_run(bevavior_window: QWidget) -> None:
     plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
     sound_alarm_timer = time_utils.Timer(3600)
     video_alarm_timer = time_utils.Timer(3600)
-    old_version_rfid = settings.get("OLD_VERSION") == OldVersion.V01
-    old_version_motor = settings.get("OLD_VERSION") != OldVersion.OFF
     manager.check_corridor_lights()
     manager.check_box_lights()
 
@@ -308,7 +306,11 @@ def system_run(bevavior_window: QWidget) -> None:
                         )
                         manager.state = State.OPEN_DOOR2_STOP
                         log.info("Going to OPEN_DOOR2_STOP State")
-                elif id == manager.subject.tag and id != "" and not old_version_rfid:
+                elif (
+                    id == manager.subject.tag
+                    and id != ""
+                    and not manager.old_version_rfid
+                ):
                     log.alarm(
                         "Wrong RFID detection: "
                         + " The main subject was detected in the corridor when it"

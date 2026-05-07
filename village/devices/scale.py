@@ -6,8 +6,8 @@ from typing import List
 import numpy as np
 import smbus2
 
-from village.classes.enums import Active
 from village.classes.null_classes import NullScale
+from village.manager import manager
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings

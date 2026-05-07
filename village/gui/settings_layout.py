@@ -598,10 +598,9 @@ class SettingsLayout(Layout):
             "OLD_VERSION",
             "CHIP_CORRIDOR_ADDRESS",
             "CHIP_BOX_ADDRESS",
-            "SCALE_ADDRESS",
-            "TEMP_SENSOR_ADDRESS",
             "USE_CORRIDOR",
-            "USE_BOX_CHIP",
+            "USE_BOX_BOARD",
+            "CAM_BOX_TRACKING_POSITION",
         ]
 
         # Keys in the current section's tracking lists (will be processed with
