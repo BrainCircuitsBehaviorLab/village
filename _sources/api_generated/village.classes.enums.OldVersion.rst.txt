@@ -1,0 +1,36 @@
+OldVersion
+==========
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: OldVersion
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OldVersion.keys
+      ~OldVersion.values
+      ~OldVersion.get_index_from_value
+      ~OldVersion.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OldVersion.OFF
+      ~OldVersion.V01
+      ~OldVersion.V02
+   
+   

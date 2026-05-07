@@ -27,6 +27,7 @@ enums
       Cycle
       DataTable
       Info
+      OldVersion
       Save
       ScreenActive
       State

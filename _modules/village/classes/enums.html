@@ -122,6 +122,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.State.html">State</a></li>
@@ -520,182 +521,191 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="90">
 </span><span data-line="91">
+<div class="viewcode-block" id="OldVersion">
+<a class="viewcode-back" href="../../../api_generated/village.classes.enums.OldVersion.html#village.classes.enums.OldVersion">[docs]</a>
+</span><span data-line="92"><span class="k">class</span><span class="w"> </span><span class="nc">OldVersion</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="93">    <span class="n">OFF</span> <span class="o">=</span> <span class="s2">&quot;OFF&quot;</span>
+</span><span data-line="94">    <span class="n">V01</span> <span class="o">=</span> <span class="s2">&quot;V0.1&quot;</span>
+</span><span data-line="95">    <span class="n">V02</span> <span class="o">=</span> <span class="s2">&quot;V0.2&quot;</span></div>
+
+</span><span data-line="96">
+</span><span data-line="97">
 <div class="viewcode-block" id="State">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State">[docs]</a>
-</span><span data-line="92"><span class="k">class</span><span class="w"> </span><span class="nc">State</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="93"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Enum representing the state of the village system.&quot;&quot;&quot;</span>
-</span><span data-line="94">
-</span><span data-line="95">    <span class="n">WAIT</span> <span class="o">=</span> <span class="s2">&quot;All subjects are at home, waiting for RFID detection&quot;</span>
-</span><span data-line="96">    <span class="n">DETECTION</span> <span class="o">=</span> <span class="s2">&quot;Gathering subject data, checking requirements to enter&quot;</span>
-</span><span data-line="97">    <span class="n">ACCESS</span> <span class="o">=</span> <span class="s2">&quot;Closing door1, opening door2&quot;</span>
-</span><span data-line="98">    <span class="n">LAUNCH_AUTO</span> <span class="o">=</span> <span class="s2">&quot;Automatically launching the task&quot;</span>
-</span><span data-line="99">    <span class="n">RUN_FIRST</span> <span class="o">=</span> <span class="s2">&quot;Task running, waiting for the corridor to become empty&quot;</span>
-</span><span data-line="100">    <span class="n">CLOSE_DOOR2</span> <span class="o">=</span> <span class="s2">&quot;Closing door2&quot;</span>
-</span><span data-line="101">    <span class="n">RUN_CLOSED</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject cannot leave yet&quot;</span>
-</span><span data-line="102">    <span class="n">OPEN_DOOR2</span> <span class="o">=</span> <span class="s2">&quot;Opening door2&quot;</span>
-</span><span data-line="103">    <span class="n">RUN_OPENED</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject can leave&quot;</span>
-</span><span data-line="104">    <span class="n">EXIT_UNSAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1; data still not saved&quot;</span>
-</span><span data-line="105">    <span class="n">SAVE_OUTSIDE</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; the subject is already outside&quot;</span>
-</span><span data-line="106">    <span class="n">SAVE_INSIDE</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; the subject is still inside&quot;</span>
-</span><span data-line="107">    <span class="n">WAIT_EXIT</span> <span class="o">=</span> <span class="s2">&quot;Task finished, waiting for the subject to leave&quot;</span>
-</span><span data-line="108">    <span class="n">EXIT_SAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1; data already saved&quot;</span>
-</span><span data-line="109">    <span class="n">OPEN_DOOR2_STOP</span> <span class="o">=</span> <span class="s2">&quot;Opening door2, disconnecting RFID&quot;</span>
-</span><span data-line="110">    <span class="n">MANUAL_MODE</span> <span class="o">=</span> <span class="s2">&quot;Settings are being changed or task is being manually prepared&quot;</span>
-</span><span data-line="111">    <span class="n">LAUNCH_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Manually launching the task&quot;</span>
-</span><span data-line="112">    <span class="n">RUN_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Task running manually&quot;</span>
-</span><span data-line="113">    <span class="n">SAVE_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; task is running manually&quot;</span>
-</span><span data-line="114">    <span class="n">SYNC</span> <span class="o">=</span> <span class="s2">&quot;Synchronizing data or doing user-defined tasks&quot;</span>
-</span><span data-line="115">    <span class="n">EXIT_GUI</span> <span class="o">=</span> <span class="s2">&quot;In the GUI window, ready to exit the app&quot;</span>
-</span><span data-line="116">
+</span><span data-line="98"><span class="k">class</span><span class="w"> </span><span class="nc">State</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="99"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Enum representing the state of the village system.&quot;&quot;&quot;</span>
+</span><span data-line="100">
+</span><span data-line="101">    <span class="n">WAIT</span> <span class="o">=</span> <span class="s2">&quot;All subjects are at home, waiting for RFID detection&quot;</span>
+</span><span data-line="102">    <span class="n">DETECTION</span> <span class="o">=</span> <span class="s2">&quot;Gathering subject data, checking requirements to enter&quot;</span>
+</span><span data-line="103">    <span class="n">ACCESS</span> <span class="o">=</span> <span class="s2">&quot;Closing door1, opening door2&quot;</span>
+</span><span data-line="104">    <span class="n">LAUNCH_AUTO</span> <span class="o">=</span> <span class="s2">&quot;Automatically launching the task&quot;</span>
+</span><span data-line="105">    <span class="n">RUN_FIRST</span> <span class="o">=</span> <span class="s2">&quot;Task running, waiting for the corridor to become empty&quot;</span>
+</span><span data-line="106">    <span class="n">CLOSE_DOOR2</span> <span class="o">=</span> <span class="s2">&quot;Closing door2&quot;</span>
+</span><span data-line="107">    <span class="n">RUN_CLOSED</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject cannot leave yet&quot;</span>
+</span><span data-line="108">    <span class="n">OPEN_DOOR2</span> <span class="o">=</span> <span class="s2">&quot;Opening door2&quot;</span>
+</span><span data-line="109">    <span class="n">RUN_OPENED</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject can leave&quot;</span>
+</span><span data-line="110">    <span class="n">EXIT_UNSAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1; data still not saved&quot;</span>
+</span><span data-line="111">    <span class="n">SAVE_OUTSIDE</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; the subject is already outside&quot;</span>
+</span><span data-line="112">    <span class="n">SAVE_INSIDE</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; the subject is still inside&quot;</span>
+</span><span data-line="113">    <span class="n">WAIT_EXIT</span> <span class="o">=</span> <span class="s2">&quot;Task finished, waiting for the subject to leave&quot;</span>
+</span><span data-line="114">    <span class="n">EXIT_SAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1; data already saved&quot;</span>
+</span><span data-line="115">    <span class="n">OPEN_DOOR2_STOP</span> <span class="o">=</span> <span class="s2">&quot;Opening door2, disconnecting RFID&quot;</span>
+</span><span data-line="116">    <span class="n">MANUAL_MODE</span> <span class="o">=</span> <span class="s2">&quot;Settings are being changed or task is being manually prepared&quot;</span>
+</span><span data-line="117">    <span class="n">LAUNCH_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Manually launching the task&quot;</span>
+</span><span data-line="118">    <span class="n">RUN_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Task running manually&quot;</span>
+</span><span data-line="119">    <span class="n">SAVE_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; task is running manually&quot;</span>
+</span><span data-line="120">    <span class="n">SYNC</span> <span class="o">=</span> <span class="s2">&quot;Synchronizing data or doing user-defined tasks&quot;</span>
+</span><span data-line="121">    <span class="n">EXIT_GUI</span> <span class="o">=</span> <span class="s2">&quot;In the GUI window, ready to exit the app&quot;</span>
+</span><span data-line="122">
 <div class="viewcode-block" id="State.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.__init__">[docs]</a>
-</span><span data-line="117">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="118"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the State enum with a description.&quot;&quot;&quot;</span>
-</span><span data-line="119">        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span></div>
+</span><span data-line="123">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="124"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the State enum with a description.&quot;&quot;&quot;</span>
+</span><span data-line="125">        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span></div>
 
-</span><span data-line="120">
+</span><span data-line="126">
 <div class="viewcode-block" id="State.can_exit">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.can_exit">[docs]</a>
-</span><span data-line="121">    <span class="k">def</span><span class="w"> </span><span class="nf">can_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="122"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the system can exit in this state.</span>
-</span><span data-line="123">
-</span><span data-line="124"><span class="sd">        Returns:</span>
-</span><span data-line="125"><span class="sd">            bool: True if exit is allowed.</span>
-</span><span data-line="126"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="127">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">MANUAL_MODE</span><span class="p">):</span>
-</span><span data-line="128">            <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="129">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="130">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="127">    <span class="k">def</span><span class="w"> </span><span class="nf">can_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="128"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the system can exit in this state.</span>
+</span><span data-line="129">
+</span><span data-line="130"><span class="sd">        Returns:</span>
+</span><span data-line="131"><span class="sd">            bool: True if exit is allowed.</span>
+</span><span data-line="132"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="133">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">MANUAL_MODE</span><span class="p">):</span>
+</span><span data-line="134">            <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="135">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="136">            <span class="k">return</span> <span class="kc">False</span></div>
 
-</span><span data-line="131">
+</span><span data-line="137">
 <div class="viewcode-block" id="State.can_edit_data">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.can_edit_data">[docs]</a>
-</span><span data-line="132">    <span class="k">def</span><span class="w"> </span><span class="nf">can_edit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="133"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if data editing is allowed in this state.</span>
-</span><span data-line="134">
-</span><span data-line="135"><span class="sd">        Returns:</span>
-</span><span data-line="136"><span class="sd">            bool: True if editing is allowed.</span>
-</span><span data-line="137"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="138">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">MANUAL_MODE</span><span class="p">):</span>
-</span><span data-line="139">            <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="140">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="141">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="138">    <span class="k">def</span><span class="w"> </span><span class="nf">can_edit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="139"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if data editing is allowed in this state.</span>
+</span><span data-line="140">
+</span><span data-line="141"><span class="sd">        Returns:</span>
+</span><span data-line="142"><span class="sd">            bool: True if editing is allowed.</span>
+</span><span data-line="143"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="144">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">MANUAL_MODE</span><span class="p">):</span>
+</span><span data-line="145">            <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="146">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="147">            <span class="k">return</span> <span class="kc">False</span></div>
 
-</span><span data-line="142">
+</span><span data-line="148">
 <div class="viewcode-block" id="State.can_calibrate_scale">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.can_calibrate_scale">[docs]</a>
-</span><span data-line="143">    <span class="k">def</span><span class="w"> </span><span class="nf">can_calibrate_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="144"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if scale calibration is allowed in this state.</span>
-</span><span data-line="145">
-</span><span data-line="146"><span class="sd">        Returns:</span>
-</span><span data-line="147"><span class="sd">            bool: True if calibration is allowed.</span>
-</span><span data-line="148"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="149">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">MANUAL_MODE</span><span class="p">):</span>
-</span><span data-line="150">            <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="151">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="152">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="149">    <span class="k">def</span><span class="w"> </span><span class="nf">can_calibrate_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="150"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if scale calibration is allowed in this state.</span>
+</span><span data-line="151">
+</span><span data-line="152"><span class="sd">        Returns:</span>
+</span><span data-line="153"><span class="sd">            bool: True if calibration is allowed.</span>
+</span><span data-line="154"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="155">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">State</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">State</span><span class="o">.</span><span class="n">MANUAL_MODE</span><span class="p">):</span>
+</span><span data-line="156">            <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="157">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="158">            <span class="k">return</span> <span class="kc">False</span></div>
 
-</span><span data-line="153">
+</span><span data-line="159">
 <div class="viewcode-block" id="State.can_stop_task">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.can_stop_task">[docs]</a>
-</span><span data-line="154">    <span class="k">def</span><span class="w"> </span><span class="nf">can_stop_task</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="155"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the running task can be stopped.</span>
-</span><span data-line="156">
-</span><span data-line="157"><span class="sd">        Returns:</span>
-</span><span data-line="158"><span class="sd">            bool: True if task can be stopped.</span>
-</span><span data-line="159"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="160">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span>
-</span><span data-line="161">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
-</span><span data-line="162">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_CLOSED</span><span class="p">,</span>
-</span><span data-line="163">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
-</span><span data-line="164">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span>
-</span><span data-line="165">        <span class="p">):</span>
-</span><span data-line="166">            <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="167">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="168">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="160">    <span class="k">def</span><span class="w"> </span><span class="nf">can_stop_task</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="161"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the running task can be stopped.</span>
+</span><span data-line="162">
+</span><span data-line="163"><span class="sd">        Returns:</span>
+</span><span data-line="164"><span class="sd">            bool: True if task can be stopped.</span>
+</span><span data-line="165"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="166">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span>
+</span><span data-line="167">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
+</span><span data-line="168">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_CLOSED</span><span class="p">,</span>
+</span><span data-line="169">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
+</span><span data-line="170">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span>
+</span><span data-line="171">        <span class="p">):</span>
+</span><span data-line="172">            <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="173">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="174">            <span class="k">return</span> <span class="kc">False</span></div>
 
-</span><span data-line="169">
+</span><span data-line="175">
 <div class="viewcode-block" id="State.can_stop_syncing">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.can_stop_syncing">[docs]</a>
-</span><span data-line="170">    <span class="k">def</span><span class="w"> </span><span class="nf">can_stop_syncing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="171"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if syncing process can be stopped.</span>
-</span><span data-line="172">
-</span><span data-line="173"><span class="sd">        Returns:</span>
-</span><span data-line="174"><span class="sd">            bool: True if syncing can be stopped.</span>
-</span><span data-line="175"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="176">        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">SYNC</span><span class="p">:</span>
-</span><span data-line="177">            <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="178">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="179">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="176">    <span class="k">def</span><span class="w"> </span><span class="nf">can_stop_syncing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="177"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if syncing process can be stopped.</span>
+</span><span data-line="178">
+</span><span data-line="179"><span class="sd">        Returns:</span>
+</span><span data-line="180"><span class="sd">            bool: True if syncing can be stopped.</span>
+</span><span data-line="181"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="182">        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">SYNC</span><span class="p">:</span>
+</span><span data-line="183">            <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="184">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="185">            <span class="k">return</span> <span class="kc">False</span></div>
 
-</span><span data-line="180">
+</span><span data-line="186">
 <div class="viewcode-block" id="State.can_go_to_wait">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.can_go_to_wait">[docs]</a>
-</span><span data-line="181">    <span class="k">def</span><span class="w"> </span><span class="nf">can_go_to_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="182"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the state can transition to WAIT.</span>
-</span><span data-line="183">
-</span><span data-line="184"><span class="sd">        Returns:</span>
-</span><span data-line="185"><span class="sd">            bool: True if transition to WAIT is allowed.</span>
-</span><span data-line="186"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="187">        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT_EXIT</span><span class="p">:</span>
-</span><span data-line="188">            <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="189">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="190">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="187">    <span class="k">def</span><span class="w"> </span><span class="nf">can_go_to_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="188"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the state can transition to WAIT.</span>
+</span><span data-line="189">
+</span><span data-line="190"><span class="sd">        Returns:</span>
+</span><span data-line="191"><span class="sd">            bool: True if transition to WAIT is allowed.</span>
+</span><span data-line="192"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="193">        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT_EXIT</span><span class="p">:</span>
+</span><span data-line="194">            <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="195">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="196">            <span class="k">return</span> <span class="kc">False</span></div>
 </div>
-
-</span><span data-line="191">
-</span><span data-line="192">
-<div class="viewcode-block" id="Cycle">
-<a class="viewcode-back" href="../../../api_generated/village.classes.enums.Cycle.html#village.classes.enums.Cycle">[docs]</a>
-</span><span data-line="193"><span class="k">class</span><span class="w"> </span><span class="nc">Cycle</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="194">    <span class="n">AUTO</span> <span class="o">=</span> <span class="s2">&quot;AUTO&quot;</span>
-</span><span data-line="195">    <span class="n">ON</span> <span class="o">=</span> <span class="s2">&quot;ON&quot;</span>
-</span><span data-line="196">    <span class="n">OFF</span> <span class="o">=</span> <span class="s2">&quot;OFF&quot;</span></div>
 
 </span><span data-line="197">
 </span><span data-line="198">
+<div class="viewcode-block" id="Cycle">
+<a class="viewcode-back" href="../../../api_generated/village.classes.enums.Cycle.html#village.classes.enums.Cycle">[docs]</a>
+</span><span data-line="199"><span class="k">class</span><span class="w"> </span><span class="nc">Cycle</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="200">    <span class="n">AUTO</span> <span class="o">=</span> <span class="s2">&quot;AUTO&quot;</span>
+</span><span data-line="201">    <span class="n">ON</span> <span class="o">=</span> <span class="s2">&quot;ON&quot;</span>
+</span><span data-line="202">    <span class="n">OFF</span> <span class="o">=</span> <span class="s2">&quot;OFF&quot;</span></div>
+
+</span><span data-line="203">
+</span><span data-line="204">
 <div class="viewcode-block" id="Actions">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.Actions.html#village.classes.enums.Actions">[docs]</a>
-</span><span data-line="199"><span class="k">class</span><span class="w"> </span><span class="nc">Actions</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="200">    <span class="n">CORRIDOR</span> <span class="o">=</span> <span class="s2">&quot;CORRIDOR&quot;</span>
-</span><span data-line="201">    <span class="n">BOX</span> <span class="o">=</span> <span class="s2">&quot;BOX&quot;</span>
-</span><span data-line="202">    <span class="n">FUNCTIONS</span> <span class="o">=</span> <span class="s2">&quot;FUNCTIONS&quot;</span>
-</span><span data-line="203">    <span class="n">VIRTUAL_MOUSE</span> <span class="o">=</span> <span class="s2">&quot;VIRTUAL_MOUSE&quot;</span></div>
-
-</span><span data-line="204">
-</span><span data-line="205">
-<div class="viewcode-block" id="Info">
-<a class="viewcode-back" href="../../../api_generated/village.classes.enums.Info.html#village.classes.enums.Info">[docs]</a>
-</span><span data-line="206"><span class="k">class</span><span class="w"> </span><span class="nc">Info</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="207">    <span class="n">INFO</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span>
-</span><span data-line="208">    <span class="n">PLOT</span> <span class="o">=</span> <span class="s2">&quot;PLOT&quot;</span>
-</span><span data-line="209">    <span class="n">DETECTION_SETTINGS</span> <span class="o">=</span> <span class="s2">&quot;DETECTION_SETTINGS&quot;</span></div>
+</span><span data-line="205"><span class="k">class</span><span class="w"> </span><span class="nc">Actions</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="206">    <span class="n">CORRIDOR</span> <span class="o">=</span> <span class="s2">&quot;CORRIDOR&quot;</span>
+</span><span data-line="207">    <span class="n">BOX</span> <span class="o">=</span> <span class="s2">&quot;BOX&quot;</span>
+</span><span data-line="208">    <span class="n">FUNCTIONS</span> <span class="o">=</span> <span class="s2">&quot;FUNCTIONS&quot;</span>
+</span><span data-line="209">    <span class="n">VIRTUAL_MOUSE</span> <span class="o">=</span> <span class="s2">&quot;VIRTUAL_MOUSE&quot;</span></div>
 
 </span><span data-line="210">
 </span><span data-line="211">
+<div class="viewcode-block" id="Info">
+<a class="viewcode-back" href="../../../api_generated/village.classes.enums.Info.html#village.classes.enums.Info">[docs]</a>
+</span><span data-line="212"><span class="k">class</span><span class="w"> </span><span class="nc">Info</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="213">    <span class="n">INFO</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span>
+</span><span data-line="214">    <span class="n">PLOT</span> <span class="o">=</span> <span class="s2">&quot;PLOT&quot;</span>
+</span><span data-line="215">    <span class="n">DETECTION_SETTINGS</span> <span class="o">=</span> <span class="s2">&quot;DETECTION_SETTINGS&quot;</span></div>
+
+</span><span data-line="216">
+</span><span data-line="217">
 <div class="viewcode-block" id="DataTable">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.DataTable.html#village.classes.enums.DataTable">[docs]</a>
-</span><span data-line="212"><span class="k">class</span><span class="w"> </span><span class="nc">DataTable</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="213">    <span class="n">EVENTS</span> <span class="o">=</span> <span class="s2">&quot;EVENTS&quot;</span>
-</span><span data-line="214">    <span class="n">SESSIONS_SUMMARY</span> <span class="o">=</span> <span class="s2">&quot;SESSIONS_SUMMARY&quot;</span>
-</span><span data-line="215">    <span class="n">SUBJECTS</span> <span class="o">=</span> <span class="s2">&quot;SUBJECTS&quot;</span>
-</span><span data-line="216">    <span class="n">WATER_CALIBRATION</span> <span class="o">=</span> <span class="s2">&quot;WATER_CALIBRATION&quot;</span>
-</span><span data-line="217">    <span class="n">SOUND_CALIBRATION</span> <span class="o">=</span> <span class="s2">&quot;SOUND_CALIBRATION&quot;</span>
-</span><span data-line="218">    <span class="n">TEMPERATURES</span> <span class="o">=</span> <span class="s2">&quot;TEMPERATURES&quot;</span>
-</span><span data-line="219">    <span class="n">SESSION</span> <span class="o">=</span> <span class="s2">&quot;SESSION&quot;</span>
-</span><span data-line="220">    <span class="n">SESSION_RAW</span> <span class="o">=</span> <span class="s2">&quot;SESSION_RAW&quot;</span>
-</span><span data-line="221">    <span class="n">OLD_SESSION</span> <span class="o">=</span> <span class="s2">&quot;OLD_SESSION&quot;</span>
-</span><span data-line="222">    <span class="n">OLD_SESSION_RAW</span> <span class="o">=</span> <span class="s2">&quot;OLD_SESSION_RAW&quot;</span></div>
+</span><span data-line="218"><span class="k">class</span><span class="w"> </span><span class="nc">DataTable</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="219">    <span class="n">EVENTS</span> <span class="o">=</span> <span class="s2">&quot;EVENTS&quot;</span>
+</span><span data-line="220">    <span class="n">SESSIONS_SUMMARY</span> <span class="o">=</span> <span class="s2">&quot;SESSIONS_SUMMARY&quot;</span>
+</span><span data-line="221">    <span class="n">SUBJECTS</span> <span class="o">=</span> <span class="s2">&quot;SUBJECTS&quot;</span>
+</span><span data-line="222">    <span class="n">WATER_CALIBRATION</span> <span class="o">=</span> <span class="s2">&quot;WATER_CALIBRATION&quot;</span>
+</span><span data-line="223">    <span class="n">SOUND_CALIBRATION</span> <span class="o">=</span> <span class="s2">&quot;SOUND_CALIBRATION&quot;</span>
+</span><span data-line="224">    <span class="n">TEMPERATURES</span> <span class="o">=</span> <span class="s2">&quot;TEMPERATURES&quot;</span>
+</span><span data-line="225">    <span class="n">SESSION</span> <span class="o">=</span> <span class="s2">&quot;SESSION&quot;</span>
+</span><span data-line="226">    <span class="n">SESSION_RAW</span> <span class="o">=</span> <span class="s2">&quot;SESSION_RAW&quot;</span>
+</span><span data-line="227">    <span class="n">OLD_SESSION</span> <span class="o">=</span> <span class="s2">&quot;OLD_SESSION&quot;</span>
+</span><span data-line="228">    <span class="n">OLD_SESSION_RAW</span> <span class="o">=</span> <span class="s2">&quot;OLD_SESSION_RAW&quot;</span></div>
 
-</span><span data-line="223">
-</span><span data-line="224">
+</span><span data-line="229">
+</span><span data-line="230">
 <div class="viewcode-block" id="Save">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.Save.html#village.classes.enums.Save">[docs]</a>
-</span><span data-line="225"><span class="k">class</span><span class="w"> </span><span class="nc">Save</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="226">    <span class="n">YES</span> <span class="o">=</span> <span class="s2">&quot;YES&quot;</span>
-</span><span data-line="227">    <span class="n">NO</span> <span class="o">=</span> <span class="s2">&quot;NO&quot;</span>
-</span><span data-line="228">    <span class="n">ZERO</span> <span class="o">=</span> <span class="s2">&quot;ZERO&quot;</span>
-</span><span data-line="229">    <span class="n">ERROR</span> <span class="o">=</span> <span class="s2">&quot;ERROR&quot;</span></div>
+</span><span data-line="231"><span class="k">class</span><span class="w"> </span><span class="nc">Save</span><span class="p">(</span><span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="232">    <span class="n">YES</span> <span class="o">=</span> <span class="s2">&quot;YES&quot;</span>
+</span><span data-line="233">    <span class="n">NO</span> <span class="o">=</span> <span class="s2">&quot;NO&quot;</span>
+</span><span data-line="234">    <span class="n">ZERO</span> <span class="o">=</span> <span class="s2">&quot;ZERO&quot;</span>
+</span><span data-line="235">    <span class="n">ERROR</span> <span class="o">=</span> <span class="s2">&quot;ERROR&quot;</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -721,7 +731,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=3e0daba9"></script>
+      <script src="../../../_static/documentation_options.js?v=f675fbf5"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
