@@ -9,6 +9,7 @@ from village.classes.settings_class import (
     ControllerEnum,
     Cycle,
     Info,
+    OldVersion,
     ScreenActive,
     Setting,
     Settings,
@@ -29,30 +30,31 @@ default_sync_directory = str(
 main_settings = [
     Setting("SYSTEM_NAME", default_system_name, str, "The system’s unique name."),
     Setting(
-        "DAYTIME",
-        "08:00",
-        str,
-        """This setting defines when the daytime cycle begins. At the start of each
-cycle, the system performs various checks. The entry plot for the behavioral box uses
-this value to distinguish between day and night periods. If lighting conditions differ
-between day and night, the system will adjust detection thresholds accordingly.""",
+        "USE_CORRIDOR",
+        "ON",
+        Active,
+        """Enables the complete Corridor subsystem, integrating the control PCB
+(RFID reader, scale, temperature sensor, motors, and lighting) and the dedicated
+corridor camera. This setting also activates Telegram notifications for real-time
+remote monitoring. Keep ON for fully automated Training Village experiments. Disable
+only when running standalone Operant Box sessions without the corridor, such as for
+tethered ephys or optogenetics recordings.""",
     ),
     Setting(
-        "NIGHTTIME",
-        "20:00",
-        str,
-        """This setting defines when the nighttime cycle begins. At the start of each
-cycle, the system performs various checks. The entry plot for the behavioral box uses
-this value to distinguish between day and night periods. If lighting conditions differ
-between day and night, the system will adjust detection thresholds accordingly.""",
+        "USE_BOX",
+        "ON",
+        Active,
+        """Enables the Operant Box subsystem, including the control PCB (LED stimuli,
+running manual sessions in the Operant Box
+(e.g., for tethered ephys or optogenetics recordings).""",
     ),
     Setting(
-        "DETECTION_COLOR",
-        "BLACK",
-        Color,
-        """If the animals are darker than the background, the system detects black
-pixels against a white background. If the animals are lighter than the
-background, the system detects white pixels against a black background.""",
+        "USE_BOX_BOARD",
+        "ON",
+        Active,
+        """Enables the Operant Box PCB. This setting allows the Raspberry Pi to control
+some box components, such as LED stimuli, visible/infrared lighting,
+and motors.""",
     ),
 ]
 
@@ -396,6 +398,32 @@ which provides a clear view of the system activity while keeping CPU usage low."
 
 corridor_settings = [
     Setting(
+        "DAYTIME",
+        "08:00",
+        str,
+        """This setting defines when the daytime cycle begins. At the start of each
+cycle, the system performs various checks. The entry plot for the behavioral box uses
+this value to distinguish between day and night periods. If lighting conditions differ
+between day and night, the system will adjust detection thresholds accordingly.""",
+    ),
+    Setting(
+        "NIGHTTIME",
+        "20:00",
+        str,
+        """This setting defines when the nighttime cycle begins. At the start of each
+cycle, the system performs various checks. The entry plot for the behavioral box uses
+this value to distinguish between day and night periods. If lighting conditions differ
+between day and night, the system will adjust detection thresholds accordingly.""",
+    ),
+    Setting(
+        "DETECTION_COLOR",
+        "BLACK",
+        Color,
+        """If the animals are darker than the background, the system detects black
+pixels against a white background. If the animals are lighter than the
+background, the system detects white pixels against a black background.""",
+    ),
+    Setting(
         "DETECTION_DURATION",
         0.5,
         float,
@@ -470,7 +498,7 @@ preventing unnecessary processing.""",
     Setting(
         "OLD_VERSION",
         "OFF",
-        Active,
+        OldVersion,
         """Use the old version of the Hardware Attached on Top (HAT) that only has
         2 servo motors and no LEDs.""",
     ),

@@ -6,6 +6,7 @@ from typing import List
 import numpy as np
 import smbus2
 
+from village.classes.enums import Active
 from village.classes.null_classes import NullScale
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
@@ -170,6 +171,10 @@ def get_scale(
     Returns:
         Scale | NullScale: An initialized Scale instance or a null scale on failure.
     """
+    if settings.get("USE_CORRIDOR") == Active.OFF:
+        scale = NullScale()
+        scale.error = ""
+        return scale
     try:
         scale = Scale(
             address=address, min_threshold=min_threshold, max_threshold=max_threshold

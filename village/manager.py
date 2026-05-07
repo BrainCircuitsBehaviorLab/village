@@ -138,6 +138,8 @@ class Manager:
         log.event = self.events
         log.temp = self.temperatures
         self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
+        self.use_of_corridor = settings.get("USE_CORRIDOR") == Active.ON
+        self.use_of_box_chip = settings.get("USE_BOX_BOARD") == Active.ON
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod = bpod
             self.bpod.check_connection()

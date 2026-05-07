@@ -10,6 +10,7 @@ from village.classes.enums import (
     ControllerEnum,
     Cycle,
     Info,
+    OldVersion,
     ScreenActive,
     SuperEnum,
     SyncType,
@@ -229,6 +230,8 @@ class Settings:
                 return ScreenActive(str_value)
             elif type == AreaActive:
                 return AreaActive(str_value)
+            elif type == OldVersion:
+                return OldVersion(str_value)
             elif type == list[str]:
                 return self.saved_settings.value(key)
             elif type == list[int]:

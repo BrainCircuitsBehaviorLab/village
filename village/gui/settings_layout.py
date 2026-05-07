@@ -48,11 +48,11 @@ mini_box = 7
 
 MENU_SECTIONS = [
     "MAIN SETTINGS",
+    "CORRIDOR SETTINGS",
     "CONTROLLER SETTINGS",
+    "CAMERA SETTINGS",
     "SOUND SETTINGS",
     "SCREEN SETTINGS",
-    "CAMERA SETTINGS",
-    "CORRIDOR SETTINGS",
     "SYNC SETTINGS",
     "TELEGRAM SETTINGS",
     "ADVANCED SETTINGS",
@@ -61,18 +61,39 @@ MENU_SECTIONS = [
 
 MENU_TOOLTIPS: dict[str, str] = {
     "MAIN SETTINGS": ("Main settings and project configuration."),
-    "CONTROLLER SETTINGS": ("Behavior controller type (Bpod, Arduino, Raspberry)."),
-    "SOUND SETTINGS": "Soundcard and audio device configuration.",
-    "SCREEN SETTINGS": ("Screen or touchscreen configuration for behavioral stimuli."),
-    "CAMERA SETTINGS": ("Camera framerates, resolution and tracking settings."),
     "CORRIDOR SETTINGS": (
         "Detection thresholds, weight limits and timing for corridor access."
     ),
+    "CONTROLLER SETTINGS": ("Behavior controller type (Bpod, Arduino, Raspberry)."),
+    "CAMERA SETTINGS": ("Camera framerates, resolution and tracking settings."),
+    "SOUND SETTINGS": "Soundcard and audio device configuration.",
+    "SCREEN SETTINGS": ("Screen or touchscreen configuration for behavioral stimuli."),
     "SYNC SETTINGS": "Data synchronization to external drive or remote server.",
     "TELEGRAM SETTINGS": ("Telegram and alarm settings for notifications."),
     "ADVANCED SETTINGS": ("Advanced and visual settings."),
     "DEVICE ADDRESSES": ("Addresses for connected hardware devices."),
 }
+
+no_corridor = [
+    "CAM_CORRIDOR_INDEX",
+    "CAM_CORRIDOR_FRAMERATE",
+    "CORRIDOR_VIDEO_DURATION",
+    "VISIBLE_LIGHT_CORRIDOR_INDEX",
+    "IR_LIGHT_CORRIDOR_INDEX",
+    "MOTOR1_CORRIDOR_INDEX",
+    "MOTOR2_CORRIDOR_INDEX",
+    "CHIP_CORRIDOR_ADDRESS",
+    "SCALE_ADDRESS",
+    "TEMP_SENSOR_ADDRESS",
+]
+
+no_box_board = [
+    "VISIBLE_LIGHT_BOX_INDEX",
+    "IR_LIGHT_BOX_INDEX",
+    "MOTOR1_BOX_INDEX",
+    "MOTOR2_BOX_INDEX",
+    "CHIP_BOX_ADDRESS",
+]
 
 # Keys whose toggle value affects what is shown within their section
 _CONDITIONAL_KEYS: dict[str, str] = {
@@ -128,6 +149,20 @@ class SettingsLayout(Layout):
             with suppress(Exception):
                 return [possible.index(str(v)) for v in vals]
         return settings.get_indices(key)
+
+    @property
+    def _active_sections(self) -> list[str]:
+        hidden: set[str] = set()
+        if not manager.use_of_corridor:
+            hidden.update({"CORRIDOR SETTINGS", "TELEGRAM SETTINGS"})
+        return [s for s in MENU_SECTIONS if s not in hidden]
+
+    def _should_show(self, key: str) -> bool:
+        if not manager.use_of_corridor and key in no_corridor:
+            return False
+        if not manager.use_of_box_chip and key in no_box_board:
+            return False
+        return True
 
     # ── Tracking lists ─────────────────────────────────────────────────────────
 
@@ -226,12 +261,12 @@ class SettingsLayout(Layout):
             "QToolTip { background-color: white; color: black; font-size: 9pt; }"
         )
         self.menu_list.setSpacing(1)
-        for name in MENU_SECTIONS:
+        for name in self._active_sections:
             item = QListWidgetItem(name)
             item.setToolTip(MENU_TOOLTIPS.get(name, name))
             self.menu_list.addItem(item)
         self.menu_list.currentRowChanged.connect(
-            lambda i: self.select_section(MENU_SECTIONS[i])
+            lambda i: self.select_section(self._active_sections[i])
         )
         self.addWidget(self.menu_list, C_ROW, MENU_COL, 46, MENU_WIDTH + 2)
 
@@ -260,7 +295,10 @@ class SettingsLayout(Layout):
         self.restore_button.clicked.connect(self.restore_button_clicked)
 
     def _highlight_menu(self, selected: str) -> None:
-        idx = MENU_SECTIONS.index(selected)
+        active = self._active_sections
+        if selected not in active:
+            return
+        idx = active.index(selected)
         if self.menu_list.currentRow() != idx:
             self.menu_list.setCurrentRow(idx)
 
@@ -288,8 +326,9 @@ class SettingsLayout(Layout):
 
         if name == "MAIN SETTINGS":
             for s in settings.main_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
             row += 1
             sub = self.create_and_add_label(
                 "PROJECT", row, C_COL, C_LABEL_W, 2, "black"
@@ -299,27 +338,36 @@ class SettingsLayout(Layout):
             for s in settings.directory_settings:
                 if s.key == "APP_DIRECTORY":
                     continue
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
 
         elif name == "SOUND SETTINGS":
             s = settings.sound_settings[0]
-            self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-            row += 2
+            if self._should_show(s.key):
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                row += 2
             if self._get("USE_SOUNDCARD") == Active.ON:
                 for s in settings.sound_settings[1:]:
-                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                    row += 2
+                    if self._should_show(s.key):
+                        self.create_label_and_value(
+                            row, C_COL, s, name, width=C_VAL_OFF
+                        )
+                        row += 2
 
         elif name == "SCREEN SETTINGS":
             s = settings.screen_settings[0]
-            self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-            row += 2
+            if self._should_show(s.key):
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                row += 2
             use_screen = self._get("USE_SCREEN")
             if use_screen != ScreenActive.OFF:
                 for s in settings.screen_settings[1:]:
-                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                    row += 2
+                    if self._should_show(s.key):
+                        self.create_label_and_value(
+                            row, C_COL, s, name, width=C_VAL_OFF
+                        )
+                        row += 2
             if use_screen == ScreenActive.TOUCHSCREEN:
                 row += 1
                 sub = self.create_and_add_label(
@@ -328,23 +376,29 @@ class SettingsLayout(Layout):
                 sub.setProperty("type", name)
                 row += 2
                 for s in settings.touchscreen_settings:
-                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                    row += 2
+                    if self._should_show(s.key):
+                        self.create_label_and_value(
+                            row, C_COL, s, name, width=C_VAL_OFF
+                        )
+                        row += 2
 
         elif name == "CAMERA SETTINGS":
             for s in settings.cam_framerate_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
 
         elif name == "CORRIDOR SETTINGS":
             for s in settings.corridor_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
 
         elif name == "CONTROLLER SETTINGS":
             for s in settings.controller_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
             if self._get("BEHAVIOR_CONTROLLER") == ControllerEnum.BPOD:
                 row += 1
                 sub = self.create_and_add_label(
@@ -353,18 +407,25 @@ class SettingsLayout(Layout):
                 sub.setProperty("type", name)
                 row += 2
                 for s in settings.bpod_settings:
-                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                    row += 2
+                    if self._should_show(s.key):
+                        self.create_label_and_value(
+                            row, C_COL, s, name, width=C_VAL_OFF
+                        )
+                        row += 2
 
         elif name == "SYNC SETTINGS":
             s = settings.sync_settings[0]
-            self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-            row += 2
+            if self._should_show(s.key):
+                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                row += 2
             sync_type = self._get("SYNC_TYPE")
             if sync_type != SyncType.OFF:
                 for s in settings.sync_settings[1:]:
-                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                    row += 2
+                    if self._should_show(s.key):
+                        self.create_label_and_value(
+                            row, C_COL, s, name, width=C_VAL_OFF
+                        )
+                        row += 2
             if sync_type == SyncType.SERVER:
                 row += 1
                 sub = self.create_and_add_label(
@@ -373,13 +434,17 @@ class SettingsLayout(Layout):
                 sub.setProperty("type", name)
                 row += 2
                 for s in settings.server_settings:
-                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                    row += 2
+                    if self._should_show(s.key):
+                        self.create_label_and_value(
+                            row, C_COL, s, name, width=C_VAL_OFF
+                        )
+                        row += 2
 
         elif name == "TELEGRAM SETTINGS":
             for s in settings.telegram_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
             row += 1
             sub = self.create_and_add_label(
                 "HOURLY ALARMS", row, C_COL, C_LABEL_W, 2, "black"
@@ -387,8 +452,9 @@ class SettingsLayout(Layout):
             sub.setProperty("type", name)
             row += 2
             for s in settings.hourly_alarm_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
             row += 1
             sub = self.create_and_add_label(
                 "TWICE-DAILY ALARMS", row, C_COL, C_LABEL_W, 2, "black"
@@ -396,8 +462,9 @@ class SettingsLayout(Layout):
             sub.setProperty("type", name)
             row += 2
             for s in settings.cycle_alarm_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
             row += 1
             sub = self.create_and_add_label(
                 "END-SESSION ALARMS", row, C_COL, C_LABEL_W, 2, "black"
@@ -405,18 +472,21 @@ class SettingsLayout(Layout):
             sub.setProperty("type", name)
             row += 2
             for s in settings.session_alarm_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
 
         elif name == "DEVICE ADDRESSES":
             for s in settings.device_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
 
         elif name == "ADVANCED SETTINGS":
             for s in settings.extra_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
             row += 1
             sub = self.create_and_add_label(
                 "VISUAL SETTINGS", row, C_COL, C_LABEL_W, 2, "black"
@@ -424,8 +494,9 @@ class SettingsLayout(Layout):
             sub.setProperty("type", name)
             row += 2
             for s in settings.visual_settings:
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
 
         self._tag_content_widgets(before)
 
@@ -529,6 +600,8 @@ class SettingsLayout(Layout):
             "CHIP_BOX_ADDRESS",
             "SCALE_ADDRESS",
             "TEMP_SENSOR_ADDRESS",
+            "USE_CORRIDOR",
+            "USE_BOX_CHIP",
         ]
 
         # Keys in the current section's tracking lists (will be processed with

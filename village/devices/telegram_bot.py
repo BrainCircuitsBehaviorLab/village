@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
+from village.classes.enums import Active
 from village.classes.null_classes import NullTelegramBot
 from village.devices.camera import cam_box, cam_corridor
 from village.manager import manager
@@ -173,6 +174,10 @@ def get_telegram_bot() -> TelegramBot | NullTelegramBot:
     Returns:
         TelegramBotBase: An initialized TelegramBot instance or base class on failure.
     """
+    if settings.get("USE_CORRIDOR") == Active.OFF:
+        null_telegram_bot = NullTelegramBot()
+        null_telegram_bot.error = ""
+        return null_telegram_bot
     try:
         telegram_bot = TelegramBot()
         chrono = time_utils.Chrono()

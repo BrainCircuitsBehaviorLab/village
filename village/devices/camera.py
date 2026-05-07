@@ -1075,6 +1075,10 @@ def get_camera(index: int, framerate: int, name: str) -> Camera | NullCamera:
     Returns:
         CameraBase: An initialized Camera or null class on failure.
     """
+    if name == "CORRIDOR" and settings.get("USE_CORRIDOR") == Active.OFF:
+        null_camera = NullCamera()
+        null_camera.error = ""
+        return null_camera
     try:
         available = Picamera2.global_camera_info()
         if index >= len(available):

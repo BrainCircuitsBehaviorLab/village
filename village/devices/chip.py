@@ -2,31 +2,46 @@ import traceback
 
 from PCA9685_smbus2 import PCA9685  # type: ignore
 
-from village.classes.enums import Active
+from village.classes.enums import Active, OldVersion
 from village.classes.null_classes import NullChip, NullMotor
 from village.devices.motor_old import MotorOld
 from village.scripts.log import log
 from village.settings import settings
 
 # Init (50 Hz for servos)
-try:
-    pwm_corridor = PCA9685.PCA9685(
-        interface=1, address=int(settings.get("CHIP_CORRIDOR_ADDRESS"), 16)
-    )
-    pwm_corridor.set_pwm_freq(50)
+if (
+    settings.get("USE_CORRIDOR")
+    == Active.ON & settings.get("OLD_VERSION")
+    == OldVersion.OFF
+):
+    try:
+        pwm_corridor = PCA9685.PCA9685(
+            interface=1, address=int(settings.get("CHIP_CORRIDOR_ADDRESS"), 16)
+        )
+        pwm_corridor.set_pwm_freq(50)
+        error_corridor = ""
+    except Exception:
+        error_corridor = "Error connecting to the corridor chip "
+        pwm_corridor = NullChip()
+else:
     error_corridor = ""
-except Exception:
-    error_corridor = "Error connecting to the corridor chip "
     pwm_corridor = NullChip()
 
-try:
-    pwm_box = PCA9685.PCA9685(
-        interface=1, address=int(settings.get("CHIP_BOX_ADDRESS"), 16)
-    )
-    pwm_box.set_pwm_freq(50)
+if (
+    settings.get("USE_BOX_CHIP") == Active.ON
+    and settings.get("OLD_VERSION") == OldVersion.OFF
+):
+    try:
+        pwm_box = PCA9685.PCA9685(
+            interface=1, address=int(settings.get("CHIP_BOX_ADDRESS"), 16)
+        )
+        pwm_box.set_pwm_freq(50)
+        error_box = ""
+    except Exception:
+        error_box = "Error connecting to the box chip "
+        pwm_box = NullChip()
+else:
     error_box = ""
-except Exception:
-    error_box = "Error connecting to the box chip "
     pwm_box = NullChip()
 
 
@@ -103,6 +118,10 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
         Motor: An initialized Motor instance.
     """
 
+    if settings.get("USE_CORRIDOR") == Active.OFF:
+        null_motor = NullMotor()
+        null_motor.error = ""
+        return null_motor
     try:
         motor = MotorOld(pin=channel, angles=angles)
         log.info("Motor successfully initialized")
@@ -128,7 +147,7 @@ ir_light_corridor = LED(settings.get("IR_LIGHT_CORRIDOR_INDEX"), 4, pwm_corridor
 visible_light_box = LED(settings.get("VISIBLE_LIGHT_BOX_INDEX"), 1, pwm_box)
 ir_light_box = LED(settings.get("IR_LIGHT_BOX_INDEX"), 4, pwm_box)
 
-if settings.get("OLD_VERSION") == Active.ON:
+if settings.get("OLD_VERSION") != OldVersion.OFF:
     motor_corridor1 = get_motor_old(
         settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES")
     )

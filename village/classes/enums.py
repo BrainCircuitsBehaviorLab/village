@@ -89,6 +89,12 @@ class AreaActive(SuperEnum):
     OFF = "OFF"
 
 
+class OldVersion(SuperEnum):
+    OFF = "OFF"
+    V01 = "V0.1"
+    V02 = "V0.2"
+
+
 class State(SuperEnum):
     """Enum representing the state of the village system."""
 

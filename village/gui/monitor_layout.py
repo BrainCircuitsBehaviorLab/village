@@ -372,14 +372,19 @@ class MonitorLayout(Layout):
         self.actions_tab_widget.tabBar().setFont(_tab_font)
 
         self._actions_tab_map: list[str] = []
-        self.actions_tab_widget.addTab(self.page1, "CORRIDOR")
-        self._actions_tab_map.append("CORRIDOR")
-        if manager.controller_type == ControllerEnum.BPOD:
-            self.actions_tab_widget.addTab(self.page2, "BOX")
-            self._actions_tab_map.append("BOX")
+        if manager.use_of_corridor:
+            self.actions_tab_widget.addTab(self.page1, "CORRIDOR")
+            self._actions_tab_map.append("CORRIDOR")
+        self.actions_tab_widget.addTab(self.page2, "BOX")
+        self._actions_tab_map.append("BOX")
         self.actions_tab_widget.addTab(self.page3, "FUNCTIONS")
         self._actions_tab_map.append("FUNCTIONS")
-        if manager.controller_type == ControllerEnum.BPOD:
+        if (
+            manager.controller_type
+            == ControllerEnum.BPOD | settings.get("CAM_BOX_TRACKING_POSITION")
+            == Active.ON | settings.get("USE_SCREEN")
+            == ScreenActive.TOUCHSCREEN
+        ):
             self.actions_tab_widget.addTab(self.page4, "VIRTUAL MOUSE")
             self._actions_tab_map.append("VIRTUAL_MOUSE")
 
@@ -409,10 +414,6 @@ class MonitorLayout(Layout):
         self.tab_widget.addTab(self.page7, "PLOT")
         self.tab_widget.addTab(self.page6, "DETECTION SETTINGS")
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
-
-        if manager.controller_type != ControllerEnum.BPOD:
-            if manager.actions in (Actions.BOX, Actions.VIRTUAL_MOUSE):
-                manager.actions = Actions.CORRIDOR
 
         index = Info.get_index_from_string(manager.info.value)
         self.tab_widget.setCurrentIndex(index)
@@ -847,28 +848,29 @@ class BoxLayout(Layout):
             "Modify the angle values for the motors.",
         )
 
-        for i in range(8):
-            button1 = self.create_and_add_button(
-                "LED" + str(i + 1),
-                i * 2 + 6,
-                20,
-                8,
-                2,
-                partial(self.led_clicked, i + 1),
-                "Light the LED" + str(i),
-            )
-            self.buttons.append(button1)
+        if manager.controller_type == ControllerEnum.BPOD:
+            for i in range(8):
+                button1 = self.create_and_add_button(
+                    "LED" + str(i + 1),
+                    i * 2 + 6,
+                    20,
+                    8,
+                    2,
+                    partial(self.led_clicked, i + 1),
+                    "Light the LED" + str(i),
+                )
+                self.buttons.append(button1)
 
-            button2 = self.create_and_add_button(
-                "WATER" + str(i + 1),
-                i * 2 + 6,
-                28,
-                8,
-                2,
-                partial(self.water_clicked, i + 1),
-                "Deliver water for 0.1 seconds" + str(i),
-            )
-            self.buttons.append(button2)
+                button2 = self.create_and_add_button(
+                    "WATER" + str(i + 1),
+                    i * 2 + 6,
+                    28,
+                    8,
+                    2,
+                    partial(self.water_clicked, i + 1),
+                    "Deliver water for 0.1 seconds" + str(i),
+                )
+                self.buttons.append(button2)
 
     def draw_motor_buttons(
         self, name: str, row: int, column: int, motor: Motor | MotorOld | NullMotor
@@ -1051,120 +1053,138 @@ class VirtualMouseLayout(Layout):
 
     def draw(self) -> None:
         """Draws the virtual mouse controls."""
-        for i in range(8):
-            button = self.create_and_add_button(
-                "POKE" + str(i + 1),
-                i * 2 + 2,
-                3,
-                14,
-                2,
-                partial(self.poke_clicked, i + 1),
-                "Virtual mouse poke in port" + str(i),
-            )
-            self.buttons.append(button)
 
-        self.x_label = self.create_and_add_label(
-            "X coordinate",
-            14,
-            21,
-            10,
-            2,
-            "black",
-            description="X coordinate of the touch screen",
-        )
+        if manager.controller_type != ControllerEnum.BPOD:
+            if (
+                settings.get("CAM_BOX_TRACKING_POSITION")
+                == Active.ON | settings.get("USE_SCREEN")
+                == ScreenActive.TOUCHSCREEN
+            ):
+                row_bpod = 2
+                col_bpod = 3
+                col_auto = 21
+                col_touch = 21
+                if settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON:
+                    row_auto = 2
+                    row_touch = 14
+                else:
+                    row_touch = 2
+            else:
+                row_bpod = 2
+                col_bpod = 12
 
-        self.y_label = self.create_and_add_label(
-            "Y coordinate",
-            16,
-            21,
-            10,
-            2,
-            "black",
-            description="Y coordinate of the touch screen",
-        )
-
-        self.x_line_edit = self.create_and_add_line_edit(
-            "0", 14, 31, 4, 2, self.coordinates_changed
-        )
-        self.y_line_edit = self.create_and_add_line_edit(
-            "0", 16, 31, 4, 2, self.coordinates_changed
-        )
-        self.touch = self.create_and_add_button(
-            "Touch the screen",
-            18,
-            21,
-            14,
-            2,
-            self.touch_clicked,
-            "Touching the screen at the specified coordinates",
-            color="lightgreen",
-        )
-
-        if settings.get("USE_SCREEN") != ScreenActive.TOUCHSCREEN:
-            self.x_label.hide()
-            self.y_label.hide()
-            self.x_line_edit.hide()
-            self.y_line_edit.hide()
-            self.touch.hide()
-
-        self.auto_no_mouse_button = self.create_and_add_button(
-            "▶  AutoNoMouse",
-            2,
-            21,
-            14,
-            2,
-            self.auto_no_mouse_clicked,
-            "Start/stop the automated virtual-mouse agent",
-            color="lightblue",
-        )
-        self.create_and_add_label(
-            "p correct L",
-            4,
-            21,
-            10,
-            2,
-            "black",
-            description="P(correct | reward LEFT)",
-        )
-        self.p_left_edit = self.create_and_add_line_edit(
-            "0.80", 4, 31, 4, 2, lambda: None
-        )
-        self.create_and_add_label(
-            "p correct R",
-            6,
-            21,
-            10,
-            2,
-            "black",
-            description="P(correct | reward RIGHT)",
-        )
-        self.p_right_edit = self.create_and_add_line_edit(
-            "0.80", 6, 31, 4, 2, lambda: None
-        )
-        self.create_and_add_label(
-            "N inject",
-            8,
-            21,
-            10,
-            2,
-            "black",
-            description="Number of mock trials to inject",
-        )
-        self.n_inject_edit = self.create_and_add_line_edit(
-            "10", 8, 31, 4, 2, lambda: None
-        )
-        self.create_and_add_button(
-            "Inject Trials",
-            10,
-            21,
-            14,
-            2,
-            self._inject_trials,
-            "Inject N trials using p correct L/R into session_df",
-            color="lightgreen",
-        )
+        if manager.controller_type == ControllerEnum.BPOD:
+            for i in range(8):
+                button = self.create_and_add_button(
+                    "POKE" + str(i + 1),
+                    i * 2 + row_bpod,
+                    col_bpod,
+                    14,
+                    2,
+                    partial(self.poke_clicked, i + 1),
+                    "Virtual mouse poke in port" + str(i),
+                )
+                self.buttons.append(button)
 
         self._anm: AutoNoMouse_Base | None = None
+
+        if settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON:
+            self.auto_no_mouse_button = self.create_and_add_button(
+                "▶  AutoNoMouse",
+                row_auto,
+                col_auto,
+                14,
+                2,
+                self.auto_no_mouse_clicked,
+                "Start/stop the automated virtual-mouse agent",
+                color="lightblue",
+            )
+            self.create_and_add_label(
+                "p correct L",
+                row_auto + 2,
+                col_auto,
+                10,
+                2,
+                "black",
+                description="P(correct | reward LEFT)",
+            )
+            self.p_left_edit = self.create_and_add_line_edit(
+                "0.80", row_auto + 2, col_auto + 10, 4, 2, lambda: None
+            )
+            self.create_and_add_label(
+                "p correct R",
+                row_auto + 4,
+                col_auto,
+                10,
+                2,
+                "black",
+                description="P(correct | reward RIGHT)",
+            )
+            self.p_right_edit = self.create_and_add_line_edit(
+                "0.80", row_auto + 4, col_auto + 10, 4, 2, lambda: None
+            )
+            self.create_and_add_label(
+                "N inject",
+                row_auto + 6,
+                col_auto,
+                10,
+                2,
+                "black",
+                description="Number of mock trials to inject",
+            )
+            self.n_inject_edit = self.create_and_add_line_edit(
+                "10", row_auto + 6, col_auto + 10, 4, 2, lambda: None
+            )
+            self.create_and_add_button(
+                "Inject Trials",
+                row_auto + 8,
+                col_auto,
+                14,
+                2,
+                self._inject_trials,
+                "Inject N trials using p correct L/R into session_df",
+                color="lightgreen",
+            )
+        else:
+            row_touch = 4
+
+        if settings.get("USE_SCREEN") == ScreenActive.TOUCHSCREEN:
+            self.x_label = self.create_and_add_label(
+                "X coordinate",
+                row_touch,
+                col_touch,
+                10,
+                2,
+                "black",
+                description="X coordinate of the touch screen",
+            )
+
+            self.y_label = self.create_and_add_label(
+                "Y coordinate",
+                row_touch + 2,
+                col_touch,
+                10,
+                2,
+                "black",
+                description="Y coordinate of the touch screen",
+            )
+
+            self.x_line_edit = self.create_and_add_line_edit(
+                "0", row_touch, col_touch + 10, 4, 2, self.coordinates_changed
+            )
+            self.y_line_edit = self.create_and_add_line_edit(
+                "0", row_touch + 2, col_touch + 10, 4, 2, self.coordinates_changed
+            )
+            self.touch = self.create_and_add_button(
+                "Touch the screen",
+                row_touch + 4,
+                col_touch,
+                14,
+                2,
+                self.touch_clicked,
+                "Touching the screen at the specified coordinates",
+                color="lightgreen",
+            )
 
     def coordinates_changed(self) -> None:
         """Handles changes in the coordinate fields."""
