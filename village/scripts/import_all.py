@@ -10,6 +10,7 @@ from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
+from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
@@ -34,6 +35,8 @@ def import_all(manager) -> None:
     camera_trigger_found = 0
     camera_draw_found = 0
     auto_no_mouse_found = 0
+    direct_functions_found = 0
+    direct_functions_correct = False
     training_correct = False
     session_plot_correct = False
     subject_plot_correct = False
@@ -43,34 +46,14 @@ def import_all(manager) -> None:
     camera_trigger_correct = False
     camera_draw_correct = False
     auto_no_mouse_correct = False
-    functions_path = ""
     sound_path = ""
 
     for root, _, files in os.walk(directory):
         for file in files:
-            if file == "softcode_functions.py":
-                functions_path = os.path.join(root, file)
             if file == "sound_functions.py":
                 sound_path = os.path.join(root, file)
             if file.endswith(".py"):
                 python_files.append(os.path.join(root, file))
-
-    if os.path.exists(functions_path):
-        module_name = "custom_module"
-        spec = importlib.util.spec_from_file_location(module_name, functions_path)
-        if spec and spec.loader:
-            module = importlib.util.module_from_spec(spec)
-            try:
-                spec.loader.exec_module(module)
-                for i in range(1, 100):
-                    func_name = f"function{i}"
-                    if hasattr(module, func_name):
-                        manager.functions[i] = getattr(module, func_name)
-            except Exception:
-                log.error(
-                    "Couldn't import softcode functions",
-                    exception=traceback.format_exc(),
-                )
 
     if os.path.exists(sound_path):
         module_name = "custom_module2"
@@ -162,6 +145,18 @@ def import_all(manager) -> None:
                         d = cls()
                         manager.auto_no_mouse = d
                         auto_no_mouse_correct = True
+                elif (
+                    issubclass(cls, DirectFunctionsBase) and cls != DirectFunctionsBase
+                ):
+                    direct_functions_found += 1
+                    if direct_functions_found == 1:
+                        f = cls()
+                        manager.direct_functions = f
+                        for i in range(1, 100):
+                            method_name = f"function{i}"
+                            if method_name in cls.__dict__:
+                                manager.functions[i] = getattr(f, method_name)
+                        direct_functions_correct = True
 
         except Exception:
             log.error(
@@ -184,6 +179,7 @@ def import_all(manager) -> None:
         ("Camera Trigger", camera_trigger_found, camera_trigger_correct),
         ("Camera Draw", camera_draw_found, camera_draw_correct),
         ("Auto No Mouse", auto_no_mouse_found, auto_no_mouse_correct),
+        ("Softcode Functions", direct_functions_found, direct_functions_correct),
     ]
 
     defaults, customs = [], []

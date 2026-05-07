@@ -261,7 +261,8 @@ class SettingsLayout(Layout):
             "QListWidget::item:selected { background: steelblue; color: white;"
             " border-color: steelblue; }"
             "QListWidget::item:hover { background: #b0c4de; border-color: #b0c4de; }"
-            "QToolTip { background-color: white; color: black; font-size: 10pt; padding: 4px }"
+            "QToolTip { background-color: white; color: black;"
+            " font-size: 10pt; padding: 4px }"
         )
         self.menu_list.setSpacing(1)
         for name in self._active_sections:

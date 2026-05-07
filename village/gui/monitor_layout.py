@@ -422,9 +422,7 @@ class MonitorLayout(Layout):
 
         value_key = manager.info.value
         if value_key in self._tab_map:
-            self.tab_widget.setCurrentIndex(
-                self._tab_map.index(value_key)
-            )
+            self.tab_widget.setCurrentIndex(self._tab_map.index(value_key))
 
         actions_key = manager.actions.name
         if actions_key in self._actions_tab_map:
@@ -1101,7 +1099,6 @@ class VirtualMouseLayout(Layout):
                 row_touch = 2
                 col_touch = 12
 
-
         if manager.controller_type == ControllerEnum.BPOD:
             for i in range(8):
                 button = self.create_and_add_button(
@@ -1361,10 +1358,18 @@ class DetectionLayout(Layout):
         self.lbs: list[LabelButtons] = []
 
         if manager.use_of_corridor:
-            self.draw_area_buttons_corridor("AREA1_CORRIDOR", 2, 2, self.color_area1_str)
-            self.draw_area_buttons_corridor("AREA2_CORRIDOR", 2, 22, self.color_area2_str)
-            self.draw_area_buttons_corridor("AREA3_CORRIDOR", 2, 42, self.color_area3_str)
-            self.draw_area_buttons_corridor("AREA4_CORRIDOR", 2, 62, self.color_area4_str)
+            self.draw_area_buttons_corridor(
+                "AREA1_CORRIDOR", 2, 2, self.color_area1_str
+            )
+            self.draw_area_buttons_corridor(
+                "AREA2_CORRIDOR", 2, 22, self.color_area2_str
+            )
+            self.draw_area_buttons_corridor(
+                "AREA3_CORRIDOR", 2, 42, self.color_area3_str
+            )
+            self.draw_area_buttons_corridor(
+                "AREA4_CORRIDOR", 2, 62, self.color_area4_str
+            )
             self.draw_mice_buttons("DETECTION_OF_MOUSE_CORRIDOR", 0, 2)
 
             self.detection_corridor_label: Label = self.create_and_add_label(
@@ -1383,7 +1388,7 @@ class DetectionLayout(Layout):
                 index,
                 self.toggle_corridor,
                 "View the detection in the corridor",
-        )
+            )
 
         self.draw_area_buttons_box("AREA1_BOX", 2, 123, self.color_area1_str)
         self.draw_area_buttons_box("AREA2_BOX", 2, 143, self.color_area2_str)
@@ -1562,7 +1567,13 @@ class DetectionLayout(Layout):
             row += 2
 
             lb = LabelButtons(
-                "LENS_POSITION_CORRIDOR", "lens_position", row, column, width, color, self
+                "LENS_POSITION_CORRIDOR",
+                "lens_position",
+                row,
+                column,
+                width,
+                color,
+                self,
             )
             self.lbs.append(lb)
             row += 2

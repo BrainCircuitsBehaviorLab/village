@@ -33,6 +33,7 @@ from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
+from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
@@ -171,6 +172,7 @@ class Manager:
 
         self.behavior_window: BehaviorWindow | NullBehaviorWindow = NullBehaviorWindow()
         self.cam_box: Camera | NullCamera = NullCamera()
+        self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,
@@ -340,6 +342,12 @@ class Manager:
             self.weight = np.nan
             self.task.controller_type = self.controller_type
             self.task.functions = self.functions
+            self.direct_functions.set_variables(
+                task=self.task,
+                behaviour_window=self.behavior_window,
+                sound_calibration=self.sound_calibration,
+                water_calibration=self.water_calibration,
+            )
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -389,6 +397,12 @@ class Manager:
                 self.task.sound_calibration = self.sound_calibration
                 self.task.controller_type = self.controller_type
                 self.task.functions = self.functions
+                self.direct_functions.set_variables(
+                    task=self.task,
+                    behaviour_window=self.behavior_window,
+                    sound_calibration=self.sound_calibration,
+                    water_calibration=self.water_calibration,
+                )
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
