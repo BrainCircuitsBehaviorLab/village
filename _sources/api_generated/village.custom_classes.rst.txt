@@ -33,6 +33,7 @@
    camera_draw_base
    camera_trigger_base
    change_cycle_base
+   direct_functions_base
    online_plot_base
    session_plot_base
    subject_plot_base
