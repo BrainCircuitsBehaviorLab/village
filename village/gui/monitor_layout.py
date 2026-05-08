@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 import pandas as pd
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QColor, QFont, QPixmap
+from PyQt5.QtGui import QFontMetrics
 from PyQt5.QtWidgets import (
     QDialog,
     QHBoxLayout,
@@ -1309,17 +1310,24 @@ class FunctionsLayout(Layout):
         """Draws the function buttons."""
         for i in range(98):
             row = 1 + i // 2 * 2
-            column = 1 if i % 2 == 0 else 18
-            function_name = manager.functions[i].__doc__ or "FUNCTION" + str(i + 1)
+            column = 0 if i % 2 == 0 else 18
+            function_name = manager.functions[i+1].__doc__
+            if function_name is None:
+                text = "FUNCTION" + str(i+1)
+            else:
+                text = str(i+1) + "." + manager.functions[i+1].__doc__
             button = self.create_and_add_button(
-                function_name,
+                text,
                 row,
                 column,
-                17,
+                18,
                 2,
                 partial(self.function_clicked, i + 1),
                 "Execute user-defined function" + str(i + 1),
             )
+            fm = QFontMetrics(button.font())
+            text = fm.elidedText(text, Qt.ElideRight, 14 * self.column_width)
+            button.setText(text)
             self.buttons.append(button)
 
     def function_clicked(self, i=0) -> None:
