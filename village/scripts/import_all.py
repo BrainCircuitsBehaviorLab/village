@@ -2,6 +2,7 @@ import importlib
 import importlib.util
 import inspect
 import os
+import re
 import sys
 import traceback
 
@@ -152,9 +153,12 @@ def import_all(manager) -> None:
                     if direct_functions_found == 1:
                         f = cls()
                         manager.direct_functions = f
-                        for i in range(1, 100):
-                            method_name = f"function{i}"
-                            if method_name in cls.__dict__:
+                        for method_name in cls.__dict__:
+                            match = re.fullmatch(
+                                r"function0*(\d+)", method_name, re.IGNORECASE
+                            )
+                            if match:
+                                i = int(match.group(1))
                                 manager.functions[i] = getattr(f, method_name)
                         direct_functions_correct = True
 

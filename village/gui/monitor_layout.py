@@ -1309,15 +1309,16 @@ class FunctionsLayout(Layout):
         """Draws the function buttons."""
         for i in range(98):
             row = 1 + i // 2 * 2
-            column = 5 if i % 2 == 0 else 18
+            column = 1 if i % 2 == 0 else 18
+            function_name = manager.functions[i].__doc__ or "FUNCTION" + str(i + 1)
             button = self.create_and_add_button(
-                "FUNCTION" + str(i + 1),
+                function_name,
                 row,
                 column,
-                13,
+                17,
                 2,
                 partial(self.function_clicked, i + 1),
-                "Run the user-function" + str(i),
+                "Execute user-defined function" + str(i + 1),
             )
             self.buttons.append(button)
 
