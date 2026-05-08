@@ -145,6 +145,10 @@ class Settings:
         """Reset all restorable settings to their factory default values."""
         for s in self.restorable_settings:
             self.saved_settings.setValue(s.key, s.value)
+        for s in self.all_settings:
+            old_value = self.get(s.key)
+            if old_value is None:
+                self.saved_settings.setValue(s.key, s.value)
 
     def restore_visual_settings(self) -> None:
         """Reset visual settings to their factory default values."""

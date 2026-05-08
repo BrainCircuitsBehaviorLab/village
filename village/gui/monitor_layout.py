@@ -6,8 +6,7 @@ from typing import TYPE_CHECKING
 
 import pandas as pd
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QColor, QFont, QPixmap
-from PyQt5.QtGui import QFontMetrics
+from PyQt5.QtGui import QColor, QFont, QFontMetrics, QPixmap
 from PyQt5.QtWidgets import (
     QDialog,
     QHBoxLayout,
@@ -1311,11 +1310,11 @@ class FunctionsLayout(Layout):
         for i in range(98):
             row = 1 + i // 2 * 2
             column = 0 if i % 2 == 0 else 18
-            function_name = manager.functions[i+1].__doc__
+            function_name = manager.functions[i + 1].__doc__
             if function_name is None:
-                text = "FUNCTION" + str(i+1)
+                text = "FUNCTION" + str(i + 1)
             else:
-                text = str(i+1) + "." + manager.functions[i+1].__doc__
+                text = str(i + 1) + "." + function_name
             button = self.create_and_add_button(
                 text,
                 row,
