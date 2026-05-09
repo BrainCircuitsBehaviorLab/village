@@ -30,8 +30,6 @@ Collection
       ~Collection.get_last_water_df
       ~Collection.get_sound_gain
       ~Collection.get_valve_time
-      ~Collection.log
-      ~Collection.log_temp
       ~Collection.save_from_df
    
    

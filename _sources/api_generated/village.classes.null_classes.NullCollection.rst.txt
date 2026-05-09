@@ -17,8 +17,7 @@ NullCollection
    .. autosummary::
    
       ~NullCollection.__init__
-      ~NullCollection.log
-      ~NullCollection.log_temp
+      ~NullCollection.add_entry
    
    
 

@@ -370,8 +370,7 @@ data-aria-dark="Switch to auto color mode">
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCollection"><code class="docutils literal notranslate"><span class="pre">NullCollection</span></code></a><ul>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCollection.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullCollection.log"><code class="docutils literal notranslate">log()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullCollection.log_temp"><code class="docutils literal notranslate">log_temp()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.NullCollection.add_entry"><code class="docutils literal notranslate">add_entry()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -469,42 +468,19 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCollection.__init__" title="village.classes.null_classes.NullCollection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCollection.log" title="village.classes.null_classes.NullCollection.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>(date, type, subject, description)</p></td>
-<td><p>Logs a generic event.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCollection.log_temp" title="village.classes.null_classes.NullCollection.log_temp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_temp</span></code></a>(date, temperature, humidity)</p></td>
-<td><p>Logs temperature and humidity data.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCollection.add_entry" title="village.classes.null_classes.NullCollection.add_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_entry</span></code></a>(entry)</p></td>
+<td><p>Adds a new entry to the collection.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullCollection.log">
-<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCollection.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Logs a generic event.</p>
+<dt class="sig sig-object py" id="village.classes.null_classes.NullCollection.add_entry">
+<span class="sig-name descname"><span class="pre">add_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCollection.add_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Adds a new entry to the collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em>) – Date/time string.</p></li>
-<li><p><strong>type</strong> (<em>str</em>) – Event type.</p></li>
-<li><p><strong>subject</strong> (<em>str</em>) – Subject name.</p></li>
-<li><p><strong>description</strong> (<em>str</em>) – Description.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullCollection.log_temp">
-<span class="sig-name descname"><span class="pre">log_temp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">humidity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCollection.log_temp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Logs temperature and humidity data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em>) – Date/time string.</p></li>
-<li><p><strong>temperature</strong> (<em>float</em>) – Temperature value.</p></li>
-<li><p><strong>humidity</strong> (<em>float</em>) – Humidity value.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>entry</strong> (<em>list</em>) – The list of values for the new row.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -550,7 +526,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a37715ee"></script>
+      <script src="../_static/documentation_options.js?v=4afab881"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
