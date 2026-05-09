@@ -60,5 +60,9 @@ class CalibrationBase(Layout):
         """
         return True
 
+    def update_status_label_buttons(self) -> None:
+        """Delegates status bar update to the parent CalibrationLayout."""
+        self.window.layout.update_status_label_buttons()
+
     def update_gui(self) -> None:
         """Called periodically to refresh the UI."""

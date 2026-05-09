@@ -384,7 +384,7 @@ class WaterCalibration(CalibrationBase):
         self.save_button = self.create_and_add_button(
             "SAVE CALIBRATION",
             45,
-            177,
+            152,
             20,
             2,
             self.save_button_clicked,
@@ -396,7 +396,7 @@ class WaterCalibration(CalibrationBase):
         self.delete_button = self.create_and_add_button(
             "DELETE CALIBRATION",
             48,
-            177,
+            152,
             20,
             2,
             self.delete_button_clicked,
@@ -416,8 +416,8 @@ class WaterCalibration(CalibrationBase):
         self.addWidget(self.scroll_area, 6, 85, 46, 36)
 
         # plot layout
-        self.plot_layout = _CalibrationPlotLayout(self.window, 38, 79, self)
-        self.addLayout(self.plot_layout, 6, 121, 38, 79)
+        self.plot_layout = _CalibrationPlotLayout(self.window, 38, 51, self)
+        self.addLayout(self.plot_layout, 6, 121, 38, 51)
 
     def change_layout(self, auto: bool = False) -> bool:
         if auto:

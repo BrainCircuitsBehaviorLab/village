@@ -73,6 +73,13 @@ class CalibrationLayout(Layout):
         self._calibrations[0].container.show()
         self.menu_list.setCurrentRow(0)
 
+        # Raise chrome widgets so they capture mouse events above the containers
+        self.nav_tab_bar.raise_()
+        self.status_label.raise_()
+        self.stop_button.raise_()
+        self.online_or_force_button.raise_()
+        self.exit_button.raise_()
+
     # ── menu selection ─────────────────────────────────────────────────────────
 
     def _on_menu_changed(self, new_idx: int) -> None:
