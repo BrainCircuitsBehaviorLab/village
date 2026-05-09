@@ -73,6 +73,17 @@ class WaterCalibration(CalibrationBase):
     """Water port calibration and testing panel."""
 
     name = "WATER CALIBRATION"
+    col_name = "water_calibration"
+    col_columns = [
+        "date",
+        "port_number",
+        "time(s)",
+        "water_delivered(ul)",
+        "calibration_number",
+        "water_expected(ul)",
+        "error(%)",
+    ]
+    col_types = [str, int, float, float, int, float, float]
 
     @classmethod
     def is_active(cls) -> bool:
@@ -82,7 +93,7 @@ class WaterCalibration(CalibrationBase):
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
 
-        self.df = pd.DataFrame()
+        self.session_df = pd.DataFrame()
         self.date = ""
         self.calibration_number = -1
         self.delete_rows: list[int] = []
@@ -121,16 +132,16 @@ class WaterCalibration(CalibrationBase):
 
         # ports
         for i in range(8):
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 "port" + str(i + 1), 4 + 2 * i, 2, 8, 2, "black", bold=False
             )
         for i in range(8):
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 "port" + str(i + 1), 26 + 2 * i, 2, 8, 2, "black", bold=False
             )
 
         # input
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "CALIBRATION INPUT",
             0,
             5,
@@ -142,7 +153,7 @@ class WaterCalibration(CalibrationBase):
                 "to calibrate the ports."
             ),
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "TEST INPUT",
             22,
             5,
@@ -156,7 +167,7 @@ class WaterCalibration(CalibrationBase):
         )
 
         # first input variable
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "TIME(s)",
             2,
             8,
@@ -167,12 +178,12 @@ class WaterCalibration(CalibrationBase):
             description="Valve opening time in seconds.",
         )
         for i in range(8):
-            line_edit = self.create_and_add_line_edit(
+            line_edit = self.layout.create_and_add_line_edit(
                 "0", 4 + 2 * i, 7, 8, 2, self.calibration_changed
             )
             self.time_line_edits.append(line_edit)
 
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "WATER EXPECTED(ul)",
             24,
             5,
@@ -183,13 +194,13 @@ class WaterCalibration(CalibrationBase):
             description="The expected water in microliters.",
         )
         for i in range(8):
-            line_edit = self.create_and_add_line_edit(
+            line_edit = self.layout.create_and_add_line_edit(
                 "0", 26 + 2 * i, 7, 8, 2, self.test_changed
             )
             self.water_expected_line_edits2.append(line_edit)
 
         # iterations
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "ITERATIONS",
             7,
             19,
@@ -199,10 +210,10 @@ class WaterCalibration(CalibrationBase):
             bold=False,
             description="Number of iterations.",
         )
-        self.iterations_line_edit = self.create_and_add_line_edit(
+        self.iterations_line_edit = self.layout.create_and_add_line_edit(
             "100", 9, 19, 8, 2, self.calibration_changed
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "ITERATIONS",
             29,
             19,
@@ -212,12 +223,12 @@ class WaterCalibration(CalibrationBase):
             bold=False,
             description="Number of iterations.",
         )
-        self.iterations_line_edit2 = self.create_and_add_line_edit(
+        self.iterations_line_edit2 = self.layout.create_and_add_line_edit(
             "100", 31, 19, 8, 2, self.test_changed
         )
 
         # buttons
-        self.calibrate_button = self.create_and_add_button(
+        self.calibrate_button = self.layout.create_and_add_button(
             "CALIBRATE ->",
             11,
             17,
@@ -229,7 +240,7 @@ class WaterCalibration(CalibrationBase):
         )
         self.calibrate_button.setDisabled(True)
 
-        self.test_button = self.create_and_add_button(
+        self.test_button = self.layout.create_and_add_button(
             "TEST ->",
             33,
             17,
@@ -242,7 +253,7 @@ class WaterCalibration(CalibrationBase):
         self.test_button.setDisabled(True)
 
         # output
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "CALIBRATION OUTPUT",
             0,
             28,
@@ -254,7 +265,7 @@ class WaterCalibration(CalibrationBase):
                 "the water delivered in microliters for each iteration."
             ),
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "TEST OUTPUT",
             22,
             28,
@@ -268,7 +279,7 @@ class WaterCalibration(CalibrationBase):
         )
 
         # output total weight
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "TOTAL WEIGHT(g)",
             2,
             29,
@@ -279,13 +290,13 @@ class WaterCalibration(CalibrationBase):
             description="Total weight in grams.",
         )
         for i in range(8):
-            line_edit = self.create_and_add_line_edit(
+            line_edit = self.layout.create_and_add_line_edit(
                 "0", 4 + 2 * i, 31, 8, 2, self.calibration_weighted
             )
             line_edit.setDisabled(True)
             self.total_weight_line_edits.append(line_edit)
 
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "TOTAL WEIGHT(g)",
             24,
             29,
@@ -296,14 +307,14 @@ class WaterCalibration(CalibrationBase):
             description="Total weight in grams.",
         )
         for i in range(8):
-            line_edit = self.create_and_add_line_edit(
+            line_edit = self.layout.create_and_add_line_edit(
                 "0", 26 + 2 * i, 31, 8, 2, partial(self.test_weighted, i)
             )
             line_edit.setDisabled(True)
             self.total_weight_line_edits2.append(line_edit)
 
         # output water delivered
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "WATER DELIVERED(ul)",
             2,
             46,
@@ -314,13 +325,13 @@ class WaterCalibration(CalibrationBase):
             description="Water delivered in microliters for each of the iterations.",
         )
         for i in range(8):
-            label = self.create_and_add_label(
+            label = self.layout.create_and_add_label(
                 "0", 4 + 2 * i, 45, 18, 2, "black", bold=False
             )
             label.setAlignment(Qt.AlignCenter)
             self.water_delivered_labels.append(label)
 
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "WATER DELIVERED(ul)",
             24,
             46,
@@ -331,14 +342,14 @@ class WaterCalibration(CalibrationBase):
             description="Water delivered in microliters for each of the iterations.",
         )
         for i in range(8):
-            label = self.create_and_add_label(
+            label = self.layout.create_and_add_label(
                 "0", 26 + 2 * i, 45, 18, 2, "black", bold=False
             )
             label.setAlignment(Qt.AlignCenter)
             self.water_delivered_labels2.append(label)
 
         # add button
-        self.add_button = self.create_and_add_button(
+        self.add_button = self.layout.create_and_add_button(
             "ADD ->",
             11,
             66,
@@ -352,7 +363,7 @@ class WaterCalibration(CalibrationBase):
 
         # ok and fail buttons
         for i in range(8):
-            button = self.create_and_add_button(
+            button = self.layout.create_and_add_button(
                 "OK",
                 26 + 2 * i,
                 66,
@@ -366,7 +377,7 @@ class WaterCalibration(CalibrationBase):
             self.ok_buttons2.append(button)
 
         for i in range(8):
-            button = self.create_and_add_button(
+            button = self.layout.create_and_add_button(
                 "FAIL ->",
                 26 + 2 * i,
                 73,
@@ -381,7 +392,7 @@ class WaterCalibration(CalibrationBase):
             self.add_buttons2.append(button)
 
         # save / delete
-        self.save_button = self.create_and_add_button(
+        self.save_button = self.layout.create_and_add_button(
             "SAVE CALIBRATION",
             38,
             152,
@@ -393,7 +404,7 @@ class WaterCalibration(CalibrationBase):
         )
         self.save_button.setDisabled(True)
 
-        self.delete_button = self.create_and_add_button(
+        self.delete_button = self.layout.create_and_add_button(
             "DELETE CALIBRATION",
             41,
             152,
@@ -413,11 +424,11 @@ class WaterCalibration(CalibrationBase):
         self.scroll_area.setWidget(widget)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.addWidget(self.scroll_area, 0, 85, 44, 36)
+        self.layout.addWidget(self.scroll_area, 0, 85, 44, 36)
 
         # plot layout
         self.plot_layout = _CalibrationPlotLayout(self.window, 38, 51, self)
-        self.addLayout(self.plot_layout, 0, 121, 38, 51)
+        self.layout.addLayout(self.plot_layout, 0, 121, 38, 51)
 
     def change_layout(self, auto: bool = False) -> bool:
         if auto:
@@ -566,9 +577,7 @@ class WaterCalibration(CalibrationBase):
                 self.times2[i] = 0
             else:
                 try:
-                    self.times2[i] = manager.water_calibration.get_valve_time(
-                        i + 1, self.water_expected2[i]
-                    )
+                    self.times2[i] = self.get_valve_time(i + 1, self.water_expected2[i])
                     ok += 1
                 except Exception:
                     self.water_expected2[i] = 0
@@ -608,15 +617,13 @@ class WaterCalibration(CalibrationBase):
             self.iterations_line_edit2.setStyleSheet("")
 
     def save_button_clicked(self) -> None:
-        counts = self.df["port_number"].value_counts()
+        counts = self.session_df["port_number"].value_counts()
         valid_ports = counts[counts >= 2].index
         removed_ports = counts[counts < 2].index.tolist()
-        filtered_df = self.df[self.df["port_number"].isin(valid_ports)]
+        filtered_df = self.session_df[self.session_df["port_number"].isin(valid_ports)]
 
-        manager.water_calibration.df = pd.concat(
-            [manager.water_calibration.df, filtered_df], ignore_index=True
-        )
-        manager.water_calibration.save_from_df()
+        self.df = pd.concat([self.df, filtered_df], ignore_index=True)
+        self.save_from_df()
 
         if removed_ports:
             text = (
@@ -678,10 +685,10 @@ class WaterCalibration(CalibrationBase):
         if self.update_plot:
             if self.delete_rows:
                 for row in self.delete_rows:
-                    self.df = self.df.drop(index=row)
-                    self.df = self.df.reset_index(drop=True)
+                    self.session_df = self.session_df.drop(index=row)
+                    self.session_df = self.session_df.reset_index(drop=True)
                 self.delete_rows = []
-            self.plot_layout.update(self.df, self.test_point)
+            self.plot_layout.update(self.session_df, self.test_point)
             self.update_plot = False
 
         def some_port_has_two_values() -> bool:
@@ -719,7 +726,7 @@ class WaterCalibration(CalibrationBase):
         self.iterations_line_edit2.setStyleSheet("")
         self.calibration_denied = False
         self.info_layout.update()
-        self.df = pd.DataFrame(self.test_row_dicts)
+        self.session_df = pd.DataFrame(self.test_row_dicts)
         self.calibration_points = self.test_row_dicts
         self.test_row_dicts = []
         self.update_plot = True
@@ -745,7 +752,7 @@ class WaterCalibration(CalibrationBase):
         for line_edit in self.water_delivered_labels2:
             line_edit.setText("0")
 
-        df = manager.water_calibration.df.copy()
+        df = self.df.copy()
         for index in self.indices2:
             line_edit = self.total_weight_line_edits2[index]
             try:
@@ -770,7 +777,7 @@ class WaterCalibration(CalibrationBase):
             if index == i:
                 df = df[df["port_number"] == index + 1]
                 max_calibration = df["calibration_number"].max()
-                self.df = df[df["calibration_number"] == max_calibration]
+                self.session_df = df[df["calibration_number"] == max_calibration]
                 self.test_point = (self.times2[index], result)
                 self.test_index = index
                 self.update_plot = True
@@ -780,7 +787,7 @@ class WaterCalibration(CalibrationBase):
             self.date = time_utils.now_string()
         if self.calibration_number < 0:
             try:
-                max_value = manager.water_calibration.df["calibration_number"].max()
+                max_value = self.df["calibration_number"].max()
                 self.calibration_number = (
                     int(max_value) + 1 if pd.notna(max_value) else 1
                 )
@@ -798,7 +805,7 @@ class WaterCalibration(CalibrationBase):
                 "error(%)": np.nan,
             }
             df = pd.DataFrame([row_dict])
-            self.df = pd.concat([self.df, df], ignore_index=True)
+            self.session_df = pd.concat([self.session_df, df], ignore_index=True)
             self.calibration_points.append(row_dict)
 
         for line_edit in self.time_line_edits:
@@ -812,7 +819,7 @@ class WaterCalibration(CalibrationBase):
             line_edit.setDisabled(True)
             line_edit.setStyleSheet("")
         self.add_button.setDisabled(True)
-        self.plot_layout.update(self.df, self.test_point)
+        self.plot_layout.update(self.session_df, self.test_point)
         self.info_layout.update()
 
     def ok_button2_clicked(self, index: int) -> None:
@@ -831,13 +838,11 @@ class WaterCalibration(CalibrationBase):
         }
         self.indices2_cleared.append(index)
         df = pd.DataFrame([row_dict])
-        manager.water_calibration.df = pd.concat(
-            [manager.water_calibration.df, df], ignore_index=True
-        )
-        manager.water_calibration.save_from_df()
+        self.df = pd.concat([self.df, df], ignore_index=True)
+        self.save_from_df()
 
         if self.test_index == index:
-            self.df = pd.DataFrame()
+            self.session_df = pd.DataFrame()
             self.test_point = None
             self.test_index = 0
 
@@ -856,7 +861,7 @@ class WaterCalibration(CalibrationBase):
         self.test_denied = True
         if self.calibration_number < 0:
             try:
-                max_value = manager.water_calibration.df["calibration_number"].max()
+                max_value = self.df["calibration_number"].max()
                 self.calibration_number = (
                     int(max_value) + 1 if pd.notna(max_value) else 1
                 )
@@ -920,7 +925,7 @@ class _CalibrationPlotLayout(Layout):
             "QLabel {border: 1px solid gray; background-color: white;}"
         )
         dpi = int(settings.get("MATPLOTLIB_DPI"))
-        self.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
+        self.layout.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
         self.pixmap = QPixmap()
         self.plot_width = (self.columns * self.column_width - 10) / dpi
         self.plot_height = (self.rows * self.row_height - 5) / dpi
@@ -961,22 +966,22 @@ class _InfoLayout(Layout):
         self.update()
 
     def update(self) -> None:
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "CALIBRATION POINTS", 0, 1, 40, 2, "black", bold=False
         )
-        self.create_and_add_label("Port", 2, 1, 8, 2, "black", bold=False)
-        self.create_and_add_label("Time(s)", 2, 6, 8, 2, "black", bold=False)
-        self.create_and_add_label(
+        self.layout.create_and_add_label("Port", 2, 1, 8, 2, "black", bold=False)
+        self.layout.create_and_add_label("Time(s)", 2, 6, 8, 2, "black", bold=False)
+        self.layout.create_and_add_label(
             "Water delivered(ul)", 2, 14, 24, 2, "black", bold=False
         )
         for i, point in enumerate(self.parent.calibration_points):
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 str(point["port_number"]), 4 + 2 * i, 1, 8, 2, "black", bold=False
             )
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 str(point["time(s)"]), 4 + 2 * i, 8, 8, 2, "black", bold=False
             )
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 str(point["water_delivered(ul)"]),
                 4 + 2 * i,
                 16,
@@ -985,7 +990,7 @@ class _InfoLayout(Layout):
                 "black",
                 bold=False,
             )
-            self.create_and_add_button(
+            self.layout.create_and_add_button(
                 "-",
                 4 + 2 * i,
                 28,

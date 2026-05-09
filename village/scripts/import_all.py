@@ -61,6 +61,14 @@ def import_all(manager) -> None:
 
     manager.calibration_classes = list(_DEFAULT_CALIBRATIONS)
 
+    # Create one instance per calibration class (Collection is initialised here).
+    # Instances are reused by CalibrationLayout; only the Qt panel is rebuilt.
+    for cls in manager.calibration_classes:
+        instance = cls()
+        cls._instance = instance
+        if cls.col_name:
+            setattr(manager.calibration, cls.col_name, instance)
+
     for root, _, files in os.walk(directory):
         for file in files:
             if file == "sound_functions.py":
@@ -164,6 +172,10 @@ def import_all(manager) -> None:
                 ):
                     if cls not in manager.calibration_classes:
                         manager.calibration_classes.append(cls)
+                        instance = cls()
+                        cls._instance = instance
+                        if cls.col_name:
+                            setattr(manager.calibration, cls.col_name, instance)
                 elif (
                     issubclass(cls, DirectFunctionsBase) and cls != DirectFunctionsBase
                 ):

@@ -80,6 +80,18 @@ class SoundCalibration(CalibrationBase):
     """Sound speaker calibration and testing panel."""
 
     name = "SOUND CALIBRATION"
+    col_name = "sound_calibration"
+    col_columns = [
+        "date",
+        "speaker",
+        "sound_name",
+        "gain",
+        "dB_obtained",
+        "calibration_number",
+        "dB_expected",
+        "error(%)",
+    ]
+    col_types = [str, int, str, float, float, int, float, float]
 
     @classmethod
     def is_active(cls) -> bool:
@@ -89,7 +101,7 @@ class SoundCalibration(CalibrationBase):
         manager.state = State.MANUAL_MODE
         manager.changing_settings = False
 
-        self.df = pd.DataFrame()
+        self.session_df = pd.DataFrame()
         self.date = ""
         self.calibration_number = -1
         self.delete_rows: list[int] = []
@@ -129,7 +141,7 @@ class SoundCalibration(CalibrationBase):
         values = [f.__name__ for f in manager.sound_calibration_functions]
 
         # ── calibration input ──────────────────────────────────────────────────
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "CALIBRATION INPUT",
             0,
             2,
@@ -141,14 +153,14 @@ class SoundCalibration(CalibrationBase):
                 "to calibrate the speakers."
             ),
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "SOUND", 2, 2, 12, 2, "black", bold=False, description=sound_tip
         )
-        self.sound_combo = self.create_and_add_combo_box(
+        self.sound_combo = self.layout.create_and_add_combo_box(
             "sound", 4, 2, 30, 2, values, 0, self.calibration_changed
         )
-        self.create_and_add_label("SPEAKER", 7, 2, 12, 2, "black", bold=False)
-        self.speaker_combo = self.create_and_add_combo_box(
+        self.layout.create_and_add_label("SPEAKER", 7, 2, 12, 2, "black", bold=False)
+        self.speaker_combo = self.layout.create_and_add_combo_box(
             "speaker",
             9,
             2,
@@ -158,7 +170,7 @@ class SoundCalibration(CalibrationBase):
             0,
             self.calibration_changed,
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "GAIN(0-1)",
             7,
             14,
@@ -168,10 +180,10 @@ class SoundCalibration(CalibrationBase):
             bold=False,
             description="Gain value between 0 and 1",
         )
-        self.gain_line_edit = self.create_and_add_line_edit(
+        self.gain_line_edit = self.layout.create_and_add_line_edit(
             "0", 9, 14, 8, 2, self.calibration_changed
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "DURATION(s)",
             7,
             23,
@@ -181,10 +193,10 @@ class SoundCalibration(CalibrationBase):
             bold=False,
             description="The duration of the sound in seconds.",
         )
-        self.duration_line_edit = self.create_and_add_line_edit(
+        self.duration_line_edit = self.layout.create_and_add_line_edit(
             "1", 9, 24, 8, 2, self.calibration_changed
         )
-        self.calibrate_button = self.create_and_add_button(
+        self.calibrate_button = self.layout.create_and_add_button(
             "CALIBRATE ->",
             9,
             36,
@@ -197,7 +209,7 @@ class SoundCalibration(CalibrationBase):
         self.calibrate_button.setDisabled(True)
 
         # ── calibration output ─────────────────────────────────────────────────
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "CALIBRATION OUTPUT",
             0,
             51,
@@ -206,7 +218,7 @@ class SoundCalibration(CalibrationBase):
             "black",
             description="Enter the measured dB.",
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "dB OBTAINED",
             7,
             51,
@@ -216,11 +228,11 @@ class SoundCalibration(CalibrationBase):
             bold=False,
             description="Measured dB",
         )
-        self.dB_obtained_line_edit = self.create_and_add_line_edit(
+        self.dB_obtained_line_edit = self.layout.create_and_add_line_edit(
             "0", 9, 51, 8, 2, self.calibration_measured
         )
         self.dB_obtained_line_edit.setDisabled(True)
-        self.add_button = self.create_and_add_button(
+        self.add_button = self.layout.create_and_add_button(
             "ADD ->",
             9,
             66,
@@ -233,7 +245,7 @@ class SoundCalibration(CalibrationBase):
         self.add_button.setDisabled(True)
 
         # ── test input ─────────────────────────────────────────────────────────
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "TEST INPUT",
             23,
             2,
@@ -245,17 +257,17 @@ class SoundCalibration(CalibrationBase):
                 "to test the speakers"
             ),
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "SOUND", 25, 2, 12, 2, "black", bold=False, description=sound_tip
         )
-        self.sound_combo2 = self.create_and_add_combo_box(
+        self.sound_combo2 = self.layout.create_and_add_combo_box(
             "sound", 27, 2, 30, 2, values, 0, self.test_changed
         )
-        self.create_and_add_label("SPEAKER", 30, 2, 12, 2, "black", bold=False)
-        self.speaker_combo2 = self.create_and_add_combo_box(
+        self.layout.create_and_add_label("SPEAKER", 30, 2, 12, 2, "black", bold=False)
+        self.speaker_combo2 = self.layout.create_and_add_combo_box(
             "speaker", 32, 2, 10, 2, ["left(0)", "right(1)"], 0, self.test_changed
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "dB EXPECTED",
             30,
             13,
@@ -265,10 +277,10 @@ class SoundCalibration(CalibrationBase):
             bold=False,
             description="The expected dB value",
         )
-        self.dB_expected_line_edit2 = self.create_and_add_line_edit(
+        self.dB_expected_line_edit2 = self.layout.create_and_add_line_edit(
             "0", 32, 14, 8, 2, self.test_changed
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "DURATION(s)",
             30,
             24,
@@ -278,10 +290,10 @@ class SoundCalibration(CalibrationBase):
             bold=False,
             description="The duration of the sound in seconds.",
         )
-        self.duration_line_edit2 = self.create_and_add_line_edit(
+        self.duration_line_edit2 = self.layout.create_and_add_line_edit(
             "1", 32, 25, 8, 2, self.test_changed
         )
-        self.test_button = self.create_and_add_button(
+        self.test_button = self.layout.create_and_add_button(
             "TEST ->",
             32,
             36,
@@ -294,7 +306,7 @@ class SoundCalibration(CalibrationBase):
         self.test_button.setDisabled(True)
 
         # ── test output ────────────────────────────────────────────────────────
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "TEST OUTPUT",
             23,
             51,
@@ -303,7 +315,7 @@ class SoundCalibration(CalibrationBase):
             "black",
             description="Enter the measured dB.",
         )
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "dB OBTAINED",
             30,
             51,
@@ -313,14 +325,14 @@ class SoundCalibration(CalibrationBase):
             bold=False,
             description="Measured dB",
         )
-        self.dB_obtained_line_edit2 = self.create_and_add_line_edit(
+        self.dB_obtained_line_edit2 = self.layout.create_and_add_line_edit(
             "0", 32, 51, 8, 2, self.test_measured
         )
         self.dB_obtained_line_edit2.setDisabled(True)
-        self.error_label2 = self.create_and_add_label(
+        self.error_label2 = self.layout.create_and_add_label(
             "", 34, 51, 18, 2, "black", bold=False
         )
-        self.ok_button2 = self.create_and_add_button(
+        self.ok_button2 = self.layout.create_and_add_button(
             "OK",
             32,
             66,
@@ -331,7 +343,7 @@ class SoundCalibration(CalibrationBase):
             "powderblue",
         )
         self.ok_button2.setDisabled(True)
-        self.add_button2 = self.create_and_add_button(
+        self.add_button2 = self.layout.create_and_add_button(
             "FAIL ->",
             32,
             73,
@@ -344,7 +356,7 @@ class SoundCalibration(CalibrationBase):
         self.add_button2.setDisabled(True)
 
         # ── save / delete ──────────────────────────────────────────────────────
-        self.save_button = self.create_and_add_button(
+        self.save_button = self.layout.create_and_add_button(
             "SAVE CALIBRATION",
             38,
             152,
@@ -355,7 +367,7 @@ class SoundCalibration(CalibrationBase):
             "powderblue",
         )
         self.save_button.setDisabled(True)
-        self.delete_button = self.create_and_add_button(
+        self.delete_button = self.layout.create_and_add_button(
             "DELETE CALIBRATION",
             41,
             152,
@@ -375,11 +387,11 @@ class SoundCalibration(CalibrationBase):
         self.scroll_area.setWidget(widget)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.addWidget(self.scroll_area, 0, 85, 44, 36)
+        self.layout.addWidget(self.scroll_area, 0, 85, 44, 36)
 
         # ── plot layout ────────────────────────────────────────────────────────
         self.plot_layout = _CalibrationPlotLayout(self.window, 36, 51, self)
-        self.addLayout(self.plot_layout, 0, 121, 38, 51)
+        self.layout.addLayout(self.plot_layout, 0, 121, 38, 51)
 
     def change_layout(self, auto: bool = False) -> bool:
         if auto:
@@ -522,7 +534,7 @@ class SoundCalibration(CalibrationBase):
         self.test_button.setDisabled(True)
         ok = False
         try:
-            self.gain2 = manager.sound_calibration.get_sound_gain(
+            self.gain2 = self.get_sound_gain(
                 self.speaker2, self.dB_expected2, sound_name=self.sound2
             )
             self.calibration_denied = True
@@ -562,8 +574,8 @@ class SoundCalibration(CalibrationBase):
 
     def save_button_clicked(self) -> None:
         removed_list: list[str] = []
-        filtered_df = self.df.copy()
-        for sound, group in self.df.groupby("sound_name"):
+        filtered_df = self.session_df.copy()
+        for sound, group in self.session_df.groupby("sound_name"):
             counts = group["speaker"].value_counts()
             removed_speakers = counts[counts < 2].index
             removed_list.extend(
@@ -575,10 +587,8 @@ class SoundCalibration(CalibrationBase):
                     & (filtered_df["speaker"].isin(removed_speakers))
                 )
             ]
-        manager.sound_calibration.df = pd.concat(
-            [manager.sound_calibration.df, filtered_df], ignore_index=True
-        )
-        manager.sound_calibration.save_from_df()
+        self.df = pd.concat([self.df, filtered_df], ignore_index=True)
+        self.save_from_df()
         if removed_list:
             text = (
                 "The following speaker/sound combinations had only one calibration "
@@ -649,10 +659,10 @@ class SoundCalibration(CalibrationBase):
         if self.update_plot:
             if self.delete_rows:
                 for row in self.delete_rows:
-                    self.df = self.df.drop(index=row)
-                    self.df = self.df.reset_index(drop=True)
+                    self.session_df = self.session_df.drop(index=row)
+                    self.session_df = self.session_df.reset_index(drop=True)
                 self.delete_rows = []
-            self.plot_layout.update(self.df, self.test_point)
+            self.plot_layout.update(self.session_df, self.test_point)
             self.update_plot = False
 
         def some_speaker_has_two_values() -> bool:
@@ -695,11 +705,11 @@ class SoundCalibration(CalibrationBase):
                 self.error_label2.setText(str(self.error2) + "% error")
                 self.ok_button2.setEnabled(True)
                 self.add_button2.setEnabled(True)
-                df = manager.sound_calibration.df.copy()
+                df = self.df.copy()
                 df = df[df["speaker"] == self.speaker2]
                 df = df[df["sound_name"] == self.sound2]
                 max_calibration = df["calibration_number"].max()
-                self.df = df[df["calibration_number"] == max_calibration]
+                self.session_df = df[df["calibration_number"] == max_calibration]
                 self.test_point = (self.gain2, result)
                 self.update_plot = True
         except Exception:
@@ -710,7 +720,7 @@ class SoundCalibration(CalibrationBase):
             self.date = time_utils.now_string()
         if self.calibration_number < 0:
             try:
-                max_value = manager.sound_calibration.df["calibration_number"].max()
+                max_value = self.df["calibration_number"].max()
                 self.calibration_number = (
                     int(max_value) + 1 if pd.notna(max_value) else 1
                 )
@@ -727,7 +737,7 @@ class SoundCalibration(CalibrationBase):
             "error(%)": np.nan,
         }
         df = pd.DataFrame([row_dict])
-        self.df = pd.concat([self.df, df], ignore_index=True)
+        self.session_df = pd.concat([self.session_df, df], ignore_index=True)
         self.calibration_points.append(row_dict)
         self.speaker_combo.setEnabled(True)
         self.gain_line_edit.setEnabled(True)
@@ -736,7 +746,7 @@ class SoundCalibration(CalibrationBase):
         self.dB_obtained_line_edit.setDisabled(True)
         self.dB_obtained_line_edit.setStyleSheet("")
         self.add_button.setDisabled(True)
-        self.plot_layout.update(self.df, self.test_point)
+        self.plot_layout.update(self.session_df, self.test_point)
         self.info_layout.update()
 
     def ok_button2_clicked(self) -> None:
@@ -753,16 +763,14 @@ class SoundCalibration(CalibrationBase):
             "error(%)": self.error2,
         }
         df = pd.DataFrame([row_dict])
-        manager.sound_calibration.df = pd.concat(
-            [manager.sound_calibration.df, df], ignore_index=True
-        )
-        manager.sound_calibration.save_from_df()
+        self.df = pd.concat([self.df, df], ignore_index=True)
+        self.save_from_df()
         manager.changing_settings = False
         self.reset_values_after_ok_or_add2()
 
     def reset_values_after_ok_or_add2(self, delete_df: bool = True) -> None:
         if delete_df:
-            self.df = pd.DataFrame()
+            self.session_df = pd.DataFrame()
         self.test_point = None
         self.calibration_denied = False
         self.speaker_combo.setEnabled(True)
@@ -786,7 +794,7 @@ class SoundCalibration(CalibrationBase):
         self.test_denied = True
         if self.calibration_number < 0:
             try:
-                max_value = manager.sound_calibration.df["calibration_number"].max()
+                max_value = self.df["calibration_number"].max()
                 self.calibration_number = (
                     int(max_value) + 1 if pd.notna(max_value) else 1
                 )
@@ -803,7 +811,7 @@ class SoundCalibration(CalibrationBase):
             "error(%)": np.nan,
         }
         df = pd.DataFrame([row_dict])
-        self.df = pd.concat([self.df, df], ignore_index=True)
+        self.session_df = pd.concat([self.session_df, df], ignore_index=True)
         self.calibration_points.append(row_dict)
         self.reset_values_after_ok_or_add2(delete_df=False)
 
@@ -851,7 +859,7 @@ class _CalibrationPlotLayout(Layout):
             "QLabel {border: 1px solid gray; background-color: white;}"
         )
         dpi = int(settings.get("MATPLOTLIB_DPI"))
-        self.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
+        self.layout.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
         self.pixmap = QPixmap()
         self.plot_width = (self.columns * self.column_width - 10) / dpi
         self.plot_height = (self.rows * self.row_height - 5) / dpi
@@ -889,27 +897,29 @@ class _InfoLayout(Layout):
         self.update()
 
     def update(self) -> None:
-        self.create_and_add_label(
+        self.layout.create_and_add_label(
             "CALIBRATION POINTS", 0, 1, 40, 2, "black", bold=False
         )
-        self.create_and_add_label("Speaker", 2, 1, 7, 2, "black", bold=False)
-        self.create_and_add_label("Sound_name", 2, 8, 11, 2, "black", bold=False)
-        self.create_and_add_label("Gain", 2, 18, 4, 2, "black", bold=False)
-        self.create_and_add_label("dB_obtained", 2, 22, 24, 2, "black", bold=False)
+        self.layout.create_and_add_label("Speaker", 2, 1, 7, 2, "black", bold=False)
+        self.layout.create_and_add_label("Sound_name", 2, 8, 11, 2, "black", bold=False)
+        self.layout.create_and_add_label("Gain", 2, 18, 4, 2, "black", bold=False)
+        self.layout.create_and_add_label(
+            "dB_obtained", 2, 22, 24, 2, "black", bold=False
+        )
         for i, point in enumerate(self.parent.calibration_points):
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 str(point["speaker"]), 4 + 2 * i, 1, 4, 2, "black", bold=False
             )
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 str(point["sound_name"]), 4 + 2 * i, 7, 12, 2, "black", bold=False
             )
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 str(point["gain"]), 4 + 2 * i, 18, 5, 2, "black", bold=False
             )
-            self.create_and_add_label(
+            self.layout.create_and_add_label(
                 str(point["dB_obtained"]), 4 + 2 * i, 24, 14, 2, "black", bold=False
             )
-            self.create_and_add_button(
+            self.layout.create_and_add_button(
                 "-",
                 4 + 2 * i,
                 28,

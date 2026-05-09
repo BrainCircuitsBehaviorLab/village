@@ -2,6 +2,7 @@ import os
 import traceback
 from pathlib import Path
 from threading import Thread
+from types import SimpleNamespace
 from typing import TYPE_CHECKING, Callable
 
 import numpy as np
@@ -209,33 +210,7 @@ class Manager:
             ],
             [str, str, float, str, str, str],
         )
-        self.water_calibration = Collection(
-            "water_calibration",
-            [
-                "date",
-                "port_number",
-                "time(s)",
-                "water_delivered(ul)",
-                "calibration_number",
-                "water_expected(ul)",
-                "error(%)",
-            ],
-            [str, int, float, float, int, float, float],
-        )
-        self.sound_calibration = Collection(
-            "sound_calibration",
-            [
-                "date",
-                "speaker",
-                "sound_name",
-                "gain",
-                "dB_obtained",
-                "calibration_number",
-                "dB_expected",
-                "error(%)",
-            ],
-            [str, int, str, float, float, int, float, float],
-        )
+        self.calibration: SimpleNamespace = SimpleNamespace()
         self.temperatures = Collection(
             "temperatures",
             ["date", "temperature", "humidity"],
@@ -332,8 +307,8 @@ class Manager:
         """
         self.task.create_paths()
         self.task.cam_box = self.cam_box
-        self.task.water_calibration = self.water_calibration
-        self.task.sound_calibration = self.sound_calibration
+        self.task.water_calibration = self.calibration.water_calibration
+        self.task.sound_calibration = self.calibration.sound_calibration
         if self.subject.name != "None":
             self.task.cam_box.start_recording(
                 self.task.video_path, self.task.video_data_path
@@ -347,8 +322,8 @@ class Manager:
             self.direct_functions.set_variables(
                 task=self.task,
                 behaviour_window=self.behavior_window,
-                sound_calibration=self.sound_calibration,
-                water_calibration=self.water_calibration,
+                sound_calibration=self.calibration.sound_calibration,
+                water_calibration=self.calibration.water_calibration,
             )
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
@@ -395,15 +370,15 @@ class Manager:
                     self.task.video_path, self.task.video_data_path
                 )
                 self.task.maximum_number_of_trials = 100000000
-                self.task.water_calibration = self.water_calibration
-                self.task.sound_calibration = self.sound_calibration
+                self.task.water_calibration = self.calibration.water_calibration
+                self.task.sound_calibration = self.calibration.sound_calibration
                 self.task.controller_type = self.controller_type
                 self.task.functions = self.functions
                 self.direct_functions.set_variables(
                     task=self.task,
                     behaviour_window=self.behavior_window,
-                    sound_calibration=self.sound_calibration,
-                    water_calibration=self.water_calibration,
+                    sound_calibration=self.calibration.sound_calibration,
+                    water_calibration=self.calibration.water_calibration,
                 )
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()

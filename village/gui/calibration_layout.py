@@ -33,8 +33,10 @@ class CalibrationLayout(Layout):
 
     def _draw(self) -> None:
         for cls in manager.calibration_classes:
-            if cls.is_active():
-                self._calibrations.append(cls(self.window))
+            if cls.is_active() and hasattr(cls, "_instance"):
+                cal = cls._instance
+                cal.init_panel(self.window)
+                self._calibrations.append(cal)
 
         if not self._calibrations:
             self.create_and_add_label(

@@ -225,11 +225,11 @@ class TableView(QTableView):
             manager.temperatures.df = model.complete_df
             manager.temperatures.save_from_df()
         elif manager.table == DataTable.WATER_CALIBRATION:
-            manager.water_calibration.df = model.complete_df
-            manager.water_calibration.save_from_df()
+            manager.calibration.water_calibration.df = model.complete_df
+            manager.calibration.water_calibration.save_from_df()
         elif manager.table == DataTable.SOUND_CALIBRATION:
-            manager.sound_calibration.df = model.complete_df
-            manager.sound_calibration.save_from_df()
+            manager.calibration.sound_calibration.df = model.complete_df
+            manager.calibration.sound_calibration.save_from_df()
         elif manager.table == DataTable.SESSIONS_SUMMARY:
             manager.sessions_summary.df = model.complete_df
             manager.sessions_summary.save_from_df()
@@ -730,7 +730,7 @@ class DataLayout(Layout):
                     )
         elif manager.table == DataTable.WATER_CALIBRATION:
             try:
-                df = manager.water_calibration.get_last_water_df()
+                df = manager.calibration.water_calibration.get_last_water_df()
                 figure = water_calibration_plot(df, width, height, None)
                 pixmap = utils.create_pixmap(figure)
             except Exception:
@@ -740,7 +740,7 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.SOUND_CALIBRATION:
             try:
-                df = manager.sound_calibration.get_last_sound_df()
+                df = manager.calibration.sound_calibration.get_last_sound_df()
                 figure = sound_calibration_plot(df, width, height, None)
                 pixmap = utils.create_pixmap(figure)
             except Exception:
@@ -940,10 +940,10 @@ class DfLayout(Layout):
                 self.complete_df = manager.subjects.df
                 self.widths = [20, 20, 20, 20, 20, 90]
             case DataTable.WATER_CALIBRATION:
-                self.complete_df = manager.water_calibration.df
+                self.complete_df = manager.calibration.water_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.SOUND_CALIBRATION:
-                self.complete_df = manager.sound_calibration.df
+                self.complete_df = manager.calibration.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.TEMPERATURES:
                 self.complete_df = manager.temperatures.df
