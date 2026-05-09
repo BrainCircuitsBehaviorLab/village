@@ -67,18 +67,11 @@ class CalibrationLayout(Layout):
         # Each stacked_widget spans the full right content area (row 0, full height)
         # so the calibration's internal row references (7-48) align with the window.
         for cal in self._calibrations:
-            self.addWidget(cal.container, 0, _CAL_COL, 51, 173)
+            self.addWidget(cal.container, _C_ROW, _CAL_COL, 44, 173)
             cal.container.hide()
 
         self._calibrations[0].container.show()
         self.menu_list.setCurrentRow(0)
-
-        # Raise chrome widgets so they capture mouse events above the containers
-        self.nav_tab_bar.raise_()
-        self.status_label.raise_()
-        self.stop_button.raise_()
-        self.online_or_force_button.raise_()
-        self.exit_button.raise_()
 
     # ── menu selection ─────────────────────────────────────────────────────────
 

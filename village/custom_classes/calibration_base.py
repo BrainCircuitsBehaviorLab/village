@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 # Columns available in the content area (full width minus the left menu)
-CAL_ROWS = 51
+CAL_ROWS = 44
 CAL_COLS = 172
 
 
