@@ -35,12 +35,12 @@ MENU_WIDTH = 22
 # ── Right content panel ────────────────────────────────────────────────────────
 C_COL = 28  # content start column
 C_ROW = 7  # content start row
-C_LABEL_W = 23  # label width
-C_VAL_OFF = 23  # offset from C_COL to value widget column
+C_LABEL_W = 24  # label width
+C_VAL_OFF = 24  # offset from C_COL to value widget column
 
 # ── Value widget size constants ────────────────────────────────────────────────
 size1 = 14
-size2 = 45
+size2 = 50
 size3 = 14
 size4 = 14
 small_box = 7
@@ -668,8 +668,11 @@ class SettingsLayout(Layout):
                 continue
             if key == "SYSTEM_DIRECTORY":
                 continue
-            if key in critical_keys and str(val) != str(settings.get(key)):
-                self.critical_changes = True
+            if key in critical_keys:
+                stored = settings.get(key)
+                stored_str = stored.name if hasattr(stored, "name") else str(stored)
+                if str(val) != stored_str:
+                    self.critical_changes = True
             if key == "SYNC_DIRECTORY":
                 settings.set(key, sync_directory)
             else:
