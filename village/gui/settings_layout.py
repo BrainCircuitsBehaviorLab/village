@@ -577,7 +577,6 @@ class SettingsLayout(Layout):
                 return False
         settings.set("SYSTEM_NAME", value)
         utils.change_system_directory_settings()
-        self.critical_changes = True
         return True
 
     def save(self, changing_project: bool) -> None:
@@ -667,6 +666,8 @@ class SettingsLayout(Layout):
                     str(val), changing_project
                 )
                 continue
+            if key == "SYSTEM_DIRECTORY":
+                continue
             if key in critical_keys and str(val) != str(settings.get(key)):
                 self.critical_changes = True
             if key == "SYNC_DIRECTORY":
@@ -692,6 +693,8 @@ class SettingsLayout(Layout):
                     system_name_changed |= changed
                     if not changed:
                         line_edit.setText(str(settings.get("SYSTEM_NAME")))
+                    continue
+                if s.key == "SYSTEM_DIRECTORY":
                     continue
                 settings.set(s.key, value)
             elif s.value_type == float:
@@ -770,6 +773,8 @@ class SettingsLayout(Layout):
                 "Some of the setting changes require a system restart to take effect."
             )
             QMessageBox.information(self.window, "Restart", text)
+            self.window.reload_app()
+        elif system_name_changed and not changing_project:
             self.window.reload_app()
 
         self.critical_changes = False

@@ -40,7 +40,7 @@ class Log:
         type = "INFO"
         date = time_utils.now_string()
         text = date + "  " + type + "  " + subject + "  " + description
-        self.event.add_entry(["date", "type", "subject", "description"])
+        self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -65,7 +65,7 @@ class Log:
         date = time_utils.now_string()
         description = task + " started"
         text = date + "  " + type + " " + subject + "  " + description
-        self.event.add_entry(["date", "type", "subject", "description"])
+        self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -80,7 +80,7 @@ class Log:
         date = time_utils.now_string()
         description = task + " ended"
         text = date + "  " + type + " " + subject + "  " + description
-        self.event.add_entry(["date", "type", "subject", "description"])
+        self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -101,7 +101,7 @@ class Log:
         date = time_utils.now_string()
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
-        self.event.add_entry(["date", "type", "subject", "description"])
+        self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
         print(text.replace("  |  ", "\n"))
 
@@ -130,7 +130,7 @@ class Log:
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
         if not report:
-            self.event.add_entry(["date", "type", "subject", "description"])
+            self.event.add_entry([date, type, subject, description])
             self.cam.write_text(text)
         print(text.replace("  |  ", "\n"))
 
