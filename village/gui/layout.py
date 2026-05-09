@@ -292,8 +292,7 @@ class Layout(QGridLayout):
             ("MONITOR", "Go to the monitor menu"),
             ("TASKS", "Go to the tasks menu"),
             ("DATA", "Go to the data menu"),
-            ("WATER CALIBRATION", "Go to the water calibration menu"),
-            ("SOUND CALIBRATION", "Go to the sound calibration menu"),
+            ("CALIBRATION", "Go to the calibration menu"),
             ("SETTINGS", "Go to the settings menu"),
         ]
         self.nav_tab_bar = QTabBar()
@@ -324,9 +323,8 @@ class Layout(QGridLayout):
         self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)
         self.tasks_button = NavTabProxy(self.nav_tab_bar, 2)
         self.data_button = NavTabProxy(self.nav_tab_bar, 3)
-        self.water_calibration_button = NavTabProxy(self.nav_tab_bar, 4)
-        self.sound_calibration_button = NavTabProxy(self.nav_tab_bar, 5)
-        self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
+        self.calibration_button = NavTabProxy(self.nav_tab_bar, 4)
+        self.settings_button = NavTabProxy(self.nav_tab_bar, 5)
 
         self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
@@ -556,49 +554,20 @@ class Layout(QGridLayout):
             self.close_online_plot_window()
             self.window.create_data_layout()
 
-    def water_calibration_button_clicked(self) -> None:
-        """Handles water calibration button click."""
+    def calibration_button_clicked(self) -> None:
+        """Handles calibration button click."""
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
                 self.close_online_plot_window()
-                self.window.create_water_calibration_layout()
+                self.window.create_calibration_layout()
             else:
-                text = (
-                    "Calibration is not available while a subject is in the box, a "
-                    + "detection is ongoing, or data is syncing."
-                )
                 QMessageBox.information(
                     self.window,
                     "CALIBRATION",
-                    text,
-                )
-
-    def sound_calibration_button_clicked(self) -> None:
-        """Handles sound calibration button click."""
-        if not manager.sound_calibration_functions:
-            text = "To calibrate the sound, you must first create a list of functions "
-            text += "that generate the sounds you want to use for calibration in "
-            text += "your project. Please refer to the documentation for instructions "
-            text += "on how to do this."
-            QMessageBox.information(self.window, "WARNING", text)
-            return
-        if self.change_layout():
-            if manager.state in [State.WAIT, State.MANUAL_MODE]:
-                manager.state = State.MANUAL_MODE
-                manager.reset_subject_task_training()
-                self.close_online_plot_window()
-                self.window.create_sound_calibration_layout()
-            else:
-                text = (
-                    "Calibration is not available while a subject is in the box, a "
-                    + "detection is ongoing, or data is syncing."
-                )
-                QMessageBox.information(
-                    self.window,
-                    "CALIBRATION",
-                    text,
+                    "Calibration is not available while a subject is in the box, "
+                    "a detection is ongoing, or data is syncing.",
                 )
 
     def settings_button_clicked(self) -> None:
@@ -678,7 +647,7 @@ class Layout(QGridLayout):
                     self.column_width * 62,
                     self.row_height * 20,
                 )
-                self.plot_dialog = OnlinePlotDialog()
+                self.plot_dialog: OnlinePlotDialog = OnlinePlotDialog()
                 self.plot_dialog.setGeometry(*geom)
                 self.plot_dialog.show()
 
@@ -925,8 +894,7 @@ class Layout(QGridLayout):
             self.monitor_button_clicked,
             self.tasks_button_clicked,
             self.data_button_clicked,
-            self.water_calibration_button_clicked,
-            self.sound_calibration_button_clicked,
+            self.calibration_button_clicked,
             self.settings_button_clicked,
         ]
         if 0 <= index < len(actions):

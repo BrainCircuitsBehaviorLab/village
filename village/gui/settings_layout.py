@@ -40,7 +40,7 @@ C_VAL_OFF = 24  # offset from C_COL to value widget column
 
 # ── Value widget size constants ────────────────────────────────────────────────
 size1 = 14
-size2 = 50
+size2 = 55
 size3 = 14
 size4 = 14
 small_box = 7

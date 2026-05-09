@@ -6,8 +6,12 @@ import re
 import sys
 import traceback
 
+from village.calibration.camera_calibration import CameraCalibration
+from village.calibration.sound_calibration import SoundCalibration
+from village.calibration.water_calibration import WaterCalibration
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.calibration_base import CalibrationBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
@@ -19,6 +23,12 @@ from village.custom_classes.task import Task
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
 from village.settings import settings
+
+_DEFAULT_CALIBRATIONS: list[type] = [
+    WaterCalibration,
+    SoundCalibration,
+    CameraCalibration,
+]
 
 
 def import_all(manager) -> None:
@@ -48,6 +58,8 @@ def import_all(manager) -> None:
     camera_draw_correct = False
     auto_no_mouse_correct = False
     sound_path = ""
+
+    manager.calibration_classes = list(_DEFAULT_CALIBRATIONS)
 
     for root, _, files in os.walk(directory):
         for file in files:
@@ -146,6 +158,12 @@ def import_all(manager) -> None:
                         d = cls()
                         manager.auto_no_mouse = d
                         auto_no_mouse_correct = True
+                elif issubclass(cls, CalibrationBase) and cls not in (
+                    CalibrationBase,
+                    *_DEFAULT_CALIBRATIONS,
+                ):
+                    if cls not in manager.calibration_classes:
+                        manager.calibration_classes.append(cls)
                 elif (
                     issubclass(cls, DirectFunctionsBase) and cls != DirectFunctionsBase
                 ):

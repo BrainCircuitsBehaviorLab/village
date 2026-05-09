@@ -52,6 +52,7 @@ from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 if TYPE_CHECKING:
+    from village.custom_classes.calibration_base import CalibrationBase
     from village.devices.camera import Camera
     from village.screen.behavior_window import BehaviorWindow
 
@@ -173,6 +174,7 @@ class Manager:
         self.behavior_window: BehaviorWindow | NullBehaviorWindow = NullBehaviorWindow()
         self.cam_box: Camera | NullCamera = NullCamera()
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
+        self.calibration_classes: list[type[CalibrationBase]] = []
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,

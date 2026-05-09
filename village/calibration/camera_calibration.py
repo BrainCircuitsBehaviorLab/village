@@ -1,0 +1,14 @@
+from __future__ import annotations
+
+from village.custom_classes.calibration_base import CalibrationBase
+
+
+class CameraCalibration(CalibrationBase):
+    name = "CAMERA CALIBRATION"
+
+    @classmethod
+    def is_active(cls) -> bool:
+        return True
+
+    def draw(self) -> None:
+        pass
