@@ -67,10 +67,10 @@ class CalibrationLayout(Layout):
         # Each stacked_widget spans the full right content area (row 0, full height)
         # so the calibration's internal row references (7-48) align with the window.
         for cal in self._calibrations:
-            self.addWidget(cal.stacked_widget, 0, _CAL_COL, 51, 173)
-            cal.stacked_widget.hide()
+            self.addWidget(cal.container, 0, _CAL_COL, 51, 173)
+            cal.container.hide()
 
-        self._calibrations[0].stacked_widget.show()
+        self._calibrations[0].container.show()
         self.menu_list.setCurrentRow(0)
 
     # ── menu selection ─────────────────────────────────────────────────────────
@@ -83,9 +83,9 @@ class CalibrationLayout(Layout):
             self.menu_list.setCurrentRow(self._current_idx)
             self.menu_list.blockSignals(False)
             return
-        self._calibrations[self._current_idx].stacked_widget.hide()
+        self._calibrations[self._current_idx].container.hide()
         self._current_idx = new_idx
-        self._calibrations[new_idx].stacked_widget.show()
+        self._calibrations[new_idx].container.show()
 
     # ── Layout interface ───────────────────────────────────────────────────────
 

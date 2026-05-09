@@ -18,6 +18,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from PyQt5.QtWidgets import QWidget
+
 from village.gui.layout import Layout
 
 if TYPE_CHECKING:
@@ -39,6 +41,8 @@ class CalibrationBase(Layout):
 
     def __init__(self, window: GuiWindow) -> None:
         super().__init__(window, stacked=True, rows=CAL_ROWS, columns=CAL_COLS)
+        self.container = QWidget()
+        self.container.setLayout(self)
         self.draw()
 
     @classmethod
