@@ -925,7 +925,7 @@ class _CalibrationPlotLayout(Layout):
             "QLabel {border: 1px solid gray; background-color: white;}"
         )
         dpi = int(settings.get("MATPLOTLIB_DPI"))
-        self.layout.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
+        self.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
         self.pixmap = QPixmap()
         self.plot_width = (self.columns * self.column_width - 10) / dpi
         self.plot_height = (self.rows * self.row_height - 5) / dpi
@@ -966,22 +966,22 @@ class _InfoLayout(Layout):
         self.update()
 
     def update(self) -> None:
-        self.layout.create_and_add_label(
+        self.create_and_add_label(
             "CALIBRATION POINTS", 0, 1, 40, 2, "black", bold=False
         )
-        self.layout.create_and_add_label("Port", 2, 1, 8, 2, "black", bold=False)
-        self.layout.create_and_add_label("Time(s)", 2, 6, 8, 2, "black", bold=False)
-        self.layout.create_and_add_label(
+        self.create_and_add_label("Port", 2, 1, 8, 2, "black", bold=False)
+        self.create_and_add_label("Time(s)", 2, 6, 8, 2, "black", bold=False)
+        self.create_and_add_label(
             "Water delivered(ul)", 2, 14, 24, 2, "black", bold=False
         )
         for i, point in enumerate(self.parent.calibration_points):
-            self.layout.create_and_add_label(
+            self.create_and_add_label(
                 str(point["port_number"]), 4 + 2 * i, 1, 8, 2, "black", bold=False
             )
-            self.layout.create_and_add_label(
+            self.create_and_add_label(
                 str(point["time(s)"]), 4 + 2 * i, 8, 8, 2, "black", bold=False
             )
-            self.layout.create_and_add_label(
+            self.create_and_add_label(
                 str(point["water_delivered(ul)"]),
                 4 + 2 * i,
                 16,
@@ -990,7 +990,7 @@ class _InfoLayout(Layout):
                 "black",
                 bold=False,
             )
-            self.layout.create_and_add_button(
+            self.create_and_add_button(
                 "-",
                 4 + 2 * i,
                 28,

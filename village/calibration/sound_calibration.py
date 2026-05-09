@@ -859,7 +859,7 @@ class _CalibrationPlotLayout(Layout):
             "QLabel {border: 1px solid gray; background-color: white;}"
         )
         dpi = int(settings.get("MATPLOTLIB_DPI"))
-        self.layout.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
+        self.addWidget(self.plot_label, 0, 0, self.rows, self.columns)
         self.pixmap = QPixmap()
         self.plot_width = (self.columns * self.column_width - 10) / dpi
         self.plot_height = (self.rows * self.row_height - 5) / dpi
@@ -897,29 +897,27 @@ class _InfoLayout(Layout):
         self.update()
 
     def update(self) -> None:
-        self.layout.create_and_add_label(
+        self.create_and_add_label(
             "CALIBRATION POINTS", 0, 1, 40, 2, "black", bold=False
         )
-        self.layout.create_and_add_label("Speaker", 2, 1, 7, 2, "black", bold=False)
-        self.layout.create_and_add_label("Sound_name", 2, 8, 11, 2, "black", bold=False)
-        self.layout.create_and_add_label("Gain", 2, 18, 4, 2, "black", bold=False)
-        self.layout.create_and_add_label(
-            "dB_obtained", 2, 22, 24, 2, "black", bold=False
-        )
+        self.create_and_add_label("Speaker", 2, 1, 7, 2, "black", bold=False)
+        self.create_and_add_label("Sound_name", 2, 8, 11, 2, "black", bold=False)
+        self.create_and_add_label("Gain", 2, 18, 4, 2, "black", bold=False)
+        self.create_and_add_label("dB_obtained", 2, 22, 24, 2, "black", bold=False)
         for i, point in enumerate(self.parent.calibration_points):
-            self.layout.create_and_add_label(
+            self.create_and_add_label(
                 str(point["speaker"]), 4 + 2 * i, 1, 4, 2, "black", bold=False
             )
-            self.layout.create_and_add_label(
+            self.create_and_add_label(
                 str(point["sound_name"]), 4 + 2 * i, 7, 12, 2, "black", bold=False
             )
-            self.layout.create_and_add_label(
+            self.create_and_add_label(
                 str(point["gain"]), 4 + 2 * i, 18, 5, 2, "black", bold=False
             )
-            self.layout.create_and_add_label(
+            self.create_and_add_label(
                 str(point["dB_obtained"]), 4 + 2 * i, 24, 14, 2, "black", bold=False
             )
-            self.layout.create_and_add_button(
+            self.create_and_add_button(
                 "-",
                 4 + 2 * i,
                 28,
