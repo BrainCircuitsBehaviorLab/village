@@ -185,31 +185,6 @@ class Collection:
         self.df.loc[self.df.index[-1], column] = value
         self.save_from_df()
 
-    def log(self, date: str, type: str, subject: str, description: str) -> None:
-        """Logs an event if the collection schema matches standard logging fields.
-
-        Args:
-            date (str): Date string.
-            type (str): Event type.
-            subject (str): Subject name.
-            description (str): Description.
-        """
-        if self.columns == ["date", "type", "subject", "description"]:
-            entry = [date, type, subject, description]
-            self.add_entry(entry)
-
-    def log_temp(self, date: str, temperature: float, humidity: float) -> None:
-        """Logs temperature if the collection schema matches temperature fields.
-
-        Args:
-            date (str): Date string.
-            temperature (float): Temperature value.
-            humidity (float): Humidity value.
-        """
-        if self.columns == ["date", "temperature", "humidity"]:
-            entry = [date, temperature, humidity]
-            self.add_entry(entry)
-
     def get_last_water_df(self) -> pd.DataFrame:
         """Returns the latest water calibration entries for each port.
 

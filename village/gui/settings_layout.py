@@ -540,6 +540,46 @@ class SettingsLayout(Layout):
     def save_button_clicked(self) -> None:
         self.save(changing_project=False)
 
+    def _apply_system_name(self, value: str, changing_project: bool) -> bool:
+        """Validates, confirms and saves a SYSTEM_NAME change.
+
+        Returns True if the name was changed, False otherwise.
+        """
+        old_value = str(settings.get("SYSTEM_NAME"))
+        if value == old_value:
+            settings.set("SYSTEM_NAME", value)
+            return False
+        if not re.fullmatch(r"[A-Za-z0-9_-]+", value):
+            QMessageBox.warning(
+                self.window,
+                "SYSTEM_NAME",
+                "Invalid system name. "
+                "It must not contain spaces or special characters.",
+            )
+            return False
+        text = (
+            "Are you sure you want to change the system name?\n"
+            "It is not recommended to do this if you have "
+            "already started collecting data for an experiment.\n"
+            "Although the system's data directory will "
+            " be renamed automatically, some data may already have "
+            "been saved in CSV files using the previous system name."
+        )
+        if not changing_project:
+            reply = QMessageBox.question(
+                self.window,
+                "SYSTEM_NAME",
+                text,
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
+            if reply != QMessageBox.Yes:
+                return False
+        settings.set("SYSTEM_NAME", value)
+        utils.change_system_directory_settings()
+        self.critical_changes = True
+        return True
+
     def save(self, changing_project: bool) -> None:
         # Flush current section's widgets into _pending so save() sees everything
         self._flush_to_pending()
@@ -547,6 +587,7 @@ class SettingsLayout(Layout):
         sync_directory = self.create_sync_directory()
         self.save_button.setDisabled(True)
         manager.changing_settings = False
+        system_name_changed = False
 
         critical_keys = [
             "USE_SOUNDCARD",
@@ -621,6 +662,11 @@ class SettingsLayout(Layout):
         for key, val in self._pending.items():
             if key in tracked_keys:
                 continue
+            if key == "SYSTEM_NAME":
+                system_name_changed |= self._apply_system_name(
+                    str(val), changing_project
+                )
+                continue
             if key in critical_keys and str(val) != str(settings.get(key)):
                 self.critical_changes = True
             if key == "SYNC_DIRECTORY":
@@ -640,45 +686,12 @@ class SettingsLayout(Layout):
 
             if s.value_type == str:
                 value = line_edit.text()
-                old_value = str(settings.get("SYSTEM_NAME"))
 
-                if s.key == "SYSTEM_NAME" and value != old_value:
-                    if re.fullmatch(r"[A-Za-z0-9_-]+", value):
-                        text = (
-                            "Are you sure you want to change the system name?\n"
-                            + "It is not recommended to do this if you have "
-                            + "already started collecting data for an experiment.\n"
-                            + "Although the system's data directory will "
-                            + " be renamed automatically, some data may already have "
-                            + "been saved in CSV files using the previous "
-                            + "system name."
-                        )
-                        if not changing_project:
-                            reply = QMessageBox.question(
-                                self.window,
-                                "SYSTEM_NAME",
-                                text,
-                                QMessageBox.Yes | QMessageBox.No,
-                                QMessageBox.No,
-                            )
-                            if reply == QMessageBox.Yes:
-                                settings.set(s.key, value)
-                                utils.change_system_directory_settings()
-                                self._destroy_content()
-                                self.draw_section("DIRECTORY SETTINGS")
-                                self.critical_changes = True
-                            else:
-                                line_edit.setText(old_value)
-                        else:
-                            settings.set(s.key, value)
-                            utils.change_system_directory_settings()
-                            self._destroy_content()
-                            self.draw_section("DIRECTORY SETTINGS")
-                    else:
-                        text = "Invalid system name. "
-                        text += "It must not contain spaces or special characters."
-                        QMessageBox.warning(self.window, "SYSTEM_NAME", text)
-                        line_edit.setText(old_value)
+                if s.key == "SYSTEM_NAME":
+                    changed = self._apply_system_name(value, changing_project)
+                    system_name_changed |= changed
+                    if not changed:
+                        line_edit.setText(str(settings.get("SYSTEM_NAME")))
                     continue
                 settings.set(s.key, value)
             elif s.value_type == float:
@@ -747,6 +760,10 @@ class SettingsLayout(Layout):
             pass
 
         self._pending.clear()
+
+        if system_name_changed:
+            self._destroy_content()
+            self.draw_section(self._current_section)
 
         if self.critical_changes and not changing_project:
             text = (

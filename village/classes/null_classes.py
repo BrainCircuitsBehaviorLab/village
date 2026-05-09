@@ -207,24 +207,11 @@ class NullSoundDevice:
 
 
 class NullCollection:
-    def log(self, date: str, type: str, subject: str, description: str) -> None:
-        """Logs a generic event.
+    def add_entry(self, entry: list) -> None:
+        """Adds a new entry to the collection.
 
         Args:
-            date (str): Date/time string.
-            type (str): Event type.
-            subject (str): Subject name.
-            description (str): Description.
-        """
-        return
-
-    def log_temp(self, date: str, temperature: float, humidity: float) -> None:
-        """Logs temperature and humidity data.
-
-        Args:
-            date (str): Date/time string.
-            temperature (float): Temperature value.
-            humidity (float): Humidity value.
+            entry (list): The list of values for the new row.
         """
         return
 
