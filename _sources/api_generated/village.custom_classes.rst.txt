@@ -30,6 +30,7 @@
 
    after_session_base
    auto_no_mouse_base
+   calibration_base
    camera_draw_base
    camera_trigger_base
    change_cycle_base

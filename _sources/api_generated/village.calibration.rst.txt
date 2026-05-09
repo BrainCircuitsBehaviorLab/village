@@ -28,6 +28,7 @@
    :template: custom_module_template.rst
    :recursive:
 
+   camera_calibration
    sound_calibration
    water_calibration
 

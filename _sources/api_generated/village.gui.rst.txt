@@ -28,6 +28,7 @@
    :template: custom_module_template.rst
    :recursive:
 
+   calibration_layout
    data_layout
    gui
    gui_window
@@ -35,7 +36,5 @@
    main_layout
    monitor_layout
    settings_layout
-   sound_calibration_layout
    tasks_layout
-   water_calibration_layout
 
