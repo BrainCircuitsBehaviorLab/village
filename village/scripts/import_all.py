@@ -53,6 +53,10 @@ def import_all(manager) -> None:
     auto_no_mouse_correct = False
     sound_path = ""
 
+    manager.calibrations.sound_calibration = SoundCalibration()
+    manager.calibrations.camera_calibration = CameraCalibration()
+    manager.calibrations.bpod_water_calibration = BpodWaterCalibration()
+
     for root, _, files in os.walk(directory):
         for file in files:
             if file == "sound_functions.py":
