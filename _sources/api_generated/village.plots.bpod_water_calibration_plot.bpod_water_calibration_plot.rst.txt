@@ -1,0 +1,6 @@
+bpod\_water\_calibration\_plot
+==============================
+
+.. currentmodule:: village.plots.bpod_water_calibration_plot
+
+.. autofunction:: bpod_water_calibration_plot

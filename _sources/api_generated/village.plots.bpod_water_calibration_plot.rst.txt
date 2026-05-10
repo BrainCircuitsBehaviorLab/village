@@ -1,7 +1,7 @@
-water\_calibration\_plot
-========================
+bpod\_water\_calibration\_plot
+==============================
 
-.. automodule:: village.plots.water_calibration_plot
+.. automodule:: village.plots.bpod_water_calibration_plot
 
    
    
@@ -15,7 +15,7 @@ water\_calibration\_plot
       :toctree:
       :template: custom_base_template.rst
    
-      water_calibration_plot
+      bpod_water_calibration_plot
    
    
 

@@ -22,6 +22,7 @@ Collection
       ~Collection.check_split_csv
       ~Collection.convert_df_to_types
       ~Collection.convert_with_default
+      ~Collection.create_data_collection
       ~Collection.df_from_df
       ~Collection.get_first_entry
       ~Collection.get_last_entry

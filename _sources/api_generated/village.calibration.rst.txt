@@ -28,7 +28,7 @@
    :template: custom_module_template.rst
    :recursive:
 
+   bpod_water_calibration
    camera_calibration
    sound_calibration
-   water_calibration
 

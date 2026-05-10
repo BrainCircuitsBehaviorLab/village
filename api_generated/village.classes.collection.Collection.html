@@ -155,24 +155,8 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.html">auto_no_mouse_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html">AutoNoMouse_Base</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.change_cycle_base.ChangeCycleBase.html">ChangeCycleBase</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.direct_functions_base.DirectFunctionsBase.html">DirectFunctionsBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
@@ -185,13 +169,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.subject_plot_base.html">subject_plot_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task.html">task</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.Task.html">Task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
@@ -228,6 +205,10 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="village.plots.html">plots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.plots.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.plots.bpod_water_calibration_plot.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
 </ul>
@@ -238,10 +219,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.plots.temperatures_plot.html">temperatures_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.temperatures_plot.temperatures_plot.html">temperatures_plot</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="village.plots.water_calibration_plot.html">water_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.plots.water_calibration_plot.water_calibration_plot.html">water_calibration_plot</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.plots.weights_plot.html">weights_plot</a><ul>
@@ -366,6 +343,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.classes.collection.Collection.path"><code class="docutils literal notranslate">path</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.collection.Collection.df"><code class="docutils literal notranslate">df</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.collection.Collection.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.collection.Collection.create_data_collection"><code class="docutils literal notranslate">create_data_collection()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.collection.Collection.add_entry"><code class="docutils literal notranslate">add_entry()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.collection.Collection.convert_with_default"><code class="docutils literal notranslate">convert_with_default()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.collection.Collection.convert_df_to_types"><code class="docutils literal notranslate">convert_df_to_types()</span></code></a></li>
@@ -463,7 +441,7 @@ data-aria-dark="Switch to auto color mode">
 <h1>Collection</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="village.classes.collection.Collection">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Collection</span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Manages a collection of data entries stored in a CSV file and a pandas DataFrame.</p>
 <dl class="py attribute">
@@ -534,24 +512,15 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.classes.collection.Collection.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initializes the Collection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The name of the collection (and the file base name).</p></li>
-<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – The column names.</p></li>
-<li><p><strong>types</strong> (<em>list</em><em>[</em><em>Type</em><em>]</em>) – The data types for each column.</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <p class="rubric">Methods</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.__init__" title="village.classes.collection.Collection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name, columns, types)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.__init__" title="village.classes.collection.Collection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p>Initializes the Collection.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.add_entry" title="village.classes.collection.Collection.add_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_entry</span></code></a>(entry)</p></td>
@@ -569,36 +538,44 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.convert_with_default" title="village.classes.collection.Collection.convert_with_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_with_default</span></code></a>(value, target_type)</p></td>
 <td><p>Converts a value to a target type, using defaults for failures.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.df_from_df" title="village.classes.collection.Collection.df_from_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_from_df</span></code></a>(df, training)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.create_data_collection" title="village.classes.collection.Collection.create_data_collection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_data_collection</span></code></a>(name, columns, types)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.df_from_df" title="village.classes.collection.Collection.df_from_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_from_df</span></code></a>(df, training)</p></td>
 <td><p>Processes a DataFrame for saving (formatting dates, enums, etc).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_first_entry" title="village.classes.collection.Collection.get_first_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_first_entry</span></code></a>(column, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_first_entry" title="village.classes.collection.Collection.get_first_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_first_entry</span></code></a>(column, value)</p></td>
 <td><p>Gets the first entry matching a specific value in a column.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_last_entry" title="village.classes.collection.Collection.get_last_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_last_entry</span></code></a>(column, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_last_entry" title="village.classes.collection.Collection.get_last_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_last_entry</span></code></a>(column, value)</p></td>
 <td><p>Gets the last entry matching a specific value in a column.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_last_entry_name" title="village.classes.collection.Collection.get_last_entry_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_last_entry_name</span></code></a>(column, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_last_entry_name" title="village.classes.collection.Collection.get_last_entry_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_last_entry_name</span></code></a>(column, value)</p></td>
 <td><p>Gets the 'name' field of the last entry matching a condition.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_last_sound_df" title="village.classes.collection.Collection.get_last_sound_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_last_sound_df</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_last_sound_df" title="village.classes.collection.Collection.get_last_sound_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_last_sound_df</span></code></a>()</p></td>
 <td><p>Returns the latest sound calibration entries for each speaker/sound.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_last_water_df" title="village.classes.collection.Collection.get_last_water_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_last_water_df</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_last_water_df" title="village.classes.collection.Collection.get_last_water_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_last_water_df</span></code></a>()</p></td>
 <td><p>Returns the latest water calibration entries for each port.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_sound_gain" title="village.classes.collection.Collection.get_sound_gain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sound_gain</span></code></a>(speaker, dB, sound_name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_sound_gain" title="village.classes.collection.Collection.get_sound_gain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sound_gain</span></code></a>(speaker, dB, sound_name)</p></td>
 <td><p>Calculates sound gain for a target dB based on calibration.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_valve_time" title="village.classes.collection.Collection.get_valve_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_valve_time</span></code></a>(port, volume)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.get_valve_time" title="village.classes.collection.Collection.get_valve_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_valve_time</span></code></a>(port, volume)</p></td>
 <td><p>Calculates valve open time for a given volume based on calibration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.collection.Collection.save_from_df" title="village.classes.collection.Collection.save_from_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_from_df</span></code></a>([training])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.collection.Collection.save_from_df" title="village.classes.collection.Collection.save_from_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_from_df</span></code></a>([training])</p></td>
 <td><p>Saves values from the current DataFrame to the CSV file, processing formatting.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<dl class="py method">
+<dt class="sig sig-object py" id="village.classes.collection.Collection.create_data_collection">
+<span class="sig-name descname"><span class="pre">create_data_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.create_data_collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="village.classes.collection.Collection.add_entry">
 <span class="sig-name descname"><span class="pre">add_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.add_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -876,7 +853,7 @@ processing formatting.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=01fab388"></script>
+      <script src="../_static/documentation_options.js?v=623bfd07"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
