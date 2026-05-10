@@ -53,9 +53,12 @@ def import_all(manager) -> None:
     auto_no_mouse_correct = False
     sound_path = ""
 
+    manager.calibrations.bpod_water_calibration = BpodWaterCalibration()
     manager.calibrations.sound_calibration = SoundCalibration()
     manager.calibrations.camera_calibration = CameraCalibration()
-    manager.calibrations.bpod_water_calibration = BpodWaterCalibration()
+    manager.calibration_classes.append(BpodWaterCalibration)
+    manager.calibration_classes.append(SoundCalibration)
+    manager.calibration_classes.append(CameraCalibration)
 
     for root, _, files in os.walk(directory):
         for file in files:
