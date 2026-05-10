@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>classes - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="collection" href="village.classes.collection.html" /><link rel="prev" title="calibration" href="village.calibration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>classes - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="calibrations" href="village.classes.calibrations.html" /><link rel="prev" title="calibration" href="village.calibration.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.classes.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -103,6 +103,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.classes.calibrations.html">calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.calibrations.Calibrations.html">Calibrations</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.classes.collection.html">collection</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.collection.Collection.html">Collection</a></li>
 </ul>
@@ -127,6 +131,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.classes.null_classes.html">null_classes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.LEDStripBase.html">LEDStripBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullBpod.html">NullBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCalibrationBase.html">NullCalibrationBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCamera.html">NullCamera</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCollection.html">NullCollection</a></li>
@@ -155,8 +160,24 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.html">auto_no_mouse_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html">AutoNoMouse_Base</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.change_cycle_base.ChangeCycleBase.html">ChangeCycleBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.direct_functions_base.DirectFunctionsBase.html">DirectFunctionsBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
@@ -169,6 +190,13 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.subject_plot_base.html">subject_plot_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task.html">task</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.Task.html">Task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
@@ -408,19 +436,22 @@ data-aria-dark="Switch to auto color mode">
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.collection.html#module-village.classes.collection" title="village.classes.collection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collection</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.calibrations.html#module-village.classes.calibrations" title="village.classes.calibrations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calibrations</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.classes.enums.html#module-village.classes.enums" title="village.classes.enums"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enums</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.collection.html#module-village.classes.collection" title="village.classes.collection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collection</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.null_classes.html#module-village.classes.null_classes" title="village.classes.null_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">null_classes</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.enums.html#module-village.classes.enums" title="village.classes.enums"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enums</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.classes.settings_class.html#module-village.classes.settings_class" title="village.classes.settings_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">settings_class</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.null_classes.html#module-village.classes.null_classes" title="village.classes.null_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">null_classes</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.subject.html#module-village.classes.subject" title="village.classes.subject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subject</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.classes.settings_class.html#module-village.classes.settings_class" title="village.classes.settings_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">settings_class</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="village.classes.subject.html#module-village.classes.subject" title="village.classes.subject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subject</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -440,10 +471,10 @@ data-aria-dark="Switch to auto color mode">
         <span>Previous</span><div class="title">calibration</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="village.classes.collection.html">
+    <a href="village.classes.calibrations.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">collection</div>
+        <div class="title">calibrations</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -465,7 +496,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=ba84cf57"></script>
+      <script src="../_static/documentation_options.js?v=0ac66d7a"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

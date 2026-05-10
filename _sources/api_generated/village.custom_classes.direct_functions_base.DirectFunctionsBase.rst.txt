@@ -1,0 +1,25 @@
+DirectFunctionsBase
+===================
+
+.. currentmodule:: village.custom_classes.direct_functions_base
+
+.. autoclass:: DirectFunctionsBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DirectFunctionsBase.__init__
+   
+   
+
+   
+   
+   

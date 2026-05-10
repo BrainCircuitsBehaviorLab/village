@@ -1,0 +1,6 @@
+village.custom\_classes.task.TaskError
+======================================
+
+.. currentmodule:: village.custom_classes.task
+
+.. autoexception:: TaskError

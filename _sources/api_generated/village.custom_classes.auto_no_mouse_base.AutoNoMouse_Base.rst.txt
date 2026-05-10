@@ -1,0 +1,39 @@
+AutoNoMouse\_Base
+=================
+
+.. currentmodule:: village.custom_classes.auto_no_mouse_base
+
+.. autoclass:: AutoNoMouse_Base
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AutoNoMouse_Base.__init__
+      ~AutoNoMouse_Base.inject_trial
+      ~AutoNoMouse_Base.inject_trials
+      ~AutoNoMouse_Base.poke
+      ~AutoNoMouse_Base.run_trial
+      ~AutoNoMouse_Base.set_position
+      ~AutoNoMouse_Base.start
+      ~AutoNoMouse_Base.stop
+      ~AutoNoMouse_Base.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AutoNoMouse_Base.running
+   
+   

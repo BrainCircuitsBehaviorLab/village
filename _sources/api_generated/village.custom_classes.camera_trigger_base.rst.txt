@@ -1,0 +1,31 @@
+camera\_trigger\_base
+=====================
+
+.. automodule:: village.custom_classes.camera_trigger_base
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      CameraTriggerBase
+   
+   
+
+   
+   
+   
+
+
+

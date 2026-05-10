@@ -21,6 +21,7 @@ null\_classes
    
       LEDStripBase
       NullBpod
+      NullCalibrationBase
       NullCamera
       NullChip
       NullCollection

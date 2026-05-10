@@ -1,0 +1,25 @@
+Calibrations
+============
+
+.. currentmodule:: village.classes.calibrations
+
+.. autoclass:: Calibrations
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Calibrations.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,31 @@
+auto\_no\_mouse\_base
+=====================
+
+.. automodule:: village.custom_classes.auto_no_mouse_base
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      AutoNoMouse_Base
+   
+   
+
+   
+   
+   
+
+
+
