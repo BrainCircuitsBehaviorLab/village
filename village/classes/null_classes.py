@@ -1,10 +1,12 @@
 import threading
 from typing import Any, Callable, Optional
 
+import pandas as pd
 from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
+from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -207,12 +209,47 @@ class NullSoundDevice:
 
 
 class NullCollection:
-    def add_entry(self, entry: list) -> None:
-        """Adds a new entry to the collection.
+    df = pd.DataFrame()
 
-        Args:
-            entry (list): The list of values for the new row.
+    def get_last_water_df(self) -> pd.DataFrame:
+        return pd.DataFrame()
+
+    def get_last_sound_df(self) -> pd.DataFrame:
+        return pd.DataFrame()
+
+    def get_valve_time(self, port: int, volume: float) -> float:
+        return 0.0
+
+    def get_sound_gain(self, speaker: int, dB: float, sound_name: str) -> float:
+        return 0.0
+
+    def save_from_df(
+        self, training: TrainingProtocolBase = TrainingProtocolBase()
+    ) -> None:
+        return
+
+    def add_entry(self, entry: list) -> None:
+        return
+
+
+class NullCalibrationBase(NullCollection):
+    def draw(self) -> None:
+        """Draws the calibration UI. Override in subclasses."""
+        pass
+
+    def change_layout(self, auto: bool = False) -> bool:
+        """Called before switching away from this calibration.
+
+        Return False to prevent the switch (e.g. unsaved changes).
         """
+        return True
+
+    def update_status_label_buttons(self) -> None:
+        """Delegates status bar update to the parent CalibrationLayout."""
+        return
+
+    def update_gui(self) -> None:
+        """Called periodically to refresh the UI."""
         return
 
 
