@@ -2,7 +2,6 @@ import os
 import traceback
 from pathlib import Path
 from threading import Thread
-from types import SimpleNamespace
 from typing import TYPE_CHECKING, Callable
 
 import numpy as np
@@ -180,7 +179,9 @@ class Manager:
         and measurements."""
         self.events = Collection()
         self.events.create_data_collection(
-            "events.csv", ["date", "type", "subject", "description"], [str, str, str, str]
+            "events.csv",
+            ["date", "type", "subject", "description"],
+            [str, str, str, str],
         )
         self.sessions_summary = Collection()
         self.sessions_summary.create_data_collection(
@@ -317,7 +318,7 @@ class Manager:
             self.task.controller_type = self.controller_type
             self.task.calibrations = self.calibrations
             self.task.functions = self.functions
-            self.direct_functions.task=self.task
+            self.direct_functions.task = self.task
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -331,8 +332,7 @@ class Manager:
             return False
 
     def launch_task_calibration(self) -> None:
-        """Launches a calibration task in manual mode.
-        """
+        """Launches a calibration task in manual mode."""
         self.task.cam_box = self.cam_box
         self.task.calibrations = self.calibrations
         self.task.settings.maximum_duration = 1000
@@ -340,10 +340,9 @@ class Manager:
         self.weight = np.nan
         self.task.controller_type = self.controller_type
         self.task.functions = self.functions
-        self.direct_functions.task=self.task
+        self.direct_functions.task = self.task
         log.start(task=self.task.name, subject="None")
         self.run_task_in_thread()
-
 
     def launch_task_auto(self) -> bool:
         """Launches a task in automatic mode based on training protocol.
@@ -378,7 +377,7 @@ class Manager:
                 self.task.calibrations = self.calibrations
                 self.task.controller_type = self.controller_type
                 self.task.functions = self.functions
-                self.direct_functions.task=self.task
+                self.direct_functions.task = self.task
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True

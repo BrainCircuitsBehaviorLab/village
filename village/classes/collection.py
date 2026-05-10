@@ -27,11 +27,8 @@ class Collection:
     """
 
     def __init__(self) -> None:
-        """Initializes the Collection.
-        """
-        self.name = ""
-        self.columns: list[str] = []
-        self.types: list[Type] = []
+        """Initializes the Collection."""
+        pass
 
     def create_data_collection(
         self, name: str, columns: list[str], types: list[Type]

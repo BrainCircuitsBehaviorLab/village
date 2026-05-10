@@ -93,7 +93,7 @@ class BpodWaterCalibration(CalibrationBase):
         ]
         types = [str, int, float, float, int, float, float]
 
-        self.create_data_collection(name == name, columns=columns, types=types)
+        self.create_data_collection(name=name, columns=columns, types=types)
 
     @classmethod
     def is_active(cls) -> bool:

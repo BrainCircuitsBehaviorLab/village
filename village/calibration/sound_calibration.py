@@ -3,7 +3,6 @@ from __future__ import annotations
 import time
 import traceback
 from functools import partial
-from threading import Thread
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -44,7 +43,7 @@ class SoundCalibrationTask(Task):
         self.duration = duration
         self.maximum_number_of_trials = 1
 
-    def start() -> None:
+    def start(self) -> None:
         pass
 
     def create_trial(self) -> None:
@@ -88,7 +87,7 @@ class SoundCalibration(CalibrationBase):
         ]
         types = [str, int, str, float, float, int, float, float]
 
-        self.create_data_collection(name == name, columns=columns, types=types)
+        self.create_data_collection(name=name, columns=columns, types=types)
 
     @classmethod
     def is_active(cls) -> bool:
@@ -136,7 +135,7 @@ class SoundCalibration(CalibrationBase):
             "Example functions are available in the demo-village-project."
         )
 
-        values = [f.__name__ for f in self.calibrations.sound_calibration_functions]
+        values = [f.__name__ for f in manager.calibrations.sound_calibration_functions]
 
         # ── calibration input ──────────────────────────────────────────────────
         self.layout.create_and_add_label(
@@ -429,7 +428,7 @@ class SoundCalibration(CalibrationBase):
         self.duration = 0
         self.speaker = self.speaker_combo.currentIndex()
         self.sound_index = self.sound_combo.currentIndex()
-        self.sound = self.calibrations.sound_calibration_functions[
+        self.sound = manager.calibrations.sound_calibration_functions[
             self.sound_index
         ].__name__
         try:
@@ -466,7 +465,9 @@ class SoundCalibration(CalibrationBase):
         self.duration2 = 0
         self.speaker2 = self.speaker_combo2.currentIndex()
         self.sound_index2 = self.sound_combo2.currentIndex()
-        self.sound2 = self.calibrations.sound_calibration_functions[self.sound_index2].__name__
+        self.sound2 = manager.calibrations.sound_calibration_functions[
+            self.sound_index2
+        ].__name__
         try:
             duration2 = int(self.duration_line_edit2.text())
             if duration2 > 0:
@@ -616,7 +617,7 @@ class SoundCalibration(CalibrationBase):
         self.update_status_label_buttons()
         if manager.state == State.WAIT and self.calibration_initiated:
             self.calibration_initiated = False
-            if not self.calibrations.sound_calibration_error:
+            if not manager.calibrations.sound_calibration_error:
                 self.calibrate_button.setDisabled(True)
                 self.test_button.setDisabled(True)
                 self.dB_obtained_line_edit.setEnabled(True)
@@ -624,7 +625,7 @@ class SoundCalibration(CalibrationBase):
                     "QLineEdit {border: 1px solid black;}"
                 )
             else:
-                self.calibrations.sound_calibration_error = False
+                manager.calibrations.sound_calibration_error = False
                 text = (
                     "It was not possible to play the calibration sound. "
                     "Check the events for more information about the error."
@@ -639,7 +640,7 @@ class SoundCalibration(CalibrationBase):
 
         if manager.state == State.WAIT and self.test_initiated:
             self.test_initiated = False
-            if not self.calibrations.sound_calibration_error:
+            if not manager.calibrations.sound_calibration_error:
                 self.calibrate_button.setDisabled(True)
                 self.test_button.setDisabled(True)
                 self.dB_obtained_line_edit2.setEnabled(True)
@@ -647,7 +648,7 @@ class SoundCalibration(CalibrationBase):
                     "QLineEdit {border: 1px solid black;}"
                 )
             else:
-                self.calibrations.sound_calibration_error = False
+                manager.calibrations.sound_calibration_error = False
                 text = (
                     "It was not possible to play the calibration sound. "
                     "Check the events for more information about the error."

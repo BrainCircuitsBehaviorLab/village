@@ -54,6 +54,8 @@ class CalibrationBase(Collection):
         types   - Collection column types
     """
 
+    _instance: ClassVar[CalibrationBase | None] = None
+
     def __init__(self) -> None:
         """Initialises the Collection. Called once by import_all."""
         super().__init__()
@@ -87,11 +89,6 @@ class CalibrationBase(Collection):
         self.draw()
 
     # ── Interface methods ──────────────────────────────────────────────────────
-
-    @classmethod
-    def is_active(cls) -> bool:
-        """Returns True if this calibration should appear in the menu."""
-        return True
 
     def draw(self) -> None:
         """Draws the calibration UI. Override in subclasses."""
