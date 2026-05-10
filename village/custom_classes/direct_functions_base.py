@@ -11,24 +11,9 @@ Example:
             self.behaviour_window.show_image("reward.png")
 """
 
-from typing import Any
+from village.custom_classes.task import Task
 
 
 class DirectFunctionsBase:
     def __init__(self) -> None:
-        self.task: Any = None
-        self.behaviour_window: Any = None
-        self.sound_calibration: Any = None
-        self.water_calibration: Any = None
-
-    def set_variables(
-        self,
-        task: Any,
-        behaviour_window: Any,
-        sound_calibration: Any,
-        water_calibration: Any,
-    ) -> None:
-        self.task = task
-        self.behaviour_window = behaviour_window
-        self.sound_calibration = sound_calibration
-        self.water_calibration = water_calibration
+        self.task: Task = Task()

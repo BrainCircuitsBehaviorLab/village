@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, Callable, Tuple
 
 import pandas as pd
 
-from village.classes.collection import Collection
+from village.classes.calibrations import Calibrations
 from village.classes.enums import Active, ControllerEnum, Save
 from village.classes.null_classes import NullCamera
 from village.controllers.arduino_controller import arduino
@@ -127,12 +127,12 @@ class Task:
                 speaker=1, dB=65.0, sound_name="white_noise"
             )
 
-    self.water_calibration.get_valve_time(port, volume)
+    self.bpod_water_calibration.get_valve_time(port, volume)
         to convert a target volume (µl) into the valve open time (seconds).
 
         Example::
 
-            valve_time = self.water_calibration.get_valve_time(
+            valve_time = self.bpod_water_calibration.get_valve_time(
                 port=1, volume=5.0  # 5 µl
             )
 
@@ -187,8 +187,7 @@ class Task:
         self.maximum_number_of_trials: int = 100000000
         self.chrono = time_utils.Chrono()
 
-        self.sound_calibration: Collection = Collection("", [], [])
-        self.water_calibration: Collection = Collection("", [], [])
+        self.calibrations: Calibrations = Calibrations()
 
         self.current_x = 0.0
         self.current_y = 0.0

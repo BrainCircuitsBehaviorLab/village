@@ -32,7 +32,7 @@ if TYPE_CHECKING:
 # ── Sound runner (internal) ────────────────────────────────────────────────────
 
 
-class _SoundCalibration:
+class SoundCalibrationTask(Task):
     """Plays a sound at a given gain/duration for calibration measurement."""
 
     def __init__(
@@ -42,10 +42,14 @@ class _SoundCalibration:
         self.gain = gain
         self.sound_index = sound_index
         self.duration = duration
+        self.maximum_number_of_trials = 1
 
-    def run(self) -> None:
+    def start() -> None:
+        pass
+
+    def create_trial(self) -> None:
         try:
-            generator = manager.sound_calibration_functions[self.sound_index]
+            generator = self.calibrations.sound_calibration_functions[self.sound_index]
             sound = generator(duration=self.duration, gain=self.gain)
             if self.speaker == 0:
                 sound_device.load(sound, None)
@@ -56,18 +60,7 @@ class _SoundCalibration:
             sound_device.stop()
         except Exception:
             log.error("Error calibrating sound", exception=traceback.format_exc())
-            manager.sound_calibration_error = True
-
-    def run_in_thread(self, daemon: bool = True) -> None:
-        self.process = Thread(target=self.run, daemon=daemon)
-        self.process.start()
-
-    def close(self) -> None:
-        pass
-
-
-class _DummyTask(Task):
-    """Minimal task used as a placeholder during sound calibration."""
+            self.calibrations.sound_calibration_error = True
 
     def close(self) -> None:
         pass
@@ -79,19 +72,23 @@ class _DummyTask(Task):
 class SoundCalibration(CalibrationBase):
     """Sound speaker calibration and testing panel."""
 
-    name = "SOUND CALIBRATION"
-    col_name = "sound_calibration"
-    col_columns = [
-        "date",
-        "speaker",
-        "sound_name",
-        "gain",
-        "dB_obtained",
-        "calibration_number",
-        "dB_expected",
-        "error(%)",
-    ]
-    col_types = [str, int, str, float, float, int, float, float]
+    def __init__(self) -> None:
+        super().__init__()
+
+        name = "sound_calibration"
+        columns = [
+            "date",
+            "speaker",
+            "sound_name",
+            "gain",
+            "dB_obtained",
+            "calibration_number",
+            "dB_expected",
+            "error(%)",
+        ]
+        types = [str, int, str, float, float, int, float, float]
+
+        self.create_data_collection(name == name, columns=columns, types=types)
 
     @classmethod
     def is_active(cls) -> bool:
@@ -135,10 +132,11 @@ class SoundCalibration(CalibrationBase):
             "should return a NumPy array of floats representing the sound "
             "waveform. In this way, the sound will be mono (single-channel) and "
             "can be played through the left or right speaker depending on our "
-            "selection."
+            "selection. \n"
+            "Example functions are available in the demo-village-project."
         )
 
-        values = [f.__name__ for f in manager.sound_calibration_functions]
+        values = [f.__name__ for f in self.calibrations.sound_calibration_functions]
 
         # ── calibration input ──────────────────────────────────────────────────
         self.layout.create_and_add_label(
@@ -431,7 +429,9 @@ class SoundCalibration(CalibrationBase):
         self.duration = 0
         self.speaker = self.speaker_combo.currentIndex()
         self.sound_index = self.sound_combo.currentIndex()
-        self.sound = manager.sound_calibration_functions[self.sound_index].__name__
+        self.sound = self.calibrations.sound_calibration_functions[
+            self.sound_index
+        ].__name__
         try:
             duration = int(self.duration_line_edit.text())
             if duration > 0:
@@ -466,7 +466,7 @@ class SoundCalibration(CalibrationBase):
         self.duration2 = 0
         self.speaker2 = self.speaker_combo2.currentIndex()
         self.sound_index2 = self.sound_combo2.currentIndex()
-        self.sound2 = manager.sound_calibration_functions[self.sound_index2].__name__
+        self.sound2 = self.calibrations.sound_calibration_functions[self.sound_index2].__name__
         try:
             duration2 = int(self.duration_line_edit2.text())
             if duration2 > 0:
@@ -505,22 +505,21 @@ class SoundCalibration(CalibrationBase):
         self.test_denied = True
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
-        manager.state = State.RUN_MANUAL
-        manager.calibrating = True
-        task = _SoundCalibration(
-            self.speaker, self.gain, self.sound_index, self.duration
+        manager.task = SoundCalibrationTask(
+            speaker=self.speaker,
+            gain=self.gain,
+            sound_index=self.sound_index,
+            duration=self.duration,
         )
-        manager.task = _DummyTask()
-        manager.task.settings.maximum_duration = self.duration + 3
+        manager.state = State.RUN_MANUAL
+        self.calibration_initiated = True
         self.speaker_combo.setDisabled(True)
         self.gain_line_edit.setDisabled(True)
         self.duration_line_edit.setDisabled(True)
         self.dB_expected_line_edit2.setDisabled(True)
         self.duration_line_edit2.setDisabled(True)
         self.speaker_combo2.setDisabled(True)
-        self.calibration_initiated = True
-        log.start(task="SoundCalibration", subject="None")
-        task.run_in_thread()
+        manager.launch_task_calibration()
 
     def test_button_clicked(self) -> None:
         if self.test_denied:
@@ -555,22 +554,22 @@ class SoundCalibration(CalibrationBase):
             self.dB_expected_line_edit2.setStyleSheet("")
             self.duration_line_edit2.setStyleSheet("")
         if ok:
-            manager.state = State.RUN_MANUAL
-            manager.calibrating = True
-            task = _SoundCalibration(
-                self.speaker2, self.gain2, self.sound_index2, self.duration2
+
+            manager.task = SoundCalibrationTask(
+                speaker=self.speaker2,
+                gain=self.gain2,
+                sound_index=self.sound_index2,
+                duration=self.duration2,
             )
-            manager.task = _DummyTask()
-            manager.task.settings.maximum_duration = self.duration2 + 3
+            manager.state = State.RUN_MANUAL
+            self.test_initiated = True
             self.speaker_combo.setDisabled(True)
             self.gain_line_edit.setDisabled(True)
             self.duration_line_edit.setDisabled(True)
             self.dB_expected_line_edit2.setDisabled(True)
             self.duration_line_edit2.setDisabled(True)
             self.speaker_combo2.setDisabled(True)
-            self.test_initiated = True
-            log.start(task="SoundCalibration", subject="None")
-            task.run_in_thread()
+            manager.launch_task_calibration()
 
     def save_button_clicked(self) -> None:
         removed_list: list[str] = []
@@ -617,7 +616,7 @@ class SoundCalibration(CalibrationBase):
         self.update_status_label_buttons()
         if manager.state == State.WAIT and self.calibration_initiated:
             self.calibration_initiated = False
-            if not manager.sound_calibration_error:
+            if not self.calibrations.sound_calibration_error:
                 self.calibrate_button.setDisabled(True)
                 self.test_button.setDisabled(True)
                 self.dB_obtained_line_edit.setEnabled(True)
@@ -625,7 +624,7 @@ class SoundCalibration(CalibrationBase):
                     "QLineEdit {border: 1px solid black;}"
                 )
             else:
-                manager.sound_calibration_error = False
+                self.calibrations.sound_calibration_error = False
                 text = (
                     "It was not possible to play the calibration sound. "
                     "Check the events for more information about the error."
@@ -640,7 +639,7 @@ class SoundCalibration(CalibrationBase):
 
         if manager.state == State.WAIT and self.test_initiated:
             self.test_initiated = False
-            if not manager.sound_calibration_error:
+            if not self.calibrations.sound_calibration_error:
                 self.calibrate_button.setDisabled(True)
                 self.test_button.setDisabled(True)
                 self.dB_obtained_line_edit2.setEnabled(True)
@@ -648,7 +647,7 @@ class SoundCalibration(CalibrationBase):
                     "QLineEdit {border: 1px solid black;}"
                 )
             else:
-                manager.sound_calibration_error = False
+                self.calibrations.sound_calibration_error = False
                 text = (
                     "It was not possible to play the calibration sound. "
                     "Check the events for more information about the error."

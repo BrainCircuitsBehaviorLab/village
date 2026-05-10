@@ -6,9 +6,9 @@ import re
 import sys
 import traceback
 
+from village.calibration.bpod_water_calibration import BpodWaterCalibration
 from village.calibration.camera_calibration import CameraCalibration
 from village.calibration.sound_calibration import SoundCalibration
-from village.calibration.water_calibration import WaterCalibration
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
 from village.custom_classes.calibration_base import CalibrationBase
@@ -23,12 +23,6 @@ from village.custom_classes.task import Task
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
 from village.settings import settings
-
-_DEFAULT_CALIBRATIONS: list[type] = [
-    WaterCalibration,
-    SoundCalibration,
-    CameraCalibration,
-]
 
 
 def import_all(manager) -> None:
@@ -59,16 +53,6 @@ def import_all(manager) -> None:
     auto_no_mouse_correct = False
     sound_path = ""
 
-    manager.calibration_classes = list(_DEFAULT_CALIBRATIONS)
-
-    # Create one instance per calibration class (Collection is initialised here).
-    # Instances are reused by CalibrationLayout; only the Qt panel is rebuilt.
-    for cls in manager.calibration_classes:
-        instance = cls()
-        cls._instance = instance
-        if cls.col_name:
-            setattr(manager.calibration, cls.col_name, instance)
-
     for root, _, files in os.walk(directory):
         for file in files:
             if file == "sound_functions.py":
@@ -84,7 +68,7 @@ def import_all(manager) -> None:
             try:
                 spec.loader.exec_module(module)
                 if hasattr(module, "sound_calibration_functions"):
-                    manager.sound_calibration_functions = getattr(
+                    manager.calibrations.sound_calibration_functions = getattr(
                         module, "sound_calibration_functions"
                     )
             except Exception:
@@ -168,14 +152,16 @@ def import_all(manager) -> None:
                         auto_no_mouse_correct = True
                 elif issubclass(cls, CalibrationBase) and cls not in (
                     CalibrationBase,
-                    *_DEFAULT_CALIBRATIONS,
+                    CameraCalibration,
+                    SoundCalibration,
+                    BpodWaterCalibration,
                 ):
                     if cls not in manager.calibration_classes:
                         manager.calibration_classes.append(cls)
                         instance = cls()
                         cls._instance = instance
-                        if cls.col_name:
-                            setattr(manager.calibration, cls.col_name, instance)
+                        if cls.name:
+                            setattr(manager.calibration, cls.name, instance)
                 elif (
                     issubclass(cls, DirectFunctionsBase) and cls != DirectFunctionsBase
                 ):

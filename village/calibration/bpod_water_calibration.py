@@ -15,7 +15,7 @@ from village.custom_classes.calibration_base import CalibrationBase
 from village.custom_classes.task import BpodEvent, Task
 from village.gui.layout import Label, Layout, LineEdit
 from village.manager import manager
-from village.plots.water_calibration_plot import water_calibration_plot
+from village.plots.bpod_water_calibration_plot import bpod_water_calibration_plot
 from village.scripts import utils
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
@@ -29,13 +29,19 @@ if TYPE_CHECKING:
 # ── Bpod task (internal) ───────────────────────────────────────────────────────
 
 
-class _WaterCalibrationTask(Task):
+class BpodWaterCalibrationTask(Task):
     """Bpod task for calibrating water delivery valves."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        indices: list[int],
+        times: list[float],
+        maximum_number_of_trials: int,
+    ) -> None:
         super().__init__()
-        self.indices: list[int] = []
-        self.times: list[float] = []
+        self.indices = indices
+        self.times = times
+        self.maximum_number_of_trials = maximum_number_of_trials
 
     def start(self) -> None:
         self.states = ["valve" + str(i + 1) for i in self.indices] + ["exit"]
@@ -69,21 +75,25 @@ class _WaterCalibrationTask(Task):
 # ── Calibration panel ──────────────────────────────────────────────────────────
 
 
-class WaterCalibration(CalibrationBase):
+class BpodWaterCalibration(CalibrationBase):
     """Water port calibration and testing panel."""
 
-    name = "WATER CALIBRATION"
-    col_name = "water_calibration"
-    col_columns = [
-        "date",
-        "port_number",
-        "time(s)",
-        "water_delivered(ul)",
-        "calibration_number",
-        "water_expected(ul)",
-        "error(%)",
-    ]
-    col_types = [str, int, float, float, int, float, float]
+    def __init__(self) -> None:
+        super().__init__()
+
+        name = "bpod_water_calibration"
+        columns = [
+            "date",
+            "port_number",
+            "time(s)",
+            "water_delivered(ul)",
+            "calibration_number",
+            "water_expected(ul)",
+            "error(%)",
+        ]
+        types = [str, int, float, float, int, float, float]
+
+        self.create_data_collection(name == name, columns=columns, types=types)
 
     @classmethod
     def is_active(cls) -> bool:
@@ -542,22 +552,20 @@ class WaterCalibration(CalibrationBase):
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
         self.indices = [i for i, val in enumerate(self.times) if val != 0]
-        manager.task = _WaterCalibrationTask()
-        manager.task.indices = self.indices
-        manager.task.times = [self.times[i] for i in self.indices]
-        manager.task.maximum_number_of_trials = self.iterations
-        manager.task.settings.maximum_duration = 1000
+        manager.task = BpodWaterCalibrationTask(
+            indices=self.indices,
+            times=[self.times[i] for i in self.indices],
+            maximum_number_of_trials=self.iterations,
+        )
         manager.state = State.RUN_MANUAL
-        manager.calibrating = True
+        self.calibration_initiated = True
         for line_edit in self.time_line_edits:
             line_edit.setDisabled(True)
         self.iterations_line_edit.setDisabled(True)
         for line_edit in self.water_expected_line_edits2:
             line_edit.setDisabled(True)
         self.iterations_line_edit2.setDisabled(True)
-        self.calibration_initiated = True
-        log.start(task=manager.task.name, subject="None")
-        manager.run_task_in_thread()
+        manager.launch_task_calibration()
 
     def test_button_clicked(self) -> None:
         if self.test_denied:
@@ -596,23 +604,20 @@ class WaterCalibration(CalibrationBase):
             QMessageBox.information(self.window, "Warning", text)
 
         if ok > 0:
-            manager.task = _WaterCalibrationTask()
-            manager.task.indices = self.indices2
-            manager.task.times = [self.times2[i] for i in self.indices2]
-            manager.task.maximum_number_of_trials = self.iterations2
-            manager.task.settings.maximum_duration = 1000
+            manager.task = BpodWaterCalibrationTask(
+                indices=self.indices2,
+                times=[self.times2[i] for i in self.indices2],
+                maximum_number_of_trials=self.iterations2,
+            )
             manager.state = State.RUN_MANUAL
-            manager.calibrating = True
+            self.test_initiated = True
             for line_edit in self.time_line_edits:
                 line_edit.setDisabled(True)
             self.iterations_line_edit.setDisabled(True)
             for line_edit in self.water_expected_line_edits2:
                 line_edit.setDisabled(True)
             self.iterations_line_edit2.setDisabled(True)
-            self.calibration_initiated = True
-            log.start(task=manager.task.name, subject="None")
-            manager.run_task_in_thread()
-            self.test_initiated = True
+            manager.launch_task_calibration()
         else:
             self.iterations_line_edit2.setStyleSheet("")
 
@@ -911,7 +916,7 @@ class _CalibrationPlotLayout(Layout):
         window: GuiWindow,
         rows: int,
         columns: int,
-        parent: WaterCalibration,
+        parent: BpodWaterCalibration,
     ) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows
@@ -936,7 +941,7 @@ class _CalibrationPlotLayout(Layout):
             return
         pixmap = QPixmap()
         try:
-            figure = water_calibration_plot(
+            figure = bpod_water_calibration_plot(
                 df.copy(), self.plot_width, self.plot_height, test_point
             )
             pixmap = create_pixmap(figure)
@@ -957,7 +962,7 @@ class _InfoLayout(Layout):
         window: GuiWindow,
         rows: int,
         columns: int,
-        parent: WaterCalibration,
+        parent: BpodWaterCalibration,
     ) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows

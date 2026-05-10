@@ -26,14 +26,16 @@ class Collection:
         df (pd.DataFrame): The pandas DataFrame holding the data.
     """
 
-    def __init__(self, name: str, columns: list[str], types: list[Type]) -> None:
+    def __init__(self) -> None:
         """Initializes the Collection.
-
-        Args:
-            name (str): The name of the collection (and the file base name).
-            columns (list[str]): The column names.
-            types (list[Type]): The data types for each column.
         """
+        self.name = ""
+        self.columns: list[str] = []
+        self.types: list[Type] = []
+
+    def create_data_collection(
+        self, name: str, columns: list[str], types: list[Type]
+    ) -> None:
         self.name: str = name
         self.columns: list[str] = columns
         self.types: list[Type] = types
@@ -246,7 +248,7 @@ class Collection:
             for a water delivery of {volume} ul for the port {port}.\n
             1. Make sure you have calibrated the valves/pumps you are using.\n
             2. Make sure the water you want to give is within calibration range.\n
-            3. Ultimately, check water_calibration.csv in 'data'.\n
+            3. Ultimately, check bpod_water_calibration.csv in 'data'.\n
             """
             raise ValueError(text)
 

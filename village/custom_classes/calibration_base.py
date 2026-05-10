@@ -5,8 +5,8 @@ Example:
     class MyCalibration(CalibrationBase):
         name = "MY CALIBRATION"
         col_name = "my_calibration"
-        col_columns = ["date", "value"]
-        col_types = [str, float]
+        columns = ["date", "value"]
+        types = [str, float]
 
         @classmethod
         def is_active(cls) -> bool:
@@ -49,20 +49,18 @@ class CalibrationBase(Collection):
     create_and_add_label, addWidget, etc. work without prefixing.
 
     Class attributes to define in subclasses:
-        name        – label shown in the left menu
-        col_name    – Collection file name (empty = no persistent data)
-        col_columns – Collection column names
-        col_types   – Collection column types
+        name        - label shown in the left menu
+        columns   - Collection column names
+        types   - Collection column types
     """
-
-    name: str = "CALIBRATION"
-    col_name: str = ""
-    col_columns: ClassVar[list[str]] = []
-    col_types: ClassVar[list[type]] = []
 
     def __init__(self) -> None:
         """Initialises the Collection. Called once by import_all."""
-        Collection.__init__(self, self.col_name, self.col_columns, self.col_types)
+        super().__init__()
+
+    @classmethod
+    def is_active(cls) -> bool:
+        return True
 
     # ── Panel lifecycle ────────────────────────────────────────────────────────
 

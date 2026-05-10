@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import requests  # type: ignore
 
+from village.classes.calibrations import Calibrations
 from village.classes.collection import Collection
 from village.classes.enums import (
     Actions,
@@ -86,8 +87,6 @@ class Manager:
         events (Collection): Collection of events.
         sessions_summary (Collection): Collection of session summaries.
         subjects (Collection): Collection of subjects.
-        water_calibration (Collection): Collection of water calibration data.
-        sound_calibration (Collection): Collection of sound calibration data.
         temperatures (Collection): Collection of temperature data.
         process (Thread): Thread for running tasks.
     """
@@ -123,8 +122,6 @@ class Manager:
         self.errors: str = ""
         self.max_time_counter: int = 1
         self.functions: list[Callable] = [lambda: None for _ in range(99)]
-        self.sound_calibration_functions: list[Callable] = []
-        self.sound_calibration_error: bool = False
         self.raw_session_df = pd.DataFrame()
         self.old_session_df = pd.DataFrame()
         self.old_session_raw_df = pd.DataFrame()
@@ -176,15 +173,18 @@ class Manager:
         self.cam_box: Camera | NullCamera = NullCamera()
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibration_classes: list[type[CalibrationBase]] = []
+        self.calibrations: Calibrations = Calibrations()
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,
         and measurements."""
-        self.events = Collection(
-            "events", ["date", "type", "subject", "description"], [str, str, str, str]
+        self.events = Collection()
+        self.events.create_data_collection(
+            "events.csv", ["date", "type", "subject", "description"], [str, str, str, str]
         )
-        self.sessions_summary = Collection(
-            "sessions_summary",
+        self.sessions_summary = Collection()
+        self.sessions_summary.create_data_collection(
+            "sessions_summary.csv",
             [
                 "date",
                 "subject",
@@ -198,8 +198,9 @@ class Manager:
             ],
             [str, str, str, float, str, float, int, float, str],
         )
-        self.subjects = Collection(
-            "subjects",
+        self.subjects = Collection()
+        self.subjects.create_data_collection(
+            "subjects.csv",
             [
                 "name",
                 "tag",
@@ -210,14 +211,15 @@ class Manager:
             ],
             [str, str, float, str, str, str],
         )
-        self.calibration: SimpleNamespace = SimpleNamespace()
-        self.temperatures = Collection(
-            "temperatures",
+        self.temperatures = Collection()
+        self.temperatures.create_data_collection(
+            "temperatures.csv",
             ["date", "temperature", "humidity"],
             [str, float, float],
         )
-        self.deleted_sessions = Collection(
-            "deleted_sessions",
+        self.deleted_sessions = Collection()
+        self.deleted_sessions.create_data_collection(
+            "deleted_sessions.csv",
             [
                 "filename",
             ],
@@ -299,16 +301,11 @@ class Manager:
     def launch_task_manual(self) -> bool:
         """Launches a task in manual mode.
 
-        Args:
-            cam (CameraBase): The camera instance to use.
-
         Returns:
             bool: True if launched successfully, False otherwise.
         """
         self.task.create_paths()
         self.task.cam_box = self.cam_box
-        self.task.water_calibration = self.calibration.water_calibration
-        self.task.sound_calibration = self.calibration.sound_calibration
         if self.subject.name != "None":
             self.task.cam_box.start_recording(
                 self.task.video_path, self.task.video_data_path
@@ -318,13 +315,9 @@ class Manager:
         try:
             self.weight = np.nan
             self.task.controller_type = self.controller_type
+            self.task.calibrations = self.calibrations
             self.task.functions = self.functions
-            self.direct_functions.set_variables(
-                task=self.task,
-                behaviour_window=self.behavior_window,
-                sound_calibration=self.calibration.sound_calibration,
-                water_calibration=self.calibration.water_calibration,
-            )
+            self.direct_functions.task=self.task
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -337,11 +330,23 @@ class Manager:
             self.error_in_manual_task = True
             return False
 
+    def launch_task_calibration(self) -> None:
+        """Launches a calibration task in manual mode.
+        """
+        self.task.cam_box = self.cam_box
+        self.task.calibrations = self.calibrations
+        self.task.settings.maximum_duration = 1000
+        self.calibrating = True
+        self.weight = np.nan
+        self.task.controller_type = self.controller_type
+        self.task.functions = self.functions
+        self.direct_functions.task=self.task
+        log.start(task=self.task.name, subject="None")
+        self.run_task_in_thread()
+
+
     def launch_task_auto(self) -> bool:
         """Launches a task in automatic mode based on training protocol.
-
-        Args:
-            cam (CameraBase): The camera instance to use.
 
         Returns:
             bool: True if launched successfully, False otherwise.
@@ -370,16 +375,10 @@ class Manager:
                     self.task.video_path, self.task.video_data_path
                 )
                 self.task.maximum_number_of_trials = 100000000
-                self.task.water_calibration = self.calibration.water_calibration
-                self.task.sound_calibration = self.calibration.sound_calibration
+                self.task.calibrations = self.calibrations
                 self.task.controller_type = self.controller_type
                 self.task.functions = self.functions
-                self.direct_functions.set_variables(
-                    task=self.task,
-                    behaviour_window=self.behavior_window,
-                    sound_calibration=self.calibration.sound_calibration,
-                    water_calibration=self.calibration.water_calibration,
-                )
+                self.direct_functions.task=self.task
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True

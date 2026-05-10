@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 from village.scripts.utils import interpolate
 
 
-def water_calibration_plot(
+def bpod_water_calibration_plot(
     df: pd.DataFrame,
     width: float,
     height: float,

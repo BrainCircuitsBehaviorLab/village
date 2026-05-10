@@ -43,9 +43,9 @@ from PyQt5.QtWidgets import (
 from village.classes.enums import DataTable, State
 from village.gui.layout import Layout
 from village.manager import manager
+from village.plots.bpod_water_calibration_plot import bpod_water_calibration_plot
 from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.plots.temperatures_plot import temperatures_plot
-from village.plots.water_calibration_plot import water_calibration_plot
 from village.plots.weights_plot import weights_plot
 from village.scripts import utils
 from village.scripts.global_csv_for_subject import main as global_csv_for_subject_script
@@ -225,11 +225,11 @@ class TableView(QTableView):
             manager.temperatures.df = model.complete_df
             manager.temperatures.save_from_df()
         elif manager.table == DataTable.WATER_CALIBRATION:
-            manager.calibration.water_calibration.df = model.complete_df
-            manager.calibration.water_calibration.save_from_df()
+            manager.calibrations.bpod_water_calibration.df = model.complete_df
+            manager.calibrations.bpod_water_calibration.save_from_df()
         elif manager.table == DataTable.SOUND_CALIBRATION:
-            manager.calibration.sound_calibration.df = model.complete_df
-            manager.calibration.sound_calibration.save_from_df()
+            manager.calibrations.sound_calibration.df = model.complete_df
+            manager.calibrations.sound_calibration.save_from_df()
         elif manager.table == DataTable.SESSIONS_SUMMARY:
             manager.sessions_summary.df = model.complete_df
             manager.sessions_summary.save_from_df()
@@ -730,8 +730,8 @@ class DataLayout(Layout):
                     )
         elif manager.table == DataTable.WATER_CALIBRATION:
             try:
-                df = manager.calibration.water_calibration.get_last_water_df()
-                figure = water_calibration_plot(df, width, height, None)
+                df = manager.calibrations.bpod_water_calibration.get_last_water_df()
+                figure = bpod_water_calibration_plot(df, width, height, None)
                 pixmap = utils.create_pixmap(figure)
             except Exception:
                 log.error(
@@ -740,7 +740,7 @@ class DataLayout(Layout):
                 )
         elif manager.table == DataTable.SOUND_CALIBRATION:
             try:
-                df = manager.calibration.sound_calibration.get_last_sound_df()
+                df = manager.calibrations.sound_calibration.get_last_sound_df()
                 figure = sound_calibration_plot(df, width, height, None)
                 pixmap = utils.create_pixmap(figure)
             except Exception:
@@ -940,10 +940,10 @@ class DfLayout(Layout):
                 self.complete_df = manager.subjects.df
                 self.widths = [20, 20, 20, 20, 20, 90]
             case DataTable.WATER_CALIBRATION:
-                self.complete_df = manager.calibration.water_calibration.df
+                self.complete_df = manager.calibrations.bpod_water_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.SOUND_CALIBRATION:
-                self.complete_df = manager.calibration.sound_calibration.df
+                self.complete_df = manager.calibrations.sound_calibration.df
                 self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.TEMPERATURES:
                 self.complete_df = manager.temperatures.df
