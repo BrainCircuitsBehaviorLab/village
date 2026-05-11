@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 import traceback
-from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Type, Union
 
 import pandas as pd
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
     QComboBox,
     QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QScrollArea,
     QTabWidget,
@@ -28,14 +30,27 @@ from village.settings import settings
 if TYPE_CHECKING:
     from village.custom_classes.task import Task
     from village.gui.gui_window import GuiWindow
-    from village.gui.layout import LineEdit, PushButton
+    from village.gui.layout import LineEdit
+
+
+# ── Left menu panel ────────────────────────────────────────────────────────────
+MENU_COL = 1
+MENU_WIDTH = 22
+
+# ── Right content panel ────────────────────────────────────────────────────────
+C_COL = 25  # content start column
+C_ROW = 7  # content start row
+
+DESC_COLS = 62  # description area width in grid columns
+SETTINGS_COL = C_COL + DESC_COLS + 2  # = 89
+
+MENU_ITEM_TRAINING = "TEST TRAINING PROTOCOL"
 
 
 class ExtraLayout(Layout):
-    """Layout helper for checking task buttons and settings in scrollable areas."""
+    """Layout helper for task settings in scrollable areas."""
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
-        """Initializes the ExtraLayout."""
         super().__init__(window, stacked=True, rows=rows, columns=columns)
 
 
@@ -43,11 +58,6 @@ class TasksLayout(Layout):
     """Layout for selecting and configuring tasks."""
 
     def __init__(self, window: GuiWindow) -> None:
-        """Initializes the TasksLayout.
-
-        Args:
-            window (GuiWindow): The parent window.
-        """
         super().__init__(window)
         self._highlight_nav_button(self.tasks_button)
         self.window = window
@@ -57,109 +67,103 @@ class TasksLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        """Draws the tasks layout elements, including task
-        selection list and settings."""
         self.line_edits: dict[str, LineEdit] = {}
         self.tasks_button.setDisabled(True)
 
         self.run_task_button = self.create_and_add_button(
             "RUN TASK",
-            8,
-            92,
-            16,
+            47,
+            C_COL,
+            20,
             2,
             self.run_task_button_clicked,
             "Run the selected task",
             "powderblue",
         )
 
-        self.task_buttons: list[PushButton] = []
+        self._draw_menu()
+        self._draw_content_area()
+        self.check_buttons()
 
-        row = 7
-        self.create_and_add_label("TRAINING PROTOCOL", row, 4, 20, 2, "black")
-        row += 2
-        self.training_button = self.create_and_add_button(
-            "TEST THE TRAINING PROTOCOL",
-            row,
-            4,
-            30,
-            2,
-            self.training_button_clicked,
-            "Test the training protocol to check that returns the correct values",
+    # ── Left menu ──────────────────────────────────────────────────────────────
+
+    def _draw_menu(self) -> None:
+        menu_font = QFont("DejaVu Sans Condensed", 9)
+        menu_font.setBold(True)
+        self.menu_list = QListWidget()
+        self.menu_list.setFont(menu_font)
+        self.menu_list.setStyleSheet(
+            "QListWidget { background: #e8e8e8; border: none; outline: none; }"
+            "QListWidget::item {"
+            " background: #d0d0d0; color: black;"
+            " padding: 6px 8px; margin-bottom: 2px;"
+            " border: 1px solid #aaaaaa;"
+            " border-radius: 3px; }"
+            "QListWidget::item:selected { background: steelblue; color: white;"
+            " border-color: steelblue; }"
+            "QListWidget::item:hover { background: #b0c4de; border-color: #b0c4de; }"
+            "QToolTip { background-color: white; color: black;"
+            " font-size: 10pt; padding: 4px }"
         )
+        self.menu_list.setSpacing(1)
 
-        self.left_layout = QVBoxLayout()
-        self.addLayout(self.left_layout, 11, 2, 39, 38)
+        training_item = QListWidgetItem(MENU_ITEM_TRAINING)
+        training_item.setToolTip(
+            "Test the training protocol to check that it returns the correct values"
+        )
+        self.menu_list.addItem(training_item)
 
+        for key in manager.tasks:
+            item = QListWidgetItem(key)
+            item.setToolTip(f"Select the task {key}")
+            self.menu_list.addItem(item)
+
+        self.menu_list.currentRowChanged.connect(self._on_menu_changed)
+        self.addWidget(self.menu_list, C_ROW, MENU_COL, 46, MENU_WIDTH + 2)
+
+    def _menu_items(self) -> list[str]:
+        return [MENU_ITEM_TRAINING] + list(manager.tasks.keys())
+
+    def _on_menu_changed(self, row: int) -> None:
+        items = self._menu_items()
+        if row < 0 or row >= len(items):
+            return
+        name = items[row]
+        if name == MENU_ITEM_TRAINING:
+            self.training_button_clicked()
+        else:
+            cls = manager.tasks[name]
+            self.select_task(cls, name)
+
+    # ── Content area ───────────────────────────────────────────────────────────
+
+    def _draw_content_area(self) -> None:
         self.central_layout = QVBoxLayout()
-        self.addLayout(self.central_layout, 10, 45, 40, 65)
-
-        self.right_layout = QVBoxLayout()
-        self.addLayout(self.right_layout, 11, 110, 39, 85)
-
-        self.left_scroll = QScrollArea()
-        self.left_scroll.setStyleSheet("border: 0px;")
-        self.left_scroll.setStyleSheet("QScrollArea  {border: 0px}")
-        self.left_scroll.setWidgetResizable(True)
-        self.left_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.left_sub_widget = QWidget()
+        self.addLayout(self.central_layout, C_ROW, C_COL, 40, DESC_COLS)
 
         self.central_scroll = QScrollArea()
-        self.central_scroll.setStyleSheet("border: 0px;")
-        self.central_scroll.setStyleSheet("QScrollArea {border: 0px;}")
+        self.central_scroll.setStyleSheet("QScrollArea { border: 0px }")
         self.central_scroll.setWidgetResizable(True)
         self.central_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.central_sub_widget = QWidget()
-
-        self.left_sub_layout = ExtraLayout(self.window, 36, 32)
         self.central_sub_layout = ExtraLayout(self.window, 36, 59)
-
-        # Create a QTabWidget
-        self.right_tabs = QTabWidget()
-        self.right_tabs.setStyleSheet("border: 0px;")
-        self.right_tabs.setStyleSheet("QTabWidget  {border: 0px}")
-        self.right_layout.addWidget(self.right_tabs)
-
-        # Create the General tab and its scroll area
-        self.restart_tab_panel()
-
-        row = 1
-        self.left_sub_layout.create_and_add_label("TASKS", row, 2, 20, 2, "black")
-        row += 1
-        for key, value in manager.tasks.items():
-            button = self.left_sub_layout.create_and_add_button(
-                key,
-                row,
-                2,
-                30,
-                2,
-                partial(self.select_task, value, key),
-                "Select the task",
-            )
-            row += 2
-            self.task_buttons.append(button)
-
-        self.left_sub_widget.setLayout(self.left_sub_layout)
-        self.left_scroll.setWidget(self.left_sub_widget)
-        self.left_layout.addWidget(self.left_scroll)
-
         self.central_sub_widget.setLayout(self.central_sub_layout)
         self.central_scroll.setWidget(self.central_sub_widget)
         self.central_layout.addWidget(self.central_scroll)
 
-        self.check_buttons()
+        self.right_layout = QVBoxLayout()
+        self.addLayout(self.right_layout, C_ROW, SETTINGS_COL, 40, 109)
+
+        self.right_tabs = QTabWidget()
+        self.right_tabs.setStyleSheet("QTabWidget { border: 0px }")
+        self.right_layout.addWidget(self.right_tabs)
+
+        self.restart_tab_panel()
 
     def create_tab_with_scroll_area(self, tab_name: str, layout: ExtraLayout) -> None:
-        """Creates a scrollable tab in the settings panel.
-
-        Args:
-            tab_name (str): Name of the tab.
-            layout (ExtraLayout): Layout to populate the tab with.
-        """
         tab = QWidget()
         scroll_area = QScrollArea()
-        scroll_area.setStyleSheet("border: 0px;")
-        scroll_area.setStyleSheet("QScrollArea {border: 0px;}")
+        scroll_area.setStyleSheet("QScrollArea { border: 0px }")
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         widget = QWidget()
@@ -172,51 +176,38 @@ class TasksLayout(Layout):
         self.right_tabs.addTab(tab, tab_name)
 
     def restart_tab_panel(self) -> None:
-        """Clears and recreates the right-side tab panel for task settings."""
         self.right_tabs.clear()
         self.right_layout_general = ExtraLayout(self.window, 30, 79)
         self.create_tab_with_scroll_area("General", self.right_layout_general)
 
+    # ── Button state management ────────────────────────────────────────────────
+
     def check_buttons(self) -> None:
-        """Updates button states based on application state and selection."""
         if manager.state.can_stop_task():
             self.run_task_button.setEnabled(False)
-            for button in self.task_buttons:
-                button.setEnabled(False)
+            self.menu_list.setEnabled(False)
             for line_edit in self.line_edits.values():
                 line_edit.setEnabled(False)
         elif self.testing_training:
             self.run_task_button.setText("TEST TRAINING")
             self.right_layout_general.delete_optional_widgets("optional2")
-            if self.subject_index != 0:
-                self.run_task_button.setEnabled(True)
-            else:
-                self.run_task_button.setEnabled(False)
-
+            self.menu_list.setEnabled(True)
+            self.run_task_button.setEnabled(self.subject_index != 0)
         elif self.selected != "":
             self.run_task_button.setText("RUN TASK")
             self.run_task_button.setEnabled(True)
-            for button in self.task_buttons:
-                if button.text() == self.selected:
-                    button.setEnabled(False)
-                else:
-                    button.setEnabled(True)
+            self.menu_list.setEnabled(True)
             for line_edit in self.line_edits.values():
                 line_edit.setEnabled(True)
         else:
             self.run_task_button.setEnabled(False)
-            for button in self.task_buttons:
-                button.setEnabled(True)
+            self.menu_list.setEnabled(True)
             for line_edit in self.line_edits.values():
                 line_edit.setEnabled(True)
 
-    def select_task(self, cls: Type, name: str) -> None:
-        """Selects a task type and updates the UI with its settings.
+    # ── Task / training selection ──────────────────────────────────────────────
 
-        Args:
-            cls (Type): Task class.
-            name (str): Task name.
-        """
+    def select_task(self, cls: Type, name: str) -> None:
         if issubclass(cls, Task):
             self.subject_index = 0
             self.testing_training = False
@@ -241,9 +232,9 @@ class TasksLayout(Layout):
             self.create_gui_properties(testing_training=False)
 
     def training_button_clicked(self) -> None:
-        """Sets up the UI for testing the training protocol."""
         self.subject_index = 0
         self.testing_training = True
+        self.selected = ""
         self.central_sub_layout.delete_optional_widgets("optional")
         self.central_sub_layout.delete_optional_widgets("optional2")
         self.right_layout_general.delete_optional_widgets("optional")
@@ -252,18 +243,14 @@ class TasksLayout(Layout):
         manager.reset_subject_task_training()
         self.create_gui_properties(testing_training=True)
 
-    def create_gui_properties(self, testing_training: bool) -> None:
-        """Generates input fields for task settings.
+    # ── GUI properties panel ───────────────────────────────────────────────────
 
-        Args:
-            testing_training (bool): Whether we are in training protocol test mode.
-        """
+    def create_gui_properties(self, testing_training: bool) -> None:
         self.line_edits = {}
         self.central_sub_layout.delete_optional_widgets("optional2")
         self.right_layout_general.delete_optional_widgets("optional2")
-        # remove all the tabs from the right_layout and recreate general
         self.restart_tab_panel()
-        # restore subject selection
+
         self.subject_label = self.right_layout_general.create_and_add_label(
             "Subject", 0, 2, 20, 2, "black"
         )
@@ -286,6 +273,7 @@ class TasksLayout(Layout):
             self.select_subject,
         )
         self.subject_combo.setProperty("type", "optional")
+
         remove_names = [
             "next_task",
             "maximum_duration",
@@ -297,9 +285,8 @@ class TasksLayout(Layout):
             for k, v in manager.training.get_dict().items()
             if k not in remove_names
         }
-        # sort the properties into the tabs
+
         for tab_name, properties_list in manager.training.gui_tabs.items():
-            # create a tab
             tab_layout = ExtraLayout(self.window, 30, 79)
             self.create_tab_with_scroll_area(tab_name, tab_layout)
             row = 0
@@ -315,7 +302,6 @@ class TasksLayout(Layout):
                         f"Tab setting {property} not found in settings, check spelling"
                     )
 
-        # add the rest to general tab
         row = 4
         if not testing_training:
             self.create_label_and_value(
@@ -337,33 +323,19 @@ class TasksLayout(Layout):
         for i, (k, v) in enumerate(properties.items()):
             self.create_label_and_value(self.right_layout_general, row, 2, k, str(v))
             row += 2
-        # delete the "Hide" tab if it exists
+
         hide_tab = self.find_tab_by_label("Hide")
         if hide_tab:
             self.right_tabs.removeTab(self.right_tabs.indexOf(hide_tab))
         self.update_gui()
 
     def find_tab_by_label(self, label: str) -> Union[QWidget, None]:
-        """Finds a tab widget by its label name.
-
-        Args:
-            label (str): Text label of the tab.
-
-        Returns:
-            Union[QWidget, None]: The tab widget if found, None otherwise.
-        """
         for index in range(self.right_tabs.count()):
             if self.right_tabs.tabText(index) == label:
                 return self.right_tabs.widget(index)
         return None
 
     def select_subject(self, value: str, key: str) -> None:
-        """Handles subject selection, loading their training history.
-
-        Args:
-            value (str): Selected subject name.
-            key (str): Setting key (unused).
-        """
         self.subject_index = self.subject_combo.currentIndex()
         current_value = ""
         if value != "None":
@@ -384,7 +356,6 @@ class TasksLayout(Layout):
         self.create_gui_properties(testing_training=self.testing_training)
 
     def run_task_button_clicked(self) -> None:
-        """Validates settings and launches the selected task."""
         wrong_keys = self.change_properties()
         if self.testing_training:
             if len(wrong_keys) <= 2:
@@ -437,6 +408,8 @@ class TasksLayout(Layout):
                     "The following settings are wrong:\n" + "\n".join(wrong_keys),
                 )
 
+    # ── Widget factory for a single setting ───────────────────────────────────
+
     def create_label_and_value(
         self,
         layout: Layout,
@@ -446,16 +419,6 @@ class TasksLayout(Layout):
         value: str,
         width: int = 23,
     ) -> None:
-        """Creates a label and input widget pair for a setting.
-
-        Args:
-            layout (Layout): The parent layout.
-            row (int): Row index.
-            column (int): Column index.
-            name (str): Setting name.
-            value (str): Current value.
-            width (int, optional): Width in grid cells. Defaults to 23.
-        """
         label = layout.create_and_add_label(
             name, row, column, width, 2, "black", bold=True
         )
@@ -492,11 +455,6 @@ class TasksLayout(Layout):
         self.line_edits[name] = line_edit
 
     def change_properties(self) -> list[str]:
-        """Reads input fields and updates the task settings.
-
-        Returns:
-            list[str]: List of settings that failed validation.
-        """
         wrong_values: list[str] = []
         properties = manager.training.get_dict()
         remove_names = [
@@ -537,14 +495,11 @@ class TasksLayout(Layout):
         return wrong_values + wrong_keys
 
     def change_text(self) -> None:
-        """Placeholder for text change events."""
         pass
 
     def change_combo(self, value: str, key: str) -> None:
-        """Placeholder for combobox change events."""
         pass
 
     def update_gui(self) -> None:
-        """Updates the GUI status."""
         self.update_status_label_buttons()
         self.check_buttons()
