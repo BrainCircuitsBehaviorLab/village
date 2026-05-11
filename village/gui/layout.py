@@ -477,7 +477,7 @@ class Layout(QGridLayout):
                     QMessageBox.Save,
                 )
                 if reply == QMessageBox.Save:
-                    save_fn = getattr(self, "save_button_clicked", None)
+                    save_fn = getattr(self, "save_for_exit", None)
                     if save_fn is not None:
                         save_fn()
                     manager.turn_off_all_lights()
