@@ -18,7 +18,7 @@ from PyQt5.QtCore import (
     QVariant,
     pyqtSignal,
 )
-from PyQt5.QtGui import QBrush, QColor, QImage, QPixmap
+from PyQt5.QtGui import QBrush, QColor, QFont, QImage, QPixmap
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QAbstractScrollArea,
@@ -30,6 +30,8 @@ from PyQt5.QtWidgets import (
     QHeaderView,
     QLabel,
     QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPushButton,
     QScrollArea,
@@ -881,47 +883,42 @@ class DfLayout(Layout):
             and cal.is_active()
             and hasattr(cal, "df")
         ]
-        possible_values = base_values + cal_names
-        if isinstance(manager.table, DataTable):
-            try:
-                index = possible_values.index(manager.table.value)
-            except ValueError:
-                index = 0
-        else:
-            try:
-                index = possible_values.index(manager.table)
-            except ValueError:
-                index = 0
+        self._menu_items_list = base_values + cal_names
 
-        self.title = self.create_and_add_combo_box(
-            "title", 1, 3, 35, 2, possible_values, index, self.change_data_table
-        )
+        self._draw_menu()
+
+        # Content area starts at column 26
+        C = 26
 
         self.back_button = self.create_and_add_button(
-            "<-- BACK", 1, 3, 35, 2, self.back_button_clicked, "back"
+            "<-- BACK", 1, C, 22, 2, self.back_button_clicked, "back"
         )
         self.back_button.hide()
 
-        self.search_label = self.create_and_add_label("search", 1, 45, 6, 2, "Search")
-        self.search_edit = self.create_and_add_line_edit("", 1, 51, 25, 2, self.search)
+        self.search_label = self.create_and_add_label(
+            "search", 1, C + 24, 6, 2, "black"
+        )
+        self.search_edit = self.create_and_add_line_edit(
+            "", 1, C + 30, 22, 2, self.search
+        )
 
         self.first_button = self.create_and_add_button(
-            "FIRST", 1, 89, 18, 2, self.button_clicked, "first"
+            "FIRST", 1, C + 54, 18, 2, self.button_clicked, "first"
         )
         self.second_button = self.create_and_add_button(
-            "SECOND", 1, 107, 18, 2, self.button_clicked, "second"
+            "SECOND", 1, C + 72, 18, 2, self.button_clicked, "second"
         )
         self.third_button = self.create_and_add_button(
-            "THIRD", 1, 125, 18, 2, self.button_clicked, "third"
+            "THIRD", 1, C + 90, 18, 2, self.button_clicked, "third"
         )
         self.fourth_button = self.create_and_add_button(
-            "FOURTH", 1, 143, 18, 2, self.button_clicked, "fourth"
+            "FOURTH", 1, C + 108, 18, 2, self.button_clicked, "fourth"
         )
         self.fifth_button = self.create_and_add_button(
-            "FIFTH", 1, 161, 18, 2, self.button_clicked, "fifth"
+            "FIFTH", 1, C + 126, 18, 2, self.button_clicked, "fifth"
         )
         self.sixth_button = self.create_and_add_button(
-            "SIXTH", 1, 179, 18, 2, self.button_clicked, "sixth"
+            "SIXTH", 1, C + 144, 18, 2, self.button_clicked, "sixth"
         )
 
         self.table_view = TableView(None)
@@ -938,10 +935,53 @@ class DfLayout(Layout):
         self.table_view.setSelectionMode(QTableView.SingleSelection)
         self.table_view.viewport().setAutoFillBackground(True)
 
-        self.addWidget(self.table_view, 5, 0, 42, 200)
+        self.addWidget(self.table_view, 5, C, 42, 200 - C)
+
+    def _draw_menu(self) -> None:
+        menu_font = QFont("DejaVu Sans Condensed", 9)
+        menu_font.setBold(True)
+        self.menu_list = QListWidget()
+        self.menu_list.setFont(menu_font)
+        self.menu_list.setStyleSheet(
+            "QListWidget { background: #e8e8e8; border: none; outline: none; }"
+            "QListWidget::item {"
+            " background: #d0d0d0; color: black;"
+            " padding: 6px 8px; margin-bottom: 2px;"
+            " border: 1px solid #aaaaaa;"
+            " border-radius: 3px; }"
+            "QListWidget::item:selected { background: steelblue; color: white;"
+            " border-color: steelblue; }"
+            "QListWidget::item:hover { background: #b0c4de; border-color: #b0c4de; }"
+            "QToolTip { background-color: white; color: black;"
+            " font-size: 10pt; padding: 4px }"
+        )
+        self.menu_list.setSpacing(1)
+        for name in self._menu_items_list:
+            self.menu_list.addItem(QListWidgetItem(name))
+        self.menu_list.currentRowChanged.connect(self._on_menu_changed)
+        self.addWidget(self.menu_list, 0, 0, 44, 25)
+
+    def _on_menu_changed(self, row: int) -> None:
+        if row < 0 or row >= len(self._menu_items_list):
+            return
+        self.change_data_table(self._menu_items_list[row], "")
+
+    def _sync_menu_selection(self) -> None:
+        self.menu_list.blockSignals(True)
+        if isinstance(manager.table, DataTable):
+            target = manager.table.value
+        else:
+            target = manager.table
+        try:
+            idx = self._menu_items_list.index(target)
+            self.menu_list.setCurrentRow(idx)
+        except ValueError:
+            self.menu_list.setCurrentRow(-1)
+        self.menu_list.blockSignals(False)
 
     def update_data(self) -> None:
         """Updates the DataFrame based on the currently selected DataTable."""
+        self.back_button.hide()
         match manager.table:
             case DataTable.EVENTS:
                 self.complete_df = manager.events.df
@@ -964,27 +1004,23 @@ class DfLayout(Layout):
             case DataTable.OLD_SESSION:
                 self.complete_df = manager.old_session_df
                 self.widths = [20, 20, 20, 20, 20, 20]
-                self.title.setCurrentIndex(-1)
-                self.title.hide()
                 self.back_button.show()
             case DataTable.OLD_SESSION_RAW:
                 self.complete_df = manager.old_session_raw_df
                 self.widths = [20, 20, 20, 60, 60]
-                self.title.setCurrentIndex(-1)
-                self.title.hide()
                 self.back_button.show()
             case str():
                 cal = _get_calibration_by_name(manager.table)
                 if cal is not None:
                     self.complete_df = cal.df
                     self.widths = [20] * len(cal.df.columns)
+        self._sync_menu_selection()
         self.df = self.obtain_searched_df()
 
     def back_button_clicked(self) -> None:
         """Handles the back button click, returning to the SESSIONS_SUMMARY table."""
         self.back_button.hide()
-        self.title.show()
-        self.title.setCurrentText(DataTable.SESSIONS_SUMMARY.value)
+        self.change_data_table(DataTable.SESSIONS_SUMMARY.value, "")
 
     def create_table(self) -> None:
         """Creates and sets up the QTableView with the current DataFrame."""
@@ -1074,10 +1110,12 @@ class DfLayout(Layout):
             if self.df["name"].duplicated().any():
                 text = "There are repeated names in the subjects table."
                 QMessageBox.information(self.window, "WARNING", text)
+                self._sync_menu_selection()
                 return
             elif self.df["name"].str.strip().eq("").any():
                 text = "There are empty names in the subjects table."
                 QMessageBox.information(self.window, "WARNING", text)
+                self._sync_menu_selection()
                 return
 
         if value != "":
