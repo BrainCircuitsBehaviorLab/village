@@ -899,9 +899,15 @@ class Layout(QGridLayout):
         ]
         if 0 <= index < len(actions):
             actions[index]()
+        # If navigation was blocked we are still the active layout; restore the tab.
+        if self.window.layout is self and hasattr(self, "_active_nav_index"):
+            self.nav_tab_bar.blockSignals(True)
+            self.nav_tab_bar.setCurrentIndex(self._active_nav_index)
+            self.nav_tab_bar.blockSignals(False)
 
     def _highlight_nav_button(self, active_button: NavTabProxy) -> None:
         """Selects the active navigation tab."""
+        self._active_nav_index = active_button._idx
         self.nav_tab_bar.blockSignals(True)
         self.nav_tab_bar.setCurrentIndex(active_button._idx)
         self.nav_tab_bar.blockSignals(False)
