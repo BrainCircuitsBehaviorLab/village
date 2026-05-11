@@ -70,10 +70,12 @@ class TasksLayout(Layout):
         self.line_edits: dict[str, LineEdit] = {}
         self.tasks_button.setDisabled(True)
 
+        # Centered between menu end (col 25) and right panel (col 89): (89-25-20)//2=22
+        _btn_col = C_COL + (SETTINGS_COL - C_COL - 20) // 2  # = 47
         self.run_task_button = self.create_and_add_button(
             "RUN TASK",
-            47,
-            C_COL,
+            C_ROW,
+            _btn_col,
             20,
             2,
             self.run_task_button_clicked,
@@ -139,7 +141,7 @@ class TasksLayout(Layout):
 
     def _draw_content_area(self) -> None:
         self.central_layout = QVBoxLayout()
-        self.addLayout(self.central_layout, C_ROW, C_COL, 40, DESC_COLS)
+        self.addLayout(self.central_layout, C_ROW + 3, C_COL, 37, DESC_COLS)
 
         self.central_scroll = QScrollArea()
         self.central_scroll.setStyleSheet("QScrollArea { border: 0px }")

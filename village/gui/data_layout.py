@@ -887,8 +887,8 @@ class DfLayout(Layout):
 
         self._draw_menu()
 
-        # Content area starts at column 26
-        C = 26
+        # Content area starts at column 28 (matches settings_layout C_COL)
+        C = 28
 
         self.back_button = self.create_and_add_button(
             "<-- BACK", 1, C, 22, 2, self.back_button_clicked, "back"
@@ -896,29 +896,29 @@ class DfLayout(Layout):
         self.back_button.hide()
 
         self.search_label = self.create_and_add_label(
-            "search", 1, C + 24, 6, 2, "black"
+            "search", 1, C + 18, 6, 2, "black"
         )
         self.search_edit = self.create_and_add_line_edit(
-            "", 1, C + 30, 22, 2, self.search
+            "", 1, C + 24, 22, 2, self.search
         )
 
         self.first_button = self.create_and_add_button(
-            "FIRST", 1, C + 54, 18, 2, self.button_clicked, "first"
+            "FIRST", 1, C + 48, 18, 2, self.button_clicked, "first"
         )
         self.second_button = self.create_and_add_button(
-            "SECOND", 1, C + 72, 18, 2, self.button_clicked, "second"
+            "SECOND", 1, C + 66, 18, 2, self.button_clicked, "second"
         )
         self.third_button = self.create_and_add_button(
-            "THIRD", 1, C + 90, 18, 2, self.button_clicked, "third"
+            "THIRD", 1, C + 84, 18, 2, self.button_clicked, "third"
         )
         self.fourth_button = self.create_and_add_button(
-            "FOURTH", 1, C + 108, 18, 2, self.button_clicked, "fourth"
+            "FOURTH", 1, C + 102, 18, 2, self.button_clicked, "fourth"
         )
         self.fifth_button = self.create_and_add_button(
-            "FIFTH", 1, C + 126, 18, 2, self.button_clicked, "fifth"
+            "FIFTH", 1, C + 120, 18, 2, self.button_clicked, "fifth"
         )
         self.sixth_button = self.create_and_add_button(
-            "SIXTH", 1, C + 144, 18, 2, self.button_clicked, "sixth"
+            "SIXTH", 1, C + 138, 18, 2, self.button_clicked, "sixth"
         )
 
         self.table_view = TableView(None)
@@ -935,7 +935,7 @@ class DfLayout(Layout):
         self.table_view.setSelectionMode(QTableView.SingleSelection)
         self.table_view.viewport().setAutoFillBackground(True)
 
-        self.addWidget(self.table_view, 5, C, 42, 200 - C)
+        self.addWidget(self.table_view, 4, C, 42, 200 - C)
 
     def _draw_menu(self) -> None:
         menu_font = QFont("DejaVu Sans Condensed", 9)
@@ -959,7 +959,7 @@ class DfLayout(Layout):
         for name in self._menu_items_list:
             self.menu_list.addItem(QListWidgetItem(name))
         self.menu_list.currentRowChanged.connect(self._on_menu_changed)
-        self.addWidget(self.menu_list, 0, 0, 44, 25)
+        self.addWidget(self.menu_list, 3, 1, 41, 24)
 
     def _on_menu_changed(self, row: int) -> None:
         if row < 0 or row >= len(self._menu_items_list):
@@ -982,16 +982,17 @@ class DfLayout(Layout):
     def update_data(self) -> None:
         """Updates the DataFrame based on the currently selected DataTable."""
         self.back_button.hide()
+        _W = 172  # available table columns (200 - C where C=28)
         match manager.table:
             case DataTable.EVENTS:
                 self.complete_df = manager.events.df
-                self.widths = [20, 20, 20, 130]
+                self.widths = [20, 20, 20, _W - 60]
             case DataTable.SESSIONS_SUMMARY:
                 self.complete_df = manager.sessions_summary.df
-                self.widths = [20, 20, 20, 20, 20, 20, 20, 20, 20]
+                self.widths = [20, 20, 20, 20, 20, 20, 20, 20, _W - 160]
             case DataTable.SUBJECTS:
                 self.complete_df = manager.subjects.df
-                self.widths = [20, 20, 20, 20, 20, 90]
+                self.widths = [20, 20, 20, 20, 20, _W - 100]
             case DataTable.TEMPERATURES:
                 self.complete_df = manager.temperatures.df
                 self.widths = [20, 20, 20]
@@ -1000,20 +1001,23 @@ class DfLayout(Layout):
                 self.widths = [20, 20, 20, 20, 20]
             case DataTable.SESSION_RAW:
                 self.complete_df = manager.update_raw_session_df()
-                self.widths = [20, 20, 20, 65, 65]
+                self.widths = [20, 20, 20, 65, _W - 125]
             case DataTable.OLD_SESSION:
                 self.complete_df = manager.old_session_df
                 self.widths = [20, 20, 20, 20, 20, 20]
                 self.back_button.show()
             case DataTable.OLD_SESSION_RAW:
                 self.complete_df = manager.old_session_raw_df
-                self.widths = [20, 20, 20, 60, 60]
+                self.widths = [20, 20, 20, 60, _W - 120]
                 self.back_button.show()
             case str():
                 cal = _get_calibration_by_name(manager.table)
                 if cal is not None:
+                    n = len(cal.df.columns)
+                    others = 20 * (n - 1)
+                    last = max(10, _W - others)
                     self.complete_df = cal.df
-                    self.widths = [20] * len(cal.df.columns)
+                    self.widths = [20] * (n - 1) + [last]
         self._sync_menu_selection()
         self.df = self.obtain_searched_df()
 
