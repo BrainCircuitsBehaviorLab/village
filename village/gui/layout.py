@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Callable
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTime
-from PyQt5.QtGui import QCloseEvent, QPixmap, QWheelEvent
+from PyQt5.QtGui import QCloseEvent, QFont, QPixmap, QWheelEvent
 from PyQt5.QtWidgets import (
     QComboBox,
     QDialog,
@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QPushButton,
+    QTabBar,
     QTimeEdit,
     QVBoxLayout,
 )
@@ -27,6 +28,27 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
+
+
+class NavTabProxy:
+    """Proxy for a nav QTabBar tab, exposing a QPushButton-compatible interface."""
+
+    def __init__(self, tab_bar: QTabBar, index: int) -> None:
+        self._bar = tab_bar
+        self._idx = index
+
+    def setDisabled(self, disabled: bool) -> None:
+        # Disabling the currently selected tab causes QTabBar to auto-advance
+        # to the next tab, firing currentChanged during construction. Skip it.
+        if disabled and self._bar.currentIndex() == self._idx:
+            return
+        self._bar.setTabEnabled(self._idx, not disabled)
+
+    def setEnabled(self, enabled: bool) -> None:
+        self._bar.setTabEnabled(self._idx, enabled)
+
+    def isEnabled(self) -> bool:
+        return self._bar.isTabEnabled(self._idx)
 
 
 class Label(QLabel):
@@ -51,7 +73,10 @@ class Label(QLabel):
         else:
             style += "; background-color: " + background + "}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
+            style += (
+                "QToolTip {background-color: white; color: black;"
+                " font-size: 10pt; padding: 4px}"
+            )
             self.setToolTip(description)
         self.setStyleSheet(style)
         if right_aligment:
@@ -101,7 +126,10 @@ class PushButton(QPushButton):
         super().__init__(text)
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
+            style += (
+                "QToolTip {background-color: white; color: black;"
+                " font-size: 10pt; padding: 4px}"
+            )
             self.setToolTip(description)
         self.setStyleSheet(style)
         self.pressed.connect(action)
@@ -116,7 +144,6 @@ class ToggleButton(QPushButton):
         possible_values: list[str],
         index: int,
         action: Callable,
-        complete_name: bool,
         description: str,
         color: str = "lightgray",
     ) -> None:
@@ -126,7 +153,6 @@ class ToggleButton(QPushButton):
         self.possible_values = possible_values
         self.index = index
         self.action = action
-        self.complete_name = complete_name
         self.description = description
         self.value = self.possible_values[self.index]
         self.color = color
@@ -135,14 +161,15 @@ class ToggleButton(QPushButton):
 
     def update_style(self) -> None:
         """Updates the button text and color based on current value."""
-        if self.complete_name:
-            self.setText(self.key + " " + self.value)
-        else:
-            self.setText(self.value)
+
+        self.setText(self.value)
         color = "darkgray" if self.value == "OFF" else self.color
         style = "QPushButton {background-color: " + color + "; font-weight: bold}"
         if self.description != "":
-            style += "QToolTip {background-color: white; color: black; font-size: 12px}"
+            style += (
+                "QToolTip {background-color: white; color: black;"
+                " font-size: 10pt; padding: 4px}"
+            )
             self.setToolTip(self.description)
         self.setStyleSheet(style)
 
@@ -167,11 +194,15 @@ class ComboBox(QComboBox):
         self.possible_values = possible_values
         self.index = index
         self.action = action
-        try:
-            self.value = self.possible_values[self.index]
-        except Exception:
+        if not self.possible_values:
             self.index = 0
-            self.value = self.possible_values[self.index]
+            self.value = ""
+        else:
+            try:
+                self.value = self.possible_values[self.index]
+            except Exception:
+                self.index = 0
+                self.value = self.possible_values[0]
         self.setCurrentText(self.value)
         self.currentTextChanged.connect(self.handleTextChanged)
         self.update_style()
@@ -180,7 +211,7 @@ class ComboBox(QComboBox):
         """Updates the combo box styling."""
         color = "darkgray" if self.value == "OFF" else "lightgray"
         self.setStyleSheet(
-            "QComboBox {background-color: " + color + "; font-size: 10px}"
+            "QComboBox {background-color: " + color + "; font-size: 8pt}"
         )
 
     def handleTextChanged(self, value: str) -> None:
@@ -212,7 +243,8 @@ class Layout(QGridLayout):
 
         Args:
             window (GuiWindow): The parent window.
-            stacked (bool, optional): Whether this layout is part of a stacked widget. Defaults to False.
+            stacked (bool, optional): Whether this layout is part of a stacked widget.
+            Defaults to False.
             rows (int, optional): Number of rows in the grid. Defaults to 51.
             columns (int, optional): Number of columns in the grid. Defaults to 200.
         """
@@ -252,109 +284,65 @@ class Layout(QGridLayout):
     def create_common_elements(self) -> None:
         """Creates the navigation menu buttons common to all main layouts."""
         self.status_label = self.create_and_add_label(
-            "", 3, 0, 200, 2, "white", background="black"
-        )
-        # self.status_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-
-        size = 18
-
-        self.main_button = self.create_and_add_button(
-            "MAIN",
-            1,
-            0,
-            size,
-            2,
-            self.main_button_clicked,
-            "Go to the main menu",
+            "", 1, 0, 200, 2, "black", background="powderblue"
         )
 
-        self.monitor_button = self.create_and_add_button(
-            "MONITOR",
-            1,
-            size,
-            size,
-            2,
-            self.monitor_button_clicked,
-            "Go to the monitor menu",
+        _nav_items = [
+            ("MAIN", "Go to the main menu"),
+            ("MONITOR", "Go to the monitor menu"),
+            ("TASKS", "Go to the tasks menu"),
+            ("DATA", "Go to the data menu"),
+            ("CALIBRATION", "Go to the calibration menu"),
+            ("SETTINGS", "Go to the settings menu"),
+        ]
+        self.nav_tab_bar = QTabBar()
+        _nav_font = QFont("DejaVu Sans Condensed", 10)
+        _nav_font.setBold(True)
+        self.nav_tab_bar.setFont(_nav_font)
+        self.nav_tab_bar.setExpanding(False)
+        self.nav_tab_bar.setStyleSheet(
+            "QTabBar::tab { background: lightgray;"
+            " padding: 6px 30px;"
+            " border: 1px solid #aaaaaa; border-bottom: none;"
+            " border-radius: 4px 4px 0 0; margin-right: 2px; }"
+            "QTabBar::tab:selected { background: steelblue; color: white;"
+            " border-color: steelblue; }"
+            "QTabBar::tab:selected:disabled { background: steelblue; color: white; }"
+            "QTabBar::tab:hover:!selected { background: #b0c4de; }"
+            "QTabBar::tab:disabled { background: #cccccc; color: #999999; }"
+            "QToolTip { background-color: white; color: black;"
+            " font-size: 10pt; padding: 4px }"
         )
+        for label, tooltip in _nav_items:
+            idx = self.nav_tab_bar.addTab(label)
+            self.nav_tab_bar.setTabToolTip(idx, tooltip)
+        self.nav_tab_bar.currentChanged.connect(self._on_nav_tab_changed)
+        self.addWidget(self.nav_tab_bar, 4, 0, 2, 200)
 
-        self.tasks_button = self.create_and_add_button(
-            "TASKS",
-            1,
-            2 * size,
-            size,
-            2,
-            self.tasks_button_clicked,
-            "Go to the tasks menu",
-        )
+        self.main_button = NavTabProxy(self.nav_tab_bar, 0)
+        self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)
+        self.tasks_button = NavTabProxy(self.nav_tab_bar, 2)
+        self.data_button = NavTabProxy(self.nav_tab_bar, 3)
+        self.calibration_button = NavTabProxy(self.nav_tab_bar, 4)
+        self.settings_button = NavTabProxy(self.nav_tab_bar, 5)
 
-        self.data_button = self.create_and_add_button(
-            "DATA",
-            1,
-            3 * size,
-            size,
-            2,
-            self.data_button_clicked,
-            "Go to the data menu",
-        )
-
-        self.water_calibration_button = self.create_and_add_button(
-            "WATER CALIBRATION",
-            1,
-            4 * size,
-            size,
-            2,
-            self.water_calibration_button_clicked,
-            "Go to the water calibration menu",
-        )
-
-        self.sound_calibration_button = self.create_and_add_button(
-            "SOUND CALIBRATION",
-            1,
-            5 * size,
-            size,
-            2,
-            self.sound_calibration_button_clicked,
-            "Go to the sound calibration menu",
-        )
-
-        self.settings_button = self.create_and_add_button(
-            "SETTINGS",
-            1,
-            6 * size,
-            size,
-            2,
-            self.settings_button_clicked,
-            "Go to the setting menu",
-        )
-
-        self.camera_calibration_button = self.create_and_add_button(
-            "CAMERA CALIBRATION",
-            1,
-            7 * size,
-            size,
-            2,
-            self.camera_calibration_button_clicked,
-            "Go to the camera calibration menu",
-        )
-
-        self.online_plots_button = self.create_and_add_button(
+        self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
-            1,
-            158,
-            14,
-            2,
-            self.show_online_plots_clicked,
-            "Show the online plots when a task is running",
-            "powderblue",
+            3,
+            150,
+            16,
+            3,
+            self.online_or_force_button_clicked,
+            "Show live plots while a task is running",
+            "lightgray",
         )
 
         self.stop_button = self.create_and_add_button(
             "",
-            1,
-            172,
-            14,
-            2,
+            3,
+            166,
+            22,
+            3,
             self.stop_button_clicked,
             "Stop a running task",
             "lightcoral",
@@ -362,10 +350,10 @@ class Layout(QGridLayout):
 
         self.exit_button = self.create_and_add_button(
             "EXIT",
-            1,
-            186,
-            14,
-            2,
+            3,
+            188,
+            12,
+            3,
             self.exit_button_clicked,
             "Exit the application",
             "lightcoral",
@@ -375,21 +363,46 @@ class Layout(QGridLayout):
 
     def update_status_label_buttons(self) -> None:
         """Updates the status label and button states based on manager state."""
+        _tt = (
+            "QToolTip {background-color: white; color: black;"
+            " font-size: 10pt; padding: 4px}"
+        )
         manager.update_text()
         self.status_label.setText(manager.text)
         if manager.state.can_stop_task():
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
             self.stop_button.setEnabled(True)
-            self.online_plots_button.setEnabled(True)
+            self.stop_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+            )
+            self.online_or_force_button.setText("ONLINE PLOTS")
+            self.online_or_force_button.setToolTip(
+                "Show live plots while a task is running"
+            )
+            self.online_or_force_button.setEnabled(True)
+            self.online_or_force_button.setStyleSheet(
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
+            )
         elif manager.state.can_go_to_wait():
             self.stop_button.setText("GO TO WAIT STATE")
             text = (
-                "If the systems thinks there is a subject in the corridor or the "
-                + "box, but there isn't, you can force going to the WAIT state."
+                "The system thinks there is a subject in the box, but there isn't. "
+                + "Use this to return to WAIT state."
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
+            )
+            self.online_or_force_button.setText("FORCE SYNC")
+            self.online_or_force_button.setToolTip(
+                "Force synchronisation with external device or server"
+            )
+            self.online_or_force_button.setEnabled(False)
+            self.online_or_force_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+            )
         elif manager.state.can_stop_syncing():
             self.stop_button.setText("STOP SYNC")
             text = (
@@ -398,12 +411,42 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
-            self.online_plots_button.setEnabled(False)
+            self.stop_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+            )
+            self.online_or_force_button.setText("FORCE SYNC")
+            self.online_or_force_button.setToolTip(
+                "Force synchronisation with external device or server"
+            )
+            self.online_or_force_button.setEnabled(False)
+            self.online_or_force_button.setStyleSheet(
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+            )
         else:
-            self.stop_button.setText("STOP TASK")
-            self.stop_button.setToolTip("Stop a running task")
-            self.stop_button.setEnabled(False)
-            self.online_plots_button.setEnabled(False)
+            self.stop_button.setText("WAIT FOR SUBJECT EXIT")
+            text = (
+                "The system thinks there is no subject in the box (currently in WAIT) "
+                + "but there is one. Use this to make the system wait for the "
+                + "subject to exit."
+            )
+            self.stop_button.setToolTip(text)
+            self.stop_button.setStyleSheet(
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
+            )
+            self.online_or_force_button.setText("FORCE SYNC")
+            self.online_or_force_button.setToolTip(
+                "Force synchronisation with external device or server"
+            )
+            self.online_or_force_button.setStyleSheet(
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
+            )
+
+            if manager.state == State.WAIT:
+                self.stop_button.setEnabled(True)
+                self.online_or_force_button.setEnabled(True)
+            else:
+                self.stop_button.setEnabled(False)
+                self.online_or_force_button.setEnabled(False)
 
     def exit_button_clicked(self) -> None:
         """Handles exit button click, confirming exit and saving data if needed."""
@@ -435,6 +478,7 @@ class Layout(QGridLayout):
                 QMessageBox.No,
             )
             if reply == QMessageBox.Yes:
+                manager.turn_off_all_lights()
                 self.window.exit_app()
             else:
                 manager.state = old_state
@@ -510,60 +554,20 @@ class Layout(QGridLayout):
             self.close_online_plot_window()
             self.window.create_data_layout()
 
-    def water_calibration_button_clicked(self) -> None:
-        """Handles water calibration button click."""
+    def calibration_button_clicked(self) -> None:
+        """Handles calibration button click."""
         if self.change_layout():
             if manager.state in [State.WAIT, State.MANUAL_MODE]:
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
                 self.close_online_plot_window()
-                self.window.create_water_calibration_layout()
+                self.window.create_calibration_layout()
             else:
-                text = (
-                    "Calibration is not available while a subject is in the box, a "
-                    + "detection is ongoing, or data is syncing."
-                )
                 QMessageBox.information(
                     self.window,
                     "CALIBRATION",
-                    text,
-                )
-
-    def sound_calibration_button_clicked(self) -> None:
-        """Handles sound calibration button click."""
-        if self.change_layout():
-            if manager.state in [State.WAIT, State.MANUAL_MODE]:
-                manager.state = State.MANUAL_MODE
-                manager.reset_subject_task_training()
-                self.close_online_plot_window()
-                self.window.create_sound_calibration_layout()
-            else:
-                text = (
-                    "Calibration is not available while a subject is in the box, a "
-                    + "detection is ongoing, or data is syncing."
-                )
-                QMessageBox.information(
-                    self.window,
-                    "CALIBRATION",
-                    text,
-                )
-
-    def camera_calibration_button_clicked(self) -> None:
-        """Handles camera calibration button click."""
-        if self.change_layout():
-            if manager.state in [State.WAIT, State.MANUAL_MODE]:
-                manager.state = State.MANUAL_MODE
-                manager.reset_subject_task_training()
-                self.close_online_plot_window()
-                self.window.create_camera_calibration_layout()
-            else:
-                text = (
-                    "Camera calibration is not available while a subject"
-                    " is in the box, a detection is ongoing,"
-                    " or data is syncing."
-                )
-                QMessageBox.information(
-                    self.window, "CAMERA CALIBRATION", text
+                    "Calibration is not available while a subject is in the box, "
+                    "a detection is ongoing, or data is syncing.",
                 )
 
     def settings_button_clicked(self) -> None:
@@ -604,6 +608,9 @@ class Layout(QGridLayout):
             log.info("Going to WAIT State")
         elif manager.state.can_stop_syncing():
             manager.after_session.cancel_event.set()
+        elif manager.state == State.WAIT:
+            manager.state = State.WAIT_EXIT
+            log.info("Going to WAIT_EXIT State")
         self.update_gui()
 
     def close_online_plot_window(self) -> None:
@@ -613,29 +620,36 @@ class Layout(QGridLayout):
         except Exception:
             pass
 
-    def show_online_plots_clicked(self) -> None:
+    def online_or_force_button_clicked(self) -> None:
         """Handles the online plots button click to show or update the plot window."""
-        try:
-            manager.online_plot.update_canvas(manager.task.session_df)
-        except Exception:
-            log.error(
-                "Error in online plot",
-                subject=manager.subject.name,
-                exception=traceback.format_exc(),
-            )
+        if manager.state == State.WAIT:
+            manager.detection_change = True
+            manager.state = State.SYNC
+            manager.after_session_flag = True
+            log.info("Going to SYNC State")
+            manager.state = State.SYNC
+        else:
+            try:
+                manager.online_plot.update_canvas(manager.task.session_df)
+            except Exception:
+                log.error(
+                    "Error in online plot",
+                    subject=manager.subject.name,
+                    exception=traceback.format_exc(),
+                )
 
-        if not manager.online_plot.active:
-            manager.online_plot.active = True
-            manager.online_plot.update_canvas(manager.task.session_df.copy())
-            geom = (
-                self.column_width * 10,
-                self.row_height * 5,
-                self.column_width * 62,
-                self.row_height * 20,
-            )
-            self.plot_dialog = OnlinePlotDialog()
-            self.plot_dialog.setGeometry(*geom)
-            self.plot_dialog.show()
+            if not manager.online_plot.active:
+                manager.online_plot.active = True
+                manager.online_plot.update_canvas(manager.task.session_df.copy())
+                geom = (
+                    self.column_width * 10,
+                    self.row_height * 5,
+                    self.column_width * 62,
+                    self.row_height * 20,
+                )
+                self.plot_dialog: OnlinePlotDialog = OnlinePlotDialog()
+                self.plot_dialog.setGeometry(*geom)
+                self.plot_dialog.show()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         """Ignores the close event to prevent closing the layout directly."""
@@ -806,7 +820,6 @@ class Layout(QGridLayout):
         index: int,
         action: Callable,
         description: str,
-        complete_name: bool = False,
         color: str = "lightgray",
     ) -> ToggleButton:
         """Creates and adds a ToggleButton to the layout.
@@ -821,7 +834,7 @@ class Layout(QGridLayout):
             index (int): Initial index in possible_values.
             action (Callable): The function to call on toggle.
             description (str): Tooltip text.
-            complete_name (bool, optional): Whether to show key + value. Defaults to False.
+            Defaults to False.
             color (str, optional): Background color. Defaults to "lightgray".
 
         Returns:
@@ -832,7 +845,6 @@ class Layout(QGridLayout):
             possible_values,
             index,
             action,
-            complete_name,
             description,
             color,
         )
@@ -870,6 +882,35 @@ class Layout(QGridLayout):
         combo_box.setFixedSize(width * self.column_width, height * self.row_height)
         self.addWidget(combo_box, row, column, height, width)
         return combo_box
+
+    def _on_nav_tab_changed(self, index: int) -> None:
+        """Dispatches tab click to the appropriate navigation action."""
+        if "layout" not in self.window.__dict__:
+            return
+        if self.window.layout is not self:
+            return
+        actions: list[Callable[[], None]] = [
+            self.main_button_clicked,
+            self.monitor_button_clicked,
+            self.tasks_button_clicked,
+            self.data_button_clicked,
+            self.calibration_button_clicked,
+            self.settings_button_clicked,
+        ]
+        if 0 <= index < len(actions):
+            actions[index]()
+        # If navigation was blocked we are still the active layout; restore the tab.
+        if self.window.layout is self and hasattr(self, "_active_nav_index"):
+            self.nav_tab_bar.blockSignals(True)
+            self.nav_tab_bar.setCurrentIndex(self._active_nav_index)
+            self.nav_tab_bar.blockSignals(False)
+
+    def _highlight_nav_button(self, active_button: NavTabProxy) -> None:
+        """Selects the active navigation tab."""
+        self._active_nav_index = active_button._idx
+        self.nav_tab_bar.blockSignals(True)
+        self.nav_tab_bar.setCurrentIndex(active_button._idx)
+        self.nav_tab_bar.blockSignals(False)
 
     def update_gui(self) -> None:
         """Updates the GUI elements (placeholder base method)."""

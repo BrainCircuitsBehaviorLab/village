@@ -27,9 +27,11 @@ fmt.setSwapBehavior(QSurfaceFormat.DoubleBuffer)
 
 QSurfaceFormat.setDefaultFormat(fmt)
 
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication
 
 q_app = QApplication.instance() or QApplication(sys.argv)
+q_app.setFont(QFont("DejaVu Sans Condensed", 9))
 
 import gc
 import queue
@@ -39,17 +41,22 @@ import time
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active, State
-from village.devices.bpod import bpod
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.motor import motor1, motor2
+from village.devices.chip import (
+    motor_box1,
+    motor_box2,
+    motor_corridor1,
+    motor_corridor2,
+)
 from village.devices.rfid import rfid
-from village.devices.scale import real_weight_inference, scale
+from village.devices.scale import scale
 from village.devices.sound_device import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
 from village.gui.gui import Gui
 from village.manager import manager
 from village.scripts.error_queue import error_queue
+from village.scripts.import_all import import_all
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
@@ -71,18 +78,17 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 # faulthandler.enable()
 
 
-# init
-manager.task.bpod = bpod
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor
-manager.import_all_tasks()
+import_all(manager)
 manager.send_heartbeat()
-manager.errors = (
-    bpod.error
-    + cam_corridor.error
+manager.errors += (
+    cam_corridor.error
     + cam_box.error
-    + motor1.error
-    + motor2.error
+    + motor_corridor1.error
+    + motor_corridor2.error
+    + motor_box1.error
+    + motor_box2.error
     + scale.error
     + temp_sensor.error
     + sound_device.error
@@ -109,25 +115,25 @@ def system_run(bevavior_window: QWidget) -> None:
     plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
     sound_alarm_timer = time_utils.Timer(3600)
     video_alarm_timer = time_utils.Timer(3600)
+    manager.check_corridor_lights()
+    manager.check_box_lights()
 
     cam_corridor.start_recording()
 
     corridor_video_duration = float(settings.get("CORRIDOR_VIDEO_DURATION"))
-    weight_threshold = float(settings.get("WEIGHT_THRESHOLD"))
 
     def background_checks() -> None:
         """Performs periodic background checks for errors, storage,
         and schedule changes."""
         while True:
             time.sleep(1)
-            manager.update_cycle()
 
             try:
                 while True:
                     device, error = error_queue.get_nowait()
                     if device == "sound" and sound_alarm_timer.has_elapsed():
                         log.alarm(
-                            "Error in sound_device",
+                            "Error in sound device",
                             exception=error,
                             subject=manager.subject.name,
                         )
@@ -148,7 +154,6 @@ def system_run(bevavior_window: QWidget) -> None:
                 manager.hourly_checks()
 
             if manager.cycle_change_detector.has_cycle_changed():
-                manager.update_cycle()
                 cam_corridor.change = True
                 manager.cycle_checks()
 
@@ -228,13 +233,15 @@ def system_run(bevavior_window: QWidget) -> None:
             case State.ACCESS:
                 # Closing door1, opening door2
                 gc.disable()
-                motor1.close()
-                motor2.open()
+                motor_corridor1.close()
+                motor_corridor2.open()
                 manager.state = State.LAUNCH_AUTO
 
             case State.LAUNCH_AUTO:
                 # Automatically launching the task
-                if manager.launch_task_auto(cam_box):
+                manager.check_box_lights()
+                manager.cam_box = cam_box
+                if manager.launch_task_auto():
                     manager.detection_change = True
                     manager.state = State.RUN_FIRST
                     log.info("Going to RUN_FIRST State")
@@ -279,7 +286,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.CLOSE_DOOR2:
                 # Closing door2
-                motor2.close()
+                motor_corridor2.close()
                 log.info("Going to RUN_CLOSED State")
                 manager.state = State.RUN_CLOSED
 
@@ -299,7 +306,11 @@ def system_run(bevavior_window: QWidget) -> None:
                         )
                         manager.state = State.OPEN_DOOR2_STOP
                         log.info("Going to OPEN_DOOR2_STOP State")
-                elif id == manager.subject.tag and id != "":
+                elif (
+                    id == manager.subject.tag
+                    and id != ""
+                    and not manager.old_version_rfid
+                ):
                     log.alarm(
                         "Wrong RFID detection: "
                         + " The main subject was detected in the corridor when it"
@@ -323,7 +334,7 @@ def system_run(bevavior_window: QWidget) -> None:
                 # Opening door2
                 scale.tare()
                 tare_timer.reset()
-                motor2.open()
+                motor_corridor2.open()
                 manager.state = State.RUN_OPENED
                 log.info("Going to RUN_OPENED State")
 
@@ -364,21 +375,16 @@ def system_run(bevavior_window: QWidget) -> None:
                         subject=manager.subject.name,
                     )
                     manager.state = State.SAVE_INSIDE
-                elif weight > weight_threshold:
+                else:
                     if (
                         not cam_corridor.area_2_empty()
                         and cam_corridor.area_3_empty()
                         and cam_corridor.area_4_empty()
                     ):
-                        manager.measuring_weight_list.append(weight)
-                        ok, weight_value = real_weight_inference(
-                            manager.measuring_weight_list,
-                            weight_threshold,
-                        )
+                        ok, weight_value = scale.real_weight_inference()
                         if ok:
                             manager.weight = weight_value
                             manager.getting_weights = False
-                            manager.measuring_weight_list = []
                             manager.state = State.EXIT_UNSAVED
                             log.info(
                                 "Subject back home: " + str(manager.weight) + " g",
@@ -387,8 +393,9 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_UNSAVED:
                 # Closing door2, opening door1; data still not saved
-                motor2.close()
-                motor1.open()
+                manager.check_box_lights()
+                motor_corridor2.close()
+                motor_corridor1.open()
                 manager.state = State.SAVE_OUTSIDE
 
             case State.SAVE_OUTSIDE:
@@ -414,7 +421,7 @@ def system_run(bevavior_window: QWidget) -> None:
                     + manager.max_time_counter * 3600
                 ):
                     text = (
-                        "The subject has been in the box for "
+                        "The subject has been in the box for too long. "
                         + str(manager.task.chrono.get_seconds())
                         + " seconds. "
                     )
@@ -428,21 +435,16 @@ def system_run(bevavior_window: QWidget) -> None:
                     log.alarm(text, subject=manager.subject.name)
                     manager.max_time_counter += 1
 
-                elif weight > weight_threshold:
+                else:
                     if (
                         not cam_corridor.area_2_empty()
                         and cam_corridor.area_3_empty()
                         and cam_corridor.area_4_empty()
                     ):
-                        manager.measuring_weight_list.append(weight)
-                        ok, weight_value = real_weight_inference(
-                            manager.measuring_weight_list,
-                            weight_threshold,
-                        )
+                        ok, weight_value = scale.real_weight_inference()
                         if ok:
                             manager.weight = weight_value
                             manager.getting_weights = False
-                            manager.measuring_weight_list = []
                             manager.state = State.EXIT_SAVED
                             log.info(
                                 "Subject back home: " + str(manager.weight) + " g",
@@ -451,16 +453,17 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.EXIT_SAVED:
                 # Closing door2, opening door1 (data already saved)
+                manager.check_box_lights()
                 log.info("The subject has returned home.", subject=manager.subject.name)
-                motor2.close()
-                motor1.open()
+                motor_corridor2.close()
+                motor_corridor1.open()
                 manager.sessions_summary.change_last_entry("weight", manager.weight)
                 manager.state = State.SYNC
                 log.info("Going to SYNC State")
 
             case State.OPEN_DOOR2_STOP:
                 # Opening door2, disconnecting RFID
-                motor2.open()
+                motor_corridor2.open()
                 manager.rfid_reader = Active.OFF
                 manager.rfid_changed = True
                 manager.state = State.SAVE_INSIDE
@@ -472,7 +475,9 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.LAUNCH_MANUAL:
                 # Manually launching the task
-                if manager.launch_task_manual(cam_box):
+                manager.check_box_lights()
+                manager.cam_box = cam_box
+                if manager.launch_task_manual():
                     manager.detection_change = True
                     manager.state = State.RUN_MANUAL
                     log.info("Going to RUN_MANUAL State")
@@ -493,6 +498,7 @@ def system_run(bevavior_window: QWidget) -> None:
 
             case State.SAVE_MANUAL:
                 # Stopping the task, saving the data; the task was manually stopped
+                manager.check_box_lights()
                 manager.disconnect_and_save("Manual")
                 manager.detection_change = True
                 if manager.calibrating:

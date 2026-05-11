@@ -1,5 +1,6 @@
 """
-This module runs when cycle day/night changes and there is no animal in the behavioural box.
+This module runs when cycle day/night changes and there is no animal
+in the behavioural box.
 
 1. Deletes the old videos.
 2. You can override this class in your project code to implement custom behavior.

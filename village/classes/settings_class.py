@@ -7,9 +7,10 @@ from village.classes.enums import (
     Active,
     AreaActive,
     Color,
-    Controller,
+    ControllerEnum,
     Cycle,
     Info,
+    OldVersion,
     ScreenActive,
     SuperEnum,
     SyncType,
@@ -25,7 +26,8 @@ class Setting:
         value_type (type): The expected type of the value (e.g., int, float, str, enum).
         description (str): A description of what the setting controls.
         type0 (type): The base type (e.g., list if value_type is list[int]).
-        type1 (type | None): The inner type for lists (e.g., int if value_type is list[int]).
+        type1 (type | None): The inner type for lists (e.g., int if value_type
+        is list[int]).
     """
 
     def __init__(
@@ -35,7 +37,8 @@ class Setting:
 
         Args:
             key (str): The name of the setting.
-            factory_value (Any): The default value. For enums, this is the string representation.
+            factory_value (Any): The default value. For enums, this is the
+            string representation.
             value_type (type): The type of the value.
             description (str): A brief description of the setting.
         """
@@ -142,6 +145,10 @@ class Settings:
         """Reset all restorable settings to their factory default values."""
         for s in self.restorable_settings:
             self.saved_settings.setValue(s.key, s.value)
+        for s in self.all_settings:
+            old_value = self.get(s.key)
+            if old_value is None:
+                self.saved_settings.setValue(s.key, s.value)
 
     def restore_visual_settings(self) -> None:
         """Reset visual settings to their factory default values."""
@@ -153,7 +160,7 @@ class Settings:
         for s in self.directory_settings:
             self.saved_settings.setValue(s.key, s.value)
 
-    def create_factory_settings(self) -> None:
+    def restore_all_settings(self) -> None:
         """Initialize all settings with their factory defaults in QSettings."""
         for s in self.all_settings:
             self.saved_settings.setValue(s.key, s.value)
@@ -171,7 +178,7 @@ class Settings:
         Otherwise, adds any new settings that are missing.
         """
         if self.get("FIRST_LAUNCH") is None:
-            self.create_factory_settings()
+            self.restore_all_settings()
         else:
             self.add_new_settings()
 
@@ -194,8 +201,9 @@ class Settings:
         if val is None:
             return setting.value
 
-        # If QSettings returns a QVariant/PyQt object/string that is not the value we expect
-        # but contains "QSettings", it's likely a Sphinx build artifact or mock issue.
+        # If QSettings returns a QVariant/PyQt object/string that is not the value
+        # we expect but contains "QSettings", it's likely a Sphinx build
+        # artifact or mock issue.
         val_str = str(val)
         if "QSettings" in val_str or "PyQt5" in val_str:
             return setting.value
@@ -212,8 +220,8 @@ class Settings:
                 return Active(str_value)
             elif type == Color:
                 return Color(str_value)
-            elif type == Controller:
-                return Controller(str_value)
+            elif type == ControllerEnum:
+                return ControllerEnum(str_value)
             elif type == SyncType:
                 return SyncType(str_value)
             elif type == Actions:
@@ -226,6 +234,8 @@ class Settings:
                 return ScreenActive(str_value)
             elif type == AreaActive:
                 return AreaActive(str_value)
+            elif type == OldVersion:
+                return OldVersion(str_value)
             elif type == list[str]:
                 return self.saved_settings.value(key)
             elif type == list[int]:

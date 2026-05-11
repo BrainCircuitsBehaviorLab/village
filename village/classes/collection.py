@@ -7,15 +7,13 @@ from typing import Any, Type, Union
 import numpy as np
 import pandas as pd
 
-from village.classes.abstract_classes import EventBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
-from village.scripts.utils import get_x_value_interp
 from village.settings import settings
 
 
-class Collection(EventBase):
+class Collection:
     """Manages a collection of data entries stored in a CSV file and a pandas DataFrame.
 
     Attributes:
@@ -27,14 +25,13 @@ class Collection(EventBase):
         df (pd.DataFrame): The pandas DataFrame holding the data.
     """
 
-    def __init__(self, name: str, columns: list[str], types: list[Type]) -> None:
-        """Initializes the Collection.
+    def __init__(self) -> None:
+        """Initializes the Collection."""
+        pass
 
-        Args:
-            name (str): The name of the collection (and the file base name).
-            columns (list[str]): The column names.
-            types (list[Type]): The data types for each column.
-        """
+    def create_data_collection(
+        self, name: str, columns: list[str], types: list[Type]
+    ) -> None:
         self.name: str = name
         self.columns: list[str] = columns
         self.types: list[Type] = types
@@ -87,11 +84,11 @@ class Collection(EventBase):
         try:
             return target_type(value)
         except (ValueError, TypeError):
-            if target_type == int or target_type == float:
+            if target_type is int or target_type is float:
                 return 0
-            elif target_type == bool:
+            elif target_type is bool:
                 return False
-            elif target_type == str:
+            elif target_type is str:
                 return ""
             else:
                 return value
@@ -186,145 +183,11 @@ class Collection(EventBase):
         self.df.loc[self.df.index[-1], column] = value
         self.save_from_df()
 
-    def log(self, date: str, type: str, subject: str, description: str) -> None:
-        """Logs an event if the collection schema matches standard logging fields.
-
-        Args:
-            date (str): Date string.
-            type (str): Event type.
-            subject (str): Subject name.
-            description (str): Description.
-        """
-        if self.columns == ["date", "type", "subject", "description"]:
-            entry = [date, type, subject, description]
-            self.add_entry(entry)
-
-    def log_temp(self, date: str, temperature: float, humidity: float) -> None:
-        """Logs temperature if the collection schema matches temperature fields.
-
-        Args:
-            date (str): Date string.
-            temperature (float): Temperature value.
-            humidity (float): Humidity value.
-        """
-        if self.columns == ["date", "temperature", "humidity"]:
-            entry = [date, temperature, humidity]
-            self.add_entry(entry)
-
-    def get_last_water_df(self) -> pd.DataFrame:
-        """Returns the latest water calibration entries for each port.
-
-        Returns:
-            pd.DataFrame: Filtered DataFrame with max calibration numbers per port.
-        """
-        df = self.df[self.df["calibration_number"] != -1].copy()
-        max_values = df.groupby(["port_number"])["calibration_number"].transform("max")
-        df = df[df["calibration_number"] == max_values]
-        return df
-
-    def get_last_sound_df(self) -> pd.DataFrame:
-        """Returns the latest sound calibration entries for each speaker/sound.
-
-        Returns:
-            pd.DataFrame: Filtered DataFrame with max calibration numbers per sound.
-        """
-        df = self.df[self.df["calibration_number"] != -1].copy()
-        max_values = df.groupby(["speaker", "sound_name"])[
-            "calibration_number"
-        ].transform("max")
-        df = df[df["calibration_number"] == max_values]
-        return df
-
-    def get_valve_time(self, port: int, volume: float) -> float:
-        """Calculates valve open time for a given volume based on calibration.
-
-        Args:
-            port (int): The port number.
-            volume (float): The target volume in ul.
-
-        Returns:
-            float: The time in seconds.
-
-        Raises:
-            ValueError: If calibration data is invalid or missing.
-        """
-        try:
-            calibration_df = self.df[self.df["port_number"] == port]
-            max_calibration = calibration_df["calibration_number"].max()
-            calibration_df = calibration_df[
-                calibration_df["calibration_number"] == max_calibration
-            ]
-
-            x = calibration_df["time(s)"].values
-            y = calibration_df["water_delivered(ul)"].values
-
-            val = get_x_value_interp(x, y, volume)
-
-            if val is None:
-                raise Exception
-            else:
-                return val
-
-        except Exception:
-            text = f"""
-            \n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n
-            It is not possible to provide a valid time value
-            for a water delivery of {volume} ul for the port {port}.\n
-            1. Make sure you have calibrated the valves/pumps you are using.\n
-            2. Make sure the water you want to give is within calibration range.\n
-            3. Ultimately, check water_calibration.csv in 'data'.\n
-            """
-            raise ValueError(text)
-
-    def get_sound_gain(self, speaker: int, dB: float, sound_name: str) -> float:
-        """Calculates sound gain for a target dB based on calibration.
-
-        Args:
-            speaker (int): The speaker ID.
-            dB (float): The target decibels.
-            sound_name (str): The name of the sound.
-
-        Returns:
-            float: The gain factor.
-
-        Raises:
-            ValueError: If calibration data is invalid or missing.
-        """
-        try:
-            if dB == 0:
-                return 0.0
-            calibration_df = self.df[self.df["speaker"] == speaker]
-            calibration_df = calibration_df[calibration_df["sound_name"] == sound_name]
-            max_calibration = calibration_df["calibration_number"].max()
-            calibration_df = calibration_df[
-                calibration_df["calibration_number"] == max_calibration
-            ]
-
-            x = calibration_df["gain"].values
-            y = calibration_df["dB_obtained"].values
-
-            val = get_x_value_interp(x, y, dB)
-
-            if val is None:
-                raise Exception
-            else:
-                return val
-
-        except Exception:
-            text = f"""
-            \n\n\t--> SOUND CALIBRATION PROBLEM !!!!!!\n
-            It is not possible to provide a valid gain value
-            for a target dB of {dB} for the speaker {speaker} and sound {sound_name}.\n
-            1. Make sure you have calibrated the sound you are using.\n
-            2. Make sure the dB you want to obtain is within calibration range.\n
-            3. Ultimately, check sound_calibration.csv in 'data'.\n
-            """
-            raise ValueError(text)
-
     def save_from_df(
         self, training: TrainingProtocolBase = TrainingProtocolBase()
     ) -> None:
-        """Saves values from the current DataFrame to the CSV file, processing formatting.
+        """Saves values from the current DataFrame to the CSV file,
+        processing formatting.
 
         Args:
             training (TrainingProtocolBase): Protocol for formatting specific fields.
@@ -340,7 +203,8 @@ class Collection(EventBase):
 
         Args:
             df (pd.DataFrame): The input DataFrame.
-            training (TrainingProtocolBase): The training protocol for custom formatting.
+            training (TrainingProtocolBase): The training protocol for
+            custom formatting.
 
         Returns:
             pd.DataFrame: The processed DataFrame.

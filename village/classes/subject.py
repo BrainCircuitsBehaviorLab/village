@@ -17,7 +17,8 @@ class Subject:
         active (str): Active days configuration (e.g., "Mon-Fri", "ON", "OFF").
         next_session_time (str): Timestamp for the next allowed session.
         next_settings (str): Next settings JSON string.
-        subject_series (pd.Series | None): The raw pandas Series containing subject data.
+        subject_series (pd.Series | None): The raw pandas Series containing
+        subject data.
     """
 
     def __init__(self, name: str = "None") -> None:

@@ -70,7 +70,7 @@ class Color(SuperEnum):
     WHITE = "WHITE"
 
 
-class Controller(SuperEnum):
+class ControllerEnum(SuperEnum):
     BPOD = "BPOD"
     ARDUINO = "ARDUINO"
     RASPBERRY = "RASPBERRY"
@@ -87,6 +87,12 @@ class AreaActive(SuperEnum):
     NOT_ALLOWED = "NOT_ALLOWED"
     TRIGGER = "TRIGGER"
     OFF = "OFF"
+
+
+class OldVersion(SuperEnum):
+    OFF = "OFF"
+    V01 = "V0.1"
+    V02 = "V0.2"
 
 
 class State(SuperEnum):
@@ -192,29 +198,27 @@ class State(SuperEnum):
 
 class Cycle(SuperEnum):
     AUTO = "AUTO"
-    DAY = "DAY"
-    NIGHT = "NIGHT"
+    ON = "ON"
+    OFF = "OFF"
 
 
 class Actions(SuperEnum):
     CORRIDOR = "CORRIDOR"
-    PORTS = "PORTS"
+    BOX = "BOX"
     FUNCTIONS = "FUNCTIONS"
     VIRTUAL_MOUSE = "VIRTUAL_MOUSE"
 
 
 class Info(SuperEnum):
-    SYSTEM_INFO = "SYSTEM_INFO"
+    INFO = "INFO"
+    PLOT = "PLOT"
     DETECTION_SETTINGS = "DETECTION_SETTINGS"
-    DETECTION_PLOT = "DETECTION_PLOT"
 
 
 class DataTable(SuperEnum):
     EVENTS = "EVENTS"
     SESSIONS_SUMMARY = "SESSIONS_SUMMARY"
     SUBJECTS = "SUBJECTS"
-    WATER_CALIBRATION = "WATER_CALIBRATION"
-    SOUND_CALIBRATION = "SOUND_CALIBRATION"
     TEMPERATURES = "TEMPERATURES"
     SESSION = "SESSION"
     SESSION_RAW = "SESSION_RAW"

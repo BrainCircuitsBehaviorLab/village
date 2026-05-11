@@ -8,8 +8,8 @@ import numpy as np
 import sounddevice as sd
 from scipy.io import wavfile
 
-from village.classes.abstract_classes import SoundDeviceBase
 from village.classes.enums import Active
+from village.classes.null_classes import NullSoundDevice
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.settings import settings
@@ -19,14 +19,14 @@ def get_sound_devices() -> list[str]:
     """Retrieves a list of available sound device names.
 
     Returns:
-        list[str]: A list of device names.
+        list[str]: A list of device names, or ["No device"] if none are found.
     """
     devices = sd.query_devices()
     devices_str = [d["name"] for d in devices]
-    return devices_str
+    return devices_str if devices_str else ["No device"]
 
 
-class SoundDevice(SoundDeviceBase):
+class SoundDevice:
     """Handles audio playback using sounddevice.
 
     Attributes:
@@ -92,16 +92,7 @@ class SoundDevice(SoundDeviceBase):
 
         self.command_queue.put(("load", new_sound))
 
-    def load_wav(self, file: str) -> None:
-        """Loads a WAV file into the playback queue.
-
-        Args:
-            file (str): Filename of the WAV file in the media directory.
-
-        Raises:
-            FileNotFoundError: If the file does not exist.
-            ValueError: If sample rate mismatches or channel count is unsupported.
-        """
+    def get_sound_from_wav(self, file: str) -> tuple[np.ndarray, np.ndarray]:
         media_directory = settings.get("MEDIA_DIRECTORY")
         path = os.path.join(media_directory, file)
         if not os.path.exists(path):
@@ -128,7 +119,7 @@ class SoundDevice(SoundDeviceBase):
         else:
             raise ValueError("Unsupported number of channels in WAV file.")
 
-        self.load(left, right)
+        return left, right
 
     def play(self) -> None:
         """Triggers playback of the loaded sound."""
@@ -211,14 +202,14 @@ class SoundDevice(SoundDeviceBase):
         return np.ascontiguousarray(sound.T, dtype=np.float32)
 
 
-def get_sound_device() -> SoundDeviceBase:
+def get_sound_device() -> SoundDevice | NullSoundDevice:
     """Factory function to initialize the SoundDevice.
 
     Returns:
         SoundDeviceBase: An initialized SoundDevice or base class if disabled/failed.
     """
     if settings.get("USE_SOUNDCARD") == Active.OFF:
-        return SoundDeviceBase()
+        return NullSoundDevice()
     else:
         try:
             sound_device = SoundDevice()
@@ -228,7 +219,7 @@ def get_sound_device() -> SoundDeviceBase:
             log.error(
                 "Could not initialize sound device", exception=traceback.format_exc()
             )
-            return SoundDeviceBase()
+            return NullSoundDevice()
 
 
 sound_device = get_sound_device()

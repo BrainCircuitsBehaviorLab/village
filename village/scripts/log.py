@@ -1,11 +1,17 @@
 import re
+from typing import TYPE_CHECKING
 
-from village.classes.abstract_classes import (
-    CameraBase,
-    EventBase,
-    TelegramBotBase,
+from village.classes.null_classes import (
+    NullCamera,
+    NullCollection,
+    NullTelegramBot,
 )
 from village.scripts.time_utils import time_utils
+
+if TYPE_CHECKING:
+    from village.classes.collection import Collection
+    from village.devices.camera import Camera
+    from village.devices.telegram_bot import TelegramBot
 
 
 class Log:
@@ -19,11 +25,10 @@ class Log:
     """
 
     def __init__(self) -> None:
-        """Initializes the Log system with default handlers."""
-        self.event = EventBase()
-        self.temp = EventBase()
-        self.cam = CameraBase()
-        self.telegram_bot = TelegramBotBase()
+        self.event: Collection | NullCollection = NullCollection()
+        self.temp: Collection | NullCollection = NullCollection()
+        self.cam: Camera | NullCamera = NullCamera()
+        self.telegram_bot: TelegramBot | NullTelegramBot = NullTelegramBot()
 
     def info(self, description: str, subject: str = "system") -> None:
         """Logs an informational message.
@@ -35,7 +40,7 @@ class Log:
         type = "INFO"
         date = time_utils.now_string()
         text = date + "  " + type + "  " + subject + "  " + description
-        self.event.log(date, type, subject, description)
+        self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -47,7 +52,7 @@ class Log:
             humidity (float): The humidity value.
         """
         date = time_utils.now_string()
-        self.temp.log_temp(date, temperature, humidity)
+        self.temp.add_entry([date, temperature, humidity])
 
     def start(self, task: str, subject: str = "system") -> None:
         """Logs the start of a task.
@@ -60,7 +65,7 @@ class Log:
         date = time_utils.now_string()
         description = task + " started"
         text = date + "  " + type + " " + subject + "  " + description
-        self.event.log(date, type, subject, description)
+        self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -75,7 +80,7 @@ class Log:
         date = time_utils.now_string()
         description = task + " ended"
         text = date + "  " + type + " " + subject + "  " + description
-        self.event.log(date, type, subject, description)
+        self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -96,7 +101,7 @@ class Log:
         date = time_utils.now_string()
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
-        self.event.log(date, type, subject, description)
+        self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
         print(text.replace("  |  ", "\n"))
 
@@ -125,7 +130,7 @@ class Log:
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
         if not report:
-            self.event.log(date, type, subject, description)
+            self.event.add_entry([date, type, subject, description])
             self.cam.write_text(text)
         print(text.replace("  |  ", "\n"))
 

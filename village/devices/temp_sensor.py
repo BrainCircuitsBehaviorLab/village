@@ -2,12 +2,15 @@ import traceback
 
 import smbus2
 
-from village.classes.abstract_classes import TempSensorBase
+from village.classes.enums import Active
+from village.classes.null_classes import NullTempSensor
 from village.scripts.log import log
 from village.settings import settings
 
+use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
 
-class TempSensor(TempSensorBase):
+
+class TempSensor:
     """Interface for a temperature and humidity sensor via I2C.
 
     Attributes:
@@ -59,7 +62,7 @@ class TempSensor(TempSensorBase):
         return temp, RH, temp_RH_string
 
 
-def get_temp_sensor(address: str) -> TempSensorBase:
+def get_temp_sensor(address: str) -> TempSensor | NullTempSensor:
     """Factory function to initialize the TempSensor.
 
     Args:
@@ -68,13 +71,17 @@ def get_temp_sensor(address: str) -> TempSensorBase:
     Returns:
         TempSensorBase: An initialized TempSensor or base class on failure.
     """
+    if not use_of_corridor:
+        null_temp_sensor = NullTempSensor()
+        null_temp_sensor.error = ""
+        return null_temp_sensor
     try:
         temp_sensor = TempSensor(address=address)
         log.info("Temp sensor successfully initialized")
         return temp_sensor
     except Exception:
         log.error("Could not initialize temp sensor", exception=traceback.format_exc())
-        return TempSensorBase()
+        return NullTempSensor()
 
 
 temp_sensor = get_temp_sensor(address=settings.get("TEMP_SENSOR_ADDRESS"))

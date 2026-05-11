@@ -299,6 +299,44 @@ def delete_all_elements_from_layout(layout: QLayout) -> None:
                     delete_all_elements_from_layout(layoutItem.layout())
 
 
+def validate_subject_name(name: str) -> str | None:
+    """Returns an error message if the name is invalid, None if valid."""
+    INVALID_CHARS = r"[^a-zA-Z0-9_\-]"
+    if not name or not name.strip():
+        return "Subject name cannot be empty."
+    if re.search(INVALID_CHARS, name):
+        text = "Subject names can only contain letters, numbers, "
+        text += "underscores (_) and hyphens (-)."
+        return text
+    reserved = {
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        "COM1",
+        "COM2",
+        "COM3",
+        "COM4",
+        "COM5",
+        "COM6",
+        "COM7",
+        "COM8",
+        "COM9",
+        "LPT1",
+        "LPT2",
+        "LPT3",
+        "LPT4",
+        "LPT5",
+        "LPT6",
+        "LPT7",
+        "LPT8",
+        "LPT9",
+    }
+    if name.upper() in reserved:
+        return f"'{name}' is a reserved system name and cannot be used."
+    return None
+
+
 # not used function
 def reformat_trial_data(
     data: dict, date: str, trial: int, subject: str, task: str, system_name: str

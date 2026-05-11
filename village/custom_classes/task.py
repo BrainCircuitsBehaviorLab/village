@@ -2,22 +2,26 @@ import json
 import traceback
 from pathlib import Path
 from threading import Thread
-from typing import Any, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Tuple
 
-import numpy as np
 import pandas as pd
 
-from village.classes.abstract_classes import CameraBase, PyBpodBase
-from village.classes.collection import Collection
-from village.classes.enums import Active, Save
+from village.classes.calibrations import Calibrations
+from village.classes.enums import Active, ControllerEnum, Save
+from village.classes.null_classes import NullCamera
+from village.controllers.arduino_controller import arduino
+from village.controllers.bpod_controller import bpod
+from village.controllers.trial_recorder import TrialRecorder
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
-from village.devices.bpod import bpod
 from village.devices.sound_device import sound_device
-from village.pybpodapi.bpod.hardware.events import EventName
-from village.pybpodapi.bpod.hardware.output_channels import OutputChannel
+from village.pybpodapi.hardware.events import EventName
+from village.pybpodapi.hardware.output_channels import OutputChannel
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.devices.camera import Camera
 
 
 class TaskError(Exception):
@@ -27,38 +31,137 @@ class TaskError(Exception):
         super().__init__(message)
 
 
-class Event(EventName):
+class BpodEvent(EventName):
     """Enumeration of Bpod event names."""
 
     pass
 
 
-class Output(OutputChannel):
+class BpodOutput(OutputChannel):
     """Enumeration of Bpod output channels."""
 
     pass
 
 
 class Task:
-    """Base class for defining and running behavioral tasks using Bpod.
+    """Base class for defining behavioral tasks.
 
-    This class provides the infrastructure for task management, including
-    communication with Bpod, data logging, session management, and integration
-    with other devices like cameras and sound systems.
+    Subclass ``Task`` to implement your own task. You must override four methods
+    and may optionally call helper methods and read certain attributes during
+    execution.
+
+    ──────────────────────────────────────────────────────────
+    METHODS YOU MUST OVERRIDE
+    ──────────────────────────────────────────────────────────
+
+    start(self) -> None
+        Called once before the trial loop begins.
+        Use it to configure hardware, pre-compute stimuli, open files, etc.
+
+    create_trial(self) -> None
+        Called at the beginning of every trial.
+        Build and send the Bpod state machine here (or set up stimuli for
+        non-Bpod controllers). The state machine runs to completion before
+        ``after_trial`` is called.
+
+    after_trial(self) -> None
+        Called immediately after each trial finishes.
+        Use it to score the animal's performance, update adaptive parameters,
+        and call ``register_value`` to save custom columns to the data file.
+        ``self.trial_data`` is already populated at this point.
+
+    close(self) -> None
+        Called once after the trial loop ends (session finished, forced stop,
+        or error).
+        Use it to close files, stop hardware, release resources.
+
+    ──────────────────────────────────────────────────────────
+    METHODS YOU CAN CALL (do not override)
+    ──────────────────────────────────────────────────────────
+
+    register_value(name: str, value: Any) -> None
+        Saves a custom value to the current trial row in the CSV.
+        Call this inside ``after_trial``.
+
+        Example::
+
+            self.register_value("correct", 1)
+            self.register_value("response_time", 0.432)
+
+    ──────────────────────────────────────────────────────────
+    ATTRIBUTES YOU CAN READ INSIDE YOUR TASK
+    ──────────────────────────────────────────────────────────
+
+    self.trial_data : dict
+        Dictionary populated automatically after each trial with Bpod event
+        timestamps and any values previously registered via ``register_value``.
+        Available inside ``after_trial`` to drive adaptive logic.
+
+        Typical keys: ``"trial"``, ``"subject"``, ``"task"``, ``"date"``,
+        ``"system_name"``, plus every key you have registered with
+        ``register_value``.
+
+        Example::
+
+            def after_trial(self):
+                if self.trial_data.get("correct") == 1:
+                    self.settings.difficulty += 1
+
+    self.current_trial : int
+        1-based index of the trial that just ran (available in both
+        ``create_trial`` and ``after_trial``).
+
+    self.subject : str
+        Name of the subject running the session.
+
+    self.settings : Settings
+        Object that holds all the session parameters defined in the training
+        protocol. Read and write its attributes to implement adaptive training.
+
+    self.sound_calibration.get_sound_gain(speaker, dB, sound_name)
+        to convert a target dB level into a hardware gain value.
+
+        Example::
+
+            gain = self.sound_calibration.get_sound_gain(
+                speaker=1, dB=65.0, sound_name="white_noise"
+            )
+
+    self.bpod_water_calibration.get_valve_time(port, volume)
+        to convert a target volume (µl) into the valve open time (seconds).
+
+        Example::
+
+            valve_time = self.bpod_water_calibration.get_valve_time(
+                port=1, volume=5.0  # 5 µl
+            )
+
+    self.bpod : BpodController
+        Low-level Bpod interface (state machine construction, sending, etc.).
+        Primarily used inside ``create_trial``.
+
+    self.arduino : ArduinoController
+        Arduino interface for tasks that use an Arduino instead of Bpod.
+
+    self.cam_box : Camera | NullCamera
+        Camera attached to the behaviour box (NullCamera if not configured).
     """
 
     def __init__(self) -> None:
-        """Initializes the Task instance with default settings and components."""
-        self.bpod: PyBpodBase = bpod
+        self.controller_type = ControllerEnum.RASPBERRY
+        self.bpod = bpod
+        self.arduino = arduino
+        self.recorder: TrialRecorder = TrialRecorder()
+        self.functions: list[Callable] = []
+
         self.name: str = self.get_name()
         self.subject: str = "None"
         self.current_trial: int = 1
-        self.current_trial_states: list = []
         self.touch_response: list = []
         self.system_name: str = settings.get("SYSTEM_NAME")
         self.date: str = time_utils.now_string()
 
-        self.cam_box = CameraBase()
+        self.cam_box: Camera | NullCamera = NullCamera()
 
         self.info: str = ""
 
@@ -84,8 +187,10 @@ class Task:
         self.maximum_number_of_trials: int = 100000000
         self.chrono = time_utils.Chrono()
 
-        self.sound_calibration: Collection = Collection("", [], [])
-        self.water_calibration: Collection = Collection("", [], [])
+        self.calibrations: Calibrations = Calibrations()
+
+        self.current_x = 0.0
+        self.current_y = 0.0
 
     # OVERWRITE THESE METHODS IN YOUR TASKS
     def start(self) -> None:
@@ -104,20 +209,33 @@ class Task:
         """Closes the task and releases resources. Must be overridden."""
         raise TaskError("The method close(self) is required")
 
-    # DO NOT OVERWRITE THESE METHODS
-    def send_softcode_to_bpod(self, code: int) -> None:
-        """Sends a softcode to the Bpod device.
+    # METHODS TO USE IN YOUR TASKS, BUT NOT OVERWRITE
+    def register_value(self, name: str, value: Any) -> None:
+        """Registers a custom value to be saved with the trial data.
 
         Args:
-            code (int): The softcode value to send.
+            name (str): The name of the value (column header).
+            value (Any): The value to store.
         """
-        self.bpod.receive_softcode(code)
+        self.recorder.add_value(name, value)
+        self.trial_data[name] = value
+
+    # DO NOT OVERWRITE THESE METHODS
+    def execute_function(self, i: int) -> None:
+        """Executes a registered function.
+
+        Args:
+            i (int): The function index (1-99).
+        """
+        if 1 <= i <= 99:
+            self.functions[i]()
 
     def run_in_thread(self, daemon: bool = True) -> None:
         """Runs the task in a separate background thread.
 
         Args:
-            daemon (bool, optional): Whether to run as a daemon thread. Defaults to True.
+            daemon (bool, optional): Whether to run as a daemon thread.
+            Defaults to True.
         """
 
         def test_run():
@@ -133,113 +251,42 @@ class Task:
 
     def run(self) -> None:
         """Runs the task in the main thread until completion or forced stop."""
+        self.chrono.reset()
         self.start()
         while (
             self.current_trial <= self.maximum_number_of_trials
             and self.chrono.get_seconds() < self.settings.maximum_duration
             and not self.force_stop
         ):
-            self.do_trial(send_to_cam=True)
+            self.do_trial()
 
-    def do_trial(self, send_to_cam: bool = False) -> None:
+    def do_trial(self) -> None:
         """Executes a single trial.
 
-        Initializes the state machine, runs it, collects data, and performs post-trial updates.
-
-        Args:
-            send_to_cam (bool, optional): Whether to update the camera with the trial number. Defaults to False.
+        Initializes the state machine, runs it, collects data, and performs
+        post-trial updates.
         """
-        self.bpod.create_state_machine()
-        if send_to_cam:
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod.create_state_machine()
             self.cam_box.trial = self.current_trial
-        self.create_trial()
-        self.bpod.send_and_run_state_machine()
-        self.get_trial_data()
+            self.create_trial()
+            self.bpod.send_and_run_state_machine()
+        else:
+            self.cam_box.trial = self.current_trial
+            self.create_trial()
+        self.trial_data = self.recorder.get_trial_data(
+            self.date, self.current_trial, self.subject, self.name, self.system_name
+        )
         self.after_trial()
-        self.register_default_values()
         self.concatenate_trial_data()
         self.current_trial += 1
         return
-
-    def get_trial_data(self) -> None:
-        """Retrieves and processes data from the last executed trial.
-
-        Extracts timestamps, events, and states from the Bpod session and updates
-        `self.trial_data`.
-        """
-        # TODO: make this with a better logic
-        # read from bpod if there is one
-        try:
-            data = self.bpod.session.current_trial.export()
-            occurrences = self.bpod.session.current_trial.events_occurrences
-        except Exception:
-            if hasattr(self, "bpod_mock"):
-                data = self.bpod_mock.current_trial
-                occurrences = self.bpod_mock.events_occurrences
-
-        self.trial_data.update(
-            {
-                "date": self.date,
-                "trial": self.current_trial,
-                "subject": self.subject,
-                "task": self.name,
-                "system_name": self.system_name,
-                "TRIAL_START": data["Trial start timestamp"],
-                "TRIAL_END": max(
-                    [
-                        max(timestamps)
-                        for timestamps in data["Events timestamps"].values()
-                    ]
-                ),
-            }
-        )
-
-        for event, timestamps in data["Events timestamps"].items():
-            self.trial_data[event] = timestamps
-
-        for state, intervals in data["States timestamps"].items():
-            starts = [start for start, _ in intervals]
-            ends = [end for _, end in intervals]
-            self.trial_data[f"STATE_{state}_START"] = starts
-            self.trial_data[f"STATE_{state}_END"] = ends
-
-        self.trial_data["ordered_list_of_events"] = [msg.content for msg in occurrences]
 
     def concatenate_trial_data(self) -> None:
         """Appends the current trial's data to the session DataFrame."""
         self.row_df = pd.DataFrame([self.trial_data])
         self.session_df = pd.concat([self.session_df, self.row_df], ignore_index=True)
         self.trial_data = {}
-
-    def register_value(self, name: str, value: Any) -> None:
-        """Registers a custom value to be saved with the trial data.
-
-        Args:
-            name (str): The name of the value (column header).
-            value (Any): The value to store.
-        """
-        self.bpod.register_value(name, value)
-        self.trial_data[name] = value
-
-    def register_default_values(self) -> None:
-        """Registers standard session metadata values (task, subject, system, date)."""
-        self.bpod.register_value("task", self.name)
-        self.bpod.register_value("subject", self.subject)
-        self.bpod.register_value("system_name", self.system_name)
-        self.bpod.register_value("date", self.date)
-
-        if hasattr(self.bpod, "bpod"):
-            if hasattr(self.bpod.bpod, "com_error"):
-                if self.bpod.bpod.com_error:
-                    self.bpod.register_value("COM_ERROR", 1)
-                    self.bpod.bpod.com_error = False
-
-        # # get all the attributes in self.settings and register them
-        # for name in vars(self.settings):
-        #     attribute = getattr(self.settings, name)
-        #     self.bpod.register_value(name, attribute)
-
-        self.bpod.register_value("TRIAL", None)
 
     def disconnect_and_save(self, run_mode: str) -> Tuple[Save, float, int, int, str]:
         """Stops the task, disconnects devices, and saves session data.
@@ -258,7 +305,8 @@ class Task:
         settings_str: str = ""
         self.close()
         sound_device.stop()
-        self.bpod.stop()
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod.stop()
         self.cam_box.stop_recording()
         if self.subject != "None":
             try:
@@ -274,7 +322,7 @@ class Task:
                     subject=self.subject,
                     exception=traceback.format_exc(),
                 )
-                save == Save.ERROR
+                save = Save.ERROR
             if save == Save.YES:
                 try:
                     self.training.df = self.subject_df
@@ -289,7 +337,10 @@ class Task:
                         subject=self.subject,
                         exception=traceback.format_exc(),
                     )
-        self.bpod.close()
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod.close()
+        elif self.controller_type == ControllerEnum.ARDUINO:
+            self.arduino.close()
         return save, duration, trials, water, settings_str
 
     def save_json(self, run_mode: str) -> str:
@@ -368,7 +419,7 @@ class Task:
                 duration = float(non_nan_values.iloc[-1] - non_nan_values.iloc[0])
                 duration = round(duration, 4)
 
-            self.raw_df.to_csv(self.raw_session_path, index=None, header=True, sep=";")
+            self.raw_df.to_csv(self.raw_session_path, index=False, header=True, sep=";")
 
             trials = self.session_df.shape[0]
 
@@ -432,97 +483,6 @@ class Task:
                     subject=self.subject,
                 )
             return 0.0, 0, 0, False
-
-    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Transforms raw session data into a wide format suitable for analysis.
-
-        Args:
-            df (pd.DataFrame): Raw dataframe.
-
-        Returns:
-            pd.DataFrame: Transformed dataframe.
-        """
-
-        def make_list(x) -> Any | float | str:
-            if x.size <= 1:
-                return x
-            elif x.isnull().all():
-                return np.nan
-            else:
-                return ",".join([str(x.iloc[i]) for i in range(len(x))])
-
-        df0 = df
-        df0["idx"] = range(1, len(df0) + 1)
-        df1 = df0.set_index("idx")
-        df2 = df1.pivot_table(
-            index="TRIAL", columns="MSG", values=["START", "END"], aggfunc=make_list
-        )
-
-        df3 = df1.pivot_table(
-            index="TRIAL",
-            columns="MSG",
-            values="VALUE",
-            aggfunc=lambda x: x if x.size == 1 else x.iloc[0],
-        )
-        df4 = pd.concat([df2, df3], axis=1, sort=False)
-
-        columns_to_drop = [
-            item
-            for item in df4.columns
-            if type(item) == tuple
-            and (item[1].startswith("Tup") or item[1].startswith("_Transition"))
-        ]
-        df4.drop(columns=columns_to_drop, inplace=True)
-
-        columns_to_drop2 = [
-            col
-            for col in df4.columns
-            if isinstance(col, str)
-            and (col.startswith("Tup") or col.startswith("_Transition"))
-        ]
-        df4.drop(columns=columns_to_drop2, inplace=True)
-
-        df4.columns = [
-            item[1] + "_" + item[0] if type(item) == tuple else item
-            for item in df4.columns
-        ]
-
-        df4.replace("", np.nan, inplace=True)
-        df4.dropna(subset=["TRIAL_END"], inplace=True)
-        df4["trial"] = range(1, len(df4) + 1)
-
-        list_of_columns = df4.columns
-
-        start_list = [item for item in list_of_columns if item.endswith("_START")]
-        end_list = [item for item in list_of_columns if item.endswith("_END")]
-        other_list = [
-            item
-            for item in list_of_columns
-            if item not in start_list and item not in end_list
-        ]
-
-        states_list = []
-        for item in start_list:
-            states_list.append(item)
-            for item2 in end_list:
-                if item2.startswith(item[:-5]):
-                    states_list.append(item2)
-
-        new_list = [
-            "date",
-            "trial",
-            "subject",
-            "task",
-            "system_name",
-            "TRIAL_START",
-            "TRIAL_END",
-        ]
-        new_list += states_list + other_list
-        new_list = pd.Series(new_list).drop_duplicates().tolist()
-
-        df4 = df4[new_list]
-
-        return df4
 
     @classmethod
     def get_name(cls) -> str:

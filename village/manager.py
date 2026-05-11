@@ -1,45 +1,60 @@
-import importlib
-import importlib.util
-import inspect
 import os
-import sys
 import traceback
 from pathlib import Path
 from threading import Thread
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 import numpy as np
 import pandas as pd
 import requests  # type: ignore
 
-from village.classes.abstract_classes import BehaviorWindowBase, CameraBase
+from village.classes.calibrations import Calibrations
 from village.classes.collection import Collection
 from village.classes.enums import (
     Actions,
     Active,
+    ControllerEnum,
     Cycle,
     DataTable,
     Info,
+    OldVersion,
     Save,
     State,
     SyncType,
 )
+from village.classes.null_classes import (
+    NullBehaviorWindow,
+    NullCamera,
+)
 from village.classes.subject import Subject
+from village.controllers.arduino_controller import arduino
+from village.controllers.bpod_controller import bpod
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
-from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
+from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
+from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
 from village.custom_classes.task import Task
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
+from village.devices.chip import (
+    ir_light_box,
+    ir_light_corridor,
+    visible_light_box,
+    visible_light_corridor,
+)
 from village.devices.temp_sensor import temp_sensor
 from village.scripts import utils
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.devices.camera import Camera
+    from village.screen.behavior_window import BehaviorWindow
 
 
 class Manager:
@@ -50,12 +65,17 @@ class Manager:
         subject (Subject): Instance of Subject class.
         task (Task): Instance of Task class.
         training (Training): Instance of Training class.
+        bpod (BpodController): Instance of BpodController class.
+        arduino (ArduinoController): Instance of ArduinoController class.
         state (State): Current state of the system.
         table (DataTable): Data table type.
         rfid_reader (Active): RFID reader settings.
-        cycle (Cycle): Current cycle settings.
         info (Info): Information settings.
         actions (Actions): Actions settings.
+        visible_corridor_cycle (Cycle): Visible light cycle of the corridor.
+        ir_corridor_cycle (Cycle): Infrared light cycle of the corridor.
+        visible_box_cycle (Cycle): Visible light cycle of the box.
+        ir_box_cycle (Cycle): Infrared light cycle of the box.
         cycle_text (str): Text representation of the current cycle.
         text (str): Current system text.
         day (bool): Indicates if it's day.
@@ -65,8 +85,6 @@ class Manager:
         events (Collection): Collection of events.
         sessions_summary (Collection): Collection of session summaries.
         subjects (Collection): Collection of subjects.
-        water_calibration (Collection): Collection of water calibration data.
-        sound_calibration (Collection): Collection of sound calibration data.
         temperatures (Collection): Collection of temperature data.
         process (Thread): Thread for running tasks.
     """
@@ -83,26 +101,25 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
-        self.auto_no_mouse: type = AutoNoMouse_Base
+        self.auto_no_mouse: AutoNoMouse_Base = AutoNoMouse_Base()
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
-        self.table: DataTable = DataTable.EVENTS
+        self.table: DataTable | str = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
-        self.cycle: Cycle = settings.get("CYCLE")
+        self.visible_corridor_cycle: Cycle = settings.get("VISIBLE_CORRIDOR")
+        self.ir_corridor_cycle: Cycle = settings.get("IR_CORRIDOR")
+        self.visible_box_cycle: Cycle = settings.get("VISIBLE_BOX")
+        self.ir_box_cycle: Cycle = settings.get("IR_BOX")
         self.info: Info = settings.get("INFO")
         self.actions: Actions = settings.get("ACTIONS")
-        self.cycle_text: str = ""
         self.text: str = ""
-        self.day: bool = True
         self.weight: float = np.nan
         self.changing_settings: bool = False
         self.tasks: dict[str, type] = dict()
         self.errors: str = ""
         self.max_time_counter: int = 1
         self.functions: list[Callable] = [lambda: None for _ in range(99)]
-        self.sound_calibration_functions: list[Callable] = []
-        self.sound_calibration_error: bool = False
         self.raw_session_df = pd.DataFrame()
         self.old_session_df = pd.DataFrame()
         self.old_session_raw_df = pd.DataFrame()
@@ -110,12 +127,28 @@ class Manager:
             Path(settings.get("SESSIONS_DIRECTORY"), "session.csv")
         )
 
-        self.update_cycle()
+        # init
+        self.cycle_change_detector = time_utils.CycleChangeDetector(
+            settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
+        )
         utils.download_github_repositories(settings.get("GITHUB_REPOSITORY_EXAMPLES"))
         utils.create_directories()
         self.create_collections()
         log.event = self.events
         log.temp = self.temperatures
+        self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
+        self.use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
+        self.use_of_box_chip: bool = settings.get("USE_BOX_BOARD") == Active.ON
+        self.old_version_rfid: bool = settings.get("OLD_VERSION") == OldVersion.V01
+        self.old_version_motor: bool = settings.get("OLD_VERSION") != OldVersion.OFF
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod = bpod
+            self.bpod.check_connection()
+            self.errors = self.bpod.error
+        elif self.controller_type == ControllerEnum.ARDUINO:
+            self.arduino = arduino
+            self.arduino.check_connection()
+            self.errors = self.arduino.error
         self.detections = time_utils.TimestampTracker(
             hours=int(settings.get("NO_DETECTION_HOURS") or 6)
         )
@@ -123,31 +156,34 @@ class Manager:
             hours=int(settings.get("NO_SESSION_HOURS") or 6)
         )
         self.hour_change_detector = time_utils.HourChangeDetector()
-        self.cycle_change_detector = time_utils.CycleChangeDetector(
-            settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
-        )
         self.detection_change = True
         self.error_in_manual_task = False
         self.rfid_changed = False
         self.change_cycle_flag = False
         self.after_session_flag = False
         self.getting_weights = False
-        self.measuring_weight_list: list[float] = []
         self.log_weight = False
         self.taring_scale = False
 
         self.healthchecks_url = settings.get("HEALTHCHECKS_URL")
 
-        self.behavior_window = BehaviorWindowBase()
+        self.behavior_window: BehaviorWindow | NullBehaviorWindow = NullBehaviorWindow()
+        self.cam_box: Camera | NullCamera = NullCamera()
+        self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
+        self.calibrations: Calibrations = Calibrations()
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,
         and measurements."""
-        self.events = Collection(
-            "events", ["date", "type", "subject", "description"], [str, str, str, str]
+        self.events = Collection()
+        self.events.create_data_collection(
+            "events.csv",
+            ["date", "type", "subject", "description"],
+            [str, str, str, str],
         )
-        self.sessions_summary = Collection(
-            "sessions_summary",
+        self.sessions_summary = Collection()
+        self.sessions_summary.create_data_collection(
+            "sessions_summary.csv",
             [
                 "date",
                 "subject",
@@ -161,8 +197,9 @@ class Manager:
             ],
             [str, str, str, float, str, float, int, float, str],
         )
-        self.subjects = Collection(
-            "subjects",
+        self.subjects = Collection()
+        self.subjects.create_data_collection(
+            "subjects.csv",
             [
                 "name",
                 "tag",
@@ -173,242 +210,20 @@ class Manager:
             ],
             [str, str, float, str, str, str],
         )
-        self.water_calibration = Collection(
-            "water_calibration",
-            [
-                "date",
-                "port_number",
-                "time(s)",
-                "water_delivered(ul)",
-                "calibration_number",
-                "water_expected(ul)",
-                "error(%)",
-            ],
-            [str, int, float, float, int, float, float],
-        )
-        self.sound_calibration = Collection(
-            "sound_calibration",
-            [
-                "date",
-                "speaker",
-                "sound_name",
-                "gain",
-                "dB_obtained",
-                "calibration_number",
-                "dB_expected",
-                "error(%)",
-            ],
-            [str, int, str, float, float, int, float, float],
-        )
-        self.temperatures = Collection(
-            "temperatures",
+        self.temperatures = Collection()
+        self.temperatures.create_data_collection(
+            "temperatures.csv",
             ["date", "temperature", "humidity"],
             [str, float, float],
         )
-        self.deleted_sessions = Collection(
-            "deleted_sessions",
+        self.deleted_sessions = Collection()
+        self.deleted_sessions.create_data_collection(
+            "deleted_sessions.csv",
             [
                 "filename",
             ],
             [str],
         )
-
-    def import_all_tasks(self) -> None:
-        """Imports all tasks, custom classes, and functions from the configured
-        code directory."""
-        directory = settings.get("CODE_DIRECTORY")
-        sys.path.append(directory)
-
-        python_files: list[str] = []
-        tasks = dict()
-        training_found = 0
-        session_plot_found = 0
-        subject_plot_found = 0
-        online_plot_found = 0
-        after_session_found = 0
-        change_cycle_found = 0
-        camera_trigger_found = 0
-        training_correct = False
-        session_plot_correct = False
-        subject_plot_correct = False
-        online_plot_correct = False
-        after_session_correct = False
-        change_cycle_correct = False
-        camera_trigger_correct = False
-        functions_path = ""
-        sound_path = ""
-
-        for root, _, files in os.walk(directory):
-            for file in files:
-                if file == "softcode_functions.py":
-                    functions_path = os.path.join(root, file)
-                if file == "sound_functions.py":
-                    sound_path = os.path.join(root, file)
-                if file.endswith(".py"):
-                    python_files.append(os.path.join(root, file))
-
-        if os.path.exists(functions_path):
-            module_name = "custom_module"
-            spec = importlib.util.spec_from_file_location(module_name, functions_path)
-            if spec and spec.loader:
-                module = importlib.util.module_from_spec(spec)
-                try:
-                    spec.loader.exec_module(module)
-                    for i in range(1, 100):
-                        func_name = f"function{i}"
-                        if hasattr(module, func_name):
-                            self.functions[i] = getattr(module, func_name)
-                except Exception:
-                    log.error(
-                        "Couldn't import softcode functions",
-                        exception=traceback.format_exc(),
-                    )
-
-        if os.path.exists(sound_path):
-            module_name = "custom_module2"
-            spec = importlib.util.spec_from_file_location(module_name, sound_path)
-            if spec and spec.loader:
-                module = importlib.util.module_from_spec(spec)
-                try:
-                    spec.loader.exec_module(module)
-                    if hasattr(module, "sound_calibration_functions"):
-                        self.sound_calibration_functions = getattr(
-                            module, "sound_calibration_functions"
-                        )
-                except Exception:
-                    log.error(
-                        "Couldn't import sound calibration functions",
-                        exception=traceback.format_exc(),
-                    )
-
-        for python_file in python_files:
-            relative_path = os.path.relpath(python_file, directory)
-            module_name = os.path.splitext(relative_path.replace(os.path.sep, "."))[0]
-            try:
-                module = importlib.import_module(module_name)
-                clsmembers = inspect.getmembers(module, inspect.isclass)
-                for _, cls in clsmembers:
-                    if cls.__module__ != module_name:
-                        continue
-
-                    if issubclass(cls, Task) and cls != Task:
-                        name = cls.__name__
-                        _ = cls()
-                        if name not in tasks:
-                            tasks[name] = cls
-                    elif (
-                        issubclass(cls, TrainingProtocolBase)
-                        and cls != TrainingProtocolBase
-                    ):
-                        training_found += 1
-                        if training_found == 1:
-                            t = cls()
-                            t.copy_settings()
-                            self.training = t
-                            training_correct = True
-                    elif issubclass(cls, SessionPlotBase) and cls != SessionPlotBase:
-                        session_plot_found += 1
-                        if session_plot_found == 1:
-                            p = cls()
-                            self.session_plot = p
-                            session_plot_correct = True
-                    elif issubclass(cls, SubjectPlotBase) and cls != SubjectPlotBase:
-                        subject_plot_found += 1
-                        if subject_plot_found == 1:
-                            s = cls()
-                            self.subject_plot = s
-                            subject_plot_correct = True
-                    elif issubclass(cls, OnlinePlotBase) and cls != OnlinePlotBase:
-                        online_plot_found += 1
-                        if online_plot_found == 1:
-                            o = cls()
-                            self.online_plot = o
-                            online_plot_correct = True
-                    elif issubclass(cls, AfterSessionBase) and cls != AfterSessionBase:
-                        after_session_found += 1
-                        if after_session_found == 1:
-                            a = cls()
-                            self.after_session = a
-                            after_session_correct = True
-                    elif issubclass(cls, ChangeCycleBase) and cls != ChangeCycleBase:
-                        change_cycle_found += 1
-                        if change_cycle_found == 1:
-                            y = cls()
-                            self.change_cycle = y
-                            change_cycle_correct = True
-                    elif (
-                        issubclass(cls, CameraTriggerBase) and cls != CameraTriggerBase
-                    ):
-                        camera_trigger_found += 1
-                        if camera_trigger_found == 1:
-                            z = cls()
-                            self.camera_trigger = z
-                            camera_trigger_correct = True
-                    elif issubclass(cls, CameraDrawBase) and cls != CameraDrawBase:
-                        if hasattr(cls, "draw") and callable(getattr(cls, "draw")):
-                            c = cls()
-                            self.camera_draw = c
-                    elif (
-                        issubclass(cls, AutoNoMouse_Base)
-                        and cls != AutoNoMouse_Base
-                    ):
-                        self.auto_no_mouse = cls
-
-            except Exception:
-                log.error(
-                    "Couldn't import " + module_name, exception=traceback.format_exc()
-                )
-                continue
-        if training_found == 0:
-            log.error("Training protocol not found")
-        elif training_found == 1 and training_correct:
-            log.info("Training protocol successfully imported")
-        elif training_found > 1:
-            log.error("Multiple training protocols found")
-        if session_plot_found == 0:
-            log.info("Custom Session plot not found, using default")
-        elif session_plot_found == 1 and session_plot_correct:
-            log.info("Custom Session plot successfully imported")
-        elif session_plot_found > 1:
-            log.error("Multiple session plots found")
-        if subject_plot_found == 0:
-            log.info("Custom Subject plot not found, using default")
-        elif subject_plot_found == 1 and subject_plot_correct:
-            log.info("Custom Subject plot successfully imported")
-        elif subject_plot_found > 1:
-            log.error("Multiple subject plots found")
-        if online_plot_found == 0:
-            log.info("Custom Online plot not found, using default")
-        elif online_plot_found == 1 and online_plot_correct:
-            log.info("Custom Online plot successfully imported")
-        elif online_plot_found > 1:
-            log.error("Multiple online plots found")
-        if after_session_found == 0:
-            log.info("Custom After Session Run not found, using default")
-        elif after_session_found == 1 and after_session_correct:
-            log.info("Custom After Session Run successfully imported")
-        elif after_session_found > 1:
-            log.error("Multiple After Session Run found")
-        if change_cycle_found == 0:
-            log.info("Custom Change Cycle Run not found, using default")
-        elif change_cycle_found == 1 and change_cycle_correct:
-            log.info("Custom Change Cycle Run successfully imported")
-        elif change_cycle_found > 1:
-            log.error("Multiple Change Cycle Run found")
-        if camera_trigger_found == 0:
-            log.info("Custom Camera Trigger not found, using default")
-        elif camera_trigger_found == 1 and camera_trigger_correct:
-            log.info("Custom Camera Trigger successfully imported")
-        elif camera_trigger_found > 1:
-            log.error("Multiple Camera Trigger found")
-        self.tasks = dict(sorted(tasks.items()))
-        number_of_tasks = len(tasks)
-        if number_of_tasks == 0:
-            log.error("No tasks could be imported")
-        elif number_of_tasks == 1:
-            log.info("1 task successfully imported")
-        else:
-            log.info(str(number_of_tasks) + " tasks successfully imported")
 
     def get_subject_from_tag(self, tag: str) -> bool:
         """Retrieves a subject based on their RFID tag.
@@ -428,62 +243,41 @@ class Manager:
             self.subject.subject_series = subject_series
             return True
 
-    def update_cycle(self) -> None:
-        """Updates the day/night cycle state based on current time and settings."""
-        match self.cycle:
-            case Cycle.DAY:
-                self.cycle_text = "DAY"
-                self.day = True
-            case Cycle.NIGHT:
-                self.cycle_text = "NIGHT"
-                self.day = False
-            case Cycle.AUTO:
-                day = time_utils.time_from_setting_string(settings.get("DAYTIME"))
-                night = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
-                now = time_utils.now().time()
-
-                if day < night:
-                    if day < now < night:
-                        self.cycle_text = "AUTO (DAY)"
-                        self.day = True
-                    else:
-                        self.cycle_text = "AUTO (NIGHT)"
-                        self.day = False
-                else:
-                    if day < now or now < night:
-                        self.cycle_text = "AUTO (DAY)"
-                        self.day = True
-                    else:
-                        self.cycle_text = "AUTO (NIGHT)"
-                        self.day = False
-
     def update_text(self) -> None:
         """Updates the status text with current system state, subject, task,
-        and cycle info."""
+        cycle and project name info."""
         state_name = self.state.name
         state_description = self.state.description
         subject_name = self.subject.name
         task_name = self.task.name
         rfid_reader_name = self.rfid_reader.name
-        cycle_text = self.cycle_text
+        cycle_text = self.cycle_change_detector.cycle_text
+        try:
+            project_text = settings.get("PROJECT_DIRECTORY")
+            project_text = os.path.basename(project_text.rstrip("/"))
+        except Exception:
+            project_text = ""
 
         self.text = (
-            "     SYSTEM STATE: "
+            "   SYSTEM STATE: "
             + state_name
             + " ("
             + state_description
-            + ")                    "
+            + ")               "
             + "SUBJECT: "
             + subject_name
-            + "                    "
+            + "               "
             + "TASK: "
             + task_name
-            + "                    "
-            + "RFID_READER: "
+            + "               "
+            + "RFID: "
             + rfid_reader_name
-            + "                    "
+            + "               "
             + "CYCLE: "
             + cycle_text
+            + "               "
+            + "PROJECT: "
+            + project_text
         )
 
     def multiple_detections(self, multiple: bool) -> bool:
@@ -503,19 +297,14 @@ class Manager:
             return True
         return False
 
-    def launch_task_manual(self, cam: CameraBase) -> bool:
+    def launch_task_manual(self) -> bool:
         """Launches a task in manual mode.
-
-        Args:
-            cam (CameraBase): The camera instance to use.
 
         Returns:
             bool: True if launched successfully, False otherwise.
         """
         self.task.create_paths()
-        self.task.cam_box = cam
-        self.task.water_calibration = self.water_calibration
-        self.task.sound_calibration = self.sound_calibration
+        self.task.cam_box = self.cam_box
         if self.subject.name != "None":
             self.task.cam_box.start_recording(
                 self.task.video_path, self.task.video_data_path
@@ -524,6 +313,10 @@ class Manager:
             self.task.cam_box.show_time_info = True
         try:
             self.weight = np.nan
+            self.task.controller_type = self.controller_type
+            self.task.calibrations = self.calibrations
+            self.task.functions = self.functions
+            self.direct_functions.task = self.task
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -536,11 +329,21 @@ class Manager:
             self.error_in_manual_task = True
             return False
 
-    def launch_task_auto(self, cam: CameraBase) -> bool:
-        """Launches a task in automatic mode based on training protocol.
+    def launch_task_calibration(self) -> None:
+        """Launches a calibration task in manual mode."""
+        self.task.cam_box = self.cam_box
+        self.task.calibrations = self.calibrations
+        self.task.settings.maximum_duration = 1000
+        self.calibrating = True
+        self.weight = np.nan
+        self.task.controller_type = self.controller_type
+        self.task.functions = self.functions
+        self.direct_functions.task = self.task
+        log.start(task=self.task.name, subject="None")
+        self.run_task_in_thread()
 
-        Args:
-            cam (CameraBase): The camera instance to use.
+    def launch_task_auto(self) -> bool:
+        """Launches a task in automatic mode based on training protocol.
 
         Returns:
             bool: True if launched successfully, False otherwise.
@@ -564,13 +367,15 @@ class Manager:
                 self.task.settings = self.training.settings
                 self.task.training = self.training
                 self.task.create_paths()
-                self.task.cam_box = cam
+                self.task.cam_box = self.cam_box
                 self.task.cam_box.start_recording(
                     self.task.video_path, self.task.video_data_path
                 )
                 self.task.maximum_number_of_trials = 100000000
-                self.task.water_calibration = self.water_calibration
-                self.task.sound_calibration = self.sound_calibration
+                self.task.calibrations = self.calibrations
+                self.task.controller_type = self.controller_type
+                self.task.functions = self.functions
+                self.direct_functions.task = self.task
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -601,7 +406,14 @@ class Manager:
     def run_task(self) -> None:
         """Executes the task logic and handles exceptions/errors during execution."""
         try:
-            self.task.bpod.connect(self.functions)
+            if self.controller_type == ControllerEnum.BPOD:
+                self.task.bpod = self.bpod
+                self.task.bpod.connect(self.task.execute_function)
+                self.task.recorder = self.bpod.recorder
+            elif self.controller_type == ControllerEnum.ARDUINO:
+                self.task.arduino = self.arduino
+                self.task.arduino.connect()
+                self.task.recorder = self.arduino.recorder
             self.task.run()
         except Exception:
             if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:
@@ -759,24 +571,93 @@ class Manager:
             ]
         )
 
+    def check_corridor_lights(self) -> None:
+        """Checks the state of the corridor lights and sets them based
+        on the current cycle."""
+        cycle = self.cycle_change_detector.cycle_text
+
+        if self.visible_corridor_cycle == Cycle.ON:
+            visible_light_corridor.on()
+        elif self.visible_corridor_cycle == Cycle.OFF:
+            visible_light_corridor.off()
+        elif cycle == "DAY":
+            visible_light_corridor.on()
+        else:
+            visible_light_corridor.off()
+
+        if self.ir_corridor_cycle == Cycle.ON:
+            ir_light_corridor.on()
+        elif self.ir_corridor_cycle == Cycle.OFF:
+            ir_light_corridor.off()
+        elif cycle == "NIGHT":
+            ir_light_corridor.on()
+        else:
+            ir_light_corridor.off()
+
+    def check_box_lights(self) -> None:
+        """Checks the state of the box lights and sets them based
+        on the current state."""
+        task_running = self.state in [
+            State.RUN_FIRST,
+            State.CLOSE_DOOR2,
+            State.OPEN_DOOR2,
+            State.RUN_OPENED,
+            State.RUN_CLOSED,
+            State.SAVE_INSIDE,
+            State.WAIT_EXIT,
+            State.OPEN_DOOR2_STOP,
+            State.RUN_MANUAL,
+        ]
+
+        if self.visible_box_cycle == Cycle.ON:
+            visible_light_box.on()
+        elif self.visible_box_cycle == Cycle.OFF:
+            visible_light_box.off()
+        elif task_running:
+            visible_light_box
+        else:
+            visible_light_box.off()
+
+        if self.ir_box_cycle == Cycle.ON:
+            ir_light_box.on()
+        elif self.ir_box_cycle == Cycle.OFF:
+            ir_light_box.off()
+        elif task_running:
+            ir_light_box.on()
+        else:
+            ir_light_box.off()
+
+    def turn_off_all_lights(self) -> None:
+        """Turns off all corridor and box lights."""
+        visible_light_corridor.off()
+        ir_light_corridor.off()
+        visible_light_box.off()
+        ir_light_box.off()
+
     def cycle_checks(self) -> None:
         """Performs daily cycle checks and logs alarms for missing detections,
         sessions, or syncs."""
+        self.check_corridor_lights()
         text, non_det_subs, non_ses_subs, low_water_subs, sync = self.create_report(24)
         log.alarm(text, report=True)
         if (
             len(non_det_subs) > 0
             and settings.get("NO_DETECTION_SUBJECT_24H") == Active.ON
         ):
-            log.alarm("No detections in the last 24 hours: " + ", ".join(non_det_subs))
+            log.alarm(
+                "Subjects not detected in the last 24 hours: " + ", ".join(non_det_subs)
+            )
         if (
             len(non_ses_subs) > 0
             and settings.get("NO_SESSION_SUBJECT_24H") == Active.ON
         ):
-            log.alarm("No sessions in the last 24 hours: " + ", ".join(non_ses_subs))
+            log.alarm(
+                "Subjects with no sessions in the last 24 hours: "
+                + ", ".join(non_ses_subs)
+            )
         if len(low_water_subs) > 0:
             log.alarm(
-                "Low water consumption in the last 24 hours: "
+                "Subjects with low water intake in the last 24 hours: "
                 + ", ".join(low_water_subs)
             )
         if not sync and settings.get("SYNC_TYPE") != SyncType.OFF:
@@ -907,17 +788,17 @@ class Manager:
         and recent activity."""
         temp, _, temp_string = temp_sensor.get_temperature()
         if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
-            log.alarm("Temperature above maximum: " + temp_string)
+            log.alarm("High temperature: " + temp_string)
         elif temp < float(settings.get("MINIMUM_TEMPERATURE")):
-            log.alarm("Temperature below minimum: " + temp_string)
+            log.alarm("Low temperature: " + temp_string)
 
         if self.detections.trigger_empty():
             value = str(self.detections.hours)
-            log.alarm("No subjects detected in the last " + value + " hours")
+            log.alarm("No detections in the last " + value + " hours")
 
         if self.sessions.trigger_empty():
             value = str(self.sessions.hours)
-            log.alarm("No sessions performed in the last " + value + " hours")
+            log.alarm("No sessions in the last " + value + " hours")
 
         if utils.has_low_disk_space():
             log.alarm("Low disk space (less than 10GB)")

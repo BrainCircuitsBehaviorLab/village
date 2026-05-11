@@ -1,4 +1,5 @@
 import os
+import threading
 import time
 import traceback
 from pprint import pprint
@@ -22,7 +23,7 @@ except Exception:
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.abstract_classes import CameraBase
+from village.classes.null_classes import NullCamera
 from village.manager import manager
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
@@ -81,7 +82,7 @@ class LowFreqQPicamera2(QPicamera2):
 
 
 # the camera class
-class Camera(CameraBase):
+class Camera:
     """Controls a Picamera2 device, handles recording, and performs real-time detection.
 
     Attributes:
@@ -118,7 +119,6 @@ class Camera(CameraBase):
         x_positions (list[int]): List of X positions.
         y_positions (list[int]): List of Y positions.
         camera_timestamps (list[float]): List of camera sensor timestamps.
-        pre_process_timestamps (list[float]): List of preprocess timestamps.
         origin_rectangle (tuple): Coordinates for status bar background.
         end_rectangle (tuple): Dimensions for status bar background.
         origin_text1 (tuple): Position for first text line.
@@ -139,7 +139,6 @@ class Camera(CameraBase):
         prohibited_detections (int): Counter for prohibited area detections.
         area4_alarm_timer (time_utils.Timer): Timer for area 4 alarms.
         box_alarm_timer (time_utils.Timer): Timer for box alarms.
-        pre_process_timestamp (float): Timestamp of last preprocess call.
         camera_timestamp (float): Timestamp of current frame.
         watchdog_timer (QTimer): Timer to restart camera if frozen.
     """
@@ -189,7 +188,9 @@ class Camera(CameraBase):
         self.cam.configure(self.config)
         self.path_video = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".mp4")
         self.path_csv = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".csv")
-        self.path_picture = os.path.join(settings.get("DATA_DIRECTORY"), name + ".jpg")
+        self.path_picture = os.path.join(
+            settings.get("SYSTEM_DIRECTORY"), name + ".jpg"
+        )
         self.output = FfmpegOutput(self.path_video)
         self.filename = ""
         self.cam.pre_callback = self.pre_process
@@ -263,18 +264,19 @@ class Camera(CameraBase):
 
         self.two_mice_detections = 0
         self.prohibited_detections = 0
+        self.trigger_event = threading.Event()
 
         self.area4_alarm_timer = time_utils.Timer(3600)
         self.box_alarm_timer = time_utils.Timer(3600)
 
-        self.pre_process_timestamp = time_utils.now_timestamp()
-        self.camera_timestamp = self.pre_process_timestamp
+        self.camera_timestamp = time_utils.now_timestamp()
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
 
         self.cam.start()
-        self.watchdog_timer.start()
+        if self.name == "CORRIDOR":
+            self.watchdog_timer.start()
 
     def set_properties(self) -> None:
         """Updates camera detection properties from settings."""
@@ -342,18 +344,9 @@ class Camera(CameraBase):
         self.detection_size = settings.get("DETECTION_CIRCLE_SIZE")
 
         # lens position, sharpness and contrast settings
-        if self.name == "CORRIDOR" and manager.day:
-            lensposition = settings.get("LENS_POSITION_" + self.name)[0]
-            sharpness = settings.get("SHARPNESS_" + self.name)[0]
-            contrast = settings.get("CONTRAST_" + self.name)[0]
-        elif self.name == "CORRIDOR":
-            lensposition = settings.get("LENS_POSITION_" + self.name)[1]
-            sharpness = settings.get("SHARPNESS_" + self.name)[1]
-            contrast = settings.get("CONTRAST_" + self.name)[1]
-        else:
-            lensposition = settings.get("LENS_POSITION_" + self.name)
-            sharpness = settings.get("SHARPNESS_" + self.name)
-            contrast = settings.get("CONTRAST_" + self.name)
+        lensposition = settings.get("LENS_POSITION_" + self.name)
+        sharpness = settings.get("SHARPNESS_" + self.name)
+        contrast = settings.get("CONTRAST_" + self.name)
 
         self.cam.set_controls({"LensPosition": lensposition})
         self.cam.set_controls({"Sharpness": sharpness})
@@ -378,8 +371,10 @@ class Camera(CameraBase):
         """Starts recording video and data.
 
         Args:
-            path_video (str): Custom video path. Defaults to automatic naming based on settings.
-            path_csv (str): Custom CSV path. Defaults to automatic naming based on settings.
+            path_video (str): Custom video path. Defaults to automatic naming
+            based on settings.
+            path_csv (str): Custom CSV path. Defaults to automatic naming
+            based on settings.
         """
         self.filename = os.path.splitext(os.path.basename(path_video))[0]
         time_start = time_utils.now_string_for_filename()
@@ -399,6 +394,9 @@ class Camera(CameraBase):
         self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
         self.show_time_info = True
+        self.camera_timestamp = time_utils.now_timestamp()
+        if self.name == "BOX":
+            self.watchdog_timer.start()
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_recording(self) -> None:
@@ -407,6 +405,8 @@ class Camera(CameraBase):
             self.is_recording = False
             self.cam.stop_encoder()
             self.save_csv()
+        if self.name == "BOX":
+            self.watchdog_timer.stop()
         self.show_time_info = False
         self.reset_values()
 
@@ -417,7 +417,6 @@ class Camera(CameraBase):
         self.frames = []
         self.timings = []
         self.camera_timestamps = []
-        self.pre_process_timestamps = []
         self.x_positions = []
         self.y_positions = []
         self.trials = []
@@ -432,8 +431,7 @@ class Camera(CameraBase):
         self.area3_is_triggered = False
         self.area4_is_triggered = False
         self.chrono.reset()
-        self.pre_process_timestamp = time_utils.now_timestamp()
-        self.camera_timestamp = self.pre_process_timestamp
+        self.camera_timestamp = time_utils.now_timestamp()
 
     def save_csv(self) -> None:
         """Saves the recorded data frames to a CSV file."""
@@ -448,7 +446,6 @@ class Camera(CameraBase):
             x_positions = tuple(self.x_positions)
             y_positions = tuple(self.y_positions)
             camera_timestamps = tuple(self.camera_timestamps)
-            pre_process_timestamps = tuple(self.pre_process_timestamps)
 
             rows = list(
                 zip(
@@ -457,7 +454,6 @@ class Camera(CameraBase):
                     trials,
                     annotations,
                     camera_timestamps,
-                    pre_process_timestamps,
                     x_positions,
                     y_positions,
                 )
@@ -471,7 +467,6 @@ class Camera(CameraBase):
                     "trial",
                     "annotation",
                     "timestamp",
-                    "pre_process_timestamp",
                     "x_position",
                     "y_position",
                 ],
@@ -483,7 +478,6 @@ class Camera(CameraBase):
             trials = tuple(self.trials)
             annotations = tuple(self.annotations)
             camera_timestamps = tuple(self.camera_timestamps)
-            pre_process_timestamps = tuple(self.pre_process_timestamps)
 
             rows = list(
                 zip(
@@ -492,7 +486,6 @@ class Camera(CameraBase):
                     trials,
                     annotations,
                     camera_timestamps,
-                    pre_process_timestamps,
                 )
             )
 
@@ -504,7 +497,6 @@ class Camera(CameraBase):
                     "trial",
                     "annotation",
                     "timestamp",
-                    "pre_process_timestamp",
                 ],
             )
 
@@ -519,7 +511,7 @@ class Camera(CameraBase):
     def watchdog_tick(self) -> None:
         """Checks if the camera is still producing frames, restarts if frozen."""
         if (
-            time_utils.now_timestamp() - self.pre_process_timestamp > 10
+            time_utils.now_timestamp() - self.camera_timestamp > 10
         ):  # 10 seconds without a frame
             try:
                 self.restart_camera()
@@ -555,7 +547,6 @@ class Camera(CameraBase):
             self.change = False
         self.frame_number += 1
         self.timing = self.chrono.get_milliseconds()
-        self.pre_process_timestamp = time_utils.now_timestamp()
 
         with MappedArray(request, "main") as m:
             self.frame = m.array
@@ -587,14 +578,20 @@ class Camera(CameraBase):
             if self.tracking:
                 self.detect_black_position_contours()
                 if self.x_position != -1:
+                    self.trigger_event.set()
                     self.trigger()
+                else:
+                    self.trigger_event.clear()
             else:
                 self.detect_black()
         else:
             if self.tracking:
                 self.detect_white_position_contours()
                 if self.x_position != -1:
+                    self.trigger_event.set()
                     self.trigger()
+                else:
+                    self.trigger_event.clear()
             else:
                 self.detect_white()
 
@@ -621,7 +618,8 @@ class Camera(CameraBase):
                 x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
             )
 
-        manager.camera_trigger.trigger(self)
+        if manager.camera_trigger is not None:
+            manager.camera_trigger.trigger(self)
 
     def detect_black(self) -> None:
         """Detects black objects in defined areas using thresholding."""
@@ -869,7 +867,7 @@ class Camera(CameraBase):
         text_filename = (
             self.filename
             if self.filename != ""
-            else time_utils.string_from_timestamp(self.pre_process_timestamp)
+            else time_utils.string_from_timestamp(self.camera_timestamp)
         )
         text_frame = "frame: " + str(self.frame_number)
         text_timing = time_utils.format_duration(self.timing)
@@ -955,7 +953,6 @@ class Camera(CameraBase):
             self.timings.append(self.timing)
             self.trials.append(self.trial)
             self.annotations.append(self.annotation)
-            self.pre_process_timestamps.append(self.pre_process_timestamp)
             self.camera_timestamps.append(self.camera_timestamp)
             if self.tracking:
                 self.x_positions.append(self.x_position)
@@ -1016,7 +1013,8 @@ class Camera(CameraBase):
             return True
 
     def areas_box_ok(self) -> None:
-        """Checks box areas for allowed/prohibited detections and logs alarms if needed."""
+        """Checks box areas for allowed/prohibited detections and logs
+        alarms if needed."""
         pixels_allowed = 0
         pixels_not_allowed = 0
 
@@ -1042,7 +1040,7 @@ class Camera(CameraBase):
                 self.prohibited_detections = 0
                 if self.box_alarm_timer.has_elapsed():
                     log.alarm(
-                        "1 mouse in prohibited area. Area: " + str(pixels_not_allowed)
+                        "1 subject in prohibited area. Area: " + str(pixels_not_allowed)
                     )
 
     def area_1_empty(self) -> bool:
@@ -1066,7 +1064,7 @@ class Camera(CameraBase):
         self.cam.capture_file(self.path_picture)
 
 
-def get_camera(index: int, framerate: int, name: str) -> CameraBase:
+def get_camera(index: int, framerate: int, name: str) -> Camera | NullCamera:
     """Factory function to initialize a Camera.
 
     Args:
@@ -1075,15 +1073,23 @@ def get_camera(index: int, framerate: int, name: str) -> CameraBase:
         name (str): Camera name.
 
     Returns:
-        CameraBase: An initialized Camera or base class on failure.
+        CameraBase: An initialized Camera or null class on failure.
     """
+    if name == "CORRIDOR" and not manager.use_of_corridor:
+        null_camera = NullCamera()
+        null_camera.error = ""
+        return null_camera
     try:
+        available = Picamera2.global_camera_info()
+        if index >= len(available):
+            log.info("Cam " + name + " not found at index " + str(index))
+            return NullCamera()
         cam = Camera(index, framerate, name)
         log.info("Cam " + name + " successfully initialized")
         return cam
     except Exception:
         log.error("Could not initialize cam " + name, exception=traceback.format_exc())
-        return CameraBase()
+        return NullCamera()
 
 
 cam_corridor = get_camera(

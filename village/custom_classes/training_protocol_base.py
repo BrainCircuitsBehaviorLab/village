@@ -17,16 +17,17 @@ class Settings:
     def __init__(self) -> None:
         """Initializes default training settings."""
         self.next_task = "-1"
-        self.refractory_period = -1
-        self.minimum_duration: float = -1
-        self.maximum_duration: float = -1
+        self.refractory_period = 3600
+        self.minimum_duration: float = 3600
+        self.maximum_duration: float = 3600
         self.observations: str = ""
 
 
 class TrainingProtocolBase:
     """Base class for defining training protocols and managing settings.
 
-    Training protocols dictate how settings change over sessions based on subject performance.
+    Training protocols dictate how settings change over sessions based on subject
+    performance.
     """
 
     def __init__(self) -> None:

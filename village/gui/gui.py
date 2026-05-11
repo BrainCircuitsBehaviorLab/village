@@ -1,17 +1,21 @@
 import os
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from PyQt5.QtGui import QGuiApplication, QIcon
+from PyQt5.QtGui import QFont, QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
-from village.classes.abstract_classes import BehaviorWindowBase
 from village.classes.enums import ScreenActive
+from village.classes.null_classes import NullBehaviorWindow
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
 from village.screen.behavior_window import BehaviorWindow
 from village.scripts.log import log
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.screen.behavior_window import BehaviorWindow
 
 
 class Gui:
@@ -25,7 +29,12 @@ class Gui:
         """Initializes the GUI application."""
         self.q_app = QApplication.instance()
         self.q_app.setStyle("Fusion")
-        self.q_app.setStyleSheet("QLineEdit:disabled {background-color: #f0f0f0;}")
+        QFont.insertSubstitution("DejaVu Sans Condensed", "Cantarell")
+        self.q_app.setFont(QFont("DejaVu Sans Condensed", 9))
+        self.q_app.setStyleSheet(
+            "* { font-family: 'DejaVu Sans Condensed'; font-size: 9pt; }"
+            "QLineEdit:disabled { background-color: #f0f0f0; }"
+        )
 
         # put a pretty icon
         iconpath = Path(__file__).parent.parent.parent / "resources/favicon.ico"
@@ -38,18 +47,27 @@ class Gui:
         if settings.get("USE_SCREEN") != ScreenActive.OFF:
             self.create_behavior_window()
         else:
-            self.behavior_window = BehaviorWindowBase()
+            self.behavior_window: BehaviorWindow | NullBehaviorWindow = (
+                NullBehaviorWindow()
+            )
 
         self.gui_window = GuiWindow(self)
 
     def create_behavior_window(self) -> None:
         """Creates and configures the behavior window on the secondary monitor."""
         # get the resolution of the secondary monitor
-        screen = QGuiApplication.screens()[1]
-        geometry = screen.geometry()
+        try:
+            screen = QGuiApplication.screens()[1]
+            geometry = screen.geometry()
 
-        self.behavior_window = BehaviorWindow(geometry)
-        settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
+            self.behavior_window = BehaviorWindow(geometry)
+            settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
+        except IndexError:
+            log.error(
+                "Secondary screen not detected. "
+                "Behavior window will not be displayed."
+            )
+            self.behavior_window = NullBehaviorWindow()
 
     def exit_app(self) -> None:
         """Exits the application gracefully.

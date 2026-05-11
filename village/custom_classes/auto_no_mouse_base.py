@@ -1,9 +1,7 @@
 import threading
 from collections import deque
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from village.custom_classes.task import Task
+from village.custom_classes.task import Task
 
 
 class AutoNoMouse_Base:
@@ -12,12 +10,14 @@ class AutoNoMouse_Base:
     To be subclassed in task folder.
     """
 
-    def __init__(self, task: "Task") -> None:
-        self.task = task
+    def __init__(self) -> None:
+        self.task = Task()
         self._thread: threading.Thread | None = None
         self._stop_event = threading.Event()
         self.trace: deque = deque(maxlen=25 * 5)
         self.position: tuple | None = None
+        self.accuracy_left: float = 1.0
+        self.accuracy_right: float = 1.0
 
     def start(self) -> None:
         self._stop_event.clear()
@@ -46,23 +46,27 @@ class AutoNoMouse_Base:
         return self._thread is not None and self._thread.is_alive()
 
     def _run(self) -> None:
-        while (not self._stop_event.is_set() and
-               self.task.current_trial <= self.task.maximum_number_of_trials):
+        while (
+            not self._stop_event.is_set()
+            and self.task.current_trial <= self.task.maximum_number_of_trials
+        ):
             self.run_trial()
 
     def run_trial(self) -> None:
         """Override in subclass. Sequence of actions to perform for
-        one trial, e.g. pokes and position updates. """
+        one trial, e.g. pokes and position updates."""
         self.wait(1.0)
 
-    def inject_trial(self, p_correct_left: float = 1.0,
-                     p_correct_right: float = 1.0) -> None:
+    def inject_trial(
+        self, p_correct_left: float = 1.0, p_correct_right: float = 1.0
+    ) -> None:
         """Override in subclass.
         Append one mock trial row directly to session_df."""
         pass
 
-    def inject_trials(self, n: int, p_correct_left: float = 1.0,
-                      p_correct_right: float = 1.0) -> None:
+    def inject_trials(
+        self, n: int, p_correct_left: float = 1.0, p_correct_right: float = 1.0
+    ) -> None:
         for _ in range(n):
             self.inject_trial(p_correct_left, p_correct_right)
 

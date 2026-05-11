@@ -10,9 +10,12 @@ import numpy as np
 
 from village.scripts.log import log
 from village.settings import settings
+from village.custom_classes.calibration_base import CalibrationBase
 
 
-class CameraCalibration:
+class CameraCalibration(CalibrationBase):
+    name = "camera_calibration"
+
     def __init__(self, spacing_mm: float,
                  grid_size: tuple[int, int] | None = None) -> None:
         self.spacing_mm = spacing_mm
@@ -31,6 +34,13 @@ class CameraCalibration:
         self._obj_points: list[np.ndarray] = []
         self._img_points: list[np.ndarray] = []
         self._image_size: tuple[int, int] | None = None
+
+    @classmethod
+    def is_active(cls) -> bool:
+        return True
+
+    def draw(self) -> None:
+        pass
 
     @property
     def spacing_px(self) -> float | None:

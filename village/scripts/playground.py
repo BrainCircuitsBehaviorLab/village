@@ -3,14 +3,15 @@ import statistics
 import threading
 import time
 
-from village.devices.bpod import bpod
+from village.controllers.bpod_controller import bpod
 
 
 class BpodWithLatencyTest:
     """Class to test Bpod latency by measuring round-trip time of softcodes."""
 
     def __init__(self, *args, **kwargs):
-        """Initializes the test class with a Bpod instance and synchronization events."""
+        """Initializes the test class with a Bpod instance and
+        synchronization events."""
         print(1)
         self.mybpod = bpod
         print(2)
@@ -62,7 +63,7 @@ def measure_softcode_latency(bpod: BpodWithLatencyTest, n_trials: int = 100):
         t0 = time.perf_counter()
 
         # "Ping" to Bpod
-        bpod.mybpod.bpod.echo_softcode(1)
+        bpod.mybpod.bpod_hardware.echo_softcode(1)
 
         # Wait for echo (opcode == 2)
         ok = bpod._softcode_event.wait(timeout=1.0)

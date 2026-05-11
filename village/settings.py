@@ -6,9 +6,10 @@ from village.classes.settings_class import (
     Active,
     AreaActive,
     Color,
-    Controller,
+    ControllerEnum,
     Cycle,
     Info,
+    OldVersion,
     ScreenActive,
     Setting,
     Settings,
@@ -29,30 +30,22 @@ default_sync_directory = str(
 main_settings = [
     Setting("SYSTEM_NAME", default_system_name, str, "The system’s unique name."),
     Setting(
-        "DAYTIME",
-        "08:00",
-        str,
-        """This setting defines when the daytime cycle begins. At the start of each
-cycle, the system performs various checks. The entry plot for the behavioral box uses
-this value to distinguish between day and night periods. If lighting conditions differ
-between day and night, the system will adjust detection thresholds accordingly.""",
+        "USE_CORRIDOR",
+        "ON",
+        Active,
+        """Enables the complete Corridor subsystem, integrating the control PCB
+(RFID reader, scale, temperature sensor, motors, and lighting) and the dedicated
+corridor camera. This setting also activates Telegram notifications for real-time
+remote monitoring. Keep ON for fully automated Training Village experiments. Disable
+only when running standalone Operant Box sessions without the corridor, such as for
+tethered ephys or optogenetics recordings.""",
     ),
     Setting(
-        "NIGHTTIME",
-        "20:00",
-        str,
-        """This setting defines when the nighttime cycle begins. At the start of each
-cycle, the system performs various checks. The entry plot for the behavioral box uses
-this value to distinguish between day and night periods. If lighting conditions differ
-between day and night, the system will adjust detection thresholds accordingly.""",
-    ),
-    Setting(
-        "DETECTION_COLOR",
-        "BLACK",
-        Color,
-        """If the animals are darker than the background, the system detects black
-pixels against a white background. If the animals are lighter than the
-background, the system detects white pixels against a black background.""",
+        "USE_BOX_BOARD",
+        "ON",
+        Active,
+        """Enables the Operant Box PCB. This setting allows the Raspberry Pi to control
+some box components, such as LED stimuli, visible/infrared lighting, and motors.""",
     ),
 ]
 
@@ -220,21 +213,43 @@ if you don't need to specify a particular port for the SSH connection.""",
 ]
 
 device_settings = [
-    Setting("MOTOR1_PIN", 12, int, "The pin of the motor 1."),
-    Setting("MOTOR2_PIN", 13, int, "The pin of the motor 2."),
-    Setting("SCALE_ADDRESS", "0x64", str, "The address of the scale."),
-    Setting("TEMP_SENSOR_ADDRESS", "0x45", str, "The address of the temp sensor."),
     Setting(
-        "CAM_BOX_INDEX",
-        0,
-        int,
-        "The index (0, 1) of the box camera.",
+        "CHIP_CORRIDOR_ADDRESS", "0x55", str, "The address of the corridor PWM chip."
     ),
     Setting(
-        "CAM_CORRIDOR_INDEX",
-        1,
+        "MOTOR1_CORRIDOR_INDEX", 4, int, "The index of the motor 1 of the corridor."
+    ),
+    Setting(
+        "MOTOR2_CORRIDOR_INDEX", 5, int, "The index of the motor 2 of the corridor."
+    ),
+    Setting(
+        "VISIBLE_LIGHT_CORRIDOR_INDEX",
+        6,
         int,
-        "The index (0, 1) of the corridor camera.",
+        "The index of the visible light of the corridor.",
+    ),
+    Setting(
+        "IR_LIGHT_CORRIDOR_INDEX",
+        7,
+        int,
+        "The index of the infrared light of the corridor.",
+    ),
+    Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
+    Setting("TEMP_SENSOR_ADDRESS", "0x44", str, "The address of the temp sensor."),
+    Setting("CHIP_BOX_ADDRESS", "0x6a", str, "The address of the box PWM chip."),
+    Setting("MOTOR1_BOX_INDEX", 4, int, "The index of the motor 1 of the box."),
+    Setting("MOTOR2_BOX_INDEX", 5, int, "The index of the motor 2 of the box."),
+    Setting(
+        "VISIBLE_LIGHT_BOX_INDEX",
+        6,
+        int,
+        "The index of the visible light of the box.",
+    ),
+    Setting(
+        "IR_LIGHT_BOX_INDEX",
+        7,
+        int,
+        "The index of the infrared light of the box.",
     ),
 ]
 
@@ -315,6 +330,18 @@ completed any trials.""",
 
 cam_fixed_settings = [
     Setting(
+        "CAM_CORRIDOR_INDEX",
+        1,
+        int,
+        "The index (0, 1) of the corridor camera.",
+    ),
+    Setting(
+        "CAM_BOX_INDEX",
+        0,
+        int,
+        "The index (0, 1) of the box camera.",
+    ),
+    Setting(
         "CAM_BOX_TRACKING_POSITION",
         "ON",
         Active,
@@ -362,6 +389,32 @@ which provides a clear view of the system activity while keeping CPU usage low."
 
 corridor_settings = [
     Setting(
+        "DAYTIME",
+        "08:00",
+        str,
+        """This setting defines when the daytime cycle begins. At the start of each
+cycle, the system performs various checks. The entry plot for the behavioral box uses
+this value to distinguish between day and night periods. If lighting conditions differ
+between day and night, the system will adjust detection thresholds accordingly.""",
+    ),
+    Setting(
+        "NIGHTTIME",
+        "20:00",
+        str,
+        """This setting defines when the nighttime cycle begins. At the start of each
+cycle, the system performs various checks. The entry plot for the behavioral box uses
+this value to distinguish between day and night periods. If lighting conditions differ
+between day and night, the system will adjust detection thresholds accordingly.""",
+    ),
+    Setting(
+        "DETECTION_COLOR",
+        "BLACK",
+        Color,
+        """If the animals are darker than the background, the system detects black
+pixels against a white background. If the animals are lighter than the
+background, the system detects white pixels against a black background.""",
+    ),
+    Setting(
         "DETECTION_DURATION",
         0.5,
         float,
@@ -376,10 +429,20 @@ limits for this duration (in seconds).""",
 of seconds prior to a detection.""",
     ),
     Setting(
-        "WEIGHT_THRESHOLD",
+        "MIN_WEIGHT_THRESHOLD",
         10.0,
         float,
-        "The minimum weight in grams to consider that the animal is on the scale.",
+        """Minimum weight (g) considered a valid measurement. Values below this
+threshold are discarded as noise or as the animal being only partially on the scale
+(not properly positioned).""",
+    ),
+    Setting(
+        "MAX_WEIGHT_THRESHOLD",
+        40.0,
+        float,
+        """Maximum weight (g) considered a valid measurement. Values above this
+threshold are discarded as they likely reflect movement artifacts
+(e.g., running or jumping), resulting in overestimated weight.""",
     ),
     Setting(
         "REPEAT_TARE_TIME",
@@ -423,13 +486,20 @@ preventing unnecessary processing.""",
         int,
         "The DPI of the matplotlib plots.",
     ),
+    Setting(
+        "OLD_VERSION",
+        "OFF",
+        OldVersion,
+        """Use the old version of the Hardware Attached on Top (HAT) that only has
+        2 servo motors and no LEDs.""",
+    ),
 ]
 
 controller_settings = [
     Setting(
         "BEHAVIOR_CONTROLLER",
         "BPOD",
-        Controller,
+        ControllerEnum,
         """The controller used to run the behavioral box. The options are:
         BPOD: The Bpod controller. ARDUINO: A custom controller that can be
         Arduino based. RASPBERRY: No need for an external controller.
@@ -464,9 +534,9 @@ bpod_settings = [
     ),
     Setting(
         "BPOD_TARGET_FIRMWARE",
-        22,
-        int,
-        """This system is compatible only with this Bpod firmware version. If you have
+        [22, 23],
+        list[int],
+        """This system is compatible only with these Bpod firmware versions. If you have
 a different version, please update it by following the instructions at sanworks.com.""",
     ),
     Setting(
@@ -602,9 +672,9 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
     ),
     Setting(
         "LENS_POSITION_CORRIDOR",
-        [1.0, 1.0],
-        list[float],
-        "The lens position of the corridor camera (day, night).",
+        1.0,
+        float,
+        "The lens position of the corridor camera.",
     ),
     Setting(
         "LENS_POSITION_BOX",
@@ -614,9 +684,9 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
     ),
     Setting(
         "SHARPNESS_CORRIDOR",
-        [1.0, 1.0],
-        list[float],
-        "The sharpness of the corridor camera (day, night).",
+        1.0,
+        float,
+        "The sharpness of the corridor camera.",
     ),
     Setting(
         "SHARPNESS_BOX",
@@ -626,9 +696,9 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
     ),
     Setting(
         "CONTRAST_CORRIDOR",
-        [1.0, 1.0],
-        list[float],
-        "The contrast of the corridor camera (day, night).",
+        1.0,
+        float,
+        "The contrast of the corridor camera.",
     ),
     Setting(
         "CONTRAST_BOX",
@@ -702,8 +772,11 @@ hidden_settings = [
         "Factor to transform electric signal to grams.",
     ),
     Setting("RFID_READER", "ON", Active, "The RFID reader status."),
-    Setting("CYCLE", "AUTO", Cycle, "The cycle status (day/night)."),
-    Setting("INFO", "SYSTEM_INFO", Info, "The information status."),
+    Setting("VISIBLE_CORRIDOR", "ON", Cycle, "The visible light of the corridor."),
+    Setting("IR_CORRIDOR", "ON", Cycle, "The infrared light of the corridor."),
+    Setting("VISIBLE_BOX", "ON", Cycle, "The visible light of the box."),
+    Setting("IR_BOX", "OFF", Cycle, "The infrared light of the box."),
+    Setting("INFO", "INFO", Info, "The information status."),
     Setting("ACTIONS", "CORRIDOR", Actions, "The actions status."),
 ]
 
@@ -735,6 +808,7 @@ settings = Settings(
 # settings.set("DEFAULT_PROJECT_NAME", default_project_name)
 # settings.set("DEFAULT_CODE_DIRECTORY", default_code_directory)
 # settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "OFF")
+# settings.restore_all_settings()
 # settings.restore_factory_settings()
 # settings.restore_visual_settings()
 # settings.restore_directory_settings()

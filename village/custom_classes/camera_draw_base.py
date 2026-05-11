@@ -1,4 +1,11 @@
-from village.classes.abstract_classes import CameraBase
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from village.custom_classes.task import Task
+
+if TYPE_CHECKING:
+    from village.devices.camera import Camera
 
 
 class CameraDrawBase:
@@ -10,10 +17,12 @@ class CameraDrawBase:
     def __init__(self) -> None:
         """Initializes the CameraDrawBase instance."""
         self.name = "Camera Draw"
+        self.task = Task()
 
-    def draw(self, cam: CameraBase) -> None:
+    def draw(self, cam: Camera) -> None:
         """Draws on the camera frame based on the camera's state.
         Args:
-            cam (CameraBase): The camera instance providing the frame and state.
+            cam (Camera): The camera instance providing the
+            frame and state.
         """
         pass

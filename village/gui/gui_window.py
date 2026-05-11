@@ -5,13 +5,12 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import QEvent, QObjectCleanupHandler, QTimer
 from PyQt5.QtWidgets import QWidget
 
+from village.gui.calibration_layout import CalibrationLayout
 from village.gui.data_layout import DataLayout
 from village.gui.main_layout import MainLayout
 from village.gui.monitor_layout import MonitorLayout
 from village.gui.settings_layout import SettingsLayout
-from village.gui.sound_calibration_layout import SoundCalibrationLayout
 from village.gui.tasks_layout import TasksLayout
-from village.gui.water_calibration_layout import WaterCalibrationLayout
 from village.scripts import utils
 from village.scripts.time_utils import time_utils
 from village.settings import settings
@@ -94,26 +93,11 @@ class GuiWindow(QWidget):
         self.layout = DataLayout(self)
         self.setLayout(self.layout)
 
-    def create_water_calibration_layout(self) -> None:
-        """Switches the current view to the Water Calibration Layout."""
+    def create_calibration_layout(self) -> None:
+        """Switches the current view to the Calibration Layout."""
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
-        self.layout = WaterCalibrationLayout(self)
-        self.setLayout(self.layout)
-
-    def create_camera_calibration_layout(self) -> None:
-        """Switches the current view to the Camera Calibration Layout."""
-        from village.gui.camera_calibration_layout import CameraCalibrationLayout
-        utils.delete_all_elements_from_layout(self.layout)
-        QObjectCleanupHandler().add(self.layout)
-        self.layout = CameraCalibrationLayout(self)
-        self.setLayout(self.layout)
-
-    def create_sound_calibration_layout(self) -> None:
-        """Switches the current view to the Sound Calibration Layout."""
-        utils.delete_all_elements_from_layout(self.layout)
-        QObjectCleanupHandler().add(self.layout)
-        self.layout = SoundCalibrationLayout(self)
+        self.layout = CalibrationLayout(self)
         self.setLayout(self.layout)
 
     def create_settings_layout(self) -> None:

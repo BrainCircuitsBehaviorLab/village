@@ -1,7 +1,7 @@
 # mypy: ignore-errors
 import logging
 
-from village.pybpodapi.bpod.hardware.events import EventName
+from village.pybpodapi.hardware.events import EventName
 from village.pybpodapi.state_machine.conditions import Conditions
 from village.pybpodapi.state_machine.global_counters import GlobalCounters
 from village.pybpodapi.state_machine.global_timers import GlobalTimers
@@ -132,14 +132,12 @@ class StateMachineBase(object):
 
         """
 
-        # WHY DO WE NEED THIS IF-ELSE?
         if state_name not in self.manifest:
             self.state_names.append(state_name)
             self.manifest.append(state_name)
             state_name_idx = len(self.manifest) - 1
         else:
             state_name_idx = self.manifest.index(state_name)
-            self.state_names[state_name_idx] = state_name
 
         self.state_timer_matrix[state_name_idx] = state_name_idx
 
@@ -229,14 +227,6 @@ class StateMachineBase(object):
                     "Valve" + str(action_value)
                 )
                 output_value = 1
-
-                """
-                elif action_name == 'ValveState':
-                    output_code  = self.hardware.channels.output_channel_names.index(
-                    OutputChannel.Valve+str(action_value)
-                    )
-                    output_value = math.pow(2, action_value - 1)
-                """
 
             else:
                 try:

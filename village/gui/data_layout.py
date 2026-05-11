@@ -35,25 +35,32 @@ from PyQt5.QtWidgets import (
     QScrollArea,
     QStackedLayout,
     QTableView,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
 
 from village.classes.enums import DataTable, State
+from village.custom_classes.calibration_base import CalibrationBase
 from village.gui.layout import Layout
 from village.manager import manager
-from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.plots.temperatures_plot import temperatures_plot
-from village.plots.water_calibration_plot import water_calibration_plot
 from village.plots.weights_plot import weights_plot
+from village.scripts import utils
 from village.scripts.global_csv_for_subject import main as global_csv_for_subject_script
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
-from village.scripts.utils import create_pixmap
 from village.settings import settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
+
+
+def _get_calibration_by_name(name: str) -> CalibrationBase | None:
+    for cal in vars(manager.calibrations).values():
+        if isinstance(cal, CalibrationBase) and cal.display_name == name:
+            return cal
+    return None
 
 
 class TableView(QTableView):
@@ -63,7 +70,8 @@ class TableView(QTableView):
         """Initializes the TableView.
 
         Args:
-            model (Table | None, optional): The data model for the table. Defaults to None.
+            model (Table | None, optional): The data model for the table.
+            Defaults to None.
         """
         super().__init__()
         if model is not None:
@@ -83,6 +91,23 @@ class TableView(QTableView):
         if not isinstance(m, Table):
             raise RuntimeError("TableView requires a Table model")
         return cast(Table, m)
+
+    def show_text_dialog(self, text: str) -> None:
+        dialog = QDialog(self)
+        dialog.setWindowTitle("")
+        layout = QVBoxLayout(dialog)
+
+        text_edit = QTextEdit()
+        text_edit.setReadOnly(True)
+        text_edit.setPlainText(text)
+        layout.addWidget(text_edit)
+
+        btn = QPushButton("OK")
+        btn.clicked.connect(dialog.accept)
+        layout.addWidget(btn)
+
+        dialog.resize(500, 400)
+        dialog.exec_()
 
     def mousePressEvent(self, event) -> None:
         """Clear selection when clicking on empty space in the table."""
@@ -183,9 +208,17 @@ class TableView(QTableView):
                     text = text.replace("  |  ", "\n")
                     QMessageBox.information(self, "", text)
         else:
-            text = str(index.data())
-            text = text.replace("  |  ", "\n")
-            QMessageBox.information(self, "", text)
+            model = self._model()
+            row = index.row()
+            num_cols = model.columnCount()
+            lines = []
+            for col in range(num_cols):
+                header = model.headerData(col, Qt.Horizontal, Qt.DisplayRole)
+                value = str(model.data(model.index(row, col), Qt.DisplayRole))
+                value = value.replace("  |  ", "\n  ")
+                lines.append(f"{header}: {value}")
+            self.show_text_dialog("\n".join(lines))
+            self.clearSelection()
 
     def save_changes_in_df(self, update: bool = True) -> None:
         model = self._model()
@@ -197,12 +230,11 @@ class TableView(QTableView):
         elif manager.table == DataTable.TEMPERATURES:
             manager.temperatures.df = model.complete_df
             manager.temperatures.save_from_df()
-        elif manager.table == DataTable.WATER_CALIBRATION:
-            manager.water_calibration.df = model.complete_df
-            manager.water_calibration.save_from_df()
-        elif manager.table == DataTable.SOUND_CALIBRATION:
-            manager.sound_calibration.df = model.complete_df
-            manager.sound_calibration.save_from_df()
+        elif isinstance(manager.table, str):
+            cal = _get_calibration_by_name(manager.table)
+            if cal is not None:
+                cal.df = model.complete_df
+                cal.save_from_df()
         elif manager.table == DataTable.SESSIONS_SUMMARY:
             manager.sessions_summary.df = model.complete_df
             manager.sessions_summary.save_from_df()
@@ -226,7 +258,8 @@ class DaysSelectionDialog(QDialog):
 
         Args:
             parent (QWidget, optional): Parent widget. Defaults to None.
-            current_value (str, optional): Current value ("ON", "OFF", or "Mon-Tue..."). Defaults to None.
+            current_value (str, optional): Current value ("ON", "OFF", or "Mon-Tue...").
+            Defaults to None.
         """
         super().__init__(parent)
         self.setWindowTitle("Select Days or On/Off")
@@ -344,7 +377,8 @@ class DaysSelectionDialog(QDialog):
         """Constructs the result string based on selected days.
 
         Returns:
-            str: A string representing the selected days (e.g., "Mon-Wed-Fri") or "ON"/"OFF".
+            str: A string representing the selected days
+            (e.g., "Mon-Wed-Fri") or "ON"/"OFF".
         """
         if self.on_checkbox.isChecked():
             return "ON"
@@ -413,11 +447,13 @@ class Table(QAbstractTableModel):
         return self.df.shape[1]
 
     def data(self, index: QModelIndex, role: int = Qt.DisplayRole) -> Any:
-        """Returns the data stored under the given role for the item referred to by the index.
+        """Returns the data stored under the given role for the item
+        referred to by the index.
 
         Args:
             index (QModelIndex): The index of the item.
-            role (int, optional): The role for which data is requested. Defaults to Qt.DisplayRole.
+            role (int, optional): The role for which data is requested.
+            Defaults to Qt.DisplayRole.
 
         Returns:
             Any: The data for the given role.
@@ -454,12 +490,15 @@ class Table(QAbstractTableModel):
     def headerData(
         self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole
     ) -> Any:
-        """Returns the data for the given role and section in the header with the specified orientation.
+        """Returns the data for the given role and section in the header
+        with the specified orientation.
 
         Args:
             section (int): The section number (row or column index).
-            orientation (Qt.Orientation): The orientation of the header (Horizontal or Vertical).
-            role (int, optional): The role for which data is requested. Defaults to Qt.DisplayRole.
+            orientation (Qt.Orientation): The orientation of the header
+            (Horizontal or Vertical).
+            role (int, optional): The role for which data is requested.
+            Defaults to Qt.DisplayRole.
 
         Returns:
             Any: The header data.
@@ -483,6 +522,14 @@ class Table(QAbstractTableModel):
     def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
         if role != Qt.EditRole:
             return False
+
+        column_name = self.df.columns[index.column()]
+        if manager.table == DataTable.SUBJECTS and column_name == "name":
+            error = utils.validate_subject_name(str(value))
+            if error:
+                QMessageBox.warning(None, "Invalid name", error)
+                return False
+
         column_dtype = self.df.dtypes.iloc[index.column()]
         try:
             if column_dtype in ("int64", "Int64"):
@@ -572,24 +619,25 @@ class DataLayout(Layout):
             window (GuiWindow): The parent window.
         """
         super().__init__(window)
+        self._highlight_nav_button(self.data_button)
         self.draw()
 
     def draw(self) -> None:
         self.data_button.setDisabled(True)
 
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 5, 0, 45, 200)
+        self.addLayout(self.central_layout, 6, 0, 44, 200)
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = DfLayout(self.window, 45, 200)
+        self.page1Layout = DfLayout(self.window, 44, 200)
         self.page1.setLayout(self.page1Layout)
         self.page2 = QWidget()
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = VideoLayout(self.window, 45, 200)
+        self.page2Layout = VideoLayout(self.window, 44, 200)
         self.page2.setLayout(self.page2Layout)
         self.page3 = QWidget()
         self.page3.setStyleSheet("background-color:white")
-        self.page3Layout = PlotLayout(self.window, 45, 200)
+        self.page3Layout = PlotLayout(self.window, 44, 200)
         self.page3.setLayout(self.page3Layout)
 
         self.central_layout.addWidget(self.page1)
@@ -636,7 +684,7 @@ class DataLayout(Layout):
                 try:
                     df = manager.sessions_summary.df.copy()
                     figure = weights_plot(df, width, height)
-                    pixmap = create_pixmap(figure)
+                    pixmap = utils.create_pixmap(figure)
                 except Exception:
                     log.error(
                         "Can not create weights plot", exception=traceback.format_exc()
@@ -649,7 +697,7 @@ class DataLayout(Layout):
                     weight = row["weight"]
                     df = pd.read_csv(paths[0], sep=";")
                     figure = manager.session_plot.create_plot(df, weight, width, height)
-                    pixmap = create_pixmap(figure)
+                    pixmap = utils.create_pixmap(figure)
                 except Exception:
                     log.error(
                         "Can not create session plot", exception=traceback.format_exc()
@@ -659,7 +707,7 @@ class DataLayout(Layout):
                 try:
                     df = manager.sessions_summary.df.copy()
                     figure = weights_plot(df, width, height)
-                    pixmap = create_pixmap(figure)
+                    pixmap = utils.create_pixmap(figure)
                 except Exception:
                     log.error(
                         "Can not create weights plot", exception=traceback.format_exc()
@@ -679,38 +727,31 @@ class DataLayout(Layout):
                     figure = manager.subject_plot.create_plot(
                         df, summary_df, width, height
                     )
-                    pixmap = create_pixmap(figure)
+                    pixmap = utils.create_pixmap(figure)
                 except Exception:
                     log.error(
                         "Can not create plot for file: " + path,
                         exception=traceback.format_exc(),
                     )
-        elif manager.table == DataTable.WATER_CALIBRATION:
-            try:
-                df = manager.water_calibration.get_last_water_df()
-                figure = water_calibration_plot(df, width, height, None)
-                pixmap = create_pixmap(figure)
-            except Exception:
-                log.error(
-                    "Can not create water calibration plot",
-                    exception=traceback.format_exc(),
-                )
-        elif manager.table == DataTable.SOUND_CALIBRATION:
-            try:
-                df = manager.sound_calibration.get_last_sound_df()
-                figure = sound_calibration_plot(df, width, height, None)
-                pixmap = create_pixmap(figure)
-            except Exception:
-                log.error(
-                    "Can not create sound calibration plot",
-                    exception=traceback.format_exc(),
-                )
+        elif isinstance(manager.table, str):
+            cal = _get_calibration_by_name(manager.table)
+            if cal is not None:
+                try:
+                    df = cal.get_last_calibration_df()
+                    figure = cal.create_plot(df, width, height, None)
+                    if figure is not None:
+                        pixmap = utils.create_pixmap(figure)
+                except Exception:
+                    log.error(
+                        "Can not create calibration plot",
+                        exception=traceback.format_exc(),
+                    )
         elif manager.table == DataTable.TEMPERATURES:
             try:
                 figure = temperatures_plot(
                     manager.temperatures.df.copy(), width, height
                 )
-                pixmap = create_pixmap(figure)
+                pixmap = utils.create_pixmap(figure)
             except Exception:
                 log.error(
                     "Can not create temperatures plot",
@@ -721,7 +762,7 @@ class DataLayout(Layout):
                 figure = manager.session_plot.create_plot(
                     manager.old_session_df, self.page1Layout.weight, width, height
                 )
-                pixmap = create_pixmap(figure)
+                pixmap = utils.create_pixmap(figure)
             except Exception:
                 log.error(
                     "Can not create session plot",
@@ -738,7 +779,8 @@ class DataLayout(Layout):
         self.central_layout.setCurrentWidget(self.page1)
 
     def update_data(self) -> None:
-        """Updates the data displayed in the current layout based on the selected table."""
+        """Updates the data displayed in the current layout based on
+        the selected table."""
         if self.central_layout.currentIndex() == 0:
             self.page1Layout.update_data()
             self.page1Layout.create_table()
@@ -831,10 +873,25 @@ class DfLayout(Layout):
         self.searching = ""
         self.previous_searching = ""
 
-        possible_values = DataTable.values()
-        possible_values = possible_values[:-2]
-
-        index = DataTable.get_index_from_value(manager.table)
+        base_values = DataTable.values()[:-2]
+        cal_names = [
+            cal.display_name
+            for cal in vars(manager.calibrations).values()
+            if isinstance(cal, CalibrationBase)
+            and cal.is_active()
+            and hasattr(cal, "df")
+        ]
+        possible_values = base_values + cal_names
+        if isinstance(manager.table, DataTable):
+            try:
+                index = possible_values.index(manager.table.value)
+            except ValueError:
+                index = 0
+        else:
+            try:
+                index = possible_values.index(manager.table)
+            except ValueError:
+                index = 0
 
         self.title = self.create_and_add_combo_box(
             "title", 1, 3, 35, 2, possible_values, index, self.change_data_table
@@ -895,12 +952,6 @@ class DfLayout(Layout):
             case DataTable.SUBJECTS:
                 self.complete_df = manager.subjects.df
                 self.widths = [20, 20, 20, 20, 20, 90]
-            case DataTable.WATER_CALIBRATION:
-                self.complete_df = manager.water_calibration.df
-                self.widths = [20, 20, 20, 20, 20, 20]
-            case DataTable.SOUND_CALIBRATION:
-                self.complete_df = manager.sound_calibration.df
-                self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.TEMPERATURES:
                 self.complete_df = manager.temperatures.df
                 self.widths = [20, 20, 20]
@@ -922,6 +973,11 @@ class DfLayout(Layout):
                 self.title.setCurrentIndex(-1)
                 self.title.hide()
                 self.back_button.show()
+            case str():
+                cal = _get_calibration_by_name(manager.table)
+                if cal is not None:
+                    self.complete_df = cal.df
+                    self.widths = [20] * len(cal.df.columns)
         self.df = self.obtain_searched_df()
 
     def back_button_clicked(self) -> None:
@@ -1025,8 +1081,22 @@ class DfLayout(Layout):
                 return
 
         if value != "":
-            if manager.table != DataTable(value):
-                manager.table = DataTable(value)
+            cal_names = [
+                cal.display_name
+                for cal in vars(manager.calibrations).values()
+                if isinstance(cal, CalibrationBase)
+                and cal.is_active()
+                and hasattr(cal, "df")
+            ]
+            if value in cal_names:
+                new_table: DataTable | str = value
+            else:
+                try:
+                    new_table = DataTable(value)
+                except ValueError:
+                    return
+            if manager.table != new_table:
+                manager.table = new_table
                 self.searching = ""
                 self.search_edit.setText("")
                 self.update_data()
@@ -1168,7 +1238,8 @@ class DfLayout(Layout):
         button.show()
 
     def update_buttons(self) -> None:
-        """Updates the state and visibility of action buttons based on selection and table type."""
+        """Updates the state and visibility of action buttons based on selection
+        and table type."""
         sel_model = self.table_view.selectionModel()
         selected_indexes = sel_model.selectedRows() if sel_model else []
         match manager.table:
@@ -1219,11 +1290,16 @@ class DfLayout(Layout):
                 self.fourth_button.setEnabled(enabled)
                 self.fifth_button.setEnabled(enabled)
                 self.sixth_button.setEnabled(True)
-            case (
-                DataTable.WATER_CALIBRATION
-                | DataTable.SOUND_CALIBRATION
-                | DataTable.TEMPERATURES
-            ):
+            case DataTable.TEMPERATURES:
+                self.first_button.hide()
+                self.second_button.hide()
+                self.third_button.hide()
+                self.fourth_button.hide()
+                self.connect_button_to_delete(self.fifth_button)
+                self.connect_button_to_plot(self.sixth_button, "PLOT", "Plot the data")
+                self.sixth_button.setEnabled(True)
+                self.fifth_button.setEnabled(bool(selected_indexes))
+            case str():
                 self.first_button.hide()
                 self.second_button.hide()
                 self.third_button.hide()
@@ -1315,7 +1391,8 @@ class DfLayout(Layout):
         return self.model.df.iloc[index.row()]
 
     def get_seconds_from_session_row(self) -> int:
-        """Calculates the time elapsed in seconds from the session start for the selected row.
+        """Calculates the time elapsed in seconds from the session start
+        for the selected row.
 
         Returns:
             int: The elapsed time in seconds.
@@ -1405,7 +1482,8 @@ class DfLayout(Layout):
             row (pd.Series): The session summary row.
 
         Returns:
-            list[str]: A list containing session paths (csv, raw, json, video, video_data).
+            list[str]: A list containing session paths
+            (csv, raw, json, video, video_data).
         """
         date_str = row["date"]
         task = row["task"]
@@ -1464,10 +1542,8 @@ class DfLayout(Layout):
         elif manager.table in [
             DataTable.OLD_SESSION,
             DataTable.OLD_SESSION_RAW,
-            DataTable.WATER_CALIBRATION,
-            DataTable.SOUND_CALIBRATION,
             DataTable.TEMPERATURES,
-        ]:
+        ] or isinstance(manager.table, str):
             self.plot_change_requested.emit("")
 
     def plot_weights_button_clicked(self) -> None:
@@ -1820,8 +1896,7 @@ class VideoLayout(Layout):
             columns (int): Number of columns.
         """
         super().__init__(window, rows=rows, columns=columns)
-        self.deltas: list[float] = []
-        self.now = time_utils.get_time_monotonic()
+        self.video_path = ""
         self.draw()
 
     def draw(self) -> None:
@@ -1913,6 +1988,36 @@ class VideoLayout(Layout):
             self.backward_five_minutes,
             "Skip backward 5 minutes",
         )
+        self.create_and_add_button(
+            "Previous video",
+            26,
+            155,
+            15,
+            2,
+            self.previous_video,
+            "Play the previous video",
+        )
+        self.create_and_add_button(
+            "Next video",
+            26,
+            170,
+            15,
+            2,
+            self.next_video,
+            "Play the next video",
+        )
+
+    def next_video(self) -> None:
+        path = time_utils.next_video_path(self.video_path)
+        if path is not None:
+            self.stop_button_clicked()
+            self.start_video(path, 0)
+
+    def previous_video(self) -> None:
+        path = time_utils.previous_video_path(self.video_path)
+        if path is not None:
+            self.stop_button_clicked()
+            self.start_video(path, 0)
 
     def start_video(self, path: str, seconds: int) -> None:
         """Starts video playback from a specific time.
@@ -1921,6 +2026,7 @@ class VideoLayout(Layout):
             path (str): The path to the video file.
             seconds (int): The number of seconds to skip.
         """
+        self.video_path = path
         try:
             self.cap = cv2.VideoCapture(path)
             self.fps = int(self.cap.get(cv2.CAP_PROP_FPS))
@@ -2059,16 +2165,9 @@ class VideoLayout(Layout):
         """Closes the video layout and saves playback data."""
         self.stop_button_clicked()
         self.data_from_video_change_requested.emit("")
-        with open("deltas.txt", "w") as f:
-            for delta in self.deltas:
-                f.write(f"{delta}\n")
 
     def next_frame_slot(self) -> None:
         """Handles the next frame timer event to update the video display."""
-        last = self.now
-        self.now = time_utils.get_time_monotonic()
-        delta = int((self.now - last) * 1000)
-        self.deltas.append(delta)
 
         ret, frame = self.cap.read()
         if ret:

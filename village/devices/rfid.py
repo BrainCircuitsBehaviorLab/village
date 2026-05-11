@@ -21,7 +21,8 @@ class Rfid:
         time_detections (float): Time window in seconds to check for duplicate IDs.
         id (str): The most recently read RFID tag ID.
         id_history (Deque[tuple[str, datetime]]): History of read IDs and timestamps.
-        reading (bool): Flag to control reading loop (not used in loop, running is used).
+        reading (bool): Flag to control reading loop
+        (not used in loop, running is used).
         s (serial.Serial): The serial connection.
         thread (threading.Thread): Background thread for reading serial data.
         running (bool): Flag to control the background thread.
@@ -89,8 +90,9 @@ class Rfid:
         """Retrieves the current RFID tag ID and multiple status.
 
         Returns:
-            tuple[str, bool]: A tuple containing the ID (str) and whether multiple tags were detected (bool).
-                              Returns ("", False) if reading is disabled.
+            tuple[str, bool]: A tuple containing the ID (str) and whether multiple tags
+            were detected (bool).
+            Returns ("", False) if reading is disabled.
         """
         if manager.rfid_reader == Active.ON:
             value = (self.id, self.multiple)

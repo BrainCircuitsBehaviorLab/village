@@ -1,4 +1,11 @@
-from village.classes.abstract_classes import CameraBase
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from village.custom_classes.task import Task
+
+if TYPE_CHECKING:
+    from village.devices.camera import Camera
 
 
 class CameraTriggerBase:
@@ -11,15 +18,16 @@ class CameraTriggerBase:
     def __init__(self) -> None:
         """Initializes the CameraTriggerBase instance."""
         self.name = "Camera Trigger"
+        self.task = Task()
 
-    def trigger(self, cam: CameraBase) -> None:
+    def trigger(self, cam: Camera) -> None:
         """Evaluates camera triggers and performs corresponding actions.
 
         This method is called to check if any defined areas in the camera view
         have been triggered (e.g., by the subject entering them).
 
         Args:
-            cam (CameraBase): The camera instance providing the trigger status.
+            cam (Camera): The camera instance providing the trigger status.
         """
         # the camera automatically returns a True value if the subject is detected
         # within any of the predefined trigger areas.

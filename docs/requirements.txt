@@ -1,8 +1,8 @@
-furo
 linkify-it-py
 myst-parser
 nbsphinx
 setuptools-scm
+shibuya
 sphinx
 sphinx-autodoc-typehints
 sphinx-book-theme

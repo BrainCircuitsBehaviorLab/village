@@ -21,10 +21,6 @@ class StateMachineRunner(StateMachineBuilder):
 
         self.current_state = 0  # type: int
 
-    #########################################
-    ############## PROPERTIES ###############
-    #########################################
-
     @property
     def is_running(self):
         return self._is_running
