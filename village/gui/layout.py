@@ -467,22 +467,41 @@ class Layout(QGridLayout):
             old_state = manager.state
             manager.state = State.EXIT_GUI
             self.update_status_label_buttons()
-            text = "Are you sure you want to exit?"
+
             if manager.changing_settings:
-                text += " Changes will not be saved."
-            reply = QMessageBox.question(
-                self.window,
-                "EXIT",
-                text,
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No,
-            )
-            if reply == QMessageBox.Yes:
-                manager.turn_off_all_lights()
-                self.window.exit_app()
+                reply = QMessageBox.question(
+                    self.window,
+                    "EXIT",
+                    "Do you want to save the settings before exiting?",
+                    QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                    QMessageBox.Save,
+                )
+                if reply == QMessageBox.Save:
+                    save_fn = getattr(self, "save_button_clicked", None)
+                    if save_fn is not None:
+                        save_fn()
+                    manager.turn_off_all_lights()
+                    self.window.exit_app()
+                elif reply == QMessageBox.Discard:
+                    manager.turn_off_all_lights()
+                    self.window.exit_app()
+                else:
+                    manager.state = old_state
+                    self.update_status_label_buttons()
             else:
-                manager.state = old_state
-                self.update_status_label_buttons()
+                reply = QMessageBox.question(
+                    self.window,
+                    "EXIT",
+                    "Are you sure you want to exit?",
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.No,
+                )
+                if reply == QMessageBox.Yes:
+                    manager.turn_off_all_lights()
+                    self.window.exit_app()
+                else:
+                    manager.state = old_state
+                    self.update_status_label_buttons()
         else:
             text = "Wait until the box is empty or synchronization is complete"
             text += " before exiting the application"
