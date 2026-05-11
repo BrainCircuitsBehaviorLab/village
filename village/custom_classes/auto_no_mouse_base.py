@@ -10,8 +10,8 @@ class AutoNoMouse_Base:
     To be subclassed in task folder.
     """
 
-    def __init__(self) -> None:
-        self.task = Task()
+    def __init__(self, task: Task=None) -> None:
+        self.task = task
         self._thread: threading.Thread | None = None
         self._stop_event = threading.Event()
         self.trace: deque = deque(maxlen=25 * 5)
