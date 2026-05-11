@@ -63,6 +63,10 @@ class CalibrationBase(Collection):
         """Initialises the Collection. Called once by import_all."""
         super().__init__()
 
+    @property
+    def display_name(self) -> str:
+        return self.name.upper()
+
     @classmethod
     def is_active(cls) -> bool:
         return True
@@ -78,7 +82,10 @@ class CalibrationBase(Collection):
 
         self.window = window
         if hasattr(self, "layout"):
-            utils.delete_all_elements_from_layout(self.layout)
+            try:
+                utils.delete_all_elements_from_layout(self.layout)
+            except RuntimeError:
+                pass
         self.layout: _Panel = _Panel(window)
         self.container = QWidget()
         self.container.setLayout(self.layout)
@@ -88,7 +95,10 @@ class CalibrationBase(Collection):
         """Clears and redraws the panel (used after save/delete)."""
         from village.scripts import utils
 
-        utils.delete_all_elements_from_layout(self.layout)
+        try:
+            utils.delete_all_elements_from_layout(self.layout)
+        except RuntimeError:
+            pass
         self.draw()
 
     # ── Interface methods ──────────────────────────────────────────────────────

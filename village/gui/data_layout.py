@@ -58,7 +58,7 @@ if TYPE_CHECKING:
 
 def _get_calibration_by_name(name: str) -> CalibrationBase | None:
     for cal in vars(manager.calibrations).values():
-        if isinstance(cal, CalibrationBase) and cal.name == name:
+        if isinstance(cal, CalibrationBase) and cal.display_name == name:
             return cal
     return None
 
@@ -875,13 +875,13 @@ class DfLayout(Layout):
 
         base_values = DataTable.values()[:-2]
         cal_names = [
-            cal.name
+            cal.display_name
             for cal in vars(manager.calibrations).values()
             if isinstance(cal, CalibrationBase)
             and cal.is_active()
             and hasattr(cal, "df")
         ]
-        possible_values = base_values[:3] + cal_names + base_values[3:]
+        possible_values = base_values + cal_names
         if isinstance(manager.table, DataTable):
             try:
                 index = possible_values.index(manager.table.value)
@@ -1082,7 +1082,7 @@ class DfLayout(Layout):
 
         if value != "":
             cal_names = [
-                cal.name
+                cal.display_name
                 for cal in vars(manager.calibrations).values()
                 if isinstance(cal, CalibrationBase)
                 and cal.is_active()

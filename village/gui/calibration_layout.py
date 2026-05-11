@@ -60,7 +60,7 @@ class CalibrationLayout(Layout):
         )
         self.menu_list.setSpacing(1)
         for cal in self._calibrations:
-            self.menu_list.addItem(QListWidgetItem(cal.name))
+            self.menu_list.addItem(QListWidgetItem(cal.display_name))
         self.menu_list.currentRowChanged.connect(self._on_menu_changed)
         self.addWidget(self.menu_list, _C_ROW, _MENU_COL, 44, _MENU_WIDTH + 2)
 
