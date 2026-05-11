@@ -4,7 +4,7 @@ from village.custom_classes.calibration_base import CalibrationBase
 
 
 class CameraCalibration(CalibrationBase):
-    name = "CAMERA CALIBRATION"
+    name = "camera_calibration"
 
     @classmethod
     def is_active(cls) -> bool:

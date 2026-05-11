@@ -57,7 +57,7 @@ def import_all(manager) -> None:
     for cal_cls in (BpodWaterCalibration, SoundCalibration, CameraCalibration):
         instance = cal_cls()
         cal_cls._instance = instance
-        setattr(manager.calibrations, cal_cls.name, instance)
+        setattr(manager.calibrations, instance.name, instance)
 
     for root, _, files in os.walk(directory):
         for file in files:
