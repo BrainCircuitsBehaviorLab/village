@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import traceback
+from typing import Any
 
 from village.calibration.bpod_water_calibration import BpodWaterCalibration
 from village.calibration.camera_calibration import CameraCalibration
@@ -30,7 +31,7 @@ def import_all(manager) -> None:
     sys.path.append(directory)
 
     python_files: list[str] = []
-    tasks = dict()
+    tasks: dict[str, type] = dict()
     training_found = 0
     session_plot_found = 0
     subject_plot_found = 0
@@ -53,12 +54,10 @@ def import_all(manager) -> None:
     auto_no_mouse_correct = False
     sound_path = ""
 
-    manager.calibrations.bpod_water_calibration = BpodWaterCalibration()
-    manager.calibrations.sound_calibration = SoundCalibration()
-    manager.calibrations.camera_calibration = CameraCalibration()
-    manager.calibration_classes.append(BpodWaterCalibration)
-    manager.calibration_classes.append(SoundCalibration)
-    manager.calibration_classes.append(CameraCalibration)
+    for cal_cls in (BpodWaterCalibration, SoundCalibration, CameraCalibration):
+        instance = cal_cls()
+        cal_cls._instance = instance
+        setattr(manager.calibrations, cal_cls.name, instance)
 
     for root, _, files in os.walk(directory):
         for file in files:
@@ -89,7 +88,9 @@ def import_all(manager) -> None:
         module_name = os.path.splitext(relative_path.replace(os.path.sep, "."))[0]
         try:
             module = importlib.import_module(module_name)
-            clsmembers = inspect.getmembers(module, inspect.isclass)
+            clsmembers: list[tuple[str, Any]] = inspect.getmembers(
+                module, inspect.isclass
+            )
             for _, cls in clsmembers:
                 if cls.__module__ != module_name:
                     continue
@@ -163,12 +164,10 @@ def import_all(manager) -> None:
                     SoundCalibration,
                     BpodWaterCalibration,
                 ):
-                    if cls not in manager.calibration_classes:
-                        manager.calibration_classes.append(cls)
+                    if not hasattr(manager.calibrations, cls.name):
                         instance = cls()
                         cls._instance = instance
-                        if cls.name:
-                            setattr(manager.calibration, cls.name, instance)
+                        setattr(manager.calibrations, cls.name, instance)
                 elif (
                     issubclass(cls, DirectFunctionsBase) and cls != DirectFunctionsBase
                 ):

@@ -5,8 +5,11 @@ import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
+from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLabel, QMessageBox, QScrollArea, QWidget
@@ -17,11 +20,10 @@ from village.custom_classes.task import Task
 from village.devices.sound_device import sound_device
 from village.gui.layout import Layout
 from village.manager import manager
-from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.scripts import utils
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
-from village.scripts.utils import create_pixmap
+from village.scripts.utils import create_pixmap, get_x_value_interp, interpolate
 from village.settings import settings
 
 if TYPE_CHECKING:
@@ -92,6 +94,76 @@ class SoundCalibration(CalibrationBase):
     @classmethod
     def is_active(cls) -> bool:
         return settings.get("USE_SOUNDCARD") == Active.ON
+
+    def create_plot(
+        self,
+        df: pd.DataFrame,
+        width: float,
+        height: float,
+        point: tuple[float, float] | None = None,
+    ) -> Figure | None:
+        fig, ax = plt.subplots(figsize=(width, height))
+        speakers = sorted(df["speaker"].unique())
+        sounds = sorted(df["sound_name"].unique())
+        colors_left = sns.light_palette("green", len(sounds) + 1, reverse=True)[:-1]
+        colors_right = sns.light_palette("purple", len(sounds) + 1, reverse=True)[:-1]
+        for speaker in speakers:
+            subset = df[df["speaker"] == speaker]
+            for index, sound in enumerate(sounds):
+                subset2 = subset[subset["sound_name"] == sound]
+                x = subset2["gain"].values
+                y = subset2["dB_obtained"].values
+                color = colors_left[index] if speaker == 0 else colors_right[index]
+                ax.plot(x, y, marker="o", linestyle="None", color=color, label=sound)
+                x_fit, y_fit = interpolate(x, y)
+                if x_fit is None:
+                    continue
+                ax.plot(x_fit, y_fit, linestyle="-", color=color)
+                ax.plot([], [], linestyle="None", marker="None")
+        if point is not None:
+            ax.plot(point[0], point[1], marker="x", color="red", markersize=10)
+        ax.set_xlabel("Gain (0-1)", fontsize=7)
+        ax.set_ylabel("dB_obtained", fontsize=7)
+        ax.tick_params(axis="both", labelsize=6)
+        if not df.empty:
+            ax.legend(title="Speaker", fontsize=6, title_fontsize=7)
+        ax.grid(True)
+        return fig
+
+    def get_last_calibration_df(self) -> pd.DataFrame:
+        df = self.df[self.df["calibration_number"] != -1].copy()
+        max_values = df.groupby(["speaker", "sound_name"])[
+            "calibration_number"
+        ].transform("max")
+        return df[df["calibration_number"] == max_values]
+
+    def get_sound_gain(self, speaker: int, dB: float, sound_name: str) -> float:
+        try:
+            if dB == 0:
+                return 0.0
+            calibration_df = self.df[self.df["speaker"] == speaker]
+            calibration_df = calibration_df[calibration_df["sound_name"] == sound_name]
+            max_calibration = calibration_df["calibration_number"].max()
+            calibration_df = calibration_df[
+                calibration_df["calibration_number"] == max_calibration
+            ]
+            val = get_x_value_interp(
+                calibration_df["gain"].values,
+                calibration_df["dB_obtained"].values,
+                dB,
+            )
+            if val is None:
+                raise ValueError
+            return val
+        except Exception:
+            raise ValueError(
+                f"\n\n\t--> SOUND CALIBRATION PROBLEM !!!!!!\n\n"
+                f"Cannot provide a valid gain for {dB} dB, "
+                f"speaker {speaker}, sound {sound_name}.\n"
+                f"1. Make sure you have calibrated the sound you are using.\n"
+                f"2. Make sure the dB is within calibration range.\n"
+                f"3. Check sound_calibration.csv in 'data'.\n"
+            )
 
     def draw(self) -> None:
         manager.state = State.MANUAL_MODE
@@ -867,10 +939,11 @@ class _CalibrationPlotLayout(Layout):
     def update(self, df: pd.DataFrame, test_point: tuple[float, float] | None) -> None:
         pixmap = QPixmap()
         try:
-            figure = sound_calibration_plot(
+            figure = self.parent.create_plot(
                 df.copy(), self.plot_width, self.plot_height, test_point
             )
-            pixmap = create_pixmap(figure)
+            if figure is not None:
+                pixmap = create_pixmap(figure)
         except Exception:
             log.error(
                 "Can not create sound calibration plot",

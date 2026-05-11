@@ -32,9 +32,8 @@ class CalibrationLayout(Layout):
         self._draw()
 
     def _draw(self) -> None:
-        for cls in manager.calibration_classes:
-            if cls.is_active() and cls._instance is not None:
-                cal = cls._instance
+        for cal in vars(manager.calibrations).values():
+            if isinstance(cal, CalibrationBase) and cal.is_active():
                 cal.init_panel(self.window)
                 self._calibrations.append(cal)
 

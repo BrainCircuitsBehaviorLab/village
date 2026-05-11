@@ -41,10 +41,9 @@ from PyQt5.QtWidgets import (
 )
 
 from village.classes.enums import DataTable, State
+from village.custom_classes.calibration_base import CalibrationBase
 from village.gui.layout import Layout
 from village.manager import manager
-from village.plots.bpod_water_calibration_plot import bpod_water_calibration_plot
-from village.plots.sound_calibration_plot import sound_calibration_plot
 from village.plots.temperatures_plot import temperatures_plot
 from village.plots.weights_plot import weights_plot
 from village.scripts import utils
@@ -55,6 +54,13 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
+
+
+def _get_calibration_by_name(name: str) -> CalibrationBase | None:
+    for cal in vars(manager.calibrations).values():
+        if isinstance(cal, CalibrationBase) and cal.name == name:
+            return cal
+    return None
 
 
 class TableView(QTableView):
@@ -224,12 +230,11 @@ class TableView(QTableView):
         elif manager.table == DataTable.TEMPERATURES:
             manager.temperatures.df = model.complete_df
             manager.temperatures.save_from_df()
-        elif manager.table == DataTable.WATER_CALIBRATION:
-            manager.calibrations.bpod_water_calibration.df = model.complete_df
-            manager.calibrations.bpod_water_calibration.save_from_df()
-        elif manager.table == DataTable.SOUND_CALIBRATION:
-            manager.calibrations.sound_calibration.df = model.complete_df
-            manager.calibrations.sound_calibration.save_from_df()
+        elif isinstance(manager.table, str):
+            cal = _get_calibration_by_name(manager.table)
+            if cal is not None:
+                cal.df = model.complete_df
+                cal.save_from_df()
         elif manager.table == DataTable.SESSIONS_SUMMARY:
             manager.sessions_summary.df = model.complete_df
             manager.sessions_summary.save_from_df()
@@ -728,26 +733,19 @@ class DataLayout(Layout):
                         "Can not create plot for file: " + path,
                         exception=traceback.format_exc(),
                     )
-        elif manager.table == DataTable.WATER_CALIBRATION:
-            try:
-                df = manager.calibrations.bpod_water_calibration.get_last_water_df()
-                figure = bpod_water_calibration_plot(df, width, height, None)
-                pixmap = utils.create_pixmap(figure)
-            except Exception:
-                log.error(
-                    "Can not create water calibration plot",
-                    exception=traceback.format_exc(),
-                )
-        elif manager.table == DataTable.SOUND_CALIBRATION:
-            try:
-                df = manager.calibrations.sound_calibration.get_last_sound_df()
-                figure = sound_calibration_plot(df, width, height, None)
-                pixmap = utils.create_pixmap(figure)
-            except Exception:
-                log.error(
-                    "Can not create sound calibration plot",
-                    exception=traceback.format_exc(),
-                )
+        elif isinstance(manager.table, str):
+            cal = _get_calibration_by_name(manager.table)
+            if cal is not None:
+                try:
+                    df = cal.get_last_calibration_df()
+                    figure = cal.create_plot(df, width, height, None)
+                    if figure is not None:
+                        pixmap = utils.create_pixmap(figure)
+                except Exception:
+                    log.error(
+                        "Can not create calibration plot",
+                        exception=traceback.format_exc(),
+                    )
         elif manager.table == DataTable.TEMPERATURES:
             try:
                 figure = temperatures_plot(
@@ -875,10 +873,25 @@ class DfLayout(Layout):
         self.searching = ""
         self.previous_searching = ""
 
-        possible_values = DataTable.values()
-        possible_values = possible_values[:-2]
-
-        index = DataTable.get_index_from_value(manager.table)
+        base_values = DataTable.values()[:-2]
+        cal_names = [
+            cal.name
+            for cal in vars(manager.calibrations).values()
+            if isinstance(cal, CalibrationBase)
+            and cal.is_active()
+            and hasattr(cal, "df")
+        ]
+        possible_values = base_values[:3] + cal_names + base_values[3:]
+        if isinstance(manager.table, DataTable):
+            try:
+                index = possible_values.index(manager.table.value)
+            except ValueError:
+                index = 0
+        else:
+            try:
+                index = possible_values.index(manager.table)
+            except ValueError:
+                index = 0
 
         self.title = self.create_and_add_combo_box(
             "title", 1, 3, 35, 2, possible_values, index, self.change_data_table
@@ -939,12 +952,6 @@ class DfLayout(Layout):
             case DataTable.SUBJECTS:
                 self.complete_df = manager.subjects.df
                 self.widths = [20, 20, 20, 20, 20, 90]
-            case DataTable.WATER_CALIBRATION:
-                self.complete_df = manager.calibrations.bpod_water_calibration.df
-                self.widths = [20, 20, 20, 20, 20, 20]
-            case DataTable.SOUND_CALIBRATION:
-                self.complete_df = manager.calibrations.sound_calibration.df
-                self.widths = [20, 20, 20, 20, 20, 20]
             case DataTable.TEMPERATURES:
                 self.complete_df = manager.temperatures.df
                 self.widths = [20, 20, 20]
@@ -966,6 +973,11 @@ class DfLayout(Layout):
                 self.title.setCurrentIndex(-1)
                 self.title.hide()
                 self.back_button.show()
+            case str():
+                cal = _get_calibration_by_name(manager.table)
+                if cal is not None:
+                    self.complete_df = cal.df
+                    self.widths = [20] * len(cal.df.columns)
         self.df = self.obtain_searched_df()
 
     def back_button_clicked(self) -> None:
@@ -1069,8 +1081,22 @@ class DfLayout(Layout):
                 return
 
         if value != "":
-            if manager.table != DataTable(value):
-                manager.table = DataTable(value)
+            cal_names = [
+                cal.name
+                for cal in vars(manager.calibrations).values()
+                if isinstance(cal, CalibrationBase)
+                and cal.is_active()
+                and hasattr(cal, "df")
+            ]
+            if value in cal_names:
+                new_table: DataTable | str = value
+            else:
+                try:
+                    new_table = DataTable(value)
+                except ValueError:
+                    return
+            if manager.table != new_table:
+                manager.table = new_table
                 self.searching = ""
                 self.search_edit.setText("")
                 self.update_data()
@@ -1264,11 +1290,16 @@ class DfLayout(Layout):
                 self.fourth_button.setEnabled(enabled)
                 self.fifth_button.setEnabled(enabled)
                 self.sixth_button.setEnabled(True)
-            case (
-                DataTable.WATER_CALIBRATION
-                | DataTable.SOUND_CALIBRATION
-                | DataTable.TEMPERATURES
-            ):
+            case DataTable.TEMPERATURES:
+                self.first_button.hide()
+                self.second_button.hide()
+                self.third_button.hide()
+                self.fourth_button.hide()
+                self.connect_button_to_delete(self.fifth_button)
+                self.connect_button_to_plot(self.sixth_button, "PLOT", "Plot the data")
+                self.sixth_button.setEnabled(True)
+                self.fifth_button.setEnabled(bool(selected_indexes))
+            case str():
                 self.first_button.hide()
                 self.second_button.hide()
                 self.third_button.hide()
@@ -1511,10 +1542,8 @@ class DfLayout(Layout):
         elif manager.table in [
             DataTable.OLD_SESSION,
             DataTable.OLD_SESSION_RAW,
-            DataTable.WATER_CALIBRATION,
-            DataTable.SOUND_CALIBRATION,
             DataTable.TEMPERATURES,
-        ]:
+        ] or isinstance(manager.table, str):
             self.plot_change_requested.emit("")
 
     def plot_weights_button_clicked(self) -> None:

@@ -20,12 +20,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
+import pandas as pd
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.collection import Collection
 from village.gui.layout import Layout
 
 if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
     from village.gui.gui_window import GuiWindow
 
 # Content area dimensions (full window minus the left menu)
@@ -106,3 +109,15 @@ class CalibrationBase(Collection):
 
     def update_gui(self) -> None:
         """Called periodically to refresh the UI."""
+
+    def create_plot(
+        self,
+        df: pd.DataFrame,
+        width: float,
+        height: float,
+        point: tuple[float, float] | None = None,
+    ) -> Figure | None:
+        return None
+
+    def get_last_calibration_df(self) -> pd.DataFrame:
+        return self.df

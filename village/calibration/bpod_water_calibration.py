@@ -4,8 +4,11 @@ import traceback
 from functools import partial
 from typing import TYPE_CHECKING
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
+from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLabel, QMessageBox, QPushButton, QScrollArea, QWidget
@@ -15,11 +18,10 @@ from village.custom_classes.calibration_base import CalibrationBase
 from village.custom_classes.task import BpodEvent, Task
 from village.gui.layout import Label, Layout, LineEdit
 from village.manager import manager
-from village.plots.bpod_water_calibration_plot import bpod_water_calibration_plot
 from village.scripts import utils
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
-from village.scripts.utils import create_pixmap
+from village.scripts.utils import create_pixmap, get_x_value_interp, interpolate
 from village.settings import settings
 
 if TYPE_CHECKING:
@@ -98,6 +100,68 @@ class BpodWaterCalibration(CalibrationBase):
     @classmethod
     def is_active(cls) -> bool:
         return manager.controller_type == ControllerEnum.BPOD
+
+    def create_plot(
+        self,
+        df: pd.DataFrame,
+        width: float,
+        height: float,
+        point: tuple[float, float] | None = None,
+    ) -> Figure | None:
+        fig, ax = plt.subplots(figsize=(width, height))
+        ports = sorted(df["port_number"].unique())
+        colors = sns.color_palette("tab10", 8)
+        colors = [colors[0]] + colors
+        for port in ports:
+            subset = df[df["port_number"] == port]
+            x = subset["time(s)"].values
+            y = subset["water_delivered(ul)"].values
+            ax.plot(
+                x, y, marker="o", linestyle="None", color=colors[port], label=f"{port}"
+            )
+            x_fit, y_fit = interpolate(x, y)
+            if x_fit is None:
+                continue
+            ax.plot(x_fit, y_fit, linestyle="-", color=colors[port])
+            ax.plot([], [], linestyle="None", marker="None")
+        if point is not None:
+            ax.plot(point[0], point[1], marker="x", color="red", markersize=10)
+        ax.set_xlabel("Time (s)", fontsize=7)
+        ax.set_ylabel("Water Delivered (ul)", fontsize=7)
+        ax.tick_params(axis="both", labelsize=6)
+        if not df.empty:
+            ax.legend(title="Port", fontsize=6, title_fontsize=7)
+        ax.grid(True)
+        return fig
+
+    def get_last_calibration_df(self) -> pd.DataFrame:
+        df = self.df[self.df["calibration_number"] != -1].copy()
+        max_values = df.groupby(["port_number"])["calibration_number"].transform("max")
+        return df[df["calibration_number"] == max_values]
+
+    def get_valve_time(self, port: int, volume: float) -> float:
+        try:
+            calibration_df = self.df[self.df["port_number"] == port]
+            max_calibration = calibration_df["calibration_number"].max()
+            calibration_df = calibration_df[
+                calibration_df["calibration_number"] == max_calibration
+            ]
+            val = get_x_value_interp(
+                calibration_df["time(s)"].values,
+                calibration_df["water_delivered(ul)"].values,
+                volume,
+            )
+            if val is None:
+                raise ValueError
+            return val
+        except Exception:
+            raise ValueError(
+                f"\n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n\n"
+                f"Cannot provide a valid time for {volume} ul on port {port}.\n"
+                f"1. Make sure you have calibrated the valves/pumps you are using.\n"
+                f"2. Make sure the volume is within calibration range.\n"
+                f"3. Check bpod_water_calibration.csv in 'data'.\n"
+            )
 
     def draw(self) -> None:
         manager.state = State.MANUAL_MODE
@@ -941,10 +1005,11 @@ class _CalibrationPlotLayout(Layout):
             return
         pixmap = QPixmap()
         try:
-            figure = bpod_water_calibration_plot(
+            figure = self.parent.create_plot(
                 df.copy(), self.plot_width, self.plot_height, test_point
             )
-            pixmap = create_pixmap(figure)
+            if figure is not None:
+                pixmap = create_pixmap(figure)
         except Exception:
             log.error(
                 "Can not create water calibration plot",

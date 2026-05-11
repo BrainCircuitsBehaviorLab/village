@@ -211,18 +211,6 @@ class NullSoundDevice:
 class NullCollection:
     df = pd.DataFrame()
 
-    def get_last_water_df(self) -> pd.DataFrame:
-        return pd.DataFrame()
-
-    def get_last_sound_df(self) -> pd.DataFrame:
-        return pd.DataFrame()
-
-    def get_valve_time(self, port: int, volume: float) -> float:
-        return 0.0
-
-    def get_sound_gain(self, speaker: int, dB: float, sound_name: str) -> float:
-        return 0.0
-
     def save_from_df(
         self, training: TrainingProtocolBase = TrainingProtocolBase()
     ) -> None:
