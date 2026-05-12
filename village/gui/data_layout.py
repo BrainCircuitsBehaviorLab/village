@@ -888,7 +888,7 @@ class DfLayout(Layout):
         self._draw_menu()
 
         # Content area starts at column 28 (matches settings_layout C_COL)
-        C = 28
+        C = 30
 
         self.back_button = self.create_and_add_button(
             "<-- BACK", 1, C, 22, 2, self.back_button_clicked, "back"
@@ -899,6 +899,7 @@ class DfLayout(Layout):
         self.search_edit = self.create_and_add_line_edit(
             "", 1, C + 8, 22, 2, self.search
         )
+        self.search_edit.setClearButtonEnabled(True)
 
         self.first_button = self.create_and_add_button(
             "FIRST", 1, C + 30, 10, 2, self.button_clicked, "first"
@@ -960,7 +961,7 @@ class DfLayout(Layout):
         for name in self._menu_items_list:
             self.menu_list.addItem(QListWidgetItem(name))
         self.menu_list.currentRowChanged.connect(self._on_menu_changed)
-        self.addWidget(self.menu_list, 1, 1, 41, 24)
+        self.addWidget(self.menu_list, 1, 1, 41, 26)
 
     def _on_menu_changed(self, row: int) -> None:
         if row < 0 or row >= len(self._menu_items_list):
