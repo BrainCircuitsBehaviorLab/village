@@ -897,6 +897,7 @@ class DfLayout(Layout):
             self._draw_menu()
 
         C = 0 if self._subjects_only else 30
+        D = 26 if self._subjects_only else 30
 
         self.back_button = self.create_and_add_button(
             "<-- BACK", 1, C, 22, 2, self.back_button_clicked, "back"
@@ -910,25 +911,25 @@ class DfLayout(Layout):
         self.search_edit.setClearButtonEnabled(True)
 
         self.first_button = self.create_and_add_button(
-            "FIRST", 1, C + 30, 10, 2, self.button_clicked, "first"
+            "FIRST", 1, D + 30, 10, 2, self.button_clicked, "first"
         )
         self.second_button = self.create_and_add_button(
-            "SECOND", 1, C + 40, 10, 2, self.button_clicked, "second"
+            "SECOND", 1, D + 40, 10, 2, self.button_clicked, "second"
         )
         self.third_button = self.create_and_add_button(
-            "THIRD", 1, C + 77, 18, 2, self.button_clicked, "third"
+            "THIRD", 1, D + 77, 18, 2, self.button_clicked, "third"
         )
         self.fourth_button = self.create_and_add_button(
-            "FOURTH", 1, C + 95, 18, 2, self.button_clicked, "fourth"
+            "FOURTH", 1, D + 95, 18, 2, self.button_clicked, "fourth"
         )
         self.fifth_button = self.create_and_add_button(
-            "FIFTH", 1, C + 113, 18, 2, self.button_clicked, "fifth"
+            "FIFTH", 1, D + 113, 18, 2, self.button_clicked, "fifth"
         )
         self.sixth_button = self.create_and_add_button(
-            "SIXTH", 1, C + 131, 18, 2, self.button_clicked, "sixth"
+            "SIXTH", 1, D + 131, 18, 2, self.button_clicked, "sixth"
         )
         self.seventh_button = self.create_and_add_button(
-            "SEVENTH", 1, C + 149, 18, 2, self.button_clicked, "sixth"
+            "SEVENTH", 1, D + 149, 18, 2, self.button_clicked, "seventh"
         )
 
         self.table_view = TableView(None)
@@ -1951,14 +1952,14 @@ class SubjectsLayout(Layout):
         self.subjects_button.setDisabled(True)
 
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 6, 0, 44, 200)
+        self.addLayout(self.central_layout, 6, 2, 44, 196)
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = DfLayout(self.window, 44, 200, subjects_only=True)
+        self.page1Layout = DfLayout(self.window, 44, 196, subjects_only=True)
         self.page1.setLayout(self.page1Layout)
         self.page2 = QWidget()
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = PlotLayout(self.window, 44, 200)
+        self.page2Layout = PlotLayout(self.window, 44, 196)
         self.page2.setLayout(self.page2Layout)
 
         self.central_layout.addWidget(self.page1)
