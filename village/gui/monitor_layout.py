@@ -460,6 +460,7 @@ class MonitorLayout(Layout):
     def update_gui(self) -> None:
         """Updates the GUI and its components."""
         self.update_status_label_buttons()
+        self.page4Layout.update_gui()
         if manager.actions == Actions.CORRIDOR:
             self.page1Layout.update_gui()
         match manager.info:
@@ -1280,6 +1281,12 @@ class VirtualMouseLayout(Layout):
         self._anm.start()
         self.auto_no_mouse_button.setText("■  AutoNoMouse")
         self.auto_no_mouse_button.setStyleSheet("background-color: salmon;")
+
+    def update_gui(self) -> None:
+        if self._anm is not None and not self._anm.running:
+            self._anm = None
+            self.auto_no_mouse_button.setText("▶  AutoNoMouse")
+            self.auto_no_mouse_button.setStyleSheet("background-color: lightblue;")
 
     def _inject_trials(self) -> None:
         p_l, p_r = self._get_p_left(), self._get_p_right()

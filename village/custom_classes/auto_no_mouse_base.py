@@ -1,7 +1,9 @@
+import bisect
 import threading
 from collections import deque
 
 from village.custom_classes.task import Task
+from village.scripts.time_utils import time_utils
 
 
 class AutoNoMouse_Base:
@@ -18,20 +20,53 @@ class AutoNoMouse_Base:
         self.position: tuple | None = None
         self.accuracy_left: float = 1.0
         self.accuracy_right: float = 1.0
+        self._position_log: list[tuple[float, int, int]] = []
 
     def start(self) -> None:
         self._stop_event.clear()
         self.trace.clear()
         self.position = None
+        self._position_log.clear()
         self._set_overlay(self)
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
 
     def stop(self) -> None:
+        if self._stop_event.is_set() and self.position is None:
+            return
         self._stop_event.set()
         self._set_overlay(None)
         self.trace.clear()
         self.position = None
+        self.inject_positions()
+
+    def inject_positions(self) -> None:
+        """Hacky: (I did not want to modify cam_box code to support this)
+        Replaces cam_box position (x, y) lists with AutoNoMouse positions.
+        Called when AutoNoMouse stops, just before cam_box.stop_recording(),
+        so cam_box.save_csv() picks them up and records them."""
+        cam = self.task.cam_box
+        if not self._position_log or not hasattr(cam, "camera_timestamps"):
+            return
+
+        ts_log = [t for t, _, _ in self._position_log]
+        xs_log = [x for _, x, _ in self._position_log]
+        ys_log = [y for _, _, y in self._position_log]
+
+        # match each virtual position timestamp to nearest
+        # cam ts, then inject (x, y).
+        new_x, new_y = [], []
+        for ts in cam.camera_timestamps:
+            i = bisect.bisect_right(ts_log, ts) - 1
+            if i >= 0:
+                new_x.append(xs_log[i])
+                new_y.append(ys_log[i])
+            else:
+                new_x.append(-1)
+                new_y.append(-1)
+
+        cam.x_positions = new_x
+        cam.y_positions = new_y
 
     def _set_overlay(self, instance: "AutoNoMouse_Base | None") -> None:
         try:
@@ -51,6 +86,7 @@ class AutoNoMouse_Base:
             and self.task.current_trial <= self.task.maximum_number_of_trials
         ):
             self.run_trial()
+        self.stop()
 
     def run_trial(self) -> None:
         """Override in subclass. Sequence of actions to perform for
@@ -83,6 +119,7 @@ class AutoNoMouse_Base:
         pt = (int(x), int(y))
         self.position = pt
         self.trace.append(pt)
+        self._position_log.append((time_utils.now_timestamp(), pt[0], pt[1]))
 
     def wait(self, seconds: float) -> None:
         """Sleep for *seconds*, waking early if stop() is called."""
