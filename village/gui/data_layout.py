@@ -626,6 +626,8 @@ class DataLayout(Layout):
 
     def draw(self) -> None:
         self.data_button.setDisabled(True)
+        if manager.table == DataTable.SUBJECTS:
+            manager.table = DataTable.EVENTS
 
         self.central_layout = QStackedLayout()
         self.addLayout(self.central_layout, 6, 0, 44, 200)
@@ -831,14 +833,19 @@ class DfLayout(Layout):
     plot_change_requested = pyqtSignal(str)
     video_change_requested = pyqtSignal((str, int))
 
-    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+    def __init__(
+        self, window: GuiWindow, rows: int, columns: int, subjects_only: bool = False
+    ) -> None:
         """Initializes the DfLayout.
 
         Args:
             window (GuiWindow): The parent window.
             rows (int): Number of rows.
             columns (int): Number of columns.
+            subjects_only (bool): When True, hides the left menu and shows only
+                the SUBJECTS table at full width.
         """
+        self._subjects_only = subjects_only
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.df = DataFrame()
         self.complete_df = DataFrame()
@@ -875,20 +882,21 @@ class DfLayout(Layout):
         self.searching = ""
         self.previous_searching = ""
 
-        base_values = DataTable.values()[:-2]
-        cal_names = [
-            cal.display_name
-            for cal in vars(manager.calibrations).values()
-            if isinstance(cal, CalibrationBase)
-            and cal.is_active()
-            and hasattr(cal, "df")
-        ]
-        self._menu_items_list = base_values + cal_names
+        if self._subjects_only:
+            self._menu_items_list = []
+        else:
+            base_values = DataTable.values()[:-3]
+            cal_names = [
+                cal.display_name
+                for cal in vars(manager.calibrations).values()
+                if isinstance(cal, CalibrationBase)
+                and cal.is_active()
+                and hasattr(cal, "df")
+            ]
+            self._menu_items_list = base_values + cal_names
+            self._draw_menu()
 
-        self._draw_menu()
-
-        # Content area starts at column 28 (matches settings_layout C_COL)
-        C = 30
+        C = 0 if self._subjects_only else 30
 
         self.back_button = self.create_and_add_button(
             "<-- BACK", 1, C, 22, 2, self.back_button_clicked, "back"
@@ -969,6 +977,8 @@ class DfLayout(Layout):
         self.change_data_table(self._menu_items_list[row], "")
 
     def _sync_menu_selection(self) -> None:
+        if self._subjects_only:
+            return
         self.menu_list.blockSignals(True)
         if isinstance(manager.table, DataTable):
             target = manager.table.value
@@ -1725,7 +1735,7 @@ class DfLayout(Layout):
                 self.update_buttons()
             else:
                 text = "Wait until the box is empty or synchronization is complete"
-                text += " before editing the subjects."
+                text += " before editing the tables."
                 QMessageBox.information(self.window, "EDIT", text)
 
     def cancel(self) -> None:
@@ -1926,6 +1936,118 @@ class DfLayout(Layout):
     def on_data_changed(self) -> None:
         """Saves data changes to the DataFrame when modified."""
         self.table_view.save_changes_in_df()
+
+
+class SubjectsLayout(Layout):
+    """Standalone layout for the SUBJECTS tab (full-width, no left menu)."""
+
+    def __init__(self, window: "GuiWindow") -> None:
+        super().__init__(window)
+        self._highlight_nav_button(self.subjects_button)
+        manager.table = DataTable.SUBJECTS
+        self.draw()
+
+    def draw(self) -> None:
+        self.subjects_button.setDisabled(True)
+
+        self.central_layout = QStackedLayout()
+        self.addLayout(self.central_layout, 6, 0, 44, 200)
+        self.page1 = QWidget()
+        self.page1.setStyleSheet("background-color:white")
+        self.page1Layout = DfLayout(self.window, 44, 200, subjects_only=True)
+        self.page1.setLayout(self.page1Layout)
+        self.page2 = QWidget()
+        self.page2.setStyleSheet("background-color:white")
+        self.page2Layout = PlotLayout(self.window, 44, 200)
+        self.page2.setLayout(self.page2Layout)
+
+        self.central_layout.addWidget(self.page1)
+        self.central_layout.addWidget(self.page2)
+        self.central_layout.setCurrentWidget(self.page1)
+
+        self.page1Layout.plot_change_requested.connect(self.change_to_plot)
+        self.page2Layout.data_from_plot_change_requested.connect(self.change_to_df)
+
+        self.update_data()
+
+    def change_to_plot(self, signal: str) -> None:
+        if self.page1Layout.df["name"].duplicated().any():
+            text = "There are repeated names in the subjects table."
+            QMessageBox.information(self.window, "WARNING", text)
+            return
+        elif self.page1Layout.df["name"].str.strip().eq("").any():
+            text = "There are empty names in the subjects table."
+            QMessageBox.information(self.window, "WARNING", text)
+            return
+
+        self.central_layout.setCurrentWidget(self.page2)
+        pixmap = QPixmap()
+        dpi = int(settings.get("MATPLOTLIB_DPI"))
+        width = 200 * self.column_width / dpi
+        height = 45 * self.row_height / dpi
+
+        if signal == "weights":
+            try:
+                df = manager.sessions_summary.df.copy()
+                figure = weights_plot(df, width, height)
+                pixmap = utils.create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create weights plot", exception=traceback.format_exc()
+                )
+        else:
+            path = self.page1Layout.get_path_from_subjects_row(
+                cast(pd.Series, self.page1Layout.get_selected_row_series())
+            )
+            try:
+                df = pd.read_csv(path, sep=";")
+                name = cast(pd.Series, self.page1Layout.get_selected_row_series())[
+                    "name"
+                ]
+                summary_df = manager.sessions_summary.df.loc[
+                    manager.sessions_summary.df["subject"] == name
+                ]
+                figure = manager.subject_plot.create_plot(df, summary_df, width, height)
+                pixmap = utils.create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create plot for file: " + path,
+                    exception=traceback.format_exc(),
+                )
+        if not pixmap.isNull():
+            self.page2Layout.plot_label.setPixmap(pixmap)
+        else:
+            self.page2Layout.plot_label.setText(
+                "Plot could not be generated. Check events file."
+            )
+
+    def change_to_df(self) -> None:
+        self.central_layout.setCurrentWidget(self.page1)
+
+    def update_data(self) -> None:
+        if self.central_layout.currentIndex() == 0:
+            self.page1Layout.update_data()
+            self.page1Layout.create_table()
+        elif self.central_layout.currentIndex() == 1:
+            self.page2Layout.update_data()
+
+    def update_gui(self) -> None:
+        self.update_status_label_buttons()
+        if self.central_layout.currentIndex() == 0:
+            self.page1Layout.update_gui()
+        elif self.central_layout.currentIndex() == 1:
+            self.page2Layout.update_gui()
+
+    def change_layout(self, auto: bool = False) -> bool:
+        if self.page1Layout.df["name"].duplicated().any():
+            text = "There are repeated names in the subjects table."
+            QMessageBox.information(self.window, "WARNING", text)
+            return False
+        elif self.page1Layout.df["name"].str.strip().eq("").any():
+            text = "There are empty names in the subjects table."
+            QMessageBox.information(self.window, "WARNING", text)
+            return False
+        return True
 
 
 class PlotLayout(Layout):
