@@ -16,7 +16,7 @@ from village.custom_classes.calibration_base import CalibrationBase
 class CameraCalibration(CalibrationBase):
     name = "camera_calibration"
 
-    def __init__(self, spacing_mm: float,
+    def __init__(self, spacing_mm: float = 50,
                  grid_size: tuple[int, int] | None = None) -> None:
         self.spacing_mm = spacing_mm
         self.measured_spacing_mm: float | None = None

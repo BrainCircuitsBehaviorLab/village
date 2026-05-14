@@ -2,7 +2,7 @@ import traceback
 
 from pi5neo import Pi5Neo
 
-from village.classes.abstract_classes import LEDStripBase
+from village.classes.null_classes import LEDStripBase
 from village.scripts.log import log
 
 

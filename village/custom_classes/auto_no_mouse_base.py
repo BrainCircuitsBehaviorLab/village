@@ -12,7 +12,7 @@ class AutoNoMouse_Base:
     To be subclassed in task folder.
     """
 
-    def __init__(self, task: Task=None) -> None:
+    def __init__(self, task: Task = None) -> None:
         self.task = task
         self._thread: threading.Thread | None = None
         self._stop_event = threading.Event()
@@ -93,6 +93,7 @@ class AutoNoMouse_Base:
         one trial, e.g. pokes and position updates."""
         self.wait(1.0)
 
+    # FIXME: use *args, **kwargs instead of fixed params and subclassed anyway.
     def inject_trial(
         self, p_correct_left: float = 1.0, p_correct_right: float = 1.0
     ) -> None:
@@ -100,6 +101,7 @@ class AutoNoMouse_Base:
         Append one mock trial row directly to session_df."""
         pass
 
+    # FIXME: use *args, **kwargs instead of fixed params
     def inject_trials(
         self, n: int, p_correct_left: float = 1.0, p_correct_right: float = 1.0
     ) -> None:
