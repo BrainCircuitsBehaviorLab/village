@@ -18,7 +18,7 @@ from PyQt5.QtCore import (
     QVariant,
     pyqtSignal,
 )
-from PyQt5.QtGui import QBrush, QColor, QImage, QPixmap
+from PyQt5.QtGui import QBrush, QColor, QFont, QImage, QPixmap
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QAbstractScrollArea,
@@ -30,6 +30,8 @@ from PyQt5.QtWidgets import (
     QHeaderView,
     QLabel,
     QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPushButton,
     QScrollArea,
@@ -624,6 +626,8 @@ class DataLayout(Layout):
 
     def draw(self) -> None:
         self.data_button.setDisabled(True)
+        if manager.table == DataTable.SUBJECTS:
+            manager.table = DataTable.EVENTS
 
         self.central_layout = QStackedLayout()
         self.addLayout(self.central_layout, 6, 0, 44, 200)
@@ -829,14 +833,19 @@ class DfLayout(Layout):
     plot_change_requested = pyqtSignal(str)
     video_change_requested = pyqtSignal((str, int))
 
-    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+    def __init__(
+        self, window: GuiWindow, rows: int, columns: int, subjects_only: bool = False
+    ) -> None:
         """Initializes the DfLayout.
 
         Args:
             window (GuiWindow): The parent window.
             rows (int): Number of rows.
             columns (int): Number of columns.
+            subjects_only (bool): When True, hides the left menu and shows only
+                the SUBJECTS table at full width.
         """
+        self._subjects_only = subjects_only
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.df = DataFrame()
         self.complete_df = DataFrame()
@@ -873,55 +882,54 @@ class DfLayout(Layout):
         self.searching = ""
         self.previous_searching = ""
 
-        base_values = DataTable.values()[:-2]
-        cal_names = [
-            cal.display_name
-            for cal in vars(manager.calibrations).values()
-            if isinstance(cal, CalibrationBase)
-            and cal.is_active()
-            and hasattr(cal, "df")
-        ]
-        possible_values = base_values + cal_names
-        if isinstance(manager.table, DataTable):
-            try:
-                index = possible_values.index(manager.table.value)
-            except ValueError:
-                index = 0
+        if self._subjects_only:
+            self._menu_items_list = []
         else:
-            try:
-                index = possible_values.index(manager.table)
-            except ValueError:
-                index = 0
+            base_values = DataTable.values()[:-3]
+            cal_names = [
+                cal.display_name
+                for cal in vars(manager.calibrations).values()
+                if isinstance(cal, CalibrationBase)
+                and cal.is_active()
+                and hasattr(cal, "df")
+            ]
+            self._menu_items_list = base_values + cal_names
+            self._draw_menu()
 
-        self.title = self.create_and_add_combo_box(
-            "title", 1, 3, 35, 2, possible_values, index, self.change_data_table
-        )
+        C = 0 if self._subjects_only else 30
+        D = 26 if self._subjects_only else 30
 
         self.back_button = self.create_and_add_button(
-            "<-- BACK", 1, 3, 35, 2, self.back_button_clicked, "back"
+            "<-- BACK", 1, C, 22, 2, self.back_button_clicked, "back"
         )
         self.back_button.hide()
 
-        self.search_label = self.create_and_add_label("search", 1, 45, 6, 2, "Search")
-        self.search_edit = self.create_and_add_line_edit("", 1, 51, 25, 2, self.search)
+        self.search_label = self.create_and_add_label("search", 1, C + 2, 6, 2, "black")
+        self.search_edit = self.create_and_add_line_edit(
+            "", 1, C + 8, 22, 2, self.search
+        )
+        self.search_edit.setClearButtonEnabled(True)
 
         self.first_button = self.create_and_add_button(
-            "FIRST", 1, 89, 18, 2, self.button_clicked, "first"
+            "FIRST", 1, D + 30, 10, 2, self.button_clicked, "first"
         )
         self.second_button = self.create_and_add_button(
-            "SECOND", 1, 107, 18, 2, self.button_clicked, "second"
+            "SECOND", 1, D + 40, 10, 2, self.button_clicked, "second"
         )
         self.third_button = self.create_and_add_button(
-            "THIRD", 1, 125, 18, 2, self.button_clicked, "third"
+            "THIRD", 1, D + 77, 18, 2, self.button_clicked, "third"
         )
         self.fourth_button = self.create_and_add_button(
-            "FOURTH", 1, 143, 18, 2, self.button_clicked, "fourth"
+            "FOURTH", 1, D + 95, 18, 2, self.button_clicked, "fourth"
         )
         self.fifth_button = self.create_and_add_button(
-            "FIFTH", 1, 161, 18, 2, self.button_clicked, "fifth"
+            "FIFTH", 1, D + 113, 18, 2, self.button_clicked, "fifth"
         )
         self.sixth_button = self.create_and_add_button(
-            "SIXTH", 1, 179, 18, 2, self.button_clicked, "sixth"
+            "SIXTH", 1, D + 131, 18, 2, self.button_clicked, "sixth"
+        )
+        self.seventh_button = self.create_and_add_button(
+            "SEVENTH", 1, D + 149, 18, 2, self.button_clicked, "seventh"
         )
 
         self.table_view = TableView(None)
@@ -938,20 +946,66 @@ class DfLayout(Layout):
         self.table_view.setSelectionMode(QTableView.SingleSelection)
         self.table_view.viewport().setAutoFillBackground(True)
 
-        self.addWidget(self.table_view, 5, 0, 42, 200)
+        self.addWidget(self.table_view, 4, C, 42, 200 - C)
+
+    def _draw_menu(self) -> None:
+        menu_font = QFont("DejaVu Sans Condensed", 9)
+        menu_font.setBold(True)
+        self.menu_list = QListWidget()
+        self.menu_list.setFont(menu_font)
+        self.menu_list.setStyleSheet(
+            "QListWidget { background: #e8e8e8; border: none; outline: none; }"
+            "QListWidget::item {"
+            " background: #d0d0d0; color: black;"
+            " padding: 6px 8px; margin-bottom: 2px;"
+            " border: 1px solid #aaaaaa;"
+            " border-radius: 3px; }"
+            "QListWidget::item:selected { background: steelblue; color: white;"
+            " border-color: steelblue; }"
+            "QListWidget::item:hover { background: #b0c4de; border-color: #b0c4de; }"
+            "QToolTip { background-color: white; color: black;"
+            " font-size: 10pt; padding: 4px }"
+        )
+        self.menu_list.setSpacing(1)
+        for name in self._menu_items_list:
+            self.menu_list.addItem(QListWidgetItem(name))
+        self.menu_list.currentRowChanged.connect(self._on_menu_changed)
+        self.addWidget(self.menu_list, 1, 1, 41, 26)
+
+    def _on_menu_changed(self, row: int) -> None:
+        if row < 0 or row >= len(self._menu_items_list):
+            return
+        self.change_data_table(self._menu_items_list[row], "")
+
+    def _sync_menu_selection(self) -> None:
+        if self._subjects_only:
+            return
+        self.menu_list.blockSignals(True)
+        if isinstance(manager.table, DataTable):
+            target = manager.table.value
+        else:
+            target = manager.table
+        try:
+            idx = self._menu_items_list.index(target)
+            self.menu_list.setCurrentRow(idx)
+        except ValueError:
+            self.menu_list.setCurrentRow(-1)
+        self.menu_list.blockSignals(False)
 
     def update_data(self) -> None:
         """Updates the DataFrame based on the currently selected DataTable."""
+        self.back_button.hide()
+        _W = 160  # available table columns
         match manager.table:
             case DataTable.EVENTS:
                 self.complete_df = manager.events.df
-                self.widths = [20, 20, 20, 130]
+                self.widths = [20, 10, 10, _W - 40]
             case DataTable.SESSIONS_SUMMARY:
                 self.complete_df = manager.sessions_summary.df
-                self.widths = [20, 20, 20, 20, 20, 20, 20, 20, 20]
+                self.widths = [20, 15, 15, 15, 15, 15, 15, 15, _W - 125]
             case DataTable.SUBJECTS:
                 self.complete_df = manager.subjects.df
-                self.widths = [20, 20, 20, 20, 20, 90]
+                self.widths = [15, 15, 15, 15, 15, _W - 75]
             case DataTable.TEMPERATURES:
                 self.complete_df = manager.temperatures.df
                 self.widths = [20, 20, 20]
@@ -960,31 +1014,28 @@ class DfLayout(Layout):
                 self.widths = [20, 20, 20, 20, 20]
             case DataTable.SESSION_RAW:
                 self.complete_df = manager.update_raw_session_df()
-                self.widths = [20, 20, 20, 65, 65]
+                self.widths = [20, 20, 20, 40, _W - 100]
             case DataTable.OLD_SESSION:
                 self.complete_df = manager.old_session_df
                 self.widths = [20, 20, 20, 20, 20, 20]
-                self.title.setCurrentIndex(-1)
-                self.title.hide()
                 self.back_button.show()
             case DataTable.OLD_SESSION_RAW:
                 self.complete_df = manager.old_session_raw_df
-                self.widths = [20, 20, 20, 60, 60]
-                self.title.setCurrentIndex(-1)
-                self.title.hide()
+                self.widths = [20, 20, 20, 40, _W - 100]
                 self.back_button.show()
             case str():
                 cal = _get_calibration_by_name(manager.table)
                 if cal is not None:
+                    n = len(cal.df.columns)
                     self.complete_df = cal.df
-                    self.widths = [20] * len(cal.df.columns)
+                    self.widths = [20] * n
+        self._sync_menu_selection()
         self.df = self.obtain_searched_df()
 
     def back_button_clicked(self) -> None:
         """Handles the back button click, returning to the SESSIONS_SUMMARY table."""
         self.back_button.hide()
-        self.title.show()
-        self.title.setCurrentText(DataTable.SESSIONS_SUMMARY.value)
+        self.change_data_table(DataTable.SESSIONS_SUMMARY.value, "")
 
     def create_table(self) -> None:
         """Creates and sets up the QTableView with the current DataFrame."""
@@ -1074,10 +1125,12 @@ class DfLayout(Layout):
             if self.df["name"].duplicated().any():
                 text = "There are repeated names in the subjects table."
                 QMessageBox.information(self.window, "WARNING", text)
+                self._sync_menu_selection()
                 return
             elif self.df["name"].str.strip().eq("").any():
                 text = "There are empty names in the subjects table."
                 QMessageBox.information(self.window, "WARNING", text)
+                self._sync_menu_selection()
                 return
 
         if value != "":
@@ -1240,6 +1293,10 @@ class DfLayout(Layout):
     def update_buttons(self) -> None:
         """Updates the state and visibility of action buttons based on selection
         and table type."""
+        _tt = (
+            "QToolTip {background-color: white; color: black;"
+            " font-size: 10pt; padding: 4px}"
+        )
         sel_model = self.table_view.selectionModel()
         selected_indexes = sel_model.selectedRows() if sel_model else []
         match manager.table:
@@ -1249,65 +1306,95 @@ class DfLayout(Layout):
                 self.third_button.hide()
                 self.fourth_button.hide()
                 self.fifth_button.hide()
-                self.connect_button_to_video(self.sixth_button)
-                self.sixth_button.setEnabled(bool(selected_indexes))
+                self.sixth_button.hide()
+                self.connect_button_to_video(self.seventh_button)
+                self.seventh_button.setEnabled(bool(selected_indexes))
             case DataTable.SESSIONS_SUMMARY:
                 self.connect_button_to_delete(self.first_button)
-                self.connect_button_to_data_raw(self.second_button)
-                self.connect_button_to_data(self.third_button)
-                self.connect_button_to_video(self.fourth_button)
+                self.first_button.setStyleSheet(
+                    "QPushButton {background-color: lightcoral; font-weight: bold}"
+                    + _tt
+                )
+                self.second_button.hide()
+                self.connect_button_to_data_raw(self.third_button)
+                self.connect_button_to_data(self.fourth_button)
+                self.connect_button_to_video(self.fifth_button)
                 self.connect_button_to_plot(
-                    self.fifth_button, "PLOT SESSION", "Plot the selected session"
+                    self.sixth_button, "PLOT SESSION", "Plot the selected session"
                 )
                 self.connect_button_to_plot_weights(
-                    self.sixth_button,
+                    self.seventh_button,
                     "PLOT WEIGHTS",
                     "Plot the weights of all subjects",
                 )
                 enabled = bool(selected_indexes)
                 self.first_button.setEnabled(enabled)
-                self.second_button.setEnabled(enabled)
                 self.third_button.setEnabled(enabled)
                 self.fourth_button.setEnabled(enabled)
                 self.fifth_button.setEnabled(enabled)
-                self.sixth_button.setEnabled(True)
+                self.sixth_button.setEnabled(enabled)
+                self.seventh_button.setEnabled(True)
             case DataTable.SUBJECTS:
-                self.first_button.hide()
-                self.second_button.hide()
-                self.connect_button_to_add(self.third_button)
-                self.connect_button_to_delete(self.fourth_button)
+                self.connect_button_to_add(self.first_button)
+                self.first_button.setStyleSheet(
+                    "QPushButton {background-color: powderblue; font-weight: bold}"
+                    + _tt
+                )
+                self.connect_button_to_delete(self.second_button)
+                self.second_button.setStyleSheet(
+                    "QPushButton {background-color: lightcoral; font-weight: bold}"
+                    + _tt
+                )
+                self.third_button.hide()
+                self.fourth_button.hide()
+                self.fifth_button.hide()
                 self.connect_button_to_plot(
-                    self.fifth_button, "PLOT SUBJECT", "Plot the selected subject"
+                    self.sixth_button, "PLOT SUBJECT", "Plot the selected subject"
                 )
                 self.connect_button_to_plot_weights(
-                    self.sixth_button,
+                    self.seventh_button,
                     "PLOT WEIGHTS",
                     "Plot the weights of all subjects",
                 )
-
-                self.third_button.setEnabled(True)
                 enabled = bool(selected_indexes)
-                self.fourth_button.setEnabled(enabled)
-                self.fifth_button.setEnabled(enabled)
-                self.sixth_button.setEnabled(True)
+                self.first_button.setEnabled(True)
+                self.second_button.setEnabled(enabled)
+                self.sixth_button.setEnabled(enabled)
+                self.seventh_button.setEnabled(True)
             case DataTable.TEMPERATURES:
-                self.first_button.hide()
+                self.connect_button_to_delete(self.first_button)
+                self.first_button.setStyleSheet(
+                    "QPushButton {background-color: lightcoral; font-weight: bold}"
+                    + _tt
+                )
                 self.second_button.hide()
                 self.third_button.hide()
                 self.fourth_button.hide()
-                self.connect_button_to_delete(self.fifth_button)
-                self.connect_button_to_plot(self.sixth_button, "PLOT", "Plot the data")
-                self.sixth_button.setEnabled(True)
-                self.fifth_button.setEnabled(bool(selected_indexes))
+                self.fifth_button.hide()
+                self.sixth_button.hide()
+                self.connect_button_to_plot(
+                    self.seventh_button, "PLOT", "Plot the data"
+                )
+                enabled = bool(selected_indexes)
+                self.first_button.setEnabled(enabled)
+                self.seventh_button.setEnabled(True)
             case str():
-                self.first_button.hide()
+                self.connect_button_to_delete(self.first_button)
+                self.first_button.setStyleSheet(
+                    "QPushButton {background-color: lightcoral; font-weight: bold}"
+                    + _tt
+                )
                 self.second_button.hide()
                 self.third_button.hide()
                 self.fourth_button.hide()
-                self.connect_button_to_delete(self.fifth_button)
-                self.connect_button_to_plot(self.sixth_button, "PLOT", "Plot the data")
-                self.sixth_button.setEnabled(True)
-                self.fifth_button.setEnabled(bool(selected_indexes))
+                self.fifth_button.hide()
+                self.sixth_button.hide()
+                self.connect_button_to_plot(
+                    self.seventh_button, "PLOT", "Plot the data"
+                )
+                enabled = bool(selected_indexes)
+                self.first_button.setEnabled(enabled)
+                self.seventh_button.setEnabled(True)
             case DataTable.SESSION | DataTable.SESSION_RAW:
                 self.first_button.hide()
                 self.second_button.hide()
@@ -1315,17 +1402,19 @@ class DfLayout(Layout):
                 self.fourth_button.hide()
                 self.fifth_button.hide()
                 self.sixth_button.hide()
+                self.seventh_button.hide()
             case DataTable.OLD_SESSION | DataTable.OLD_SESSION_RAW:
                 self.first_button.hide()
                 self.second_button.hide()
                 self.third_button.hide()
                 self.fourth_button.hide()
-                self.connect_button_to_video(self.fifth_button)
+                self.fifth_button.hide()
+                self.connect_button_to_video(self.sixth_button)
                 self.connect_button_to_plot(
-                    self.sixth_button, "PLOT SESSION", "Plot the selected session"
+                    self.seventh_button, "PLOT SESSION", "Plot the selected session"
                 )
-                self.fifth_button.setEnabled(True)
                 self.sixth_button.setEnabled(True)
+                self.seventh_button.setEnabled(True)
 
     def search(self, value: str) -> None:
         """Sets the search term.
@@ -1647,7 +1736,7 @@ class DfLayout(Layout):
                 self.update_buttons()
             else:
                 text = "Wait until the box is empty or synchronization is complete"
-                text += " before editing the subjects."
+                text += " before editing the tables."
                 QMessageBox.information(self.window, "EDIT", text)
 
     def cancel(self) -> None:
@@ -1848,6 +1937,118 @@ class DfLayout(Layout):
     def on_data_changed(self) -> None:
         """Saves data changes to the DataFrame when modified."""
         self.table_view.save_changes_in_df()
+
+
+class SubjectsLayout(Layout):
+    """Standalone layout for the SUBJECTS tab (full-width, no left menu)."""
+
+    def __init__(self, window: "GuiWindow") -> None:
+        super().__init__(window)
+        self._highlight_nav_button(self.subjects_button)
+        manager.table = DataTable.SUBJECTS
+        self.draw()
+
+    def draw(self) -> None:
+        self.subjects_button.setDisabled(True)
+
+        self.central_layout = QStackedLayout()
+        self.addLayout(self.central_layout, 6, 2, 44, 196)
+        self.page1 = QWidget()
+        self.page1.setStyleSheet("background-color:white")
+        self.page1Layout = DfLayout(self.window, 44, 196, subjects_only=True)
+        self.page1.setLayout(self.page1Layout)
+        self.page2 = QWidget()
+        self.page2.setStyleSheet("background-color:white")
+        self.page2Layout = PlotLayout(self.window, 44, 196)
+        self.page2.setLayout(self.page2Layout)
+
+        self.central_layout.addWidget(self.page1)
+        self.central_layout.addWidget(self.page2)
+        self.central_layout.setCurrentWidget(self.page1)
+
+        self.page1Layout.plot_change_requested.connect(self.change_to_plot)
+        self.page2Layout.data_from_plot_change_requested.connect(self.change_to_df)
+
+        self.update_data()
+
+    def change_to_plot(self, signal: str) -> None:
+        if self.page1Layout.df["name"].duplicated().any():
+            text = "There are repeated names in the subjects table."
+            QMessageBox.information(self.window, "WARNING", text)
+            return
+        elif self.page1Layout.df["name"].str.strip().eq("").any():
+            text = "There are empty names in the subjects table."
+            QMessageBox.information(self.window, "WARNING", text)
+            return
+
+        self.central_layout.setCurrentWidget(self.page2)
+        pixmap = QPixmap()
+        dpi = int(settings.get("MATPLOTLIB_DPI"))
+        width = 200 * self.column_width / dpi
+        height = 45 * self.row_height / dpi
+
+        if signal == "weights":
+            try:
+                df = manager.sessions_summary.df.copy()
+                figure = weights_plot(df, width, height)
+                pixmap = utils.create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create weights plot", exception=traceback.format_exc()
+                )
+        else:
+            path = self.page1Layout.get_path_from_subjects_row(
+                cast(pd.Series, self.page1Layout.get_selected_row_series())
+            )
+            try:
+                df = pd.read_csv(path, sep=";")
+                name = cast(pd.Series, self.page1Layout.get_selected_row_series())[
+                    "name"
+                ]
+                summary_df = manager.sessions_summary.df.loc[
+                    manager.sessions_summary.df["subject"] == name
+                ]
+                figure = manager.subject_plot.create_plot(df, summary_df, width, height)
+                pixmap = utils.create_pixmap(figure)
+            except Exception:
+                log.error(
+                    "Can not create plot for file: " + path,
+                    exception=traceback.format_exc(),
+                )
+        if not pixmap.isNull():
+            self.page2Layout.plot_label.setPixmap(pixmap)
+        else:
+            self.page2Layout.plot_label.setText(
+                "Plot could not be generated. Check events file."
+            )
+
+    def change_to_df(self) -> None:
+        self.central_layout.setCurrentWidget(self.page1)
+
+    def update_data(self) -> None:
+        if self.central_layout.currentIndex() == 0:
+            self.page1Layout.update_data()
+            self.page1Layout.create_table()
+        elif self.central_layout.currentIndex() == 1:
+            self.page2Layout.update_data()
+
+    def update_gui(self) -> None:
+        self.update_status_label_buttons()
+        if self.central_layout.currentIndex() == 0:
+            self.page1Layout.update_gui()
+        elif self.central_layout.currentIndex() == 1:
+            self.page2Layout.update_gui()
+
+    def change_layout(self, auto: bool = False) -> bool:
+        if self.page1Layout.df["name"].duplicated().any():
+            text = "There are repeated names in the subjects table."
+            QMessageBox.information(self.window, "WARNING", text)
+            return False
+        elif self.page1Layout.df["name"].str.strip().eq("").any():
+            text = "There are empty names in the subjects table."
+            QMessageBox.information(self.window, "WARNING", text)
+            return False
+        return True
 
 
 class PlotLayout(Layout):

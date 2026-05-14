@@ -540,6 +540,9 @@ class SettingsLayout(Layout):
     def save_button_clicked(self) -> None:
         self.save(changing_project=False)
 
+    def save_for_exit(self) -> None:
+        self.save(changing_project=False, exiting=True)
+
     def _apply_system_name(self, value: str, changing_project: bool) -> bool:
         """Validates, confirms and saves a SYSTEM_NAME change.
 
@@ -579,7 +582,7 @@ class SettingsLayout(Layout):
         utils.change_system_directory_settings()
         return True
 
-    def save(self, changing_project: bool) -> None:
+    def save(self, changing_project: bool, exiting: bool = False) -> None:
         # Flush current section's widgets into _pending so save() sees everything
         self._flush_to_pending()
 
@@ -767,18 +770,22 @@ class SettingsLayout(Layout):
 
         self._pending.clear()
 
-        if system_name_changed:
+        if system_name_changed and not exiting:
             self._destroy_content()
             self.draw_section(self._current_section)
 
-        if self.critical_changes and not changing_project:
-            text = (
-                "Some of the setting changes require a system restart to take effect."
-            )
-            QMessageBox.information(self.window, "Restart", text)
-            self.window.reload_app()
-        elif system_name_changed and not changing_project:
-            self.window.reload_app()
+        if not exiting:
+            if self.critical_changes and not changing_project:
+                text = (
+                    "Some of the setting changes require a system restart"
+                    " to take effect."
+                )
+                QMessageBox.information(self.window, "Restart", text)
+                self.window.reload_app()
+            elif system_name_changed and not changing_project:
+                self.window.reload_app()
+        else:
+            settings.sync()
 
         self.critical_changes = False
 

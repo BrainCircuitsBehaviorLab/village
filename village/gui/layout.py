@@ -290,6 +290,7 @@ class Layout(QGridLayout):
         _nav_items = [
             ("MAIN", "Go to the main menu"),
             ("MONITOR", "Go to the monitor menu"),
+            ("SUBJECTS", "Go to the subjects menu"),
             ("TASKS", "Go to the tasks menu"),
             ("DATA", "Go to the data menu"),
             ("CALIBRATION", "Go to the calibration menu"),
@@ -321,10 +322,11 @@ class Layout(QGridLayout):
 
         self.main_button = NavTabProxy(self.nav_tab_bar, 0)
         self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)
-        self.tasks_button = NavTabProxy(self.nav_tab_bar, 2)
-        self.data_button = NavTabProxy(self.nav_tab_bar, 3)
-        self.calibration_button = NavTabProxy(self.nav_tab_bar, 4)
-        self.settings_button = NavTabProxy(self.nav_tab_bar, 5)
+        self.subjects_button = NavTabProxy(self.nav_tab_bar, 2)
+        self.tasks_button = NavTabProxy(self.nav_tab_bar, 3)
+        self.data_button = NavTabProxy(self.nav_tab_bar, 4)
+        self.calibration_button = NavTabProxy(self.nav_tab_bar, 5)
+        self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
         self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
@@ -467,22 +469,41 @@ class Layout(QGridLayout):
             old_state = manager.state
             manager.state = State.EXIT_GUI
             self.update_status_label_buttons()
-            text = "Are you sure you want to exit?"
+
             if manager.changing_settings:
-                text += " Changes will not be saved."
-            reply = QMessageBox.question(
-                self.window,
-                "EXIT",
-                text,
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No,
-            )
-            if reply == QMessageBox.Yes:
-                manager.turn_off_all_lights()
-                self.window.exit_app()
+                reply = QMessageBox.question(
+                    self.window,
+                    "EXIT",
+                    "Do you want to save the settings before exiting?",
+                    QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                    QMessageBox.Save,
+                )
+                if reply == QMessageBox.Save:
+                    save_fn = getattr(self, "save_for_exit", None)
+                    if save_fn is not None:
+                        save_fn()
+                    manager.turn_off_all_lights()
+                    self.window.exit_app()
+                elif reply == QMessageBox.Discard:
+                    manager.turn_off_all_lights()
+                    self.window.exit_app()
+                else:
+                    manager.state = old_state
+                    self.update_status_label_buttons()
             else:
-                manager.state = old_state
-                self.update_status_label_buttons()
+                reply = QMessageBox.question(
+                    self.window,
+                    "EXIT",
+                    "Are you sure you want to exit?",
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.No,
+                )
+                if reply == QMessageBox.Yes:
+                    manager.turn_off_all_lights()
+                    self.window.exit_app()
+                else:
+                    manager.state = old_state
+                    self.update_status_label_buttons()
         else:
             text = "Wait until the box is empty or synchronization is complete"
             text += " before exiting the application"
@@ -525,6 +546,15 @@ class Layout(QGridLayout):
             manager.detection_change = True
             self.close_online_plot_window()
             self.window.create_monitor_layout()
+
+    def subjects_button_clicked(self) -> None:
+        """Handles subjects button click."""
+        if self.change_layout():
+            if manager.state == State.MANUAL_MODE:
+                manager.state = State.WAIT
+                manager.reset_subject_task_training()
+            self.close_online_plot_window()
+            self.window.create_subjects_layout()
 
     def tasks_button_clicked(self) -> None:
         """Handles tasks button click."""
@@ -892,6 +922,7 @@ class Layout(QGridLayout):
         actions: list[Callable[[], None]] = [
             self.main_button_clicked,
             self.monitor_button_clicked,
+            self.subjects_button_clicked,
             self.tasks_button_clicked,
             self.data_button_clicked,
             self.calibration_button_clicked,

@@ -6,7 +6,7 @@ from PyQt5.QtCore import QEvent, QObjectCleanupHandler, QTimer
 from PyQt5.QtWidgets import QWidget
 
 from village.gui.calibration_layout import CalibrationLayout
-from village.gui.data_layout import DataLayout
+from village.gui.data_layout import DataLayout, SubjectsLayout
 from village.gui.main_layout import MainLayout
 from village.gui.monitor_layout import MonitorLayout
 from village.gui.settings_layout import SettingsLayout
@@ -77,6 +77,13 @@ class GuiWindow(QWidget):
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MonitorLayout(self)
+        self.setLayout(self.layout)
+
+    def create_subjects_layout(self) -> None:
+        """Switches the current view to the Subjects Layout."""
+        utils.delete_all_elements_from_layout(self.layout)
+        QObjectCleanupHandler().add(self.layout)
+        self.layout = SubjectsLayout(self)
         self.setLayout(self.layout)
 
     def create_tasks_layout(self) -> None:
