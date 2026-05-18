@@ -268,8 +268,10 @@ class DaysSelectionDialog(QDialog):
     ]
     _BTN_W, _BTN_H = 24, 22
     _DAY_COL_WIDTH = 85
-    # Alternating inactive backgrounds (even / odd hour)
+    # Alternating backgrounds / active colors (even / odd hour)
     _GROUP_BG = ["#e0e0e0", "#d0d0d0"]
+    _GROUP_ACTIVE = ["#6ab0f0", "#5ba0e0"]
+    _GROUP_ACTIVE_BORDER = ["#4a90d0", "#3a80c0"]
 
     def __init__(self, parent=None, current_value=None) -> None:
         super().__init__(parent)
@@ -302,21 +304,27 @@ class DaysSelectionDialog(QDialog):
 
             buttons: list[QPushButton] = []
             for hour in range(24):
-                bg = self._GROUP_BG[hour % 2]
+                idx = hour % 2
+                bg = self._GROUP_BG[idx]
+                active_bg = self._GROUP_ACTIVE[idx]
+                active_border = self._GROUP_ACTIVE_BORDER[idx]
                 btn = QPushButton()
                 btn.setCheckable(True)
                 btn.setChecked(False)
                 btn.setFixedSize(self._BTN_W, self._BTN_H)
                 btn.setToolTip(f"{hour}:00")
                 btn.setStyleSheet(
-                    "QPushButton:checked"
-                    "{ background-color:#5ba0e0; border:1px solid #3a80c0; }"
+                    f"QPushButton:checked"
+                    f"{{ background-color:{active_bg};"
+                    f" border:1px solid {active_border}; }}"
                     f"QPushButton:!checked"
                     f"{{ background-color:{bg}; border:1px solid #aaaaaa; }}"
                 )
                 grid.addWidget(btn, row_idx + 1, hour + 1)
                 buttons.append(btn)
-                btn.clicked.connect(self._exit_global_mode)
+                btn.clicked.connect(
+                    lambda checked, d=day: self._on_hour_clicked(d)
+                )
 
             self.days_checkboxes[day] = day_cb
             self.hour_buttons[day] = buttons
@@ -356,13 +364,20 @@ class DaysSelectionDialog(QDialog):
             cb.blockSignals(block)
 
     def _exit_global_mode(self) -> None:
-        """Uncheck ON/OFF when a custom button or day is toggled."""
+        """Uncheck ON/OFF when entering custom schedule mode."""
         self.on_checkbox.blockSignals(True)
         self.off_checkbox.blockSignals(True)
         self.on_checkbox.setChecked(False)
         self.off_checkbox.setChecked(False)
         self.on_checkbox.blockSignals(False)
         self.off_checkbox.blockSignals(False)
+
+    def _on_hour_clicked(self, day: str) -> None:
+        self._exit_global_mode()
+        if not any(btn.isChecked() for btn in self.hour_buttons[day]):
+            self.days_checkboxes[day].blockSignals(True)
+            self.days_checkboxes[day].setChecked(False)
+            self.days_checkboxes[day].blockSignals(False)
 
     def _set_day_hours(self, day: str, active_hours: frozenset[int]) -> None:
         for hour, btn in enumerate(self.hour_buttons[day]):
@@ -405,11 +420,13 @@ class DaysSelectionDialog(QDialog):
         elif value == "OFF" or value == "":
             self.off_checkbox.setChecked(True)
         else:
+            self._block_global(True)
             schedule = utils._parse_schedule(value)
             for day in self.DAYS:
                 active_hours = schedule.get(day, frozenset())
                 self._set_day_hours(day, active_hours)
                 self.days_checkboxes[day].setChecked(bool(active_hours))
+            self._block_global(False)
 
     def getSelection(self) -> str | None:
         if self.on_checkbox.isChecked():
