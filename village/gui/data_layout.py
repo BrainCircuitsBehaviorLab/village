@@ -310,6 +310,7 @@ class DaysSelectionDialog(QDialog):
                 w.setVisible(False)
 
             row.addWidget(day_cb)
+            row.addSpacing(20)
             row.addWidget(all_day_cb)
             row.addSpacing(20)
             row.addWidget(hours_cb)
@@ -370,7 +371,6 @@ class DaysSelectionDialog(QDialog):
     def _reset_day(self, day: str) -> None:
         """Hide all per-day controls and restore default (all_day) state."""
         self.all_day_checkboxes[day].setChecked(True)
-        self.all_day_checkboxes[day].setEnabled(True)
         self.all_day_checkboxes[day].setVisible(False)
         self.hours_checkboxes[day].setChecked(False)
         self.hours_checkboxes[day].setVisible(False)
@@ -387,13 +387,13 @@ class DaysSelectionDialog(QDialog):
             w.setVisible(True)
         if use_hours:
             self.all_day_checkboxes[day].setChecked(False)
-            self.all_day_checkboxes[day].setEnabled(False)
+            self.all_day_checkboxes[day].setStyleSheet("color: gray;")
             self.hours_checkboxes[day].setChecked(True)
             for time_edit in (self.from_times[day], self.to_times[day]):
                 time_edit.setEnabled(True)
         else:
             self.all_day_checkboxes[day].setChecked(True)
-            self.all_day_checkboxes[day].setEnabled(True)
+            self.all_day_checkboxes[day].setStyleSheet("")
             self.hours_checkboxes[day].setChecked(False)
             for time_edit in (self.from_times[day], self.to_times[day]):
                 time_edit.setEnabled(False)
@@ -415,7 +415,7 @@ class DaysSelectionDialog(QDialog):
             return
         self._block_all(True)
         self.hours_checkboxes[day].setChecked(False)
-        self.all_day_checkboxes[day].setEnabled(True)
+        self.all_day_checkboxes[day].setStyleSheet("")
         for time_edit in (self.from_times[day], self.to_times[day]):
             time_edit.setEnabled(False)
         self._block_all(False)
@@ -424,12 +424,12 @@ class DaysSelectionDialog(QDialog):
         self._block_all(True)
         if checked:
             self.all_day_checkboxes[day].setChecked(False)
-            self.all_day_checkboxes[day].setEnabled(False)
+            self.all_day_checkboxes[day].setStyleSheet("color: gray;")
             for time_edit in (self.from_times[day], self.to_times[day]):
                 time_edit.setEnabled(True)
         else:
-            self.all_day_checkboxes[day].setEnabled(True)
             self.all_day_checkboxes[day].setChecked(True)
+            self.all_day_checkboxes[day].setStyleSheet("")
             for time_edit in (self.from_times[day], self.to_times[day]):
                 time_edit.setEnabled(False)
         self._block_all(False)
