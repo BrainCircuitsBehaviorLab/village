@@ -1,0 +1,6 @@
+is\_active\_regular
+===================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: is_active_regular

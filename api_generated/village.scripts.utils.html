@@ -381,6 +381,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.has_low_disk_space.html">has_low_disk_space</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.interpolate.html">interpolate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.is_active.html">is_active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.is_active_regular.html">is_active_regular</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.reformat_trial_data.html">reformat_trial_data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.setup_logging.html">setup_logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.utils.transform_raw_to_clean.html">transform_raw_to_clean</a></li>
@@ -437,6 +438,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.scripts.utils.create_directories"><code class="docutils literal notranslate"><span class="pre">create_directories()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.create_directories_from_path"><code class="docutils literal notranslate"><span class="pre">create_directories_from_path()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.download_github_repositories"><code class="docutils literal notranslate"><span class="pre">download_github_repositories()</span></code></a></li>
+<li><a class="reference internal" href="#village.scripts.utils.is_active_regular"><code class="docutils literal notranslate"><span class="pre">is_active_regular()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.is_active"><code class="docutils literal notranslate"><span class="pre">is_active()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.active_last_24_hours"><code class="docutils literal notranslate"><span class="pre">active_last_24_hours()</span></code></a></li>
 <li><a class="reference internal" href="#village.scripts.utils.delete_all_elements_from_layout"><code class="docutils literal notranslate"><span class="pre">delete_all_elements_from_layout()</span></code></a></li>
@@ -528,7 +530,7 @@ data-aria-dark="Switch to auto color mode">
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="village.scripts.utils.active_last_24_hours.html#village.scripts.utils.active_last_24_hours" title="village.scripts.utils.active_last_24_hours"><code class="xref py py-obj docutils literal notranslate"><span class="pre">active_last_24_hours</span></code></a>(value)</p></td>
-<td><p>Return True if the subject was scheduled active for all of the last 24 h.</p></td>
+<td><p>Return True if every hour in the last 24 h was scheduled as active.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="village.scripts.utils.change_directory_settings.html#village.scripts.utils.change_directory_settings" title="village.scripts.utils.change_directory_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_directory_settings</span></code></a>(new_path)</p></td>
 <td><p>Update all directory settings based on a new project root path.</p></td>
@@ -561,18 +563,21 @@ data-aria-dark="Switch to auto color mode">
 <td><p>Perform PCHIP interpolation on specific data points.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="village.scripts.utils.is_active.html#village.scripts.utils.is_active" title="village.scripts.utils.is_active"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_active</span></code></a>(value)</p></td>
-<td><p>Return True if the schedule dictates activity at the current moment.</p></td>
+<td><p>Return True if the current hour is within the scheduled active hours.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.scripts.utils.reformat_trial_data.html#village.scripts.utils.reformat_trial_data" title="village.scripts.utils.reformat_trial_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reformat_trial_data</span></code></a>(data, date, trial, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.scripts.utils.is_active_regular.html#village.scripts.utils.is_active_regular" title="village.scripts.utils.is_active_regular"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_active_regular</span></code></a>(value)</p></td>
+<td><p>Return True if the current calendar day is scheduled as active.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="village.scripts.utils.reformat_trial_data.html#village.scripts.utils.reformat_trial_data" title="village.scripts.utils.reformat_trial_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reformat_trial_data</span></code></a>(data, date, trial, ...)</p></td>
 <td><p>Reformats raw trial data into a flattened dictionary structure.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.scripts.utils.setup_logging.html#village.scripts.utils.setup_logging" title="village.scripts.utils.setup_logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logging</span></code></a>(logs_subdirectory)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.scripts.utils.setup_logging.html#village.scripts.utils.setup_logging" title="village.scripts.utils.setup_logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logging</span></code></a>(logs_subdirectory)</p></td>
 <td><p>Configure the logging system to write to a timestamped file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.scripts.utils.transform_raw_to_clean.html#village.scripts.utils.transform_raw_to_clean" title="village.scripts.utils.transform_raw_to_clean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_raw_to_clean</span></code></a>(df)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="village.scripts.utils.transform_raw_to_clean.html#village.scripts.utils.transform_raw_to_clean" title="village.scripts.utils.transform_raw_to_clean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_raw_to_clean</span></code></a>(df)</p></td>
 <td><p>Transforms raw Bpod trial data into a clean, wide-format DataFrame.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.scripts.utils.validate_subject_name.html#village.scripts.utils.validate_subject_name" title="village.scripts.utils.validate_subject_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_subject_name</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="village.scripts.utils.validate_subject_name.html#village.scripts.utils.validate_subject_name" title="village.scripts.utils.validate_subject_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_subject_name</span></code></a>(name)</p></td>
 <td><p>Returns an error message if the name is invalid, None if valid.</p></td>
 </tr>
 </tbody>
@@ -634,25 +639,26 @@ Updates the ‘GITHUB_REPOSITORIES_DOWNLOADED’ setting upon success.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="village.scripts.utils.is_active_regular">
+<span class="sig-name descname"><span class="pre">is_active_regular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#is_active_regular"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return True if the current calendar day is scheduled as active.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="village.scripts.utils.is_active">
 <span class="sig-name descname"><span class="pre">is_active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#is_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return True if the schedule dictates activity at the current moment.</p>
-<p>For all-day entries the check is day-based (using the DAYTIME/NIGHTTIME
-24 h window). For entries with explicit time ranges the current clock time
-is compared directly against the range.</p>
+<dd><p>Return True if the current hour is within the scheduled active hours.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="village.scripts.utils.active_last_24_hours">
 <span class="sig-name descname"><span class="pre">active_last_24_hours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#active_last_24_hours"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return True if the subject was scheduled active for all of the last 24 h.</p>
-<p>Builds the union of active intervals within the last 24 h window and
-checks whether it covers the entire window without gaps.</p>
+<dd><p>Return True if every hour in the last 24 h was scheduled as active.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="village.scripts.utils.delete_all_elements_from_layout">
-<span class="sig-name descname"><span class="pre">delete_all_elements_from_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QLayout'</span> <span class="pre">id='140198346364880'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#delete_all_elements_from_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">delete_all_elements_from_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QLayout'</span> <span class="pre">id='140044633595280'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#delete_all_elements_from_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Recursively removes all widgets and sub-layouts from a QLayout.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -800,7 +806,7 @@ or interpolation fails.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="village.scripts.utils.create_pixmap">
-<span class="sig-name descname"><span class="pre">create_pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.figure.Figure</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QPixmap'</span> <span class="pre">id='140198347488720'&gt;</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#create_pixmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">create_pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.figure.Figure</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QPixmap'</span> <span class="pre">id='140044632636304'&gt;</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#create_pixmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Creates a QPixmap from a matplotlib Figure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -854,7 +860,7 @@ or interpolation fails.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=3f83d06e"></script>
+      <script src="../_static/documentation_options.js?v=f9b263a6"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

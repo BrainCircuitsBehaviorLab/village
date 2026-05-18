@@ -27,6 +27,7 @@ utils
       has_low_disk_space
       interpolate
       is_active
+      is_active_regular
       reformat_trial_data
       setup_logging
       transform_raw_to_clean
