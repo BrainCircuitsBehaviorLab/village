@@ -3,14 +3,16 @@ INITIAL SETUP
 
 .. raw:: html
 
-   <script>window.location.replace("initial_setup/prerequisites.html");</script>
-   <noscript><meta http-equiv="refresh" content="0; url=initial_setup/prerequisites.html"></noscript>
+   <script>window.location.replace("initial_setup/system.html");</script>
+   <noscript><meta http-equiv="refresh" content="0; url=initial_setup/system.html"></noscript>
 
 .. toctree::
     :maxdepth: 1
 
-    initial_setup/prerequisites.md
-    initial_setup/first_time.md
+    initial_setup/system.md
+    initial_setup/requirements.md
+    initial_setup/initial.md
+    initial_setup/launching.md
     initial_setup/access.md
     initial_setup/telegram.md
     initial_setup/backup.md

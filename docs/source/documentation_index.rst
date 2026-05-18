@@ -3,8 +3,8 @@ DOCUMENTATION
 
 .. raw:: html
 
-   <script>window.location.replace("initial_setup/prerequisites.html");</script>
-   <noscript><meta http-equiv="refresh" content="0; url=initial_setup/prerequisites.html"></noscript>
+   <script>window.location.replace("initial_setup/system.html");</script>
+   <noscript><meta http-equiv="refresh" content="0; url=initial_setup/system.html"></noscript>
 
 .. toctree::
     :maxdepth: 1

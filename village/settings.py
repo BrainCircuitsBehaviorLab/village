@@ -498,7 +498,7 @@ preventing unnecessary processing.""",
 controller_settings = [
     Setting(
         "BEHAVIOR_CONTROLLER",
-        "BPOD",
+        "RASPBERRY",
         ControllerEnum,
         """The controller used to run the behavioral box. The options are:
         BPOD: The Bpod controller. ARDUINO: A custom controller that can be
@@ -509,12 +509,11 @@ controller_settings = [
         "CONTROLLER_PORT",
         "/dev/controller",
         str,
-        """The USB serial port of the controller device
-(e.g., Bpod, Arduino-compatible board...). Set this to the device path in /dev/.
-Note: USB serial device names (e.g., ttyACM0, ttyACM1) may change each time the system
-boots or if multiple devices are connected. To ensure a consistent device name,
-it is recommended to create a symbolic link using udev rules. See the documentation
-section "Udev rules for consistent USB device naming" for detailed instructions.
+        """The USB serial port path of the controller device (e.g., Bpod,
+Arduino-compatible board). By default, this is set to '/dev/controller'. The system
+features a pre-configured udev rule that automatically generates this consistent
+symbolic link, so no manual configuration is required. Simply ensure the controller is
+plugged into the designated USB port as specified in the hardware guide.
 """,
     ),
 ]

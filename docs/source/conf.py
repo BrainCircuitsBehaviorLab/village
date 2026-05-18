@@ -8,8 +8,9 @@
 
 import os
 import sys
-import setuptools_scm  # type: ignore
 from unittest.mock import MagicMock
+
+import setuptools_scm  # type: ignore
 
 
 # Manually mock PyQt5 to avoid infinite recursion in sphinx-autodoc-typehints
@@ -49,6 +50,11 @@ sys.modules["PyQt5.QtCore"] = mock_core
 sys.modules["PyQt5.QtGui"] = MagicMock()
 sys.modules["PyQt5.QtWidgets"] = MagicMock()
 
+# Mock controllers that create hardware connections at module-level import time.
+# These only run on Raspberry Pi and fail on macOS with OSError [Errno 45].
+sys.modules["village.controllers.arduino_controller"] = MagicMock()
+sys.modules["village.controllers.bpod_controller"] = MagicMock()
+
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
 autodoc_mock_imports = [
@@ -77,6 +83,8 @@ autodoc_mock_imports = [
     "gpiod",
     "picamera2",
     "libcamera",
+    "PCA9685_smbus2",
+    "pi5neo",
 ]
 
 # Add the module path to sys.path here.
@@ -179,7 +187,7 @@ html_theme_options = {
     "color_mode": "light",
     "github_url": "https://github.com/BrainCircuitsBehaviorLab/village",
     "nav_links": [
-        {"title": "Documentation", "url": "initial_setup/prerequisites"},
+        {"title": "Documentation", "url": "initial_setup/system"},
         {"title": "API", "url": "api_index"},
         {"title": "Resources", "url": "resources/list_of_parts"},
         {"title": "FAQ", "url": "faq/faq"},

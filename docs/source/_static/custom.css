@@ -82,3 +82,24 @@ ul.purple-bullets li::marker {
     pointer-events: auto;
     cursor: pointer;
 }
+
+/* Wider left sidebar (default is 18rem) */
+@media (min-width: 768px) {
+    .sy-lside {
+        width: 21rem !important;
+    }
+    .sy-main {
+        width: calc(100% - 21rem) !important;
+    }
+}
+
+/* Hide right "On this page" TOC and expand content */
+@media (min-width: 1280px) {
+    .sy-rside {
+        display: none !important;
+    }
+    .sy-main {
+        width: calc(100% - 21rem) !important;
+        max-width: none !important;
+    }
+}
