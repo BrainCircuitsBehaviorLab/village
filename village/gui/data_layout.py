@@ -14,7 +14,6 @@ from PyQt5.QtCore import (
     QEvent,
     QModelIndex,
     Qt,
-    QTime,
     QTimer,
     QVariant,
     pyqtSignal,
@@ -27,6 +26,7 @@ from PyQt5.QtWidgets import (
     QCheckBox,
     QDateTimeEdit,
     QDialog,
+    QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -39,7 +39,6 @@ from PyQt5.QtWidgets import (
     QStackedLayout,
     QTableView,
     QTextEdit,
-    QTimeEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -255,7 +254,7 @@ class TableView(QTableView):
 
 
 class DaysSelectionDialog(QDialog):
-    """Dialog for selecting active days with optional per-day time ranges."""
+    """Dialog for selecting active days with hourly resolution."""
 
     DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     DAY_LABELS = [
@@ -267,80 +266,67 @@ class DaysSelectionDialog(QDialog):
         "Saturday",
         "Sunday",
     ]
+    _HOUR_LABELS = {0: "0", 6: "6", 12: "12", 18: "18"}
+    _BTN_SIZE = (24, 22)
+    _DAY_COL_WIDTH = 85
 
     def __init__(self, parent=None, current_value=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Select Days or On/Off")
+        self.setWindowTitle("Select Active Days and Hours")
 
-        self.layout: QVBoxLayout = QVBoxLayout(self)
+        main_layout = QVBoxLayout(self)
 
         self.days_checkboxes: dict[str, QCheckBox] = {}
-        self.all_day_checkboxes: dict[str, QCheckBox] = {}
-        self.hours_checkboxes: dict[str, QCheckBox] = {}
-        self.from_times: dict[str, QTimeEdit] = {}
-        self.to_times: dict[str, QTimeEdit] = {}
-        self._day_widgets: dict[str, tuple] = {}
+        self.hour_buttons: dict[str, list[QPushButton]] = {}
 
-        for day, label in zip(self.DAYS, self.DAY_LABELS):
-            row = QHBoxLayout()
+        grid = QGridLayout()
+        grid.setSpacing(2)
 
+        # Header row
+        corner = QLabel("")
+        corner.setFixedWidth(self._DAY_COL_WIDTH)
+        grid.addWidget(corner, 0, 0)
+        for hour, text in self._HOUR_LABELS.items():
+            lbl = QLabel(text)
+            lbl.setFixedWidth(self._BTN_SIZE[0])
+            lbl.setAlignment(Qt.AlignCenter)
+            grid.addWidget(lbl, 0, hour + 1)
+
+        # Day rows
+        for row_idx, (day, label) in enumerate(zip(self.DAYS, self.DAY_LABELS)):
             day_cb = QCheckBox(label)
+            day_cb.setFixedWidth(self._DAY_COL_WIDTH)
+            grid.addWidget(day_cb, row_idx + 1, 0)
 
-            all_day_cb = QCheckBox("All day")
-            all_day_cb.setChecked(True)
-            all_day_cb.setVisible(False)
-
-            hours_cb = QCheckBox("")
-            hours_cb.setChecked(False)
-            hours_cb.setVisible(False)
-
-            from_label = QLabel("From:")
-            from_te = QTimeEdit()
-            from_te.setDisplayFormat("HH:mm")
-            from_te.setTime(QTime(0, 0))
-            from_te.setEnabled(False)
-
-            to_label = QLabel("To:")
-            to_te = QTimeEdit()
-            to_te.setDisplayFormat("HH:mm")
-            to_te.setTime(QTime(23, 59))
-            to_te.setEnabled(False)
-
-            for w in (from_label, from_te, to_label, to_te):
-                w.setVisible(False)
-
-            row.addWidget(day_cb)
-            row.addSpacing(20)
-            row.addWidget(all_day_cb)
-            row.addSpacing(20)
-            row.addWidget(hours_cb)
-            row.addWidget(from_label)
-            row.addWidget(from_te)
-            row.addWidget(to_label)
-            row.addWidget(to_te)
-            self.layout.addLayout(row)
+            buttons: list[QPushButton] = []
+            for hour in range(24):
+                btn = QPushButton()
+                btn.setCheckable(True)
+                btn.setChecked(False)
+                btn.setFixedSize(*self._BTN_SIZE)
+                btn.setVisible(False)
+                btn.setToolTip(f"{hour}:00")
+                btn.setStyleSheet(
+                    "QPushButton:checked"
+                    "{ background-color:#5ba0e0; border:1px solid #3a80c0; }"
+                    "QPushButton:!checked"
+                    "{ background-color:#cccccc; border:1px solid #aaaaaa; }"
+                )
+                grid.addWidget(btn, row_idx + 1, hour + 1)
+                buttons.append(btn)
 
             self.days_checkboxes[day] = day_cb
-            self.all_day_checkboxes[day] = all_day_cb
-            self.hours_checkboxes[day] = hours_cb
-            self.from_times[day] = from_te
-            self.to_times[day] = to_te
-            self._day_widgets[day] = (from_label, from_te, to_label, to_te)
-
+            self.hour_buttons[day] = buttons
             day_cb.toggled.connect(
                 lambda checked, d=day: self._on_day_toggled(d, checked)
             )
-            all_day_cb.toggled.connect(
-                lambda checked, d=day: self._on_all_day_toggled(d, checked)
-            )
-            hours_cb.toggled.connect(
-                lambda checked, d=day: self._on_hours_toggled(d, checked)
-            )
+
+        main_layout.addLayout(grid)
 
         self.on_checkbox = QCheckBox("ON")
         self.off_checkbox = QCheckBox("OFF")
-        self.layout.addWidget(self.on_checkbox)
-        self.layout.addWidget(self.off_checkbox)
+        main_layout.addWidget(self.on_checkbox)
+        main_layout.addWidget(self.off_checkbox)
 
         self.on_checkbox.toggled.connect(self.toggle_on)
         self.off_checkbox.toggled.connect(self.toggle_off)
@@ -355,135 +341,73 @@ class DaysSelectionDialog(QDialog):
         self.btn_cancel = QPushButton("CANCEL")
         btns_layout.addWidget(self.btn_ok)
         btns_layout.addWidget(self.btn_cancel)
-        self.layout.addLayout(btns_layout)
+        main_layout.addLayout(btns_layout)
 
         self.btn_ok.clicked.connect(self.accept)
         self.btn_cancel.clicked.connect(self.reject)
 
-    def _block_all(self, block: bool) -> None:
+    def _block_day_signals(self, block: bool) -> None:
         self.on_checkbox.blockSignals(block)
         self.off_checkbox.blockSignals(block)
-        for day in self.DAYS:
-            self.days_checkboxes[day].blockSignals(block)
-            self.all_day_checkboxes[day].blockSignals(block)
-            self.hours_checkboxes[day].blockSignals(block)
+        for cb in self.days_checkboxes.values():
+            cb.blockSignals(block)
 
-    def _reset_day(self, day: str) -> None:
-        """Hide all per-day controls and restore default (all_day) state."""
-        self.all_day_checkboxes[day].setChecked(True)
-        self.all_day_checkboxes[day].setVisible(False)
-        self.hours_checkboxes[day].setChecked(False)
-        self.hours_checkboxes[day].setVisible(False)
-        for w in self._day_widgets[day]:
-            w.setVisible(False)
-        for time_edit in (self.from_times[day], self.to_times[day]):
-            time_edit.setEnabled(False)
+    def _show_hours(self, day: str, active_hours: frozenset[int]) -> None:
+        for hour, btn in enumerate(self.hour_buttons[day]):
+            btn.setChecked(hour in active_hours)
+            btn.setVisible(True)
 
-    def _show_day_controls(self, day: str, use_hours: bool = False) -> None:
-        """Show per-day controls in either all-day or custom-hours mode."""
-        self.all_day_checkboxes[day].setVisible(True)
-        self.hours_checkboxes[day].setVisible(True)
-        for w in self._day_widgets[day]:
-            w.setVisible(True)
-        if use_hours:
-            self.all_day_checkboxes[day].setChecked(False)
-            self.all_day_checkboxes[day].setStyleSheet("color: gray;")
-            self.hours_checkboxes[day].setChecked(True)
-            for time_edit in (self.from_times[day], self.to_times[day]):
-                time_edit.setEnabled(True)
-        else:
-            self.all_day_checkboxes[day].setChecked(True)
-            self.all_day_checkboxes[day].setStyleSheet("")
-            self.hours_checkboxes[day].setChecked(False)
-            for time_edit in (self.from_times[day], self.to_times[day]):
-                time_edit.setEnabled(False)
+    def _hide_hours(self, day: str) -> None:
+        for btn in self.hour_buttons[day]:
+            btn.setChecked(False)
+            btn.setVisible(False)
 
     def _on_day_toggled(self, day: str, checked: bool) -> None:
-        self._block_all(True)
+        self._block_day_signals(True)
         if checked:
-            self._show_day_controls(day, use_hours=False)
+            self._show_hours(day, utils._ALL_HOURS)
             self.on_checkbox.setChecked(False)
             self.off_checkbox.setChecked(False)
         else:
-            self._reset_day(day)
+            self._hide_hours(day)
             if not any(cb.isChecked() for cb in self.days_checkboxes.values()):
                 self.off_checkbox.setChecked(True)
-        self._block_all(False)
-
-    def _on_all_day_toggled(self, day: str, checked: bool) -> None:
-        self._block_all(True)
-        if checked:
-            self.hours_checkboxes[day].setChecked(False)
-            self.all_day_checkboxes[day].setStyleSheet("")
-            for time_edit in (self.from_times[day], self.to_times[day]):
-                time_edit.setEnabled(False)
-        else:
-            self.hours_checkboxes[day].setChecked(True)
-            self.all_day_checkboxes[day].setStyleSheet("color: gray;")
-            for time_edit in (self.from_times[day], self.to_times[day]):
-                time_edit.setEnabled(True)
-        self._block_all(False)
-
-    def _on_hours_toggled(self, day: str, checked: bool) -> None:
-        self._block_all(True)
-        if checked:
-            self.all_day_checkboxes[day].setChecked(False)
-            self.all_day_checkboxes[day].setStyleSheet("color: gray;")
-            for time_edit in (self.from_times[day], self.to_times[day]):
-                time_edit.setEnabled(True)
-        else:
-            self.all_day_checkboxes[day].setChecked(True)
-            self.all_day_checkboxes[day].setStyleSheet("")
-            for time_edit in (self.from_times[day], self.to_times[day]):
-                time_edit.setEnabled(False)
-        self._block_all(False)
+        self._block_day_signals(False)
 
     def _clear_all_days(self) -> None:
         for day in self.DAYS:
             self.days_checkboxes[day].setChecked(False)
-            self._reset_day(day)
+            self._hide_hours(day)
 
     def toggle_on(self) -> None:
-        self._block_all(True)
+        self._block_day_signals(True)
         if self.on_checkbox.isChecked():
             self.off_checkbox.setChecked(False)
             self._clear_all_days()
         elif not any(cb.isChecked() for cb in self.days_checkboxes.values()):
             self.off_checkbox.setChecked(True)
-        self._block_all(False)
+        self._block_day_signals(False)
 
     def toggle_off(self) -> None:
-        self._block_all(True)
+        self._block_day_signals(True)
         if self.off_checkbox.isChecked():
             self.on_checkbox.setChecked(False)
             self._clear_all_days()
         elif not any(cb.isChecked() for cb in self.days_checkboxes.values()):
             self.on_checkbox.setChecked(True)
-        self._block_all(False)
+        self._block_day_signals(False)
 
     def set_initial_values(self, value: str) -> None:
         if value == "ON":
             self.on_checkbox.setChecked(True)
         elif value == "OFF" or value == "":
             self.off_checkbox.setChecked(True)
-        elif "|" in value:
-            for part in value.split("|"):
-                if ":" in part:
-                    day, time_range = part.split(":", 1)
-                    if day in self.days_checkboxes:
-                        from_str, to_str = time_range.split("-", 1)
-                        self.days_checkboxes[day].setChecked(True)
-                        self._show_day_controls(day, use_hours=True)
-                        self.from_times[day].setTime(
-                            QTime.fromString(from_str, "HH:mm")
-                        )
-                        self.to_times[day].setTime(QTime.fromString(to_str, "HH:mm"))
-                elif part in self.days_checkboxes:
-                    self.days_checkboxes[part].setChecked(True)
         else:
-            for day in value.split("-"):
+            schedule = utils._parse_schedule(value)
+            for day, active_hours in schedule.items():
                 if day in self.days_checkboxes:
                     self.days_checkboxes[day].setChecked(True)
+                    self._show_hours(day, active_hours)
 
     def getSelection(self) -> str | None:
         if self.on_checkbox.isChecked():
@@ -494,12 +418,13 @@ class DaysSelectionDialog(QDialog):
         parts = []
         for day in self.DAYS:
             if self.days_checkboxes[day].isChecked():
-                if self.hours_checkboxes[day].isChecked():
-                    from_t = self.from_times[day].time().toString("HH:mm")
-                    to_t = self.to_times[day].time().toString("HH:mm")
-                    parts.append(f"{day}:{from_t}-{to_t}")
-                else:
-                    parts.append(day)
+                active = frozenset(
+                    h for h, btn in enumerate(self.hour_buttons[day]) if btn.isChecked()
+                )
+                if not active:
+                    continue
+                spec = utils._hours_set_to_spec(active)
+                parts.append(day if spec is None else f"{day}:{spec}")
 
         return "|".join(parts) if parts else None
 

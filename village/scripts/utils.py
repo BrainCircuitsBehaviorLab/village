@@ -6,7 +6,6 @@ import shutil
 import subprocess
 import traceback
 from datetime import datetime, timedelta
-from datetime import time as dt_time
 from io import BytesIO
 from pathlib import Path
 from typing import Any
@@ -171,121 +170,108 @@ def download_github_repositories(repositories: list[str]) -> None:
 
 
 _DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+_ALL_HOURS: frozenset[int] = frozenset(range(24))
 
 
-def _parse_schedule(
-    value: str,
-) -> dict[str, tuple[tuple[int, int], tuple[int, int]] | None]:
-    """Parse a schedule string into a per-day dict.
+def _hours_spec_to_set(spec: str) -> frozenset[int]:
+    """Parse a comma-separated hour-range spec into a frozenset of hours.
 
-    Returns a dict mapping day abbreviation to either None (all day) or
-    ((from_h, from_m), (to_h, to_m)).
-
-    Handles both new format ("Mon|Wed:09:00-17:00|Fri") and legacy format
-    ("Mon-Wed-Fri", treated as all-day entries).
+    Example: "8-11,16-23" -> frozenset({8,9,10,11,16,...,23})
     """
-    schedule: dict[str, tuple[tuple[int, int], tuple[int, int]] | None] = {}
-    if "|" in value:
+    hours: set[int] = set()
+    for part in spec.split(","):
+        part = part.strip()
+        if "-" in part:
+            start, end = part.split("-", 1)
+            hours.update(range(int(start), int(end) + 1))
+        elif part.isdigit():
+            hours.add(int(part))
+    return frozenset(hours)
+
+
+def _hours_set_to_spec(hours: frozenset[int] | set[int]) -> str | None:
+    """Convert a set of active hours to a compact range spec.
+
+    Returns None if all 24 hours are active (no spec needed).
+    Example: {8,9,10,11,16,...,23} -> "8-11,16-23"
+    """
+    if frozenset(hours) == _ALL_HOURS:
+        return None
+    if not hours:
+        return ""
+    sorted_h = sorted(hours)
+    ranges = []
+    start = end = sorted_h[0]
+    for h in sorted_h[1:]:
+        if h == end + 1:
+            end = h
+        else:
+            ranges.append(f"{start}-{end}" if start != end else str(start))
+            start = end = h
+    ranges.append(f"{start}-{end}" if start != end else str(start))
+    return ",".join(ranges)
+
+
+def _parse_schedule(value: str) -> dict[str, frozenset[int]]:
+    """Parse a schedule string into {day: frozenset_of_active_hours}.
+
+    Formats:
+      "Mon|Tue:8-11,16-23|Wed"  new format (pipe-separated, hour ranges)
+      "Mon-Wed-Fri"              legacy format (all 24 hours for each day)
+    """
+    schedule: dict[str, frozenset[int]] = {}
+    if "|" in value or ":" in value:
         parts = value.split("|")
     else:
         parts = [p for p in value.split("-") if p in _DAYS]
     for part in parts:
         if ":" in part:
-            day, time_range = part.split(":", 1)
-            from_str, to_str = time_range.split("-", 1)
-            fh, fm = int(from_str[:2]), int(from_str[3:5])
-            th, tm = int(to_str[:2]), int(to_str[3:5])
-            schedule[day] = ((fh, fm), (th, tm))
+            day, hours_spec = part.split(":", 1)
+            if day in _DAYS:
+                schedule[day] = _hours_spec_to_set(hours_spec)
         elif part in _DAYS:
-            schedule[part] = None
+            schedule[part] = _ALL_HOURS
     return schedule
 
 
-def is_active(value: str) -> bool:
-    """Return True if the schedule dictates activity at the current moment.
-
-    For all-day entries the check is day-based (using the DAYTIME/NIGHTTIME
-    24 h window). For entries with explicit time ranges the current clock time
-    is compared directly against the range.
-    """
+def is_active_regular(value: str) -> bool:
+    """Return True if the current calendar day is scheduled as active."""
     if value == "ON":
         return True
     if value == "OFF":
         return False
+    today = _DAYS[time_utils.now().weekday()]
+    return today in _parse_schedule(value)
 
+
+def is_active(value: str) -> bool:
+    """Return True if the current hour is within the scheduled active hours."""
+    if value == "ON":
+        return True
+    if value == "OFF":
+        return False
     now = time_utils.now()
     today = _DAYS[now.weekday()]
     schedule = _parse_schedule(value)
-
     if today not in schedule:
         return False
-
-    day_info = schedule[today]
-
-    if day_info is None:
-        day_init_time = time_utils.time_from_setting_string(settings.get("DAYTIME"))
-        night_init_time = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
-        first_init_time = min([day_init_time, night_init_time])
-        day_index = _DAYS.index(today)
-        day_date = time_utils.date_from_previous_weekday(day_index)
-        start, end = time_utils.range_24_hours(day_date, first_init_time)
-        return start <= now <= end
-
-    (fh, fm), (th, tm) = day_info
-    current = now.time()
-    from_t = dt_time(fh, fm)
-    to_t = dt_time(th, tm)
-    if from_t <= to_t:
-        return from_t <= current <= to_t
-    return current >= from_t or current <= to_t
+    return now.hour in schedule[today]
 
 
 def active_last_24_hours(value: str) -> bool:
-    """Return True if the subject was scheduled active for all of the last 24 h.
-
-    Builds the union of active intervals within the last 24 h window and
-    checks whether it covers the entire window without gaps.
-    """
+    """Return True if every hour in the last 24 h was scheduled as active."""
     if value == "ON":
         return True
     if value == "OFF":
         return False
-
     now = time_utils.now()
-    window_start = now - timedelta(hours=24)
     schedule = _parse_schedule(value)
-
-    intervals: list[tuple[datetime, datetime]] = []
-
-    for delta in (1, 0):
-        day_dt = now - timedelta(days=delta)
-        day_name = _DAYS[day_dt.weekday()]
-        if day_name not in schedule:
-            continue
-        day_info = schedule[day_name]
-        day_date = day_dt.date()
-        if day_info is None:
-            seg_start = datetime.combine(day_date, dt_time(0, 0))
-            seg_end = datetime.combine(day_date, dt_time(23, 59, 59))
-        else:
-            (fh, fm), (th, tm) = day_info
-            seg_start = datetime.combine(day_date, dt_time(fh, fm))
-            seg_end = datetime.combine(day_date, dt_time(th, tm))
-        seg_start = max(seg_start, window_start)
-        seg_end = min(seg_end, now)
-        if seg_start < seg_end:
-            intervals.append((seg_start, seg_end))
-
-    if not intervals:
-        return False
-
-    intervals.sort()
-    covered = window_start
-    for start, end in intervals:
-        if start > covered:
+    for delta in range(25):
+        check_dt = now - timedelta(hours=delta)
+        day_name = _DAYS[check_dt.weekday()]
+        if day_name not in schedule or check_dt.hour not in schedule[day_name]:
             return False
-        covered = max(covered, end)
-    return covered >= now - timedelta(minutes=1)
+    return True
 
 
 def delete_all_elements_from_layout(layout: QLayout) -> None:
