@@ -1,0 +1,6 @@
+import\_all
+===========
+
+.. currentmodule:: village.scripts.import_all
+
+.. autofunction:: import_all

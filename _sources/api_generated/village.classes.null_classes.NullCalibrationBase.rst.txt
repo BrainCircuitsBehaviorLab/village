@@ -20,10 +20,6 @@ NullCalibrationBase
       ~NullCalibrationBase.add_entry
       ~NullCalibrationBase.change_layout
       ~NullCalibrationBase.draw
-      ~NullCalibrationBase.get_last_sound_df
-      ~NullCalibrationBase.get_last_water_df
-      ~NullCalibrationBase.get_sound_gain
-      ~NullCalibrationBase.get_valve_time
       ~NullCalibrationBase.save_from_df
       ~NullCalibrationBase.update_gui
       ~NullCalibrationBase.update_status_label_buttons

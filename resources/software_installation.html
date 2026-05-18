@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=63c44de5" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=069729ed" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
       <strong>village</strong>
     </a>
     <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"><ul><li class="link"><a href="../initial_setup/prerequisites.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <nav class="sy-head-links"><ul><li class="link"><a href="../initial_setup/system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
   <kbd>/</kbd>
@@ -64,19 +64,21 @@ data-aria-dark="Switch to auto color mode">
         <div class="globaltoc" data-expand-depth="0"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/prerequisites.html">Prerequisites &amp; Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/first_time.html">First-Time Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/requirements.html">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/telegram.html">Telegram Bot Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/backup.html">Data Persistence &amp; Backups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/heartbeat.html">Remote Heartbeat Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/heartbeat.html">Remote Heartbeat Monitoring</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor &amp; Hardware Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
@@ -101,7 +103,23 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibration.html">BpodWaterCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html">BpodWaterCalibrationTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.html">camera_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.CameraCalibration.html">CameraCalibration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.html">sound_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.SoundCalibrationTask.html">SoundCalibrationTask</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.calibrations.html">calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.calibrations.Calibrations.html">Calibrations</a></li>
@@ -164,6 +182,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html">AutoNoMouse_Base</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.html">calibration_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.CalibrationBase.html">CalibrationBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -208,9 +230,27 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.camera.html">camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.rfid.Rfid.html">Rfid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
@@ -224,6 +264,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.html">telegram_bot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -231,18 +276,30 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.bpod_water_calibration_plot.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui.html">gui</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.gui.Gui.html">Gui</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.layout.html">layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.html">monitor_layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.sound_calibration_plot.html">sound_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.sound_calibration_plot.sound_calibration_plot.html">sound_calibration_plot</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
@@ -256,6 +313,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -266,6 +324,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.import_all.html">import_all</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.import_all.import_all.html">import_all</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
@@ -326,6 +388,15 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.utils.validate_subject_name.html">validate_subject_name</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.manager.html">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.manager.Manager.html">Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.main.html">main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.main.system_run.html">system_run</a></li>
 </ul>
 </li>
 </ul>
@@ -614,9 +685,10 @@ Python environment:</p></li>
 </section>
 <section id="udev-rules-for-consistent-usb-device-naming">
 <h2>Udev Rules for Consistent USB Device Naming</h2>
-<p>When you connect your Bpod device to the Raspberry Pi, it’s assigned a file path in <code class="docutils literal notranslate"><span class="pre">/dev/</span></code>, typically named <code class="docutils literal notranslate"><span class="pre">ttyACM0</span></code>. However, this name may vary (ttyACM1, ttyACM2, etc.), especially if you have other USB devices connected. To ensure a consistent and recognizable name, you can create a symbolic link to your Bpod device.</p>
+<p>When you connect your behavioral controller (e.g., Bpod, Arduino, or compatible boards) to the Raspberry Pi, the operating system assigns it a device path in <code class="docutils literal notranslate"><span class="pre">/dev/</span></code>. Depending on the specific serial chip used by your board, it is typically named <code class="docutils literal notranslate"><span class="pre">ttyACM0</span></code> or <code class="docutils literal notranslate"><span class="pre">ttyUSB0</span></code>.</p>
+<p>However, this designation can change dynamically (<code class="docutils literal notranslate"><span class="pre">ttyACM1</span></code>, <code class="docutils literal notranslate"><span class="pre">ttyUSB1</span></code>, etc.) upon reboot or if other USB peripherals are connected. To guarantee that the Training Village software can always locate the hardware, you can create a persistent symbolic link that maps the physical USB port directly to a static name.</p>
 <ol class="arabic simple">
-<li><p>Navigate to the Udev rules folder where custom rules are stored:</p></li>
+<li><p>Navigate to the system directory where custom hardware rules are stored:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">udev</span><span class="o">/</span><span class="n">rules</span><span class="o">.</span><span class="n">d</span>
 </span></pre></div>
@@ -628,10 +700,9 @@ Python environment:</p></li>
 </span></pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>In the new rule file, add the following line to create a symbolic link named <code class="docutils literal notranslate"><span class="pre">controller</span></code> for any device that matches the pattern <code class="docutils literal notranslate"><span class="pre">ttyACM*</span></code>. This will allow any device named ttyACM*(where* can be any number) to be consistently linked, provided it’s connected
-to a specific USB port (in this case, the port associated with <code class="docutils literal notranslate"><span class="pre">KERNELS==3-1:1.0</span></code>).</p></li>
+<li><p>Add the following line to the file. By targeting the serial <code class="docutils literal notranslate"><span class="pre">tty</span></code> subsystem instead of a specific naming pattern, this rule seamlessly captures both <code class="docutils literal notranslate"><span class="pre">ttyACM*</span></code> and <code class="docutils literal notranslate"><span class="pre">ttyUSB*</span></code> devices, mapping whichever device is plugged into that exact physical port to the alias <code class="docutils literal notranslate"><span class="pre">controller</span></code>:</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">KERNEL</span><span class="o">==</span><span class="s2">&quot;ttyACM*&quot;</span><span class="p">,</span><span class="n">KERNELS</span><span class="o">==</span><span class="s2">&quot;3-1:1.0&quot;</span><span class="p">,</span><span class="n">SYMLINK</span><span class="o">+=</span><span class="s2">&quot;controller&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">SUBSYSTEM</span><span class="o">==</span><span class="s2">&quot;tty&quot;</span><span class="p">,</span> <span class="n">KERNELS</span><span class="o">==</span><span class="s2">&quot;3-1:1.0&quot;</span><span class="p">,</span> <span class="n">SYMLINK</span><span class="o">+=</span><span class="s2">&quot;controller&quot;</span>
 </span></pre></div>
 </div>
 <p>Note: The USB port identifier (KERNELS==“3-1:1.0”) may vary depending on the physical USB port you are using. For reference, the 3-1:1.0 port on the Raspberry Pi is usually the USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> after connecting the device.</p>
@@ -641,7 +712,7 @@ to a specific USB port (in this case, the port associated with <code class="docu
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">udevadm</span> <span class="n">trigger</span>
 </span></pre></div>
 </div>
-<p>Now, whenever the Bpod device is connected to the specified USB port, it will consistently appear with the symbolic link <code class="docutils literal notranslate"><span class="pre">/dev/Bpod</span></code>, regardless of its dynamic ttyACM* designation.</p>
+<p>Now, whenever your Bpod or Arduino controller is plugged into that designated USB port, the system will automatically expose it at <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code>, completely bypassing any dynamic or unpredictable <code class="docutils literal notranslate"><span class="pre">ttyACM</span></code> or <code class="docutils literal notranslate"><span class="pre">ttyUSB</span></code> reassignments.</p>
 </section>
 <section id="grant-permissions-for-maximum-process-priority">
 <h2>Grant Permissions for Maximum Process Priority</h2>
@@ -792,7 +863,7 @@ to a specific USB port (in this case, the port associated with <code class="docu
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=83e9bb83"></script>
+      <script src="../_static/documentation_options.js?v=1df7cfc4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

@@ -3,7 +3,7 @@
 Launch the GUI by entering the following command in a terminal:
 
 ```
-run_village
+village
 ```
 
 When the GUI launches, the system automatically checks connections with essential components (such as cameras, temperature sensors, weight sensors, etc.). If any connection cannot be established, a warning message will display, and the Training Village will enter debug mode. For help resolving connection issues, refer to the [troubleshooting section][TROUBLE].

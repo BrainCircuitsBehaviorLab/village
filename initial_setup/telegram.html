@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=63c44de5" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=069729ed" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
       <strong>village</strong>
     </a>
     <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"><ul><li class="link"><a href="prerequisites.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <nav class="sy-head-links"><ul><li class="link"><a href="system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
   <kbd>/</kbd>
@@ -64,19 +64,21 @@ data-aria-dark="Switch to auto color mode">
         <div class="globaltoc" data-expand-depth="0"><ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="first_time.html">First-Time Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="access.html">Remote Access Setup</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Telegram Bot Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="backup.html">Data Persistence &amp; Backups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="heartbeat.html">Remote Heartbeat Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="heartbeat.html">Remote Heartbeat Monitoring</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor &amp; Hardware Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
@@ -101,7 +103,23 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibration.html">BpodWaterCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html">BpodWaterCalibrationTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.html">camera_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.CameraCalibration.html">CameraCalibration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.html">sound_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.SoundCalibrationTask.html">SoundCalibrationTask</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.calibrations.html">calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.calibrations.Calibrations.html">Calibrations</a></li>
@@ -164,6 +182,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html">AutoNoMouse_Base</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.html">calibration_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.CalibrationBase.html">CalibrationBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -208,9 +230,27 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.camera.html">camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.rfid.Rfid.html">Rfid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
@@ -224,6 +264,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.html">telegram_bot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -231,18 +276,30 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.bpod_water_calibration_plot.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui.html">gui</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.gui.Gui.html">Gui</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.layout.html">layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.html">monitor_layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.sound_calibration_plot.html">sound_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.sound_calibration_plot.sound_calibration_plot.html">sound_calibration_plot</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
@@ -256,6 +313,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -266,6 +324,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.import_all.html">import_all</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.import_all.import_all.html">import_all</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
@@ -328,6 +390,15 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.manager.html">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.manager.Manager.html">Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.main.html">main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.main.system_run.html">system_run</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -363,8 +434,15 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#check-the-token-of-an-existing-bot">Check the Token of an Existing Bot</a></li>
-<li><a class="reference internal" href="#configure-the-bot-to-trigger-alarms">Configure the Bot to Trigger Alarms</a></li>
+<li><a class="reference internal" href="#simple-overview">Simple Overview</a></li>
+<li><a class="reference internal" href="#detailed-step-by-step-guide">Detailed Step-by-Step Guide</a><ul>
+<li><a class="reference internal" href="#step-1-create-a-new-telegram-bot">Step 1: Create a New Telegram Bot</a></li>
+<li><a class="reference internal" href="#step-2-configure-the-alarm-group-chat">Step 2: Configure the Alarm Group Chat</a></li>
+<li><a class="reference internal" href="#step-3-retrieve-the-group-chat-id">Step 3: Retrieve the Group Chat ID</a></li>
+<li><a class="reference internal" href="#step-4-update-your-village-settings">Step 4: Update Your Village Settings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#managing-alarms-commands">Managing Alarms &amp; Commands</a></li>
 </ul>
 </div></div>
   </aside>
@@ -440,53 +518,84 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="telegram-bot-integration">
 <h1>Telegram Bot Integration</h1>
+<section id="simple-overview">
+<h2>Simple Overview</h2>
+<p>Integrating Telegram into the Training Village (TV) system allows you to receive automated, real-time safety alarms and query the live status of your system directly from your mobile phone.</p>
+<p>To set this up, we will perform three simple phases:</p>
 <ol class="arabic simple">
-<li><p>Install <strong>Telegram</strong> on your phone and open the app.</p></li>
-<li><p>In the search bar, type <strong>&#64;BotFather</strong> and select it.
-Be careful: there may be other bots with similar names. The official BotFather has a <strong>blue verification checkmark</strong>.</p></li>
-<li><p>Send the command <code class="docutils literal notranslate"><span class="pre">/newbot</span></code></p></li>
-<li><p>Follow BotFather’s instructions to create your bot.</p></li>
-</ol>
-<ul class="simple">
-<li><p>At the end, you will receive a <strong>token</strong>.</p></li>
-<li><p>Write it down and <strong>never share your token publicly</strong> (e.g., on GitHub).</p></li>
-</ul>
-<ol class="arabic simple" start="5">
-<li><p>Open a chat with your new bot and activate it by sending <code class="docutils literal notranslate"><span class="pre">/start</span></code></p></li>
-</ol>
-<section id="check-the-token-of-an-existing-bot">
-<h2>Check the Token of an Existing Bot</h2>
-<ol class="arabic simple">
-<li><p>Open the chat with <strong>&#64;BotFather</strong>.</p></li>
-<li><p>Send: <code class="docutils literal notranslate"><span class="pre">/token</span></code></p></li>
-<li><p>Select the bot whose token you want to retrieve.</p></li>
+<li><p>Create a dedicated Telegram bot using the official account (<strong>&#64;BotFather</strong>) to obtain an access token.</p></li>
+<li><p>Set up a laboratory group chat containing the team and the bot, then use an identification bot to retrieve the unique <strong>Group Chat ID</strong>.</p></li>
+<li><p>Save these credentials locally inside your Training Village configuration file on the Raspberry Pi.</p></li>
 </ol>
 </section>
-<section id="configure-the-bot-to-trigger-alarms">
-<h2>Configure the Bot to Trigger Alarms</h2>
+<hr class="docutils" />
+<section id="detailed-step-by-step-guide">
+<h2>Detailed Step-by-Step Guide</h2>
+<section id="step-1-create-a-new-telegram-bot">
+<h3>Step 1: Create a New Telegram Bot</h3>
 <ol class="arabic simple">
-<li><p>Create a <strong>group chat</strong> that includes:</p></li>
+<li><p>Open the <strong>Telegram</strong> app on your phone or computer.</p></li>
+<li><p>In the search bar, type <strong>&#64;BotFather</strong> and select it.</p></li>
 </ol>
-<ul class="simple">
-<li><p>The bot (make it <strong>administrator</strong>: <em>Group → Edit → Administrators</em>).</p></li>
-<li><p>Other participants who should receive the alarms.</p></li>
-</ul>
-<p>→ Everyone in this group will receive alarms and can send commands to the bot.</p>
-<ol class="arabic simple" start="2">
-<li><p>To obtain the <strong>group chat ID</strong>:</p></li>
-</ol>
-<ul class="simple">
-<li><p>Start a conversation with <strong>&#64;username_to_id_bot</strong> (IDBot).</p></li>
-<li><p>Forward any message from the group to IDBot.</p></li>
-<li><p>IDBot will reply with the <strong>chat ID</strong>-</p></li>
-</ul>
-<ol class="arabic simple" start="3">
-<li><p>Copy the values into your <strong>Village settings</strong> t(he settings are stored in a system file that never leaves your Raspberry Pi and is never shared with anything else.)</p></li>
-</ol>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="na">TELEGRAM_TOKEN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;your-bot-token&gt;</span>
-</span><span data-line="2"><span class="na">TELEGRAM_CHAT</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;group-chat-id&gt;</span>
-</span></pre></div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Ensure you choose the official account featuring the <strong>blue verification checkmark</strong> to avoid fake clone bots.</p>
 </div>
+<ol class="arabic simple" start="3">
+<li><p>Send the command <code class="docutils literal notranslate"><span class="pre">/newbot</span></code>.</p></li>
+<li><p>Follow the step-by-step prompts provided by BotFather to assign a display name and a unique username for your bot.</p></li>
+<li><p>Once complete, BotFather will generate an API <strong>Token</strong>. Copy this token immediately and store it safely. <strong>Never share this token publicly</strong> (e.g., do not commit it to public GitHub repositories).</p></li>
+<li><p>Click the link to your new bot provided by BotFather, open a direct chat with it, and click <strong>Start</strong> (or send <code class="docutils literal notranslate"><span class="pre">/start</span></code>) to activate it.</p></li>
+</ol>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>If you ever need to retrieve the token of an existing bot, simply open your chat with <strong>&#64;BotFather</strong>, send <code class="docutils literal notranslate"><span class="pre">/token</span></code>, and select your target bot from the menu.</p>
+</div>
+</section>
+<section id="step-2-configure-the-alarm-group-chat">
+<h3>Step 2: Configure the Alarm Group Chat</h3>
+<ol class="arabic simple">
+<li><p>Create a new <strong>Group Chat</strong> in Telegram.</p></li>
+<li><p>Add all laboratory members who need to receive system alarms, and add your newly created <strong>bot</strong> to the group.</p></li>
+<li><p>Promote the bot to an <strong>Administrator</strong>: Navigate to <em>Group Info → Edit → Administrators → Add Administrator</em> and select your bot. This grants it the necessary permissions to transmit alarms to the group.</p></li>
+</ol>
+<div class="important admonition">
+<p class="admonition-title">Result</p>
+<p>Anyone added to this group will receive automated alarms and can send text commands to control or query the bot.</p>
+</div>
+</section>
+<section id="step-3-retrieve-the-group-chat-id">
+<h3>Step 3: Retrieve the Group Chat ID</h3>
+<ol class="arabic simple">
+<li><p>Search for <strong>&#64;username_to_id_bot</strong> (commonly known as IDBot) in Telegram and start a chat with it.</p></li>
+<li><p>Go back to your newly created lab group chat, send a temporary message, and <strong>forward</strong> that message directly into your chat with IDBot.</p></li>
+<li><p>IDBot will immediately reply with your unique <strong>Group Chat ID</strong> (typically a long negative number, e.g., <code class="docutils literal notranslate"><span class="pre">-100xxxxxxxxx</span></code>). Copy this number exactly, including the minus sign if present.</p></li>
+</ol>
+</section>
+<section id="step-4-update-your-village-settings">
+<h3>Step 4: Update Your Village Settings</h3>
+<ol class="arabic simple">
+<li><p>Open a terminal on your Raspberry Pi and launch the application interface by typing <code class="docutils literal notranslate"><span class="pre">village</span></code>.</p></li>
+<li><p>Within the Training Village menu, navigate to <strong>SETTINGS</strong> and select the <strong>TELEGRAM SETTINGS</strong> subsection. Update the fields with your newly acquired credentials:</p></li>
+</ol>
+<p>TELEGRAM_TOKEN</p>
+<p>TELEGRAM_CHAT</p>
+<div class="warning admonition">
+<p class="admonition-title">Security Note</p>
+<p>These configuration settings are saved strictly on your local Raspberry Pi storage. Your credentials never leave your hardware and are never uploaded or shared externally.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="managing-alarms-commands">
+<h2>Managing Alarms &amp; Commands</h2>
+<p>Once your bot is fully linked to the system, you can refer to the <a class="reference internal" href="../troubleshooting/alarm.html"><span class="std std-doc">Alarm system overview</span></a> section of the documentation. There you will find a complete reference list of interactive commands you can text to the bot to check system health, alongside a detailed breakdown of the automated alarm types the Training Village can trigger.</p>
+<p>To verify that everything is working correctly, go to your Telegram group chat and send one of the following commands (ensuring the TV system is powered on and running). You should receive an immediate response from the bot:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/report</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/plot</span></code></p></li>
+</ul>
 <br>
 </section>
 </section>
@@ -528,7 +637,7 @@ Be careful: there may be other bots with similar names. The official BotFather h
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=83e9bb83"></script>
+      <script src="../_static/documentation_options.js?v=1df7cfc4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

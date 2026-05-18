@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Remote Access Setup - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Telegram Bot Integration" href="telegram.html" /><link rel="prev" title="First-Time Configuration" href="first_time.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Remote Access Setup - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Telegram Bot Integration" href="telegram.html" /><link rel="prev" title="Launching the TV Application" href="launching.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/initial_setup/access.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=63c44de5" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=069729ed" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
       <strong>village</strong>
     </a>
     <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"><ul><li class="link"><a href="prerequisites.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <nav class="sy-head-links"><ul><li class="link"><a href="system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
   <kbd>/</kbd>
@@ -64,19 +64,21 @@ data-aria-dark="Switch to auto color mode">
         <div class="globaltoc" data-expand-depth="0"><ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="first_time.html">First-Time Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="telegram.html">Telegram Bot Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="backup.html">Data Persistence &amp; Backups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="heartbeat.html">Remote Heartbeat Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="heartbeat.html">Remote Heartbeat Monitoring</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor &amp; Hardware Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
@@ -101,7 +103,23 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibration.html">BpodWaterCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html">BpodWaterCalibrationTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.html">camera_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.CameraCalibration.html">CameraCalibration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.html">sound_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.SoundCalibrationTask.html">SoundCalibrationTask</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.calibrations.html">calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.calibrations.Calibrations.html">Calibrations</a></li>
@@ -164,6 +182,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html">AutoNoMouse_Base</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.html">calibration_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.CalibrationBase.html">CalibrationBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -208,9 +230,27 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.camera.html">camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.rfid.Rfid.html">Rfid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
@@ -224,6 +264,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.html">telegram_bot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -231,18 +276,30 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.bpod_water_calibration_plot.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui.html">gui</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.gui.Gui.html">Gui</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.layout.html">layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.html">monitor_layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.sound_calibration_plot.html">sound_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.sound_calibration_plot.sound_calibration_plot.html">sound_calibration_plot</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
@@ -256,6 +313,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -266,6 +324,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.import_all.html">import_all</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.import_all.import_all.html">import_all</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
@@ -328,6 +390,15 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.manager.html">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.manager.Manager.html">Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.main.html">main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.main.system_run.html">system_run</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -362,7 +433,19 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#option-1-using-anydesk">Option 1: Using AnyDesk</a><ul>
+<li><a class="reference internal" href="#from-your-raspberry-pi-5">From your Raspberry Pi 5:</a></li>
+<li><a class="reference internal" href="#from-your-external-computer-or-smartphone">From your external computer or smartphone:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#option-2-using-realvnc">Option 2: Using RealVNC</a><ul>
+<li><a class="reference internal" href="#id1">From your Raspberry Pi 5:</a></li>
+<li><a class="reference internal" href="#id2">From your external computer or smartphone:</a></li>
+</ul>
+</li>
+</ul>
+</div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -436,24 +519,67 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="remote-access-setup">
 <h1>Remote Access Setup</h1>
-<p>First, we need to set up the system’s internet connection. The easiest way to do this is to connect the Raspberry Pi to a keyboard, mouse, screen, and Ethernet cable (if you are using a wired connection) before powering it on for the first time. For performance reasons, the screen resolution is forcibly set to 1280x720, regardless of the display you use.</p>
-<p>Once the operating system boots up, simply configure the internet connection. <a class="reference external" href="https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3">Help</a>.</p>
-<p>Now we’ll set up remote access using <a class="reference external" href="https://www.realvnc.com/en/">RealVNC</a>. Follow these steps:</p>
-<p>From your Raspberry Pi:</p>
+<p>Before configuring remote access, verify that your Raspberry Pi is connected to the internet. If you need assistance with network configuration, please refer to the official <a class="reference external" href="https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3">Raspberry Pi Guide</a>.</p>
+<p>While any remote desktop client providing a full graphical user interface can be used, we recommend one of the two options below for seamless integration with the Training Village (TV) system.</p>
+<hr class="docutils" />
+<section id="option-1-using-anydesk">
+<h2>Option 1: Using AnyDesk</h2>
+<p>AnyDesk is highly reliable, easy to deploy, and its free tier is fully sufficient for lab operations.</p>
+<section id="from-your-raspberry-pi-5">
+<h3>From your Raspberry Pi 5:</h3>
 <ol class="arabic simple">
-<li><p>Go to the <a class="reference external" href="https://www.realvnc.com/en/connect/plan/lite/">Lite Access Subscription Page</a> of RealVNC and create an account (free for non-commercial use). Follow these <a class="reference external" href="https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription">detailed instructions</a> if you encounter any issues.</p></li>
-<li><p>Open the RealVNC Server on the Raspberry Pi (it is installed automatically with Raspberry Pi OS) and configure it for your team.</p></li>
-<li><p>Go to the Device Access section on the RealVNC webpage and add your current device.</p></li>
-<li><p>In the RealVNC window, you will see a code that allows remote connections from other networks and an IP address for connections from the same network.</p></li>
+<li><p>Open the web browser on your Raspberry Pi, go to the AnyDesk download page, and download the <strong>Raspberry Pi / Debian (64-bit / ARM64)</strong> <code class="docutils literal notranslate"><span class="pre">.deb</span></code> package.</p></li>
+<li><p>Install the downloaded package by double-clicking it or using the terminal.</p></li>
+<li><p>Launch AnyDesk and write down the unique <strong>AnyDesk Address</strong> assigned to your device.</p></li>
+<li><p>Navigate to <em>Settings → Access</em>, then look for <strong>Unattended Access</strong>. Check the option to enable it and set a secure password. This allows authorized lab members to connect remotely at any time without needing someone to manually accept the incoming request on the Pi.</p></li>
 </ol>
-<p>From your external computer or phone:</p>
+</section>
+<section id="from-your-external-computer-or-smartphone">
+<h3>From your external computer or smartphone:</h3>
 <ol class="arabic simple">
-<li><p>Log in to the RealVNC webpage with your credentials.</p></li>
-<li><p>Install and open RealVNC Viewer on your external computer or phone.</p></li>
-<li><p>Connect to the Raspberry Pi using the RealVNC server’s code if connecting from a different network, or the IP address if connecting from the same network.</p></li>
+<li><p>Download and install AnyDesk on your external workstation, laptop, or mobile phone.</p></li>
+<li><p>Launch the application, type the Raspberry Pi’s unique AnyDesk Address into the connection bar, and enter your preset unattended access password when prompted.</p></li>
 </ol>
-<p>There is also an alternative option for remote connection using <a class="reference external" href="https://www.raspberrypi.com/software/connect/">raspi-connect</a>; however, we currently do not recommend it due to some issues we encountered during testing, and suboptimal performance.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can rename and save this connection to your favorites for quick access.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="option-2-using-realvnc">
+<h2>Option 2: Using RealVNC</h2>
+<p>RealVNC is an excellent choice because the server software comes pre-installed by default on Raspberry Pi OS. You will need to create an account, but the free <strong>Lite</strong> tier is ideal for managing a standalone system.</p>
+<section id="id1">
+<h3>From your Raspberry Pi 5:</h3>
+<ol class="arabic simple">
+<li><p>Navigate to the <a class="reference external" href="https://www.realvnc.com/en/connect/plan/lite/">RealVNC Lite Access Subscription Page</a> and create a free account (eligible for non-commercial/research use). If you encounter any verification issues, follow these <a class="reference external" href="https://help.realvnc.com/hc/en-us/articles/360029619052-Activating-a-RealVNC-Connect-Lite-subscription">detailed instructions</a>.</p></li>
+<li><p>Open the <strong>RealVNC Server</strong> application on your Raspberry Pi (accessible via the desktop taskbar or the main application menu).</p></li>
+<li><p>Sign in to the server window using your newly created credentials to link the Raspberry Pi to your team’s account.</p></li>
+<li><p>Once linked, the RealVNC window will display a cloud connectivity code (allowing you to connect from outside the university/institution network) as well as a local IP address (for faster connections when your laptop is on the same local network).</p></li>
+</ol>
+</section>
+<section id="id2">
+<h3>From your external computer or smartphone:</h3>
+<ol class="arabic simple">
+<li><p>Install and open <strong>RealVNC Viewer</strong> on your external computer, laptop, or smartphone.</p></li>
+<li><p>Log in with your team’s RealVNC credentials.</p></li>
+<li><p>Select your Raspberry Pi directly from your team’s cloud device list. Alternatively, if you are working on the same local network, you can connect instantly by typing the Raspberry Pi’s local IP address directly into the search bar.</p></li>
+</ol>
+<hr class="docutils" />
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>While <a class="reference external" href="https://www.raspberrypi.com/software/connect/">Raspberry Pi Connect</a> is a popular built-in option for remote connections, it is <strong>incompatible</strong> with the Training Village system.
+Our system explicitly runs on an <strong>X11 display server</strong> instead of Wayland (which is required by Raspberry Pi Connect). Forcing an X11 architecture is mandatory for our ecosystem because it provides superior, low-level frame rendering when utilizing a touchscreen to present visual stimuli in the experiments.</p>
+</div>
+<hr class="docutils" />
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Once remote access is successfully configured, we highly recommend disconnecting the keyboard, mouse, and monitor, and completing the remaining setup steps remotely.</p>
+</div>
 <br>
+</section>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -462,10 +588,10 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="first_time.html">
+    <a href="launching.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">First-Time Configuration</div></div>
+        <span>Previous</span><div class="title">Launching the TV Application</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="telegram.html">
@@ -493,7 +619,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=83e9bb83"></script>
+      <script src="../_static/documentation_options.js?v=1df7cfc4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

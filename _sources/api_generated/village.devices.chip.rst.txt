@@ -1,0 +1,41 @@
+chip
+====
+
+.. automodule:: village.devices.chip
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      get_motor
+      get_motor_old
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      LED
+      Motor
+   
+   
+
+   
+   
+   
+
+
+

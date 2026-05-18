@@ -1,0 +1,39 @@
+telegram\_bot
+=============
+
+.. automodule:: village.devices.telegram_bot
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      get_telegram_bot
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      TelegramBot
+   
+   
+
+   
+   
+   
+
+
+

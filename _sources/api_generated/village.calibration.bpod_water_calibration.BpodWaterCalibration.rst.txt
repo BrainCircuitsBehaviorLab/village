@@ -1,0 +1,65 @@
+BpodWaterCalibration
+====================
+
+.. currentmodule:: village.calibration.bpod_water_calibration
+
+.. autoclass:: BpodWaterCalibration
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BpodWaterCalibration.__init__
+      ~BpodWaterCalibration.add_button2_clicked
+      ~BpodWaterCalibration.add_button_clicked
+      ~BpodWaterCalibration.add_entry
+      ~BpodWaterCalibration.all_tests_done
+      ~BpodWaterCalibration.calibrate_button_clicked
+      ~BpodWaterCalibration.calibration_changed
+      ~BpodWaterCalibration.calibration_weighted
+      ~BpodWaterCalibration.change_last_entry
+      ~BpodWaterCalibration.change_layout
+      ~BpodWaterCalibration.check_split_csv
+      ~BpodWaterCalibration.convert_df_to_types
+      ~BpodWaterCalibration.convert_with_default
+      ~BpodWaterCalibration.create_data_collection
+      ~BpodWaterCalibration.create_plot
+      ~BpodWaterCalibration.delete_button_clicked
+      ~BpodWaterCalibration.df_from_df
+      ~BpodWaterCalibration.draw
+      ~BpodWaterCalibration.get_first_entry
+      ~BpodWaterCalibration.get_last_calibration_df
+      ~BpodWaterCalibration.get_last_entry
+      ~BpodWaterCalibration.get_last_entry_name
+      ~BpodWaterCalibration.get_valve_time
+      ~BpodWaterCalibration.init_panel
+      ~BpodWaterCalibration.is_active
+      ~BpodWaterCalibration.ok_button2_clicked
+      ~BpodWaterCalibration.reset
+      ~BpodWaterCalibration.save_button_clicked
+      ~BpodWaterCalibration.save_from_df
+      ~BpodWaterCalibration.stop_button_clicked
+      ~BpodWaterCalibration.test_button_clicked
+      ~BpodWaterCalibration.test_changed
+      ~BpodWaterCalibration.test_weighted
+      ~BpodWaterCalibration.update_gui
+      ~BpodWaterCalibration.update_status_label_buttons
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BpodWaterCalibration.display_name
+   
+   

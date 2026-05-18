@@ -27,10 +27,6 @@ Collection
       ~Collection.get_first_entry
       ~Collection.get_last_entry
       ~Collection.get_last_entry_name
-      ~Collection.get_last_sound_df
-      ~Collection.get_last_water_df
-      ~Collection.get_sound_gain
-      ~Collection.get_valve_time
       ~Collection.save_from_df
    
    

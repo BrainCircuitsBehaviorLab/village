@@ -1,0 +1,31 @@
+calibration\_base
+=================
+
+.. automodule:: village.custom_classes.calibration_base
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      CalibrationBase
+   
+   
+
+   
+   
+   
+
+
+

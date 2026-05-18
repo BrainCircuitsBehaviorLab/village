@@ -1,0 +1,6 @@
+get\_motor\_old
+===============
+
+.. currentmodule:: village.devices.chip
+
+.. autofunction:: get_motor_old

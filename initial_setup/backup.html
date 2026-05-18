@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Data Persistence &amp; Backups - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Remote Heartbeat Signals" href="heartbeat.html" /><link rel="prev" title="Telegram Bot Integration" href="telegram.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Data Persistence &amp; Backups - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Remote Heartbeat Monitoring" href="heartbeat.html" /><link rel="prev" title="Telegram Bot Integration" href="telegram.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/initial_setup/backup.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=63c44de5" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=069729ed" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
       <strong>village</strong>
     </a>
     <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"><ul><li class="link"><a href="prerequisites.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <nav class="sy-head-links"><ul><li class="link"><a href="system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
   <kbd>/</kbd>
@@ -64,19 +64,21 @@ data-aria-dark="Switch to auto color mode">
         <div class="globaltoc" data-expand-depth="0"><ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="first_time.html">First-Time Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="telegram.html">Telegram Bot Integration</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Data Persistence &amp; Backups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="heartbeat.html">Remote Heartbeat Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="heartbeat.html">Remote Heartbeat Monitoring</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor &amp; Hardware Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
@@ -101,7 +103,23 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibration.html">BpodWaterCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html">BpodWaterCalibrationTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.html">camera_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.CameraCalibration.html">CameraCalibration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.html">sound_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.SoundCalibrationTask.html">SoundCalibrationTask</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.calibrations.html">calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.calibrations.Calibrations.html">Calibrations</a></li>
@@ -164,6 +182,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouse_Base.html">AutoNoMouse_Base</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.html">calibration_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.CalibrationBase.html">CalibrationBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -208,9 +230,27 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.camera.html">camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.rfid.Rfid.html">Rfid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
@@ -224,6 +264,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.html">telegram_bot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -231,18 +276,30 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.bpod_water_calibration_plot.bpod_water_calibration_plot.html">bpod_water_calibration_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui.html">gui</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.gui.Gui.html">Gui</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.layout.html">layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.html">monitor_layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.sound_calibration_plot.html">sound_calibration_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.sound_calibration_plot.sound_calibration_plot.html">sound_calibration_plot</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
@@ -256,6 +313,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -266,6 +324,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.import_all.html">import_all</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.import_all.import_all.html">import_all</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
@@ -328,6 +390,15 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.manager.html">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.manager.Manager.html">Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.main.html">main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.main.system_run.html">system_run</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -362,7 +433,11 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#key-configuration-fields">Key Configuration Fields</a></li>
+<li><a class="reference internal" href="#troubleshooting-sync-logs">Troubleshooting &amp; Sync Logs</a></li>
+</ul>
+</div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -436,7 +511,37 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="data-persistence-backups">
 <h1>Data Persistence &amp; Backups</h1>
+<p>Because the system runs on a microSD card with a limited capacity of 256 GB, older video files must be regularly purged to make room for new recordings. Please note that <strong>behavioral task data is never deleted</strong>—only the video files are cleared.</p>
+<p>By default, the system retains one week of video storage, but you can adjust this window to fit your needs under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code>.</p>
+<p>At the conclusion of each behavioral session, the system automatically triggers a data synchronization routine. To specify your backup destination, configure the fields in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SYNC</span> <span class="pre">SETTINGS</span></code>. Here you can choose whether to sync your data to a remote network server or to an external hard drive connected directly to the Raspberry Pi.</p>
+<section id="key-configuration-fields">
+<h2>Key Configuration Fields</h2>
+<p>There are two critical parameters that govern this backup behavior:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code>:</strong></p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ON</span></code>:</strong> The system will <em>only</em> delete old video files if it confirms they have been successfully backed up to your remote server or external hard drive.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OFF</span></code>:</strong> The system will automatically purge old video files once they exceed the storage days limit, even if no backup is found.</p></li>
+</ul>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MAXIMUM_SYNC_TIME</span></code>:</strong> The maximum time allowed (in seconds) for the synchronization process to complete. If a sync session exceeds this threshold, the process terminates automatically. This safety cutoff prevents a slow network or hanging transfer from indefinitely blocking other animals from voluntarily accessing the operant box.</p></li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>When synchronizing data to a remote server, the <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code> field can be left blank if there is no need to specify a particular port for the SSH connection.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting-sync-logs">
+<h2>Troubleshooting &amp; Sync Logs</h2>
+<p>If you suspect a transfer issue, you can inspect the detailed synchronization logs generated by the system. The log files are stored locally in the following directory:</p>
+<p><code class="docutils literal notranslate"><span class="pre">/home/pi/village_projects/YOUR_PROJECT/data/YOUR_SYSTEM/rsync_logs</span></code></p>
+<p>If the synchronization routine fails repeatedly, the system will broadcast an automated warning to your team’s Telegram channel:</p>
+<p>Alarm: No data sync in the last 24h</p>
+<p>Meaning: No data has been successfully backed up to the external server or hard drive during the last 24 hours.</p>
+<p>Action Required: Review the logs inside the rsync_logs folder to identify the specific transfer error, and verify your network connectivity or remote storage availability.</p>
 <br>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -454,7 +559,7 @@ data-aria-dark="Switch to auto color mode">
     <a href="heartbeat.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Remote Heartbeat Signals</div>
+        <div class="title">Remote Heartbeat Monitoring</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -476,7 +581,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=83e9bb83"></script>
+      <script src="../_static/documentation_options.js?v=1df7cfc4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

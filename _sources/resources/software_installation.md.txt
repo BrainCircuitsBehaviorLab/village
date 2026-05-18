@@ -157,10 +157,11 @@ enable_uart=1
 
 ### Udev Rules for Consistent USB Device Naming
 
-When you connect your Bpod device to the Raspberry Pi, it’s assigned a file path in `/dev/`, typically named `ttyACM0`. However, this name may vary (ttyACM1, ttyACM2, etc.), especially if you have other USB devices connected. To ensure a consistent and recognizable name, you can create a symbolic link to your Bpod device.
+When you connect your behavioral controller (e.g., Bpod, Arduino, or compatible boards) to the Raspberry Pi, the operating system assigns it a device path in `/dev/`. Depending on the specific serial chip used by your board, it is typically named `ttyACM0` or `ttyUSB0`.
 
-1. Navigate to the Udev rules folder where custom rules are stored:
+However, this designation can change dynamically (`ttyACM1`, `ttyUSB1`, etc.) upon reboot or if other USB peripherals are connected. To guarantee that the Training Village software can always locate the hardware, you can create a persistent symbolic link that maps the physical USB port directly to a static name.
 
+1. Navigate to the system directory where custom hardware rules are stored:
 ```
 cd /etc/udev/rules.d
 ```
@@ -171,11 +172,10 @@ cd /etc/udev/rules.d
 sudo nano 99-usb.rules
 ```
 
-3. In the new rule file, add the following line to create a symbolic link named `controller` for any device that matches the pattern `ttyACM*`. This will allow any device named ttyACM*(where* can be any number) to be consistently linked, provided it’s connected
-to a specific USB port (in this case, the port associated with `KERNELS==3-1:1.0`).
+3. Add the following line to the file. By targeting the serial `tty` subsystem instead of a specific naming pattern, this rule seamlessly captures both `ttyACM*` and `ttyUSB*` devices, mapping whichever device is plugged into that exact physical port to the alias `controller`:
 
 ```
-KERNEL=="ttyACM*",KERNELS=="3-1:1.0",SYMLINK+="controller"
+SUBSYSTEM=="tty", KERNELS=="3-1:1.0", SYMLINK+="controller"
 ```
 
 Note: The USB port identifier (KERNELS=="3-1:1.0") may vary depending on the physical USB port you are using. For reference, the 3-1:1.0 port on the Raspberry Pi is usually the USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command `dmesg` after connecting the device.
@@ -186,7 +186,7 @@ Note: The USB port identifier (KERNELS=="3-1:1.0") may vary depending on the phy
 sudo udevadm trigger
 ```
 
-Now, whenever the Bpod device is connected to the specified USB port, it will consistently appear with the symbolic link `/dev/Bpod`, regardless of its dynamic ttyACM* designation.
+Now, whenever your Bpod or Arduino controller is plugged into that designated USB port, the system will automatically expose it at `/dev/controller`, completely bypassing any dynamic or unpredictable `ttyACM` or `ttyUSB` reassignments.
 
 ### Grant Permissions for Maximum Process Priority
 

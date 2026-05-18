@@ -31,13 +31,11 @@ DataTable
    
       ~DataTable.EVENTS
       ~DataTable.SESSIONS_SUMMARY
-      ~DataTable.SUBJECTS
-      ~DataTable.WATER_CALIBRATION
-      ~DataTable.SOUND_CALIBRATION
       ~DataTable.TEMPERATURES
       ~DataTable.SESSION
       ~DataTable.SESSION_RAW
       ~DataTable.OLD_SESSION
       ~DataTable.OLD_SESSION_RAW
+      ~DataTable.SUBJECTS
    
    

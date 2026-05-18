@@ -28,9 +28,7 @@
    :template: custom_module_template.rst
    :recursive:
 
-   bpod_water_calibration_plot
    corridor_plot
-   sound_calibration_plot
    temperatures_plot
    weights_plot
 

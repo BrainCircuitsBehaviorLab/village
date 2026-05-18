@@ -18,10 +18,6 @@ NullCollection
    
       ~NullCollection.__init__
       ~NullCollection.add_entry
-      ~NullCollection.get_last_sound_df
-      ~NullCollection.get_last_water_df
-      ~NullCollection.get_sound_gain
-      ~NullCollection.get_valve_time
       ~NullCollection.save_from_df
    
    
