@@ -10,5 +10,4 @@ HARDWARE RESOURCES
     :maxdepth: 1
 
     resources/list_of_parts.md
-    resources/3D.md
     resources/hardware.md

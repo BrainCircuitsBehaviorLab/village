@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>List of Parts - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="3D Printing &amp; CAD Files" href="3D.html" /><link rel="prev" title="HARDWARE RESOURCES" href="../hardware.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>List of Parts - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="System Assembly Guide" href="hardware.html" /><link rel="prev" title="HARDWARE RESOURCES" href="../hardware.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/resources/list_of_parts.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -404,8 +404,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../hardware.html">HARDWARE RESOURCES</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">List of Parts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="3D.html">3D Printing &amp; CAD Files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hardware.html">Hardware Assembly Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html">System Assembly Guide</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
@@ -434,20 +433,15 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#d-printed-parts">3D-Printed Parts</a></li>
-<li><a class="reference internal" href="#cnc-machined-parts">CNC Machined Parts</a></li>
-<li><a class="reference internal" href="#aluminium-extrusions-and-tubes">Aluminium Extrusions and Tubes</a></li>
-<li><a class="reference internal" href="#bpod-ports">Bpod + Ports</a></li>
-<li><a class="reference internal" href="#raspberry-cams">Raspberry + Cams</a></li>
-<li><a class="reference internal" href="#training-village-hat">Training Village HAT</a></li>
-<li><a class="reference internal" href="#electronics">Electronics</a><ul>
-<li><a class="reference internal" href="#rfid">RFID</a></li>
+<li><a class="reference internal" href="#raspberry-pi-components">Raspberry Pi Components</a></li>
+<li><a class="reference internal" href="#corridor-components">Corridor Components</a><ul>
+<li><a class="reference internal" href="#small-setup-configuration-2-home-cages">Small Setup Configuration (2 Home Cages)</a></li>
+<li><a class="reference internal" href="#large-setup-configuration-4-home-cages-ecohab-compatible">Large Setup Configuration (4 Home Cages / EcoHab Compatible)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#behavioral-box">Behavioral Box</a></li>
-<li><a class="reference internal" href="#homecages">Homecages</a></li>
-<li><a class="reference internal" href="#sound">Sound</a></li>
-<li><a class="reference internal" href="#screen">Screen</a></li>
+<li><a class="reference internal" href="#custom-pcb-boards-electronics">Custom PCB Boards &amp; Electronics</a></li>
+<li><a class="reference internal" href="#illumination-accessories">Illumination &amp; Accessories</a></li>
+<li><a class="reference internal" href="#open-source-design-files">Open-Source Design Files</a></li>
 </ul>
 </div></div>
   </aside>
@@ -523,159 +517,98 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="list-of-parts">
 <h1>List of Parts</h1>
-<p>Below are the detailed lists of what you’ll need to print, purchase, and assemble. The estimated cost for all the system is 4300€.</p>
-<section id="d-printed-parts">
-<h2>3D-Printed Parts</h2>
-<p>You’ll need to 3D print the following parts to build the Training Village system.</p>
+<p>Below are the detailed component lists required to print, source, and assemble the Training Village system.</p>
+<p>The estimated total cost of materials ranges between <strong>€1,200 and €1,500</strong> (or equivalent currency). This estimate varies depending on the local cost of 3D printing and custom laser-cutting or CNC machining services for the acrylic components.</p>
+<hr class="docutils" />
+<section id="raspberry-pi-components">
+<h2>Raspberry Pi Components</h2>
 <ul class="simple">
-<li><p><strong>Corridor parts</strong></p>
-<ul>
-<li><p>Bottom parts (home, central and cage)</p></li>
-<li><p>Top parts (home, central and cage)</p></li>
-<li><p>RFID parts 1 and 2</p></li>
+<li><p>1 x <a class="reference external" href="https://www.raspberrypi.com/products/raspberry-pi-5/?variant=raspberry-pi-5-8gb">Raspberry Pi 5 (8GB RAM)</a></p></li>
+<li><p>1 x <a class="reference external" href="https://www.raspberrypi.com/products/active-cooler/">Raspberry Pi Active Cooler</a></p></li>
+<li><p>1 x <a class="reference external" href="https://www.raspberrypi.com/products/power-supply/">Official Raspberry Pi 27W USB-C Power Supply</a></p></li>
+<li><p>1 x High-Speed microSD Card (256 GB)</p></li>
+<li><p>2 x <a class="reference external" href="https://www.raspberrypi.com/products/camera-module-3/?variant=camera-module-3-noir-wide">Raspberry Pi Camera Module 3 (NoIR, Wide-Angle)</a></p></li>
+<li><p>2 x <a class="reference external" href="https://www.raspberrypi.com/products/camera-cable/?variant=camera-cable-std-mini-500">Official Raspberry Pi Camera Cable (50 cm, Standard-to-Mini)</a></p></li>
+<li><p><em>(Optional — required only for acoustic stimuli tasks):</em> 1 x <a class="reference external" href="https://www.raspberrypi.com/products/dac-pro/">Raspberry Pi DAC Pro</a></p></li>
 </ul>
-</li>
-<li><p><strong>Other parts</strong></p>
-<ul>
-<li><p>Door system mounts (left and right)</p></li>
-<li><p>Camera mount (top and bottom)</p></li>
-<li><p>Cable organizer (top and bottom)</p></li>
-</ul>
-</li>
-<li><p><strong>Cage connectors</strong></p>
-<ul>
-<li><p>Tunnel connectors (x6)</p></li>
-<li><p>Cage connectors (x7)</p></li>
-<li><p>Connector blockers (x3)</p></li>
-</ul>
-</li>
-</ul>
-<p><a class="reference internal" href="3D.html"><span class="std std-doc">Download all the 3D printing files here</span></a></p>
 </section>
-<section id="cnc-machined-parts">
-<h2>CNC Machined Parts</h2>
-<p>Below are the CAD files for the parts that need to be CNC machined:</p>
+<hr class="docutils" />
+<section id="corridor-components">
+<h2>Corridor Components</h2>
 <ul class="simple">
-<li><p><strong>4mm Transparent Acrylic</strong>:</p>
-<ul>
-<li><p><strong>Corridor Lid</strong> (x1): The lid that covers the corridor.</p></li>
-<li><p><strong>Corridor Lid Stops</strong> (x3): These stops ensure that the mice cannot push up the corridor
-lid and escape the system.</p></li>
+<li><p>1 x Dedicated 5V, 3A Power Supply (for the Main HAT)</p></li>
+<li><p>1 x 1 kg Load Cell (Note: The custom Corridor Board integrates the HX711 amplifier onboard; only the physical load cell sensor is needed)</p></li>
+<li><p>2 x TowerPro MG995 Servo Motors (11 kg/cm torque, 5V)</p></li>
+<li><p>1 x <a class="reference external" href="https://www.sparkfun.com/rfid-reader-id-20la-125-khz.html">SparkFun RFID Reader ID-20LA (125 kHz)</a></p></li>
+<li><p>1 x Set of RFID Glass Transponder Capsules (125 kHz) for animal identification</p></li>
+<li><p>1 x Complete set of 3D-printed structural components</p></li>
+<li><p>1 x 3mm Matte White Acrylic Base (laser-cut or CNC-machined)</p></li>
+<li><p>2 x 3mm Matte White Acrylic Doors (laser-cut or CNC-machined)</p></li>
+<li><p>1 x 4mm Transparent Acrylic Lid (laser-cut or CNC-machined)</p></li>
+<li><p>4 x 4mm Transparent Acrylic Lid Stops (laser-cut or CNC-machined)</p></li>
 </ul>
-</li>
-<li><p><strong>3mm Matte White Acrylic</strong>:</p>
+<section id="small-setup-configuration-2-home-cages">
+<h3>Small Setup Configuration (2 Home Cages)</h3>
+<ul class="simple">
+<li><p>2 x Standard Home Cages (modified with custom cutouts to host the connecting tubes)</p></li>
+<li><p>2 x Transparent Acrylic Connection Tubes (30 mm internal diameter, 34 mm external diameter, 16 cm length)</p></li>
+<li><p>1 x Set of 20x20 mm Aluminum T-Slot Profiles (Slot 6 mm), cut to the following lengths:</p>
 <ul>
-<li><p><strong>Base</strong> (x1): The foundation where the Training Village is mounted. Available in two
-versions: small (2 home cages) and large (4 home cages).</p></li>
-<li><p><strong>Doors</strong> (x2): CNC machined doors for the system.</p></li>
+<li><p>2 x 55 cm length</p></li>
+<li><p>4 x 45 cm length</p></li>
+<li><p>6 x 34 cm length</p></li>
 </ul>
 </li>
 </ul>
-<p><a class="reference download internal" download="" href="../_downloads/a40989f7ad81c06355854dce8f68c291/cad.zip"><span class="xref download myst">Download all the CAD files here</span></a></p>
 </section>
-<section id="aluminium-extrusions-and-tubes">
-<h2>Aluminium Extrusions and Tubes</h2>
-<p>For the structural support and frame of the Mouse Village system, you will need
-aluminium extrusions and tubes. These provide durability and stability to the entire
-setup. Below is a basic list of what you’ll need:</p>
+<section id="large-setup-configuration-4-home-cages-ecohab-compatible">
+<h3>Large Setup Configuration (4 Home Cages / EcoHab Compatible)</h3>
 <ul class="simple">
-<li><p><strong>Aluminium Extrusions</strong>:</p>
+<li><p>4 x Standard Home Cages (modified with custom cutouts to host the connecting tubes)</p></li>
+<li><p>3 x Transparent Acrylic Connection Tubes (30 mm internal diameter, 34 mm external diameter, 26 cm length)</p></li>
+<li><p>1 x Transparent Acrylic Connection Tube (30 mm internal diameter, 34 mm external diameter, 10 cm length)</p></li>
+<li><p>1 x Set of 20x20 mm Aluminum T-Slot Profiles (Slot 6 mm), cut to the following lengths:</p>
 <ul>
-<li><p>20x20 mm extrusions (for the chamber frame)</p></li>
-<li><p>30x30 mm extrusions (for heavier support sections)</p></li>
-</ul>
-</li>
-<li><p><strong>Tubes</strong>:</p>
-<ul>
-<li><p>Aluminium tubes (for connecting various components and ensuring rigidity)</p></li>
+<li><p>2 x 55 cm length</p></li>
+<li><p>4 x 65 cm length</p></li>
+<li><p>6 x 38 cm length</p></li>
 </ul>
 </li>
 </ul>
-<p>Make sure to source these parts from reliable suppliers to ensure quality and fit.</p>
-<p>Feel free to follow the instructions in the
-<a class="reference internal" href="hardware.html"><span class="std std-doc">Assembly Instructions Section</span></a>
-for detailed guidance on how to assemble the Training Village system.</p>
-</section>
-<section id="bpod-ports">
-<h2>Bpod + Ports</h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://sanworks.io/shop/viewproduct?productID=1036"><strong>Bpod</strong></a>, x1 - 1495.0€</p></li>
-<li><p><a class="reference external" href="https://sanworks.io/shop/viewproduct?productID=1008"><strong>Interface board</strong></a>, x6 - Total: 228.0€, The number needed depends on task</p></li>
-<li><p><a class="reference external" href="https://github.com/sanworks/Bpod/blob/4b756d8251f0a06ee9a442e9cac465872c1b4174/CAD/Ports/Mouse%20nosepoke/STL/Mousepoke.stl"><strong>Mouse port</strong></a>, x1 - Total: 5.0€, The number needed depends on the task</p></li>
-<li><p><strong>White LED (VAOL-3GWY4)</strong>, x1 - 0.7€</p></li>
-<li><p><strong>IR Emitter (OPB100Z)</strong>, x6 - Total: 54.0€, If not available, you can buy parts separately: emitter and receiver (OPB100-EZ + OPB100-SZ)</p></li>
-<li><p><a class="reference external" href="https://www.amazon.es/gp/product/B07TYVB4R8/ref=ox_sc_act_title_1?smid=A2NF1LB1MEBSO1&amp;psc=1"><strong>Stainless steel tube</strong></a>, 50cm x 1.6mm internal diameter x 2mm external diameter, x1 - 9.0€</p></li>
-<li><p><a class="reference external" href="https://www.amazon.es/gp/product/B08H8H1QWT/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&amp;psc=1"><strong>Plastic tube</strong></a>, 1.5m x 2mm internal diameter x 4mm external diameter, x1 - 8.0€,</p></li>
-<li><p><a class="reference external" href="https://www.amazon.es/gp/product/B07XMPNB1T/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&amp;psc=1"><strong>Pump</strong></a>, x1 - 11.0€, Tube is 3mm internal diameter x 5mm external diameter (useful for 2 x 4 too)</p></li>
-</ul>
-</section>
-<section id="raspberry-cams">
-<h2>Raspberry + Cams</h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://www.tiendatec.es/raspberry-pi/kits-raspberry-pi/2235-raspberry-pi-5-starter-kit-negro-.html"><strong>Raspberry pi 5 8GB, 256GB SD</strong></a>, x1 - 142.95€</p></li>
-<li><p><a class="reference external" href="https://www.tiendatec.es/raspberry-pi/camaras/1987-camara-oficial-raspberry-pi-v3-12mpx-wide-noir--5056561800899.html"><strong>Raspberry pi camera</strong></a>,Raspberry pi camera v3 wide noir, x2 - 79.9€</p></li>
-<li><p><a class="reference external" href="https://www.tiendatec.es/raspberry-pi/cables/508-conector-empalme-cable-ffc-para-camara-raspberry-pi-8405080320000.html"><strong>Raspberry camera cable connector</strong></a>, 20cm cable to 100 cm cable, x2 - 11.9€</p></li>
-<li><p><a class="reference external" href="https://www.tiendatec.es/raspberry-pi/cables/2154-1256-cable-adaptador-fpc-camara-pantalla-raspberry-pi-5.html"><strong>Raspberry camera cable</strong></a>, 20 cm, x2 - 2.5€</p></li>
-<li><p><a class="reference external" href="https://www.tiendatec.es/raspberry-pi/cables/497-cable-flex-csi-dsi-camara-o-pantalla-raspberry-pi-100cm-8404970320014.html"><strong>Flex wire for raspberry camera 100 cm</strong></a>, x2 - 6.9€</p></li>
-</ul>
-</section>
-<section id="training-village-hat">
-<h2>Training Village HAT</h2>
-<ul class="simple">
-<li><p><strong>Training village HAT</strong>, x1 - 100.0€</p></li>
-<li><p><a class="reference external" href="https://example.com/"><strong>Power supply for training village HAT</strong></a>, x1 - 10.0€</p></li>
-</ul>
-</section>
-<section id="electronics">
-<h2>Electronics</h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://www.amazon.es/gp/product/B08DF7NY4P/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&amp;th=1"><strong>Temperature Sensor (CQRobot Ocean SHT31</strong></a>, x1 - 24.0€</p></li>
-<li><p><a class="reference external" href="https://www.amazon.es/dp/B076PYX5DW?psc=1&amp;ref=ppx_yo2ov_dt_b_product_details"><strong>Scale (HX711)</strong></a>, for 1 Kg, x1 - 9.99€</p></li>
-<li><p><a class="reference external" href="https://www.amazon.es/gp/product/B09H74YTHN/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&amp;psc=1"><strong>IR illuminator</strong></a>, 12 V - DC connector, x2 - 29.98€</p></li>
-<li><p><a class="reference external" href="https://www.tiendatec.es/electronica/iluminacion-led/alimentacion/726-fuente-alimentacion-12v-2a-para-arduino-tira-led-8407261350011.html"><strong>12V power supply</strong></a>, 2A (1 for IR light), x1 - 4.95€</p></li>
-<li><p><a class="reference external" href="https://www.tiendatec.es/electronica/servos/585-servomotor-digital-mg995-8405851490017.html"><strong>Servo (Towerpro MG995)</strong></a>, 11 Kg torque (5V), x2 - 17.9€</p></li>
-</ul>
-<section id="rfid">
-<h3>RFID</h3>
-<ul class="simple">
-<li><p><a class="reference external" href="https://www.sparkfun.com/products/11828"><strong>RFID (ID-20LA)</strong></a>, RFID Reader ID-20LA (125 kHz), x1 - 37.5€</p></li>
-<li><p><a class="reference external" href="https://www.sparkfun.com/products/9416"><strong>RFID capsules</strong></a>, RFID Glass Capsule (125kHz), x20 - 110.0€</p></li>
-</ul>
 </section>
 </section>
-<section id="behavioral-box">
-<h2>Behavioral Box</h2>
+<hr class="docutils" />
+<section id="custom-pcb-boards-electronics">
+<h2>Custom PCB Boards &amp; Electronics</h2>
 <ul class="simple">
-<li><p><strong>Behavioral box</strong>, 3D printed parts and laser cut parts, x1 - 500.0€</p></li>
+<li><p>1 x Custom Main HAT Board</p></li>
+<li><p>1 x Custom Corridor Board</p></li>
+<li><p>1 x Custom Box Board</p></li>
+<li><p>2 x Standard Ethernet Cables (used to interface the Corridor and Box satellite boards to the Main HAT)</p></li>
+<li><p>2 x 5x20 mm Fuses (250V, 5A)</p></li>
+<li><p>1 x Extra-tall GPIO Header Spacer/Extension (for vertical clearance between the Pi and the Main HAT)</p></li>
 </ul>
 </section>
-<section id="homecages">
-<h2>Homecages</h2>
+<hr class="docutils" />
+<section id="illumination-accessories">
+<h2>Illumination &amp; Accessories</h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://example.com/"><strong>Homecages</strong></a>, x1 - 5.0€, estimated price</p></li>
-<li><p><a class="reference external" href="https://example.com/"><strong>Water bottle home</strong></a>, x1 - 5.0€, estimated price</p></li>
-<li><p><a class="reference external" href="https://example.com/"><strong>Homecages</strong></a>, x2 - Total: 160.0€, estimated price</p></li>
-<li><p><a class="reference external" href="https://example.com/"><strong>Homecage covers</strong></a>, x8 - Total: 160.0€, estimated price</p></li>
-<li><p><a class="reference external" href="https://example.com/"><strong>Food dispenser</strong></a>, x8 - Total: 80.0€ estimated price</p></li>
+<li><p>4 x [OPB100-EZ IR Emitter][<a class="reference external" href="https://www.digikey.es/es/products/detail/tt-electronics-optek-technology/OPB100-EZ/1636778?srsltid=AfmBOooF1n3jWZgLVXz4OcnRL9aMCuzfMDHeN47At1cGJwLUa2YQTyzU">https://www.digikey.es/es/products/detail/tt-electronics-optek-technology/OPB100-EZ/1636778?srsltid=AfmBOooF1n3jWZgLVXz4OcnRL9aMCuzfMDHeN47At1cGJwLUa2YQTyzU</a>]</p></li>
+<li><p>1 x 5V White LED Strip</p></li>
+<li><p>1 x Home Cage Water Bottle</p></li>
+<li><p>1 x Automated Food Dispenser Module</p></li>
 </ul>
 </section>
-<section id="sound">
-<h2>Sound</h2>
+<hr class="docutils" />
+<section id="open-source-design-files">
+<h2>Open-Source Design Files</h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://www.tiendatec.es/raspberry-pi/hifi-dac/1348-iqaudio-pi-dac-pro-fullhd-audio-hat-5056561802381.html"><strong>Sound</strong></a>, x1 - 32.95€</p></li>
-<li><p><a class="reference external" href="https://example.com/"><strong>Speakers</strong></a>, x1 - 50.0€, Estimated price</p></li>
-<li><p><a class="reference external" href="https://example.com/"><strong>RCA cable</strong></a>, x1 - 10.0€, Estimated price</p></li>
+<li><p>📦 <strong><a class="reference internal" href="#/_static_3d.zip/"><span class="xref myst">Download 3D Printing Files (.STL)</span></a></strong></p></li>
+<li><p>🛠️ <strong><a class="reference download internal" download="" href="../_downloads/a40989f7ad81c06355854dce8f68c291/cad.zip"><span class="xref download myst">Download CAD/CNC Machining Files (.DXF)</span></a></strong></p></li>
+<li><p>🔌 <strong><a class="reference internal" href="#/_static/pcb_boards.zip"><span class="xref myst">Download PCB Gerber &amp; Schematics Files</span></a></strong></p></li>
 </ul>
-</section>
-<section id="screen">
-<h2>Screen</h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://example.com/"><strong>19 inch Screen</strong></a>, x1 - 200.0€, Comments: estimated price</p></li>
-<li><p><a class="reference external" href="https://eosiberica.com"><strong>IR touch device</strong></a>, x1 - 200.0€</p></li>
-<li><p><a class="reference external" href="https://www.tiendatec.es/electronica/cables/usb/715-alargador-extensor-microusb-h-microusb-m-30cm-8407150350009.html"><strong>USB extension 30 cm</strong></a>, x1 - 1.95€</p></li>
-<li><p><a class="reference external" href="https://www.tiendatec.es/raspberry-pi/cables/1173-cable-micro-hdmi-tipo-d-2m-negro-oficial-raspberry-pi-8472496016445.html"><strong>HDMI wire 2m</strong></a>, micro HDMI to HDMI 2m, x1 - 8.95€</p></li>
-</ul>
-<br>
+<hr class="docutils" />
+<p>For a comprehensive, step-by-step walkthrough on assembling these components, please refer to the <a class="reference internal" href="hardware.html"><span class="std std-doc">System Assembly Guide</span></a>.</p>
 </section>
 </section>
 
@@ -691,10 +624,10 @@ for detailed guidance on how to assemble the Training Village system.</p>
         <span>Previous</span><div class="title">HARDWARE RESOURCES</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="3D.html">
+    <a href="hardware.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">3D Printing &amp; CAD Files</div>
+        <div class="title">System Assembly Guide</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -716,7 +649,7 @@ for detailed guidance on how to assemble the Training Village system.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1df7cfc4"></script>
+      <script src="../_static/documentation_options.js?v=b9f9b5a0"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
