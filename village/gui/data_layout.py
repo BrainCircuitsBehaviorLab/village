@@ -411,13 +411,17 @@ class DaysSelectionDialog(QDialog):
         self._block_all(False)
 
     def _on_all_day_toggled(self, day: str, checked: bool) -> None:
-        if not checked:
-            return
         self._block_all(True)
-        self.hours_checkboxes[day].setChecked(False)
-        self.all_day_checkboxes[day].setStyleSheet("")
-        for time_edit in (self.from_times[day], self.to_times[day]):
-            time_edit.setEnabled(False)
+        if checked:
+            self.hours_checkboxes[day].setChecked(False)
+            self.all_day_checkboxes[day].setStyleSheet("")
+            for time_edit in (self.from_times[day], self.to_times[day]):
+                time_edit.setEnabled(False)
+        else:
+            self.hours_checkboxes[day].setChecked(True)
+            self.all_day_checkboxes[day].setStyleSheet("color: gray;")
+            for time_edit in (self.from_times[day], self.to_times[day]):
+                time_edit.setEnabled(True)
         self._block_all(False)
 
     def _on_hours_toggled(self, day: str, checked: bool) -> None:
