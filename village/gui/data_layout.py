@@ -372,10 +372,10 @@ class DaysSelectionDialog(QDialog):
 
     def _on_hour_clicked(self, day: str) -> None:
         self._exit_global_mode()
-        if not any(btn.isChecked() for btn in self.hour_buttons[day]):
-            self.days_checkboxes[day].blockSignals(True)
-            self.days_checkboxes[day].setChecked(False)
-            self.days_checkboxes[day].blockSignals(False)
+        any_active = any(btn.isChecked() for btn in self.hour_buttons[day])
+        self.days_checkboxes[day].blockSignals(True)
+        self.days_checkboxes[day].setChecked(any_active)
+        self.days_checkboxes[day].blockSignals(False)
 
     def _set_day_hours(self, day: str, active_hours: frozenset[int]) -> None:
         for hour, btn in enumerate(self.hour_buttons[day]):
