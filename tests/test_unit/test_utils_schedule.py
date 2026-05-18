@@ -40,8 +40,8 @@ def test_set_to_spec_single_range():
 
 
 def test_set_to_spec_multiple_ranges():
-    result = utils._hours_set_to_spec(frozenset({8, 9, 10, 11, 16, 17, 18}))
-    assert result == "8-11,16-18"
+    result = utils._hours_set_to_spec(frozenset({8, 9, 10, 11, 16, 17, 18, 20}))
+    assert result == "8-11,16-18,20"
 
 
 def test_set_to_spec_single_hour():
@@ -49,7 +49,7 @@ def test_set_to_spec_single_hour():
 
 
 def test_set_to_spec_roundtrip():
-    original = frozenset({8, 9, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23})
+    original = frozenset({8, 9, 10, 11, 16, 17, 18, 19, 20, 21, 23})
     spec = utils._hours_set_to_spec(original)
     assert utils._hours_spec_to_set(spec) == original
 
@@ -71,8 +71,10 @@ def test_parse_multiple_days_all_hours():
 
 
 def test_parse_day_with_hour_range():
-    result = utils._parse_schedule("Tue:8-11,16-23")
-    assert result == {"Tue": frozenset(range(8, 12)) | frozenset(range(16, 24))}
+    result = utils._parse_schedule("Tue:8-11,16-21,23")
+    assert result == {
+        "Tue": frozenset(range(8, 12)) | frozenset(range(16, 22)) | frozenset({23})
+    }
 
 
 def test_parse_mixed():
@@ -205,3 +207,102 @@ def test_active_last_24_weekend_wraparound():
     with patch("village.scripts.utils.time_utils") as mock_tu:
         mock_tu.now.return_value = _dt("2025-01-06 10:00:00")  # Monday
         assert utils.active_last_24_hours("Sun|Mon") is True
+
+
+def test_active_last_24_partial_hours():
+    # Monday 19:00 — Sun:17-23 + Mon all hours covers the window → True
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-06 19:00:00")  # Monday
+        assert utils.active_last_24_hours("Sun:17-23|Mon") is True
+
+
+def test_active_last_24_one_hour_gap():
+    # Mon:0-22 misses hour 23, so last 24h from Tue 10:00 not fully covered
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-07 10:00:00")  # Tuesday
+        assert utils.active_last_24_hours("Mon:0-22|Tue") is False
+
+
+def test_active_last_24_midnight_boundary():
+    # Tue 00:00 — checks Mon:23..0 and Tue:0; needs both days
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-07 00:00:00")
+        assert utils.active_last_24_hours("Mon|Tue") is True
+
+
+# ── _hours_spec_to_set edge cases ────────────────────────────────────────────
+
+
+def test_spec_to_set_hour_zero():
+    assert 0 in utils._hours_spec_to_set("0-5")
+
+
+def test_spec_to_set_hour_23():
+    assert 23 in utils._hours_spec_to_set("20-23")
+
+
+# ── _hours_set_to_spec edge cases ────────────────────────────────────────────
+
+
+def test_set_to_spec_empty_returns_empty_string():
+    assert utils._hours_set_to_spec(frozenset()) == ""
+
+
+# ── _parse_schedule edge cases ───────────────────────────────────────────────
+
+
+def test_parse_empty_string_returns_empty():
+    assert utils._parse_schedule("") == {}
+
+
+# ── is_active edge cases ─────────────────────────────────────────────────────
+
+
+def test_is_active_empty_string():
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-07 10:00:00")
+        assert utils.is_active("") is False
+
+
+def test_is_active_midnight_hour_active():
+    # Tue:0-5 at midnight → True
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-07 00:00:00")
+        assert utils.is_active("Tue:0-5") is True
+
+
+def test_is_active_hour_23():
+    # Tue:20-23 at 23:00 → True
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-07 23:00:00")
+        assert utils.is_active("Tue:20-23") is True
+
+
+# ── is_active_regular ────────────────────────────────────────────────────────
+
+
+def test_is_active_regular_on():
+    assert utils.is_active_regular("ON") is True
+
+
+def test_is_active_regular_off():
+    assert utils.is_active_regular("OFF") is False
+
+
+def test_is_active_regular_today():
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-07 03:00:00")  # Tuesday
+        assert utils.is_active_regular("Mon|Tue|Wed") is True
+
+
+def test_is_active_regular_not_today():
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-07 03:00:00")  # Tuesday
+        assert utils.is_active_regular("Mon|Wed") is False
+
+
+def test_is_active_regular_ignores_hours():
+    # is_active_regular only checks the day, not the hour
+    with patch("village.scripts.utils.time_utils") as mock_tu:
+        mock_tu.now.return_value = _dt("2025-01-07 03:00:00")  # Tuesday 03:00
+        assert utils.is_active_regular("Tue:8-17") is True

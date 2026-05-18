@@ -47,3 +47,11 @@ repos:
       - id: codespell
         additional_dependencies:
         - tomli
+    - repo: local
+      hooks:
+      - id: pytest-unit
+        name: Run unit tests
+        entry: python -m pytest tests/test_unit/ --no-cov -q
+        language: system
+        pass_filenames: false
+        always_run: true

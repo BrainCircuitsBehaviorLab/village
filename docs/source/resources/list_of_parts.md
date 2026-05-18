@@ -63,7 +63,7 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 
 ### Illumination & Accessories
 
-*   4 x [OPB100-EZ IR Emitter][https://www.digikey.es/es/products/detail/tt-electronics-optek-technology/OPB100-EZ/1636778?srsltid=AfmBOooF1n3jWZgLVXz4OcnRL9aMCuzfMDHeN47At1cGJwLUa2YQTyzU]
+*   4 x [OPB100-EZ IR Emitter](https://www.digikey.es/es/products/detail/tt-electronics-optek-technology/OPB100-EZ/1636778?srsltid=AfmBOooF1n3jWZgLVXz4OcnRL9aMCuzfMDHeN47At1cGJwLUa2YQTyzU)
 *   1 x 5V White LED Strip
 *   1 x Home Cage Water Bottle
 *   1 x Automated Food Dispenser Module

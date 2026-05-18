@@ -12,6 +12,29 @@ from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
+_WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+
+def convert_active(value: str) -> str:
+    """Normalise an 'active' schedule value for storage.
+
+    Accepts the new pipe-separated hour format, legacy hyphen-separated day
+    format, ON/OFF variants, and empty strings.
+    """
+    value = value.strip()
+    if not value:
+        return "ON"
+    if value in ("ON", "On", "on"):
+        return "ON"
+    if value in ("OFF", "Off", "off"):
+        return "OFF"
+    if "|" in value:
+        return value
+    days = [day.strip() for day in value.split("-")]
+    if all(day in _WEEKDAYS for day in days):
+        return "-".join(days)
+    return "OFF"
+
 
 class Collection:
     """Manages a collection of data entries stored in a CSV file and a pandas DataFrame.
@@ -224,23 +247,6 @@ class Collection:
                 new_df[col] = new_df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
 
         if "active" in new_df.columns:
-            weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-
-            def convert_active(value) -> str:
-                value = value.strip()
-                if not value:
-                    return "ON"
-                if value in ("ON", "On", "on"):
-                    return "ON"
-                if value in ("OFF", "Off", "off"):
-                    return "OFF"
-                if "|" in value:
-                    return value
-                days = [day.strip() for day in value.split("-")]
-                if all(day in weekdays for day in days):
-                    return "-".join(days)
-                return "OFF"
-
             new_df["active"] = new_df["active"].apply(convert_active)
 
         if "next_settings" in new_df.columns:
