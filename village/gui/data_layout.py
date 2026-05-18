@@ -276,33 +276,43 @@ class DaysSelectionDialog(QDialog):
 
         self.days_checkboxes: dict[str, QCheckBox] = {}
         self.all_day_checkboxes: dict[str, QCheckBox] = {}
+        self.hours_checkboxes: dict[str, QCheckBox] = {}
         self.from_times: dict[str, QTimeEdit] = {}
         self.to_times: dict[str, QTimeEdit] = {}
-        self._time_widgets: dict[str, tuple] = {}
+        self._day_widgets: dict[str, tuple] = {}
 
         for day, label in zip(self.DAYS, self.DAY_LABELS):
             row = QHBoxLayout()
 
             day_cb = QCheckBox(label)
+
             all_day_cb = QCheckBox("All day")
             all_day_cb.setChecked(True)
             all_day_cb.setVisible(False)
+
+            hours_cb = QCheckBox("")
+            hours_cb.setChecked(False)
+            hours_cb.setVisible(False)
 
             from_label = QLabel("From:")
             from_te = QTimeEdit()
             from_te.setDisplayFormat("HH:mm")
             from_te.setTime(QTime(0, 0))
+            from_te.setEnabled(False)
 
             to_label = QLabel("To:")
             to_te = QTimeEdit()
             to_te.setDisplayFormat("HH:mm")
             to_te.setTime(QTime(23, 59))
+            to_te.setEnabled(False)
 
             for w in (from_label, from_te, to_label, to_te):
                 w.setVisible(False)
 
             row.addWidget(day_cb)
             row.addWidget(all_day_cb)
+            row.addSpacing(20)
+            row.addWidget(hours_cb)
             row.addWidget(from_label)
             row.addWidget(from_te)
             row.addWidget(to_label)
@@ -311,15 +321,19 @@ class DaysSelectionDialog(QDialog):
 
             self.days_checkboxes[day] = day_cb
             self.all_day_checkboxes[day] = all_day_cb
+            self.hours_checkboxes[day] = hours_cb
             self.from_times[day] = from_te
             self.to_times[day] = to_te
-            self._time_widgets[day] = (from_label, from_te, to_label, to_te)
+            self._day_widgets[day] = (from_label, from_te, to_label, to_te)
 
             day_cb.toggled.connect(
                 lambda checked, d=day: self._on_day_toggled(d, checked)
             )
             all_day_cb.toggled.connect(
                 lambda checked, d=day: self._on_all_day_toggled(d, checked)
+            )
+            hours_cb.toggled.connect(
+                lambda checked, d=day: self._on_hours_toggled(d, checked)
             )
 
         self.on_checkbox = QCheckBox("ON")
@@ -351,17 +365,43 @@ class DaysSelectionDialog(QDialog):
         for day in self.DAYS:
             self.days_checkboxes[day].blockSignals(block)
             self.all_day_checkboxes[day].blockSignals(block)
+            self.hours_checkboxes[day].blockSignals(block)
 
     def _reset_day(self, day: str) -> None:
+        """Hide all per-day controls and restore default (all_day) state."""
         self.all_day_checkboxes[day].setChecked(True)
+        self.all_day_checkboxes[day].setEnabled(True)
         self.all_day_checkboxes[day].setVisible(False)
-        for w in self._time_widgets[day]:
+        self.hours_checkboxes[day].setChecked(False)
+        self.hours_checkboxes[day].setVisible(False)
+        for w in self._day_widgets[day]:
             w.setVisible(False)
+        for time_edit in (self.from_times[day], self.to_times[day]):
+            time_edit.setEnabled(False)
+
+    def _show_day_controls(self, day: str, use_hours: bool = False) -> None:
+        """Show per-day controls in either all-day or custom-hours mode."""
+        self.all_day_checkboxes[day].setVisible(True)
+        self.hours_checkboxes[day].setVisible(True)
+        for w in self._day_widgets[day]:
+            w.setVisible(True)
+        if use_hours:
+            self.all_day_checkboxes[day].setChecked(False)
+            self.all_day_checkboxes[day].setEnabled(False)
+            self.hours_checkboxes[day].setChecked(True)
+            for time_edit in (self.from_times[day], self.to_times[day]):
+                time_edit.setEnabled(True)
+        else:
+            self.all_day_checkboxes[day].setChecked(True)
+            self.all_day_checkboxes[day].setEnabled(True)
+            self.hours_checkboxes[day].setChecked(False)
+            for time_edit in (self.from_times[day], self.to_times[day]):
+                time_edit.setEnabled(False)
 
     def _on_day_toggled(self, day: str, checked: bool) -> None:
         self._block_all(True)
         if checked:
-            self.all_day_checkboxes[day].setVisible(True)
+            self._show_day_controls(day, use_hours=False)
             self.on_checkbox.setChecked(False)
             self.off_checkbox.setChecked(False)
         else:
@@ -371,8 +411,28 @@ class DaysSelectionDialog(QDialog):
         self._block_all(False)
 
     def _on_all_day_toggled(self, day: str, checked: bool) -> None:
-        for w in self._time_widgets[day]:
-            w.setVisible(not checked)
+        if not checked:
+            return
+        self._block_all(True)
+        self.hours_checkboxes[day].setChecked(False)
+        self.all_day_checkboxes[day].setEnabled(True)
+        for time_edit in (self.from_times[day], self.to_times[day]):
+            time_edit.setEnabled(False)
+        self._block_all(False)
+
+    def _on_hours_toggled(self, day: str, checked: bool) -> None:
+        self._block_all(True)
+        if checked:
+            self.all_day_checkboxes[day].setChecked(False)
+            self.all_day_checkboxes[day].setEnabled(False)
+            for time_edit in (self.from_times[day], self.to_times[day]):
+                time_edit.setEnabled(True)
+        else:
+            self.all_day_checkboxes[day].setEnabled(True)
+            self.all_day_checkboxes[day].setChecked(True)
+            for time_edit in (self.from_times[day], self.to_times[day]):
+                time_edit.setEnabled(False)
+        self._block_all(False)
 
     def _clear_all_days(self) -> None:
         for day in self.DAYS:
@@ -409,16 +469,14 @@ class DaysSelectionDialog(QDialog):
                     if day in self.days_checkboxes:
                         from_str, to_str = time_range.split("-", 1)
                         self.days_checkboxes[day].setChecked(True)
-                        self.all_day_checkboxes[day].setChecked(False)
+                        self._show_day_controls(day, use_hours=True)
                         self.from_times[day].setTime(
                             QTime.fromString(from_str, "HH:mm")
                         )
                         self.to_times[day].setTime(QTime.fromString(to_str, "HH:mm"))
-                else:
-                    if part in self.days_checkboxes:
-                        self.days_checkboxes[part].setChecked(True)
+                elif part in self.days_checkboxes:
+                    self.days_checkboxes[part].setChecked(True)
         else:
-            # backward compat: old "Mon-Wed-Fri" format
             for day in value.split("-"):
                 if day in self.days_checkboxes:
                     self.days_checkboxes[day].setChecked(True)
@@ -432,12 +490,12 @@ class DaysSelectionDialog(QDialog):
         parts = []
         for day in self.DAYS:
             if self.days_checkboxes[day].isChecked():
-                if self.all_day_checkboxes[day].isChecked():
-                    parts.append(day)
-                else:
+                if self.hours_checkboxes[day].isChecked():
                     from_t = self.from_times[day].time().toString("HH:mm")
                     to_t = self.to_times[day].time().toString("HH:mm")
                     parts.append(f"{day}:{from_t}-{to_t}")
+                else:
+                    parts.append(day)
 
         return "|".join(parts) if parts else None
 
