@@ -369,7 +369,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.utils.html">utils</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.calculate_active_hours.html">calculate_active_hours</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.active_last_24_hours.html">active_last_24_hours</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.change_directory_settings.html">change_directory_settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.change_system_directory_settings.html">change_system_directory_settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.create_directories.html">create_directories</a></li>
@@ -381,7 +381,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.has_low_disk_space.html">has_low_disk_space</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.interpolate.html">interpolate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.is_active.html">is_active</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.is_active_regular.html">is_active_regular</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.reformat_trial_data.html">reformat_trial_data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.setup_logging.html">setup_logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.utils.transform_raw_to_clean.html">transform_raw_to_clean</a></li>
@@ -502,7 +501,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="30">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
 </span><span data-line="31">        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 </span><span data-line="32">        <span class="bp">self</span><span class="o">.</span><span class="n">basal_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="33">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Off&quot;</span>
+</span><span data-line="33">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ON&quot;</span>
 </span><span data-line="34">        <span class="bp">self</span><span class="o">.</span><span class="n">next_session_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 </span><span data-line="35">        <span class="bp">self</span><span class="o">.</span><span class="n">next_settings</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 </span><span data-line="36">        <span class="bp">self</span><span class="o">.</span><span class="n">subject_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
@@ -587,7 +586,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=b9f9b5a0"></script>
+      <script src="../../../_static/documentation_options.js?v=79b74b37"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

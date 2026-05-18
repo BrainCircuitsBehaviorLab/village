@@ -1,6 +1,0 @@
-calculate\_active\_hours
-========================
-
-.. currentmodule:: village.scripts.utils
-
-.. autofunction:: calculate_active_hours

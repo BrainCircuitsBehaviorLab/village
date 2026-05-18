@@ -369,7 +369,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../api_generated/village.scripts.utils.html">utils</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.calculate_active_hours.html">calculate_active_hours</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.active_last_24_hours.html">active_last_24_hours</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.change_directory_settings.html">change_directory_settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.change_system_directory_settings.html">change_system_directory_settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.create_directories.html">create_directories</a></li>
@@ -381,7 +381,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.has_low_disk_space.html">has_low_disk_space</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.interpolate.html">interpolate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.is_active.html">is_active</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.is_active_regular.html">is_active_regular</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.reformat_trial_data.html">reformat_trial_data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.setup_logging.html">setup_logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.scripts.utils.transform_raw_to_clean.html">transform_raw_to_clean</a></li>
@@ -1253,119 +1252,122 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="718">        <span class="n">active_subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
 </span><span data-line="719">            <span class="n">subjects</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">is_active</span><span class="p">),</span> <span class="s2">&quot;name&quot;</span>
 </span><span data-line="720">        <span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-</span><span data-line="721">        <span class="n">active_hours</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">calculate_active_hours</span><span class="p">(</span><span class="n">subjects</span><span class="p">)</span>
-</span><span data-line="722">
-</span><span data-line="723">        <span class="n">report_text</span> <span class="o">=</span> <span class="s2">&quot;REPORT last &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;h</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-</span><span data-line="724">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;state: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;, subject: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span>
-</span><span data-line="725">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-</span><span data-line="726">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;subject, detections, sessions, water, weight</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span data-line="727">
-</span><span data-line="728">        <span class="n">non_detected_subjects</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="729">        <span class="n">non_session_subjects</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="730">        <span class="n">low_water_subjects</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="731">
-</span><span data-line="732">        <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">active_subjects</span><span class="p">:</span>
-</span><span data-line="733">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="734">                <span class="n">detections_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subject_detections</span><span class="p">[</span><span class="n">sub</span><span class="p">])</span>
-</span><span data-line="735">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span data-line="736">                <span class="n">detections_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-</span><span data-line="737">                <span class="k">if</span> <span class="n">active_hours</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">23</span><span class="p">:</span>
-</span><span data-line="738">                    <span class="n">non_detected_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
-</span><span data-line="739">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="740">                <span class="n">sessions_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subject_sessions</span><span class="p">[</span><span class="n">sub</span><span class="p">])</span>
-</span><span data-line="741">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span data-line="742">                <span class="n">sessions_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-</span><span data-line="743">                <span class="k">if</span> <span class="n">active_hours</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">23</span><span class="p">:</span>
-</span><span data-line="744">                    <span class="n">non_session_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
-</span><span data-line="745">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="746">                <span class="n">water</span> <span class="o">=</span> <span class="n">subject_water</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span>
-</span><span data-line="747">                <span class="n">water_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">water</span><span class="p">))</span>
-</span><span data-line="748">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span data-line="749">                <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="750">                <span class="n">water_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-</span><span data-line="751">            <span class="k">if</span> <span class="n">active_hours</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">23</span> <span class="ow">and</span> <span class="n">water</span> <span class="o">&lt;</span> <span class="n">minimum_water</span><span class="p">:</span>
-</span><span data-line="752">                <span class="n">low_water_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
-</span><span data-line="753">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="754">                <span class="n">weight_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">subject_weight</span><span class="p">[</span><span class="n">sub</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
-</span><span data-line="755">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span data-line="756">                <span class="n">weight_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-</span><span data-line="757">            <span class="n">report_text</span> <span class="o">+=</span> <span class="p">(</span>
-</span><span data-line="758">                <span class="n">sub</span>
-</span><span data-line="759">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-</span><span data-line="760">                <span class="o">+</span> <span class="n">detections_str</span>
-</span><span data-line="761">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-</span><span data-line="762">                <span class="o">+</span> <span class="n">sessions_str</span>
-</span><span data-line="763">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-</span><span data-line="764">                <span class="o">+</span> <span class="n">water_str</span>
-</span><span data-line="765">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-</span><span data-line="766">                <span class="o">+</span> <span class="n">weight_str</span>
-</span><span data-line="767">                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span data-line="768">            <span class="p">)</span>
-</span><span data-line="769">        <span class="k">return</span> <span class="p">(</span>
-</span><span data-line="770">            <span class="n">report_text</span><span class="p">,</span>
-</span><span data-line="771">            <span class="n">non_detected_subjects</span><span class="p">,</span>
-</span><span data-line="772">            <span class="n">non_session_subjects</span><span class="p">,</span>
-</span><span data-line="773">            <span class="n">low_water_subjects</span><span class="p">,</span>
-</span><span data-line="774">            <span class="n">sync</span><span class="p">,</span>
-</span><span data-line="775">        <span class="p">)</span></div>
+</span><span data-line="721">        <span class="n">active_24h</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="722">            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="n">utils</span><span class="o">.</span><span class="n">active_last_24_hours</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">])</span>
+</span><span data-line="723">            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subjects</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
+</span><span data-line="724">        <span class="p">}</span>
+</span><span data-line="725">
+</span><span data-line="726">        <span class="n">report_text</span> <span class="o">=</span> <span class="s2">&quot;REPORT last &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;h</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+</span><span data-line="727">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;state: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;, subject: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span>
+</span><span data-line="728">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+</span><span data-line="729">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;subject, detections, sessions, water, weight</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span data-line="730">
+</span><span data-line="731">        <span class="n">non_detected_subjects</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="732">        <span class="n">non_session_subjects</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="733">        <span class="n">low_water_subjects</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="734">
+</span><span data-line="735">        <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">active_subjects</span><span class="p">:</span>
+</span><span data-line="736">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="737">                <span class="n">detections_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subject_detections</span><span class="p">[</span><span class="n">sub</span><span class="p">])</span>
+</span><span data-line="738">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span data-line="739">                <span class="n">detections_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span data-line="740">                <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+</span><span data-line="741">                    <span class="n">non_detected_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+</span><span data-line="742">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="743">                <span class="n">sessions_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subject_sessions</span><span class="p">[</span><span class="n">sub</span><span class="p">])</span>
+</span><span data-line="744">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span data-line="745">                <span class="n">sessions_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span data-line="746">                <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+</span><span data-line="747">                    <span class="n">non_session_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+</span><span data-line="748">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="749">                <span class="n">water</span> <span class="o">=</span> <span class="n">subject_water</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span>
+</span><span data-line="750">                <span class="n">water_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">water</span><span class="p">))</span>
+</span><span data-line="751">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span data-line="752">                <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="753">                <span class="n">water_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span data-line="754">            <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="n">water</span> <span class="o">&lt;</span> <span class="n">minimum_water</span><span class="p">:</span>
+</span><span data-line="755">                <span class="n">low_water_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+</span><span data-line="756">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="757">                <span class="n">weight_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">subject_weight</span><span class="p">[</span><span class="n">sub</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+</span><span data-line="758">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span data-line="759">                <span class="n">weight_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span data-line="760">            <span class="n">report_text</span> <span class="o">+=</span> <span class="p">(</span>
+</span><span data-line="761">                <span class="n">sub</span>
+</span><span data-line="762">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+</span><span data-line="763">                <span class="o">+</span> <span class="n">detections_str</span>
+</span><span data-line="764">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+</span><span data-line="765">                <span class="o">+</span> <span class="n">sessions_str</span>
+</span><span data-line="766">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+</span><span data-line="767">                <span class="o">+</span> <span class="n">water_str</span>
+</span><span data-line="768">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+</span><span data-line="769">                <span class="o">+</span> <span class="n">weight_str</span>
+</span><span data-line="770">                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span data-line="771">            <span class="p">)</span>
+</span><span data-line="772">        <span class="k">return</span> <span class="p">(</span>
+</span><span data-line="773">            <span class="n">report_text</span><span class="p">,</span>
+</span><span data-line="774">            <span class="n">non_detected_subjects</span><span class="p">,</span>
+</span><span data-line="775">            <span class="n">non_session_subjects</span><span class="p">,</span>
+</span><span data-line="776">            <span class="n">low_water_subjects</span><span class="p">,</span>
+</span><span data-line="777">            <span class="n">sync</span><span class="p">,</span>
+</span><span data-line="778">        <span class="p">)</span></div>
 
-</span><span data-line="776">
+</span><span data-line="779">
 <div class="viewcode-block" id="Manager.send_heartbeat">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.send_heartbeat">[docs]</a>
-</span><span data-line="777">    <span class="k">def</span><span class="w"> </span><span class="nf">send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="778"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends a heartbeat signal to the healthcheck URL if configured.&quot;&quot;&quot;</span>
-</span><span data-line="779">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">healthchecks_url</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-</span><span data-line="780">            <span class="k">return</span>
-</span><span data-line="781">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="782">            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">healthchecks_url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-</span><span data-line="783">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="784">            <span class="k">pass</span></div>
+</span><span data-line="780">    <span class="k">def</span><span class="w"> </span><span class="nf">send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="781"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends a heartbeat signal to the healthcheck URL if configured.&quot;&quot;&quot;</span>
+</span><span data-line="782">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">healthchecks_url</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+</span><span data-line="783">            <span class="k">return</span>
+</span><span data-line="784">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="785">            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">healthchecks_url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span data-line="786">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="787">            <span class="k">pass</span></div>
 
-</span><span data-line="785">
+</span><span data-line="788">
 <div class="viewcode-block" id="Manager.hourly_checks">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.hourly_checks">[docs]</a>
-</span><span data-line="786">    <span class="k">def</span><span class="w"> </span><span class="nf">hourly_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="787"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs hourly system health checks including temperature, disk space,</span>
-</span><span data-line="788"><span class="sd">        and recent activity.&quot;&quot;&quot;</span>
-</span><span data-line="789">        <span class="n">temp</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">temp_string</span> <span class="o">=</span> <span class="n">temp_sensor</span><span class="o">.</span><span class="n">get_temperature</span><span class="p">()</span>
-</span><span data-line="790">        <span class="k">if</span> <span class="n">temp</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MAXIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
-</span><span data-line="791">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;High temperature: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
-</span><span data-line="792">        <span class="k">elif</span> <span class="n">temp</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MINIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
-</span><span data-line="793">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Low temperature: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
-</span><span data-line="794">
-</span><span data-line="795">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detections</span><span class="o">.</span><span class="n">trigger_empty</span><span class="p">():</span>
-</span><span data-line="796">            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detections</span><span class="o">.</span><span class="n">hours</span><span class="p">)</span>
-</span><span data-line="797">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No detections in the last &quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">&quot; hours&quot;</span><span class="p">)</span>
-</span><span data-line="798">
-</span><span data-line="799">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">trigger_empty</span><span class="p">():</span>
-</span><span data-line="800">            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">hours</span><span class="p">)</span>
-</span><span data-line="801">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No sessions in the last &quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">&quot; hours&quot;</span><span class="p">)</span>
-</span><span data-line="802">
-</span><span data-line="803">        <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">has_low_disk_space</span><span class="p">():</span>
-</span><span data-line="804">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Low disk space (less than 10GB)&quot;</span><span class="p">)</span>
+</span><span data-line="789">    <span class="k">def</span><span class="w"> </span><span class="nf">hourly_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="790"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs hourly system health checks including temperature, disk space,</span>
+</span><span data-line="791"><span class="sd">        and recent activity.&quot;&quot;&quot;</span>
+</span><span data-line="792">        <span class="n">temp</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">temp_string</span> <span class="o">=</span> <span class="n">temp_sensor</span><span class="o">.</span><span class="n">get_temperature</span><span class="p">()</span>
+</span><span data-line="793">        <span class="k">if</span> <span class="n">temp</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MAXIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
+</span><span data-line="794">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;High temperature: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
+</span><span data-line="795">        <span class="k">elif</span> <span class="n">temp</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MINIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
+</span><span data-line="796">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Low temperature: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
+</span><span data-line="797">
+</span><span data-line="798">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detections</span><span class="o">.</span><span class="n">trigger_empty</span><span class="p">():</span>
+</span><span data-line="799">            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detections</span><span class="o">.</span><span class="n">hours</span><span class="p">)</span>
+</span><span data-line="800">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No detections in the last &quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">&quot; hours&quot;</span><span class="p">)</span>
+</span><span data-line="801">
+</span><span data-line="802">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">trigger_empty</span><span class="p">():</span>
+</span><span data-line="803">            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">hours</span><span class="p">)</span>
+</span><span data-line="804">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No sessions in the last &quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">&quot; hours&quot;</span><span class="p">)</span>
 </span><span data-line="805">
-</span><span data-line="806">        <span class="bp">self</span><span class="o">.</span><span class="n">send_heartbeat</span><span class="p">()</span></div>
+</span><span data-line="806">        <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">has_low_disk_space</span><span class="p">():</span>
+</span><span data-line="807">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Low disk space (less than 10GB)&quot;</span><span class="p">)</span>
+</span><span data-line="808">
+</span><span data-line="809">        <span class="bp">self</span><span class="o">.</span><span class="n">send_heartbeat</span><span class="p">()</span></div>
 
-</span><span data-line="807">
+</span><span data-line="810">
 <div class="viewcode-block" id="Manager.run_softcode_function">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.run_softcode_function">[docs]</a>
-</span><span data-line="808">    <span class="k">def</span><span class="w"> </span><span class="nf">run_softcode_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="809"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a user-defined softcode function.</span>
-</span><span data-line="810">
-</span><span data-line="811"><span class="sd">        Args:</span>
-</span><span data-line="812"><span class="sd">            number (int): The function index (1-based).</span>
-</span><span data-line="813"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="814">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="815">            <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="n">number</span><span class="p">]()</span>
-</span><span data-line="816">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="817">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="818">                <span class="s2">&quot;Error running function&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">),</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
-</span><span data-line="819">            <span class="p">)</span></div>
+</span><span data-line="811">    <span class="k">def</span><span class="w"> </span><span class="nf">run_softcode_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="812"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a user-defined softcode function.</span>
+</span><span data-line="813">
+</span><span data-line="814"><span class="sd">        Args:</span>
+</span><span data-line="815"><span class="sd">            number (int): The function index (1-based).</span>
+</span><span data-line="816"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="817">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="818">            <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="n">number</span><span class="p">]()</span>
+</span><span data-line="819">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="820">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="821">                <span class="s2">&quot;Error running function&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">),</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+</span><span data-line="822">            <span class="p">)</span></div>
 </div>
 
-</span><span data-line="820">
-</span><span data-line="821">
-</span><span data-line="822"><span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">()</span>
+</span><span data-line="823">
+</span><span data-line="824">
+</span><span data-line="825"><span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -1390,7 +1392,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=b9f9b5a0"></script>
+      <script src="../../_static/documentation_options.js?v=79b74b37"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

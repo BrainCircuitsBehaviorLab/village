@@ -1,0 +1,6 @@
+active\_last\_24\_hours
+=======================
+
+.. currentmodule:: village.scripts.utils
+
+.. autofunction:: active_last_24_hours

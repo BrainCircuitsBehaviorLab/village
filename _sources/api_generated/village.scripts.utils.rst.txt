@@ -15,7 +15,7 @@ utils
       :toctree:
       :template: custom_base_template.rst
    
-      calculate_active_hours
+      active_last_24_hours
       change_directory_settings
       change_system_directory_settings
       create_directories
@@ -27,7 +27,6 @@ utils
       has_low_disk_space
       interpolate
       is_active
-      is_active_regular
       reformat_trial_data
       setup_logging
       transform_raw_to_clean
