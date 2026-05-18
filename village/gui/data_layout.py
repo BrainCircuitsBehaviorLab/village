@@ -322,9 +322,7 @@ class DaysSelectionDialog(QDialog):
                 )
                 grid.addWidget(btn, row_idx + 1, hour + 1)
                 buttons.append(btn)
-                btn.clicked.connect(
-                    lambda checked, d=day: self._on_hour_clicked(d)
-                )
+                btn.clicked.connect(lambda checked, d=day: self._on_hour_clicked(d))
 
             self.days_checkboxes[day] = day_cb
             self.hour_buttons[day] = buttons
