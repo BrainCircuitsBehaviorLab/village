@@ -286,7 +286,7 @@ class DaysSelectionDialog(QDialog):
             day_cb = QCheckBox(label)
             all_day_cb = QCheckBox("All day")
             all_day_cb.setChecked(True)
-            all_day_cb.setEnabled(False)
+            all_day_cb.setVisible(False)
 
             from_label = QLabel("From:")
             from_te = QTimeEdit()
@@ -354,14 +354,14 @@ class DaysSelectionDialog(QDialog):
 
     def _reset_day(self, day: str) -> None:
         self.all_day_checkboxes[day].setChecked(True)
-        self.all_day_checkboxes[day].setEnabled(False)
+        self.all_day_checkboxes[day].setVisible(False)
         for w in self._time_widgets[day]:
             w.setVisible(False)
 
     def _on_day_toggled(self, day: str, checked: bool) -> None:
         self._block_all(True)
         if checked:
-            self.all_day_checkboxes[day].setEnabled(True)
+            self.all_day_checkboxes[day].setVisible(True)
             self.on_checkbox.setChecked(False)
             self.off_checkbox.setChecked(False)
         else:

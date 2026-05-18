@@ -228,14 +228,18 @@ class Collection:
 
             def convert_active(value) -> str:
                 value = value.strip()
+                if not value:
+                    return "ON"
                 if value in ("ON", "On", "on"):
                     return "ON"
-                else:
-                    days = [day.strip() for day in value.split("-")]
-                    if all(day in weekdays for day in days):
-                        return "-".join(days)
-                    else:
-                        return "OFF"
+                if value in ("OFF", "Off", "off"):
+                    return "OFF"
+                if "|" in value:
+                    return value
+                days = [day.strip() for day in value.split("-")]
+                if all(day in weekdays for day in days):
+                    return "-".join(days)
+                return "OFF"
 
             new_df["active"] = new_df["active"].apply(convert_active)
 
