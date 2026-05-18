@@ -9,6 +9,14 @@ collection
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      convert_active
+   
    
 
    

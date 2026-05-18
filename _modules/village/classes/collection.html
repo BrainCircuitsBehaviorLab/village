@@ -126,6 +126,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.collection.html">collection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.collection.convert_active.html">convert_active</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.collection.Collection.html">Collection</a></li>
 </ul>
 </li>
@@ -480,280 +481,289 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
 </span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 </span><span data-line="14">
-</span><span data-line="15">
+</span><span data-line="15"><span class="n">_WEEKDAYS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Mon&quot;</span><span class="p">,</span> <span class="s2">&quot;Tue&quot;</span><span class="p">,</span> <span class="s2">&quot;Wed&quot;</span><span class="p">,</span> <span class="s2">&quot;Thu&quot;</span><span class="p">,</span> <span class="s2">&quot;Fri&quot;</span><span class="p">,</span> <span class="s2">&quot;Sat&quot;</span><span class="p">,</span> <span class="s2">&quot;Sun&quot;</span><span class="p">]</span>
+</span><span data-line="16">
+</span><span data-line="17">
+<div class="viewcode-block" id="convert_active">
+<a class="viewcode-back" href="../../../api_generated/village.classes.collection.convert_active.html#village.classes.collection.convert_active">[docs]</a>
+</span><span data-line="18"><span class="k">def</span><span class="w"> </span><span class="nf">convert_active</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="19"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalise an &#39;active&#39; schedule value for storage.</span>
+</span><span data-line="20">
+</span><span data-line="21"><span class="sd">    Accepts the new pipe-separated hour format, legacy hyphen-separated day</span>
+</span><span data-line="22"><span class="sd">    format, ON/OFF variants, and empty strings.</span>
+</span><span data-line="23"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="24">    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span data-line="25">    <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+</span><span data-line="26">        <span class="k">return</span> <span class="s2">&quot;ON&quot;</span>
+</span><span data-line="27">    <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;On&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="p">):</span>
+</span><span data-line="28">        <span class="k">return</span> <span class="s2">&quot;ON&quot;</span>
+</span><span data-line="29">    <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;OFF&quot;</span><span class="p">,</span> <span class="s2">&quot;Off&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
+</span><span data-line="30">        <span class="k">return</span> <span class="s2">&quot;OFF&quot;</span>
+</span><span data-line="31">    <span class="k">if</span> <span class="s2">&quot;|&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+</span><span data-line="32">        <span class="k">return</span> <span class="n">value</span>
+</span><span data-line="33">    <span class="n">days</span> <span class="o">=</span> <span class="p">[</span><span class="n">day</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)]</span>
+</span><span data-line="34">    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">day</span> <span class="ow">in</span> <span class="n">_WEEKDAYS</span> <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">days</span><span class="p">):</span>
+</span><span data-line="35">        <span class="k">return</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
+</span><span data-line="36">    <span class="k">return</span> <span class="s2">&quot;OFF&quot;</span></div>
+
+</span><span data-line="37">
+</span><span data-line="38">
 <div class="viewcode-block" id="Collection">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection">[docs]</a>
-</span><span data-line="16"><span class="k">class</span><span class="w"> </span><span class="nc">Collection</span><span class="p">:</span>
-</span><span data-line="17"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages a collection of data entries stored in a CSV file and a pandas DataFrame.</span>
-</span><span data-line="18">
-</span><span data-line="19"><span class="sd">    Attributes:</span>
-</span><span data-line="20"><span class="sd">        name (str): Name of the collection.</span>
-</span><span data-line="21"><span class="sd">        columns (list[str]): List of column names.</span>
-</span><span data-line="22"><span class="sd">        types (list[Type]): List of column data types.</span>
-</span><span data-line="23"><span class="sd">        dict (dict): Dictionary mapping columns to types.</span>
-</span><span data-line="24"><span class="sd">        path (Path): Path to the CSV file.</span>
-</span><span data-line="25"><span class="sd">        df (pd.DataFrame): The pandas DataFrame holding the data.</span>
-</span><span data-line="26"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="27">
+</span><span data-line="39"><span class="k">class</span><span class="w"> </span><span class="nc">Collection</span><span class="p">:</span>
+</span><span data-line="40"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages a collection of data entries stored in a CSV file and a pandas DataFrame.</span>
+</span><span data-line="41">
+</span><span data-line="42"><span class="sd">    Attributes:</span>
+</span><span data-line="43"><span class="sd">        name (str): Name of the collection.</span>
+</span><span data-line="44"><span class="sd">        columns (list[str]): List of column names.</span>
+</span><span data-line="45"><span class="sd">        types (list[Type]): List of column data types.</span>
+</span><span data-line="46"><span class="sd">        dict (dict): Dictionary mapping columns to types.</span>
+</span><span data-line="47"><span class="sd">        path (Path): Path to the CSV file.</span>
+</span><span data-line="48"><span class="sd">        df (pd.DataFrame): The pandas DataFrame holding the data.</span>
+</span><span data-line="49"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="50">
 <div class="viewcode-block" id="Collection.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.__init__">[docs]</a>
-</span><span data-line="28">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="29"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Collection.&quot;&quot;&quot;</span>
-</span><span data-line="30">        <span class="k">pass</span></div>
+</span><span data-line="51">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="52"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Collection.&quot;&quot;&quot;</span>
+</span><span data-line="53">        <span class="k">pass</span></div>
 
-</span><span data-line="31">
+</span><span data-line="54">
 <div class="viewcode-block" id="Collection.create_data_collection">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.create_data_collection">[docs]</a>
-</span><span data-line="32">    <span class="k">def</span><span class="w"> </span><span class="nf">create_data_collection</span><span class="p">(</span>
-</span><span data-line="33">        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span>
-</span><span data-line="34">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="35">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
-</span><span data-line="36">        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">columns</span>
-</span><span data-line="37">        <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span>
-</span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">)}</span>
-</span><span data-line="39">        <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYSTEM_DIRECTORY&quot;</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
-</span><span data-line="40">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-</span><span data-line="41">
-</span><span data-line="42">        <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-</span><span data-line="43">            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
-</span><span data-line="44">                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-</span><span data-line="45">                    <span class="n">columns_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span data-line="46">                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">columns_str</span><span class="p">)</span>
-</span><span data-line="47">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="48">                <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-</span><span data-line="49">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="50">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="51">                    <span class="s2">&quot;error reading from: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">),</span>
-</span><span data-line="52">                    <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
-</span><span data-line="53">                <span class="p">)</span>
-</span><span data-line="54">                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
+</span><span data-line="55">    <span class="k">def</span><span class="w"> </span><span class="nf">create_data_collection</span><span class="p">(</span>
+</span><span data-line="56">        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span>
+</span><span data-line="57">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+</span><span data-line="59">        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">columns</span>
+</span><span data-line="60">        <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span>
+</span><span data-line="61">        <span class="bp">self</span><span class="o">.</span><span class="n">dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">)}</span>
+</span><span data-line="62">        <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYSTEM_DIRECTORY&quot;</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
+</span><span data-line="63">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</span><span data-line="64">
+</span><span data-line="65">        <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+</span><span data-line="66">            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
+</span><span data-line="67">                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+</span><span data-line="68">                    <span class="n">columns_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span data-line="69">                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">columns_str</span><span class="p">)</span>
+</span><span data-line="70">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="71">                <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span data-line="72">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="73">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="74">                    <span class="s2">&quot;error reading from: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">),</span>
+</span><span data-line="75">                    <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
+</span><span data-line="76">                <span class="p">)</span>
+</span><span data-line="77">                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
-</span><span data-line="55">
+</span><span data-line="78">
 <div class="viewcode-block" id="Collection.add_entry">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.add_entry">[docs]</a>
-</span><span data-line="56">    <span class="k">def</span><span class="w"> </span><span class="nf">add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="57"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a new entry to the collection.</span>
-</span><span data-line="58">
-</span><span data-line="59"><span class="sd">        Args:</span>
-</span><span data-line="60"><span class="sd">            entry (list): The list of values for the new row.</span>
-</span><span data-line="61"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="62">        <span class="n">entry_str</span> <span class="o">=</span> <span class="p">[</span>
-</span><span data-line="63">            <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entry</span>
-</span><span data-line="64">        <span class="p">]</span>
-</span><span data-line="65">        <span class="n">new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">entry_str</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-</span><span data-line="66">        <span class="n">new_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_df_to_types</span><span class="p">(</span><span class="n">new_row</span><span class="p">)</span>
-</span><span data-line="67">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="n">new_row</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="68">        <span class="n">columns_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry_str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span data-line="69">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-</span><span data-line="70">            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">columns_str</span><span class="p">)</span>
-</span><span data-line="71">        <span class="bp">self</span><span class="o">.</span><span class="n">check_split_csv</span><span class="p">()</span></div>
-
-</span><span data-line="72">
-<div class="viewcode-block" id="Collection.convert_with_default">
-<a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.convert_with_default">[docs]</a>
-</span><span data-line="73">    <span class="nd">@staticmethod</span>
-</span><span data-line="74">    <span class="k">def</span><span class="w"> </span><span class="nf">convert_with_default</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">target_type</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span data-line="75"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a value to a target type, using defaults for failures.</span>
-</span><span data-line="76">
-</span><span data-line="77"><span class="sd">        Args:</span>
-</span><span data-line="78"><span class="sd">            value: The value to convert.</span>
-</span><span data-line="79"><span class="sd">            target_type (Any): The target type.</span>
-</span><span data-line="80">
-</span><span data-line="81"><span class="sd">        Returns:</span>
-</span><span data-line="82"><span class="sd">            Any: The converted value or a default.</span>
-</span><span data-line="83"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="84">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="85">            <span class="k">return</span> <span class="n">target_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span data-line="86">        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-</span><span data-line="87">            <span class="k">if</span> <span class="n">target_type</span> <span class="ow">is</span> <span class="nb">int</span> <span class="ow">or</span> <span class="n">target_type</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">:</span>
-</span><span data-line="88">                <span class="k">return</span> <span class="mi">0</span>
-</span><span data-line="89">            <span class="k">elif</span> <span class="n">target_type</span> <span class="ow">is</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="90">                <span class="k">return</span> <span class="kc">False</span>
-</span><span data-line="91">            <span class="k">elif</span> <span class="n">target_type</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="92">                <span class="k">return</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="93">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="94">                <span class="k">return</span> <span class="n">value</span></div>
+</span><span data-line="79">    <span class="k">def</span><span class="w"> </span><span class="nf">add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="80"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a new entry to the collection.</span>
+</span><span data-line="81">
+</span><span data-line="82"><span class="sd">        Args:</span>
+</span><span data-line="83"><span class="sd">            entry (list): The list of values for the new row.</span>
+</span><span data-line="84"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="85">        <span class="n">entry_str</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="86">            <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entry</span>
+</span><span data-line="87">        <span class="p">]</span>
+</span><span data-line="88">        <span class="n">new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">entry_str</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</span><span data-line="89">        <span class="n">new_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_df_to_types</span><span class="p">(</span><span class="n">new_row</span><span class="p">)</span>
+</span><span data-line="90">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="n">new_row</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="91">        <span class="n">columns_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry_str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span data-line="92">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+</span><span data-line="93">            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">columns_str</span><span class="p">)</span>
+</span><span data-line="94">        <span class="bp">self</span><span class="o">.</span><span class="n">check_split_csv</span><span class="p">()</span></div>
 
 </span><span data-line="95">
+<div class="viewcode-block" id="Collection.convert_with_default">
+<a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.convert_with_default">[docs]</a>
+</span><span data-line="96">    <span class="nd">@staticmethod</span>
+</span><span data-line="97">    <span class="k">def</span><span class="w"> </span><span class="nf">convert_with_default</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">target_type</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span data-line="98"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a value to a target type, using defaults for failures.</span>
+</span><span data-line="99">
+</span><span data-line="100"><span class="sd">        Args:</span>
+</span><span data-line="101"><span class="sd">            value: The value to convert.</span>
+</span><span data-line="102"><span class="sd">            target_type (Any): The target type.</span>
+</span><span data-line="103">
+</span><span data-line="104"><span class="sd">        Returns:</span>
+</span><span data-line="105"><span class="sd">            Any: The converted value or a default.</span>
+</span><span data-line="106"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="107">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="108">            <span class="k">return</span> <span class="n">target_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="109">        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+</span><span data-line="110">            <span class="k">if</span> <span class="n">target_type</span> <span class="ow">is</span> <span class="nb">int</span> <span class="ow">or</span> <span class="n">target_type</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="111">                <span class="k">return</span> <span class="mi">0</span>
+</span><span data-line="112">            <span class="k">elif</span> <span class="n">target_type</span> <span class="ow">is</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="113">                <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="114">            <span class="k">elif</span> <span class="n">target_type</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="115">                <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="116">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="117">                <span class="k">return</span> <span class="n">value</span></div>
+
+</span><span data-line="118">
 <div class="viewcode-block" id="Collection.convert_df_to_types">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.convert_df_to_types">[docs]</a>
-</span><span data-line="96">    <span class="k">def</span><span class="w"> </span><span class="nf">convert_df_to_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span data-line="97"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts DataFrame columns to the specified types.</span>
-</span><span data-line="98">
-</span><span data-line="99"><span class="sd">        Args:</span>
-</span><span data-line="100"><span class="sd">            df (pd.DataFrame): The DataFrame to convert.</span>
-</span><span data-line="101">
-</span><span data-line="102"><span class="sd">        Returns:</span>
-</span><span data-line="103"><span class="sd">            pd.DataFrame: The converted DataFrame.</span>
-</span><span data-line="104"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="105">        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="nb">type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">):</span>
-</span><span data-line="106">            <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_with_default</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="p">))</span>
-</span><span data-line="107">        <span class="k">return</span> <span class="n">df</span></div>
+</span><span data-line="119">    <span class="k">def</span><span class="w"> </span><span class="nf">convert_df_to_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span data-line="120"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts DataFrame columns to the specified types.</span>
+</span><span data-line="121">
+</span><span data-line="122"><span class="sd">        Args:</span>
+</span><span data-line="123"><span class="sd">            df (pd.DataFrame): The DataFrame to convert.</span>
+</span><span data-line="124">
+</span><span data-line="125"><span class="sd">        Returns:</span>
+</span><span data-line="126"><span class="sd">            pd.DataFrame: The converted DataFrame.</span>
+</span><span data-line="127"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="128">        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="nb">type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">):</span>
+</span><span data-line="129">            <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_with_default</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="p">))</span>
+</span><span data-line="130">        <span class="k">return</span> <span class="n">df</span></div>
 
-</span><span data-line="108">
+</span><span data-line="131">
 <div class="viewcode-block" id="Collection.check_split_csv">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.check_split_csv">[docs]</a>
-</span><span data-line="109">    <span class="k">def</span><span class="w"> </span><span class="nf">check_split_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="110"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the CSV file is too large and splits it if necessary.&quot;&quot;&quot;</span>
-</span><span data-line="111">        <span class="n">max_size</span> <span class="o">=</span> <span class="mi">50000</span>
-</span><span data-line="112">        <span class="n">file_size</span> <span class="o">=</span> <span class="mi">40000</span>
-</span><span data-line="113">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_size</span><span class="p">:</span>
-</span><span data-line="114">            <span class="n">first_rows</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">file_size</span><span class="p">)</span>
-</span><span data-line="115">            <span class="n">date_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_string_for_filename</span><span class="p">()</span>
-</span><span data-line="116">            <span class="n">new_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">date_str</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
-</span><span data-line="117">            <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYSTEM_DIRECTORY&quot;</span><span class="p">),</span> <span class="s2">&quot;old_events&quot;</span><span class="p">)</span>
-</span><span data-line="118">            <span class="n">new_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">new_filename</span><span class="p">)</span>
-</span><span data-line="119">            <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="120">            <span class="n">first_rows</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">new_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-</span><span data-line="121">            <span class="n">last</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span> <span class="o">-</span> <span class="n">file_size</span><span class="p">)</span>
-</span><span data-line="122">            <span class="n">last</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-</span><span data-line="123">            <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">last</span></div>
+</span><span data-line="132">    <span class="k">def</span><span class="w"> </span><span class="nf">check_split_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="133"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the CSV file is too large and splits it if necessary.&quot;&quot;&quot;</span>
+</span><span data-line="134">        <span class="n">max_size</span> <span class="o">=</span> <span class="mi">50000</span>
+</span><span data-line="135">        <span class="n">file_size</span> <span class="o">=</span> <span class="mi">40000</span>
+</span><span data-line="136">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_size</span><span class="p">:</span>
+</span><span data-line="137">            <span class="n">first_rows</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">file_size</span><span class="p">)</span>
+</span><span data-line="138">            <span class="n">date_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_string_for_filename</span><span class="p">()</span>
+</span><span data-line="139">            <span class="n">new_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">date_str</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
+</span><span data-line="140">            <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYSTEM_DIRECTORY&quot;</span><span class="p">),</span> <span class="s2">&quot;old_events&quot;</span><span class="p">)</span>
+</span><span data-line="141">            <span class="n">new_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">new_filename</span><span class="p">)</span>
+</span><span data-line="142">            <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="143">            <span class="n">first_rows</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">new_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span data-line="144">            <span class="n">last</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span> <span class="o">-</span> <span class="n">file_size</span><span class="p">)</span>
+</span><span data-line="145">            <span class="n">last</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span data-line="146">            <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">last</span></div>
 
-</span><span data-line="124">
+</span><span data-line="147">
 <div class="viewcode-block" id="Collection.get_last_entry">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.get_last_entry">[docs]</a>
-</span><span data-line="125">    <span class="k">def</span><span class="w"> </span><span class="nf">get_last_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-</span><span data-line="126"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the last entry matching a specific value in a column.</span>
-</span><span data-line="127">
-</span><span data-line="128"><span class="sd">        Args:</span>
-</span><span data-line="129"><span class="sd">            column (str): The column to search.</span>
-</span><span data-line="130"><span class="sd">            value (str): The value to match.</span>
-</span><span data-line="131">
-</span><span data-line="132"><span class="sd">        Returns:</span>
-</span><span data-line="133"><span class="sd">            Union[pd.Series, None]: The last matching row, or None.</span>
-</span><span data-line="134"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="135">        <span class="n">column_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span><span class="p">]</span>
-</span><span data-line="136">        <span class="k">if</span> <span class="ow">not</span> <span class="n">column_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span data-line="137">            <span class="k">return</span> <span class="n">column_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</span><span data-line="138">        <span class="k">return</span> <span class="kc">None</span></div>
+</span><span data-line="148">    <span class="k">def</span><span class="w"> </span><span class="nf">get_last_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+</span><span data-line="149"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the last entry matching a specific value in a column.</span>
+</span><span data-line="150">
+</span><span data-line="151"><span class="sd">        Args:</span>
+</span><span data-line="152"><span class="sd">            column (str): The column to search.</span>
+</span><span data-line="153"><span class="sd">            value (str): The value to match.</span>
+</span><span data-line="154">
+</span><span data-line="155"><span class="sd">        Returns:</span>
+</span><span data-line="156"><span class="sd">            Union[pd.Series, None]: The last matching row, or None.</span>
+</span><span data-line="157"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="158">        <span class="n">column_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span><span class="p">]</span>
+</span><span data-line="159">        <span class="k">if</span> <span class="ow">not</span> <span class="n">column_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span data-line="160">            <span class="k">return</span> <span class="n">column_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span><span data-line="161">        <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span data-line="139">
+</span><span data-line="162">
 <div class="viewcode-block" id="Collection.get_last_entry_name">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.get_last_entry_name">[docs]</a>
-</span><span data-line="140">    <span class="k">def</span><span class="w"> </span><span class="nf">get_last_entry_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="141"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the &#39;name&#39; field of the last entry matching a condition.</span>
-</span><span data-line="142">
-</span><span data-line="143"><span class="sd">        Args:</span>
-</span><span data-line="144"><span class="sd">            column (str): The column to search.</span>
-</span><span data-line="145"><span class="sd">            value (str): The value to match.</span>
-</span><span data-line="146">
-</span><span data-line="147"><span class="sd">        Returns:</span>
-</span><span data-line="148"><span class="sd">            str | None: The name, or None.</span>
-</span><span data-line="149"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="150">        <span class="n">column_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span><span class="p">]</span>
-</span><span data-line="151">        <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="152">        <span class="k">if</span> <span class="ow">not</span> <span class="n">column_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span data-line="153">            <span class="n">row</span> <span class="o">=</span> <span class="n">column_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</span><span data-line="154">            <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="155">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="156">                    <span class="n">name</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-</span><span data-line="157">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="158">                    <span class="k">pass</span>
-</span><span data-line="159">        <span class="k">return</span> <span class="n">name</span></div>
+</span><span data-line="163">    <span class="k">def</span><span class="w"> </span><span class="nf">get_last_entry_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="164"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the &#39;name&#39; field of the last entry matching a condition.</span>
+</span><span data-line="165">
+</span><span data-line="166"><span class="sd">        Args:</span>
+</span><span data-line="167"><span class="sd">            column (str): The column to search.</span>
+</span><span data-line="168"><span class="sd">            value (str): The value to match.</span>
+</span><span data-line="169">
+</span><span data-line="170"><span class="sd">        Returns:</span>
+</span><span data-line="171"><span class="sd">            str | None: The name, or None.</span>
+</span><span data-line="172"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="173">        <span class="n">column_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span><span class="p">]</span>
+</span><span data-line="174">        <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="175">        <span class="k">if</span> <span class="ow">not</span> <span class="n">column_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span data-line="176">            <span class="n">row</span> <span class="o">=</span> <span class="n">column_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span><span data-line="177">            <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="178">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="179">                    <span class="n">name</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+</span><span data-line="180">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="181">                    <span class="k">pass</span>
+</span><span data-line="182">        <span class="k">return</span> <span class="n">name</span></div>
 
-</span><span data-line="160">
+</span><span data-line="183">
 <div class="viewcode-block" id="Collection.get_first_entry">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.get_first_entry">[docs]</a>
-</span><span data-line="161">    <span class="k">def</span><span class="w"> </span><span class="nf">get_first_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-</span><span data-line="162"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the first entry matching a specific value in a column.</span>
-</span><span data-line="163">
-</span><span data-line="164"><span class="sd">        Args:</span>
-</span><span data-line="165"><span class="sd">            column (str): The column to search.</span>
-</span><span data-line="166"><span class="sd">            value (str): The value to match.</span>
-</span><span data-line="167">
-</span><span data-line="168"><span class="sd">        Returns:</span>
-</span><span data-line="169"><span class="sd">            Union[pd.Series, None]: The first matching row, or None.</span>
-</span><span data-line="170"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="171">        <span class="n">column_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span><span class="p">]</span>
-</span><span data-line="172">        <span class="k">if</span> <span class="ow">not</span> <span class="n">column_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span data-line="173">            <span class="k">return</span> <span class="n">column_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="174">        <span class="k">return</span> <span class="kc">None</span></div>
-
-</span><span data-line="175">
-<div class="viewcode-block" id="Collection.change_last_entry">
-<a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.change_last_entry">[docs]</a>
-</span><span data-line="176">    <span class="k">def</span><span class="w"> </span><span class="nf">change_last_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="177"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates a value in the last entry of the DataFrame and saves.</span>
-</span><span data-line="178">
-</span><span data-line="179"><span class="sd">        Args:</span>
-</span><span data-line="180"><span class="sd">            column (str): The column to update.</span>
-</span><span data-line="181"><span class="sd">            value (Any): The new value.</span>
-</span><span data-line="182"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="183">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-</span><span data-line="184">        <span class="bp">self</span><span class="o">.</span><span class="n">save_from_df</span><span class="p">()</span></div>
-
-</span><span data-line="185">
-<div class="viewcode-block" id="Collection.save_from_df">
-<a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.save_from_df">[docs]</a>
-</span><span data-line="186">    <span class="k">def</span><span class="w"> </span><span class="nf">save_from_df</span><span class="p">(</span>
-</span><span data-line="187">        <span class="bp">self</span><span class="p">,</span> <span class="n">training</span><span class="p">:</span> <span class="n">TrainingProtocolBase</span> <span class="o">=</span> <span class="n">TrainingProtocolBase</span><span class="p">()</span>
-</span><span data-line="188">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="189"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves values from the current DataFrame to the CSV file,</span>
-</span><span data-line="190"><span class="sd">        processing formatting.</span>
-</span><span data-line="191">
-</span><span data-line="192"><span class="sd">        Args:</span>
-</span><span data-line="193"><span class="sd">            training (TrainingProtocolBase): Protocol for formatting specific fields.</span>
-</span><span data-line="194"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="195">        <span class="n">new_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_from_df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="n">training</span><span class="p">)</span>
-</span><span data-line="196">        <span class="n">new_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-</span><span data-line="197">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">new_df</span></div>
+</span><span data-line="184">    <span class="k">def</span><span class="w"> </span><span class="nf">get_first_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+</span><span data-line="185"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the first entry matching a specific value in a column.</span>
+</span><span data-line="186">
+</span><span data-line="187"><span class="sd">        Args:</span>
+</span><span data-line="188"><span class="sd">            column (str): The column to search.</span>
+</span><span data-line="189"><span class="sd">            value (str): The value to match.</span>
+</span><span data-line="190">
+</span><span data-line="191"><span class="sd">        Returns:</span>
+</span><span data-line="192"><span class="sd">            Union[pd.Series, None]: The first matching row, or None.</span>
+</span><span data-line="193"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="194">        <span class="n">column_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span><span class="p">]</span>
+</span><span data-line="195">        <span class="k">if</span> <span class="ow">not</span> <span class="n">column_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span data-line="196">            <span class="k">return</span> <span class="n">column_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="197">        <span class="k">return</span> <span class="kc">None</span></div>
 
 </span><span data-line="198">
+<div class="viewcode-block" id="Collection.change_last_entry">
+<a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.change_last_entry">[docs]</a>
+</span><span data-line="199">    <span class="k">def</span><span class="w"> </span><span class="nf">change_last_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="200"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates a value in the last entry of the DataFrame and saves.</span>
+</span><span data-line="201">
+</span><span data-line="202"><span class="sd">        Args:</span>
+</span><span data-line="203"><span class="sd">            column (str): The column to update.</span>
+</span><span data-line="204"><span class="sd">            value (Any): The new value.</span>
+</span><span data-line="205"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="206">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+</span><span data-line="207">        <span class="bp">self</span><span class="o">.</span><span class="n">save_from_df</span><span class="p">()</span></div>
+
+</span><span data-line="208">
+<div class="viewcode-block" id="Collection.save_from_df">
+<a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.save_from_df">[docs]</a>
+</span><span data-line="209">    <span class="k">def</span><span class="w"> </span><span class="nf">save_from_df</span><span class="p">(</span>
+</span><span data-line="210">        <span class="bp">self</span><span class="p">,</span> <span class="n">training</span><span class="p">:</span> <span class="n">TrainingProtocolBase</span> <span class="o">=</span> <span class="n">TrainingProtocolBase</span><span class="p">()</span>
+</span><span data-line="211">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="212"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves values from the current DataFrame to the CSV file,</span>
+</span><span data-line="213"><span class="sd">        processing formatting.</span>
+</span><span data-line="214">
+</span><span data-line="215"><span class="sd">        Args:</span>
+</span><span data-line="216"><span class="sd">            training (TrainingProtocolBase): Protocol for formatting specific fields.</span>
+</span><span data-line="217"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="218">        <span class="n">new_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_from_df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="n">training</span><span class="p">)</span>
+</span><span data-line="219">        <span class="n">new_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+</span><span data-line="220">        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">new_df</span></div>
+
+</span><span data-line="221">
 <div class="viewcode-block" id="Collection.df_from_df">
 <a class="viewcode-back" href="../../../api_generated/village.classes.collection.Collection.html#village.classes.collection.Collection.df_from_df">[docs]</a>
-</span><span data-line="199">    <span class="k">def</span><span class="w"> </span><span class="nf">df_from_df</span><span class="p">(</span>
-</span><span data-line="200">        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">training</span><span class="p">:</span> <span class="n">TrainingProtocolBase</span>
-</span><span data-line="201">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span data-line="202"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Processes a DataFrame for saving (formatting dates, enums, etc).</span>
-</span><span data-line="203">
-</span><span data-line="204"><span class="sd">        Args:</span>
-</span><span data-line="205"><span class="sd">            df (pd.DataFrame): The input DataFrame.</span>
-</span><span data-line="206"><span class="sd">            training (TrainingProtocolBase): The training protocol for</span>
-</span><span data-line="207"><span class="sd">            custom formatting.</span>
-</span><span data-line="208">
-</span><span data-line="209"><span class="sd">        Returns:</span>
-</span><span data-line="210"><span class="sd">            pd.DataFrame: The processed DataFrame.</span>
-</span><span data-line="211"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="212">        <span class="n">new_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_df_to_types</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</span><span data-line="213">
-</span><span data-line="214">        <span class="k">if</span> <span class="s2">&quot;next_session_time&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="215">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
-</span><span data-line="216">                <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
-</span><span data-line="217">            <span class="p">)</span>
-</span><span data-line="218">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
-</span><span data-line="219">                <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-</span><span data-line="220">            <span class="p">)</span>
-</span><span data-line="221">
-</span><span data-line="222">        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="223">            <span class="k">if</span> <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;datetime64[ns]&quot;</span><span class="p">:</span>
-</span><span data-line="224">                <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
-</span><span data-line="225">
-</span><span data-line="226">        <span class="k">if</span> <span class="s2">&quot;active&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="227">            <span class="n">weekdays</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Mon&quot;</span><span class="p">,</span> <span class="s2">&quot;Tue&quot;</span><span class="p">,</span> <span class="s2">&quot;Wed&quot;</span><span class="p">,</span> <span class="s2">&quot;Thu&quot;</span><span class="p">,</span> <span class="s2">&quot;Fri&quot;</span><span class="p">,</span> <span class="s2">&quot;Sat&quot;</span><span class="p">,</span> <span class="s2">&quot;Sun&quot;</span><span class="p">]</span>
-</span><span data-line="228">
-</span><span data-line="229">            <span class="k">def</span><span class="w"> </span><span class="nf">convert_active</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="230">                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span data-line="231">                <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
-</span><span data-line="232">                    <span class="k">return</span> <span class="s2">&quot;ON&quot;</span>
-</span><span data-line="233">                <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;On&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="p">):</span>
-</span><span data-line="234">                    <span class="k">return</span> <span class="s2">&quot;ON&quot;</span>
-</span><span data-line="235">                <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;OFF&quot;</span><span class="p">,</span> <span class="s2">&quot;Off&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
-</span><span data-line="236">                    <span class="k">return</span> <span class="s2">&quot;OFF&quot;</span>
-</span><span data-line="237">                <span class="k">if</span> <span class="s2">&quot;|&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-</span><span data-line="238">                    <span class="k">return</span> <span class="n">value</span>
-</span><span data-line="239">                <span class="n">days</span> <span class="o">=</span> <span class="p">[</span><span class="n">day</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)]</span>
-</span><span data-line="240">                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">day</span> <span class="ow">in</span> <span class="n">weekdays</span> <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">days</span><span class="p">):</span>
-</span><span data-line="241">                    <span class="k">return</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
-</span><span data-line="242">                <span class="k">return</span> <span class="s2">&quot;OFF&quot;</span>
-</span><span data-line="243">
-</span><span data-line="244">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_active</span><span class="p">)</span>
-</span><span data-line="245">
-</span><span data-line="246">        <span class="k">if</span> <span class="s2">&quot;next_settings&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="247">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_settings&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-</span><span data-line="248">                <span class="n">training</span><span class="o">.</span><span class="n">get_jsonstring_from_jsonstring</span>
-</span><span data-line="249">            <span class="p">)</span>
-</span><span data-line="250">
-</span><span data-line="251">        <span class="k">return</span> <span class="n">new_df</span></div>
+</span><span data-line="222">    <span class="k">def</span><span class="w"> </span><span class="nf">df_from_df</span><span class="p">(</span>
+</span><span data-line="223">        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">training</span><span class="p">:</span> <span class="n">TrainingProtocolBase</span>
+</span><span data-line="224">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span data-line="225"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Processes a DataFrame for saving (formatting dates, enums, etc).</span>
+</span><span data-line="226">
+</span><span data-line="227"><span class="sd">        Args:</span>
+</span><span data-line="228"><span class="sd">            df (pd.DataFrame): The input DataFrame.</span>
+</span><span data-line="229"><span class="sd">            training (TrainingProtocolBase): The training protocol for</span>
+</span><span data-line="230"><span class="sd">            custom formatting.</span>
+</span><span data-line="231">
+</span><span data-line="232"><span class="sd">        Returns:</span>
+</span><span data-line="233"><span class="sd">            pd.DataFrame: The processed DataFrame.</span>
+</span><span data-line="234"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="235">        <span class="n">new_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_df_to_types</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</span><span data-line="236">
+</span><span data-line="237">        <span class="k">if</span> <span class="s2">&quot;next_session_time&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="238">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+</span><span data-line="239">                <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+</span><span data-line="240">            <span class="p">)</span>
+</span><span data-line="241">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+</span><span data-line="242">                <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span data-line="243">            <span class="p">)</span>
+</span><span data-line="244">
+</span><span data-line="245">        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="246">            <span class="k">if</span> <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;datetime64[ns]&quot;</span><span class="p">:</span>
+</span><span data-line="247">                <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+</span><span data-line="248">
+</span><span data-line="249">        <span class="k">if</span> <span class="s2">&quot;active&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="250">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_active</span><span class="p">)</span>
+</span><span data-line="251">
+</span><span data-line="252">        <span class="k">if</span> <span class="s2">&quot;next_settings&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="253">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_settings&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+</span><span data-line="254">                <span class="n">training</span><span class="o">.</span><span class="n">get_jsonstring_from_jsonstring</span>
+</span><span data-line="255">            <span class="p">)</span>
+</span><span data-line="256">
+</span><span data-line="257">        <span class="k">return</span> <span class="n">new_df</span></div>
 </div>
 
 </span></pre></div>
@@ -780,7 +790,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=f9b263a6"></script>
+      <script src="../../../_static/documentation_options.js?v=294121ee"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

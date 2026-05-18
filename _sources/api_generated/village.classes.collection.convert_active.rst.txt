@@ -1,0 +1,6 @@
+convert\_active
+===============
+
+.. currentmodule:: village.classes.collection
+
+.. autofunction:: convert_active
