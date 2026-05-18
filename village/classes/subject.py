@@ -30,7 +30,7 @@ class Subject:
         self.name: str = name
         self.tag: str = ""
         self.basal_weight: float = 0.0
-        self.active: str = "Off"
+        self.active: str = "ON"
         self.next_session_time: str = ""
         self.next_settings: str = ""
         self.subject_series: pd.Series | None = None

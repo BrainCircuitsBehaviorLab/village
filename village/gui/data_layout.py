@@ -14,6 +14,7 @@ from PyQt5.QtCore import (
     QEvent,
     QModelIndex,
     Qt,
+    QTime,
     QTimer,
     QVariant,
     pyqtSignal,
@@ -38,6 +39,7 @@ from PyQt5.QtWidgets import (
     QStackedLayout,
     QTableView,
     QTextEdit,
+    QTimeEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -253,33 +255,72 @@ class TableView(QTableView):
 
 
 class DaysSelectionDialog(QDialog):
-    """Dialog for selecting specific days or toggling ON/OFF."""
+    """Dialog for selecting active days with optional per-day time ranges."""
+
+    DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    DAY_LABELS = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
 
     def __init__(self, parent=None, current_value=None) -> None:
-        """Initializes the DaysSelectionDialog.
-
-        Args:
-            parent (QWidget, optional): Parent widget. Defaults to None.
-            current_value (str, optional): Current value ("ON", "OFF", or "Mon-Tue...").
-            Defaults to None.
-        """
         super().__init__(parent)
         self.setWindowTitle("Select Days or On/Off")
 
         self.layout: QVBoxLayout = QVBoxLayout(self)
 
-        self.days_checkboxes = {
-            "Mon": QCheckBox("Monday"),
-            "Tue": QCheckBox("Tuesday"),
-            "Wed": QCheckBox("Wednesday"),
-            "Thu": QCheckBox("Thursday"),
-            "Fri": QCheckBox("Friday"),
-            "Sat": QCheckBox("Saturday"),
-            "Sun": QCheckBox("Sunday"),
-        }
+        self.days_checkboxes: dict[str, QCheckBox] = {}
+        self.all_day_checkboxes: dict[str, QCheckBox] = {}
+        self.from_times: dict[str, QTimeEdit] = {}
+        self.to_times: dict[str, QTimeEdit] = {}
+        self._time_widgets: dict[str, tuple] = {}
 
-        for checkbox in self.days_checkboxes.values():
-            self.layout.addWidget(checkbox)
+        for day, label in zip(self.DAYS, self.DAY_LABELS):
+            row = QHBoxLayout()
+
+            day_cb = QCheckBox(label)
+            all_day_cb = QCheckBox("All day")
+            all_day_cb.setChecked(True)
+            all_day_cb.setEnabled(False)
+
+            from_label = QLabel("From:")
+            from_te = QTimeEdit()
+            from_te.setDisplayFormat("HH:mm")
+            from_te.setTime(QTime(0, 0))
+
+            to_label = QLabel("To:")
+            to_te = QTimeEdit()
+            to_te.setDisplayFormat("HH:mm")
+            to_te.setTime(QTime(23, 59))
+
+            for w in (from_label, from_te, to_label, to_te):
+                w.setVisible(False)
+
+            row.addWidget(day_cb)
+            row.addWidget(all_day_cb)
+            row.addWidget(from_label)
+            row.addWidget(from_te)
+            row.addWidget(to_label)
+            row.addWidget(to_te)
+            self.layout.addLayout(row)
+
+            self.days_checkboxes[day] = day_cb
+            self.all_day_checkboxes[day] = all_day_cb
+            self.from_times[day] = from_te
+            self.to_times[day] = to_te
+            self._time_widgets[day] = (from_label, from_te, to_label, to_te)
+
+            day_cb.toggled.connect(
+                lambda checked, d=day: self._on_day_toggled(d, checked)
+            )
+            all_day_cb.toggled.connect(
+                lambda checked, d=day: self._on_all_day_toggled(d, checked)
+            )
 
         self.on_checkbox = QCheckBox("ON")
         self.off_checkbox = QCheckBox("OFF")
@@ -288,9 +329,6 @@ class DaysSelectionDialog(QDialog):
 
         self.on_checkbox.toggled.connect(self.toggle_on)
         self.off_checkbox.toggled.connect(self.toggle_off)
-
-        for checkbox in self.days_checkboxes.values():
-            checkbox.toggled.connect(self.toggle_days)
 
         if current_value:
             self.set_initial_values(current_value)
@@ -307,97 +345,103 @@ class DaysSelectionDialog(QDialog):
         self.btn_ok.clicked.connect(self.accept)
         self.btn_cancel.clicked.connect(self.reject)
 
-    def set_initial_values(self, value) -> None:
+    def _block_all(self, block: bool) -> None:
+        self.on_checkbox.blockSignals(block)
+        self.off_checkbox.blockSignals(block)
+        for day in self.DAYS:
+            self.days_checkboxes[day].blockSignals(block)
+            self.all_day_checkboxes[day].blockSignals(block)
+
+    def _reset_day(self, day: str) -> None:
+        self.all_day_checkboxes[day].setChecked(True)
+        self.all_day_checkboxes[day].setEnabled(False)
+        for w in self._time_widgets[day]:
+            w.setVisible(False)
+
+    def _on_day_toggled(self, day: str, checked: bool) -> None:
+        self._block_all(True)
+        if checked:
+            self.all_day_checkboxes[day].setEnabled(True)
+            self.on_checkbox.setChecked(False)
+            self.off_checkbox.setChecked(False)
+        else:
+            self._reset_day(day)
+            if not any(cb.isChecked() for cb in self.days_checkboxes.values()):
+                self.off_checkbox.setChecked(True)
+        self._block_all(False)
+
+    def _on_all_day_toggled(self, day: str, checked: bool) -> None:
+        for w in self._time_widgets[day]:
+            w.setVisible(not checked)
+
+    def _clear_all_days(self) -> None:
+        for day in self.DAYS:
+            self.days_checkboxes[day].setChecked(False)
+            self._reset_day(day)
+
+    def toggle_on(self) -> None:
+        self._block_all(True)
+        if self.on_checkbox.isChecked():
+            self.off_checkbox.setChecked(False)
+            self._clear_all_days()
+        elif not any(cb.isChecked() for cb in self.days_checkboxes.values()):
+            self.off_checkbox.setChecked(True)
+        self._block_all(False)
+
+    def toggle_off(self) -> None:
+        self._block_all(True)
+        if self.off_checkbox.isChecked():
+            self.on_checkbox.setChecked(False)
+            self._clear_all_days()
+        elif not any(cb.isChecked() for cb in self.days_checkboxes.values()):
+            self.on_checkbox.setChecked(True)
+        self._block_all(False)
+
+    def set_initial_values(self, value: str) -> None:
         if value == "ON":
             self.on_checkbox.setChecked(True)
         elif value == "OFF" or value == "":
             self.off_checkbox.setChecked(True)
+        elif "|" in value:
+            for part in value.split("|"):
+                if ":" in part:
+                    day, time_range = part.split(":", 1)
+                    if day in self.days_checkboxes:
+                        from_str, to_str = time_range.split("-", 1)
+                        self.days_checkboxes[day].setChecked(True)
+                        self.all_day_checkboxes[day].setChecked(False)
+                        self.from_times[day].setTime(
+                            QTime.fromString(from_str, "HH:mm")
+                        )
+                        self.to_times[day].setTime(QTime.fromString(to_str, "HH:mm"))
+                else:
+                    if part in self.days_checkboxes:
+                        self.days_checkboxes[part].setChecked(True)
         else:
-            days = value.split("-")
-            for day in days:
+            # backward compat: old "Mon-Wed-Fri" format
+            for day in value.split("-"):
                 if day in self.days_checkboxes:
                     self.days_checkboxes[day].setChecked(True)
 
-    def toggle_on(self) -> None:
-        self.on_checkbox.blockSignals(True)
-        self.off_checkbox.blockSignals(True)
-        for checkbox in self.days_checkboxes.values():
-            checkbox.blockSignals(True)
-
-        if self.on_checkbox.isChecked():
-            self.off_checkbox.setChecked(False)
-            for checkbox in self.days_checkboxes.values():
-                checkbox.setChecked(False)
-        elif any(checkbox.isChecked() for checkbox in self.days_checkboxes.values()):
-            pass
-        else:
-            self.off_checkbox.setChecked(True)
-
-        self.on_checkbox.blockSignals(False)
-        self.off_checkbox.blockSignals(False)
-        for checkbox in self.days_checkboxes.values():
-            checkbox.blockSignals(False)
-
-    def toggle_off(self) -> None:
-        self.on_checkbox.blockSignals(True)
-        self.off_checkbox.blockSignals(True)
-        for checkbox in self.days_checkboxes.values():
-            checkbox.blockSignals(True)
-
-        if self.off_checkbox.isChecked():
-            self.on_checkbox.setChecked(False)
-            for checkbox in self.days_checkboxes.values():
-                checkbox.setChecked(False)
-        elif any(checkbox.isChecked() for checkbox in self.days_checkboxes.values()):
-            pass
-        else:
-            self.on_checkbox.setChecked(True)
-
-        self.on_checkbox.blockSignals(False)
-        self.off_checkbox.blockSignals(False)
-        for checkbox in self.days_checkboxes.values():
-            checkbox.blockSignals(False)
-
-    def toggle_days(self) -> None:
-        self.on_checkbox.blockSignals(True)
-        self.off_checkbox.blockSignals(True)
-        for checkbox in self.days_checkboxes.values():
-            checkbox.blockSignals(True)
-
-        self.on_checkbox.setChecked(False)
-        if any(checkbox.isChecked() for checkbox in self.days_checkboxes.values()):
-            self.off_checkbox.setChecked(False)
-        elif not self.on_checkbox.isChecked():
-            self.off_checkbox.setChecked(True)
-
-        self.on_checkbox.blockSignals(False)
-        self.off_checkbox.blockSignals(False)
-        for checkbox in self.days_checkboxes.values():
-            checkbox.blockSignals(False)
-
     def getSelection(self) -> str | None:
-        """Constructs the result string based on selected days.
-
-        Returns:
-            str: A string representing the selected days
-            (e.g., "Mon-Wed-Fri") or "ON"/"OFF".
-        """
         if self.on_checkbox.isChecked():
             return "ON"
         if self.off_checkbox.isChecked():
             return "OFF"
 
-        selected_days = [
-            day
-            for day, checkbox in self.days_checkboxes.items()
-            if checkbox.isChecked()
-        ]
-        if selected_days:
-            return "-".join(selected_days)
-        return None
+        parts = []
+        for day in self.DAYS:
+            if self.days_checkboxes[day].isChecked():
+                if self.all_day_checkboxes[day].isChecked():
+                    parts.append(day)
+                else:
+                    from_t = self.from_times[day].time().toString("HH:mm")
+                    to_t = self.to_times[day].time().toString("HH:mm")
+                    parts.append(f"{day}:{from_t}-{to_t}")
+
+        return "|".join(parts) if parts else None
 
     def accept(self) -> None:
-        """Accepts the dialog and closes it."""
         super().accept()
 
 

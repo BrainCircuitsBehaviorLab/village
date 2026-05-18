@@ -718,7 +718,10 @@ class Manager:
         active_subjects = subjects.loc[
             subjects["active"].apply(utils.is_active), "name"
         ].tolist()
-        active_hours = utils.calculate_active_hours(subjects)
+        active_24h = {
+            row["name"]: utils.active_last_24_hours(row["active"])
+            for _, row in subjects.iterrows()
+        }
 
         report_text = "REPORT last " + str(hours) + "h\n\n"
         report_text += "state: " + self.state.name + ", subject: " + self.subject.name
@@ -734,13 +737,13 @@ class Manager:
                 detections_str = str(subject_detections[sub])
             except KeyError:
                 detections_str = "0"
-                if active_hours[sub] >= 23:
+                if active_24h.get(sub, False):
                     non_detected_subjects.append(sub)
             try:
                 sessions_str = str(subject_sessions[sub])
             except KeyError:
                 sessions_str = "0"
-                if active_hours[sub] >= 23:
+                if active_24h.get(sub, False):
                     non_session_subjects.append(sub)
             try:
                 water = subject_water[sub]
@@ -748,7 +751,7 @@ class Manager:
             except KeyError:
                 water = 0
                 water_str = "0"
-            if active_hours[sub] >= 23 and water < minimum_water:
+            if active_24h.get(sub, False) and water < minimum_water:
                 low_water_subjects.append(sub)
             try:
                 weight_str = str(round(subject_weight[sub], 2))
