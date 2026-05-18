@@ -732,23 +732,27 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="228">
 </span><span data-line="229">            <span class="k">def</span><span class="w"> </span><span class="nf">convert_active</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </span><span data-line="230">                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span data-line="231">                <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;On&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="p">):</span>
+</span><span data-line="231">                <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
 </span><span data-line="232">                    <span class="k">return</span> <span class="s2">&quot;ON&quot;</span>
-</span><span data-line="233">                <span class="k">else</span><span class="p">:</span>
-</span><span data-line="234">                    <span class="n">days</span> <span class="o">=</span> <span class="p">[</span><span class="n">day</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)]</span>
-</span><span data-line="235">                    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">day</span> <span class="ow">in</span> <span class="n">weekdays</span> <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">days</span><span class="p">):</span>
-</span><span data-line="236">                        <span class="k">return</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
-</span><span data-line="237">                    <span class="k">else</span><span class="p">:</span>
-</span><span data-line="238">                        <span class="k">return</span> <span class="s2">&quot;OFF&quot;</span>
-</span><span data-line="239">
-</span><span data-line="240">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_active</span><span class="p">)</span>
-</span><span data-line="241">
-</span><span data-line="242">        <span class="k">if</span> <span class="s2">&quot;next_settings&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="243">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_settings&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-</span><span data-line="244">                <span class="n">training</span><span class="o">.</span><span class="n">get_jsonstring_from_jsonstring</span>
-</span><span data-line="245">            <span class="p">)</span>
-</span><span data-line="246">
-</span><span data-line="247">        <span class="k">return</span> <span class="n">new_df</span></div>
+</span><span data-line="233">                <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;On&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="p">):</span>
+</span><span data-line="234">                    <span class="k">return</span> <span class="s2">&quot;ON&quot;</span>
+</span><span data-line="235">                <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;OFF&quot;</span><span class="p">,</span> <span class="s2">&quot;Off&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
+</span><span data-line="236">                    <span class="k">return</span> <span class="s2">&quot;OFF&quot;</span>
+</span><span data-line="237">                <span class="k">if</span> <span class="s2">&quot;|&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+</span><span data-line="238">                    <span class="k">return</span> <span class="n">value</span>
+</span><span data-line="239">                <span class="n">days</span> <span class="o">=</span> <span class="p">[</span><span class="n">day</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)]</span>
+</span><span data-line="240">                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">day</span> <span class="ow">in</span> <span class="n">weekdays</span> <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">days</span><span class="p">):</span>
+</span><span data-line="241">                    <span class="k">return</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
+</span><span data-line="242">                <span class="k">return</span> <span class="s2">&quot;OFF&quot;</span>
+</span><span data-line="243">
+</span><span data-line="244">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_active</span><span class="p">)</span>
+</span><span data-line="245">
+</span><span data-line="246">        <span class="k">if</span> <span class="s2">&quot;next_settings&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="247">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_settings&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+</span><span data-line="248">                <span class="n">training</span><span class="o">.</span><span class="n">get_jsonstring_from_jsonstring</span>
+</span><span data-line="249">            <span class="p">)</span>
+</span><span data-line="250">
+</span><span data-line="251">        <span class="k">return</span> <span class="n">new_df</span></div>
 </div>
 
 </span></pre></div>
@@ -775,7 +779,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=79b74b37"></script>
+      <script src="../../../_static/documentation_options.js?v=63416afe"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
