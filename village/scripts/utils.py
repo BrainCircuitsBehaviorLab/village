@@ -59,8 +59,13 @@ def change_system_directory_settings() -> None:
         try:
             os.rename(old_system_directory, new_system_directory)
         except Exception:
-            pass
+            logging.warning(
+                "Could not rename system directory from %s to %s",
+                old_system_directory,
+                new_system_directory,
+            )
 
+    Path(new_system_directory).mkdir(parents=True, exist_ok=True)
     settings.set("SYSTEM_DIRECTORY", new_system_directory)
 
 

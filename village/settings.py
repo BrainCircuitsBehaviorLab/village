@@ -230,7 +230,7 @@ device_settings = [
     ),
     Setting(
         "IR_LIGHT_CORRIDOR_INDEX",
-        7,
+        0,
         int,
         "The index of the infrared light of the corridor.",
     ),
@@ -247,7 +247,7 @@ device_settings = [
     ),
     Setting(
         "IR_LIGHT_BOX_INDEX",
-        7,
+        0,
         int,
         "The index of the infrared light of the box.",
     ),

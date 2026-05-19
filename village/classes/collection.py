@@ -59,7 +59,8 @@ class Collection:
         self.columns: list[str] = columns
         self.types: list[Type] = types
         self.dict = {col: t for col, t in zip(self.columns, self.types)}
-        self.path: Path = Path(settings.get("SYSTEM_DIRECTORY")) / (name + ".csv")
+        filename = name if name.endswith(".csv") else name + ".csv"
+        self.path: Path = Path(settings.get("SYSTEM_DIRECTORY")) / filename
         self.df = pd.DataFrame()
 
         if name != "":

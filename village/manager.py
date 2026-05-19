@@ -131,6 +131,7 @@ class Manager:
         self.cycle_change_detector = time_utils.CycleChangeDetector(
             settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
         )
+        utils.change_system_directory_settings()
         utils.download_github_repositories(settings.get("GITHUB_REPOSITORY_EXAMPLES"))
         utils.create_directories()
         self.create_collections()
@@ -614,7 +615,7 @@ class Manager:
         elif self.visible_box_cycle == Cycle.OFF:
             visible_light_box.off()
         elif task_running:
-            visible_light_box
+            visible_light_box.on()
         else:
             visible_light_box.off()
 

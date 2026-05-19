@@ -83,6 +83,11 @@ ul.purple-bullets li::marker {
     cursor: pointer;
 }
 
+/* Reduce vertical spacing between nav items (default is 0.6rem) */
+.globaltoc li {
+    margin: 0.3rem 0 !important;
+}
+
 /* Wider left sidebar (default is 18rem) */
 @media (min-width: 768px) {
     .sy-lside {
