@@ -517,10 +517,25 @@ data-aria-dark="Switch to auto color mode">
 <li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The subject’s name.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: The ID of its RFID capsule.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">basal_weight</span></code>: Weigh the animal to record its baseline weight as a reference.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">active</span></code>: Change the value to ON to allow the animal to access the behavioral box.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>: By default, this is set to the date and time the subject is created.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">next_settings</span></code>: Assigns the settings defined as default settings in the training protocol.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">active</span></code>: Controls when the subject is allowed to access the behavioral box. The available options are:</p>
+<ul>
+<li><p><strong>ON</strong>: the subject can access the box at any time.</p></li>
+<li><p><strong>OFF</strong>: the subject cannot access the box.</p></li>
+<li><p><strong>Custom schedule</strong>: by double-clicking the cell, a dialog opens where you can select specific days of the week and, for each day, the individual hours (0–23) during which the subject is active. This allows fine-grained control — for example, restricting access to weekdays between 8:00 and 20:00.</p></li>
 </ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>: By default, this is set to the date and time the subject is created. After each session ends, the training protocol automatically updates this field to schedule the next allowed session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next_settings</span></code>: Stores the task variables that will be applied at the start of the subject’s next session. When a subject is created, these values are automatically populated with the default values defined in the training protocol. To inspect or modify them, double-click the cell to open an editor showing all available variables. After each session ends, the training protocol automatically updates this field based on the subject’s performance and the progression logic you have defined.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If new variables are added to the training protocol after a subject has already been created, they will appear automatically with their default values the next time the <code class="docutils literal notranslate"><span class="pre">next_settings</span></code> cell is opened or the table is saved — no manual update is required. Variables that are removed from the protocol will silently disappear on the next save.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Renaming a variable in the training protocol is strongly discouraged once data collection has started. The system identifies variables by name, so renaming one causes its stored value to be permanently lost for all existing subjects — the renamed variable will revert to its default value on the next session.</p>
+</div>
+<p><br><br><br></p>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -560,7 +575,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=294121ee"></script>
+      <script src="../_static/documentation_options.js?v=a970d919"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

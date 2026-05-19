@@ -435,7 +435,12 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#interrogate-the-system">Interrogate the system</a></li>
-<li><a class="reference internal" href="#subject-checks-performed-twice-a-day">Subject Checks Performed Twice a Day</a></li>
+<li><a class="reference internal" href="#hourly-diagnostics">Hourly Diagnostics</a></li>
+<li><a class="reference internal" href="#subject-health-checks-twice-daily">Subject Health Checks (Twice Daily)</a><ul>
+<li><a class="reference internal" href="#triggered-warnings-ordered-from-least-to-most-critical">Triggered Warnings (Ordered from Least to Most Critical):</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#post-session-checks">Post-Session Checks</a></li>
 <li><a class="reference internal" href="#alarms">Alarms</a><ul>
 <li><a class="reference internal" href="#table-of-alarms">Table of Alarms</a></li>
 </ul>
@@ -526,15 +531,48 @@ All commands start with the <code class="docutils literal notranslate"><span cla
 </ul>
 </section>
 <hr class="docutils" />
-<section id="subject-checks-performed-twice-a-day">
-<h2>Subject Checks Performed Twice a Day</h2>
-<p>Whenever there is a transition between day and night, the system evaluates the state of the animals and generates a report containing the number of detections, sessions, water intake, and average weight for all subjects.</p>
-<p>A warning alarm is also sent if one or more subjects present an issue.
-Warnings (from least to most critical):</p>
+<section id="hourly-diagnostics">
+<h2>Hourly Diagnostics</h2>
+<p>Every hour, the system runs an automated background diagnostic.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Subjects</span> <span class="pre">with</span> <span class="pre">low</span> <span class="pre">water</span> <span class="pre">intake</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">last</span> <span class="pre">24h</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Subjects</span> <span class="pre">with</span> <span class="pre">no</span> <span class="pre">session</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">last</span> <span class="pre">24h</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Subjects</span> <span class="pre">not</span> <span class="pre">detected</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">last</span> <span class="pre">24h</span></code></p></li>
+<li><p><strong>Temperature Monitoring:</strong> The system checks the current room temperature against safety thresholds.</p></li>
+<li><p><strong>Activity Detection:</strong> The system flags if no animal has been detected by the RFID readers or if no behavioral sessions have been initiated for a specified number of consecutive hours (6 hours by default).</p></li>
+</ul>
+<div class="note admonition">
+<p class="admonition-title">Troubleshooting Context</p>
+<p>If your project hosts a large cohort of animals, it is highly unusual to have zero RFID detections or sessions for more than 6 consecutive hours. A silent system often points to an accidental physical barrier (e.g., a door stuck closed) or an RFID reader malfunction. If you are working with a small cohort, you may want to increase this window to prevent false alarms.</p>
+</div>
+<p>You can customize these hourly thresholds in <strong><code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code></strong> using the following variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MINIMUM_TEMPERATURE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MAXIMUM_TEMPERATURE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NO_DETECTION_HOURS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NO_SESSION_HOURS</span></code></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="subject-health-checks-twice-daily">
+<h2>Subject Health Checks (Twice Daily)</h2>
+<p>Twice a day, exactly during the programmed day-to-night and night-to-day transitions, the system evaluates individual animal metrics to generate a comprehensive cohort report. This automated message summarizes the <strong>number of detections, number of sessions, water intake, and average weight</strong> for every subject.</p>
+<p>Alongside the report, the system runs a health-screening algorithm exclusively for <strong>active subjects</strong> and broadcasts targeted warnings if an animal drops below safe behavioral baselines.</p>
+<p>You can toggle these specific alarms on/off or adjust the minimum hydration baselines in <strong><code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code></strong> using the variables: <code class="docutils literal notranslate"><span class="pre">NO_DETECTION_SUBJECT_24H</span></code>, <code class="docutils literal notranslate"><span class="pre">NO_SESSION_SUBJECT_24H</span></code>, and <code class="docutils literal notranslate"><span class="pre">MINIMUM_WATER_SUBJECT_24H</span></code>.</p>
+<section id="triggered-warnings-ordered-from-least-to-most-critical">
+<h3>Triggered Warnings (Ordered from Least to Most Critical):</h3>
+<ol class="arabic simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Subjects</span> <span class="pre">with</span> <span class="pre">low</span> <span class="pre">water</span> <span class="pre">intake</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">last</span> <span class="pre">24h</span></code></strong> → The subject’s totalized water consumption has dropped below your minimum threshold.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Subjects</span> <span class="pre">with</span> <span class="pre">no</span> <span class="pre">session</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">last</span> <span class="pre">24h</span></code></strong> → The subject has not voluntarily entered the operant box to perform a task for an entire day.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Subjects</span> <span class="pre">not</span> <span class="pre">detected</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">last</span> <span class="pre">24h</span></code></strong> → Critical warning. The subject has not passed by any RFID antenna in 24 hours, suggesting a health issue or an escape.</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="post-session-checks">
+<h2>Post-Session Checks</h2>
+<p>Immediately following the conclusion of any individual behavioral session, the system assesses the animal’s engagement data before it returns to the home cage.</p>
+<p>It validates that <strong>at least one trial was performed</strong> and that <strong>some amount of water was consumed</strong> during the session. If your experimental paradigm utilizes tasks that do not involve traditional trials or do not offer water rewards, you can easily disable these immediate notifications in your settings using the variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NO_SESSIONS_PERFORMED</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NO_WATER_DRUNK</span></code></p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -571,152 +609,125 @@ When it is not clear what sequence of events produced the alarm, review the vide
 <div class="table-wrapper colwidths-given docutils container">
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 20.0%" />
-<col style="width: 37.0%" />
-<col style="width: 37.0%" />
-<col style="width: 6.0%" />
+<col style="width: 21.3%" />
+<col style="width: 39.4%" />
+<col style="width: 39.4%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Alarm</strong></p></th>
 <th class="head"><p><strong>Description</strong></p></th>
 <th class="head"><p><strong>Solution</strong></p></th>
-<th class="head"><p><strong>Urgency</strong></p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Heartbeat Not Received ⚠️</p></td>
+<tr class="row-even"><td><p>Heartbeat Not Received</p></td>
 <td><p>The remote server did not receive the latest heartbeat signal.</p></td>
 <td><p>Check whether the system is accessible remotely. If you can connect and the Python process is frozen, try stopping it and launching it again (restart the OS if necessary). You may also find that the system is reachable but the code is not running, indicating that the Raspberry Pi has rebooted due to a power interruption. If you cannot connect remotely, there is no way to determine whether the system is functioning normally and only the internet connection is down, or whether the system is actually frozen or powered off. In this case, a physical inspection is required to ensure animal safety, as an animal may be trapped inside the operant box without access to food or water.</p></td>
-<td><p>High.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Wrong RFID detection ⚠️</p></td>
+<tr class="row-odd"><td><p>Wrong RFID detection</p></td>
 <td><p>This alarm has two possible causes: (1) a different subject was detected in the corridor while the main subject was performing the task, or (2) the correct subject was detected in the corridor even though door 2 was already closed and the subject should not be there. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.</p></td>
 <td><p>Review the previous videos to determine the cause (e.g., door malfunction, lighting issues, inaccurate camera thresholding).</p></td>
-<td><p>High.</p></td>
 </tr>
-<tr class="row-even"><td><p>Maximum time reached and areas 3 or 4 were never empty ⚠️</p></td>
+<tr class="row-even"><td><p>Maximum time reached and areas 3 or 4 were never empty</p></td>
 <td><p>After a subject enters the operant box, door 2 should close once areas 3 and 4 are empty. If the maximum task duration is reached and these areas were never cleared, the alarm is triggered. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.</p></td>
 <td><p>Check lighting and remove any dirt or objects in the corridor. Verify whether the animal fell asleep in the corridor or hesitated to enter the operant box. Review previous videos to check for door malfunction or issues with pixel detection.</p></td>
-<td><p>High.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Error running task ⚠️</p></td>
+<tr class="row-odd"><td><p>Error running task</p></td>
 <td><p>A task execution error occurred, likely caused by an exception in the task code.</p></td>
 <td><p>Inspect the event logs to obtain the full traceback and identify the line of code that triggered the error. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-even"><td><p>Error saving the task</p></td>
 <td><p>The task data could not be saved.</p></td>
 <td><p>Check the events log to inspect the traceback and identify the cause of the error.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Error updating the training settings</p></td>
 <td><p>The training settings could not be updated, so the subject will keep its previous configuration.</p></td>
 <td><p>Check the events log to inspect the traceback. The code that updates the training settings is delicate and may fail if the format of the CSV has changed unexpectedly (e.g., a column that is now a string instead of an integer). After modifying this part of the code, you can test it from the TASKS tab.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-even"><td><p>Detection in area4 when it should be empty</p></td>
 <td><p>When the operant box is empty and a subject is detected by the RFID reader, pixels are also detected in Area 4, which should be empty.</p></td>
 <td><p>Check corridor illumination and remove any dirt or objects that may cause false detection. If an animal is actually present in Area 4 when it should not be, review the previous videos to determine the cause (e.g., door malfunction, lighting issues, inaccurate camera thresholding).</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-odd"><td><p>2 Subjects in Box</p></td>
 <td><p>The pixel count suggests that more than one animal has entered the operant box.</p></td>
 <td><p>Connect remotely to verify whether this is a true event or a false alarm. If two animals are indeed inside the box, carefully open and close door 2 and door 1 to allow them to exit safely. Stop the task (this will automatically disable the RFID reader), and once everything is back to normal, ensure that door 2 is closed and door 1 is open, then reactivate the RFID reader. If this was a false alarm, check illumination, cleanliness, and pixel-detection thresholds to prevent future false detections.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-even"><td><p>Subject in Prohibited Area</p></td>
 <td><p>Pixels are detected in a region where no animal should be present.</p></td>
 <td><p>Connect remotely to confirm whether the detection is real or a false alarm. If the alarm was false, inspect illumination, cleanliness, and pixel-detection thresholds to reduce the likelihood of recurring false positives.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Invalid data in subjects.csv</p></td>
 <td><p>An error occurred while reading subjects.csv. The file may contain malformed rows, inconsistent numbers of columns, or unintended spaces or line breaks.</p></td>
 <td><p>Verify that the CSV structure is correct: all rows must contain the same number of columns, without stray spaces, tabs, or newline characters. Fix or recreate the file if needed.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-even"><td><p>Scale not responding</p></td>
 <td><p>The scale is continuously returning a weight of 0.0 grams, indicating that it is not receiving valid readings from the load cell.</p></td>
 <td><p>Inspect the scale wiring and connectors, ensuring all cables are firmly attached. Verify that the external 5V power supply is reaching the board.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-odd"><td><p>No detections in the set interval</p></td>
 <td><p>No animal has been detected by the RFID system during the last X hours (X defined in settings).</p></td>
 <td><p>Ensure that animals have unobstructed access to the corridor (no blockage, door 1 open). Check RFID cabling and confirm that the external 5V power supply is reaching the board.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-even"><td><p>No sessions in the set interval</p></td>
 <td><p>No session has been performed within the last X hours.</p></td>
 <td><p>Verify corridor access and correct RFID operation. Ensure the cameras are not falsely detecting pixels when the corridor is empty (check illumination and threshold configuration).</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Low disk space (less than 10GB)</p></td>
 <td><p>The disk is nearly full.</p></td>
 <td><p>Videos are kept on the Raspberry Pi’s SD card for X days (user-defined in settings) and are automatically deleted only after proper synchronization with an external server or drive. Review rsync_logs and data_removal_logs to confirm that files are being synchronized and deleted correctly. If necessary, reduce the number of days for which videos are stored.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-even"><td><p>Error in sound device</p></td>
 <td><p>An error occurred while attempting to play a sound.</p></td>
 <td><p>Check the events log to see the traceback and identify the exact cause of the error.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Error in video worker</p></td>
 <td><p>An error occurred while attempting to display video or visual stimuli.</p></td>
 <td><p>Check the events log to inspect the traceback and determine the source of the problem.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-even"><td><p>The session file is very large</p></td>
 <td><p>The session CSV contains more than 100,000 rows, typically caused by an abnormally high-frequency sensor event.</p></td>
 <td><p>Inspect photogates, check for cable noise, and verify that no hardware component is malfunctioning.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Subjects not detected in the last 24h</p></td>
 <td><p>The subject has not been detected by the RFID system for the last 24 hours. This check can be enabled or disabled in the settings.</p></td>
 <td><p>Check corridor access, door 1 status, and the correct functioning and power supply of the RFID system.</p></td>
-<td><p>High.</p></td>
 </tr>
 <tr class="row-even"><td><p>The subject has been in the box for too long</p></td>
 <td><p>More than one hour has passed since the task ended, and the animal remains inside the operant box.</p></td>
 <td><p>Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.</p></td>
-<td><p>Low.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Camera not responding</p></td>
 <td><p>The camera automatically restarts after failing to deliver frames for 10 seconds. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.</p></td>
 <td><p>Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts.</p></td>
-<td><p>Low.</p></td>
 </tr>
 <tr class="row-even"><td><p>Low/High temperature</p></td>
 <td><p>Temperature has risen above or fallen below the configured threshold.</p></td>
 <td><p>Verify the room temperature using an independent sensor and take the appropriate corrective measures.</p></td>
-<td><p>Low.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Subjects with low water intake in the last 24h</p></td>
 <td><p>The subject consumed less than the configured water-intake threshold during the last 24 hours.</p></td>
 <td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning correctly.</p></td>
-<td><p>Low.</p></td>
 </tr>
 <tr class="row-even"><td><p>Subjects with no session in the last 24h</p></td>
 <td><p>The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be enabled or disabled in the settings.</p></td>
 <td><p>Verify corridor access, door 1 operation, RFID functionality, and camera-based detection.</p></td>
-<td><p>Low.</p></td>
 </tr>
 <tr class="row-odd"><td><p>No data sync in the last 24h</p></td>
 <td><p>No data has been successfully synchronized with the external server or hard drive during the last 24 hours.</p></td>
 <td><p>Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.</p></td>
-<td><p>Low.</p></td>
 </tr>
 <tr class="row-even"><td><p>No water was drunk</p></td>
 <td><p>The subject did not drink any water during the task. This check can be enabled or disabled in the settings.</p></td>
 <td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning properly.</p></td>
-<td><p>Low.</p></td>
 </tr>
 <tr class="row-odd"><td><p>No trials were recorded</p></td>
 <td><p>The subject did not complete any trials. This check can be enabled or disabled in the settings.</p></td>
 <td><p>Confirm that the animal entered the operant box and did not fall asleep. Inspect the task logic and verify that all hardware components are functioning correctly.</p></td>
-<td><p>Low.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p><br><br><br></p>
 </section>
 </section>
 </section>
@@ -758,7 +769,7 @@ When it is not clear what sequence of events produced the alarm, review the vide
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=294121ee"></script>
+      <script src="../_static/documentation_options.js?v=a970d919"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

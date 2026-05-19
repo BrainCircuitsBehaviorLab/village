@@ -434,8 +434,9 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#temperature-or-weight-sensor-connection-error">Temperature or Weight Sensor Connection Error</a></li>
-<li><a class="reference internal" href="#wrong-numpy-version">Wrong numpy version</a></li>
+<li><a class="reference internal" href="#camera-issues-connection-error-or-malfunctioning">Camera Issues (Connection Error or Malfunctioning)</a></li>
+<li><a class="reference internal" href="#controller-issues-bpod-or-arduino-connection-error">Controller Issues (Bpod or Arduino Connection Error)</a></li>
+<li><a class="reference internal" href="#peripheral-issues-sensors-motors-lights-or-satellite-boards">Peripheral Issues (Sensors, Motors, Lights, or Satellite Boards)</a></li>
 </ul>
 </div></div>
   </aside>
@@ -511,45 +512,113 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="general-troubleshooting-guide">
 <h1>General Troubleshooting Guide</h1>
-<section id="temperature-or-weight-sensor-connection-error">
-<h2>Temperature or Weight Sensor Connection Error</h2>
-<p>The system is configured to work with address = 0x45 for the temperature sensor (DFRobot HX711) and address = 0x48 for the weight sensor (CQRobot SHT31). If you are using different models or if the devices are not recognized, follow these steps to verify that the addresses are correct:</p>
+<section id="camera-issues-connection-error-or-malfunctioning">
+<h2>Camera Issues (Connection Error or Malfunctioning)</h2>
 <ol class="arabic simple">
-<li><p>Check that the devices are correctly connected to the raspberry.</p></li>
-<li><p>Install the detection tools:</p></li>
+<li><p><strong>Verify Physical Connections:</strong> Ensure both camera ribbon cables are firmly seated in the Raspberry Pi 5 MIPI CSI slots and that the locking clips are engaged.</p></li>
+<li><p><strong>Check Camera Indices:</strong> Open the application GUI, navigate to <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>, and verify that your camera indices are properly assigned (typically one is <code class="docutils literal notranslate"><span class="pre">0</span></code> and the other is <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CAM_CORRIDOR_INDEX</span></code>: <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CAM_BOX_INDEX</span></code>: <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Reboot:</strong> If you swapped indices or re-seated the cables, restart the system to allow the OS to re-initialize the video devices.</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">i2c</span><span class="o">-</span><span class="n">tools</span>
-</span></pre></div>
-</div>
-<ol class="arabic simple" start="3">
-<li><p>Run the tools:</p></li>
+</section>
+<hr class="docutils" />
+<section id="controller-issues-bpod-or-arduino-connection-error">
+<h2>Controller Issues (Bpod or Arduino Connection Error)</h2>
+<ol class="arabic simple">
+<li><p><strong>Verify Physical Port:</strong> Ensure your behavioral controller is plugged into the <strong>bottom USB 3.0 port</strong> (the blue port closest to the Raspberry Pi’s onboard Ethernet connector).</p></li>
+<li><p><strong>Verify App Settings:</strong> Navigate to <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CONTROLLER</span> <span class="pre">SETTINGS</span></code> in the GUI. Ensure your specific controller type is selected and the device path is set exactly to <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code>.</p></li>
+<li><p><strong>Check System Devices:</strong> Open a terminal and check if Linux detects the hardware as a raw serial interface by running:</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">ls</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">ttyACM</span><span class="o">*</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">ttyUSB</span><span class="o">*</span>
 </span></pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><p>Change the addresses in the python code by modifying the corresponding settings in
-<code class="docutils literal notranslate"><span class="pre">village/settings.py</span></code> (extra_settings).</p></li>
+<li><p><strong>Isolate Hardware</strong>: If no device appears in step 3, try replacing the USB cable. Use a shorter, high-quality, shielded USB cable to prevent electromagnetic interference.</p></li>
+<li><p><strong>Verify Symbolic Link</strong>: Check if the automated udev rule successfully generated your symlink by running:</p></li>
 </ol>
-<p><br><br><br></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">ls</span> <span class="o">-</span><span class="n">l</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">controller</span>
+</span></pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p><strong>Fix Missing Symlink:</strong> If the raw device (<code class="docutils literal notranslate"><span class="pre">ttyACM*</span></code> or <code class="docutils literal notranslate"><span class="pre">ttyUSB*</span></code>) appears but <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code> is missing, inspect the system logs by typing <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> to find the exact port configuration, then review your rule file at <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-usb.rules</span></code>.</p></li>
+</ol>
 </section>
-<section id="wrong-numpy-version">
-<h2>Wrong numpy version</h2>
-<p>If you get an error about an incompatible NumPy version, it may be because installing another package that depends on NumPy automatically pulled NumPy 2 via pip.
-If NumPy 2 was installed by mistake, you can remove it with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">numpy</span>
-</span></pre></div>
+<hr class="docutils" />
+<section id="peripheral-issues-sensors-motors-lights-or-satellite-boards">
+<h2>Peripheral Issues (Sensors, Motors, Lights, or Satellite Boards)</h2>
+<ol class="arabic simple">
+<li><p><strong>Verify Software Activation:</strong> Open the GUI and ensure the specific satellite board you are trying to communicate with is enabled under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">MAIN</span> <span class="pre">SETTINGS</span></code>. Toggle <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> to <strong><code class="docutils literal notranslate"><span class="pre">ON</span></code></strong> depending on your active setup.</p></li>
+<li><p><strong>Verify Satellite Connections:</strong> Check that the failing component (servo, LED strip, RFID antenna) is securely connected to the correct ports on the Corridor Board or Box Board with the correct wiring polarity.</p></li>
+<li><p><strong>Check Hub-to-Satellite Cables:</strong> Ensure the Ethernet cables linking the Corridor Board and Box Board are plugged into their respective dedicated ports on the Main HAT.</p></li>
+<li><p><strong>Check HAT Seating:</strong> Ensure the Main HAT is fully pressed down and evenly seated onto the Raspberry Pi 5 GPIO header extension pins.</p></li>
+<li><p><strong>Test Power Lines:</strong> Verify that the Main HAT is receiving a stable <strong>5V (3A)</strong> from the main power supply. A drop in voltage can cause I2C chips, scales, or servos to drop off the bus randomly.</p></li>
+<li><p><strong>Verify I2C &amp; Register Addresses:</strong> Ensure the software is pointing to the correct I2C addresses and chip register pins. If your hardware profile has been modified, cross-reference your configuration under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">DEVICE</span> <span class="pre">ADDRESSES</span></code>:</p></li>
+</ol>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Device Parameter</p></th>
+<th class="head text-left"><p>Default Value / Address</p></th>
+<th class="head text-left"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">CHIP_CORRIDOR_ADDRESS</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0x55</span></code></p></td>
+<td class="text-left"><p>Main I2C chip address on the Corridor Board</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">MOTOR1_CORRIDOR_INDEX</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td class="text-left"><p>Pin channel for Corridor Door 1 Servo</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">MOTOR2_CORRIDOR_INDEX</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">5</span></code></p></td>
+<td class="text-left"><p>Pin channel for Corridor Door 2 Servo</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">VISIBLE_LIGHT_CORRIDOR_INDEX</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">6</span></code></p></td>
+<td class="text-left"><p>Pin channel for White LED illumination strip</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">IR_LIGHT_CORRIDOR_INDEX</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">7</span></code></p></td>
+<td class="text-left"><p>Pin channel for Infrared LED arrays</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">SCALE_ADDRESS</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0x48</span></code></p></td>
+<td class="text-left"><p>Onboard scale/load cell amplifier address</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">TEMP_SENSOR_ADDRESS</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0x44</span></code></p></td>
+<td class="text-left"><p>Ambient temperature sensor address</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">CHIP_BOX_ADDRESS</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0x6a</span></code></p></td>
+<td class="text-left"><p>Main I2C chip address on the Box Board</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">MOTOR1_BOX_INDEX</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td class="text-left"><p>Pin channel for Box Module Servo 1</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">MOTOR2_BOX_INDEX</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">5</span></code></p></td>
+<td class="text-left"><p>Pin channel for Box Module Servo 2</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">VISIBLE_LIGHT_BOX_INDEX</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">6</span></code></p></td>
+<td class="text-left"><p>Pin channel for Box Visible light</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">IR_LIGHT_BOX_INDEX</span></code></strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">7</span></code></p></td>
+<td class="text-left"><p>Pin channel for Box IR light</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<p>This removes only the pip-installed version (NumPy 2), while keeping the system version (NumPy 1) that was installed via apt.
-Next, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">package</span><span class="o">-</span><span class="n">name</span>
-</span></pre></div>
-</div>
-<p>to remove the package that caused NumPy 2 to be installed.
-Then install a specific version of that package that is compatible with NumPy 1, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">pip</span> <span class="n">install</span> <span class="n">package</span><span class="o">-</span><span class="n">name</span><span class="o">==&lt;</span><span class="n">version</span><span class="o">&gt;</span>
-</span></pre></div>
-</div>
+<p><br><br><br></p>
 </section>
 </section>
 
@@ -590,7 +659,7 @@ Then install a specific version of that package that is compatible with NumPy 1,
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=294121ee"></script>
+      <script src="../_static/documentation_options.js?v=a970d919"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

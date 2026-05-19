@@ -30,5 +30,4 @@ Training Village is an open-source project. We’d be glad if you’d like to do
 
 
 
-
-<br>
+<br><br><br>

@@ -13,7 +13,12 @@ Replace citric acid bottles. Change home-cages and enrichment, ensure sufficient
 **Occasionally:**
 Deliver water manually to a specific mouse (as required). Calibrate water delivery system (once every two months or if suspected malfunction occurs). Clean lickports and remove dust from water ports (once every two months). Deep-clean the touchscreen, including removal of the mask (once every four months).
 
-> **Notes on cleaning:** Before cleaning, check whether the operant box is occupied. If occupied, stop the task manually and use the automatic buttons to remove the animal. Block the corridor with a lid. After cleaning, verify that all electronic components in the operant box and corridor are functioning properly.
+```{admonition} Notes on cleaning
+:class: note
+Before cleaning, check whether the operant box is occupied. If occupied, stop the task manually and use the automatic buttons to remove the animal. Block the corridor with a lid. After cleaning, verify that all electronic components in the operant box and corridor are functioning properly.
+```
+
+<br><br><br>
 
 
 [ALARMS]: /troubleshooting/alarm.md
