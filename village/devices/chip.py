@@ -79,10 +79,10 @@ class LED:
     def set(self, value: float) -> None:
         ticks = int(4095 * value)
         if self.led_strip:
-            pwm_corridor.set_pwm(self.channel, 0, ticks)
+            self.pwm.set_pwm(self.channel, 0, ticks)
         else:
             for c in range(self.channel, self.channel + 4):
-                pwm_corridor.set_pwm(c, 0, (4095 - ticks))
+                self.pwm.set_pwm(c, 0, (4095 - ticks))
 
     def on(self) -> None:
         """Turns the LED on."""

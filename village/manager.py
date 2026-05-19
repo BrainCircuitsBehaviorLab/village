@@ -576,6 +576,10 @@ class Manager:
         """Checks the state of the corridor lights and sets them based
         on the current cycle."""
         cycle = self.cycle_change_detector.cycle_text
+        log.info(
+            f"check_corridor_lights: visible={self.visible_corridor_cycle} "
+            f"ir={self.ir_corridor_cycle} cycle={cycle}"
+        )
 
         if self.visible_corridor_cycle == Cycle.ON:
             visible_light_corridor.on()
