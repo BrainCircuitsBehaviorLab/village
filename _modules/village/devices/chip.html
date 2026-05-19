@@ -574,10 +574,10 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="79">    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="80">        <span class="n">ticks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4095</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span>
 </span><span data-line="81">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">led_strip</span><span class="p">:</span>
-</span><span data-line="82">            <span class="n">pwm_corridor</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
+</span><span data-line="82">            <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
 </span><span data-line="83">        <span class="k">else</span><span class="p">:</span>
 </span><span data-line="84">            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">+</span> <span class="mi">4</span><span class="p">):</span>
-</span><span data-line="85">                <span class="n">pwm_corridor</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">4095</span> <span class="o">-</span> <span class="n">ticks</span><span class="p">))</span></div>
+</span><span data-line="85">                <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">4095</span> <span class="o">-</span> <span class="n">ticks</span><span class="p">))</span></div>
 
 </span><span data-line="86">
 <div class="viewcode-block" id="LED.on">
@@ -701,7 +701,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=84180cc8"></script>
+      <script src="../../../_static/documentation_options.js?v=70d35d85"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
