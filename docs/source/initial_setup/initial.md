@@ -27,7 +27,7 @@ Before powering on the system, ensure all hardware components are properly assem
 5. **System Placement:** Carefully place the fully stacked Raspberry Pi assembly and the cameras into their designated physical positions on the corridor structure.
 6. **Corridor Board Configuration:** Mount the Corridor Board in its position on the corridor and connect all of its local peripherals: servo motors, RFID reader, weighing scale, white LED strips, and IR LEDs. **Always double-check correct wiring polarities** before plugging them in.
 7. **Satellite-to-Hub Wiring:** Connect the Corridor Board to the Raspberry Pi assembly using a standard Ethernet cable. **It is vital to plug this into the correct port**, as the Main HAT features two distinct Ethernet ports: one labeled **Corridor** and one labeled **Box**. If your configuration utilizes the Box Board (for operant box lighting or other peripherals), connect it to the "Box" port at this time.
-8. **Behavioral Controller:** If you are using a Bpod (or any other external behavioral controller), connect it to the **bottom USB port** closest to the Raspberry Pi's onboard Ethernet port.
+8. **Behavioral Controller:** If you are using a Bpod (or any other external behavioral controller), connect it to the **bottom USB port** closest to the Raspberry Pi's Ethernet port.
 9. **System Power:** Connect a high-quality **5V, 3A power supply** directly to the power input on the Raspberry Pi's **Main HAT**. Using a 3A power source is mandatory to ensure there is enough current to reliably power all visible and IR illumination LEDs simultaneously.
 
 ![Connections](/_static/connections.png)
@@ -51,7 +51,7 @@ The easiest way to do this is to connect a keyboard, mouse, monitor (via micro-H
 With the local setup complete and the system online, you can proceed to the next section to configure your preferred [Remote Access Method](#remote-access-setup).
 
 
-<br>
+<br><br><br>
 
 
 [INSTRUCTIONS]: /resources/hardware.md

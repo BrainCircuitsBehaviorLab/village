@@ -178,7 +178,7 @@ sudo nano 99-usb.rules
 SUBSYSTEM=="tty", KERNELS=="3-1:1.0", SYMLINK+="controller"
 ```
 
-Note: The USB port identifier (KERNELS=="3-1:1.0") may vary depending on the physical USB port you are using. For reference, the 3-1:1.0 port on the Raspberry Pi is usually the USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command `dmesg` after connecting the device.
+Note: The USB port identifier (KERNELS=="3-1:1.0") may vary depending on the physical USB port you are using. For reference, the 3-1:1.0 port on the Raspberry Pi is usually the bottom USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command `dmesg` after connecting the device.
 
 4. Activate the new rule by triggering the Udev process:
 
@@ -293,4 +293,4 @@ village
 [IMAGE]: image.md
 [UPDATE]: https://www.raspberrypi.com/documentation/computers/os.html
 
-<br>
+<br><br><br>

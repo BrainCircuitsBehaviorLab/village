@@ -70,6 +70,6 @@ To verify that everything is working correctly, go to your Telegram group chat a
 - `/report`
 - `/plot`
 
-<br>
+<br><br><br>
 
 [ALARM]: /troubleshooting/alarm.md

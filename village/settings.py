@@ -306,7 +306,7 @@ triggered.""",
         400,
         int,
         """This check is performed every time the system switches between day and night.
-If any animal drinks less than the specified minimum water intake (in mL) over a 24-hour
+If any animal drinks less than the specified minimum water intake (in µL) over a 24-hour
 period, an alarm is triggered.""",
     ),
 ]

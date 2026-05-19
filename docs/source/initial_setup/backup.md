@@ -35,4 +35,4 @@ Meaning: No data has been successfully backed up to the external server or hard 
 
 Action Required: Review the logs inside the rsync_logs folder to identify the specific transfer error, and verify your network connectivity or remote storage availability.
 
-<br>
+<br><br><br>

@@ -3,6 +3,8 @@ exclude: 'conf\.py|^village/pybpodapi/v2\.(2|3)/'
 # Configuring https://pre-commit.ci/
 ci:
     autoupdate_schedule: monthly
+    skip:
+      - pytest-unit
 
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks

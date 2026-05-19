@@ -37,4 +37,4 @@ To ensure all connectivity alerts arrive in the exact same Telegram group chat u
 Once saved, the Training Village will immediately send its first heartbeat signal. Refresh your healthchecks.io dashboard web page; the status indicator for your check should turn from a grey "New" state into a green "Passed" state.
 ```
 
-<br>
+<br><br><br>

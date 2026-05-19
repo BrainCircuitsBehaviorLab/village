@@ -77,4 +77,4 @@ Below is a summary of the standard operational cycle:
 
 ![Standard Operational Cycle Workflow](/_static/workflow.png)
 
-<br>
+<br><br><br>
