@@ -7,9 +7,9 @@
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=069729ed" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d0a70041" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,7 +19,8 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/>
+    
+  <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.custom_classes.task.html"/>
   <meta property="og:title" content="task"/>
     <meta name="twitter:card" content="summary"/>
@@ -645,21 +646,8 @@ Available inside <code class="docutils literal notranslate"><span class="pre">af
 <dt>self.settings<span class="classifier">Settings</span></dt><dd><p>Object that holds all the session parameters defined in the training
 protocol. Read and write its attributes to implement adaptive training.</p>
 </dd>
-<dt>self.sound_calibration.get_sound_gain(speaker, dB, sound_name)</dt><dd><p>to convert a target dB level into a hardware gain value.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">65.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">&quot;white_noise&quot;</span>
-</span><span data-line="3"><span class="p">)</span>
-</span></pre></div>
-</div>
-</dd>
-<dt>self.bpod_water_calibration.get_valve_time(port, volume)</dt><dd><p>to convert a target volume (µl) into the valve open time (seconds).</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">valve_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bpod_water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">5.0</span>  <span class="c1"># 5 µl</span>
-</span><span data-line="3"><span class="p">)</span>
-</span></pre></div>
-</div>
+<dt>self.calibrations<span class="classifier">Calibrations</span></dt><dd><p>Object that holds the task’s calibrations. Call its methods to convert
+between hardware values and real-world units.</p>
 </dd>
 <dt>self.bpod<span class="classifier">BpodController</span></dt><dd><p>Low-level Bpod interface (state machine construction, sending, etc.).
 Primarily used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p>
@@ -860,9 +848,9 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a970d919"></script>
+      <script src="../_static/documentation_options.js?v=84180cc8"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-      <script src="../_static/shibuya.js?v=cac61aee"></script></body>
+      <script src="../_static/shibuya.js?v=50760d75"></script></body>
 </html>
