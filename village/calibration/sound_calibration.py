@@ -39,6 +39,7 @@ class SoundCalibrationTask(Task):
     def __init__(
         self, speaker: int, gain: float, sound_index: int, duration: float
     ) -> None:
+        super().__init__()
         self.speaker = speaker
         self.gain = gain
         self.sound_index = sound_index
