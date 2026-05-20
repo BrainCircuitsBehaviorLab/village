@@ -8,6 +8,7 @@ import pandas as pd
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QColor, QFont, QFontMetrics, QPixmap
 from PyQt5.QtWidgets import (
+    QCheckBox,
     QDialog,
     QHBoxLayout,
     QHeaderView,
@@ -1126,52 +1127,32 @@ class VirtualMouseLayout(Layout):
                 "Start/stop the automated virtual-mouse agent",
                 color="lightblue",
             )
+
+            # Build custom autonomouse parameters automatically
+            # based on the PARAMS list.
+            self._col_auto = col_auto
+            self._inject_param_widgets: dict = {}
+            self._inject_param_row_start = row_auto + 2
+            row_after = self._build_inject_param_widgets()
+
+            # Inject button first, then N / Interval below it.
+            self.inject_button = self.create_and_add_button(
+                "Inject Trials", row_after + 2, col_auto, 15, 2,
+                self._inject_trials, "Inject N mock trials", "lightgreen")
+
             self.create_and_add_label(
-                "p correct L",
-                row_auto + 2,
-                col_auto,
-                10,
-                2,
-                "black",
-                description="P(correct | reward LEFT)",
-            )
-            self.p_left_edit = self.create_and_add_line_edit(
-                "0.80", row_auto + 2, col_auto + 10, 4, 2, lambda: None
-            )
-            self.create_and_add_label(
-                "p correct R",
-                row_auto + 4,
-                col_auto,
-                10,
-                2,
-                "black",
-                description="P(correct | reward RIGHT)",
-            )
-            self.p_right_edit = self.create_and_add_line_edit(
-                "0.80", row_auto + 4, col_auto + 10, 4, 2, lambda: None
-            )
-            self.create_and_add_label(
-                "N inject",
-                row_auto + 6,
-                col_auto,
-                10,
-                2,
-                "black",
-                description="Number of mock trials to inject",
-            )
+                "N inject", row_after + 4, col_auto, 10, 2, "black",
+                description="Number of mock trials to inject")
+
             self.n_inject_edit = self.create_and_add_line_edit(
-                "10", row_auto + 6, col_auto + 10, 4, 2, lambda: None
-            )
-            self.create_and_add_button(
-                "Inject Trials",
-                row_auto + 8,
-                col_auto,
-                15,
-                2,
-                self._inject_trials,
-                "Inject N trials using p correct L/R into session_df",
-                color="lightgreen",
-            )
+                "300", row_after + 4, col_auto + 10, 4, 2, lambda: None)
+
+            self.create_and_add_label(
+                "Interval (s)", row_after + 6, col_auto, 10, 2, "black",
+                description="Interval (in s) between trial injections")
+
+            self.interval_inject_edit = self.create_and_add_line_edit(
+                "0.1", row_after + 6, col_auto + 10, 4, 2, lambda: None)
         else:
             row_touch = 4
 
@@ -1243,19 +1224,44 @@ class VirtualMouseLayout(Layout):
             self.x_line_edit.setText("0")
             self.y_line_edit.setText("0")
 
-    def _get_p(self, edit, default: float = 0.80) -> float:
-        try:
-            v = float(edit.text())
-            return max(0.0, min(1.0, v))
-        except ValueError:
-            edit.setText(str(default))
-            return default
+    def _build_inject_param_widgets(self) -> int:
+        """Create one label and lineedit per PARAMS entry
+        and then returns next free row for next labels."""
+        col_auto = self._col_auto
+        self._inject_param_widgets.clear()
+        row = self._inject_param_row_start
+        for param in manager.auto_no_mouse.PARAMS:
+            self.create_and_add_label(
+                param.label, row, col_auto, 10, 2, "black",
+                description=param.tooltip)
+            if param.type_ is bool:
+                widget = QCheckBox()
+                widget.setChecked(bool(param.default))
+                widget.setToolTip(param.tooltip)
+                self.addWidget(widget, row, col_auto + 10, 2, 4)
+            else:
+                widget = self.create_and_add_line_edit(
+                    str(param.default), row, col_auto + 10, 4, 2, lambda: None)
+            self._inject_param_widgets[param.name] = widget
+            row += 2
+        return row
 
-    def _get_p_left(self) -> float:
-        return self._get_p(self.p_left_edit)
-
-    def _get_p_right(self) -> float:
-        return self._get_p(self.p_right_edit)
+    def _get_inject_kwargs(self) -> dict:
+        result = {}
+        for param in manager.auto_no_mouse.PARAMS:
+            widget = self._inject_param_widgets.get(param.name)
+            if widget is None:
+                result[param.name] = param.default
+                continue
+            if isinstance(widget, QCheckBox):
+                result[param.name] = widget.isChecked()
+            else:
+                try:
+                    result[param.name] = param.clamp(widget.text())
+                except (ValueError, TypeError):
+                    widget.setText(str(param.default))
+                    result[param.name] = param.default
+        return result
 
     def _get_n_inject(self) -> int:
         try:
@@ -1265,19 +1271,31 @@ class VirtualMouseLayout(Layout):
             self.n_inject_edit.setText("10")
             return 10
 
+    def _get_interval_inject(self) -> float:
+        try:
+            v = float(self.interval_inject_edit.text())
+            return max(0.0, v)
+        except ValueError:
+            self.interval_inject_edit.setText("1.0")
+            return 1.0
+
     def auto_no_mouse_clicked(self) -> None:
         """Toggle AutoNoMouse on/off."""
         if self._anm is not None and self._anm.running:
             self._anm.stop()
             self._anm = None
             self.auto_no_mouse_button.setText("▶  AutoNoMouse")
-            self.auto_no_mouse_button.setStyleSheet("background-color: lightblue;")
+            self.auto_no_mouse_button.setStyleSheet(
+                "background-color: lightblue;")
             return
 
         self._anm = manager.auto_no_mouse
         self._anm.task = manager.task
-        self._anm.accuracy_left = self._get_p_left()
-        self._anm.accuracy_right = self._get_p_right()
+        # Update autonomouse parameters based on the current values in the GUI.
+        kwargs = self._get_inject_kwargs()
+        for param in self._anm.PARAMS:
+            if param.name in kwargs:
+                setattr(self._anm, param.name, kwargs[param.name])
         self._anm.start()
         self.auto_no_mouse_button.setText("■  AutoNoMouse")
         self.auto_no_mouse_button.setStyleSheet("background-color: salmon;")
@@ -1286,15 +1304,35 @@ class VirtualMouseLayout(Layout):
         if self._anm is not None and not self._anm.running:
             self._anm = None
             self.auto_no_mouse_button.setText("▶  AutoNoMouse")
-            self.auto_no_mouse_button.setStyleSheet("background-color: lightblue;")
+            self.auto_no_mouse_button.setStyleSheet(
+                "background-color: lightblue;")
+        injector = manager.auto_no_mouse
+        if hasattr(self, "inject_button"):
+            if not injector.injecting and self.inject_button.text() == "■  Stop Inject":
+                self.inject_button.setText("Inject Trials")
+                self.inject_button.setStyleSheet("background-color: lightgreen;")
 
     def _inject_trials(self) -> None:
-        p_l, p_r = self._get_p_left(), self._get_p_right()
         injector = manager.auto_no_mouse
+        if injector.injecting:
+            injector.stop_inject()
+            self.inject_button.setText("Inject Trials")
+            self.inject_button.setStyleSheet("background-color: lightgreen;")
+            return
+        # Stop autonomouse if running so run_trial doesn't conflict
+        if self._anm is not None and self._anm.running:
+            self._anm.stop()
+            self._anm = None
+            self.auto_no_mouse_button.setText("▶  AutoNoMouse")
+            self.auto_no_mouse_button.setStyleSheet(
+                "background-color: lightblue;")
+        kwargs = self._get_inject_kwargs()
         injector.task = manager.task
-        injector.accuracy_left = p_l
-        injector.accuracy_right = p_r
-        injector.inject_trials(self._get_n_inject(), p_l, p_r)
+        injector.inject_trials(self._get_n_inject(),
+                               interval=self._get_interval_inject(),
+                               **kwargs)
+        self.inject_button.setText("■  Stop Inject")
+        self.inject_button.setStyleSheet("background-color: salmon;")
 
 
 class FunctionsLayout(Layout):
