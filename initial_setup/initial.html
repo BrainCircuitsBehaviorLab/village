@@ -436,7 +436,12 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#preliminary-steps">Preliminary Steps</a></li>
-<li><a class="reference internal" href="#hardware-connections">Hardware Connections</a></li>
+<li><a class="reference internal" href="#hardware-connections">Hardware Connections</a><ul>
+<li><a class="reference internal" href="#phase-1-core-raspberry-pi-assembly">Phase 1: Core Raspberry Pi Assembly</a></li>
+<li><a class="reference internal" href="#phase-2-hat-stacking-architecture">Phase 2: HAT Stacking Architecture</a></li>
+<li><a class="reference internal" href="#phase-3-peripheral-power-distribution">Phase 3: Peripheral &amp; Power Distribution</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#first-boot-os-configuration">First Boot &amp; OS Configuration</a><ul>
 <li><a class="reference internal" href="#setting-up-the-os">Setting Up the OS:</a></li>
 </ul>
@@ -528,21 +533,38 @@ data-aria-dark="Switch to auto color mode">
 <hr class="docutils" />
 <section id="hardware-connections">
 <h2>Hardware Connections</h2>
-<p>Before powering on the system, ensure all hardware components are properly assembled.</p>
-<ol class="arabic simple">
-<li><p><strong>Core Unit Assembly:</strong> Insert the microSD card (pre-loaded with the operating system and required software) into the Raspberry Pi 5 slot. Securely mount the heat sink onto the Raspberry Pi processor.</p></li>
-<li><p><strong>Camera Installation:</strong> Connect the two camera ribbon cables to the Pi. For optimal signal integrity, keep these cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable. If 50 cm is not long enough to reach your operant box camera mount, use a ribbon cable extension paired with a dedicated FFC adapter.</p></li>
-<li><p><strong>Main HAT Installation:</strong> Place the <strong>Main HAT</strong> onto the Raspberry Pi 5 GPIO pins. Use a GPIO header extension/spacer to increase the vertical clearance between the Pi and the HAT. <strong>Crucial:</strong> Ensure the Main HAT has two <strong>5A fuses</strong> installed before proceeding.</p></li>
-<li><p><strong>Audio HAT Stack:</strong> Mount the <strong>Audio HAT</strong> directly on top of the Main HAT. No additional spacer or vertical adapter is required for this layer.</p></li>
-<li><p><strong>System Placement:</strong> Carefully place the fully stacked Raspberry Pi assembly and the cameras into their designated physical positions on the corridor structure.</p></li>
-<li><p><strong>Corridor Board Configuration:</strong> Mount the Corridor Board in its position on the corridor and connect all of its local peripherals: servo motors, RFID reader, weighing scale, white LED strips, and IR LEDs. <strong>Always double-check correct wiring polarities</strong> before plugging them in.</p></li>
-<li><p><strong>Satellite-to-Hub Wiring:</strong> Connect the Corridor Board to the Raspberry Pi assembly using a standard Ethernet cable. <strong>It is vital to plug this into the correct port</strong>, as the Main HAT features two distinct Ethernet ports: one labeled <strong>Corridor</strong> and one labeled <strong>Box</strong>. If your configuration utilizes the Box Board (for operant box lighting or other peripherals), connect it to the “Box” port at this time.</p></li>
-<li><p><strong>Behavioral Controller:</strong> If you are using a Bpod (or any other external behavioral controller), connect it to the <strong>bottom USB port</strong> closest to the Raspberry Pi’s Ethernet port.</p></li>
-<li><p><strong>System Power:</strong> Connect a high-quality <strong>5V, 3A power supply</strong> directly to the power input on the Raspberry Pi’s <strong>Main HAT</strong>. Using a 3A power source is mandatory to ensure there is enough current to reliably power all visible and IR illumination LEDs simultaneously.</p></li>
-</ol>
-<p><img alt="Connections" src="../_images/connections.png" /></p>
+<div class="admonition-critical-power-wiring-warning admonition">
+<p class="admonition-title">CRITICAL POWER &amp; WIRING WARNING</p>
+<p>Never hot-plug peripherals: Ensure the main power supply is completely disconnected before plugging or unplugging any HAT, board, servo, or sensor.</p>
+</div>
+<section id="phase-1-core-raspberry-pi-assembly">
+<h3>Phase 1: Core Raspberry Pi Assembly</h3>
+<p><strong>Storage &amp; Cooling</strong>: Insert the pre-loaded microSD card into the Raspberry Pi 5 slot. Securely mount the official Active Cooler onto the Raspberry Pi processor.
+<strong>Camera Integration</strong>: Connect the two camera ribbon cables to the Pi. For optimal signal integrity, keep these cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable. If 50 cm is not long enough to reach your operant box camera mount, use a ribbon cable extension paired with a dedicated FFC adapter.</p>
+<p><img alt="Boards1" src="../_images/boards1.png" /></p>
+<p><strong>Enclosure Mounting</strong>: Place the Raspberry Pi into its dedicated 3D-printed enclosure (Raspberry Box) and secure it with screws.</p>
+<p><img alt="Boards2" src="../_images/boards2.png" /></p>
 </section>
-<hr class="docutils" />
+<section id="phase-2-hat-stacking-architecture">
+<h3>Phase 2: HAT Stacking Architecture</h3>
+<p><strong>Main HAT Preparation</strong>: Insert two 5A fuses into their designated slots on the Main HAT. To ensure proper vertical clearance and prevent short circuits between components, install a GPIO header extension/spacer alongside plastic standoffs on the board.</p>
+<p><img alt="Boards3" src="../_images/boards3.png" /></p>
+<p><strong>Main HAT Mounting</strong>: Align and carefully press the Main HAT down onto the Raspberry Pi’s 40-pin GPIO header.</p>
+<p><img alt="Boards4" src="../_images/boards4.png" /></p>
+<p><strong>Audio HAT Preparation</strong>: Install another GPIO header extension/spacer and plastic standoffs onto the Audio HAT to stack it safely above the previous layer.</p>
+<p><img alt="Boards5" src="../_images/boards5.png" /></p>
+<p><strong>Audio HAT Mounting</strong>: Press the Audio HAT firmly on top of the Main HAT, completing the primary hardware stack.</p>
+<p><img alt="Boards6" src="../_images/boards6.png" /></p>
+<p><img alt="Boards7" src="../_images/boards7.png" /></p>
+</section>
+<section id="phase-3-peripheral-power-distribution">
+<h3>Phase 3: Peripheral &amp; Power Distribution</h3>
+<p><strong>Corridor Board Setup</strong>: Mount the Corridor Board in its fixed position on the physical corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale (load cell), white LED strips, and IR illumination LEDs. Always double-check wiring polarities against the board silk-screen before insertion.</p>
+<p><strong>Infrastructure Cabling</strong>: Connect the Corridor Board to the Raspberry Pi assembly using a standard Ethernet cable. <strong>It is vital to plug this into the correct port</strong>, as the Main HAT features two distinct Ethernet ports: one labeled <strong>Corridor</strong> and one labeled <strong>Box</strong>. If your configuration utilizes the Box Board (for operant box lighting or other peripherals), connect it to the “Box” port at this time.</p>
+<p><strong>Behavioral Controller (Optional)</strong>: If your experimental paradigm integrates a Bpod (or any other external behavioral controller), connect its USB cable to the bottom USB 3.0 port (the blue port closest to the Raspberry Pi’s native Ethernet jack).</p>
+<p><strong>System Power</strong>: Connect your dedicated 5V, 3A power supply directly to the power input barrel jack located on the Main HAT. Using a 3A power source is mandatory to ensure there is enough current to reliably power all visible and IR illumination LEDs simultaneously.</p>
+</section>
+</section>
 <section id="first-boot-os-configuration">
 <h2>First Boot &amp; OS Configuration</h2>
 <p>To complete the initial setup, configure the internet connection, and enable remote management, you will temporarily need <strong>local access</strong> to the system.</p>
@@ -560,7 +582,6 @@ data-aria-dark="Switch to auto color mode">
 <li><p>Leave the username as <code class="docutils literal notranslate"><span class="pre">pi</span></code>, but <strong>change the password</strong> to a secure one of your choice.</p></li>
 <li><p>Once the setup wizard completes, configure your internet connection via the Wi-Fi icon in the top-right corner (or leave it on Ethernet).</p></li>
 </ol>
-<p>With the local setup complete and the system online, you can proceed to the next section to configure your preferred Remote Access Method.</p>
 <p><br><br><br></p>
 </section>
 </section>
@@ -603,7 +624,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=b5b5a829"></script>
+      <script src="../_static/documentation_options.js?v=87a31cc9"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

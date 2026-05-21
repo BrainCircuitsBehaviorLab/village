@@ -694,482 +694,485 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="172"><span class="sd">        Returns:</span>
 </span><span data-line="173"><span class="sd">            datetime.datetime: Parsed datetime object.</span>
 </span><span data-line="174"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="175">        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span></div>
+</span><span data-line="175">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="176">            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+</span><span data-line="177">        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span data-line="178">            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="176">
+</span><span data-line="179">
 <div class="viewcode-block" id="TimeUtils.time_from_setting_string">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.time_from_setting_string">[docs]</a>
-</span><span data-line="177">    <span class="k">def</span><span class="w"> </span><span class="nf">time_from_setting_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">:</span>
-</span><span data-line="178"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses a time string from settings.</span>
-</span><span data-line="179">
-</span><span data-line="180"><span class="sd">        Args:</span>
-</span><span data-line="181"><span class="sd">            string (str): Time string (&quot;%H:%M&quot;).</span>
+</span><span data-line="180">    <span class="k">def</span><span class="w"> </span><span class="nf">time_from_setting_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">:</span>
+</span><span data-line="181"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses a time string from settings.</span>
 </span><span data-line="182">
-</span><span data-line="183"><span class="sd">        Returns:</span>
-</span><span data-line="184"><span class="sd">            datetime.time: Parsed time object, defaults to 08:00 on error.</span>
-</span><span data-line="185"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="186">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="187">            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-</span><span data-line="188">        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-</span><span data-line="189">            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+</span><span data-line="183"><span class="sd">        Args:</span>
+</span><span data-line="184"><span class="sd">            string (str): Time string (&quot;%H:%M&quot;).</span>
+</span><span data-line="185">
+</span><span data-line="186"><span class="sd">        Returns:</span>
+</span><span data-line="187"><span class="sd">            datetime.time: Parsed time object, defaults to 08:00 on error.</span>
+</span><span data-line="188"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="189">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="190">            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span><span data-line="191">        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+</span><span data-line="192">            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
-</span><span data-line="190">
+</span><span data-line="193">
 <div class="viewcode-block" id="TimeUtils.date_from_path">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.date_from_path">[docs]</a>
-</span><span data-line="191">    <span class="k">def</span><span class="w"> </span><span class="nf">date_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
-</span><span data-line="192"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts date from a file path based on filename convention.</span>
-</span><span data-line="193">
-</span><span data-line="194"><span class="sd">        Args:</span>
-</span><span data-line="195"><span class="sd">            path (str): File path.</span>
+</span><span data-line="194">    <span class="k">def</span><span class="w"> </span><span class="nf">date_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+</span><span data-line="195"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts date from a file path based on filename convention.</span>
 </span><span data-line="196">
-</span><span data-line="197"><span class="sd">        Returns:</span>
-</span><span data-line="198"><span class="sd">            datetime.datetime: Extracted date.</span>
-</span><span data-line="199"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="200">        <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
-</span><span data-line="201">        <span class="n">date_str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
-</span><span data-line="202">        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span></div>
+</span><span data-line="197"><span class="sd">        Args:</span>
+</span><span data-line="198"><span class="sd">            path (str): File path.</span>
+</span><span data-line="199">
+</span><span data-line="200"><span class="sd">        Returns:</span>
+</span><span data-line="201"><span class="sd">            datetime.datetime: Extracted date.</span>
+</span><span data-line="202"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="203">        <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+</span><span data-line="204">        <span class="n">date_str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+</span><span data-line="205">        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="203">
+</span><span data-line="206">
 <div class="viewcode-block" id="TimeUtils.days_ago_init_times">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.days_ago_init_times">[docs]</a>
-</span><span data-line="204">    <span class="k">def</span><span class="w"> </span><span class="nf">days_ago_init_times</span><span class="p">(</span>
-</span><span data-line="205">        <span class="bp">self</span><span class="p">,</span>
-</span><span data-line="206">        <span class="n">first</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
-</span><span data-line="207">        <span class="n">second</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
-</span><span data-line="208">        <span class="n">days</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span data-line="209">        <span class="n">time_to_end</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="210">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
-</span><span data-line="211"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates initialization times for a previous day.</span>
-</span><span data-line="212">
-</span><span data-line="213"><span class="sd">        Args:</span>
-</span><span data-line="214"><span class="sd">            first (datetime.time): First time.</span>
-</span><span data-line="215"><span class="sd">            second (datetime.time): Second time.</span>
-</span><span data-line="216"><span class="sd">            days (int): Days ago.</span>
-</span><span data-line="217"><span class="sd">            time_to_end (datetime.datetime | None): End time reference.</span>
-</span><span data-line="218">
-</span><span data-line="219"><span class="sd">        Returns:</span>
-</span><span data-line="220"><span class="sd">            Tuple[datetime.datetime, datetime.datetime]: Calculated datetimes.</span>
-</span><span data-line="221"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="222">
-</span><span data-line="223">        <span class="n">end</span> <span class="o">=</span> <span class="n">time_to_end</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-</span><span data-line="224">
-</span><span data-line="225">        <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="n">end</span><span class="o">.</span><span class="n">time</span><span class="p">():</span>
-</span><span data-line="226">            <span class="n">day</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="227">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="228">            <span class="n">day</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
-</span><span data-line="229">
-</span><span data-line="230">        <span class="n">v1</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-</span><span data-line="231">            <span class="n">hour</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
-</span><span data-line="232">            <span class="n">minute</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
-</span><span data-line="233">            <span class="n">second</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
-</span><span data-line="234">            <span class="n">microsecond</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
-</span><span data-line="235">        <span class="p">)</span>
-</span><span data-line="236">        <span class="n">v2</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-</span><span data-line="237">            <span class="n">hour</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
-</span><span data-line="238">            <span class="n">minute</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
-</span><span data-line="239">            <span class="n">second</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
-</span><span data-line="240">            <span class="n">microsecond</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
-</span><span data-line="241">        <span class="p">)</span>
-</span><span data-line="242">        <span class="k">return</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span></div>
+</span><span data-line="207">    <span class="k">def</span><span class="w"> </span><span class="nf">days_ago_init_times</span><span class="p">(</span>
+</span><span data-line="208">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="209">        <span class="n">first</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+</span><span data-line="210">        <span class="n">second</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+</span><span data-line="211">        <span class="n">days</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span data-line="212">        <span class="n">time_to_end</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="213">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
+</span><span data-line="214"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates initialization times for a previous day.</span>
+</span><span data-line="215">
+</span><span data-line="216"><span class="sd">        Args:</span>
+</span><span data-line="217"><span class="sd">            first (datetime.time): First time.</span>
+</span><span data-line="218"><span class="sd">            second (datetime.time): Second time.</span>
+</span><span data-line="219"><span class="sd">            days (int): Days ago.</span>
+</span><span data-line="220"><span class="sd">            time_to_end (datetime.datetime | None): End time reference.</span>
+</span><span data-line="221">
+</span><span data-line="222"><span class="sd">        Returns:</span>
+</span><span data-line="223"><span class="sd">            Tuple[datetime.datetime, datetime.datetime]: Calculated datetimes.</span>
+</span><span data-line="224"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="225">
+</span><span data-line="226">        <span class="n">end</span> <span class="o">=</span> <span class="n">time_to_end</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span data-line="227">
+</span><span data-line="228">        <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="n">end</span><span class="o">.</span><span class="n">time</span><span class="p">():</span>
+</span><span data-line="229">            <span class="n">day</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="230">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="231">            <span class="n">day</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+</span><span data-line="232">
+</span><span data-line="233">        <span class="n">v1</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+</span><span data-line="234">            <span class="n">hour</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
+</span><span data-line="235">            <span class="n">minute</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
+</span><span data-line="236">            <span class="n">second</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
+</span><span data-line="237">            <span class="n">microsecond</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
+</span><span data-line="238">        <span class="p">)</span>
+</span><span data-line="239">        <span class="n">v2</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+</span><span data-line="240">            <span class="n">hour</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
+</span><span data-line="241">            <span class="n">minute</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
+</span><span data-line="242">            <span class="n">second</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
+</span><span data-line="243">            <span class="n">microsecond</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
+</span><span data-line="244">        <span class="p">)</span>
+</span><span data-line="245">        <span class="k">return</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span></div>
 
-</span><span data-line="243">
+</span><span data-line="246">
 <div class="viewcode-block" id="TimeUtils.tomorrow_init_time">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.tomorrow_init_time">[docs]</a>
-</span><span data-line="244">    <span class="k">def</span><span class="w"> </span><span class="nf">tomorrow_init_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
-</span><span data-line="245"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the initialization time for tomorrow.</span>
-</span><span data-line="246">
-</span><span data-line="247"><span class="sd">        Args:</span>
-</span><span data-line="248"><span class="sd">            first (datetime.time): Target time.</span>
+</span><span data-line="247">    <span class="k">def</span><span class="w"> </span><span class="nf">tomorrow_init_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+</span><span data-line="248"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the initialization time for tomorrow.</span>
 </span><span data-line="249">
-</span><span data-line="250"><span class="sd">        Returns:</span>
-</span><span data-line="251"><span class="sd">            datetime.datetime: Calculated datetime.</span>
-</span><span data-line="252"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="253">        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-</span><span data-line="254">        <span class="n">day</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="n">base</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="k">else</span> <span class="n">base</span>
-</span><span data-line="255">        <span class="k">return</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-</span><span data-line="256">            <span class="n">hour</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
-</span><span data-line="257">            <span class="n">minute</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
-</span><span data-line="258">            <span class="n">second</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
-</span><span data-line="259">            <span class="n">microsecond</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
-</span><span data-line="260">        <span class="p">)</span></div>
+</span><span data-line="250"><span class="sd">        Args:</span>
+</span><span data-line="251"><span class="sd">            first (datetime.time): Target time.</span>
+</span><span data-line="252">
+</span><span data-line="253"><span class="sd">        Returns:</span>
+</span><span data-line="254"><span class="sd">            datetime.datetime: Calculated datetime.</span>
+</span><span data-line="255"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="256">        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span data-line="257">        <span class="n">day</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="n">base</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="k">else</span> <span class="n">base</span>
+</span><span data-line="258">        <span class="k">return</span> <span class="n">day</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+</span><span data-line="259">            <span class="n">hour</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
+</span><span data-line="260">            <span class="n">minute</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
+</span><span data-line="261">            <span class="n">second</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
+</span><span data-line="262">            <span class="n">microsecond</span><span class="o">=</span><span class="n">first</span><span class="o">.</span><span class="n">microsecond</span><span class="p">,</span>
+</span><span data-line="263">        <span class="p">)</span></div>
 
-</span><span data-line="261">
+</span><span data-line="264">
 <div class="viewcode-block" id="TimeUtils.range_24_hours">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.range_24_hours">[docs]</a>
-</span><span data-line="262">    <span class="k">def</span><span class="w"> </span><span class="nf">range_24_hours</span><span class="p">(</span>
-</span><span data-line="263">        <span class="bp">self</span><span class="p">,</span> <span class="n">day_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">first_init_time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span>
-</span><span data-line="264">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
-</span><span data-line="265"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates a 24-hour range starting from a specific time.</span>
-</span><span data-line="266">
-</span><span data-line="267"><span class="sd">        Args:</span>
-</span><span data-line="268"><span class="sd">            day_date (datetime.datetime): The date.</span>
-</span><span data-line="269"><span class="sd">            first_init_time (datetime.time): The start time.</span>
-</span><span data-line="270">
-</span><span data-line="271"><span class="sd">        Returns:</span>
-</span><span data-line="272"><span class="sd">            Tuple[datetime.datetime, datetime.datetime]: Start and end datetimes.</span>
-</span><span data-line="273"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="274">        <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">day_date</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">first_init_time</span><span class="p">)</span>
-</span><span data-line="275">        <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
-</span><span data-line="276">        <span class="k">return</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span></div>
+</span><span data-line="265">    <span class="k">def</span><span class="w"> </span><span class="nf">range_24_hours</span><span class="p">(</span>
+</span><span data-line="266">        <span class="bp">self</span><span class="p">,</span> <span class="n">day_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">first_init_time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span>
+</span><span data-line="267">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
+</span><span data-line="268"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates a 24-hour range starting from a specific time.</span>
+</span><span data-line="269">
+</span><span data-line="270"><span class="sd">        Args:</span>
+</span><span data-line="271"><span class="sd">            day_date (datetime.datetime): The date.</span>
+</span><span data-line="272"><span class="sd">            first_init_time (datetime.time): The start time.</span>
+</span><span data-line="273">
+</span><span data-line="274"><span class="sd">        Returns:</span>
+</span><span data-line="275"><span class="sd">            Tuple[datetime.datetime, datetime.datetime]: Start and end datetimes.</span>
+</span><span data-line="276"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="277">        <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">day_date</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">first_init_time</span><span class="p">)</span>
+</span><span data-line="278">        <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+</span><span data-line="279">        <span class="k">return</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span></div>
 
-</span><span data-line="277">
+</span><span data-line="280">
 <div class="viewcode-block" id="TimeUtils.measure_time">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.measure_time">[docs]</a>
-</span><span data-line="278">    <span class="k">def</span><span class="w"> </span><span class="nf">measure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-</span><span data-line="279"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Decorator to measure execution time of a function.</span>
-</span><span data-line="280">
-</span><span data-line="281"><span class="sd">        Args:</span>
-</span><span data-line="282"><span class="sd">            func (Callable): Function to measure.</span>
+</span><span data-line="281">    <span class="k">def</span><span class="w"> </span><span class="nf">measure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span data-line="282"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Decorator to measure execution time of a function.</span>
 </span><span data-line="283">
-</span><span data-line="284"><span class="sd">        Returns:</span>
-</span><span data-line="285"><span class="sd">            Callable: Wrapped function.</span>
-</span><span data-line="286"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="287">
-</span><span data-line="288">        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span data-line="289">            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-</span><span data-line="290">            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span data-line="291">            <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-</span><span data-line="292">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> execution time: </span><span class="si">{</span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">)</span>
-</span><span data-line="293">            <span class="k">return</span> <span class="n">result</span>
-</span><span data-line="294">
-</span><span data-line="295">        <span class="k">return</span> <span class="n">wrapper</span></div>
+</span><span data-line="284"><span class="sd">        Args:</span>
+</span><span data-line="285"><span class="sd">            func (Callable): Function to measure.</span>
+</span><span data-line="286">
+</span><span data-line="287"><span class="sd">        Returns:</span>
+</span><span data-line="288"><span class="sd">            Callable: Wrapped function.</span>
+</span><span data-line="289"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="290">
+</span><span data-line="291">        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span data-line="292">            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span data-line="293">            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span data-line="294">            <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span data-line="295">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> execution time: </span><span class="si">{</span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">)</span>
+</span><span data-line="296">            <span class="k">return</span> <span class="n">result</span>
+</span><span data-line="297">
+</span><span data-line="298">        <span class="k">return</span> <span class="n">wrapper</span></div>
 
-</span><span data-line="296">
+</span><span data-line="299">
 <div class="viewcode-block" id="TimeUtils.find_closest_file_and_seconds">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.find_closest_file_and_seconds">[docs]</a>
-</span><span data-line="297">    <span class="k">def</span><span class="w"> </span><span class="nf">find_closest_file_and_seconds</span><span class="p">(</span>
-</span><span data-line="298">        <span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
-</span><span data-line="299">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-</span><span data-line="300"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Finds the file closest to a given date and calculates time difference.</span>
-</span><span data-line="301">
-</span><span data-line="302"><span class="sd">        Args:</span>
-</span><span data-line="303"><span class="sd">            directory (str): Directory to search.</span>
-</span><span data-line="304"><span class="sd">            prefix (str): Filename prefix.</span>
-</span><span data-line="305"><span class="sd">            date (datetime.datetime): Target date.</span>
-</span><span data-line="306">
-</span><span data-line="307"><span class="sd">        Returns:</span>
-</span><span data-line="308"><span class="sd">            Tuple[str, int]: Path to closest file and seconds difference.</span>
-</span><span data-line="309"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="310">        <span class="n">closest_file</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="311">        <span class="n">closest_time</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="312">        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="313">        <span class="n">time_seconds</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="314">
-</span><span data-line="315">        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
-</span><span data-line="316">            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.mp4&quot;</span><span class="p">):</span>
-</span><span data-line="317">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="318">                    <span class="n">date_str</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="o">-</span><span class="mi">4</span><span class="p">]</span>
-</span><span data-line="319">                    <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
-</span><span data-line="320">                    <span class="k">if</span> <span class="n">file_date</span> <span class="o">&lt;</span> <span class="n">date</span> <span class="ow">and</span> <span class="p">(</span>
-</span><span data-line="321">                        <span class="n">closest_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">file_date</span> <span class="o">&gt;</span> <span class="n">closest_time</span>
-</span><span data-line="322">                    <span class="p">):</span>
-</span><span data-line="323">                        <span class="n">closest_time</span> <span class="o">=</span> <span class="n">file_date</span>
-</span><span data-line="324">                        <span class="n">closest_file</span> <span class="o">=</span> <span class="n">filename</span>
-</span><span data-line="325">                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span data-line="326">                    <span class="k">continue</span>
-</span><span data-line="327">
-</span><span data-line="328">        <span class="k">if</span> <span class="n">closest_file</span> <span class="ow">and</span> <span class="n">closest_time</span><span class="p">:</span>
-</span><span data-line="329">            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">closest_file</span><span class="p">)</span>
-</span><span data-line="330">            <span class="n">delta</span> <span class="o">=</span> <span class="n">date</span> <span class="o">-</span> <span class="n">closest_time</span>
-</span><span data-line="331">            <span class="n">time_seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span>
-</span><span data-line="332">
-</span><span data-line="333">        <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">time_seconds</span></div>
+</span><span data-line="300">    <span class="k">def</span><span class="w"> </span><span class="nf">find_closest_file_and_seconds</span><span class="p">(</span>
+</span><span data-line="301">        <span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+</span><span data-line="302">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+</span><span data-line="303"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Finds the file closest to a given date and calculates time difference.</span>
+</span><span data-line="304">
+</span><span data-line="305"><span class="sd">        Args:</span>
+</span><span data-line="306"><span class="sd">            directory (str): Directory to search.</span>
+</span><span data-line="307"><span class="sd">            prefix (str): Filename prefix.</span>
+</span><span data-line="308"><span class="sd">            date (datetime.datetime): Target date.</span>
+</span><span data-line="309">
+</span><span data-line="310"><span class="sd">        Returns:</span>
+</span><span data-line="311"><span class="sd">            Tuple[str, int]: Path to closest file and seconds difference.</span>
+</span><span data-line="312"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="313">        <span class="n">closest_file</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="314">        <span class="n">closest_time</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="315">        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="316">        <span class="n">time_seconds</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="317">
+</span><span data-line="318">        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+</span><span data-line="319">            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.mp4&quot;</span><span class="p">):</span>
+</span><span data-line="320">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="321">                    <span class="n">date_str</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+</span><span data-line="322">                    <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+</span><span data-line="323">                    <span class="k">if</span> <span class="n">file_date</span> <span class="o">&lt;</span> <span class="n">date</span> <span class="ow">and</span> <span class="p">(</span>
+</span><span data-line="324">                        <span class="n">closest_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">file_date</span> <span class="o">&gt;</span> <span class="n">closest_time</span>
+</span><span data-line="325">                    <span class="p">):</span>
+</span><span data-line="326">                        <span class="n">closest_time</span> <span class="o">=</span> <span class="n">file_date</span>
+</span><span data-line="327">                        <span class="n">closest_file</span> <span class="o">=</span> <span class="n">filename</span>
+</span><span data-line="328">                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span data-line="329">                    <span class="k">continue</span>
+</span><span data-line="330">
+</span><span data-line="331">        <span class="k">if</span> <span class="n">closest_file</span> <span class="ow">and</span> <span class="n">closest_time</span><span class="p">:</span>
+</span><span data-line="332">            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">closest_file</span><span class="p">)</span>
+</span><span data-line="333">            <span class="n">delta</span> <span class="o">=</span> <span class="n">date</span> <span class="o">-</span> <span class="n">closest_time</span>
+</span><span data-line="334">            <span class="n">time_seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span>
+</span><span data-line="335">
+</span><span data-line="336">        <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">time_seconds</span></div>
 
-</span><span data-line="334">
+</span><span data-line="337">
 <div class="viewcode-block" id="TimeUtils.format_duration">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.format_duration">[docs]</a>
-</span><span data-line="335">    <span class="k">def</span><span class="w"> </span><span class="nf">format_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">milliseconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="336"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats a duration in milliseconds to a string.</span>
-</span><span data-line="337">
-</span><span data-line="338"><span class="sd">        Args:</span>
-</span><span data-line="339"><span class="sd">            milliseconds (int): Duration in milliseconds.</span>
+</span><span data-line="338">    <span class="k">def</span><span class="w"> </span><span class="nf">format_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">milliseconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="339"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats a duration in milliseconds to a string.</span>
 </span><span data-line="340">
-</span><span data-line="341"><span class="sd">        Returns:</span>
-</span><span data-line="342"><span class="sd">            str: Formatted string (&quot;HH:MM:SS.mmm&quot;).</span>
-</span><span data-line="343"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="344">        <span class="n">hours</span> <span class="o">=</span> <span class="n">milliseconds</span> <span class="o">//</span> <span class="mi">3_600_000</span>
-</span><span data-line="345">        <span class="n">minutes</span> <span class="o">=</span> <span class="p">(</span><span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">3_600_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">60_000</span>
-</span><span data-line="346">        <span class="n">seconds</span> <span class="o">=</span> <span class="p">(</span><span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">60_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1_000</span>
-</span><span data-line="347">        <span class="n">millis</span> <span class="o">=</span> <span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">1_000</span>
-</span><span data-line="348">        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hours</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">millis</span><span class="si">:</span><span class="s2">03</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</span><span data-line="341"><span class="sd">        Args:</span>
+</span><span data-line="342"><span class="sd">            milliseconds (int): Duration in milliseconds.</span>
+</span><span data-line="343">
+</span><span data-line="344"><span class="sd">        Returns:</span>
+</span><span data-line="345"><span class="sd">            str: Formatted string (&quot;HH:MM:SS.mmm&quot;).</span>
+</span><span data-line="346"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="347">        <span class="n">hours</span> <span class="o">=</span> <span class="n">milliseconds</span> <span class="o">//</span> <span class="mi">3_600_000</span>
+</span><span data-line="348">        <span class="n">minutes</span> <span class="o">=</span> <span class="p">(</span><span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">3_600_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">60_000</span>
+</span><span data-line="349">        <span class="n">seconds</span> <span class="o">=</span> <span class="p">(</span><span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">60_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1_000</span>
+</span><span data-line="350">        <span class="n">millis</span> <span class="o">=</span> <span class="n">milliseconds</span> <span class="o">%</span> <span class="mi">1_000</span>
+</span><span data-line="351">        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hours</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">millis</span><span class="si">:</span><span class="s2">03</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
-</span><span data-line="349">
+</span><span data-line="352">
 <div class="viewcode-block" id="TimeUtils.get_sorted_videos">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.get_sorted_videos">[docs]</a>
-</span><span data-line="350">    <span class="k">def</span><span class="w"> </span><span class="nf">get_sorted_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span data-line="351">        <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.mp4&quot;</span><span class="p">)]</span>
-</span><span data-line="352">        <span class="n">files_with_dates</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="353">        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-</span><span data-line="354">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="355">                <span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_from_path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-</span><span data-line="356">                <span class="n">files_with_dates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">f</span><span class="p">,</span> <span class="n">date</span><span class="p">))</span>
-</span><span data-line="357">            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
-</span><span data-line="358">                <span class="k">pass</span>
-</span><span data-line="359">        <span class="n">files_with_dates</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</span><span data-line="360">        <span class="k">return</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">files_with_dates</span><span class="p">]</span></div>
+</span><span data-line="353">    <span class="k">def</span><span class="w"> </span><span class="nf">get_sorted_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span data-line="354">        <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.mp4&quot;</span><span class="p">)]</span>
+</span><span data-line="355">        <span class="n">files_with_dates</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="356">        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+</span><span data-line="357">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="358">                <span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_from_path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</span><span data-line="359">                <span class="n">files_with_dates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">f</span><span class="p">,</span> <span class="n">date</span><span class="p">))</span>
+</span><span data-line="360">            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+</span><span data-line="361">                <span class="k">pass</span>
+</span><span data-line="362">        <span class="n">files_with_dates</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</span><span data-line="363">        <span class="k">return</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">files_with_dates</span><span class="p">]</span></div>
 
-</span><span data-line="361">
+</span><span data-line="364">
 <div class="viewcode-block" id="TimeUtils.next_video_path">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.next_video_path">[docs]</a>
-</span><span data-line="362">    <span class="k">def</span><span class="w"> </span><span class="nf">next_video_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="363">        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
-</span><span data-line="364">        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
-</span><span data-line="365">        <span class="n">sorted_videos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sorted_videos</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
-</span><span data-line="366">        <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sorted_videos</span><span class="p">:</span>
-</span><span data-line="367">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="368">        <span class="n">idx</span> <span class="o">=</span> <span class="n">sorted_videos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-</span><span data-line="369">        <span class="k">if</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_videos</span><span class="p">):</span>
-</span><span data-line="370">            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">sorted_videos</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-</span><span data-line="371">        <span class="k">return</span> <span class="kc">None</span></div>
+</span><span data-line="365">    <span class="k">def</span><span class="w"> </span><span class="nf">next_video_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="366">        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+</span><span data-line="367">        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+</span><span data-line="368">        <span class="n">sorted_videos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sorted_videos</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+</span><span data-line="369">        <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sorted_videos</span><span class="p">:</span>
+</span><span data-line="370">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="371">        <span class="n">idx</span> <span class="o">=</span> <span class="n">sorted_videos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</span><span data-line="372">        <span class="k">if</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_videos</span><span class="p">):</span>
+</span><span data-line="373">            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">sorted_videos</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+</span><span data-line="374">        <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span data-line="372">
+</span><span data-line="375">
 <div class="viewcode-block" id="TimeUtils.previous_video_path">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.previous_video_path">[docs]</a>
-</span><span data-line="373">    <span class="k">def</span><span class="w"> </span><span class="nf">previous_video_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="374">        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
-</span><span data-line="375">        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
-</span><span data-line="376">        <span class="n">sorted_videos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sorted_videos</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
-</span><span data-line="377">        <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sorted_videos</span><span class="p">:</span>
-</span><span data-line="378">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="379">        <span class="n">idx</span> <span class="o">=</span> <span class="n">sorted_videos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-</span><span data-line="380">        <span class="k">if</span> <span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="381">            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">sorted_videos</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
-</span><span data-line="382">        <span class="k">return</span> <span class="kc">None</span></div>
+</span><span data-line="376">    <span class="k">def</span><span class="w"> </span><span class="nf">previous_video_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="377">        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+</span><span data-line="378">        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+</span><span data-line="379">        <span class="n">sorted_videos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sorted_videos</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+</span><span data-line="380">        <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sorted_videos</span><span class="p">:</span>
+</span><span data-line="381">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="382">        <span class="n">idx</span> <span class="o">=</span> <span class="n">sorted_videos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</span><span data-line="383">        <span class="k">if</span> <span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="384">            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">sorted_videos</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+</span><span data-line="385">        <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span data-line="383">
+</span><span data-line="386">
 <div class="viewcode-block" id="TimeUtils.Chrono">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono">[docs]</a>
-</span><span data-line="384">    <span class="k">class</span><span class="w"> </span><span class="nc">Chrono</span><span class="p">:</span>
-</span><span data-line="385"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Simple specific chronometer for measuring elapsed time.&quot;&quot;&quot;</span>
-</span><span data-line="386">
-</span><span data-line="387">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="388"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the Chrono.&quot;&quot;&quot;</span>
-</span><span data-line="389">            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
-</span><span data-line="390">
+</span><span data-line="387">    <span class="k">class</span><span class="w"> </span><span class="nc">Chrono</span><span class="p">:</span>
+</span><span data-line="388"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Simple specific chronometer for measuring elapsed time.&quot;&quot;&quot;</span>
+</span><span data-line="389">
+</span><span data-line="390">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="391"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the Chrono.&quot;&quot;&quot;</span>
+</span><span data-line="392">            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+</span><span data-line="393">
 <div class="viewcode-block" id="TimeUtils.Chrono.reset">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono.reset">[docs]</a>
-</span><span data-line="391">        <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="392"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Resets the chronometer.&quot;&quot;&quot;</span>
-</span><span data-line="393">            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span></div>
+</span><span data-line="394">        <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="395"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Resets the chronometer.&quot;&quot;&quot;</span>
+</span><span data-line="396">            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span></div>
 
-</span><span data-line="394">
+</span><span data-line="397">
 <div class="viewcode-block" id="TimeUtils.Chrono.get_time">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono.get_time">[docs]</a>
-</span><span data-line="395">        <span class="k">def</span><span class="w"> </span><span class="nf">get_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span data-line="396"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in seconds.</span>
-</span><span data-line="397">
-</span><span data-line="398"><span class="sd">            Returns:</span>
-</span><span data-line="399"><span class="sd">                float: Elapsed time.</span>
-</span><span data-line="400"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="401">            <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span></div>
+</span><span data-line="398">        <span class="k">def</span><span class="w"> </span><span class="nf">get_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="399"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in seconds.</span>
+</span><span data-line="400">
+</span><span data-line="401"><span class="sd">            Returns:</span>
+</span><span data-line="402"><span class="sd">                float: Elapsed time.</span>
+</span><span data-line="403"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="404">            <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span></div>
 
-</span><span data-line="402">
+</span><span data-line="405">
 <div class="viewcode-block" id="TimeUtils.Chrono.get_seconds">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono.get_seconds">[docs]</a>
-</span><span data-line="403">        <span class="k">def</span><span class="w"> </span><span class="nf">get_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span data-line="404"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in seconds as integer.</span>
-</span><span data-line="405">
-</span><span data-line="406"><span class="sd">            Returns:</span>
-</span><span data-line="407"><span class="sd">                int: Elapsed seconds.</span>
-</span><span data-line="408"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="409">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">())</span></div>
+</span><span data-line="406">        <span class="k">def</span><span class="w"> </span><span class="nf">get_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="407"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in seconds as integer.</span>
+</span><span data-line="408">
+</span><span data-line="409"><span class="sd">            Returns:</span>
+</span><span data-line="410"><span class="sd">                int: Elapsed seconds.</span>
+</span><span data-line="411"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="412">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">())</span></div>
 
-</span><span data-line="410">
+</span><span data-line="413">
 <div class="viewcode-block" id="TimeUtils.Chrono.get_milliseconds">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Chrono.get_milliseconds">[docs]</a>
-</span><span data-line="411">        <span class="k">def</span><span class="w"> </span><span class="nf">get_milliseconds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span data-line="412"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in milliseconds.</span>
-</span><span data-line="413">
-</span><span data-line="414"><span class="sd">            Returns:</span>
-</span><span data-line="415"><span class="sd">                int: Elapsed milliseconds.</span>
-</span><span data-line="416"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="417">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span></div>
+</span><span data-line="414">        <span class="k">def</span><span class="w"> </span><span class="nf">get_milliseconds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="415"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns elapsed time in milliseconds.</span>
+</span><span data-line="416">
+</span><span data-line="417"><span class="sd">            Returns:</span>
+</span><span data-line="418"><span class="sd">                int: Elapsed milliseconds.</span>
+</span><span data-line="419"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="420">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span></div>
 </div>
 
-</span><span data-line="418">
+</span><span data-line="421">
 <div class="viewcode-block" id="TimeUtils.Timer">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Timer">[docs]</a>
-</span><span data-line="419">    <span class="k">class</span><span class="w"> </span><span class="nc">Timer</span><span class="p">:</span>
-</span><span data-line="420"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Timer for checking if a specific duration has elapsed.&quot;&quot;&quot;</span>
-</span><span data-line="421">
-</span><span data-line="422">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="423"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the Timer.</span>
+</span><span data-line="422">    <span class="k">class</span><span class="w"> </span><span class="nc">Timer</span><span class="p">:</span>
+</span><span data-line="423"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Timer for checking if a specific duration has elapsed.&quot;&quot;&quot;</span>
 </span><span data-line="424">
-</span><span data-line="425"><span class="sd">            Args:</span>
-</span><span data-line="426"><span class="sd">                seconds (int): Duration in seconds.</span>
-</span><span data-line="427"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="428">            <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span> <span class="o">=</span> <span class="n">seconds</span>
-</span><span data-line="429">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
-</span><span data-line="430">            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span>
-</span><span data-line="431">            <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="mf">10.0</span>
-</span><span data-line="432">
+</span><span data-line="425">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="426"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the Timer.</span>
+</span><span data-line="427">
+</span><span data-line="428"><span class="sd">            Args:</span>
+</span><span data-line="429"><span class="sd">                seconds (int): Duration in seconds.</span>
+</span><span data-line="430"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="431">            <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span> <span class="o">=</span> <span class="n">seconds</span>
+</span><span data-line="432">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+</span><span data-line="433">            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span>
+</span><span data-line="434">            <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="mf">10.0</span>
+</span><span data-line="435">
 <div class="viewcode-block" id="TimeUtils.Timer.has_elapsed">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Timer.has_elapsed">[docs]</a>
-</span><span data-line="433">        <span class="k">def</span><span class="w"> </span><span class="nf">has_elapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="434"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the timer has elapsed.</span>
-</span><span data-line="435">
-</span><span data-line="436"><span class="sd">            Returns:</span>
-</span><span data-line="437"><span class="sd">                bool: True if elapsed, resets automatically.</span>
-</span><span data-line="438"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="439">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
-</span><span data-line="440">            <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span><span class="p">:</span>
-</span><span data-line="441">                <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span>
-</span><span data-line="442">                <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span>
-</span><span data-line="443">                <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="444">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="436">        <span class="k">def</span><span class="w"> </span><span class="nf">has_elapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="437"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the timer has elapsed.</span>
+</span><span data-line="438">
+</span><span data-line="439"><span class="sd">            Returns:</span>
+</span><span data-line="440"><span class="sd">                bool: True if elapsed, resets automatically.</span>
+</span><span data-line="441"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="442">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+</span><span data-line="443">            <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seconds</span><span class="p">:</span>
+</span><span data-line="444">                <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span>
+</span><span data-line="445">                <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span>
+</span><span data-line="446">                <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="447">            <span class="k">return</span> <span class="kc">False</span></div>
 
-</span><span data-line="445">
+</span><span data-line="448">
 <div class="viewcode-block" id="TimeUtils.Timer.ten_seconds_elapsed">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Timer.ten_seconds_elapsed">[docs]</a>
-</span><span data-line="446">        <span class="k">def</span><span class="w"> </span><span class="nf">ten_seconds_elapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="447"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if 10 seconds have elapsed.</span>
-</span><span data-line="448">
-</span><span data-line="449"><span class="sd">            Returns:</span>
-</span><span data-line="450"><span class="sd">                bool: True if 10 seconds elapsed, resets automatically.</span>
-</span><span data-line="451"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="452">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
-</span><span data-line="453">            <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
-</span><span data-line="454">                <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span>
-</span><span data-line="455">                <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="456">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="449">        <span class="k">def</span><span class="w"> </span><span class="nf">ten_seconds_elapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="450"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if 10 seconds have elapsed.</span>
+</span><span data-line="451">
+</span><span data-line="452"><span class="sd">            Returns:</span>
+</span><span data-line="453"><span class="sd">                bool: True if 10 seconds elapsed, resets automatically.</span>
+</span><span data-line="454"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="455">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+</span><span data-line="456">            <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
+</span><span data-line="457">                <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span>
+</span><span data-line="458">                <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="459">            <span class="k">return</span> <span class="kc">False</span></div>
 
-</span><span data-line="457">
+</span><span data-line="460">
 <div class="viewcode-block" id="TimeUtils.Timer.reset">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.Timer.reset">[docs]</a>
-</span><span data-line="458">        <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="459"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Resets the timer.&quot;&quot;&quot;</span>
-</span><span data-line="460">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
-</span><span data-line="461">            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span>
-</span><span data-line="462">            <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span></div>
+</span><span data-line="461">        <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="462"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Resets the timer.&quot;&quot;&quot;</span>
+</span><span data-line="463">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+</span><span data-line="464">            <span class="bp">self</span><span class="o">.</span><span class="n">init_time</span> <span class="o">=</span> <span class="n">now</span>
+</span><span data-line="465">            <span class="bp">self</span><span class="o">.</span><span class="n">ten_seconds_time</span> <span class="o">=</span> <span class="n">now</span></div>
 </div>
 
-</span><span data-line="463">
+</span><span data-line="466">
 <div class="viewcode-block" id="TimeUtils.HourChangeDetector">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.HourChangeDetector">[docs]</a>
-</span><span data-line="464">    <span class="k">class</span><span class="w"> </span><span class="nc">HourChangeDetector</span><span class="p">:</span>
-</span><span data-line="465"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects if the hour has changed.&quot;&quot;&quot;</span>
-</span><span data-line="466">
-</span><span data-line="467">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="468"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the HourChangeDetector.&quot;&quot;&quot;</span>
-</span><span data-line="469">            <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span>
-</span><span data-line="470">
+</span><span data-line="467">    <span class="k">class</span><span class="w"> </span><span class="nc">HourChangeDetector</span><span class="p">:</span>
+</span><span data-line="468"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects if the hour has changed.&quot;&quot;&quot;</span>
+</span><span data-line="469">
+</span><span data-line="470">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="471"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the HourChangeDetector.&quot;&quot;&quot;</span>
+</span><span data-line="472">            <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span>
+</span><span data-line="473">
 <div class="viewcode-block" id="TimeUtils.HourChangeDetector.has_hour_changed">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.HourChangeDetector.has_hour_changed">[docs]</a>
-</span><span data-line="471">        <span class="k">def</span><span class="w"> </span><span class="nf">has_hour_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="472"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the hour has changed since last check.</span>
-</span><span data-line="473">
-</span><span data-line="474"><span class="sd">            Returns:</span>
-</span><span data-line="475"><span class="sd">                bool: True if hour changed.</span>
-</span><span data-line="476"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="477">            <span class="n">current_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span>
-</span><span data-line="478">            <span class="k">if</span> <span class="n">current_hour</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span><span class="p">:</span>
-</span><span data-line="479">                <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span> <span class="o">=</span> <span class="n">current_hour</span>
-</span><span data-line="480">                <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="481">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="474">        <span class="k">def</span><span class="w"> </span><span class="nf">has_hour_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="475"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the hour has changed since last check.</span>
+</span><span data-line="476">
+</span><span data-line="477"><span class="sd">            Returns:</span>
+</span><span data-line="478"><span class="sd">                bool: True if hour changed.</span>
+</span><span data-line="479"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="480">            <span class="n">current_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span>
+</span><span data-line="481">            <span class="k">if</span> <span class="n">current_hour</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span><span class="p">:</span>
+</span><span data-line="482">                <span class="bp">self</span><span class="o">.</span><span class="n">last_hour</span> <span class="o">=</span> <span class="n">current_hour</span>
+</span><span data-line="483">                <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="484">            <span class="k">return</span> <span class="kc">False</span></div>
 </div>
 
-</span><span data-line="482">
+</span><span data-line="485">
 <div class="viewcode-block" id="TimeUtils.CycleChangeDetector">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.CycleChangeDetector">[docs]</a>
-</span><span data-line="483">    <span class="k">class</span><span class="w"> </span><span class="nc">CycleChangeDetector</span><span class="p">:</span>
-</span><span data-line="484"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects if the day/night cycle has changed.&quot;&quot;&quot;</span>
-</span><span data-line="485">
-</span><span data-line="486">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">day_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">night_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="487"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the CycleChangeDetector.</span>
+</span><span data-line="486">    <span class="k">class</span><span class="w"> </span><span class="nc">CycleChangeDetector</span><span class="p">:</span>
+</span><span data-line="487"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects if the day/night cycle has changed.&quot;&quot;&quot;</span>
 </span><span data-line="488">
-</span><span data-line="489"><span class="sd">            Args:</span>
-</span><span data-line="490"><span class="sd">                day_time (str): Start time of day.</span>
-</span><span data-line="491"><span class="sd">                night_time (str): Start time of night.</span>
-</span><span data-line="492"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="493">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="494">                <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">day_time</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-</span><span data-line="495">            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-</span><span data-line="496">                <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span><span data-line="497">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="498">                <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">night_time</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-</span><span data-line="499">            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-</span><span data-line="500">                <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span><span data-line="501">            <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_cycle</span><span class="p">()</span>
-</span><span data-line="502">            <span class="bp">self</span><span class="o">.</span><span class="n">is_day</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span> <span class="o">==</span> <span class="s2">&quot;day&quot;</span>
-</span><span data-line="503">            <span class="bp">self</span><span class="o">.</span><span class="n">cycle_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DAY&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_day</span> <span class="k">else</span> <span class="s2">&quot;NIGHT&quot;</span>
-</span><span data-line="504">
-</span><span data-line="505">        <span class="k">def</span><span class="w"> </span><span class="nf">_get_current_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="506"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Determines current cycle state.</span>
+</span><span data-line="489">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">day_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">night_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="490"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the CycleChangeDetector.</span>
+</span><span data-line="491">
+</span><span data-line="492"><span class="sd">            Args:</span>
+</span><span data-line="493"><span class="sd">                day_time (str): Start time of day.</span>
+</span><span data-line="494"><span class="sd">                night_time (str): Start time of night.</span>
+</span><span data-line="495"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="496">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="497">                <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">day_time</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span><span data-line="498">            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+</span><span data-line="499">                <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="500">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="501">                <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">night_time</span><span class="p">,</span> <span class="s2">&quot;%H:%M&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span><span data-line="502">            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+</span><span data-line="503">                <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="504">            <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_cycle</span><span class="p">()</span>
+</span><span data-line="505">            <span class="bp">self</span><span class="o">.</span><span class="n">is_day</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span> <span class="o">==</span> <span class="s2">&quot;day&quot;</span>
+</span><span data-line="506">            <span class="bp">self</span><span class="o">.</span><span class="n">cycle_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DAY&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_day</span> <span class="k">else</span> <span class="s2">&quot;NIGHT&quot;</span>
 </span><span data-line="507">
-</span><span data-line="508"><span class="sd">            Returns:</span>
-</span><span data-line="509"><span class="sd">                str: &#39;day&#39; or &#39;night&#39;.</span>
-</span><span data-line="510"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="511">            <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-</span><span data-line="512">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span><span class="p">:</span>
-</span><span data-line="513">                <span class="k">return</span> <span class="s2">&quot;day&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="k">else</span> <span class="s2">&quot;night&quot;</span>
-</span><span data-line="514">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="515">                <span class="k">return</span> <span class="s2">&quot;day&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;night&quot;</span>
-</span><span data-line="516">
+</span><span data-line="508">        <span class="k">def</span><span class="w"> </span><span class="nf">_get_current_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="509"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Determines current cycle state.</span>
+</span><span data-line="510">
+</span><span data-line="511"><span class="sd">            Returns:</span>
+</span><span data-line="512"><span class="sd">                str: &#39;day&#39; or &#39;night&#39;.</span>
+</span><span data-line="513"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="514">            <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span><span data-line="515">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span><span class="p">:</span>
+</span><span data-line="516">                <span class="k">return</span> <span class="s2">&quot;day&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span> <span class="k">else</span> <span class="s2">&quot;night&quot;</span>
+</span><span data-line="517">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="518">                <span class="k">return</span> <span class="s2">&quot;day&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_time</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">night_time</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;night&quot;</span>
+</span><span data-line="519">
 <div class="viewcode-block" id="TimeUtils.CycleChangeDetector.has_cycle_changed">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.CycleChangeDetector.has_cycle_changed">[docs]</a>
-</span><span data-line="517">        <span class="k">def</span><span class="w"> </span><span class="nf">has_cycle_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="518"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the cycle has changed.</span>
-</span><span data-line="519">
-</span><span data-line="520"><span class="sd">            Returns:</span>
-</span><span data-line="521"><span class="sd">                bool: True if cycle changed.</span>
-</span><span data-line="522"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="523">            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_cycle</span><span class="p">()</span>
-</span><span data-line="524">            <span class="k">if</span> <span class="n">current</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span><span class="p">:</span>
-</span><span data-line="525">                <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span> <span class="o">=</span> <span class="n">current</span>
-</span><span data-line="526">                <span class="bp">self</span><span class="o">.</span><span class="n">is_day</span> <span class="o">=</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">&quot;day&quot;</span>
-</span><span data-line="527">                <span class="bp">self</span><span class="o">.</span><span class="n">cycle_text</span> <span class="o">=</span> <span class="s2">&quot;DAY&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_day</span> <span class="k">else</span> <span class="s2">&quot;NIGHT&quot;</span>
-</span><span data-line="528">                <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="529">            <span class="k">return</span> <span class="kc">False</span></div>
+</span><span data-line="520">        <span class="k">def</span><span class="w"> </span><span class="nf">has_cycle_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="521"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the cycle has changed.</span>
+</span><span data-line="522">
+</span><span data-line="523"><span class="sd">            Returns:</span>
+</span><span data-line="524"><span class="sd">                bool: True if cycle changed.</span>
+</span><span data-line="525"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="526">            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_cycle</span><span class="p">()</span>
+</span><span data-line="527">            <span class="k">if</span> <span class="n">current</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span><span class="p">:</span>
+</span><span data-line="528">                <span class="bp">self</span><span class="o">.</span><span class="n">last_state</span> <span class="o">=</span> <span class="n">current</span>
+</span><span data-line="529">                <span class="bp">self</span><span class="o">.</span><span class="n">is_day</span> <span class="o">=</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">&quot;day&quot;</span>
+</span><span data-line="530">                <span class="bp">self</span><span class="o">.</span><span class="n">cycle_text</span> <span class="o">=</span> <span class="s2">&quot;DAY&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_day</span> <span class="k">else</span> <span class="s2">&quot;NIGHT&quot;</span>
+</span><span data-line="531">                <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="532">            <span class="k">return</span> <span class="kc">False</span></div>
 </div>
 
-</span><span data-line="530">
+</span><span data-line="533">
 <div class="viewcode-block" id="TimeUtils.TimestampTracker">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.TimestampTracker">[docs]</a>
-</span><span data-line="531">    <span class="k">class</span><span class="w"> </span><span class="nc">TimestampTracker</span><span class="p">:</span>
-</span><span data-line="532"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Tracks timestamps and checks for emptiness within a time window.&quot;&quot;&quot;</span>
-</span><span data-line="533">
-</span><span data-line="534">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="535"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the TimestampTracker.</span>
+</span><span data-line="534">    <span class="k">class</span><span class="w"> </span><span class="nc">TimestampTracker</span><span class="p">:</span>
+</span><span data-line="535"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Tracks timestamps and checks for emptiness within a time window.&quot;&quot;&quot;</span>
 </span><span data-line="536">
-</span><span data-line="537"><span class="sd">            Args:</span>
-</span><span data-line="538"><span class="sd">                hours (int): Time window in hours.</span>
-</span><span data-line="539"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="540">            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()]</span>
-</span><span data-line="541">            <span class="bp">self</span><span class="o">.</span><span class="n">hours</span> <span class="o">=</span> <span class="n">hours</span>
-</span><span data-line="542">            <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="543">
+</span><span data-line="537">        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="538"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Initializes the TimestampTracker.</span>
+</span><span data-line="539">
+</span><span data-line="540"><span class="sd">            Args:</span>
+</span><span data-line="541"><span class="sd">                hours (int): Time window in hours.</span>
+</span><span data-line="542"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="543">            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()]</span>
+</span><span data-line="544">            <span class="bp">self</span><span class="o">.</span><span class="n">hours</span> <span class="o">=</span> <span class="n">hours</span>
+</span><span data-line="545">            <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="546">
 <div class="viewcode-block" id="TimeUtils.TimestampTracker.add_timestamp">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.TimestampTracker.add_timestamp">[docs]</a>
-</span><span data-line="544">        <span class="k">def</span><span class="w"> </span><span class="nf">add_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="545"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Adds a current timestamp.&quot;&quot;&quot;</span>
-</span><span data-line="546">            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span></div>
+</span><span data-line="547">        <span class="k">def</span><span class="w"> </span><span class="nf">add_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="548"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Adds a current timestamp.&quot;&quot;&quot;</span>
+</span><span data-line="549">            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span></div>
 
-</span><span data-line="547">
+</span><span data-line="550">
 <div class="viewcode-block" id="TimeUtils.TimestampTracker.trigger_empty">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.time_utils.TimeUtils.html#village.scripts.time_utils.TimeUtils.TimestampTracker.trigger_empty">[docs]</a>
-</span><span data-line="548">        <span class="k">def</span><span class="w"> </span><span class="nf">trigger_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="549"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the tracker is empty / inactive for the duration.</span>
-</span><span data-line="550">
-</span><span data-line="551"><span class="sd">            Returns:</span>
-</span><span data-line="552"><span class="sd">                bool: True if state changed to empty.</span>
-</span><span data-line="553"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span data-line="554">            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hours</span> <span class="o">*</span> <span class="mi">3600</span>
-</span><span data-line="555">            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span><span class="n">ts</span> <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="k">if</span> <span class="n">ts</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">]</span>
-</span><span data-line="556">            <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span><span class="p">)</span>
-</span><span data-line="557">            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="558">                <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="559">                <span class="k">return</span> <span class="kc">False</span>
-</span><span data-line="560">            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span data-line="561">                <span class="k">return</span> <span class="kc">False</span>
-</span><span data-line="562">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="563">                <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="564">                <span class="k">return</span> <span class="kc">True</span></div>
+</span><span data-line="551">        <span class="k">def</span><span class="w"> </span><span class="nf">trigger_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="552"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Checks if the tracker is empty / inactive for the duration.</span>
+</span><span data-line="553">
+</span><span data-line="554"><span class="sd">            Returns:</span>
+</span><span data-line="555"><span class="sd">                bool: True if state changed to empty.</span>
+</span><span data-line="556"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span data-line="557">            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hours</span> <span class="o">*</span> <span class="mi">3600</span>
+</span><span data-line="558">            <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span><span class="n">ts</span> <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span> <span class="k">if</span> <span class="n">ts</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">]</span>
+</span><span data-line="559">            <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamps</span><span class="p">)</span>
+</span><span data-line="560">            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="561">                <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="562">                <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="563">            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span data-line="564">                <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="565">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="566">                <span class="bp">self</span><span class="o">.</span><span class="n">empty</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="567">                <span class="k">return</span> <span class="kc">True</span></div>
 </div>
 </div>
 
-</span><span data-line="565">
-</span><span data-line="566">
-</span><span data-line="567"><span class="n">time_utils</span> <span class="o">=</span> <span class="n">TimeUtils</span><span class="p">()</span>
+</span><span data-line="568">
+</span><span data-line="569">
+</span><span data-line="570"><span class="n">time_utils</span> <span class="o">=</span> <span class="n">TimeUtils</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -1194,7 +1197,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=b5b5a829"></script>
+      <script src="../../../_static/documentation_options.js?v=87a31cc9"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

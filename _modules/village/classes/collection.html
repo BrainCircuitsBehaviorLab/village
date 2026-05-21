@@ -747,14 +747,14 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="237">
 </span><span data-line="238">        <span class="k">if</span> <span class="s2">&quot;next_session_time&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
 </span><span data-line="239">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
-</span><span data-line="240">                <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+</span><span data-line="240">                <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;mixed&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
 </span><span data-line="241">            <span class="p">)</span>
 </span><span data-line="242">            <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
-</span><span data-line="243">                <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span data-line="243">                <span class="n">time_utils</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </span><span data-line="244">            <span class="p">)</span>
 </span><span data-line="245">
 </span><span data-line="246">        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="247">            <span class="k">if</span> <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;datetime64[ns]&quot;</span><span class="p">:</span>
+</span><span data-line="247">            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_datetime64_any_dtype</span><span class="p">(</span><span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]):</span>
 </span><span data-line="248">                <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
 </span><span data-line="249">
 </span><span data-line="250">        <span class="k">if</span> <span class="s2">&quot;active&quot;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
@@ -792,7 +792,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=b5b5a829"></script>
+      <script src="../../../_static/documentation_options.js?v=87a31cc9"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
