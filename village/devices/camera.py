@@ -654,8 +654,13 @@ class Camera:
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
                 roi = self.gray_frame[y1:y2, x1:x2]
+                if roi.size == 0:
+                    self.masks[index] = -1
+                    self.counts[index] = -1
+                    continue
                 threshold = self.thresholds[index]
                 _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
+                roi_bin = np.asarray(roi_bin, dtype=np.uint8)
                 sub = mask[y1:y2, x1:x2]
                 np.maximum(sub, roi_bin, out=sub)
                 self.masks[index] = roi_bin
@@ -725,8 +730,13 @@ class Camera:
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
                 roi = self.gray_frame[y1:y2, x1:x2]
+                if roi.size == 0:
+                    self.masks[index] = -1
+                    self.counts[index] = -1
+                    continue
                 threshold = self.thresholds[index]
                 _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
+                roi_bin = np.asarray(roi_bin, dtype=np.uint8)
                 sub = mask[y1:y2, x1:x2]
                 np.maximum(sub, roi_bin, out=sub)
                 self.masks[index] = roi_bin
