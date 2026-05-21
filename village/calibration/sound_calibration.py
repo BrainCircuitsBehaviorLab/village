@@ -14,9 +14,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLabel, QMessageBox, QScrollArea, QWidget
 
-from village.classes.enums import Active, State
+from village.classes.enums import Active, ControllerEnum, State
 from village.custom_classes.calibration_base import CalibrationBase
-from village.custom_classes.task import Task
+from village.custom_classes.task import BpodEvent, Task
 from village.devices.sound_device import sound_device
 from village.gui.layout import Layout
 from village.manager import manager
@@ -60,6 +60,16 @@ class SoundCalibrationTask(Task):
             sound_device.play()
             time.sleep(self.duration + 1)
             sound_device.stop()
+            # if the task is using a Bpod controller, we add a short state at
+            # the end of the trial because bpod controller always expects a state,
+            # if there is no state, bpod will throw an error
+            if manager.controller_type == ControllerEnum.BPOD:
+                self.bpod.add_state(
+                    state_name="empty",
+                    state_timer=0.1,
+                    state_change_conditions={BpodEvent.Tup: "exit"},
+                    output_actions=[],
+                )
         except Exception:
             log.error("Error calibrating sound", exception=traceback.format_exc())
             self.calibrations.sound_calibration_error = True

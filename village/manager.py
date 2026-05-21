@@ -172,6 +172,7 @@ class Manager:
         self.cam_box: Camera | NullCamera = NullCamera()
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
+        self.task.calibrations = self.calibrations
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,
@@ -446,6 +447,7 @@ class Manager:
     def reset_subject_task_training(self) -> None:
         """Resets the subject, task, and training attributes to default states."""
         self.task = Task()
+        self.task.calibrations = self.calibrations
         self.subject = Subject()
         self.training.restore()
         self.max_time_counter = 1

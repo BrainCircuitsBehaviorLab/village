@@ -237,14 +237,14 @@ class Collection:
 
         if "next_session_time" in new_df.columns:
             new_df["next_session_time"] = pd.to_datetime(
-                new_df["next_session_time"], format="%Y-%m-%d %H:%M:%S", errors="coerce"
+                new_df["next_session_time"], format="mixed", errors="coerce"
             )
             new_df["next_session_time"] = new_df["next_session_time"].fillna(
-                time_utils.now()
+                time_utils.now().replace(microsecond=0)
             )
 
         for col in new_df.columns:
-            if new_df[col].dtype == "datetime64[ns]":
+            if pd.api.types.is_datetime64_any_dtype(new_df[col]):
                 new_df[col] = new_df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
 
         if "active" in new_df.columns:
