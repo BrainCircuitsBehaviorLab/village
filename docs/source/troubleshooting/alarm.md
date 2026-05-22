@@ -19,7 +19,7 @@ Every hour, the system runs an automated background diagnostic.
 *   **Activity Detection:** The system flags if no animal has been detected by the RFID readers or if no behavioral sessions have been initiated for a specified number of consecutive hours (6 hours by default).
 
 ```{admonition} Troubleshooting Context
-:class: note
+:class: tip
 If your project hosts a large cohort of animals, it is highly unusual to have zero RFID detections or sessions for more than 6 consecutive hours. A silent system often points to an accidental physical barrier (e.g., a door stuck closed) or an RFID reader malfunction. If you are working with a small cohort, you may want to increase this window to prevent false alarms.
 ```
 
@@ -200,5 +200,3 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Confirm that the animal entered the operant box and did not fall asleep. Inspect the task logic and verify that all hardware components are functioning correctly.
 
 ```
-
-<br><br><br>

@@ -183,7 +183,7 @@ no backup is found.""",
         int,
         """Maximum time allowed (in seconds) to sync data. If synchronization is
 not completed within this time, the process will stop to allow other animals to access
-the behavioral box.""",
+the operant box.""",
     ),
     Setting(
         "SYNC_DESTINATION",
@@ -281,7 +281,7 @@ specified number of hours.""",
         6,
         int,
         """Checked hourly. This alarm is triggered if no session is performed in the
-behavioral box within a specified number of hours.""",
+operant box within a specified number of hours.""",
     ),
 ]
 
@@ -393,18 +393,16 @@ corridor_settings = [
         "08:00",
         str,
         """This setting defines when the daytime cycle begins. At the start of each
-cycle, the system performs various checks. The entry plot for the behavioral box uses
-this value to distinguish between day and night periods. If lighting conditions differ
-between day and night, the system will adjust detection thresholds accordingly.""",
+cycle, the system performs various checks. The lights in the corridor will be adjusted
+accordingly if they are in AUTO mode.""",
     ),
     Setting(
         "NIGHTTIME",
         "20:00",
         str,
         """This setting defines when the nighttime cycle begins. At the start of each
-cycle, the system performs various checks. The entry plot for the behavioral box uses
-this value to distinguish between day and night periods. If lighting conditions differ
-between day and night, the system will adjust detection thresholds accordingly.""",
+cycle, the system performs various checks. The lights in the corridor will be adjusted
+accordingly if they are in AUTO mode.""",
     ),
     Setting(
         "DETECTION_COLOR",
@@ -500,7 +498,7 @@ controller_settings = [
         "BEHAVIOR_CONTROLLER",
         "RASPBERRY",
         ControllerEnum,
-        """The controller used to run the behavioral box. The options are:
+        """The controller used to run the operant box. The options are:
         BPOD: The Bpod controller. ARDUINO: A custom controller that can be
         Arduino based. RASPBERRY: No need for an external controller.
         """,
@@ -580,7 +578,7 @@ detection threshold.""",
         [400, 300, 500, 350, 100],
         list[int],
         """The fourth area of the corridor, located between the second door and the
-behavioral box. Values include left, top, right, and bottom coordinates, along with the
+operant box. Values include left, top, right, and bottom coordinates, along with the
 detection threshold.""",
     ),
     Setting(

@@ -292,5 +292,3 @@ village
 [OS]: https://www.raspberrypi.com/software/
 [IMAGE]: image.md
 [UPDATE]: https://www.raspberrypi.com/documentation/computers/os.html
-
-<br><br><br>

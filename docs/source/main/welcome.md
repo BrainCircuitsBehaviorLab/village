@@ -65,18 +65,23 @@
 <img src="_static/plots.png" style="width: 100%;" alt="System usage plots">
 </div>
 
-<!-- ── SECTION 6: Citing ── -->
+<!-- ── SECTION 6: Get the Training Village ── -->
 <div class="full-bleed" style="background: #f7f5ff; padding: 2rem 2rem 1.5rem 2rem; margin-bottom: 4px;">
-<h1 style="font-size: 1.6rem;">Citing Training Village</h1>
+<h1 style="font-size: 1.6rem;">Interested in the Training Village?</h1>
+<p>We are excited to share this platform with the neuroscience community. If you would like to implement the Training Village in your research or discuss custom configurations and quotes, please reach out to us at <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></p>
+</div>
+
+<!-- ── SECTION 7: Citing ── -->
+<div style="padding: 2.5rem 2rem; margin-bottom: 4px;">
+<h1 style="font-size: 1.6rem;">How to Cite</h1>
 <p>If you use <strong>Training Village</strong>, please cite:</p>
 <p>Serrano-Porcar, B., Marin, R., Rodríguez, J., Barezzi, C., Vasoya, H., Kean, D., Pottinger, D., Taylor, A., Martínez Vergara, H., &amp; de la Rocha, J. (2026).<br>
 <em>The Training Village: an open platform for continuous testing of rodents in cognitive tasks.</em><br>
 <strong>bioRxiv</strong>. <a href="https://doi.org/10.64898/2026.01.12.698970">https://doi.org/10.64898/2026.01.12.698970</a></p>
 </div>
 
-<!-- ── SECTION 7: About the Project ── -->
-<div style="padding: 2.5rem 2rem; margin-bottom: 4px;">
-
+<!-- ── SECTION 8: About the Project ── -->
+<div class="full-bleed" style="background: #f7f5ff; padding: 2rem 2rem 1.5rem 2rem; margin-bottom: 4px;">
 <p><strong>Developed by:</strong></p>
 <a href="https://braincircuitsbehavior.org"
 style="color:#8B00FF; font-size:24px; font-weight:normal;

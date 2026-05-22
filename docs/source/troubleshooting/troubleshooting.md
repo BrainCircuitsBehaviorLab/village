@@ -50,6 +50,3 @@ ls -l /dev/controller
 | **`MOTOR2_BOX_INDEX`** | `5` | Pin channel for Box Module Servo 2 |
 | **`VISIBLE_LIGHT_BOX_INDEX`** | `6` | Pin channel for Box Visible light |
 | **`IR_LIGHT_BOX_INDEX`** | `7` | Pin channel for Box IR light |
-
-
-<br><br><br>

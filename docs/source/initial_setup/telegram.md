@@ -17,7 +17,8 @@ To set this up, we will perform three simple phases:
 1. Open the **Telegram** app on your phone or computer.
 2. In the search bar, type **@BotFather** and select it.
 
-```{important}
+```{admonition} Important
+:class: tip
 Ensure you choose the official account featuring the **blue verification checkmark** to avoid fake clone bots.
 ```
 3. Send the command `/newbot`.
@@ -25,7 +26,7 @@ Ensure you choose the official account featuring the **blue verification checkma
 5. Once complete, BotFather will generate an API **Token**. Copy this token immediately and store it safely. **Never share this token publicly** (e.g., do not commit it to public GitHub repositories).
 6. Click the link to your new bot provided by BotFather, open a direct chat with it, and click **Start** (or send `/start`) to activate it.
 
-```{hint}
+```{tip}
 If you ever need to retrieve the token of an existing bot, simply open your chat with **@BotFather**, send `/token`, and select your target bot from the menu.
 ```
 
@@ -34,7 +35,7 @@ If you ever need to retrieve the token of an existing bot, simply open your chat
 2. Add all laboratory members who need to receive system alarms, and add your newly created **bot** to the group.
 3. Promote the bot to an **Administrator**: Navigate to *Group Info → Edit → Administrators → Add Administrator* and select your bot. This grants it the necessary permissions to transmit alarms to the group.
 ```{admonition} Result
-:class: important
+:class: tip
 Anyone added to this group will receive automated alarms and can send text commands to control or query the bot.
 ```
 
@@ -70,6 +71,5 @@ To verify that everything is working correctly, go to your Telegram group chat a
 - `/report`
 - `/plot`
 
-<br><br><br>
 
 [ALARM]: /troubleshooting/alarm.md

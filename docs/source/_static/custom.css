@@ -22,6 +22,18 @@ ul.purple-bullets li::marker {
     font-size: 1.4em;
 }
 
+/* More visible default bullets in content */
+.yue ul > li::marker {
+    color: #8B00FF !important;
+    font-size: 1.4em;
+}
+
+/* Purple numbers for ordered lists */
+.yue ol > li::marker {
+    color: #8B00FF !important;
+    font-size: 1em;
+}
+
 /* Normal font size in table cells */
 .sy-content td, .sy-content th {
     font-size: 1rem !important;
