@@ -15,7 +15,8 @@ There are two critical parameters that govern this backup behavior:
     *   **`OFF`:** The system will automatically purge old video files once they exceed the storage days limit, even if no backup is found.
 *   **`MAXIMUM_SYNC_TIME`:** The maximum time allowed (in seconds) for the synchronization process to complete. If a sync session exceeds this threshold, the process terminates automatically. This safety cutoff prevents a slow network or hanging transfer from indefinitely blocking other animals from voluntarily accessing the operant box.
 
-```{hint}
+```{admonition} Note
+:class: tip
 When synchronizing data to a remote server, the `SERVER_PORT` field can be left blank if there is no need to specify a particular port for the SSH connection.
 ```
 
@@ -34,5 +35,3 @@ Alarm: No data sync in the last 24h
 Meaning: No data has been successfully backed up to the external server or hard drive during the last 24 hours.
 
 Action Required: Review the logs inside the rsync_logs folder to identify the specific transfer error, and verify your network connectivity or remote storage availability.
-
-<br><br><br>

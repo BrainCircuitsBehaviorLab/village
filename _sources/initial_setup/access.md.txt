@@ -51,11 +51,11 @@ Our system explicitly runs on an **X11 display server** instead of Wayland (whic
 
 ---
 
-```{tip}
+```{admonition} Note
+:class: tip
 Once remote access is successfully configured, we highly recommend disconnecting the keyboard, mouse, and monitor, and completing the remaining setup steps remotely.
 ```
 
-<br><br><br>
 
 [HELP]: https://projects.raspberrypi.org/en/projects/raspberry-pi-using/3
 [REAL]: https://www.realvnc.com/en/

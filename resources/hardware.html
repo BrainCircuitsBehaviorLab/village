@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d0a70041" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/system.html">Detailed System Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/requirements.html">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Initial Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/telegram.html">Telegram Bot Integration</a></li>
@@ -76,12 +76,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -434,7 +434,15 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#hardware-connections">Hardware Connections</a><ul>
+<li><a class="reference internal" href="#phase-1-core-raspberry-pi-assembly">Phase 1: Core Raspberry Pi Assembly</a></li>
+<li><a class="reference internal" href="#phase-2-hat-stacking-architecture">Phase 2: HAT Stacking Architecture</a></li>
+<li><a class="reference internal" href="#phase-3-peripheral-power-distribution">Phase 3: Peripheral &amp; Power Distribution</a></li>
+</ul>
+</li>
+</ul>
+</div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -508,10 +516,36 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="system-assembly-guide">
 <h1>System Assembly Guide</h1>
-<ol class="arabic simple">
-<li><p>Monta la parte inferior del frame de aluminio. Necesitaras los perfiles de aluminio, los conectores interiores y los torinillos de apriete y una llave allen.</p></li>
-</ol>
-<p><br><br><br></p>
+<section id="hardware-connections">
+<h2>Hardware Connections</h2>
+<div class="admonition-critical-power-wiring-warning admonition">
+<p class="admonition-title">CRITICAL POWER &amp; WIRING WARNING</p>
+<p>Never hot-plug peripherals: Ensure the main power supply is completely disconnected before plugging or unplugging any HAT, board, servo, or sensor.</p>
+</div>
+<section id="phase-1-core-raspberry-pi-assembly">
+<h3>Phase 1: Core Raspberry Pi Assembly</h3>
+<p><strong>Storage &amp; Cooling</strong>: Insert the pre-loaded microSD card into the Raspberry Pi 5 slot. Securely mount the official Active Cooler onto the Raspberry Pi processor.
+<strong>Camera Integration</strong>: Connect the two camera ribbon cables to the Pi. For optimal signal integrity, keep these cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable. If 50 cm is not long enough to reach your operant box camera mount, use a ribbon cable extension paired with a dedicated FFC adapter.</p>
+<p><img alt="Boards1" src="../_images/boards1.png" /></p>
+<p><strong>Enclosure Mounting</strong>: Place the Raspberry Pi into its dedicated 3D-printed enclosure (Raspberry Box) and secure it with screws.</p>
+<p><img alt="Boards2" src="../_images/boards2.png" /></p>
+</section>
+<section id="phase-2-hat-stacking-architecture">
+<h3>Phase 2: HAT Stacking Architecture</h3>
+<p><strong>Main HAT Preparation</strong>: Insert two 5A fuses into their designated slots on the Main HAT. To ensure proper vertical clearance and prevent short circuits between components, install a GPIO header extension/spacer alongside plastic standoffs on the board.</p>
+<p><img alt="Boards3" src="../_images/boards3.png" /></p>
+<p><strong>Main HAT Mounting</strong>: Align and carefully press the Main HAT down onto the Raspberry Pi’s 40-pin GPIO header.</p>
+<p><img alt="Boards4" src="../_images/boards4.png" /></p>
+<p><strong>Audio HAT Preparation</strong>: Install another GPIO header extension/spacer and plastic standoffs onto the Audio HAT to stack it safely above the previous layer.</p>
+<p><img alt="Boards5" src="../_images/boards5.png" /></p>
+<p><strong>Audio HAT Mounting</strong>: Press the Audio HAT firmly on top of the Main HAT, completing the primary hardware stack.</p>
+<p><img alt="Boards6" src="../_images/boards6.png" /></p>
+</section>
+<section id="phase-3-peripheral-power-distribution">
+<h3>Phase 3: Peripheral &amp; Power Distribution</h3>
+<p><strong>Corridor Board Setup</strong>: Mount the Corridor Board in its fixed position on the physical corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale (load cell), white LED strips, and IR illumination LEDs. Always double-check wiring polarities against the board silk-screen before insertion.</p>
+</section>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -546,12 +580,12 @@ data-aria-dark="Switch to auto color mode">
       </div>
       <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
         <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
-        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
       </div>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=124213a9"></script>
+      <script src="../_static/documentation_options.js?v=8913056c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

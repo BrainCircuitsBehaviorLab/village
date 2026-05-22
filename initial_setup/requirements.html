@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Requirements - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Assembly &amp; Initial Setup" href="initial.html" /><link rel="prev" title="Detailed System Description" href="system.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Requirements - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Initial Setup" href="initial.html" /><link rel="prev" title="Detailed System Description" href="system.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/initial_setup/requirements.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d0a70041" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2 current"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="system.html">Detailed System Description</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="initial.html">Initial Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="telegram.html">Telegram Bot Integration</a></li>
@@ -76,12 +76,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -532,7 +532,6 @@ The system uses a standardized data format. Existing analysis scripts may requir
 During the first days, problems often arise: misconfigured detection areas, poorly calibrated sensors, lighting issues, or animals reluctant to enter the box. For this reason, it is essential to monitor the system every few hours until everything is confirmed to be working correctly.</p>
 <p><strong>8. Alarm Monitoring:</strong>
 Telegram alarms must always be checked while the system is running (including weekends if the animals are allowed to train on weekends). Some rare errors may cause an animal to remain inside the operant box without access to water. Therefore, any alarm must be addressed within 24 hours or less.</p>
-<p><br><br><br></p>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -550,7 +549,7 @@ Telegram alarms must always be checked while the system is running (including we
     <a href="initial.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Assembly &amp; Initial Setup</div>
+        <div class="title">Initial Setup</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -567,12 +566,12 @@ Telegram alarms must always be checked while the system is running (including we
       </div>
       <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
         <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
-        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
       </div>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=124213a9"></script>
+      <script src="../_static/documentation_options.js?v=8913056c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

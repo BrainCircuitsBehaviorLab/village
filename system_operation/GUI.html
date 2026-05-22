@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GUI &amp; Interface Overview - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="System Settings" href="settings.html" /><link rel="prev" title="SYSTEM OPERATION" href="../system_operation_index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GUI Overview - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="System Settings" href="settings.html" /><link rel="prev" title="SYSTEM OPERATION" href="../system_operation_index.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/GUI.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d0a70041" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
     
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/GUI.html"/>
-  <meta property="og:title" content="GUI &amp; Interface Overview"/>
+  <meta property="og:title" content="GUI Overview"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -67,7 +67,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/system.html">Detailed System Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/requirements.html">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Initial Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/telegram.html">Telegram Bot Integration</a></li>
@@ -76,12 +76,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">GUI Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -436,7 +436,12 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#main">MAIN</a></li>
-<li><a class="reference internal" href="#monitor">MONITOR</a></li>
+<li><a class="reference internal" href="#monitor">MONITOR</a><ul>
+<li><a class="reference internal" href="#primary-control-tabs">Primary Control Tabs</a></li>
+<li><a class="reference internal" href="#secondary-diagnostic-tabs">Secondary Diagnostic Tabs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#subjects">SUBJECTS</a></li>
 <li><a class="reference internal" href="#tasks">TASKS</a></li>
 <li><a class="reference internal" href="#data">DATA</a></li>
 <li><a class="reference internal" href="#settings">SETTINGS</a></li>
@@ -465,7 +470,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">GUI &amp; Interface Overview</strong>
+        <strong itemprop="name">GUI Overview</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -513,46 +518,70 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="gui-interface-overview">
-<h1>GUI &amp; Interface Overview</h1>
+          <section id="gui-overview">
+<h1>GUI Overview</h1>
 <p>Launch the GUI by entering the following command in a terminal:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">village</span>
 </span></pre></div>
 </div>
 <p>When the GUI launches, the system automatically checks connections with essential components (such as cameras, temperature sensors, weight sensors, etc.). If any connection cannot be established, a warning message will display, and the Training Village will enter debug mode. For help resolving connection issues, refer to the <a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">troubleshooting section</span></a>.</p>
-<p>Once the GUI is active, a menu will appear at the top with the following options: <code class="docutils literal notranslate"><span class="pre">MAIN</span></code>, <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code>, <code class="docutils literal notranslate"><span class="pre">TASKS</span></code>, <code class="docutils literal notranslate"><span class="pre">DATA</span></code>, and <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>.</p>
+<p>Once the GUI is active, a menu will appear at the top with the following options: <code class="docutils literal notranslate"><span class="pre">MAIN</span></code>, <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code>, <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code>, <code class="docutils literal notranslate"><span class="pre">TASKS</span></code>, <code class="docutils literal notranslate"><span class="pre">DATA</span></code>, <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> and <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>.</p>
+<hr class="docutils" />
 <section id="main">
 <h2>MAIN</h2>
 <p><img alt="Main Training village screen" src="../_images/main_screen.png" /></p>
 <p>The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If there is no user activity for 5 minutes, the system automatically returns to this screen.</p>
 </section>
+<hr class="docutils" />
 <section id="monitor">
 <h2>MONITOR</h2>
 <p><img alt="Monitor Training village screen" src="../_images/monitor_screen.png" /></p>
-<p>The <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen is used to track the system’s status, displaying real-time video feeds from both the corridor and the behavioral box. Here, you can view images captured by the two cameras: one positioned above the corridor and another focused on the behavioral box. Several buttons are available at the center of the screen:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">RFID</span> <span class="pre">Reader</span> <span class="pre">(ON/OFF)</span></code>: Enables or disables the RFID reader. Disabling the RFID reader prevents animals from entering the behavioral box.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Cycle</span> <span class="pre">(AUTO/DAY/NIGHT)</span></code>: This button allows you to manually set the cameras to day or night mode, or leave them in AUTO mode. In AUTO mode, the cameras automatically switch between day and night at specified times, which can be configured in [settings][SETTINGS]. For animal welfare, the room lights should follow a day/night cycle, and the cameras must be calibrated accordingly to ensure accurate detection under both lighting conditions. Detailed instructions for this configuration can be found in the <a class="reference internal" href="detection.html"><span class="std std-doc">Animal Detection</span></a> section.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CORRIDOR/PORTS/FUNCTIONS</span></code>: This button toggles between different groups of real-time actions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen is used to track the system’s status, displaying real-time video feeds from both the corridor and the operant box. Here, you can view images captured by the two system cameras: one positioned above the corridor and another focused inside the operant box.</p>
+<section id="primary-control-tabs">
+<h3>Primary Control Tabs</h3>
+<p>Depending on your active configuration, several control tabs are available at the center of the screen:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>: Provides controls for the doors, scale, and temperature sensor.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">PORTS</span></code>: Allows you to turn on the LEDs or deliver water for one second in the behavior ports.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>: Allows you to execute user-defined Python functions, such as displaying visual stimuli, playing sounds, etc. Instructions for creating these functions can be found in the [Create a New Training Protocol][NEW] section.</p></li>
-</ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>:</strong> Provides manual and automated overrides for the RFID reader, lighting modules, doors, weighing scale, and temperature sensor. When the RFID system is toggled <strong>OFF</strong>,
+animal identification is disabled, and no subjects will be permitted to enter the operant box.</p>
+<p><em>The <code class="docutils literal notranslate"><span class="pre">VISIBLE</span> <span class="pre">LIGHT</span></code> and <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">LIGHT</span></code> modes can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, visible light turns on during daytime hours and off at night, while the infrared (IR) light operates inversely. The specific daytime and nighttime schedules can be customized under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CORRIDOR_SETTINGS</span></code>.</em></p>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS/SYSTEM</span> <span class="pre">INFO</span></code>: This button switches the information displayed at the bottom of the screen.</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">SYSTEM</span> <span class="pre">INFO</span></code>: Shows recent system events and logs.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code>: Enables control over the animal detection parameters for both the corridor and the behavioral box. A detailed explanation of these settings is available in the <a class="reference internal" href="detection.html"><span class="std std-doc">detection section</span></a>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span></code>:</strong> Provides dedicated controls for the lighting and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
+buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.</p>
+<p><em>The <code class="docutils literal notranslate"><span class="pre">VISIBLE</span> <span class="pre">LIGHT</span></code> and <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">LIGHT</span></code> modes can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.</em></p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>:</strong> Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
+for writing and deploying these scripts can be found in the [Create a New Training Protocol][NEW] section.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code>:</strong> Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness.</p>
+<ul class="simple">
+<li><p><strong>Bpod Integration:</strong> Simulate a nose-poke in any behavior port with a single click.</p></li>
+<li><p><strong>Touchscreen Integration:</strong> Simulate screen-touch events by sending precise coordinate inputs <span class="math notranslate nohighlight">\((x, y)\)</span>.</p></li>
+<li><p><strong>Position Tracking:</strong> If real-time animal tracking is active within the operant box, you can simulate custom trajectories to verify location-based experimental triggers.</p></li>
 </ul>
 </li>
 </ul>
 </section>
+<section id="secondary-diagnostic-tabs">
+<h3>Secondary Diagnostic Tabs</h3>
+<p>A secondary group of tabs is located at the bottom of the screen to monitor system telemetry and history:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">INFO</span></code>:</strong> Displays a live stream of recent system events and operational logs. Double-clicking any logged event opens an expanded window with detailed diagnostic information.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code>:</strong> Renders an interactive graphical chart illustrating both successful entries and denied entry attempts for all subjects over the past seven days.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code>:</strong> Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and behavioral box tracking systems. A comprehensive breakdown of these parameters is available in the <a class="reference internal" href="detection.html"><span class="std std-doc">Animal Detection Section</span></a>.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="subjects">
+<h2>SUBJECTS</h2>
+<p><img alt="Tasks Training Village screen" src="../_images/subjects_screen.png" />
+In this section you can create new subjects. Check the <a class="reference internal" href="subject.html"><span class="std std-doc">Subject Management Section</span></a>.</p>
+</section>
+<hr class="docutils" />
 <section id="tasks">
 <h2>TASKS</h2>
 <p><img alt="Tasks Training Village screen" src="../_images/tasks_screen.png" /></p>
-<p>On this screen, the active training protocol is displayed on the left side, along with a list of all available tasks.</p>
-<p>Clicking on the training protocol allows you to test its functionality (check the <a class="reference internal" href="../protocols/using.html"><span class="std std-doc">Test a Training Protocol</span></a> section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:</p>
+<p>From this screen, tasks can be launched manually at any time.</p>
+<p>The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the <a class="reference internal" href="../protocols/using.html"><span class="std std-doc">Test a Training Protocol</span></a> section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Subject</span></code>: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>: The task will automatically end once this number of trials is completed.</p></li>
@@ -566,29 +595,21 @@ data-aria-dark="Switch to auto color mode">
 <p><img alt="Main Training village screen" src="../_images/data_screen.png" /></p>
 <p>On this screen, saved data is displayed. The following tables are accessible:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>: A system log that records entries and exits of animals as well as unsuccessful entry attempts. Selecting an event and clicking on <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> provides access to the corresponding video.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SESSIONS</span> <span class="pre">SUMMARY</span></code>: A list of all training sessions. Clicking on an item in the list allows access to the corresponding CSV file in either standard or raw format, as well as the session video and a user-configurable plot.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code>: A list of all subjects in the experiment, where the following details can be edited:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: Name of the subject.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: RFID tag of the subject.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">basal_weight</span></code>: Baseline weight of the subject.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">active</span></code>: Status of the subject, which can be always active (ON), inactive (OFF), or active on specific days (Monday through Sunday). When inactive, the subject is not detected by the RFID reader (and therefore cannot enter the behavioral box) and does not trigger Telegram alarms.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>: Based on the refractory period, this is the time when the animal is allowed to re-enter the behavioral box.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">next_settings</span></code>: Settings for the next time the animal enters the behavioral box, including the name of the next assigned task and the corresponding variable values within the training protocol.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>:</strong> A comprehensive system log that records animal entries, exits, and denied entry attempts. Selecting any specific event and clicking <strong><code class="docutils literal notranslate"><span class="pre">VIDEO</span></code></strong> opens the corresponding video recording of that moment.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSIONS</span> <span class="pre">SUMMARY</span></code>:</strong> A historical list of all completed training sessions. Selecting an item from this list grants access to its corresponding CSV file (available in both standard and raw formats), the session’s video file, and a user-configurable behavioral plot.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">TEMPERATURES</span></code>:</strong> A chronological log of all recorded environmental temperature and humidity values within the system.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSION_RAW</span></code>:</strong> Displays the session currently in progress or the most recently completed one, rendered in real time (one row per registered hardware/behavioral event). Clicking <strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code></strong> opens a user-configurable, real-time graphical chart of the session.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSION</span></code>:</strong> Displays the session currently in progress or the most recently completed one, structured according to the final data storage format (parsed dynamically into one row per trial). Clicking <strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code></strong> opens a user-configurable, real-time graphical chart of the session.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code>:</strong> Contains parameter data regarding all currently active system calibrations.</p></li>
 </ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WATER_CALIBRATION</span></code>: Calibration values for water valves or pumps.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SOUND_CALIBRATION</span></code>: Volume calibration values for the left and right speakers.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURES</span></code>: List of recorded temperature and humidity values.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SESSION</span></code>: The latest session, either currently in progress or the most recently completed. Clicking on PLOT opens a user-configurable, real-time plot.</p></li>
-</ul>
-<p>A more detailed description of these tables, including how and where they are saved, can be found in the <a class="reference internal" href="../protocols/data.html"><span class="std std-doc">Saved Data</span></a> section.</p>
+<p>A more detailed description of these tables, including their exact database schemas and storage paths, can be found in the <a class="reference internal" href="../protocols/data.html"><span class="std std-doc">Saved Data</span></a> section.</p>
 </section>
+<hr class="docutils" />
 <section id="settings">
 <h2>SETTINGS</h2>
 <p><img alt="Main Training village screen" src="../_images/settings_screen.png" /></p>
-<p>List of all modifiable settings. Hover over each item for more information.</p>
+<p>This section displays a comprehensive list of all modifiable system settings, organized into distinct categories for streamlined configuration. You can hover over any individual parameter item to view a tooltip with more detailed information.</p>
+<p>The most critical parameters from this list will be discussed and modified step-by-step in the next section.</p>
 </section>
 </section>
 
@@ -624,14 +645,16 @@ data-aria-dark="Switch to auto color mode">
       </div>
       <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
         <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
-        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
       </div>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=124213a9"></script>
+      <script src="../_static/documentation_options.js?v=8913056c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-      <script src="../_static/shibuya.js?v=50760d75"></script></body>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script></body>
 </html>

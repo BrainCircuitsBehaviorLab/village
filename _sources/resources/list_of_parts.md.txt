@@ -81,7 +81,6 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 For a comprehensive, step-by-step walkthrough on assembling these components, please refer to the [System Assembly Guide][ASSEMBLY].
 
 
-<br><br><br>
 
 [3D]: /_static_3d.zip/
 [CAD]: /_static/cad.zip

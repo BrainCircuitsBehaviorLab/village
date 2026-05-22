@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d0a70041" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/system.html">Detailed System Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/requirements.html">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Initial Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/telegram.html">Telegram Bot Integration</a></li>
@@ -76,12 +76,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -509,8 +509,8 @@ data-aria-dark="Switch to auto color mode">
           <section id="subject-management">
 <h1>Subject Management</h1>
 <p>To create a new subject, some data is required: a unique name, the tag ID of its RFID capsule, and its baseline weight. To obtain the RFID tag, place the animal in the corridor area where the RFID reader is located. Go to the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen and ensure the <code class="docutils literal notranslate"><span class="pre">RFID</span> <span class="pre">reader</span></code> is activated. The animal should be detected, and its tag will appear in a log message at the bottom of the screen. To view this message, make sure <code class="docutils literal notranslate"><span class="pre">INFO</span></code> is selected so that the log appears at the bottom.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
 <p>All messages displayed in <code class="docutils literal notranslate"><span class="pre">INFO</span></code> are recorded in the <code class="docutils literal notranslate"><span class="pre">/data/events.csv</span></code> file located in your project folder. You can also preview this CSV file by going to the <code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen and checking the <code class="docutils literal notranslate"><span class="pre">EVENTS</span></code> table.</p>
 </div>
 <p>Next, go to the <code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen and select the <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code> table. By clicking the <code class="docutils literal notranslate"><span class="pre">ADD</span></code> button, a new row representing a subject will be created. Complete or edit its parameters as follows:</p>
@@ -528,7 +528,7 @@ data-aria-dark="Switch to auto color mode">
 <li><p><code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>: By default, this is set to the date and time the subject is created. After each session ends, the training protocol automatically updates this field to schedule the next allowed session.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">next_settings</span></code>: Stores the task variables that will be applied at the start of the subject’s next session. When a subject is created, these values are automatically populated with the default values defined in the training protocol. To inspect or modify them, double-click the cell to open an editor showing all available variables. After each session ends, the training protocol automatically updates this field based on the subject’s performance and the progression logic you have defined.</p></li>
 </ul>
-<div class="admonition note">
+<div class="tip admonition">
 <p class="admonition-title">Note</p>
 <p>If new variables are added to the training protocol after a subject has already been created, they will appear automatically with their default values the next time the <code class="docutils literal notranslate"><span class="pre">next_settings</span></code> cell is opened or the table is saved — no manual update is required. Variables that are removed from the protocol will silently disappear on the next save.</p>
 </div>
@@ -536,7 +536,6 @@ data-aria-dark="Switch to auto color mode">
 <p class="admonition-title">Warning</p>
 <p>Renaming a variable in the training protocol is strongly discouraged once data collection has started. The system identifies variables by name, so renaming one causes its stored value to be permanently lost for all existing subjects — the renamed variable will revert to its default value on the next session.</p>
 </div>
-<p><br><br><br></p>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -571,12 +570,12 @@ data-aria-dark="Switch to auto color mode">
       </div>
       <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
         <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
-        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
       </div>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=124213a9"></script>
+      <script src="../_static/documentation_options.js?v=8913056c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

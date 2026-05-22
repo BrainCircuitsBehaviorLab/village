@@ -29,6 +29,3 @@ During the first days, problems often arise: misconfigured detection areas, poor
 
 **8. Alarm Monitoring:**
 Telegram alarms must always be checked while the system is running (including weekends if the animals are allowed to train on weekends). Some rare errors may cause an animal to remain inside the operant box without access to water. Therefore, any alarm must be addressed within 24 hours or less.
-
-
-<br><br><br>

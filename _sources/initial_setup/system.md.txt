@@ -4,11 +4,24 @@ The Training Village (TV) system is built upon a lightweight aluminum framework 
 
 ![Training Village Overview](/_static/corridor.png)
 
+<table style="width:100%; border-collapse:collapse; margin-bottom:1em; font-size:inherit; font-family:inherit;">
+<tr>
+<td style="width:70%; vertical-align:top; padding-right:2em; border:none;">
+
 The entire ecosystem is centralized around a **Raspberry Pi 5** running Python code. The Raspberry directly manages the following primary peripherals:
 
-*   **Dual Camera System:** Two [Raspberry Pi Cameras](https://www.raspberrypi.com/products/camera-module-3/) are deployed—one integrated directly into the corridor and another to be positioned inside the operant box.
-*   **Audio System (Optional):** A dedicated [Raspberry Pi Sound HAT](https://www.raspberrypi.com/products/iqaudio-dac-plus/) can be attached to deliver acoustic stimuli during behavioral tasks.
-*   **Interactive Interface (Optional):** A touchscreen can be integrated to present visual stimuli and record the animals' touch responses.
+<ul>
+  <li><strong>Dual Camera System:</strong> Two <a href="https://www.raspberrypi.com/products/camera-module-3/">Raspberry Pi Cameras</a> are deployed—one integrated directly into the corridor and another to be positioned inside the operant box.</li>
+  <li><strong>Audio System (Optional):</strong> A dedicated <a href="https://www.raspberrypi.com/products/iqaudio-dac-plus/">Raspberry Pi Sound HAT</a> can be attached to deliver acoustic stimuli during behavioral tasks.</li>
+  <li><strong>Interactive Interface (Optional):</strong> A touchscreen can be integrated to present visual stimuli and record the animals' touch responses.</li>
+</ul>
+
+</td>
+<td style="width:30%; vertical-align:top; border:none;">
+<img src="../_static/raspberry.png" style="width:100%;" alt="Raspberry Pi 5">
+</td>
+</tr>
+</table>
 
 The system features universal operant box compatibility. While it natively communicates with [**Bpod**](https://sanworks.io/) and [**Arduino**](https://www.arduino.cc/), it can be easily adapted to alternative behavioral controllers (such as [**Harp**](https://harp-tech.org/) or [**PyControl**](https://pycontrol.readthedocs.io/)) simply by modifying the communication protocols.
 
@@ -19,7 +32,7 @@ Thanks to high-speed communication between the Raspberry Pi and the behavioral c
 
 A custom main HAT is mounted onto the Raspberry Pi 5 to handle power and data distribution. It receives a 5V power supply and utilizes two Ethernet ports to safely bridge both power and data to two specialized satellite boards.
 
-![Main HAT Power and Data Distribution](/_static/raspberry+hats.png)
+---
 
 ### Satellite Board 1: The Corridor Board
 
@@ -40,6 +53,9 @@ Controls the following peripherals installed in the corridor:
 </td>
 </tr>
 </table>
+
+
+---
 
 ### Satellite Board 2: The Box Board
 
@@ -76,5 +92,3 @@ To run and manage experiments, the user creates a centralized project folder con
 Below is a summary of the standard operational cycle:
 
 ![Standard Operational Cycle Workflow](/_static/workflow.png)
-
-<br><br><br>

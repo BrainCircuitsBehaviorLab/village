@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>System Settings - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Subject Management" href="subject.html" /><link rel="prev" title="GUI &amp; Interface Overview" href="GUI.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>System Settings - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Subject Management" href="subject.html" /><link rel="prev" title="GUI Overview" href="GUI.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/settings.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d0a70041" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/system.html">Detailed System Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/requirements.html">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Initial Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/telegram.html">Telegram Bot Integration</a></li>
@@ -76,12 +76,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI Overview</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -508,18 +508,36 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="system-settings">
 <h1>System Settings</h1>
-<p>Some initial settings must be configured before the system can be used. Go to the <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> screen and adjust the following parameters:</p>
+<p>Some initial settings must be configured before the system can be used.  Navigate to the <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> screen and adjust the following sections according to your laboratory setup:</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MAIN</span> <span class="pre">SETTINGS</span></code>:</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">MAIN</span> <span class="pre">SETTINGS</span></code>: For animals on a day/night cycle with changing room lighting, set <code class="docutils literal notranslate"><span class="pre">DAYTIME</span></code> and  <code class="docutils literal notranslate"><span class="pre">NIGHTTIME</span></code> to ensure camera detection thresholds automatically switch between day and night modes. Adjust the <code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">COLOR</span></code> parameter if light-colored animals are being used on a dark corridor.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>:  If using sounds, enable <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> and select the <strong>RPi DAC Pro</strong> device from the <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code> list.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SCREEN</span> <span class="pre">SETTINGS</span></code>: If a screen or touchscreen is used to present stimuli, select the type in <code class="docutils literal notranslate"><span class="pre">USE_SCREEN</span></code> and configure the remaining parameters.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">BPOD</span> <span class="pre">SETTINGS</span></code>: Set up the ports to be used (BNC, and BEHAVIOR ports).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code>: If a Telegram bot is already configured, enter the obtained token in <code class="docutils literal notranslate"><span class="pre">TELEGRAM_TOKEN</span></code>, the chat ID for notifications in <code class="docutils literal notranslate"><span class="pre">TELEGRAM_CHAT</span></code>, and the IDs of users authorized to access the bot in <code class="docutils literal notranslate"><span class="pre">TELEGRAM_USERS</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SYSTEM_NAME</span></code>:</strong> Define a unique identifier for your setup. This name will be appended to all saved datasets, which is essential for distinguishing data source origins if your facility operates multiple Training Villages.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code>:</strong> Must be toggled <strong>ON</strong> for standard automated operations.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code>:</strong> Set to <strong>ON</strong> or <strong>OFF</strong> depending on whether your configuration utilizes auxiliary servo motors or dedicated illumination modules inside the operant chamber.</p></li>
+<li><p><em>Project Selection:</em> This section also allows you to select an active experimental project or initialize a new one. For initial deployment, retain the default project profile.</p></li>
 </ul>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>Never share the TELEGRAM_TOKEN. Settings are stored in a private .INI file outside of the repository folder to prevent accidental sharing on GitHub or similar platforms.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>:</strong> Define the DAYTIME and NIGHTTIME parameters to set the specific hours you want the lights to turn on and off, the automated visible and IR lighting modules will cycle accordingly. Additionally, adjust the <code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">COLOR</span></code> parameter if you are tracking light-colored animals on a dark corridor background.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CONTROLLER</span> <span class="pre">SETTINGS</span></code>:</strong> Select your primary behavioral control hardware architecture. If integrating a Bpod system, specify the target communication ports.</p>
+<div class="tip admonition">
+<p class="admonition-title">Note</p>
+<p>The system automatically creates a symlink named <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code> pointing directly to any device connected to the bottom USB port adjacent to the Raspberry Pi’s native RJ45 Ethernet jack.</p>
 </div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>:</strong> Enable or disable real-time animal tracking for the operant box camera. If computer-vision-based tracking is not required for your paradigm, disabling it will significantly reduce CPU overhead. While resolution and frame-rate parameters are customizable, the default settings (<strong>640x480 at 30 fps</strong>) are highly optimized and thoroughly validated for low-latency processing.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>:</strong> If your experimental protocols involve acoustic stimuli, enable <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> and select the <strong>RPi DAC Pro</strong> hardware profile from the <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code> dropdown menu.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SCREEN</span> <span class="pre">SETTINGS</span></code>:</strong> If your behavioral arena features a display module or touchscreen interface for visual stimulus presentation, specify the hardware type in <code class="docutils literal notranslate"><span class="pre">USE_SCREEN</span></code> and calibrate the remaining parameters.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SYNC</span> <span class="pre">SETTINGS</span></code>:</strong> Configure the destination for your external data synchronization. Refer to the <a class="reference internal" href="system.html"><span class="std std-doc">Data Persistence Section</span></a>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code>:</strong> Input your unique authentication keys to link the system with your <a class="reference internal" href="../initial_setup/telegram.html"><span class="std std-doc">Telegram Bot</span></a> and the external <a class="reference internal" href="../initial_setup/heartbeat.html"><span class="std std-doc">Remote Heartbeat</span></a> monitoring service. You can customize alarm triggers, adjust sensor thresholds, or silence specific diagnostic checks by consulting the <a class="reference internal" href="../troubleshooting/alarm.html"><span class="std std-doc">Alarm System Section</span></a>.</p>
+<div class="warning admonition">
+<p class="admonition-title">Security Alert</p>
+<p>Never share or publish your TELEGRAM_TOKEN. To prevent accidental exposure on public GitHub repositories, all local configuration parameters are automatically stored in a private .INI file located strictly outside of the main repository directory.</p>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>:</strong> Advanced settings and gui colors.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DEVICE</span> <span class="pre">ADDRESSES</span></code>:</strong> Hardware indexing parameters. Use this section to remap camera IDs or servo motors IDs.</p></li>
+</ul>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -531,7 +549,7 @@ data-aria-dark="Switch to auto color mode">
     <a href="GUI.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">GUI &amp; Interface Overview</div></div>
+        <span>Previous</span><div class="title">GUI Overview</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="subject.html">
@@ -554,12 +572,12 @@ data-aria-dark="Switch to auto color mode">
       </div>
       <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
         <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
-        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
       </div>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=124213a9"></script>
+      <script src="../_static/documentation_options.js?v=8913056c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

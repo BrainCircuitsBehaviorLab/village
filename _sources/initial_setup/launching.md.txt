@@ -13,8 +13,8 @@ This command activates a Python environment (.env) and runs the file `/home/pi/v
 
 When the GUI launches, the system immediately performs an automated self-diagnostic check on all essential hardware connections (such as cameras, temperature sensors, scales, etc.). If a connection to a critical component cannot be established, a warning message will appear, and the Training Village will enter Debug Mode.
 
-```{admonition} Note on Common Warnings:
-:class: note
+```{admonition} Note:
+:class: tip
 Upon your very first boot, you will likely receive warnings stating that telegram_bot and box_chip are not functioning. This is perfectly normal if you have not configured Telegram yet or if you haven't connected the physical Box Board satallite module. You can safely ignore these specific warnings for now; they will not prevent the core system from running.
 ```
 
@@ -33,6 +33,3 @@ If the video feeds are inverted (i.e., the operant box camera is displaying on t
 Navigate to `SETTINGS → CAMERA SETTINGS`.
 
 Swap the camera index numbers (toggle 0 and 1 between the feeds) so they map correctly to your physical setup.
-
-
-<br><br><br>

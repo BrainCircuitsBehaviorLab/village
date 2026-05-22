@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Launching the TV Application - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Remote Access Setup" href="access.html" /><link rel="prev" title="Assembly &amp; Initial Setup" href="initial.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Launching the TV Application - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Remote Access Setup" href="access.html" /><link rel="prev" title="Initial Setup" href="initial.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/initial_setup/launching.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d0a70041" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2 current"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="system.html">Detailed System Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="initial.html">Initial Setup</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="telegram.html">Telegram Bot Integration</a></li>
@@ -76,12 +76,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -520,8 +520,8 @@ data-aria-dark="Switch to auto color mode">
 <section id="automatic-component-check">
 <h2>Automatic Component Check</h2>
 <p>When the GUI launches, the system immediately performs an automated self-diagnostic check on all essential hardware connections (such as cameras, temperature sensors, scales, etc.). If a connection to a critical component cannot be established, a warning message will appear, and the Training Village will enter Debug Mode.</p>
-<div class="note admonition">
-<p class="admonition-title">Note on Common Warnings:</p>
+<div class="tip admonition">
+<p class="admonition-title">Note:</p>
 <p>Upon your very first boot, you will likely receive warnings stating that telegram_bot and box_chip are not functioning. This is perfectly normal if you have not configured Telegram yet or if you haven’t connected the physical Box Board satallite module. You can safely ignore these specific warnings for now; they will not prevent the core system from running.</p>
 </div>
 </section>
@@ -534,7 +534,6 @@ data-aria-dark="Switch to auto color mode">
 <p>If the video feeds are inverted (i.e., the operant box camera is displaying on the left), you can quickly correct this in the software:</p>
 <p>Navigate to <code class="docutils literal notranslate"><span class="pre">SETTINGS</span> <span class="pre">→</span> <span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>.</p>
 <p>Swap the camera index numbers (toggle 0 and 1 between the feeds) so they map correctly to your physical setup.</p>
-<p><br><br><br></p>
 </section>
 </section>
 
@@ -547,7 +546,7 @@ data-aria-dark="Switch to auto color mode">
     <a href="initial.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Assembly &amp; Initial Setup</div></div>
+        <span>Previous</span><div class="title">Initial Setup</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="access.html">
@@ -570,12 +569,12 @@ data-aria-dark="Switch to auto color mode">
       </div>
       <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
         <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
-        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
       </div>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=124213a9"></script>
+      <script src="../_static/documentation_options.js?v=8913056c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

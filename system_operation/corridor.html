@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Corridor Calibration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Animal Detection Setup" href="detection.html" /><link rel="prev" title="Subject Management" href="subject.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Corridor Calibration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Animal Detection" href="detection.html" /><link rel="prev" title="Subject Management" href="subject.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/corridor.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d0a70041" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/system.html">Detailed System Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/requirements.html">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Assembly &amp; Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../initial_setup/initial.html">Initial Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/launching.html">Launching the TV Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/access.html">Remote Access Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../initial_setup/telegram.html">Telegram Bot Integration</a></li>
@@ -76,12 +76,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI &amp; Interface Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling &amp; Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -510,10 +510,30 @@ data-aria-dark="Switch to auto color mode">
 <h1>Corridor Calibration</h1>
 <p>The corridor elements must be calibrated. Navigate to the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> Screen:</p>
 <ol class="arabic simple">
-<li><p><strong>Set Door Motor Angles</strong>: Select the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> actions and use the <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">MOTOR</span> <span class="pre">ANGLES</span></code> button to correctly set the opening and closing angles for each door. The closing angle should allow the door to gently touch the top without pushing further.</p></li>
+<li><p><strong>Set Door Motor Angles</strong>: Select the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> tab in the center of the screen and use the <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">MOTOR</span> <span class="pre">ANGLES</span></code> button to correctly set the opening and closing angles for each door. The closing angle should allow the door to gently touch the top without pushing further.</p></li>
+</ol>
+<div class="tip admonition">
+<p class="admonition-title">Note</p>
+<p>Due to the symmetrical placement of the servomotors, the opening angle will be greater than the closing angle for one servo, while the opposite will apply to the other. Typically, the angular displacement between the open and closed positions is approximately 25° to 30°. The most straightforward way to calibrate the gates is by following these steps:</p>
+<ol class="arabic simple">
+<li><p>Temporarily detach the plastic gate from the servo horn.</p></li>
+<li><p>Click the <strong>CLOSE</strong> button in the interface, then manually place and secure the plastic gate in its physical “fully closed” position.</p></li>
+<li><p>Modify the <code class="docutils literal notranslate"><span class="pre">OPEN</span></code> angle parameter by just a few degrees (either above or below the closed angle value). Click <strong>OPEN</strong> to verify that the servo rotates in the expected direction.</p></li>
+<li><p>Adjust the final <code class="docutils literal notranslate"><span class="pre">OPEN</span></code> angle incrementally until the gate allows the animal to pass through easily when open.</p></li>
+</ol>
+</div>
+<ol class="arabic simple" start="2">
 <li><p><strong>Calibrate the Scale</strong>: Use the <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code> button with a known weight to calibrate the scale, and verify functionality by pressing <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code>.</p></li>
 <li><p><strong>Check Temperature and Humidity</strong>: Use the <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">TEMPERATURE</span></code> button to check temperature and humidity readings.</p></li>
 </ol>
+<div class="tip admonition">
+<p class="admonition-title">Note</p>
+<p>If you are using motors in the operant box, you can calibrate them by navigating to the <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tab and selecting the <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">MOTOR</span> <span class="pre">ANGLES</span></code> button in that tab.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tabs are not visible, it is because the corresponding options <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> are disabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">MAIN</span> <span class="pre">SETTINGS</span></code>.</p>
+</div>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -531,7 +551,7 @@ data-aria-dark="Switch to auto color mode">
     <a href="detection.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Animal Detection Setup</div>
+        <div class="title">Animal Detection</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -548,12 +568,12 @@ data-aria-dark="Switch to auto color mode">
       </div>
       <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
         <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
-        <span>Contact: <a href="mailto:marinraf@gmail.com">marinraf@gmail.com</a></span>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
       </div>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=124213a9"></script>
+      <script src="../_static/documentation_options.js?v=8913056c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
