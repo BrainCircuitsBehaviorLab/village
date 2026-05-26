@@ -16,28 +16,45 @@ Never hot-plug peripherals: Ensure the main power supply is completely disconnec
 **Storage & Cooling**: Insert the pre-loaded microSD card into the Raspberry Pi 5 slot. Securely mount the official Active Cooler onto the Raspberry Pi processor.
 **Camera Integration**: Connect the two camera ribbon cables to the Pi. For optimal signal integrity, keep these cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable. If 50 cm is not long enough to reach your operant box camera mount, use a ribbon cable extension paired with a dedicated FFC adapter.
 
-![Boards1](/_static/boards1.png)
+```{image} /_static/boards1.png
+:width: 70%
+:align: center
+```
 
 **Enclosure Mounting**: Place the Raspberry Pi into its dedicated 3D-printed enclosure (Raspberry Box) and secure it with screws.
 
-![Boards2](/_static/boards2.png)
-
+```{image} /_static/boards2.png
+:width: 70%
+:align: center
+```
 #### Phase 2: HAT Stacking Architecture
 **Main HAT Preparation**: Insert two 5A fuses into their designated slots on the Main HAT. To ensure proper vertical clearance and prevent short circuits between components, install a GPIO header extension/spacer alongside plastic standoffs on the board.
 
-![Boards3](/_static/boards3.png)
+```{image} /_static/boards3.png
+:width: 70%
+:align: center
+```
 
 **Main HAT Mounting**: Align and carefully press the Main HAT down onto the Raspberry Pi’s 40-pin GPIO header.
 
-![Boards4](/_static/boards4.png)
+```{image} /_static/boards4.png
+:width: 70%
+:align: center
+```
 
 **Audio HAT Preparation**: Install another GPIO header extension/spacer and plastic standoffs onto the Audio HAT to stack it safely above the previous layer.
 
-![Boards5](/_static/boards5.png)
+```{image} /_static/boards5.png
+:width: 70%
+:align: center
+```
 
 **Audio HAT Mounting**: Press the Audio HAT firmly on top of the Main HAT, completing the primary hardware stack.
 
-![Boards6](/_static/boards6.png)
+```{image} /_static/boards6.png
+:width: 70%
+:align: center
+```
 
 
 #### Phase 3: Peripheral & Power Distribution

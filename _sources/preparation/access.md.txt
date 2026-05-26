@@ -1,4 +1,4 @@
-## Remote Access Setup
+## Remote Access Configuration
 
 Before configuring remote access, verify that your Raspberry Pi is connected to the internet. If you need assistance with network configuration, please refer to the official [Raspberry Pi Guide][HELP].
 

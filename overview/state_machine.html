@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Telegram Bot Integration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Data Persistence &amp; Backups" href="backup.html" /><link rel="prev" title="Remote Access Setup" href="access.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/initial_setup/telegram.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>System Logic (State Machine) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="System Requirements" href="requirements.html" /><link rel="prev" title="Detailed System Description" href="system.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/overview/state_machine.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,8 +21,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/initial_setup/telegram.html"/>
-  <meta property="og:title" content="Telegram Bot Integration"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/overview/state_machine.html"/>
+  <meta property="og:title" content="System Logic (State Machine)"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -64,41 +64,45 @@ data-aria-dark="Switch to auto color mode">
       <div class="sy-scrollbar p-6">
         <div class="globaltoc" data-expand-depth="0"><ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="requirements.html">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="initial.html">Initial Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="launching.html">Launching the TV Application</a></li>
-<li class="toctree-l3"><a class="reference internal" href="access.html">Remote Access Setup</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Telegram Bot Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="backup.html">Data Persistence &amp; Backups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="heartbeat.html">Remote Heartbeat Monitoring</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">System Logic (State Machine)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html">System Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../preparation_index.html">PREPARATION &amp; SETUP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/initial.html">Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/launching.html">Launching the TV Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/access.html">Remote Access Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/telegram.html">Telegram Bot Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/backup.html">Data Persistence &amp; Backups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/heartbeat.html">Remote Heartbeat Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/animal.html">Animal Handling</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/using.html">Using Existing Protocols</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Creating New Protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Core, Audio &amp; Video Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/data.html">Saved Data Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/triggers.html">Custom Interaction Triggers</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">TROUBLESHOOTING &amp; MAINTENANCE</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">General Troubleshooting Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; TROUBLESHOOTING</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting Guide</a></li>
 </ul>
 </li>
 </ul>
@@ -435,15 +439,12 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#simple-overview">Simple Overview</a></li>
-<li><a class="reference internal" href="#detailed-step-by-step-guide">Detailed Step-by-Step Guide</a><ul>
-<li><a class="reference internal" href="#step-1-create-a-new-telegram-bot">Step 1: Create a New Telegram Bot</a></li>
-<li><a class="reference internal" href="#step-2-configure-the-alarm-group-chat">Step 2: Configure the Alarm Group Chat</a></li>
-<li><a class="reference internal" href="#step-3-retrieve-the-group-chat-id">Step 3: Retrieve the Group Chat ID</a></li>
-<li><a class="reference internal" href="#step-4-update-your-village-settings">Step 4: Update Your Village Settings</a></li>
+<li><a class="reference internal" href="#normal-cycle-for-an-animal-session">Normal Cycle for an Animal Session</a><ul>
+<li><a class="reference internal" href="#option-a-the-subject-leaves-before-the-tasks-maximum-time">Option A: The Subject Leaves Before the Task&#8217;s Maximum Time</a></li>
+<li><a class="reference internal" href="#option-b-the-subject-stays-in-the-box-until-the-maximum-time">Option B: The Subject Stays in the Box Until the Maximum Time</a></li>
+<li><a class="reference internal" href="#in-both-cases">In Both Cases</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#managing-alarms-commands">Managing Alarms &amp; Commands</a></li>
 </ul>
 </div></div>
   </aside>
@@ -465,11 +466,11 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../initial_setup_index.html"><span itemprop="name">INITIAL SETUP</span></a>
+        <a itemprop="item" href="../overview_index.html"><span itemprop="name">SYSTEM OVERVIEW</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Telegram Bot Integration</strong>
+        <strong itemprop="name">System Logic (State Machine)</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -486,7 +487,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/telegram.md.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -500,103 +501,67 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/telegram.md.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/telegram.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
-            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/telegram.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/telegram.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="telegram-bot-integration">
-<h1>Telegram Bot Integration</h1>
-<section id="simple-overview">
-<h2>Simple Overview</h2>
-<p>Integrating Telegram into the Training Village (TV) system allows you to receive automated, real-time safety alarms and query the live status of your system directly from your mobile phone.</p>
-<p>To set this up, we will perform three simple phases:</p>
+          <section id="system-logic-state-machine">
+<h1>System Logic (State Machine)</h1>
+<img alt="entrances" class="zoomable" src="../_images/states.png" />
+<p>This is the state diagram of all possible system states and their descriptions.</p>
+<p>Black arrows represent events that trigger a state transition, while red arrows indicate possible alarms, which may or may not cause a state change.</p>
+<p>States in green represent a normal cycle in automatic mode. States in blue indicate manual manipulation of the system by a user. The orange state is reached after an error that the system cannot resolve on its own, requiring remote intervention.</p>
+<p>Lighter-colored states are transitional and resolve quickly, leading to darker-colored states, which are stable states.</p>
+<section id="normal-cycle-for-an-animal-session">
+<h2>Normal Cycle for an Animal Session</h2>
+<p>A typical session of an animal performing a task follows this sequence:</p>
 <ol class="arabic simple">
-<li><p>Create a dedicated Telegram bot using the official account (<strong>&#64;BotFather</strong>) to obtain an access token.</p></li>
-<li><p>Set up a laboratory group chat containing the team and the bot, then use an identification bot to retrieve the unique <strong>Group Chat ID</strong>.</p></li>
-<li><p>Save these credentials locally inside your Training Village configuration file on the Raspberry Pi.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WAIT</span></code>: The system remains in this state until an RFID detection occurs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DETECTION</span></code>: In this state, the system determines whether the subject is allowed to enter the behavioral box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ACCESS</span></code>: If the subject is allowed to enter, Door 1 is closed, and Door 2 is opened.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LAUNCH_AUTO</span></code>: The task is automatically launched.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_FIRST</span></code>: The task begins, but Door 2 remains open until the corridor is empty.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLOSE_DOOR2</span></code>: Once the corridor is empty, Door 2 is closed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_CLOSED</span></code>: The task is running, and the subject inside the behavioral box is not allowed to leave until a configurable minimum time for the task has elapsed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OPEN_DOOR2</span></code>: Once the minimum time has elapsed, Door 2 opens.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_OPENED</span></code>: The subject is allowed to leave the behavioral box if desired, or it may continue performing the task. At this point, two possible scenarios can occur:</p></li>
+</ol>
+<section id="option-a-the-subject-leaves-before-the-tasks-maximum-time">
+<h3>Option A: The Subject Leaves Before the Task’s Maximum Time</h3>
+<p>If the scale detects that the animal is returning to the home cage, the system transitions to:</p>
+<ol class="arabic simple" start="9">
+<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_UNSAVED</span></code>: Door 2 is closed, and Door 1 is opened to allow the subject to return home.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SAVE_OUTSIDE</span></code>: After the subject has returned to the home cage, the task is closed, and all data is saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
 </ol>
 </section>
-<hr class="docutils" />
-<section id="detailed-step-by-step-guide">
-<h2>Detailed Step-by-Step Guide</h2>
-<section id="step-1-create-a-new-telegram-bot">
-<h3>Step 1: Create a New Telegram Bot</h3>
-<ol class="arabic simple">
-<li><p>Open the <strong>Telegram</strong> app on your phone or computer.</p></li>
-<li><p>In the search bar, type <strong>&#64;BotFather</strong> and select it.</p></li>
-</ol>
-<div class="tip admonition">
-<p class="admonition-title">Important</p>
-<p>Ensure you choose the official account featuring the <strong>blue verification checkmark</strong> to avoid fake clone bots.</p>
-</div>
-<ol class="arabic simple" start="3">
-<li><p>Send the command <code class="docutils literal notranslate"><span class="pre">/newbot</span></code>.</p></li>
-<li><p>Follow the step-by-step prompts provided by BotFather to assign a display name and a unique username for your bot.</p></li>
-<li><p>Once complete, BotFather will generate an API <strong>Token</strong>. Copy this token immediately and store it safely. <strong>Never share this token publicly</strong> (e.g., do not commit it to public GitHub repositories).</p></li>
-<li><p>Click the link to your new bot provided by BotFather, open a direct chat with it, and click <strong>Start</strong> (or send <code class="docutils literal notranslate"><span class="pre">/start</span></code>) to activate it.</p></li>
-</ol>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>If you ever need to retrieve the token of an existing bot, simply open your chat with <strong>&#64;BotFather</strong>, send <code class="docutils literal notranslate"><span class="pre">/token</span></code>, and select your target bot from the menu.</p>
-</div>
-</section>
-<section id="step-2-configure-the-alarm-group-chat">
-<h3>Step 2: Configure the Alarm Group Chat</h3>
-<ol class="arabic simple">
-<li><p>Create a new <strong>Group Chat</strong> in Telegram.</p></li>
-<li><p>Add all laboratory members who need to receive system alarms, and add your newly created <strong>bot</strong> to the group.</p></li>
-<li><p>Promote the bot to an <strong>Administrator</strong>: Navigate to <em>Group Info → Edit → Administrators → Add Administrator</em> and select your bot. This grants it the necessary permissions to transmit alarms to the group.</p></li>
-</ol>
-<div class="tip admonition">
-<p class="admonition-title">Result</p>
-<p>Anyone added to this group will receive automated alarms and can send text commands to control or query the bot.</p>
-</div>
-</section>
-<section id="step-3-retrieve-the-group-chat-id">
-<h3>Step 3: Retrieve the Group Chat ID</h3>
-<ol class="arabic simple">
-<li><p>Search for <strong>&#64;username_to_id_bot</strong> (commonly known as IDBot) in Telegram and start a chat with it.</p></li>
-<li><p>Go back to your newly created lab group chat, send a temporary message, and <strong>forward</strong> that message directly into your chat with IDBot.</p></li>
-<li><p>IDBot will immediately reply with your unique <strong>Group Chat ID</strong> (typically a long negative number, e.g., <code class="docutils literal notranslate"><span class="pre">-100xxxxxxxxx</span></code>). Copy this number exactly, including the minus sign if present.</p></li>
+<section id="option-b-the-subject-stays-in-the-box-until-the-maximum-time">
+<h3>Option B: The Subject Stays in the Box Until the Maximum Time</h3>
+<p>If the subject does not leave the behavioral box before the task’s maximum time is reached, the system transitions to:</p>
+<ol class="arabic simple" start="9">
+<li><p><code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>: The task is closed, and all data is saved while the subject is still inside the behavioral box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WAIT_EXIT</span></code>: Until the subject attempts to leave and is detected by the scale.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_SAVE</span></code>: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
 </ol>
 </section>
-<section id="step-4-update-your-village-settings">
-<h3>Step 4: Update Your Village Settings</h3>
-<ol class="arabic simple">
-<li><p>Open a terminal on your Raspberry Pi and launch the application interface by typing <code class="docutils literal notranslate"><span class="pre">village</span></code>.</p></li>
-<li><p>Within the Training Village menu, navigate to <strong>SETTINGS</strong> and select the <strong>TELEGRAM SETTINGS</strong> subsection. Update the fields with your newly acquired credentials:</p></li>
-</ol>
-<p>TELEGRAM_TOKEN</p>
-<p>TELEGRAM_CHAT</p>
-<div class="warning admonition">
-<p class="admonition-title">Security Note</p>
-<p>These configuration settings are saved strictly on your local Raspberry Pi storage. Your credentials never leave your hardware and are never uploaded or shared externally.</p>
-</div>
+<section id="in-both-cases">
+<h3>In Both Cases</h3>
+<p>The system transitions back to the initial WAIT state, ready for the next session.</p>
 </section>
-</section>
-<hr class="docutils" />
-<section id="managing-alarms-commands">
-<h2>Managing Alarms &amp; Commands</h2>
-<p>Once your bot is fully linked to the system, you can refer to the <a class="reference internal" href="../troubleshooting/alarm.html"><span class="std std-doc">Alarm system overview</span></a> section of the documentation. There you will find a complete reference list of interactive commands you can text to the bot to check system health, alongside a detailed breakdown of the automated alarm types the Training Village can trigger.</p>
-<p>To verify that everything is working correctly, go to your Telegram group chat and send one of the following commands (ensuring the TV system is powered on and running). You should receive an immediate response from the bot:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/report</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/plot</span></code></p></li>
-</ul>
 </section>
 </section>
 
@@ -606,16 +571,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="access.html">
+    <a href="system.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Remote Access Setup</div></div>
+        <span>Previous</span><div class="title">Detailed System Description</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="backup.html">
+    <a href="requirements.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Data Persistence &amp; Backups</div>
+        <div class="title">System Requirements</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -637,9 +602,10 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8913056c"></script>
+      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-      <script src="../_static/shibuya.js?v=50760d75"></script></body>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script src="../_static/lightbox.js?v=59078c7a"></script></body>
 </html>

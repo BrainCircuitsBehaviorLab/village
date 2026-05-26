@@ -1,6 +1,7 @@
 ## System Logic (State Machine)
 
-[![State machine](/_static/states.png)](/_static/states.png)
+<img src="/_static/states.png" class="zoomable" alt="entrances" />
+
 
 This is the state diagram of all possible system states and their descriptions.
 

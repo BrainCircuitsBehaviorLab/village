@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Data Persistence &amp; Backups - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Remote Heartbeat Monitoring" href="heartbeat.html" /><link rel="prev" title="Telegram Bot Integration" href="telegram.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/initial_setup/backup.html" /><script>
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/preparation/backup.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=58311ff0" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/initial_setup/backup.html"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/preparation/backup.html"/>
   <meta property="og:title" content="Data Persistence &amp; Backups"/>
     <meta name="twitter:card" content="summary"/>
   </head>
@@ -34,7 +34,7 @@
       <strong>village</strong>
     </a>
     <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"><ul><li class="link"><a href="system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <nav class="sy-head-links"><ul><li class="link"><a href="../overview/system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
   <kbd>/</kbd>
@@ -64,41 +64,45 @@ data-aria-dark="Switch to auto color mode">
       <div class="sy-scrollbar p-6">
         <div class="globaltoc" data-expand-depth="0"><ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../initial_setup_index.html">INITIAL SETUP</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../preparation_index.html">PREPARATION &amp; SETUP</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="initial.html">Initial Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="launching.html">Launching the TV Application</a></li>
-<li class="toctree-l3"><a class="reference internal" href="access.html">Remote Access Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="access.html">Remote Access Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="telegram.html">Telegram Bot Integration</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Data Persistence &amp; Backups</a></li>
 <li class="toctree-l3"><a class="reference internal" href="heartbeat.html">Remote Heartbeat Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animal.html">Animal Handling</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/animal.html">Animal Handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/system.html">System Logic (State Machine)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/using.html">Using Existing Protocols</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Creating New Protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Core, Audio &amp; Video Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/data.html">Saved Data Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/triggers.html">Custom Interaction Triggers</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">TROUBLESHOOTING &amp; MAINTENANCE</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">General Troubleshooting Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; TROUBLESHOOTING</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting Guide</a></li>
 </ul>
 </li>
 </ul>
@@ -436,7 +440,6 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#key-configuration-fields">Key Configuration Fields</a></li>
-<li><a class="reference internal" href="#troubleshooting-sync-logs">Troubleshooting &amp; Sync Logs</a></li>
 </ul>
 </div></div>
   </aside>
@@ -458,7 +461,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../initial_setup_index.html"><span itemprop="name">INITIAL SETUP</span></a>
+        <a itemprop="item" href="../preparation_index.html"><span itemprop="name">PREPARATION &amp; SETUP</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -479,7 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/backup.md.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/preparation/backup.md.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -493,17 +496,17 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/backup.md.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/preparation/backup.md.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/backup.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
-            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/backup.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/preparation/backup.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/preparation/backup.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/initial_setup/backup.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/preparation/backup.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
@@ -531,16 +534,6 @@ data-aria-dark="Switch to auto color mode">
 <p class="admonition-title">Note</p>
 <p>When synchronizing data to a remote server, the <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code> field can be left blank if there is no need to specify a particular port for the SSH connection.</p>
 </div>
-</section>
-<hr class="docutils" />
-<section id="troubleshooting-sync-logs">
-<h2>Troubleshooting &amp; Sync Logs</h2>
-<p>If you suspect a transfer issue, you can inspect the detailed synchronization logs generated by the system. The log files are stored locally in the following directory:</p>
-<p><code class="docutils literal notranslate"><span class="pre">/home/pi/village_projects/YOUR_PROJECT/data/YOUR_SYSTEM/rsync_logs</span></code></p>
-<p>If the synchronization routine fails repeatedly, the system will broadcast an automated warning to your team’s Telegram channel:</p>
-<p>Alarm: No data sync in the last 24h</p>
-<p>Meaning: No data has been successfully backed up to the external server or hard drive during the last 24 hours.</p>
-<p>Action Required: Review the logs inside the rsync_logs folder to identify the specific transfer error, and verify your network connectivity or remote storage availability.</p>
 </section>
 </section>
 
@@ -581,9 +574,10 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8913056c"></script>
+      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-      <script src="../_static/shibuya.js?v=50760d75"></script></body>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script src="../_static/lightbox.js?v=59078c7a"></script></body>
 </html>

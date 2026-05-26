@@ -29,13 +29,15 @@ If you prefer to build the Training Village yourself, start by reviewing the com
 
 ---
 
-#### Setting Up the OS:
-1. On the first boot, follow the on-screen welcome wizard to configure your country, timezone, keyboard layout, and language preferences.
-2. Update the system credentials when prompted. By default, the pre-configured system image uses:
+### Setting Up the OS:
+
+1. Go to `Preferences` -> `Control Centre` and select the tab `Localisation`.
+2. Configure your country, timezone, keyboard layout, and language preferences.
+3. Go to `Preferences` -> `Control Centre` and select the tab `System`.
+4. Update the system credentials when prompted. By default, the pre-configured system image uses:
    * **Username:** `pi`
    * **Password:** `training_village`
-3. Leave the username as `pi`, but **change the password** to a secure one of your choice.
-4. Once the setup wizard completes, configure your internet connection via the Wi-Fi icon in the top-right corner (or leave it on Ethernet).
+5. Leave the username as `pi`, but **change the password** to a secure one of your choice.
 
 
 
