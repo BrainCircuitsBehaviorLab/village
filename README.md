@@ -19,6 +19,6 @@
 <div align="center">
 
 [![Website](https://img.shields.io/badge/Website-blue?style=for-the-badge)](https://braincircuitsbehaviorlab.github.io/village/)
-[![Documentation](https://img.shields.io/badge/Documentation-8A2BE2?style=for-the-badge)](https://braincircuitsbehaviorlab.github.io/village/initial_setup/prerequisites)
+[![Documentation](https://img.shields.io/badge/Documentation-8A2BE2?style=for-the-badge)](https://braincircuitsbehaviorlab.github.io/village/overview/system)
 
 </div>

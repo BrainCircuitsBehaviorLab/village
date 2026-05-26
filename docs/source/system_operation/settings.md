@@ -38,6 +38,6 @@ Some initial settings must be configured before the system can be used.  Navigat
 
 
 [BACKUP]: /system_operation/system.md
-[TELEGRAM]: /initial_setup/telegram.md
-[REMOTE]: /initial_setup/heartbeat.md
+[TELEGRAM]: /preparation/telegram.md
+[REMOTE]: /preparation/heartbeat.md
 [ALARM]: /troubleshooting/alarm.md

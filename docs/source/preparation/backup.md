@@ -1,0 +1,22 @@
+## Data Persistence & Backups
+
+Because the system runs on a microSD card with a limited capacity of 256 GB, older video files must be regularly purged to make room for new recordings. Please note that **behavioral task data is never deleted**—only the video files are cleared.
+
+By default, the system retains one week of video storage, but you can adjust this window to fit your needs under `SETTINGS` → `ADVANCED SETTINGS` → `DAYS_OF_VIDEO_STORAGE`.
+
+At the conclusion of each behavioral session, the system automatically triggers a data synchronization routine. To specify your backup destination, configure the fields in `SETTINGS` → `SYNC SETTINGS`. Here you can choose whether to sync your data to a remote network server or to an external hard drive connected directly to the Raspberry Pi.
+
+### Key Configuration Fields
+
+There are two critical parameters that govern this backup behavior:
+
+*   **`SAFE_DELETE`:**
+    *   **`ON`:** The system will *only* delete old video files if it confirms they have been successfully backed up to your remote server or external hard drive.
+    *   **`OFF`:** The system will automatically purge old video files once they exceed the storage days limit, even if no backup is found.
+*   **`MAXIMUM_SYNC_TIME`:** The maximum time allowed (in seconds) for the synchronization process to complete. If a sync session exceeds this threshold, the process terminates automatically. This safety cutoff prevents a slow network or hanging transfer from indefinitely blocking other animals from voluntarily accessing the operant box.
+
+```{admonition} Note
+:class: tip
+When synchronizing data to a remote server, the `SERVER_PORT` field can be left blank if there is no need to specify a particular port for the SSH connection.
+```
+

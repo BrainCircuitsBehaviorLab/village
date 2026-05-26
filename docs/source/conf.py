@@ -187,7 +187,7 @@ html_theme_options = {
     "color_mode": "light",
     "github_url": "https://github.com/BrainCircuitsBehaviorLab/village",
     "nav_links": [
-        {"title": "Documentation", "url": "initial_setup/system"},
+        {"title": "Documentation", "url": "overview/system"},
         {"title": "API", "url": "api_index"},
         {"title": "Resources", "url": "resources/list_of_parts"},
         {"title": "FAQ", "url": "faq/faq"},
@@ -218,6 +218,7 @@ sitemap_url_scheme = "{link}"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.svg"
 html_css_files = ["custom.css"]
+html_js_files = ["lightbox.js"]
 
 # Ignore links and anchors
 linkcheck_ignore = [

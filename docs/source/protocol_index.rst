@@ -9,7 +9,6 @@ PROTOCOL & TASK DESIGN
 .. toctree::
     :maxdepth: 1
 
-    protocols/using.md
     protocols/creating.md
     protocols/task.md
     protocols/functions.md

@@ -291,11 +291,17 @@ class LabelButtons:
             coords = settings.get(self.name)
             coords = list(coords)
             coords[self.index] = int(self.label_value)
-            left, top, right, bottom = coords[0], coords[1], coords[2], coords[3]
-            if right <= left or bottom <= top:
-                self.label_value = settings.get(self.name)[self.index]
-                self.label3.setText(str(self.label_value))
-                return
+            if self.direction in ["empty_limit", "subject_limit"]:
+                if coords[0] >= coords[1]:
+                    self.label_value = settings.get(self.name)[self.index]
+                    self.label3.setText(str(self.label_value))
+                    return
+            else:
+                left, top, right, bottom = coords[0], coords[1], coords[2], coords[3]
+                if right <= left or bottom <= top:
+                    self.label_value = settings.get(self.name)[self.index]
+                    self.label3.setText(str(self.label_value))
+                    return
             settings.set(self.name, coords)
 
         cam_corridor.change = True

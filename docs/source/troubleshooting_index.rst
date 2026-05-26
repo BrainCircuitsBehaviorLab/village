@@ -1,4 +1,4 @@
-TROUBLESHOOTING & MAINTENANCE
+MAINTENANCE & TROUBLESHOOTING
 =================================
 
 .. raw:: html
@@ -9,6 +9,6 @@ TROUBLESHOOTING & MAINTENANCE
 .. toctree::
     :maxdepth: 1
 
+    troubleshooting/cleaning.md
     troubleshooting/alarm.md
     troubleshooting/troubleshooting.md
-    troubleshooting/cleaning.md
