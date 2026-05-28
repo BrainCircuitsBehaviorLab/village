@@ -146,7 +146,7 @@ def system_run(bevavior_window: QWidget) -> None:
             except queue.Empty:
                 pass
 
-            if cam_corridor.chrono.get_seconds() > corridor_video_duration:
+            if cam_corridor.timing // 1000 > corridor_video_duration:
                 cam_corridor.stop_recording()
                 cam_corridor.start_recording()
 

@@ -1,3 +1,4 @@
+import threading
 import traceback
 
 from PCA9685_smbus2 import PCA9685  # type: ignore
@@ -61,13 +62,19 @@ class Motor:
         ticks = self.servo_pulse(pulse_ms)
         self.pwm.set_pwm(self.channel, 0, ticks)
 
+    def disable(self) -> None:
+        """Stops PWM signal to release holding torque."""
+        self.pwm.set_pwm(self.channel, 0, 4096)
+
     def open(self) -> None:
         """Moves the motor to the open position."""
         self.move(self.open_angle)
+        threading.Timer(1.0, self.disable).start()
 
     def close(self) -> None:
         """Moves the motor to the close position."""
         self.move(self.close_angle)
+        threading.Timer(1.0, self.disable).start()
 
 
 class LED:

@@ -6,7 +6,7 @@ Some initial settings must be configured before the system can be used.  Navigat
     *   **`SYSTEM_NAME`:** Define a unique identifier for your setup. This name will be appended to all saved datasets, which is essential for distinguishing data source origins if your facility operates multiple Training Villages.
     *   **`USE_CORRIDOR`:** Must be toggled **ON** for standard automated operations.
     *   **`USE_BOX_BOARD`:** Set to **ON** or **OFF** depending on whether your configuration utilizes auxiliary servo motors or dedicated illumination modules inside the operant chamber.
-    *   *Project Selection:* This section also allows you to select an active experimental project or initialize a new one. For initial deployment, retain the default project profile.
+    *   **`Project Selection`:** This section allows you to select an active experimental project or initialize a new one. For now, keep the default project: **demo-village-project**.
 
 *   **`CORRIDOR SETTINGS`:** Define the DAYTIME and NIGHTTIME parameters to set the specific hours you want the lights to turn on and off, the automated visible and IR lighting modules will cycle accordingly. Additionally, adjust the `DETECTION COLOR` parameter if you are tracking light-colored animals on a dark corridor background.
 

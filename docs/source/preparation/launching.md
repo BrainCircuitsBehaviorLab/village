@@ -17,6 +17,15 @@ village
 When you run the village command, the system automatically executes a shortcut script that handles the background environment setup. Specifically, it activates your Python virtual environment by running source `~/.env/bin/activate` and then executes the core script located at `/home/pi/village/village/main.py` to start the program and display the GUI.
 ```
 
+---
+
+### Default Project
+The first time the Training Village (TV) is launched, a default project is automatically cloned from GitHub containing a repository with several example tasks.
+
+This repository is named `demo-village-project` and is located at:
+"https://github.com/BrainCircuitsBehaviorLab/demo-village-project.git"
+
+---
 
 ### Automatic Component Check
 

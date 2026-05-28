@@ -10,6 +10,4 @@ SYSTEM OVERVIEW
     :maxdepth: 1
 
     overview/system.md
-    overview/state_machine.md
     overview/requirements.md
-    overview/animal.md
