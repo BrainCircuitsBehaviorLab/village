@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>System Logic (State Machine) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="System Requirements" href="requirements.html" /><link rel="prev" title="Detailed System Description" href="system.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/overview/state_machine.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Timing &amp; Clock Synchronization - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="System Logic (State Machine)" href="state_machine.html" /><link rel="prev" title="Saved Data and Video" href="data.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/timing.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,8 +21,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/overview/state_machine.html"/>
-  <meta property="og:title" content="System Logic (State Machine)"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/timing.html"/>
+  <meta property="og:title" content="Timing &amp; Clock Synchronization"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -34,7 +34,7 @@
       <strong>village</strong>
     </a>
     <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"><ul><li class="link"><a href="system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <nav class="sy-head-links"><ul><li class="link"><a href="../overview/system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
   <kbd>/</kbd>
@@ -64,10 +64,9 @@ data-aria-dark="Switch to auto color mode">
       <div class="sy-scrollbar p-6">
         <div class="globaltoc" data-expand-depth="0"><ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="system.html">Detailed System Description</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">System Logic (State Machine)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="requirements.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../preparation_index.html">PREPARATION &amp; SETUP</a><ul>
@@ -80,15 +79,17 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../preparation/animal.html">Animal Handling</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -439,12 +440,13 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#normal-cycle-for-an-animal-session">Normal Cycle for an Animal Session</a><ul>
-<li><a class="reference internal" href="#option-a-the-subject-leaves-before-the-tasks-maximum-time">Option A: The Subject Leaves Before the Task&#8217;s Maximum Time</a></li>
-<li><a class="reference internal" href="#option-b-the-subject-stays-in-the-box-until-the-maximum-time">Option B: The Subject Stays in the Box Until the Maximum Time</a></li>
-<li><a class="reference internal" href="#in-both-cases">In Both Cases</a></li>
+<li><a class="reference internal" href="#absolute-time-unix-epoch">Absolute Time (Unix Epoch)</a></li>
+<li><a class="reference internal" href="#hardware-synchronization">Hardware Synchronization</a><ul>
+<li><a class="reference internal" href="#raspberry-pi-only-native-execution"><strong>1. Raspberry Pi only (native execution)</strong></a></li>
+<li><a class="reference internal" href="#coprocessor-integrated-setups-bpod-or-arduino"><strong>2. Coprocessor-integrated setups (Bpod or Arduino)</strong></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#precision-limits-clock-drift">Precision Limits &amp; Clock Drift</a></li>
 </ul>
 </div></div>
   </aside>
@@ -466,11 +468,11 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../overview_index.html"><span itemprop="name">SYSTEM OVERVIEW</span></a>
+        <a itemprop="item" href="../system_operation_index.html"><span itemprop="name">SYSTEM OPERATION</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">System Logic (State Machine)</strong>
+        <strong itemprop="name">Timing &amp; Clock Synchronization</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -487,7 +489,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/timing.md.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -501,67 +503,81 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/timing.md.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
-            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/timing.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/timing.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/overview/state_machine.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/timing.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="system-logic-state-machine">
-<h1>System Logic (State Machine)</h1>
-<img alt="entrances" class="zoomable" src="../_images/states.png" />
-<p>This is the state diagram of all possible system states and their descriptions.</p>
-<p>Black arrows represent events that trigger a state transition, while red arrows indicate possible alarms, which may or may not cause a state change.</p>
-<p>States in green represent a normal cycle in automatic mode. States in blue indicate manual manipulation of the system by a user. The orange state is reached after an error that the system cannot resolve on its own, requiring remote intervention.</p>
-<p>Lighter-colored states are transitional and resolve quickly, leading to darker-colored states, which are stable states.</p>
-<section id="normal-cycle-for-an-animal-session">
-<h2>Normal Cycle for an Animal Session</h2>
-<p>A typical session of an animal performing a task follows this sequence:</p>
+          <section id="timing-clock-synchronization">
+<h1>Timing &amp; Clock Synchronization</h1>
+<section id="absolute-time-unix-epoch">
+<h2>Absolute Time (Unix Epoch)</h2>
+<p>All timestamps across the platform conform to standard <strong>Unix Epoch Time</strong> — a
+floating-point value representing total seconds elapsed since January 1, 1970,
+00:00:00 UTC:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\text{Timestamp} = 1748300000.123 \longrightarrow \text{Precise calendar moment in time}\]</div>
+</div>
+<p>This format is consistent across all Linux subsystems, making it straightforward to
+subtract timestamps to compute durations or compare events across independent rigs.</p>
+</section>
+<section id="hardware-synchronization">
+<h2>Hardware Synchronization</h2>
+<p>Depending on your setup, hardware timing is managed through one of two pathways:</p>
+<section id="raspberry-pi-only-native-execution">
+<h3><strong>1. Raspberry Pi only (native execution)</strong></h3>
+<p>Timestamps are derived directly from the Linux system clock via <code class="docutils literal notranslate"><span class="pre">time.time()</span></code>.</p>
+</section>
+<section id="coprocessor-integrated-setups-bpod-or-arduino">
+<h3><strong>2. Coprocessor-integrated setups (Bpod or Arduino)</strong></h3>
+<p>Microcontrollers maintain independent internal hardware timers. To align these with the
+Raspberry Pi master clock, a synchronization handshake is performed at the start of
+every trial:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">WAIT</span></code>: The system remains in this state until an RFID detection occurs.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DETECTION</span></code>: In this state, the system determines whether the subject is allowed to enter the behavioral box.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ACCESS</span></code>: If the subject is allowed to enter, Door 1 is closed, and Door 2 is opened.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">LAUNCH_AUTO</span></code>: The task is automatically launched.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">RUN_FIRST</span></code>: The task begins, but Door 2 remains open until the corridor is empty.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CLOSE_DOOR2</span></code>: Once the corridor is empty, Door 2 is closed.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">RUN_CLOSED</span></code>: The task is running, and the subject inside the behavioral box is not allowed to leave until a configurable minimum time for the task has elapsed.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OPEN_DOOR2</span></code>: Once the minimum time has elapsed, Door 2 opens.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">RUN_OPENED</span></code>: The subject is allowed to leave the behavioral box if desired, or it may continue performing the task. At this point, two possible scenarios can occur:</p></li>
+<li><p>At the moment the state machine launches a trial, two clock values are captured
+simultaneously:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>: Current Unix epoch time on the master clock.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coprocessor_timestamp</span></code>: Reset to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> as the microcontroller begins the
+trial loop.</p></li>
+</ul>
+</li>
+<li><p>A constant offset is computed:
+<code class="docutils literal notranslate"><span class="pre">offset</span> <span class="pre">=</span> <span class="pre">raspberry_timestamp</span> <span class="pre">-</span> <span class="pre">coprocessor_timestamp</span></code></p></li>
+<li><p>As serial data packets arrive from the microcontroller, their hardware timestamps are
+converted to absolute Unix time before being written to disk:
+<code class="docutils literal notranslate"><span class="pre">timestamp_absolute</span> <span class="pre">=</span> <span class="pre">coprocessor_timestamp</span> <span class="pre">+</span> <span class="pre">offset</span></code></p></li>
 </ol>
-<section id="option-a-the-subject-leaves-before-the-tasks-maximum-time">
-<h3>Option A: The Subject Leaves Before the Task’s Maximum Time</h3>
-<p>If the scale detects that the animal is returning to the home cage, the system transitions to:</p>
-<ol class="arabic simple" start="9">
-<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_UNSAVED</span></code>: Door 2 is closed, and Door 1 is opened to allow the subject to return home.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SAVE_OUTSIDE</span></code>: After the subject has returned to the home cage, the task is closed, and all data is saved.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
-</ol>
+<p>This approach preserves the sub-millisecond precision of the external hardware controller
+while writing all data in master Unix Epoch time.</p>
 </section>
-<section id="option-b-the-subject-stays-in-the-box-until-the-maximum-time">
-<h3>Option B: The Subject Stays in the Box Until the Maximum Time</h3>
-<p>If the subject does not leave the behavioral box before the task’s maximum time is reached, the system transitions to:</p>
-<ol class="arabic simple" start="9">
-<li><p><code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>: The task is closed, and all data is saved while the subject is still inside the behavioral box.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WAIT_EXIT</span></code>: Until the subject attempts to leave and is detected by the scale.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_SAVE</span></code>: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
-</ol>
 </section>
-<section id="in-both-cases">
-<h3>In Both Cases</h3>
-<p>The system transitions back to the initial WAIT state, ready for the next session.</p>
-</section>
+<section id="precision-limits-clock-drift">
+<h2>Precision Limits &amp; Clock Drift</h2>
+<p>This synchronization model assumes the computed offset remains stable throughout a trial.
+In practice, physical oscillator variations can cause minor clock drift of up to
+<strong>~1 ms per minute</strong> relative to the Raspberry Pi.</p>
+<ul class="simple">
+<li><p><strong>Short trials (&lt; 1–2 minutes):</strong> Drift is negligible and can be safely ignored for
+standard behavioral analysis.</p></li>
+<li><p><strong>Long trials:</strong> In paradigms with very long trials, it is advisable to
+handle timestamps that depend on the coprocessor separately from those derived solely
+from the Raspberry Pi clock. For example in a 15 minutes trial, cumulative drift can
+introduce up to <strong>15 ms of offset</strong> by the end of a single trial.</p></li>
+</ul>
 </section>
 </section>
 
@@ -571,16 +587,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="system.html">
+    <a href="data.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Detailed System Description</div></div>
+        <span>Previous</span><div class="title">Saved Data and Video</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="requirements.html">
+    <a href="state_machine.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">System Requirements</div>
+        <div class="title">System Logic (State Machine)</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -602,10 +618,12 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
       <script src="../_static/lightbox.js?v=59078c7a"></script></body>
 </html>

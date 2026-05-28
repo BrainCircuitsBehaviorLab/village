@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,29 +439,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot"><code class="docutils literal notranslate"><span class="pre">TelegramBot</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.token"><code class="docutils literal notranslate">token</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.chat"><code class="docutils literal notranslate">chat</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.message"><code class="docutils literal notranslate">message</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.connected"><code class="docutils literal notranslate">connected</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.error_running"><code class="docutils literal notranslate">error_running</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.error"><code class="docutils literal notranslate">error</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.thread"><code class="docutils literal notranslate">thread</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.application"><code class="docutils literal notranslate">application</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.start"><code class="docutils literal notranslate">start()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.alarm"><code class="docutils literal notranslate">alarm()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.report"><code class="docutils literal notranslate">report()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.cam"><code class="docutils literal notranslate">cam()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.plot"><code class="docutils literal notranslate">plot()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.main"><code class="docutils literal notranslate">main()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.botloop_starttask"><code class="docutils literal notranslate">botloop_starttask()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.TelegramBot.botloop"><code class="docutils literal notranslate">botloop()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#village.devices.telegram_bot.get_telegram_bot"><code class="docutils literal notranslate"><span class="pre">get_telegram_bot()</span></code></a></li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -554,200 +533,6 @@ data-aria-dark="Switch to auto color mode">
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">TelegramBot</span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A Telegram Bot for controlling and monitoring the village system.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.token">
-<span class="sig-name descname"><span class="pre">token</span></span></dt>
-<dd><p>The Telegram bot token.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.chat">
-<span class="sig-name descname"><span class="pre">chat</span></span></dt>
-<dd><p>The chat ID to send alarms to.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.message">
-<span class="sig-name descname"><span class="pre">message</span></span></dt>
-<dd><p>Current message buffer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.connected">
-<span class="sig-name descname"><span class="pre">connected</span></span></dt>
-<dd><p>Connection status.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.error_running">
-<span class="sig-name descname"><span class="pre">error_running</span></span></dt>
-<dd><p>Flag indicating if an error occurred during the loop.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.error">
-<span class="sig-name descname"><span class="pre">error</span></span></dt>
-<dd><p>Error message.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.thread">
-<span class="sig-name descname"><span class="pre">thread</span></span></dt>
-<dd><p>Background thread for the bot loop.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>threading.Thread</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.application">
-<span class="sig-name descname"><span class="pre">application</span></span></dt>
-<dd><p>The python-telegram-bot application instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Application</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.start">
-<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">telegram.Update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">telegram.ext.ContextTypes.DEFAULT_TYPE</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Responds to the /start command.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>update</strong> (<em>Update</em>) – The update object.</p></li>
-<li><p><strong>context</strong> (<em>ContextTypes.DEFAULT_TYPE</em>) – The context object.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.alarm">
-<span class="sig-name descname"><span class="pre">alarm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot.alarm"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Sends an alarm message to the configured chat.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The message content.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.report">
-<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">telegram.Update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">telegram.ext.ContextTypes.DEFAULT_TYPE</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot.report"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Generates and sends a report for the specified number of hours.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>update</strong> (<em>Update</em>) – The update object.</p></li>
-<li><p><strong>context</strong> (<em>ContextTypes.DEFAULT_TYPE</em>) – The context object (contains args).</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.cam">
-<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">telegram.Update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">telegram.ext.ContextTypes.DEFAULT_TYPE</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot.cam"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Takes pictures from cameras and sends them.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>update</strong> (<em>Update</em>) – The update object.</p></li>
-<li><p><strong>context</strong> (<em>ContextTypes.DEFAULT_TYPE</em>) – The context object.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.plot">
-<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">telegram.Update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">telegram.ext.ContextTypes.DEFAULT_TYPE</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Generates and sends a plot of corridor events.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>update</strong> (<em>Update</em>) – The update object.</p></li>
-<li><p><strong>context</strong> (<em>ContextTypes.DEFAULT_TYPE</em>) – The context object.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.main">
-<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot.main"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Main asyncio loop for the bot application.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.botloop_starttask">
-<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">botloop_starttask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot.botloop_starttask"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Starts the main bot task.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.TelegramBot.botloop">
-<span class="sig-name descname"><span class="pre">botloop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#TelegramBot.botloop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Entry point for the bot thread.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.devices.telegram_bot.get_telegram_bot">
-<span class="sig-name descname"><span class="pre">get_telegram_bot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="village.devices.telegram_bot.TelegramBot.html#village.devices.telegram_bot.TelegramBot" title="village.devices.telegram_bot.TelegramBot"><span class="pre">TelegramBot</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="village.classes.null_classes.NullTelegramBot.html#village.classes.null_classes.NullTelegramBot" title="village.classes.null_classes.NullTelegramBot"><span class="pre">NullTelegramBot</span></a></span></span><a class="reference internal" href="../_modules/village/devices/telegram_bot.html#get_telegram_bot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Factory function to initialize and connect the TelegramBot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An initialized TelegramBot instance or base class on failure.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>TelegramBotBase</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -787,7 +572,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

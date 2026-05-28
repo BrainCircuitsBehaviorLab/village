@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,26 +439,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.scripts.utils.change_directory_settings"><code class="docutils literal notranslate"><span class="pre">change_directory_settings()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.change_system_directory_settings"><code class="docutils literal notranslate"><span class="pre">change_system_directory_settings()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.create_directories"><code class="docutils literal notranslate"><span class="pre">create_directories()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.create_directories_from_path"><code class="docutils literal notranslate"><span class="pre">create_directories_from_path()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.download_github_repositories"><code class="docutils literal notranslate"><span class="pre">download_github_repositories()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.is_active_regular"><code class="docutils literal notranslate"><span class="pre">is_active_regular()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.is_active"><code class="docutils literal notranslate"><span class="pre">is_active()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.active_last_24_hours"><code class="docutils literal notranslate"><span class="pre">active_last_24_hours()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.delete_all_elements_from_layout"><code class="docutils literal notranslate"><span class="pre">delete_all_elements_from_layout()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.validate_subject_name"><code class="docutils literal notranslate"><span class="pre">validate_subject_name()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.reformat_trial_data"><code class="docutils literal notranslate"><span class="pre">reformat_trial_data()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.transform_raw_to_clean"><code class="docutils literal notranslate"><span class="pre">transform_raw_to_clean()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.has_low_disk_space"><code class="docutils literal notranslate"><span class="pre">has_low_disk_space()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.interpolate"><code class="docutils literal notranslate"><span class="pre">interpolate()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.get_x_value_interp"><code class="docutils literal notranslate"><span class="pre">get_x_value_interp()</span></code></a></li>
-<li><a class="reference internal" href="#village.scripts.utils.create_pixmap"><code class="docutils literal notranslate"><span class="pre">create_pixmap()</span></code></a></li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -589,244 +571,6 @@ data-aria-dark="Switch to auto color mode">
 </tbody>
 </table>
 </div>
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.change_directory_settings">
-<span class="sig-name descname"><span class="pre">change_directory_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#change_directory_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Update all directory settings based on a new project root path.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_path</strong> (<em>str</em>) – The absolute path to the new project root directory.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.change_system_directory_settings">
-<span class="sig-name descname"><span class="pre">change_system_directory_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#change_system_directory_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Updates the system directory setting and renames the directory if it changed.</p>
-<p>This handles cases where the SYSTEM_NAME setting might have been updated.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.create_directories">
-<span class="sig-name descname"><span class="pre">create_directories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#create_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Create all necessary system directories if they do not exist.</p>
-<p>Uses paths defined in the global settings.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.create_directories_from_path">
-<span class="sig-name descname"><span class="pre">create_directories_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#create_directories_from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Creates a standard directory structure rooted at the given path.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>p</strong> (<em>str</em>) – Root path for the new directory structure.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if successful, False if an exception occurred.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.download_github_repositories">
-<span class="sig-name descname"><span class="pre">download_github_repositories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repositories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#download_github_repositories"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Clone a list of GitHub repositories into the user’s village_projects directory.</p>
-<p>If a repository already exists and is not empty, it is skipped.
-Updates the ‘GITHUB_REPOSITORIES_DOWNLOADED’ setting upon success.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>repositories</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of GitHub repository URLs.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.is_active_regular">
-<span class="sig-name descname"><span class="pre">is_active_regular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#is_active_regular"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return True if the current calendar day is scheduled as active.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.is_active">
-<span class="sig-name descname"><span class="pre">is_active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#is_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return True if the current hour is within the scheduled active hours.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.active_last_24_hours">
-<span class="sig-name descname"><span class="pre">active_last_24_hours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#active_last_24_hours"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return True if every hour in the last 24 h was scheduled as active.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.delete_all_elements_from_layout">
-<span class="sig-name descname"><span class="pre">delete_all_elements_from_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">&lt;MagicMock</span> <span class="pre">name</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mock.QLayout'</span> <span class="pre">id='139824478764624'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#delete_all_elements_from_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Recursively removes all widgets and sub-layouts from a QLayout.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>layout</strong> (<em>QLayout</em>) – The layout to clear.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.validate_subject_name">
-<span class="sig-name descname"><span class="pre">validate_subject_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#validate_subject_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Returns an error message if the name is invalid, None if valid.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.reformat_trial_data">
-<span class="sig-name descname"><span class="pre">reformat_trial_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection.dict" title="village.classes.collection.Collection.dict"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection.dict" title="village.classes.collection.Collection.dict"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#reformat_trial_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reformats raw trial data into a flattened dictionary structure.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection.dict" title="village.classes.collection.Collection.dict"><em>dict</em></a>) – Raw data dictionary containing events and states.</p></li>
-<li><p><strong>date</strong> (<em>str</em>) – Date string.</p></li>
-<li><p><strong>trial</strong> (<em>int</em>) – Trial number.</p></li>
-<li><p><strong>subject</strong> (<em>str</em>) – Subject identifier.</p></li>
-<li><p><strong>task</strong> (<em>str</em>) – Task identifier.</p></li>
-<li><p><strong>system_name</strong> (<em>str</em>) – System name.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Flattened dictionary including formatted start/end times.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection.dict" title="village.classes.collection.Collection.dict">dict</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.transform_raw_to_clean">
-<span class="sig-name descname"><span class="pre">transform_raw_to_clean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#transform_raw_to_clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Transforms raw Bpod trial data into a clean, wide-format DataFrame.</p>
-<p>Processes MSG, START, and END columns to create specific start/end columns
-for each message type.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – Raw input DataFrame.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Cleaned and pivoted DataFrame.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.setup_logging">
-<span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logs_subdirectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FileHandler</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#setup_logging"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Configure the logging system to write to a timestamped file.
-Creates the log directory if needed, resets existing handlers, and suppresses
-verbose logs from external libraries (urllib3, telegram, etc.).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>logs_subdirectory</strong> (<em>str</em>) – The name of the subdirectory in the system folder
-where logs should be stored.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>A tuple containing the log filename and</dt><dd><p>the created FileHandler instance.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[str, logging.FileHandler]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.has_low_disk_space">
-<span class="sig-name descname"><span class="pre">has_low_disk_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_gb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#has_low_disk_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Checks if the root partition has low disk space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>threshold_gb</strong> (<em>int</em><em>, </em><em>optional</em>) – The threshold in GB. Defaults to 10.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if free space is below the threshold, False otherwise.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.interpolate">
-<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#interpolate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Perform PCHIP interpolation on specific data points.</p>
-<p>Sorts the data, averages y-values for duplicate x-values, and generates
-interpolated points.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>Any</em>) – Input x coordinates (array-like).</p></li>
-<li><p><strong>y</strong> (<em>Any</em>) – Input y coordinates (array-like).</p></li>
-<li><p><strong>points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of interpolated points to generate. Default: 100.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple (x_fit, y_fit) of interpolated arrays,
-or (None, None) if insufficient data points.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.get_x_value_interp">
-<span class="sig-name descname"><span class="pre">get_x_value_interp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#get_x_value_interp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Find the x-value corresponding to a target y-value using interpolation.</p>
-<p>Useful for finding thresholds (e.g., x value where y crosses 50%).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>Any</em>) – Input x coordinates.</p></li>
-<li><p><strong>y</strong> (<em>Any</em>) – Input y coordinates.</p></li>
-<li><p><strong>y_target</strong> (<em>float</em>) – The target y value to search for.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The estimated x value, or None if the target is out of range
-or interpolation fails.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.scripts.utils.create_pixmap">
-<span class="sig-name descname"><span class="pre">create_pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">matplotlib.figure.Figure</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QPixmap'</span> <span class="pre">id='139824484719312'&gt;</span></span></span><a class="reference internal" href="../_modules/village/scripts/utils.html#create_pixmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Creates a QPixmap from a matplotlib Figure.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fig</strong> (<em>Figure</em>) – The matplotlib figure.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The generated QPixmap, or an empty QPixmap if an error occurs.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>QPixmap</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -866,7 +610,7 @@ or interpolation fails.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

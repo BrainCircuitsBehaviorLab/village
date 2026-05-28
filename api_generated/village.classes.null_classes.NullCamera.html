@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -457,9 +458,9 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.trial"><code class="docutils literal notranslate">trial</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.is_recording"><code class="docutils literal notranslate">is_recording</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.show_time_info"><code class="docutils literal notranslate">show_time_info</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.null_classes.NullCamera.timing"><code class="docutils literal notranslate">timing</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.x_position"><code class="docutils literal notranslate">x_position</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.y_position"><code class="docutils literal notranslate">y_position</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullCamera.chrono"><code class="docutils literal notranslate">chrono</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.trigger_event"><code class="docutils literal notranslate">trigger_event</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.items_to_draw"><code class="docutils literal notranslate">items_to_draw</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.start_camera"><code class="docutils literal notranslate">start_camera()</span></code></a></li>
@@ -659,19 +660,19 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.change" title="village.classes.null_classes.NullCamera.change"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.chrono" title="village.classes.null_classes.NullCamera.chrono"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chrono</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.error" title="village.classes.null_classes.NullCamera.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.error" title="village.classes.null_classes.NullCamera.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.is_recording" title="village.classes.null_classes.NullCamera.is_recording"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_recording</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.is_recording" title="village.classes.null_classes.NullCamera.is_recording"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_recording</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.path_picture" title="village.classes.null_classes.NullCamera.path_picture"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path_picture</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.path_picture" title="village.classes.null_classes.NullCamera.path_picture"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path_picture</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.show_time_info" title="village.classes.null_classes.NullCamera.show_time_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_time_info</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.show_time_info" title="village.classes.null_classes.NullCamera.show_time_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_time_info</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.timing" title="village.classes.null_classes.NullCamera.timing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timing</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#village.classes.null_classes.NullCamera.trial" title="village.classes.null_classes.NullCamera.trial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trial</span></code></a></p></td>
@@ -773,6 +774,11 @@ data-aria-dark="Switch to auto color mode">
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.timing">
+<span class="sig-name descname"><span class="pre">timing</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.x_position">
 <span class="sig-name descname"><span class="pre">x_position</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></span></dt>
 <dd></dd></dl>
@@ -783,13 +789,8 @@ data-aria-dark="Switch to auto color mode">
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.chrono">
-<span class="sig-name descname"><span class="pre">chrono</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;village.scripts.time_utils.TimeUtils.Chrono</span> <span class="pre">object&gt;</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.trigger_event">
-<span class="sig-name descname"><span class="pre">trigger_event</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;threading.Event</span> <span class="pre">at</span> <span class="pre">0x7f2b6c59f650:</span> <span class="pre">unset&gt;</span></span></dt>
+<span class="sig-name descname"><span class="pre">trigger_event</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;threading.Event</span> <span class="pre">at</span> <span class="pre">0x7fa0e93be550:</span> <span class="pre">unset&gt;</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -811,7 +812,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.start_preview_window">
-<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='139824479643920'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCamera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='140329086034384'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCamera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Starts the preview window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -994,7 +995,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

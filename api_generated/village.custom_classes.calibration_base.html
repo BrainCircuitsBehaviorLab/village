@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,22 +439,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase"><code class="docutils literal notranslate"><span class="pre">CalibrationBase</span></code></a><ul>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.display_name"><code class="docutils literal notranslate">display_name</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.is_active"><code class="docutils literal notranslate">is_active()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.init_panel"><code class="docutils literal notranslate">init_panel()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.reset"><code class="docutils literal notranslate">reset()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.draw"><code class="docutils literal notranslate">draw()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.change_layout"><code class="docutils literal notranslate">change_layout()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.update_status_label_buttons"><code class="docutils literal notranslate">update_status_label_buttons()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.update_gui"><code class="docutils literal notranslate">update_gui()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.create_plot"><code class="docutils literal notranslate">create_plot()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.calibration_base.CalibrationBase.get_last_calibration_df"><code class="docutils literal notranslate">get_last_calibration_df()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -555,81 +541,6 @@ def is_active(cls) -&gt; bool:</p>
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">CalibrationBase</span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection" title="village.classes.collection.Collection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Collection</span></code></a></p>
-<p>Base class for all calibration panels.</p>
-<p>Inherits from Collection so data methods (df, save_from_df, get_valve_time…)
-are directly available on self. The Qt UI is handled by a _Panel instance
-stored in self._panel; unknown attribute lookups are proxied to it so
-create_and_add_label, addWidget, etc. work without prefixing.</p>
-<dl class="simple">
-<dt>Class attributes to define in subclasses:</dt><dd><p>name        - label shown in the left menu
-columns   - Collection column names
-types   - Collection column types</p>
-</dd>
-</dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.display_name">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">display_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.is_active">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.is_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.init_panel">
-<span class="sig-name descname"><span class="pre">init_panel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GuiWindow</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.init_panel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Creates (or recreates) the Qt panel and calls draw().</p>
-<p>Called by CalibrationLayout each time the CALIBRATION tab is opened.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Clears and redraws the panel (used after save/delete).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.draw">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Draws the calibration UI. Override in subclasses.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.change_layout">
-<span class="sig-name descname"><span class="pre">change_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.change_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Called before switching away from this calibration.</p>
-<p>Return False to prevent the switch (e.g. unsaved changes).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.update_status_label_buttons">
-<span class="sig-name descname"><span class="pre">update_status_label_buttons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.update_status_label_buttons"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Delegates status bar update to the parent CalibrationLayout.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.update_gui">
-<span class="sig-name descname"><span class="pre">update_gui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.update_gui"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Called periodically to refresh the UI.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.create_plot">
-<span class="sig-name descname"><span class="pre">create_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pd.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.create_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.calibration_base.CalibrationBase.get_last_calibration_df">
-<span class="sig-name descname"><span class="pre">get_last_calibration_df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/calibration_base.html#CalibrationBase.get_last_calibration_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -669,7 +580,7 @@ types   - Collection column types</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

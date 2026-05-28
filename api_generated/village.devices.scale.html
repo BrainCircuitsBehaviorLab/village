@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,29 +439,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.devices.scale.Scale"><code class="docutils literal notranslate"><span class="pre">Scale</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.scale.Scale.I2C_ADDR"><code class="docutils literal notranslate">I2C_ADDR</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.REG_DATA_GET_RAM_DATA"><code class="docutils literal notranslate">REG_DATA_GET_RAM_DATA</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.bus"><code class="docutils literal notranslate">bus</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.calibration"><code class="docutils literal notranslate">calibration</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.offset"><code class="docutils literal notranslate">offset</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.i2cbus"><code class="docutils literal notranslate">i2cbus</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.error"><code class="docutils literal notranslate">error</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.error_message_timer"><code class="docutils literal notranslate">error_message_timer</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.alarm_timer"><code class="docutils literal notranslate">alarm_timer</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.min"><code class="docutils literal notranslate">min</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.max"><code class="docutils literal notranslate">max</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.tare"><code class="docutils literal notranslate">tare()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.calibrate"><code class="docutils literal notranslate">calibrate()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.get_value"><code class="docutils literal notranslate">get_value()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.get_weight"><code class="docutils literal notranslate">get_weight()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.scale.Scale.real_weight_inference"><code class="docutils literal notranslate">real_weight_inference()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#village.devices.scale.get_scale"><code class="docutils literal notranslate"><span class="pre">get_scale()</span></code></a></li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -554,230 +533,6 @@ data-aria-dark="Switch to auto color mode">
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="village.devices.scale.Scale">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale" title="village.classes.null_classes.NullScale"><code class="xref py py-class docutils literal notranslate"><span class="pre">NullScale</span></code></a></p>
-<p>Interface for an I2C scale sensor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>address</strong> (<em>str</em>) – The I2C address of the scale as a hex string (e.g., “0x2A”).</p></li>
-<li><p><strong>min_threshold</strong> (<em>float</em>) – The minimum weight threshold for valid measurements.</p></li>
-<li><p><strong>max_threshold</strong> (<em>float</em>) – The maximum weight threshold for valid measurements.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.I2C_ADDR">
-<span class="sig-name descname"><span class="pre">I2C_ADDR</span></span></dt>
-<dd><p>The I2C address of the scale.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.REG_DATA_GET_RAM_DATA">
-<span class="sig-name descname"><span class="pre">REG_DATA_GET_RAM_DATA</span></span></dt>
-<dd><p>Register address for getting raw data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.bus">
-<span class="sig-name descname"><span class="pre">bus</span></span></dt>
-<dd><p>The I2C bus number.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.calibration">
-<span class="sig-name descname"><span class="pre">calibration</span></span></dt>
-<dd><p>Calibration factor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.offset">
-<span class="sig-name descname"><span class="pre">offset</span></span></dt>
-<dd><p>Tare offset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.i2cbus">
-<span class="sig-name descname"><span class="pre">i2cbus</span></span></dt>
-<dd><p>The I2C bus connection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>smbus2.SMBus</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.error">
-<span class="sig-name descname"><span class="pre">error</span></span></dt>
-<dd><p>Error message if any.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.error_message_timer">
-<span class="sig-name descname"><span class="pre">error_message_timer</span></span></dt>
-<dd><p>Timer to limit error logging frequency.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>time_utils.Timer</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.alarm_timer">
-<span class="sig-name descname"><span class="pre">alarm_timer</span></span></dt>
-<dd><p>Timer for non-responsive alarms.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>time_utils.Timer</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.min">
-<span class="sig-name descname"><span class="pre">min</span></span></dt>
-<dd><p>Minimum weight threshold.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.max">
-<span class="sig-name descname"><span class="pre">max</span></span></dt>
-<dd><p>Maximum weight threshold.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.tare">
-<span class="sig-name descname"><span class="pre">tare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.tare"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Tares the scale (sets the current weight as zero).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.calibrate">
-<span class="sig-name descname"><span class="pre">calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.calibrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Calibrates the scale with a known weight.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>weight</strong> (<em>float</em>) – The known weight in grams used for calibration.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.get_value">
-<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.005</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reads raw values from the scale.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>samples</strong> (<em>int</em>) – Number of samples to read.</p></li>
-<li><p><strong>interval_s</strong> (<em>float</em>) – Delay between samples in seconds.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean of the raw values.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.get_weight">
-<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.get_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Gets the current weight in grams.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The weight in grams.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.devices.scale.Scale.real_weight_inference">
-<span class="sig-name descname"><span class="pre">real_weight_inference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.real_weight_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Determines if a sequence of weight measurements represents a stable weight.</p>
-<p>Conditions to call it a real weight:
-- standard deviation of the last 5 measurements is</p>
-<blockquote>
-<div><p>smaller than 10% of the minimum threshold</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(True, median_weight) if stable, else (False, 0.0).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple[bool, float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="village.devices.scale.get_scale">
-<span class="sig-name descname"><span class="pre">get_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="village.devices.scale.Scale.html#village.devices.scale.Scale" title="village.devices.scale.Scale"><span class="pre">Scale</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale" title="village.classes.null_classes.NullScale"><span class="pre">NullScale</span></a></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#get_scale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Factory function to initialize the Scale.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>address</strong> (<em>str</em>) – The I2C address of the scale.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An initialized Scale instance or a null scale on failure.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="village.devices.scale.Scale.html#village.devices.scale.Scale" title="village.devices.scale.Scale">Scale</a> | <a class="reference internal" href="village.classes.null_classes.NullScale.html#village.classes.null_classes.NullScale" title="village.classes.null_classes.NullScale">NullScale</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -817,7 +572,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

@@ -2,6 +2,9 @@ rsync\_to\_server
 =================
 
 .. automodule:: village.scripts.rsync_to_server
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

@@ -2,6 +2,9 @@ gui\_window
 ===========
 
 .. automodule:: village.gui.gui_window
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

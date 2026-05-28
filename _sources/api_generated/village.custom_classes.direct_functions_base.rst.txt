@@ -2,6 +2,9 @@ direct\_functions\_base
 =======================
 
 .. automodule:: village.custom_classes.direct_functions_base
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

@@ -2,6 +2,9 @@ temperatures\_plot
 ==================
 
 .. automodule:: village.plots.temperatures_plot
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

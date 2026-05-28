@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -585,13 +586,13 @@ In this section you can create new subjects. Check the <a class="reference inter
 <h2>TASKS</h2>
 <p><img alt="Tasks Training Village screen" src="../_images/tasks_screen.png" /></p>
 <p>From this screen, tasks can be launched manually at any time.</p>
-<p>The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the <a class="reference internal" href="#/protocols/using.md"><span class="xref myst">Test a Training Protocol</span></a> section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:</p>
+<p>The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the <a class="reference internal" href="manual.html"><span class="std std-doc">Manual Task Execution</span></a> section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Subject</span></code>: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>: The task will automatically end once this number of trials is completed.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>: The task will automatically end when this timer is reached.</p></li>
 </ul>
-<p>In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">Create a New Training Protocol</span></a> section, we explain how to create a protocol and define its variables.</p>
+<p>In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">Protocol Creation</span></a> section, we explain how to create a protocol and define its variables.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code> button starts the task.</p>
 </section>
 <section id="data">
@@ -599,14 +600,14 @@ In this section you can create new subjects. Check the <a class="reference inter
 <p><img alt="Main Training village screen" src="../_images/data_screen.png" /></p>
 <p>On this screen, saved data is displayed. The following tables are accessible:</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>:</strong> A comprehensive system log that records animal entries, exits, and denied entry attempts. Selecting any specific event and clicking <strong><code class="docutils literal notranslate"><span class="pre">VIDEO</span></code></strong> opens the corresponding video recording of that moment.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSIONS</span> <span class="pre">SUMMARY</span></code>:</strong> A historical list of all completed training sessions. Selecting an item from this list grants access to its corresponding CSV file (available in both standard and raw formats), the session’s video file, and a user-configurable behavioral plot.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>:</strong> A comprehensive system log that records animal entries, exits, and denied entry attempts. Selecting any specific event and clicking <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> opens the corresponding video recording of that moment.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSIONS</span> <span class="pre">SUMMARY</span></code>:</strong> A historical list of all completed training sessions. Selecting an item from this list grants access to its corresponding CSV file (available in both standard <code class="docutils literal notranslate"><span class="pre">DATA</span></code> and raw <code class="docutils literal notranslate"><span class="pre">DATA_RAW</span></code> formats), the session’s video file, <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> and a user-configurable behavioral plot <code class="docutils literal notranslate"><span class="pre">PLOT</span></code>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">TEMPERATURES</span></code>:</strong> A chronological log of all recorded environmental temperature and humidity values within the system.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSION_RAW</span></code>:</strong> Displays the session currently in progress or the most recently completed one, rendered in real time (one row per registered hardware/behavioral event). Clicking <strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code></strong> opens a user-configurable, real-time graphical chart of the session.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSION</span></code>:</strong> Displays the session currently in progress or the most recently completed one, structured according to the final data storage format (parsed dynamically into one row per trial). Clicking <strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code></strong> opens a user-configurable, real-time graphical chart of the session.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSION_RAW</span></code>:</strong> Displays the session currently in progress or the most recently completed one, rendered in real time (one row per registered hardware/behavioral event). Clicking <code class="docutils literal notranslate"><span class="pre">PLOT</span></code> opens a user-configurable, real-time graphical chart of the session.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSION</span></code>:</strong> Displays the session currently in progress or the most recently completed one, structured according to the final data storage format (parsed dynamically into one row per trial). Clicking <code class="docutils literal notranslate"><span class="pre">PLOT</span></code> opens a user-configurable, real-time graphical chart of the session.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code>:</strong> Contains parameter data regarding all currently active system calibrations.</p></li>
 </ul>
-<p>A more detailed description of these tables, including their exact database schemas and storage paths, can be found in the <a class="reference internal" href="#/protocols/data.md"><span class="xref myst">Saved Data</span></a> section.</p>
+<p>A more detailed description of these tables, including their exact database schemas and storage paths, can be found in the <a class="reference internal" href="data.html"><span class="std std-doc">Saved Data</span></a> section.</p>
 </section>
 <hr class="docutils" />
 <section id="settings">
@@ -654,7 +655,7 @@ In this section you can create new subjects. Check the <a class="reference inter
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

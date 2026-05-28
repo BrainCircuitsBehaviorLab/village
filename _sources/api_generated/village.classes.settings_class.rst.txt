@@ -2,6 +2,9 @@ settings\_class
 ===============
 
 .. automodule:: village.classes.settings_class
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

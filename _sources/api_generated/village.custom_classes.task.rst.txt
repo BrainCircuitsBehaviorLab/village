@@ -2,6 +2,9 @@ task
 ====
 
 .. automodule:: village.custom_classes.task
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

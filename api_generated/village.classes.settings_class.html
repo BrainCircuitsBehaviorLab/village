@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,37 +439,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting"><code class="docutils literal notranslate"><span class="pre">Setting</span></code></a><ul>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.key"><code class="docutils literal notranslate">key</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.value"><code class="docutils literal notranslate">value</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.value_type"><code class="docutils literal notranslate">value_type</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.description"><code class="docutils literal notranslate">description</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.type0"><code class="docutils literal notranslate">type0</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.type1"><code class="docutils literal notranslate">type1</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings"><code class="docutils literal notranslate"><span class="pre">Settings</span></code></a><ul>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.restore_factory_settings"><code class="docutils literal notranslate">restore_factory_settings()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.restore_visual_settings"><code class="docutils literal notranslate">restore_visual_settings()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.restore_directory_settings"><code class="docutils literal notranslate">restore_directory_settings()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.restore_all_settings"><code class="docutils literal notranslate">restore_all_settings()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.add_new_settings"><code class="docutils literal notranslate">add_new_settings()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.check_settings"><code class="docutils literal notranslate">check_settings()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.get"><code class="docutils literal notranslate">get()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.get_text"><code class="docutils literal notranslate">get_text()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.get_values"><code class="docutils literal notranslate">get_values()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.get_index"><code class="docutils literal notranslate">get_index()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.get_indices"><code class="docutils literal notranslate">get_indices()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.get_description"><code class="docutils literal notranslate">get_description()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.get_type"><code class="docutils literal notranslate">get_type()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.set"><code class="docutils literal notranslate">set()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.sync"><code class="docutils literal notranslate">sync()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Settings.print"><code class="docutils literal notranslate">print()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -555,200 +526,6 @@ data-aria-dark="Switch to auto color mode">
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Setting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Setting"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class representing a single configuration setting.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.key">
-<span class="sig-name descname"><span class="pre">key</span></span></dt>
-<dd><p>The name/identifier of the setting.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.value">
-<span class="sig-name descname"><span class="pre">value</span></span></dt>
-<dd><p>The current value of the setting.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.value_type">
-<span class="sig-name descname"><span class="pre">value_type</span></span></dt>
-<dd><p>The expected type of the value (e.g., int, float, str, enum).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>type</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.description">
-<span class="sig-name descname"><span class="pre">description</span></span></dt>
-<dd><p>A description of what the setting controls.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.type0">
-<span class="sig-name descname"><span class="pre">type0</span></span></dt>
-<dd><p>The base type (e.g., list if value_type is list[int]).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>type</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.type1">
-<span class="sig-name descname"><span class="pre">type1</span></span></dt>
-<dd><p>The inner type for lists (e.g., int if value_type</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>type | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">is</span> <span class="pre">list[int]).</span></span></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sound_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">screen_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">touchscreen_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">telegram_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hourly_alarm_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle_alarm_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_alarm_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cam_framerate_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corridor_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bpod_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">camera_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visual_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.settings_class.Setting.html#village.classes.settings_class.Setting" title="village.classes.settings_class.Setting"><span class="pre">Setting</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Manages system settings, including storage, retrieval, and grouping.</p>
-<p>Settings are grouped by category (main, sound, screen, etc.) and backed by
-QSettings for persistent storage.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.restore_factory_settings">
-<span class="sig-name descname"><span class="pre">restore_factory_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.restore_factory_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reset all restorable settings to their factory default values.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.restore_visual_settings">
-<span class="sig-name descname"><span class="pre">restore_visual_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.restore_visual_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reset visual settings to their factory default values.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.restore_directory_settings">
-<span class="sig-name descname"><span class="pre">restore_directory_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.restore_directory_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reset directory settings to their factory default values.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.restore_all_settings">
-<span class="sig-name descname"><span class="pre">restore_all_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.restore_all_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Initialize all settings with their factory defaults in QSettings.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.add_new_settings">
-<span class="sig-name descname"><span class="pre">add_new_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.add_new_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Add any missing settings to QSettings with their default values.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.check_settings">
-<span class="sig-name descname"><span class="pre">check_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.check_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Ensure all required settings exist in storage.</p>
-<p>If it’s the first launch, creates all factory settings.
-Otherwise, adds any new settings that are missing.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Retrieve the value of a setting.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<em>str</em>) – The identifier of the setting.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The value of the setting converted to its appropriate type,
-or None if the setting or value is invalid.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.get_text">
-<span class="sig-name descname"><span class="pre">get_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.get_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the string representation of the value of a setting.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.get_values">
-<span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.get_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the possible values of a setting when it is a enum or list of enums</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.get_index">
-<span class="sig-name descname"><span class="pre">get_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.get_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the index of the value of a setting when it is a enum or list of enums</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.get_indices">
-<span class="sig-name descname"><span class="pre">get_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.get_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the index of the value of a setting when it is a enum or list of enums</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.get_description">
-<span class="sig-name descname"><span class="pre">get_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.get_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the description of a setting.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.get_type">
-<span class="sig-name descname"><span class="pre">get_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.get_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the type of a setting.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.sync">
-<span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Settings.print">
-<span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Settings.print"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -788,7 +565,7 @@ or None if the setting or value is invalid.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Corridor Calibration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Animal Detection &amp; Tracking" href="detection.html" /><link rel="prev" title="Manual Task Execution" href="manual.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/corridor.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>System Logic (State Machine) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="PROTOCOL &amp; TASK DESIGN" href="../protocol_index.html" /><link rel="prev" title="Timing &amp; Clock Synchronization" href="timing.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/state_machine.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -21,8 +21,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/corridor.html"/>
-  <meta property="og:title" content="Corridor Calibration"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/state_machine.html"/>
+  <meta property="og:title" content="System Logic (State Machine)"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -84,12 +84,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Corridor Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timing.html">Timing &amp; Clock Synchronization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -439,7 +439,15 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#normal-cycle-for-an-animal-session">Normal Cycle for an Animal Session</a><ul>
+<li><a class="reference internal" href="#option-a-the-subject-leaves-before-the-tasks-maximum-time">Option A: The Subject Leaves Before the Task&#8217;s Maximum Time</a></li>
+<li><a class="reference internal" href="#option-b-the-subject-stays-in-the-box-until-the-maximum-time">Option B: The Subject Stays in the Box Until the Maximum Time</a></li>
+<li><a class="reference internal" href="#in-both-cases">In Both Cases</a></li>
+</ul>
+</li>
+</ul>
+</div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -463,7 +471,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Corridor Calibration</strong>
+        <strong itemprop="name">System Logic (State Machine)</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -480,7 +488,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/corridor.md.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/state_machine.md.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -494,51 +502,68 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/corridor.md.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/state_machine.md.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/corridor.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
-            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/corridor.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/state_machine.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/state_machine.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/corridor.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/state_machine.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="corridor-calibration">
-<h1>Corridor Calibration</h1>
-<p>The corridor elements must be calibrated. Navigate to the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> Screen:</p>
+          <section id="system-logic-state-machine">
+<h1>System Logic (State Machine)</h1>
+<img alt="entrances" class="zoomable" src="../_images/states.png" />
+<p>This is the state diagram of all possible system states and their descriptions.</p>
+<p>Black arrows represent events that trigger a state transition, while red arrows indicate possible alarms, which may or may not cause a state change.</p>
+<p>States in green represent a normal cycle in automatic mode. States in blue indicate manual manipulation of the system by a user. The orange state is reached after an error that the system cannot resolve on its own, requiring remote intervention.</p>
+<p>Lighter-colored states are transitional and resolve quickly, leading to darker-colored states, which are stable states.</p>
+<section id="normal-cycle-for-an-animal-session">
+<h2>Normal Cycle for an Animal Session</h2>
+<p>A typical session of an animal performing a task follows this sequence:</p>
 <ol class="arabic simple">
-<li><p><strong>Set Door Motor Angles</strong>: Select the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> tab in the center of the screen and use the <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">MOTOR</span> <span class="pre">ANGLES</span></code> button to correctly set the opening and closing angles for each door. The closing angle should allow the door to gently touch the top without pushing further.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WAIT</span></code>: The system remains in this state until an RFID detection occurs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DETECTION</span></code>: In this state, the system determines whether the subject is allowed to enter the behavioral box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ACCESS</span></code>: If the subject is allowed to enter, Door 1 is closed, and Door 2 is opened.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LAUNCH_AUTO</span></code>: The task is automatically launched.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_FIRST</span></code>: The task begins, but Door 2 remains open until the corridor is empty.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLOSE_DOOR2</span></code>: Once the corridor is empty, Door 2 is closed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_CLOSED</span></code>: The task is running, and the subject inside the behavioral box is not allowed to leave until a configurable minimum time for the task has elapsed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OPEN_DOOR2</span></code>: Once the minimum time has elapsed, Door 2 opens.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_OPENED</span></code>: The subject is allowed to leave the behavioral box if desired, or it may continue performing the task. At this point, two possible scenarios can occur:</p></li>
 </ol>
-<div class="tip admonition">
-<p class="admonition-title">Note</p>
-<p>Due to the symmetrical placement of the servomotors, the opening angle will be greater than the closing angle for one servo, while the opposite will apply to the other. Typically, the angular displacement between the open and closed positions is approximately 25° to 30°. The most straightforward way to calibrate the gates is by following these steps:</p>
-<ol class="arabic simple">
-<li><p>Temporarily detach the plastic gate from the servo horn.</p></li>
-<li><p>Click the <strong>CLOSE</strong> button in the interface, then manually place and secure the plastic gate in its physical “fully closed” position.</p></li>
-<li><p>Modify the <code class="docutils literal notranslate"><span class="pre">OPEN</span></code> angle parameter by just a few degrees (either above or below the closed angle value). Click <strong>OPEN</strong> to verify that the servo rotates in the expected direction.</p></li>
-<li><p>Adjust the final <code class="docutils literal notranslate"><span class="pre">OPEN</span></code> angle incrementally until the gate allows the animal to pass through easily when open.</p></li>
+<section id="option-a-the-subject-leaves-before-the-tasks-maximum-time">
+<h3>Option A: The Subject Leaves Before the Task’s Maximum Time</h3>
+<p>If the scale detects that the animal is returning to the home cage, the system transitions to:</p>
+<ol class="arabic simple" start="9">
+<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_UNSAVED</span></code>: Door 2 is closed, and Door 1 is opened to allow the subject to return home.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SAVE_OUTSIDE</span></code>: After the subject has returned to the home cage, the task is closed, and all data is saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
 </ol>
-</div>
-<ol class="arabic simple" start="2">
-<li><p><strong>Calibrate the Scale</strong>: Use the <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code> button with a known weight to calibrate the scale, and verify functionality by pressing <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code>.</p></li>
-<li><p><strong>Check Temperature and Humidity</strong>: Use the <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">TEMPERATURE</span></code> button to check temperature and humidity readings.</p></li>
+</section>
+<section id="option-b-the-subject-stays-in-the-box-until-the-maximum-time">
+<h3>Option B: The Subject Stays in the Box Until the Maximum Time</h3>
+<p>If the subject does not leave the behavioral box before the task’s maximum time is reached, the system transitions to:</p>
+<ol class="arabic simple" start="9">
+<li><p><code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>: The task is closed, and all data is saved while the subject is still inside the behavioral box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WAIT_EXIT</span></code>: Until the subject attempts to leave and is detected by the scale.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_SAVE</span></code>: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
 </ol>
-<div class="tip admonition">
-<p class="admonition-title">Note</p>
-<p>If you are using motors in the operant box, you can calibrate them by navigating to the <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tab and selecting the <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">MOTOR</span> <span class="pre">ANGLES</span></code> button in that tab.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tabs are not visible, it is because the corresponding options <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> are disabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">MAIN</span> <span class="pre">SETTINGS</span></code>.</p>
-</div>
+</section>
+<section id="in-both-cases">
+<h3>In Both Cases</h3>
+<p>The system transitions back to the initial WAIT state, ready for the next session.</p>
+</section>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -547,16 +572,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="manual.html">
+    <a href="timing.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Manual Task Execution</div></div>
+        <span>Previous</span><div class="title">Timing &amp; Clock Synchronization</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="detection.html">
+    <a href="../protocol_index.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Animal Detection &amp; Tracking</div>
+        <div class="title">PROTOCOL &amp; TASK DESIGN</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>

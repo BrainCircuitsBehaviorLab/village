@@ -2,6 +2,9 @@ temp\_sensor
 ============
 
 .. automodule:: village.devices.temp_sensor
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

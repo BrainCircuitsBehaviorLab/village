@@ -2,6 +2,9 @@
 =====
 
 .. automodule:: village.plots
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

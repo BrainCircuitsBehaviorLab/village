@@ -109,9 +109,11 @@ ul.purple-bullets li::marker {
     pointer-events: none;
     cursor: default;
     font-weight: 600;
+    font-size: 0.82rem;
     text-decoration: none !important;
     color: #8B00FF !important;
     opacity: 0.7;
+    white-space: nowrap;
 }
 
 /* Level 3 (actual pages): clickable, normal style */
@@ -122,7 +124,7 @@ ul.purple-bullets li::marker {
 
 /* Reduce vertical spacing between nav items (default is 0.6rem) */
 .globaltoc li {
-    margin: 0.3rem 0 !important;
+    margin: 0.15rem 0 !important;
 }
 
 /* Wider left sidebar (default is 18rem) */

@@ -18,6 +18,7 @@ Motor
    
       ~Motor.__init__
       ~Motor.close
+      ~Motor.disable
       ~Motor.move
       ~Motor.open
       ~Motor.servo_pulse

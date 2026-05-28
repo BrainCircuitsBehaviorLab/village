@@ -2,6 +2,9 @@ auto\_no\_mouse\_base
 =====================
 
 .. automodule:: village.custom_classes.auto_no_mouse_base
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

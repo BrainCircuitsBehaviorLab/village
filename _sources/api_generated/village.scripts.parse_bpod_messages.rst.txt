@@ -2,6 +2,9 @@ parse\_bpod\_messages
 =====================
 
 .. automodule:: village.scripts.parse_bpod_messages
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

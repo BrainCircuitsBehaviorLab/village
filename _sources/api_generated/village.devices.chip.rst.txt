@@ -2,6 +2,9 @@ chip
 ====
 
 .. automodule:: village.devices.chip
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

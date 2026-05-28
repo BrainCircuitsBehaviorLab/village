@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Touchscreen Integration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="PROTOCOL &amp; TASK DESIGN" href="../protocol_index.html" /><link rel="prev" title="Saved Data Structure" href="data.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Soundcard &amp; Touchscreen Integration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Saved Data and Video" href="data.html" /><link rel="prev" title="Animal Detection &amp; Tracking" href="detection.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/touchscreen.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
     
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/touchscreen.html"/>
-  <meta property="og:title" content="Touchscreen Integration"/>
+  <meta property="og:title" content="Soundcard &amp; Touchscreen Integration"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data Structure</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Touchscreen Integration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,7 +439,21 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#soundcard-integration">Soundcard Integration</a><ul>
+<li><a class="reference internal" href="#why-the-dac-must-be-released-from-the-system-before-use">Why the DAC must be released from the system before use</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#latency">Latency</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#touchscreen-integration">Touchscreen Integration</a><ul>
+<li><a class="reference internal" href="#choosing-the-right-screen-technology">Choosing the right screen technology</a></li>
+<li><a class="reference internal" href="#dual-screen-configuration">Dual-screen configuration</a></li>
+<li><a class="reference internal" href="#resolution-and-display-latency">Resolution and display latency</a></li>
+</ul>
+</li>
+</ul>
+</div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -462,7 +477,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Touchscreen Integration</strong>
+        <strong itemprop="name">Soundcard &amp; Touchscreen Integration</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -510,8 +525,103 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="touchscreen-integration">
-<h1>Touchscreen Integration</h1>
+          <section id="soundcard-touchscreen-integration">
+<h1>Soundcard &amp; Touchscreen Integration</h1>
+<section id="soundcard-integration">
+<h2>Soundcard Integration</h2>
+<p>The Training Village uses the <strong>HiFiBerry DAC+ Pro</strong> HAT for audio output. Connect it
+directly on top of the Raspberry Pi or on top of the Main HAT if one is installed. Audio
+playback from within tasks is handled by the Python <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> library, which accesses
+the hardware through PortAudio → ALSA.</p>
+<section id="why-the-dac-must-be-released-from-the-system-before-use">
+<h3>Why the DAC must be released from the system before use</h3>
+<p>When the DAC is set as the active audio output in the desktop environment, the operating
+system holds exclusive access to the device, preventing the Training Village from using
+it. Setting the profile to <strong>Off</strong> releases the device and makes it available for the
+Training Village.</p>
+</section>
+<section id="configuration">
+<h3>Configuration</h3>
+<ol class="arabic simple">
+<li><p>Connect headphones or speakers to the DAC output.</p></li>
+<li><p>Right-click the volume icon in the top system bar and select <strong>Device Profiles</strong>. The
+<strong>RPi DAC Pro</strong> entry should appear in the list. Select it and set the output profile
+to <strong>Stereo Output</strong>.</p></li>
+<li><p>Play any audio to verify the DAC is working correctly.</p></li>
+<li><p>Once confirmed, return to <strong>Device Profiles</strong>, select <strong>RPi DAC Pro</strong> again, and set
+the profile to <strong>Off</strong>. The operating system will no longer use the device, leaving it
+free for <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> to access directly.</p></li>
+<li><p>Launch the Training Village and select your soundcard under
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>.</p></li>
+</ol>
+<div class="tip admonition">
+<p class="admonition-title">Note</p>
+<p>This configuration step only needs to be done once. The “Off” profile selection persists
+across reboots, so the DAC will remain available to the Training Village after the system
+restarts.</p>
+</div>
+</section>
+<section id="latency">
+<h3>Latency</h3>
+<p>Playing a sound has a measured latency of mean = 9.3ms and sd = 0.9 ms.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="touchscreen-integration">
+<h2>Touchscreen Integration</h2>
+<p>If you plan to present visual stimuli or record touch responses, enable the screen under
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SCREEN</span> <span class="pre">SETTINGS</span></code>.</p>
+<section id="choosing-the-right-screen-technology">
+<h3>Choosing the right screen technology</h3>
+<p>We recommend using an <strong>infrared (IR) touch frame</strong> rather than a capacitive touchscreen.
+An IR frame works by projecting an invisible grid of IR beams across the display surface;
+a touch event is registered whenever an object interrupts one of the beams. This means
+the animal does not need to physically press the screen — proximity alone triggers a
+response — which reduces aversion and improves task engagement for rodents.</p>
+<p>The IR frame connects via USB and the display via the second micro-HDMI port on the
+Raspberry Pi.</p>
+</section>
+<section id="dual-screen-configuration">
+<h3>Dual-screen configuration</h3>
+<p>The system runs with two display outputs:</p>
+<ul class="simple">
+<li><p><strong>HDMI-1</strong>: Primary display showing the Training Village GUI <em>(can be virtual —
+no physical monitor required)</em>.</p></li>
+<li><p><strong>HDMI-2</strong>: Secondary display inside the operant box showing behavioral stimuli.</p></li>
+</ul>
+<p>To configure this, you need to tell the system to treat both HDMI ports as active,
+regardless of whether a physical monitor is connected to HDMI-1.</p>
+<p><strong>Step 1 — Edit the boot configuration:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">sudo<span class="w"> </span>nano<span class="w"> </span>/boot/firmware/cmdline.txt
+</span></pre></div>
+</div>
+<p>Replace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">vc4</span><span class="o">.</span><span class="n">force_hotplug</span><span class="o">=</span><span class="mi">1</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1600</span><span class="n">x900</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span>
+</span></pre></div>
+</div>
+<p>With:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">vc4</span><span class="o">.</span><span class="n">force_hotplug</span><span class="o">=</span><span class="mi">3</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1600</span><span class="n">x900</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">1280</span><span class="n">x720</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span>
+</span></pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">vc4.force_hotplug</span></code> flag controls which HDMI ports the system treats as connected:
+<code class="docutils literal notranslate"><span class="pre">1</span></code> = HDMI-1 only, <code class="docutils literal notranslate"><span class="pre">2</span></code> = HDMI-2 only, <code class="docutils literal notranslate"><span class="pre">3</span></code> = both. The <code class="docutils literal notranslate"><span class="pre">video=HDMI-A-*</span></code> parameters set
+the resolution for each port independently.</p>
+<p><strong>Step 2 — Set the resolution in the desktop:</strong></p>
+<p>Navigate to <strong>Raspberry Pi menu → Preferences → Control Centre → Screens → HDMI-2</strong>,
+set the resolution to <strong>1280×720</strong> or lower, and apply.</p>
+</section>
+<section id="resolution-and-display-latency">
+<h3>Resolution and display latency</h3>
+<p>Keep the stimulus display at 1280×720 or below. Higher resolutions significantly
+increase CPU load on the Raspberry Pi, which in turn increases stimulus presentation
+latency.</p>
+<p>The system operates at a <strong>60 Hz refresh rate</strong> (one frame every 16.6 ms). Because the
+next frame is preloaded in the buffer while the current one is being displayed, the
+latency from issuing a display command to the frame appearing on screen is typically
+one full frame plus the remaining portion of the current frame. In practice, measured
+latencies are <strong>mean = 27.4 ms, SD = 7.5 ms</strong>.</p>
+</section>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -520,16 +630,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="data.html">
+    <a href="detection.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Saved Data Structure</div></div>
+        <span>Previous</span><div class="title">Animal Detection &amp; Tracking</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="../protocol_index.html">
+    <a href="data.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">PROTOCOL &amp; TASK DESIGN</div>
+        <div class="title">Saved Data and Video</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -551,7 +661,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

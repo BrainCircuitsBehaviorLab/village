@@ -2,6 +2,9 @@ camera\_trigger\_base
 =====================
 
 .. automodule:: village.custom_classes.camera_trigger_base
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,30 +439,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.custom_classes.task.TaskError"><code class="docutils literal notranslate"><span class="pre">TaskError</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodEvent"><code class="docutils literal notranslate"><span class="pre">BpodEvent</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput"><code class="docutils literal notranslate"><span class="pre">BpodOutput</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task"><code class="docutils literal notranslate"><span class="pre">Task</span></code></a><ul>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.start"><code class="docutils literal notranslate">start()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.create_trial"><code class="docutils literal notranslate">create_trial()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.after_trial"><code class="docutils literal notranslate">after_trial()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.close"><code class="docutils literal notranslate">close()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.register_value"><code class="docutils literal notranslate">register_value()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.execute_function"><code class="docutils literal notranslate">execute_function()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.run_in_thread"><code class="docutils literal notranslate">run_in_thread()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.run"><code class="docutils literal notranslate">run()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.do_trial"><code class="docutils literal notranslate">do_trial()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.concatenate_trial_data"><code class="docutils literal notranslate">concatenate_trial_data()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.disconnect_and_save"><code class="docutils literal notranslate">disconnect_and_save()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.save_json"><code class="docutils literal notranslate">save_json()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.save_csv"><code class="docutils literal notranslate">save_csv()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.get_name"><code class="docutils literal notranslate">get_name()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.Task.create_paths"><code class="docutils literal notranslate">create_paths()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -561,258 +539,6 @@ data-aria-dark="Switch to auto color mode">
 </tbody>
 </table>
 </div>
-<dl class="py exception">
-<dt class="sig sig-object py" id="village.custom_classes.task.TaskError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">TaskError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/custom_classes/task.html#TaskError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Exception raised for errors in the Task class.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodEvent">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">BpodEvent</span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#BpodEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EventName</span></code></p>
-<p>Enumeration of Bpod event names.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">BpodOutput</span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#BpodOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OutputChannel</span></code></p>
-<p>Enumeration of Bpod output channels.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Task</span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Base class for defining behavioral tasks.</p>
-<p>Subclass <code class="docutils literal notranslate"><span class="pre">Task</span></code> to implement your own task. You must override four methods
-and may optionally call helper methods and read certain attributes during
-execution.</p>
-<p>──────────────────────────────────────────────────────────
-METHODS YOU MUST OVERRIDE
-──────────────────────────────────────────────────────────</p>
-<dl class="simple">
-<dt>start(self) -&gt; None</dt><dd><p>Called once before the trial loop begins.
-Use it to configure hardware, pre-compute stimuli, open files, etc.</p>
-</dd>
-<dt>create_trial(self) -&gt; None</dt><dd><p>Called at the beginning of every trial.
-Build and send the Bpod state machine here (or set up stimuli for
-non-Bpod controllers). The state machine runs to completion before
-<code class="docutils literal notranslate"><span class="pre">after_trial</span></code> is called.</p>
-</dd>
-<dt>after_trial(self) -&gt; None</dt><dd><p>Called immediately after each trial finishes.
-Use it to score the animal’s performance, update adaptive parameters,
-and call <code class="docutils literal notranslate"><span class="pre">register_value</span></code> to save custom columns to the data file.
-<code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> is already populated at this point.</p>
-</dd>
-<dt>close(self) -&gt; None</dt><dd><p>Called once after the trial loop ends (session finished, forced stop,
-or error).
-Use it to close files, stop hardware, release resources.</p>
-</dd>
-</dl>
-<p>──────────────────────────────────────────────────────────
-METHODS YOU CAN CALL (do not override)
-──────────────────────────────────────────────────────────</p>
-<dl>
-<dt>register_value(name: str, value: Any) -&gt; None</dt><dd><p>Saves a custom value to the current trial row in the CSV.
-Call this inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="2"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;response_time&quot;</span><span class="p">,</span> <span class="mf">0.432</span><span class="p">)</span>
-</span></pre></div>
-</div>
-</dd>
-</dl>
-<p>──────────────────────────────────────────────────────────
-ATTRIBUTES YOU CAN READ INSIDE YOUR TASK
-──────────────────────────────────────────────────────────</p>
-<dl>
-<dt>self.trial_data<span class="classifier">dict</span></dt><dd><p>Dictionary populated automatically after each trial with Bpod event
-timestamps and any values previously registered via <code class="docutils literal notranslate"><span class="pre">register_value</span></code>.
-Available inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> to drive adaptive logic.</p>
-<p>Typical keys: <code class="docutils literal notranslate"><span class="pre">&quot;trial&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;subject&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;date&quot;</span></code>,
-<code class="docutils literal notranslate"><span class="pre">&quot;system_name&quot;</span></code>, plus every key you have registered with
-<code class="docutils literal notranslate"><span class="pre">register_value</span></code>.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="2">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="3">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">+=</span> <span class="mi">1</span>
-</span></pre></div>
-</div>
-</dd>
-<dt>self.current_trial<span class="classifier">int</span></dt><dd><p>1-based index of the trial that just ran (available in both
-<code class="docutils literal notranslate"><span class="pre">create_trial</span></code> and <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>).</p>
-</dd>
-<dt>self.subject<span class="classifier">str</span></dt><dd><p>Name of the subject running the session.</p>
-</dd>
-<dt>self.settings<span class="classifier">Settings</span></dt><dd><p>Object that holds all the session parameters defined in the training
-protocol. Read and write its attributes to implement adaptive training.</p>
-</dd>
-<dt>self.calibrations<span class="classifier">Calibrations</span></dt><dd><p>Object that holds the task’s calibrations. Call its methods to convert
-between hardware values and real-world units.</p>
-</dd>
-<dt>self.bpod<span class="classifier">BpodController</span></dt><dd><p>Low-level Bpod interface (state machine construction, sending, etc.).
-Primarily used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p>
-</dd>
-<dt>self.arduino<span class="classifier">ArduinoController</span></dt><dd><p>Arduino interface for tasks that use an Arduino instead of Bpod.</p>
-</dd>
-<dt>self.cam_box<span class="classifier">Camera | NullCamera</span></dt><dd><p>Camera attached to the behaviour box (NullCamera if not configured).</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.start">
-<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Starts the task. Must be overridden by subclasses.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.create_trial">
-<span class="sig-name descname"><span class="pre">create_trial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.create_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Creates the state machine for the current trial. Must be overridden.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.after_trial">
-<span class="sig-name descname"><span class="pre">after_trial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.after_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Executed after each trial completes. Must be overridden.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Closes the task and releases resources. Must be overridden.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.register_value">
-<span class="sig-name descname"><span class="pre">register_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.register_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Registers a custom value to be saved with the trial data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The name of the value (column header).</p></li>
-<li><p><strong>value</strong> (<em>Any</em>) – The value to store.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.execute_function">
-<span class="sig-name descname"><span class="pre">execute_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.execute_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Executes a registered function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – The function index (1-99).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.run_in_thread">
-<span class="sig-name descname"><span class="pre">run_in_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">daemon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.run_in_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Runs the task in a separate background thread.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>daemon</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to run as a daemon thread.</p></li>
-<li><p><strong>True.</strong> (<em>Defaults to</em>)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Runs the task in the main thread until completion or forced stop.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.do_trial">
-<span class="sig-name descname"><span class="pre">do_trial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.do_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Executes a single trial.</p>
-<p>Initializes the state machine, runs it, collects data, and performs
-post-trial updates.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.concatenate_trial_data">
-<span class="sig-name descname"><span class="pre">concatenate_trial_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.concatenate_trial_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Appends the current trial’s data to the session DataFrame.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.disconnect_and_save">
-<span class="sig-name descname"><span class="pre">disconnect_and_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="village.classes.enums.Save.html#village.classes.enums.Save" title="village.classes.enums.Save"><span class="pre">Save</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.disconnect_and_save"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Stops the task, disconnects devices, and saves session data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>run_mode</strong> (<em>str</em>) – The mode in which the task was run (e.g., “Manual”).</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple containing the save status,
-session duration, number of trials, water consumed, and settings string.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[<a class="reference internal" href="village.classes.enums.Save.html#village.classes.enums.Save" title="village.classes.enums.Save">Save</a>, float, int, int, str]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.save_json">
-<span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Saves the session settings to a JSON file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>run_mode</strong> (<em>str</em>) – The execution mode string.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The JSON string containing the settings.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.save_csv">
-<span class="sig-name descname"><span class="pre">save_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.save_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Saves the session data to CSV files.</p>
-<p>Processes raw data, saves raw and clean session files, and updates the
-subject’s cumulative data file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>run_mode</strong> (<em>str</em>) – The execution mode string.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Duration, trial count, water consumed,
-and success status.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, int, int, bool]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.get_name">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Returns the name of the task class.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.task.Task.create_paths">
-<span class="sig-name descname"><span class="pre">create_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task.html#Task.create_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Sets up file and directory paths for the session.</p>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -852,7 +578,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

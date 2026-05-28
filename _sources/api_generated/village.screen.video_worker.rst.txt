@@ -2,6 +2,9 @@ video\_worker
 =============
 
 .. automodule:: village.screen.video_worker
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

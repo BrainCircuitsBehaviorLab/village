@@ -2,6 +2,9 @@ calibrations
 ============
 
 .. automodule:: village.classes.calibrations
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

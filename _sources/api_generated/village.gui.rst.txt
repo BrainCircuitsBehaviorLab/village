@@ -2,6 +2,9 @@
 ===
 
 .. automodule:: village.gui
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

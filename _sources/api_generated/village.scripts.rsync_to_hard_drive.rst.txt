@@ -2,6 +2,9 @@ rsync\_to\_hard\_drive
 ======================
 
 .. automodule:: village.scripts.rsync_to_hard_drive
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

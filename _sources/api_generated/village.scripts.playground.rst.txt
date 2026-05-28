@@ -2,6 +2,9 @@ playground
 ==========
 
 .. automodule:: village.scripts.playground
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

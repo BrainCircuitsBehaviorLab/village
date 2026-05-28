@@ -2,6 +2,9 @@ safe\_removal\_of\_data
 =======================
 
 .. automodule:: village.scripts.safe_removal_of_data
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

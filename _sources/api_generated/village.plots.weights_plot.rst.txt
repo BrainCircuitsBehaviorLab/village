@@ -2,6 +2,9 @@ weights\_plot
 =============
 
 .. automodule:: village.plots.weights_plot
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

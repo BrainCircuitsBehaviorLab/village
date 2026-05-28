@@ -2,6 +2,9 @@ training\_protocol\_base
 ========================
 
 .. automodule:: village.custom_classes.training_protocol_base
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

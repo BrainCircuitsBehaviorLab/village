@@ -2,6 +2,9 @@ subject
 =======
 
 .. automodule:: village.classes.subject
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

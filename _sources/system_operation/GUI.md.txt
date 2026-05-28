@@ -68,13 +68,13 @@ In this section you can create new subjects. Check the [Subject Management Secti
 
 From this screen, tasks can be launched manually at any time.
 
-The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the [Test a Training Protocol][TEST] section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:
+The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the [Manual Task Execution][MANUAL] section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:
 
 - `Subject`: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.
 - `maximum_number_of_trials`: The task will automatically end once this number of trials is completed.
 - `maximum_duration`: The task will automatically end when this timer is reached.
 
-In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the [Create a New Training Protocol][CREATE] section, we explain how to create a protocol and define its variables.
+In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the [Protocol Creation][CREATE] section, we explain how to create a protocol and define its variables.
 
 The `RUN TASK` button starts the task.
 
@@ -83,15 +83,15 @@ The `RUN TASK` button starts the task.
 
 On this screen, saved data is displayed. The following tables are accessible:
 
-*   **`EVENTS`:** A comprehensive system log that records animal entries, exits, and denied entry attempts. Selecting any specific event and clicking **`VIDEO`** opens the corresponding video recording of that moment.
+*   **`EVENTS`:** A comprehensive system log that records animal entries, exits, and denied entry attempts. Selecting any specific event and clicking `VIDEO` opens the corresponding video recording of that moment.
 
-*   **`SESSIONS SUMMARY`:** A historical list of all completed training sessions. Selecting an item from this list grants access to its corresponding CSV file (available in both standard and raw formats), the session's video file, and a user-configurable behavioral plot.
+*   **`SESSIONS SUMMARY`:** A historical list of all completed training sessions. Selecting an item from this list grants access to its corresponding CSV file (available in both standard `DATA` and raw `DATA_RAW` formats), the session's video file, `VIDEO` and a user-configurable behavioral plot `PLOT`.
 
 *   **`TEMPERATURES`:** A chronological log of all recorded environmental temperature and humidity values within the system.
 
-*   **`SESSION_RAW`:** Displays the session currently in progress or the most recently completed one, rendered in real time (one row per registered hardware/behavioral event). Clicking **`PLOT`** opens a user-configurable, real-time graphical chart of the session.
+*   **`SESSION_RAW`:** Displays the session currently in progress or the most recently completed one, rendered in real time (one row per registered hardware/behavioral event). Clicking `PLOT` opens a user-configurable, real-time graphical chart of the session.
 
-*   **`SESSION`:** Displays the session currently in progress or the most recently completed one, structured according to the final data storage format (parsed dynamically into one row per trial). Clicking **`PLOT`** opens a user-configurable, real-time graphical chart of the session.
+*   **`SESSION`:** Displays the session currently in progress or the most recently completed one, structured according to the final data storage format (parsed dynamically into one row per trial). Clicking `PLOT` opens a user-configurable, real-time graphical chart of the session.
 
 *   **`CALIBRATION`:** Contains parameter data regarding all currently active system calibrations.
 
@@ -113,6 +113,6 @@ The most critical parameters from this list will be discussed and modified step-
 [STATES]: /system_operation/system.md
 [DETECTION]: /system_operation/detection.md
 [SUBJECT]: /system_operation/subject.md
-[TEST]: /protocols/using.md
+[MANUAL]: /system_operation/manual.md
 [CREATE]: /protocols/creating.md
-[DATA]: /protocols/data.md
+[DATA]: /system_operation/data.md

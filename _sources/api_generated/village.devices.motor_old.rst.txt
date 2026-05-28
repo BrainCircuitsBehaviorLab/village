@@ -2,6 +2,9 @@ motor\_old
 ==========
 
 .. automodule:: village.devices.motor_old
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

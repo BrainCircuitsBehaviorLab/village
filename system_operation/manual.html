@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,7 +439,12 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#demo-tasks">Demo Tasks</a></li>
+<li><a class="reference internal" href="#launching-a-task">Launching a Task</a></li>
+<li><a class="reference internal" href="#testing-the-training-protocol">Testing the Training Protocol</a></li>
+</ul>
+</div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -512,6 +518,60 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="manual-task-execution">
 <h1>Manual Task Execution</h1>
+<p>To launch a task, navigate to the <code class="docutils literal notranslate"><span class="pre">TASKS</span></code> tab. If you have not yet created a new project,
+you will be working within the <code class="docutils literal notranslate"><span class="pre">demo-village-project</span></code> by default. This project includes
+several example tasks that cover a range of system functionalities.</p>
+<section id="demo-tasks">
+<h2>Demo Tasks</h2>
+<p>The following tasks are included. Note that some require additional hardware beyond the
+Raspberry Pi itself.</p>
+<p><strong>No external hardware required:</strong></p>
+<ul class="simple">
+<li><p>A minimal task that performs no actions — useful as a blank template.</p></li>
+<li><p>A task that plays sounds when the subject enters a defined area.</p></li>
+<li><p>A task that presents stimuli on a touchscreen and waits for the subject’s response.</p></li>
+</ul>
+<p><strong>Requires Bpod with 3 behavioral ports:</strong></p>
+<ul class="simple">
+<li><p>A task that delivers water whenever the subject pokes any of the three ports.</p></li>
+<li><p>A task that plays a sound on a center poke and requires the subject to choose one of
+the two side ports.</p></li>
+<li><p>A task that presents a visual stimulus when the subject is detected within a circular
+region around a defined point.</p></li>
+</ul>
+<p><strong>Requires Arduino:</strong></p>
+<ul class="simple">
+<li><p>A task that switches an LED on and off using Arduino.</p></li>
+</ul>
+<p><strong>Training protocol</strong> (<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>):</p>
+<ul class="simple">
+<li><p>The training protocol contains the following logic: TODO</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="launching-a-task">
+<h2>Launching a Task</h2>
+<p>Select a task from the list. You can optionally select a subject from the subject
+selector before running it:</p>
+<ul class="simple">
+<li><p><strong>No subject selected (<code class="docutils literal notranslate"><span class="pre">None</span></code>):</strong> The task runs with the default settings defined in
+<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>. No data or video is saved.</p></li>
+<li><p><strong>Subject selected:</strong> The task runs with the settings currently assigned to that
+subject. Once the session ends, the subject’s settings are updated automatically by
+<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>.</p></li>
+</ul>
+<p>Press <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code> to start.</p>
+</section>
+<hr class="docutils" />
+<section id="testing-the-training-protocol">
+<h2>Testing the Training Protocol</h2>
+<p>Clicking <code class="docutils literal notranslate"><span class="pre">TEST</span> <span class="pre">THE</span> <span class="pre">TRAINING</span> <span class="pre">PROTOCOL</span></code> simulates what would happen if <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>
+were applied to a specific subject right now, based on their existing session history.
+The computed settings for the next session are displayed on screen.</p>
+<p>This is intended as a validation tool: if you have modified <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>, you
+can use this to verify that the updated code runs correctly against real subject data
+without making any actual changes. The settings displayed are never saved or applied.</p>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -551,7 +611,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

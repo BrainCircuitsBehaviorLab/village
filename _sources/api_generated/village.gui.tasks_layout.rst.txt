@@ -2,6 +2,9 @@ tasks\_layout
 =============
 
 .. automodule:: village.gui.tasks_layout
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

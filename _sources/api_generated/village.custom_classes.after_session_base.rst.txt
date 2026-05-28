@@ -2,6 +2,9 @@ after\_session\_base
 ====================
 
 .. automodule:: village.custom_classes.after_session_base
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

@@ -2,6 +2,9 @@
 ===============
 
 .. automodule:: village.custom_classes
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

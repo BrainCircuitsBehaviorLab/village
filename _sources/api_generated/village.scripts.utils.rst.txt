@@ -2,6 +2,9 @@ utils
 =====
 
 .. automodule:: village.scripts.utils
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

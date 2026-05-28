@@ -2,14 +2,14 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Saved Data Structure - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Touchscreen Integration" href="touchscreen.html" /><link rel="prev" title="Animal Detection &amp; Tracking" href="detection.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Saved Data and Video - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Timing &amp; Clock Synchronization" href="timing.html" /><link rel="prev" title="Soundcard &amp; Touchscreen Integration" href="touchscreen.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/data.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
     
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/data.html"/>
-  <meta property="og:title" content="Saved Data Structure"/>
+  <meta property="og:title" content="Saved Data and Video"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -439,13 +440,24 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#trial-data-format">Trial Data Format</a></li>
-<li><a class="reference internal" href="#required-dictionary-structure">Required Dictionary Structure</a></li>
-<li><a class="reference internal" href="#field-descriptions">Field Descriptions</a></li>
-<li><a class="reference internal" href="#trial-start-timestamp-float"><code class="docutils literal notranslate"><span class="pre">"Trial</span> <span class="pre">start</span> <span class="pre">timestamp"</span></code> &#8594; <code class="docutils literal notranslate"><span class="pre">float</span></code></a></li>
-<li><a class="reference internal" href="#states-timestamps-dict-str-list-tuple-float-float"><code class="docutils literal notranslate"><span class="pre">"States</span> <span class="pre">timestamps"</span></code> &#8594; <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">list[tuple[float,</span> <span class="pre">float]]]</span></code></a></li>
-<li><a class="reference internal" href="#events-timestamps-dict-str-list-float"><code class="docutils literal notranslate"><span class="pre">"Events</span> <span class="pre">timestamps"</span></code> &#8594; <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">list[float]]</span></code></a></li>
-<li><a class="reference internal" href="#complete-example">Complete Example</a></li>
+<li><a class="reference internal" href="#directory-hierarchy-folder-structure">Directory Hierarchy &amp; Folder Structure</a></li>
+<li><a class="reference internal" href="#inside-the-data-folder">Inside the Data Folder</a></li>
+<li><a class="reference internal" href="#system-configuration-folder-systemname">System Configuration Folder (<code class="docutils literal notranslate"><span class="pre">systemName/</span></code>)</a><ul>
+<li><a class="reference internal" href="#core-data-files">Core Data Files</a></li>
+<li><a class="reference internal" href="#other-data-files">Other Data Files</a></li>
+<li><a class="reference internal" href="#log-folders">Log Folders</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#video-recordings-frame-data">Video Recordings &amp; Frame Data</a></li>
+<li><a class="reference internal" href="#frame-annotations-on-screen-overlays">Frame Annotations &amp; On-Screen Overlays</a></li>
+<li><a class="reference internal" href="#subject-behavioral-sessions">Subject Behavioral Sessions</a><ul>
+<li><a class="reference internal" href="#raw-session-filename-raw-csv">1. Raw Session (<code class="docutils literal notranslate"><span class="pre">{filename}_RAW.csv</span></code>)</a></li>
+<li><a class="reference internal" href="#processed-session-filename-csv">2. Processed Session (<code class="docutils literal notranslate"><span class="pre">{filename}.csv</span></code>)</a></li>
+<li><a class="reference internal" href="#session-settings-metadata-filename-json">3. Session Settings Metadata (<code class="docutils literal notranslate"><span class="pre">{filename}.json</span></code>)</a></li>
+<li><a class="reference internal" href="#aggregate-history-file">Aggregate History File</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#understanding-the-automated-training-loop">Understanding the Automated Training Loop</a></li>
 </ul>
 </div></div>
   </aside>
@@ -471,7 +483,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Saved Data Structure</strong>
+        <strong itemprop="name">Saved Data and Video</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -519,99 +531,321 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="saved-data-structure">
-<h1>Saved Data Structure</h1>
-<section id="trial-data-format">
-<h2>Trial Data Format</h2>
-<p>If you are <strong>not</strong> using the <code class="docutils literal notranslate"><span class="pre">pybpodapi</span></code> library, you must implement a method that returns trial data as a dictionary with the <strong>exact</strong> structure described below. This dictionary must be returned at the end of each trial.</p>
-</section>
-<section id="required-dictionary-structure">
-<h2>Required Dictionary Structure</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
-</span><span data-line="2">    <span class="s2">&quot;Trial start timestamp&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span data-line="3">    <span class="s2">&quot;States timestamps&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-</span><span data-line="4">    <span class="s2">&quot;Events timestamps&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-</span><span data-line="5"><span class="p">}</span>
+          <section id="saved-data-and-video">
+<h1>Saved Data and Video</h1>
+<p>The Training Village automatically handles all aspects of data collection, including raw
+and processed behavioral datasets, video recordings, video-tracking coordinates, and
+system metrics.</p>
+<hr class="docutils" />
+<section id="directory-hierarchy-folder-structure">
+<h2>Directory Hierarchy &amp; Folder Structure</h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">village_projects/</span></code> directory is structured as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">village_projects/
+</span><span data-line="2">└── projectName/
+</span><span data-line="3">    ├── code/
+</span><span data-line="4">    ├── media/
+</span><span data-line="5">    └── data/
 </span></pre></div>
 </div>
-</section>
-<section id="field-descriptions">
-<h2>Field Descriptions</h2>
-</section>
-<section id="trial-start-timestamp-float">
-<h2><code class="docutils literal notranslate"><span class="pre">&quot;Trial</span> <span class="pre">start</span> <span class="pre">timestamp&quot;</span></code> → <code class="docutils literal notranslate"><span class="pre">float</span></code></h2>
-<p>The time at which the trial started, expressed as a <strong>UNIX epoch timestamp in seconds</strong> (i.e., seconds since 1970-01-01 00:00:00 UTC).</p>
-<p>You can obtain this value using:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-</span><span data-line="2"><span class="n">trial_start_timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
-</span></pre></div>
-</div>
-</section>
-<section id="states-timestamps-dict-str-list-tuple-float-float">
-<h2><code class="docutils literal notranslate"><span class="pre">&quot;States</span> <span class="pre">timestamps&quot;</span></code> → <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">list[tuple[float,</span> <span class="pre">float]]]</span></code></h2>
-<p>A dictionary where:</p>
+<p>A dedicated folder is created for each project using the specified project name. Each
+project contains three subdirectories:</p>
 <ul class="simple">
-<li><p>Each <strong>key</strong> is the name of a state (<code class="docutils literal notranslate"><span class="pre">str</span></code>).</p></li>
-<li><p>Each <strong>value</strong> is a list of tuples <code class="docutils literal notranslate"><span class="pre">(start_timestamp,</span> <span class="pre">end_timestamp)</span></code>, representing every time that state was visited during the trial.</p></li>
-<li><p>Timestamps must be <strong>absolute UNIX epoch timestamps in seconds</strong>.</p></li>
-<li><p>If a state was defined but <strong>never visited</strong>, its value must be <code class="docutils literal notranslate"><span class="pre">[(float('nan'),</span> <span class="pre">float('nan'))]</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">code/</span></code></strong>: Stores all executable Python source code and experiment-specific scripts.
+See the <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">PROTOCOL &amp; TASK DESIGN</span></a> section for a detailed breakdown.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">media/</span></code></strong>: <em>(Optional)</em> Stores audio tracks, videos, or image assets required by
+behavioral tasks.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">data/</span></code></strong>: Central repository for all experimental outputs, including raw and
+processed data files and videos.</p></li>
 </ul>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
-</span><span data-line="2">    <span class="s2">&quot;WaitForPoke&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mf">1711446000.000</span><span class="p">,</span> <span class="mf">1711446001.234</span><span class="p">)],</span>
-</span><span data-line="3">    <span class="s2">&quot;Reward&quot;</span><span class="p">:</span>      <span class="p">[(</span><span class="mf">1711446001.234</span><span class="p">,</span> <span class="mf">1711446002.567</span><span class="p">)],</span>
-</span><span data-line="4">    <span class="s2">&quot;ITI&quot;</span><span class="p">:</span>         <span class="p">[(</span><span class="mf">1711446002.567</span><span class="p">,</span> <span class="mf">1711446003.000</span><span class="p">)],</span>
-</span><span data-line="5">    <span class="s2">&quot;Punish&quot;</span><span class="p">:</span>      <span class="p">[(</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">))],</span>  <span class="c1"># not visited</span>
-</span><span data-line="6"><span class="p">}</span>
+</section>
+<hr class="docutils" />
+<section id="inside-the-data-folder">
+<h2>Inside the Data Folder</h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">data/
+</span><span data-line="2">├── sessions/
+</span><span data-line="3">├── videos/
+</span><span data-line="4">└── systemName/
 </span></pre></div>
+</div>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">sessions/</span></code></strong>: Contains one subfolder per animal with raw and parsed session datasets.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">videos/</span></code></strong>: Contains one subfolder per animal with video recordings.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">systemName/</span></code></strong>: Named after your system ID; contains platform-wide metrics and
+hardware logs.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="system-configuration-folder-systemname">
+<h2>System Configuration Folder (<code class="docutils literal notranslate"><span class="pre">systemName/</span></code>)</h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">systemName/
+</span><span data-line="2">├── rsync_logs/
+</span><span data-line="3">├── data_removal_logs/
+</span><span data-line="4">├── old_events/
+</span><span data-line="5">├── events.csv
+</span><span data-line="6">├── subjects.csv
+</span><span data-line="7">├── sessions_summary.csv
+</span><span data-line="8">├── bpod_water_calibration.csv
+</span><span data-line="9">├── sound_calibration.csv
+</span><span data-line="10">├── temperatures.csv
+</span><span data-line="11">└── deleted_sessions.csv
+</span></pre></div>
+</div>
+<section id="core-data-files">
+<h3>Core Data Files</h3>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">events.csv</span></code></strong>: Log of all system events. Columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>,
+<code class="docutils literal notranslate"><span class="pre">description</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">subjects.csv</span></code></strong>: Table with one row per subject, used to track the settings that
+will be applied in each subject’s next session. Columns: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>,
+<code class="docutils literal notranslate"><span class="pre">basal_weight</span></code>, <code class="docutils literal notranslate"><span class="pre">active</span></code>, <code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>, <code class="docutils literal notranslate"><span class="pre">next_settings</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">next_settings</span></code> field is a JSON string containing the parameters computed for the
+upcoming session, including <code class="docutils literal notranslate"><span class="pre">next_task</span></code> and <code class="docutils literal notranslate"><span class="pre">refractory_period</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">next_session_time</span></code> field indicates the earliest time at which the subject is eligible
+for another session; it is calculated by adding <code class="docutils literal notranslate"><span class="pre">refractory_period</span></code> to the end time of
+the previous session.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">sessions_summary.csv</span></code></strong>: Summary table of all completed sessions. A new row is
+appended each time a session ends. Columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">weight</span></code>,
+<code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">trials</span></code>, <code class="docutils literal notranslate"><span class="pre">water</span></code>, <code class="docutils literal notranslate"><span class="pre">settings</span></code>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Note</p>
+<p>For the <code class="docutils literal notranslate"><span class="pre">water</span></code> column to be populated, water intake must be explicitly recorded within
+the task definition (see <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">PROTOCOL &amp; TASK DESIGN</span></a>).</p>
+</div>
+</li>
+</ul>
+</section>
+<section id="other-data-files">
+<h3>Other Data Files</h3>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">temperatures.csv</span></code></strong>: Hourly temperature and humidity log, recorded automatically.
+Columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">humidity</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">calibration_files.csv</span></code></strong>: Registry of saved calibration files. Different calibration
+types can be created and customized (e.g. <code class="docutils literal notranslate"><span class="pre">sound_calibration</span></code>, <code class="docutils literal notranslate"><span class="pre">camera_calibration</span></code>,
+<code class="docutils literal notranslate"><span class="pre">bpod_water_calibration</span></code>), and their stored values can be retrieved and used within
+tasks.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">deleted_sessions.csv</span></code></strong>: List of manually deleted sessions.</p>
+<div class="warning admonition">
+<p class="admonition-title">Important</p>
+<p>Deleting a session never removes the underlying data — it simply adds an entry to this
+list, causing the session to be excluded from <code class="docutils literal notranslate"><span class="pre">sessions_summary.csv</span></code> and from the
+per-subject global session file.</p>
+</div>
+</li>
+</ul>
+</section>
+<section id="log-folders">
+<h3>Log Folders</h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">rsync_logs/</span></code></strong>: Log of every data synchronization and backup attempt with a remote
+server or external drive, regardless of whether it succeeded or failed.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">data_removal_logs/</span></code></strong>: Log of the deletion process for videos that have already been
+synchronized to a remote server or external drive.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">old_events/</span></code></strong>: To prevent <code class="docutils literal notranslate"><span class="pre">events.csv</span></code> from growing too large, a new file is
+created once a line threshold is exceeded. Older event records are archived here.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="video-recordings-frame-data">
+<h2>Video Recordings &amp; Frame Data</h2>
+<ul class="simple">
+<li><p><strong>Storage path:</strong> <code class="docutils literal notranslate"><span class="pre">data/videos/{subject}/</span></code></p></li>
+<li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">{subject}_{task}_{timestamp}</span></code></p></li>
+</ul>
+<p>Each recording session produces two files:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">{filename}.mp4</span></code></strong>: H.264-encoded video. Default resolution is 640×480 at 30 FPS
+(configurable via system settings).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">{filename}.csv</span></code></strong>: Per-frame data table:</p></li>
+</ul>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Column</p></th>
+<th class="head text-left"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">frame</span></code></p></td>
+<td class="text-left"><p>Frame index.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">trial</span></code></p></td>
+<td class="text-left"><p>Active trial number during that frame.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">annotation</span></code></p></td>
+<td class="text-left"><p>Custom text string pushed dynamically from the running protocol.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code></p></td>
+<td class="text-left"><p>Absolute hardware sensor capture time.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">x_position</span></code></p></td>
+<td class="text-left"><p>Center-of-mass X coordinate of the animal <em>(tracking must be enabled)</em>.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">y_position</span></code></p></td>
+<td class="text-left"><p>Center-of-mass Y coordinate of the animal <em>(tracking must be enabled)</em>.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
-<section id="events-timestamps-dict-str-list-float">
-<h2><code class="docutils literal notranslate"><span class="pre">&quot;Events</span> <span class="pre">timestamps&quot;</span></code> → <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">list[float]]</span></code></h2>
-<p>A dictionary where:</p>
+<section id="frame-annotations-on-screen-overlays">
+<h2>Frame Annotations &amp; On-Screen Overlays</h2>
+<p>Both cameras render diagnostic text overlays burnt directly into the video frames.</p>
+<p><strong>Operant box camera:</strong></p>
 <ul class="simple">
-<li><p>Each <strong>key</strong> is the name of an event (<code class="docutils literal notranslate"><span class="pre">str</span></code>).</p></li>
-<li><p>Each <strong>value</strong> is a list of <code class="docutils literal notranslate"><span class="pre">float</span></code> timestamps (absolute UNIX epoch in seconds), one for each occurrence of that event during the trial.</p></li>
-<li><p>Only events that actually occurred should be included.</p></li>
+<li><p><strong>Top row:</strong> <code class="docutils literal notranslate"><span class="pre">&lt;filename&gt;</span>&#160; <span class="pre">trial:</span> <span class="pre">N</span>&#160; <span class="pre">&lt;annotation</span> <span class="pre">text&gt;</span></code> — filename, trial number, and
+optional custom text set from within the task.</p></li>
+<li><p><strong>Bottom row:</strong> <code class="docutils literal notranslate"><span class="pre">&lt;duration&gt;</span>&#160; <span class="pre">frame:</span> <span class="pre">N</span>&#160; <span class="pre">area1:</span> <span class="pre">N</span>&#160; <span class="pre">area2:</span> <span class="pre">N...</span></code> — elapsed recording time,
+frame number, and pixel counts for each active tracking area.</p></li>
 </ul>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
-</span><span data-line="2">    <span class="s2">&quot;Tup&quot;</span><span class="p">:</span>      <span class="p">[</span><span class="mf">1711446001.234</span><span class="p">,</span> <span class="mf">1711446002.567</span><span class="p">],</span>
-</span><span data-line="3">    <span class="s2">&quot;Port1In&quot;</span><span class="p">:</span>  <span class="p">[</span><span class="mf">1711446000.500</span><span class="p">],</span>
-</span><span data-line="4">    <span class="s2">&quot;Port1Out&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1711446000.800</span><span class="p">,</span> <span class="mf">1711446001.100</span><span class="p">],</span>
-</span><span data-line="5"><span class="p">}</span>
-</span></pre></div>
+<p><strong>Corridor camera:</strong></p>
+<ul class="simple">
+<li><p><strong>Top row:</strong> <code class="docutils literal notranslate"><span class="pre">&lt;filename&gt;</span>&#160; <span class="pre">&lt;annotation</span> <span class="pre">text&gt;</span></code> — filename and the timestamp and
+description of the most recent system event (no trial number, as the corridor is not
+trial-structured).</p></li>
+<li><p><strong>Bottom row:</strong> <code class="docutils literal notranslate"><span class="pre">&lt;duration&gt;</span>&#160; <span class="pre">frame:</span> <span class="pre">N</span>&#160; <span class="pre">area1:</span> <span class="pre">N</span>&#160; <span class="pre">area2:</span> <span class="pre">N...</span></code> — same format as above.</p></li>
+</ul>
+<p>In addition to the text overlays, when <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION</span></code> is enabled the system burns two
+additional visual layers directly into the saved video: the detection pixels highlighted
+in black, and the boundary lines delimiting each active tracking area. This option is
+configurable under <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> → <code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code>. For performance reasons, these
+overlays are computed on the same stream used for the live display and the saved
+recording.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>We recommend keeping <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_CORRIDOR</span></code> permanently enabled for the corridor
+camera. Corridor recordings are not critical data, but having the overlay active makes it
+easy to verify at a glance that pixel detection is working correctly across all areas.</p>
+<p>For the operant box, we recommend keeping <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_BOX</span></code> disabled during normal
+operation so that task videos are saved clean. Because the
+operant box is typically a closed, controlled environment, illumination conditions are
+stable and threshold recalibration is rarely needed. When it is required, simply enable
+<code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_BOX</span></code>, adjust the thresholds, and disable it again.</p>
 </div>
 </section>
-<section id="complete-example">
-<h2>Complete Example</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-</span><span data-line="2">
-</span><span data-line="3"><span class="k">def</span><span class="w"> </span><span class="nf">get_trial_data</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span data-line="4">    <span class="k">return</span> <span class="p">{</span>
-</span><span data-line="5">        <span class="s2">&quot;Trial start timestamp&quot;</span><span class="p">:</span> <span class="mf">1711446000.000</span><span class="p">,</span>
-</span><span data-line="6">        <span class="s2">&quot;States timestamps&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span data-line="7">            <span class="s2">&quot;WaitForPoke&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mf">1711446000.000</span><span class="p">,</span> <span class="mf">1711446001.234</span><span class="p">)],</span>
-</span><span data-line="8">            <span class="s2">&quot;Reward&quot;</span><span class="p">:</span>      <span class="p">[(</span><span class="mf">1711446001.234</span><span class="p">,</span> <span class="mf">1711446002.567</span><span class="p">)],</span>
-</span><span data-line="9">            <span class="s2">&quot;ITI&quot;</span><span class="p">:</span>         <span class="p">[(</span><span class="mf">1711446002.567</span><span class="p">,</span> <span class="mf">1711446003.000</span><span class="p">)],</span>
-</span><span data-line="10">            <span class="s2">&quot;Punish&quot;</span><span class="p">:</span>      <span class="p">[(</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">))],</span>
-</span><span data-line="11">        <span class="p">},</span>
-</span><span data-line="12">        <span class="s2">&quot;Events timestamps&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span data-line="13">            <span class="s2">&quot;Tup&quot;</span><span class="p">:</span>      <span class="p">[</span><span class="mf">1711446001.234</span><span class="p">,</span> <span class="mf">1711446002.567</span><span class="p">],</span>
-</span><span data-line="14">            <span class="s2">&quot;Port1In&quot;</span><span class="p">:</span>  <span class="p">[</span><span class="mf">1711446000.500</span><span class="p">],</span>
-</span><span data-line="15">            <span class="s2">&quot;Port1Out&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1711446000.800</span><span class="p">,</span> <span class="mf">1711446001.100</span><span class="p">],</span>
-</span><span data-line="16">        <span class="p">},</span>
-</span><span data-line="17">    <span class="p">}</span>
+<hr class="docutils" />
+<section id="subject-behavioral-sessions">
+<h2>Subject Behavioral Sessions</h2>
+<ul class="simple">
+<li><p><strong>Storage path:</strong> <code class="docutils literal notranslate"><span class="pre">data/sessions/{subject}/</span></code></p></li>
+<li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">{subject}_{task}_{timestamp}</span></code></p></li>
+</ul>
+<p>Three files are generated for every completed behavioral session:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">data/sessions/{subject}/
+</span><span data-line="2">├── {filename}_RAW.csv
+</span><span data-line="3">├── {filename}.csv
+</span><span data-line="4">└── {filename}.json
 </span></pre></div>
 </div>
-<blockquote>
-<div><p>[!IMPORTANT]</p>
+<section id="raw-session-filename-raw-csv">
+<h3>1. Raw Session (<code class="docutils literal notranslate"><span class="pre">{filename}_RAW.csv</span></code>)</h3>
+<p>Created in real time, one row per event:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Column</p></th>
+<th class="head text-left"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">TRIAL</span></code></p></td>
+<td class="text-left"><p>Trial index.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">START</span></code></p></td>
+<td class="text-left"><p>Absolute Unix timestamp (4 decimal places) marking the onset of a state or event.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">END</span></code></p></td>
+<td class="text-left"><p>Absolute Unix timestamp of state termination (empty for instantaneous events).</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MSG</span></code></p></td>
+<td class="text-left"><p>Message type (see standards below).</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">VALUE</span></code></p></td>
+<td class="text-left"><p>Value associated with the message.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Message type standards (<code class="docutils literal notranslate"><span class="pre">MSG</span></code>):</strong></p>
 <ul class="simple">
-<li><p>All timestamps must be in <strong>seconds</strong> (not milliseconds).</p></li>
-<li><p>All timestamps must be <strong>absolute</strong> (UNIX epoch), not relative to the trial start.</p></li>
-<li><p>State and event names are free-form strings, but should be consistent across trials.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_Transition_to_{stateName}</span></code>: State machine transition flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STATE_{stateName}_START</span></code> / <code class="docutils literal notranslate"><span class="pre">STATE_{stateName}_END</span></code>: Structural boundaries of a
+behavioral state.</p></li>
+<li><p><em>Hardware event name</em>: Digital input/output line transitions (e.g., photo-gate beams,
+ports).</p></li>
+<li><p><em>Custom variable tag</em>: Any performance variable explicitly captured with
+<code class="docutils literal notranslate"><span class="pre">register_value()</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">stimulus_side</span></code>, <code class="docutils literal notranslate"><span class="pre">correct_choice</span></code>, <code class="docutils literal notranslate"><span class="pre">rewarded</span></code>). The tag name
+is written to <code class="docutils literal notranslate"><span class="pre">MSG</span></code> and its value to <code class="docutils literal notranslate"><span class="pre">VALUE</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> / <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code>: Absolute trial boundary markers.</p></li>
 </ul>
-</div></blockquote>
+</section>
+<section id="processed-session-filename-csv">
+<h3>2. Processed Session (<code class="docutils literal notranslate"><span class="pre">{filename}.csv</span></code>)</h3>
+<p>A parsed, trial-by-trial overview generated at the end of each trial by processing the
+raw data. Instead of one row per event, this file contains one row per trial. It begins
+with the following fixed columns: <code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">trial</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>,
+<code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>.</p>
+<div class="admonition-run-mode admonition">
+<p class="admonition-title">run_mode</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">manual</span></code> if the session was launched manually from the
+GUI, or <code class="docutils literal notranslate"><span class="pre">auto</span></code> if it was triggered automatically upon detecting an animal in the corridor.</p>
+</div>
+</section>
+<section id="session-settings-metadata-filename-json">
+<h3>3. Session Settings Metadata (<code class="docutils literal notranslate"><span class="pre">{filename}.json</span></code>)</h3>
+<p>Stores all parameters used during the session: <code class="docutils literal notranslate"><span class="pre">minimum_duration</span></code>, <code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>,
+<code class="docutils literal notranslate"><span class="pre">run_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">observations</span></code>, and all custom protocol parameters.</p>
+<p>To add a note to a session, click on its entry in <code class="docutils literal notranslate"><span class="pre">sessions_summary</span></code> within the GUI. A
+panel listing all session parameters will appear; the <code class="docutils literal notranslate"><span class="pre">observations</span></code> field is editable
+and empty by default.</p>
+<div class="tip admonition">
+<p class="admonition-title">Tip</p>
+<p>Although <code class="docutils literal notranslate"><span class="pre">.json</span></code> files already capture all parameters used in a session, it is good
+practice to also record relevant variables from within the task using <code class="docutils literal notranslate"><span class="pre">register_value()</span></code>,
+as this makes them directly accessible in the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file.</p>
+</div>
+</section>
+<section id="aggregate-history-file">
+<h3>Aggregate History File</h3>
+<p>In addition to the per-session files, a persistent history file is maintained in each
+subject’s directory:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">{subject}.csv</span></code></strong>: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. This aggregate dataset is essential for adaptive automated training (<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved &gt;80% accuracy over its last three sessions before advancing to the next training stage.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="understanding-the-automated-training-loop">
+<h2>Understanding the Automated Training Loop</h2>
+<p>The Training Village uses a closed-loop parameter cycle to drive fully autonomous
+training progression across days without requiring human intervention:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">              [ subjects.csv ]
+</span><span data-line="2">         (Reads current next_settings)
+</span><span data-line="3">                     │
+</span><span data-line="4">                     ▼
+</span><span data-line="5">        [ Active Behavioral Session ]
+</span><span data-line="6">                     │
+</span><span data-line="7">       (Saves parameters actually used)
+</span><span data-line="8">                     ▼
+</span><span data-line="9">             [ {filename}.json ]
+</span><span data-line="10">                     │
+</span><span data-line="11">       (Session ends → training_protocol.py
+</span><span data-line="12">        evaluates performance history)
+</span><span data-line="13">                     ▼
+</span><span data-line="14">  [ Updated next_settings in subjects.csv ]
+</span></pre></div>
+</div>
+<ol class="arabic simple">
+<li><p><strong>Initialization:</strong> When an animal is recognized, its profile variables are loaded
+from the <code class="docutils literal notranslate"><span class="pre">next_settings</span></code> field in <code class="docutils literal notranslate"><span class="pre">subjects.csv</span></code>.</p></li>
+<li><p><strong>Archiving:</strong> The parameters used for the current session are saved to
+<code class="docutils literal notranslate"><span class="pre">{filename}.json</span></code>.</p></li>
+<li><p><strong>Evaluation:</strong> At the end of the session, <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code> runs automatically
+and analyzes the animal’s historical performance trends from <code class="docutils literal notranslate"><span class="pre">{subject}.csv</span></code>.</p></li>
+<li><p><strong>Update:</strong> The script computes the adjusted parameters for the next session
+(advancing stages, modifying task variables, or updating the refractory period) and
+writes them back to the <code class="docutils literal notranslate"><span class="pre">next_settings</span></code> field in <code class="docutils literal notranslate"><span class="pre">subjects.csv</span></code>.</p></li>
+</ol>
 </section>
 </section>
 
@@ -621,16 +855,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="detection.html">
+    <a href="touchscreen.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Animal Detection &amp; Tracking</div></div>
+        <span>Previous</span><div class="title">Soundcard &amp; Touchscreen Integration</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="touchscreen.html">
+    <a href="timing.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Touchscreen Integration</div>
+        <div class="title">Timing &amp; Clock Synchronization</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -652,7 +886,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

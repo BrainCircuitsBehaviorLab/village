@@ -2,6 +2,9 @@ main\_layout
 ============
 
 .. automodule:: village.gui.main_layout
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

@@ -2,6 +2,9 @@ session\_plot\_base
 ===================
 
 .. automodule:: village.custom_classes.session_plot_base
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
 
    
    

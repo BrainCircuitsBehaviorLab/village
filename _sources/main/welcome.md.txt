@@ -47,7 +47,7 @@
 <p><strong style="font-size: 1.1rem; color: #8B00FF;">Return &amp; Data Synchronization —</strong> After the session, the animal returns to its social group. All data is automatically synchronized to a server or external drive, and the training parameters for that specific subject are updated. This ensures the animal advances through its training protocols without any manual intervention.</p>
 <p><strong style="font-size: 1.1rem; color: #8B00FF;">Modular &amp; Extensible —</strong> The platform is built to grow with your research:</p>
 <ul>
-<li><strong>Social Behavior:</strong> Optional RFID sensors can be installed in the connecting tubes (<a href="https://elifesciences.org/articles/19532">Eco-HAB</a>) to track movement and facilitate deep social behavior analysis.</li>
+<li><strong>Social Behavior:</strong> Optional RFID sensors can be installed in the connecting tubes that link different home cages (<a href="https://elifesciences.org/articles/19532">Eco-HAB</a>) to track movement and facilitate deep social behavior analysis.</li>
 <li><strong>Wireless Optogenetics:</strong> The setup supports seamless integration with wireless optogenetic implants (<a href="https://www.neurolux.org">NEUROLUX</a>).</li>
 </ul>
 </div>

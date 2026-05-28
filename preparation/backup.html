@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -515,24 +516,45 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="data-persistence-backups">
 <h1>Data Persistence &amp; Backups</h1>
-<p>Because the system runs on a microSD card with a limited capacity of 256 GB, older video files must be regularly purged to make room for new recordings. Please note that <strong>behavioral task data is never deleted</strong>—only the video files are cleared.</p>
-<p>By default, the system retains one week of video storage, but you can adjust this window to fit your needs under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code>.</p>
-<p>At the conclusion of each behavioral session, the system automatically triggers a data synchronization routine. To specify your backup destination, configure the fields in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SYNC</span> <span class="pre">SETTINGS</span></code>. Here you can choose whether to sync your data to a remote network server or to an external hard drive connected directly to the Raspberry Pi.</p>
+<p>For safety and storage reasons, all behavioral data (session data and videos) should be
+synchronized to a remote server or external hard drive.</p>
+<p>Because the system runs on a microSD card with a limited capacity of 256 GB, older video
+files must be regularly purged to make room for new recordings. Note that <strong>behavioral
+task data is never deleted from the microSD card</strong> — only video files are removed.</p>
+<p>By default, the system retains one week of video storage, but this window can be adjusted
+under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code>.</p>
+<p>At the end of each behavioral session, the system automatically triggers a data
+synchronization routine. To specify your backup destination, configure the fields under
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SYNC</span> <span class="pre">SETTINGS</span></code>, where you can choose between syncing to a remote network
+server or to an external hard drive connected directly to the Raspberry Pi.</p>
+<div class="admonition-warning admonition">
+<p class="admonition-title">Warning</p>
+<p>Corridor videos, which are recorded continuously 24/7, are <strong>not</strong> synchronized to any
+backup destination and are automatically deleted after one week — the same retention
+policy that applies to task videos. This is intentional, as continuous recordings would
+otherwise consume an impractical amount of storage space.</p>
+</div>
 <section id="key-configuration-fields">
 <h2>Key Configuration Fields</h2>
-<p>There are two critical parameters that govern this backup behavior:</p>
+<p>Two parameters govern the backup and deletion behavior:</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code>:</strong></p>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code></strong></p>
 <ul>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">ON</span></code>:</strong> The system will <em>only</em> delete old video files if it confirms they have been successfully backed up to your remote server or external hard drive.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">OFF</span></code>:</strong> The system will automatically purge old video files once they exceed the storage days limit, even if no backup is found.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ON</span></code>:</strong> Video files are only deleted after the system confirms they have been
+successfully backed up to the remote server or external hard drive.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OFF</span></code>:</strong> Video files are automatically purged once they exceed the retention window,
+regardless of whether a backup exists.</p></li>
 </ul>
 </li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">MAXIMUM_SYNC_TIME</span></code>:</strong> The maximum time allowed (in seconds) for the synchronization process to complete. If a sync session exceeds this threshold, the process terminates automatically. This safety cutoff prevents a slow network or hanging transfer from indefinitely blocking other animals from voluntarily accessing the operant box.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MAXIMUM_SYNC_TIME</span></code>:</strong> Maximum duration (in seconds) allowed for a synchronization
+session to complete. If the process exceeds this threshold, it is terminated
+automatically. This prevents a slow network connection or a stalled transfer from
+blocking other animals from accessing the operant box.</p></li>
 </ul>
 <div class="tip admonition">
 <p class="admonition-title">Note</p>
-<p>When synchronizing data to a remote server, the <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code> field can be left blank if there is no need to specify a particular port for the SSH connection.</p>
+<p>When synchronizing to a remote server, the <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code> field can be left blank if no
+specific port needs to be defined for the SSH connection.</p>
 </div>
 </section>
 </section>
@@ -574,7 +596,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

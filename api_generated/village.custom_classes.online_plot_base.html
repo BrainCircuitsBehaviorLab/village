@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -438,17 +439,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase"><code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code></a><ul>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure"><code class="docutils literal notranslate">ensure_figure()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.close"><code class="docutils literal notranslate">close()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.update_canvas"><code class="docutils literal notranslate">update_canvas()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes"><code class="docutils literal notranslate">create_figure_and_axes()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.update_plot"><code class="docutils literal notranslate">update_plot()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -532,58 +523,6 @@ data-aria-dark="Switch to auto color mode">
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">OnlinePlotBase</span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class to handle creation and management of Matplotlib figures to monitor
-behavioral data in real-time.</p>
-<p>Use this with the variables you are registering in your task,
-that are part of Task.session_df.</p>
-<p>Subclasses should override <cite>create_figure_and_axes</cite> (to create axes) and
-<cite>update_plot</cite> (to draw on existing axes).</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure">
-<span class="sig-name descname"><span class="pre">ensure_figure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.ensure_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Ensures that the matplotlib figure exists, creating it if necessary.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Closes the matplotlib figure and resets the state.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.update_canvas">
-<span class="sig-name descname"><span class="pre">update_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.update_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Updates the plot with new data and redraws the canvas.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – The dataframe containing the latest session data.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes">
-<span class="sig-name descname"><span class="pre">create_figure_and_axes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.create_figure_and_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Creates the figure and axes. Should be overridden by subclasses.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.update_plot">
-<span class="sig-name descname"><span class="pre">update_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.update_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Updates the plot content. Should be overridden by subclasses.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – The dataframe containing the latest session data.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -623,7 +562,7 @@ that are part of Task.session_df.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

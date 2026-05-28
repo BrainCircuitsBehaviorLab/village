@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -439,6 +440,11 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#illumination-tracking-issues">Illumination &amp; Tracking Issues</a><ul>
+<li><a class="reference internal" href="#symptom-double-entries-or-wrong-rfid-detections">Symptom: Double Entries or Wrong RFID detections</a></li>
+<li><a class="reference internal" href="#symptom-broken-video-tracking-inside-the-operant-box">Symptom: Broken Video-Tracking inside the Operant Box</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#camera-issues-connection-error-or-malfunctioning">Camera Issues (Connection Error or Malfunctioning)</a></li>
 <li><a class="reference internal" href="#controller-issues-bpod-or-arduino-connection-error">Controller Issues (Bpod or Arduino Connection Error)</a></li>
 <li><a class="reference internal" href="#peripheral-issues-sensors-motors-lights-or-satellite-boards">Peripheral Issues (Sensors, Motors, Lights, or Satellite Boards)</a></li>
@@ -518,10 +524,34 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="troubleshooting-guide">
 <h1>Troubleshooting Guide</h1>
+<p>The Training Village is a multi-component system where hardware, software, and behavior intersect. Minor miscalibrations or component failures can lead to sub-optimal performance. Typically, small issues may arise during the first few days of deployment as the animals habituate and the sensors are fine-tuned.</p>
+<p>When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly to these alarms by logging in remotely to investigate the core telemetry logs and video feeds.</p>
+<hr class="docutils" />
+<section id="illumination-tracking-issues">
+<h2>Illumination &amp; Tracking Issues</h2>
+<p>Many gating or tracking failures are not caused by software bugs, but by physical lighting conditions.</p>
+<section id="symptom-double-entries-or-wrong-rfid-detections">
+<h3>Symptom: Double Entries or Wrong RFID detections</h3>
+<p>If you notice that two animals are entering the operant box simultaneously, or that a gate closes while an animal is still in the corridor, the cause is usually <strong>optical reflections</strong>.</p>
+<ul class="simple">
+<li><p><strong>The Cause:</strong> The computer vision algorithm relies on a clean binarized pixel count. If there are glare reflections on the clear acrylic corridor ceiling, the camera can become “blind” to those reflection zones. For example, if a second animal is standing directly under a heavy glare reflection, its pixels will not be counted. The system will assume the corridor is empty and mistakenly open the gate for an RFID-tagged animal, leading to double entries or wrong rfid detections.</p></li>
+<li><p><strong>The Solution:</strong> Adjust the physical positioning or angles of your external room lights. Ensure the corridor is shielded from direct overhead glare. While the camera automatically adjusts its exposure between day (<code class="docutils literal notranslate"><span class="pre">VISIBLE</span></code>) and night (<code class="docutils literal notranslate"><span class="pre">IR</span></code>) modes to keep images consistent, it cannot filter out localized mirror-like reflections on plastic surfaces.</p></li>
+</ul>
+</section>
+<section id="symptom-broken-video-tracking-inside-the-operant-box">
+<h3>Symptom: Broken Video-Tracking inside the Operant Box</h3>
+<p>If the advanced center-of-mass tracking (<code class="docutils literal notranslate"><span class="pre">findContours</span></code>) is dropping or jumping erratically inside the behavioral arena, inspect the box illumination profile.</p>
+<ul class="simple">
+<li><p><strong>The Cause:</strong> The operant box tracking requires highly uniform illumination (either visible or IR, depending on your paradigm).</p></li>
+<li><p><strong>The Solution:</strong> Ensure the LED strips inside the box are clean and fully functional. <strong>Never open the operant box door while a behavioral session is actively running</strong>, as the sudden influx of external room light will completely disrupt the binarization thresholds and crash the real-time tracking tracking loop.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
 <section id="camera-issues-connection-error-or-malfunctioning">
 <h2>Camera Issues (Connection Error or Malfunctioning)</h2>
 <ol class="arabic simple">
-<li><p><strong>Verify Physical Connections:</strong> Ensure both camera ribbon cables are firmly seated in the Raspberry Pi 5 MIPI CSI slots and that the locking clips are engaged.</p></li>
+<li><p><strong>Verify Physical Connections:</strong> Ensure both camera ribbon cables are firmly seated in the Raspberry Pi 5 MIPI CSI slots and that the white locking clips are fully engaged.</p></li>
 <li><p><strong>Check Camera Indices:</strong> Open the application GUI, navigate to <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>, and verify that your camera indices are properly assigned (typically one is <code class="docutils literal notranslate"><span class="pre">0</span></code> and the other is <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">CAM_CORRIDOR_INDEX</span></code>: <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
@@ -535,7 +565,7 @@ data-aria-dark="Switch to auto color mode">
 <section id="controller-issues-bpod-or-arduino-connection-error">
 <h2>Controller Issues (Bpod or Arduino Connection Error)</h2>
 <ol class="arabic simple">
-<li><p><strong>Verify Physical Port:</strong> Ensure your behavioral controller is plugged into the <strong>bottom USB 3.0 port</strong> (the blue port closest to the Raspberry Pi’s onboard Ethernet connector).</p></li>
+<li><p><strong>Verify Physical Port:</strong> Ensure your behavioral controller is plugged into the <strong>bottom USB 3.0 port</strong> (the bottom blue port closest to the Raspberry Pi’s onboard Ethernet connector).</p></li>
 <li><p><strong>Verify App Settings:</strong> Navigate to <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CONTROLLER</span> <span class="pre">SETTINGS</span></code> in the GUI. Ensure your specific controller type is selected and the device path is set exactly to <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code>.</p></li>
 <li><p><strong>Check System Devices:</strong> Open a terminal and check if Linux detects the hardware as a raw serial interface by running:</p></li>
 </ol>
@@ -552,6 +582,16 @@ data-aria-dark="Switch to auto color mode">
 <ol class="arabic simple" start="6">
 <li><p><strong>Fix Missing Symlink:</strong> If the raw device (<code class="docutils literal notranslate"><span class="pre">ttyACM*</span></code> or <code class="docutils literal notranslate"><span class="pre">ttyUSB*</span></code>) appears but <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code> is missing, inspect the system logs by typing <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> to find the exact port configuration, then review your rule file at <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-usb.rules</span></code>.</p></li>
 </ol>
+<div class="tip admonition">
+<p class="admonition-title">Understanding Symlinks, udev Rules &amp; /dev/controller</p>
+<p>A <strong>symlink</strong> (short for symbolic link) is a software shortcut in Linux that transparently redirects one file path to another.</p>
+<ul class="simple">
+<li><p><strong>Why it is necessary:</strong> When you connect a serial device (like a Bpod or Arduino) to the Raspberry Pi, Linux dynamically assigns it a generic node path like <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM0</span></code> or <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB0</span></code>. However, if the device is unplugged, if the Pi reboots, or if another USB peripheral is connected, Linux might randomly reassign that hardware to <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM1</span></code>. If the Training Village software were hardcoded to look for a static name like <code class="docutils literal notranslate"><span class="pre">ttyACM0</span></code>, the connection would instantly break.</p></li>
+<li><p><strong>The Automated Solution (<code class="docutils literal notranslate"><span class="pre">udev</span></code> rules):</strong> To prevent this, Linux uses a background device manager called <code class="docutils literal notranslate"><span class="pre">udev</span></code>. The Training Village comes pre-configured with a custom rule file (located at <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-usb.rules</span></code>) containing the following instruction: <code class="docutils literal notranslate"><span class="pre">SUBSYSTEM==&quot;tty&quot;,</span> <span class="pre">KERNELS==&quot;3-1:1.0&quot;,</span> <span class="pre">SYMLINK+=&quot;controller&quot;</span></code></p></li>
+<li><p><strong>How this udev rule works:</strong> <code class="docutils literal notranslate"><span class="pre">SUBSYSTEM==&quot;tty&quot;</span></code>: Filters the incoming hardware events and tells Linux to only trigger this rule if the connected device is a serial/terminal interface (like a USB microcontroller). <code class="docutils literal notranslate"><span class="pre">KERNELS==&quot;3-1:1.0&quot;</span></code>: instead of looking at what device is plugged in, it looks at where it is plugged in. <code class="docutils literal notranslate"><span class="pre">3-1:1.0</span></code> corresponds to the exact physical address of the bottom USB port adjacent to the Raspberry Pi 5 Ethernet jack. <code class="docutils literal notranslate"><span class="pre">SYMLINK+=&quot;controller&quot;</span></code>: If a serial device matches the criteria above, udev automatically creates a permanent, unchangeable symbolic link shortcut named /dev/controller pointing straight to it.</p></li>
+</ul>
+<p>Thanks to this rule, no matter what microcontroller you plug into that specific bottom port, and regardless of the generic name Linux gives it internally, the Training Village software can always find your behavioral controller seamlessly.</p>
+</div>
 </section>
 <hr class="docutils" />
 <section id="peripheral-issues-sensors-motors-lights-or-satellite-boards">
@@ -674,7 +714,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

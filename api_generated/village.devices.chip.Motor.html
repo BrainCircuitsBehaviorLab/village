@@ -9,7 +9,7 @@
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cec072e2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,7 +66,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../overview/state_machine.html">System Logic (State Machine)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
 </ul>
 </li>
@@ -87,8 +86,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
@@ -443,6 +444,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.devices.chip.Motor.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.chip.Motor.servo_pulse"><code class="docutils literal notranslate">servo_pulse()</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.chip.Motor.move"><code class="docutils literal notranslate">move()</span></code></a></li>
+<li><a class="reference internal" href="#village.devices.chip.Motor.disable"><code class="docutils literal notranslate">disable()</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.chip.Motor.open"><code class="docutils literal notranslate">open()</span></code></a></li>
 <li><a class="reference internal" href="#village.devices.chip.Motor.close"><code class="docutils literal notranslate">close()</span></code></a></li>
 </ul>
@@ -545,13 +547,16 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-even"><td><p><a class="reference internal" href="#village.devices.chip.Motor.close" title="village.devices.chip.Motor.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></a>()</p></td>
 <td><p>Moves the motor to the close position.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.devices.chip.Motor.move" title="village.devices.chip.Motor.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a>(angle)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.devices.chip.Motor.disable" title="village.devices.chip.Motor.disable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disable</span></code></a>()</p></td>
+<td><p>Stops PWM signal to release holding torque.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.devices.chip.Motor.move" title="village.devices.chip.Motor.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a>(angle)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.devices.chip.Motor.open" title="village.devices.chip.Motor.open"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#village.devices.chip.Motor.open" title="village.devices.chip.Motor.open"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open</span></code></a>()</p></td>
 <td><p>Moves the motor to the open position.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.devices.chip.Motor.servo_pulse" title="village.devices.chip.Motor.servo_pulse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">servo_pulse</span></code></a>(ms)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#village.devices.chip.Motor.servo_pulse" title="village.devices.chip.Motor.servo_pulse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">servo_pulse</span></code></a>(ms)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -566,6 +571,12 @@ data-aria-dark="Switch to auto color mode">
 <dt class="sig sig-object py" id="village.devices.chip.Motor.move">
 <span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/chip.html#Motor.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.devices.chip.Motor.disable">
+<span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/chip.html#Motor.disable"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Stops PWM signal to release holding torque.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.devices.chip.Motor.open">
@@ -620,7 +631,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=aaeafdac"></script>
+      <script src="../_static/documentation_options.js?v=7b1f120f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
