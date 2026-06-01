@@ -9,8 +9,10 @@ import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QFileDialog, QLabel
 
-from village.calibration.camera_calibration import (CameraCalibration,
-                                                    default_result_path)
+from village.calibration.camera_calibration import (
+    CameraCalibration,
+    default_result_path,
+)
 from village.calibration.camera_calibration_grid import make_circle_grid
 from village.classes.enums import State
 from village.devices.camera import cam_box
@@ -29,8 +31,7 @@ def _frame_to_pixmap(frame: np.ndarray) -> QPixmap:
     return QPixmap.fromImage(QImage(rgb.data, w, h, w * 3, QImage.Format_RGB888))
 
 
-def _make_diagnostic_plots(diag: dict, width_in: float,
-                           height_in: float) -> plt.Figure:
+def _make_diagnostic_plots(diag: dict, width_in: float, height_in: float) -> plt.Figure:
     pts = diag["pts"]
     errs = diag["errs"]
     mags = np.linalg.norm(errs, axis=1)
@@ -47,14 +48,26 @@ def _make_diagnostic_plots(diag: dict, width_in: float,
     tilt_y = diag.get("tilt_y_deg", 0.0)
     tilt_t = diag.get("tilt_total", 0.0)
     roll = diag.get("roll_deg", 0.0)
-    fig.suptitle(f"Tilt X {tilt_x:+.1f}°  Tilt Y {tilt_y:+.1f}°  "
-                 f"Tilt total {tilt_t:.1f}°  Roll {roll:+.1f}°", fontsize=9)
+    fig.suptitle(
+        f"Tilt X {tilt_x:+.1f}°  Tilt Y {tilt_y:+.1f}°  "
+        f"Tilt total {tilt_t:.1f}°  Roll {roll:+.1f}°",
+        fontsize=9,
+    )
 
     # (0,0) residual reprojection error
     ax = axes[0, 0]
     ax.tricontourf(pts[:, 0], pts[:, 1], mags, levels=10, cmap="hot", alpha=0.25)
-    q = ax.quiver(pts[:, 0], pts[:, 1], errs[:, 0], errs[:, 1], mags,
-                  cmap="hot", angles="xy", scale_units="xy", scale=0.05)
+    q = ax.quiver(
+        pts[:, 0],
+        pts[:, 1],
+        errs[:, 0],
+        errs[:, 1],
+        mags,
+        cmap="hot",
+        angles="xy",
+        scale_units="xy",
+        scale=0.05,
+    )
     fig.colorbar(q, ax=ax, label="error (px)", **cb_args)
     ax.set_xlim(0, w)
     ax.set_ylim(h, 0)
@@ -63,9 +76,17 @@ def _make_diagnostic_plots(diag: dict, width_in: float,
 
     # (0,1) lens distortion field
     ax = axes[0, 1]
-    q2 = ax.quiver(grid_pts[:, 0], grid_pts[:, 1],
-                   disp[:, 0], disp[:, 1], disp_mag,
-                   cmap="cool", angles="xy", scale_units="xy", scale=0.3)
+    q2 = ax.quiver(
+        grid_pts[:, 0],
+        grid_pts[:, 1],
+        disp[:, 0],
+        disp[:, 1],
+        disp_mag,
+        cmap="cool",
+        angles="xy",
+        scale_units="xy",
+        scale=0.3,
+    )
     fig.colorbar(q2, ax=ax, label="displacement (px)", **cb_args)
     ax.set_xlim(0, w)
     ax.set_ylim(h, 0)
@@ -87,28 +108,54 @@ def _make_diagnostic_plots(diag: dict, width_in: float,
         rr = diag.get("roll_rad", 0.0)
         cr, sr = np.cos(rr), np.sin(rr)
         hw, hh = avg_w / 2, avg_h / 2
-        ideal = np.array([center + [-cr * hw + sr * hh, -sr * hw - cr * hh],
-                          center + [ cr * hw + sr * hh,  sr * hw - cr * hh],
-                          center + [ cr * hw - sr * hh,  sr * hw + cr * hh],
-                          center + [-cr * hw - sr * hh, -sr * hw + cr * hh]])
+        ideal = np.array(
+            [
+                center + [-cr * hw + sr * hh, -sr * hw - cr * hh],
+                center + [cr * hw + sr * hh, sr * hw - cr * hh],
+                center + [cr * hw - sr * hh, sr * hw + cr * hh],
+                center + [-cr * hw - sr * hh, -sr * hw + cr * hh],
+            ]
+        )
         ax.scatter(last_pts[:, 0], last_pts[:, 1], s=3, c="steelblue", zorder=3)
-        ax.plot(*np.vstack([tl, tr, br, bl, tl]).T, "r-", lw=2,
-                label=f"Actual (tilt {tilt_t:.1f}°)")
+        ax.plot(
+            *np.vstack([tl, tr, br, bl, tl]).T,
+            "r-",
+            lw=2,
+            label=f"Actual (tilt {tilt_t:.1f}°)",
+        )
         ax.plot(*np.vstack([ideal, ideal[0]]).T, "g--", lw=2, label="Ideal")
         roll_row = diag.get("roll_top_row")
         if roll_row is not None and len(roll_row) >= 2:
-            ax.scatter(roll_row[:, 0], roll_row[:, 1],
-                       s=20, c="orange", zorder=5, label="Roll ref row")
-            ax.plot([roll_row[0, 0], roll_row[-1, 0]],
-                    [roll_row[0, 1], roll_row[-1, 1]],
-                    color="orange", lw=1.5, linestyle="--", zorder=4)
+            ax.scatter(
+                roll_row[:, 0],
+                roll_row[:, 1],
+                s=20,
+                c="orange",
+                zorder=5,
+                label="Roll ref row",
+            )
+            ax.plot(
+                [roll_row[0, 0], roll_row[-1, 0]],
+                [roll_row[0, 1], roll_row[-1, 1]],
+                color="orange",
+                lw=1.5,
+                linestyle="--",
+                zorder=4,
+            )
         ax.legend(fontsize=7, ncols=3)
         ax.set_xlim(0, w)
         ax.set_ylim(h, 0)
         ax.set_aspect("equal")
     else:
-        ax.text(0.5, 0.5, "Grid size not set", ha="center", va="center",
-                transform=ax.transAxes, color="gray")
+        ax.text(
+            0.5,
+            0.5,
+            "Grid size not set",
+            ha="center",
+            va="center",
+            transform=ax.transAxes,
+            color="gray",
+        )
     ax.axis("off")
 
     # (1,1) px/cm scale heatmap
@@ -123,8 +170,15 @@ def _make_diagnostic_plots(diag: dict, width_in: float,
         ax.set_ylim(h, 0)
         ax.set_aspect("equal")
     else:
-        ax.text(0.5, 0.5, "Scale not available\n(set grid size)", ha="center",
-                va="center", transform=ax.transAxes, color="gray")
+        ax.text(
+            0.5,
+            0.5,
+            "Scale not available\n(set grid size)",
+            ha="center",
+            va="center",
+            transform=ax.transAxes,
+            color="gray",
+        )
     ax.axis("off")
 
     plt.tight_layout()
@@ -150,8 +204,7 @@ class DiagnosticPlotsLayout(Layout):
 
     def update(self, diag: dict) -> None:
         try:
-            fig = _make_diagnostic_plots(diag, self.plot_width,
-                                         self.plot_height)
+            fig = _make_diagnostic_plots(diag, self.plot_width, self.plot_height)
             self.plot_label.setPixmap(create_pixmap(fig))
             plt.close(fig)
         except Exception:
@@ -173,81 +226,225 @@ class CameraCalibrationLayout(Layout):
         self._calib: CameraCalibration | None = None
         self._last_annotated: np.ndarray | None = None
 
-        self.create_and_add_label("GRID GENERATION", 5, 2, 40, 2, "black",
-                                  description="Generate a printable symmetric circle grid.\n"
-                                  "Print it and verify spacing with a ruler.")
-        self.create_and_add_label("PAGE W (mm)", 8, 2, 14, 2, "black", bold=False,
-                                  description="Page width in mm (e.g. 210 for A4)")
-        self.page_w_edit = self.create_and_add_line_edit("210", 10, 2, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "GRID GENERATION",
+            5,
+            2,
+            40,
+            2,
+            "black",
+            description="Generate a printable symmetric circle grid.\n"
+            "Print it and verify spacing with a ruler.",
+        )
+        self.create_and_add_label(
+            "PAGE W (mm)",
+            8,
+            2,
+            14,
+            2,
+            "black",
+            bold=False,
+            description="Page width in mm (e.g. 210 for A4)",
+        )
+        self.page_w_edit = self.create_and_add_line_edit(
+            "210", 10, 2, 8, 2, lambda _: None
+        )
 
-        self.create_and_add_label("PAGE H (mm)", 8, 12, 14, 2, "black", bold=False,
-                                  description="Page height in mm (e.g. 297 for A4)")
-        self.page_h_edit = self.create_and_add_line_edit("297", 10, 12, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "PAGE H (mm)",
+            8,
+            12,
+            14,
+            2,
+            "black",
+            bold=False,
+            description="Page height in mm (e.g. 297 for A4)",
+        )
+        self.page_h_edit = self.create_and_add_line_edit(
+            "297", 10, 12, 8, 2, lambda _: None
+        )
 
-        self.create_and_add_label("SPACING (mm)", 8, 22, 16, 2, "black", bold=False,
-                                  description="Centre-to-centre distance between circles in mm")
-        self.spacing_edit = self.create_and_add_line_edit("50", 10, 22, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "SPACING (mm)",
+            8,
+            22,
+            16,
+            2,
+            "black",
+            bold=False,
+            description="Centre-to-centre distance between circles in mm",
+        )
+        self.spacing_edit = self.create_and_add_line_edit(
+            "50", 10, 22, 8, 2, lambda _: None
+        )
 
-        self.create_and_add_label("DOT RADIUS (mm)", 8, 32, 18, 2, "black", bold=False,
-                                  description="Radius of each printed circle in mm")
-        self.dot_radius_edit = self.create_and_add_line_edit("10", 10, 32, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "DOT RADIUS (mm)",
+            8,
+            32,
+            18,
+            2,
+            "black",
+            bold=False,
+            description="Radius of each printed circle in mm",
+        )
+        self.dot_radius_edit = self.create_and_add_line_edit(
+            "10", 10, 32, 8, 2, lambda _: None
+        )
 
-        self.create_and_add_label("MARGIN (mm)", 8, 42, 14, 2, "black", bold=False,
-                                  description="Empty border around the grid in mm")
-        self.margin_edit = self.create_and_add_line_edit("0", 10, 42, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "MARGIN (mm)",
+            8,
+            42,
+            14,
+            2,
+            "black",
+            bold=False,
+            description="Empty border around the grid in mm",
+        )
+        self.margin_edit = self.create_and_add_line_edit(
+            "0", 10, 42, 8, 2, lambda _: None
+        )
 
-        self.generate_button = self.create_and_add_button("GENERATE GRID PDF", 13, 2, 30, 2,
-                                                          self._generate_grid_clicked,
-                                                          "Generate a printable circle grid PDF",
-                                                          "powderblue")
-        self.grid_status_label = self.create_and_add_label("", 16, 2, 50, 2, "gray", bold=False)
+        self.generate_button = self.create_and_add_button(
+            "GENERATE GRID PDF",
+            13,
+            2,
+            30,
+            2,
+            self._generate_grid_clicked,
+            "Generate a printable circle grid PDF",
+            "powderblue",
+        )
+        self.grid_status_label = self.create_and_add_label(
+            "", 16, 2, 50, 2, "gray", bold=False
+        )
 
-        self.create_and_add_label("CALIBRATION DETECTION", 19, 2, 50, 2, "black",
-                                  description="Parameters of the actual grid in front of the camera.\n"
-                                  "Rows/cols may differ from the printed sheet if you stitched several.")
-        self.create_and_add_label("GRID COLS", 21, 2, 14, 2, "black", bold=False,
-                                  description="Columns in the stitched calibration grid")
-        self.grid_cols_edit = self.create_and_add_line_edit("30", 23, 2, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "CALIBRATION DETECTION",
+            19,
+            2,
+            50,
+            2,
+            "black",
+            description="Parameters of the actual grid in front of the camera.\n"
+            "Rows/cols may differ from the printed sheet if you stitched several.",
+        )
+        self.create_and_add_label(
+            "GRID COLS",
+            21,
+            2,
+            14,
+            2,
+            "black",
+            bold=False,
+            description="Columns in the stitched calibration grid",
+        )
+        self.grid_cols_edit = self.create_and_add_line_edit(
+            "30", 23, 2, 8, 2, lambda _: None
+        )
 
-        self.create_and_add_label("GRID ROWS", 21, 12, 14, 2, "black", bold=False,
-                                  description="Rows in the stitched calibration grid")
-        self.grid_rows_edit = self.create_and_add_line_edit("18", 23, 12, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "GRID ROWS",
+            21,
+            12,
+            14,
+            2,
+            "black",
+            bold=False,
+            description="Rows in the stitched calibration grid",
+        )
+        self.grid_rows_edit = self.create_and_add_line_edit(
+            "18", 23, 12, 8, 2, lambda _: None
+        )
 
-        self.create_and_add_label("SPACING (px)", 21, 22, 16, 2, "black", bold=False,
-                                  description="Expected centre-to-centre dot spacing in pixels.\n"
-                                              "Used to tune the blob detector area bounds.")
-        self.spacing_px_edit = self.create_and_add_line_edit("17", 23, 22, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "SPACING (px)",
+            21,
+            22,
+            16,
+            2,
+            "black",
+            bold=False,
+            description="Expected centre-to-centre dot spacing in pixels.\n"
+            "Used to tune the blob detector area bounds.",
+        )
+        self.spacing_px_edit = self.create_and_add_line_edit(
+            "17", 23, 22, 8, 2, lambda _: None
+        )
 
-        self.create_and_add_label("MEASURED SPACING (mm)", 21, 34, 22, 2, "black", bold=False,
-                                  description="Actual printed dot spacing measured with a ruler.\n"
-                                              "Leave blank to use SPACING (mm) above.\n"
-                                              "Only affects the px/cm scale heatmap.")
-        self.measured_spacing_edit = self.create_and_add_line_edit("", 23, 34, 8, 2, lambda _: None)
+        self.create_and_add_label(
+            "MEASURED SPACING (mm)",
+            21,
+            34,
+            22,
+            2,
+            "black",
+            bold=False,
+            description="Actual printed dot spacing measured with a ruler.\n"
+            "Leave blank to use SPACING (mm) above.\n"
+            "Only affects the px/cm scale heatmap.",
+        )
+        self.measured_spacing_edit = self.create_and_add_line_edit(
+            "", 23, 34, 8, 2, lambda _: None
+        )
 
-        self.capture_button = self.create_and_add_button("CAPTURE FRAME", 26, 2, 28, 2,
-                                                         self._capture_clicked,
-                                                         "Grab current frame, detect grid, and run calibration",
-                                                         "powderblue")
-        self.load_image_button = self.create_and_add_button("LOAD IMAGE", 26, 32, 20, 2,
-                                                            self._load_image_clicked,
-                                                            "Load a PNG/JPG image file and use it as a calibration frame",
-                                                            "powderblue")
-        self.clear_button = self.create_and_add_button("CLEAR FRAMES", 26, 54, 20, 2,
-                                                       self._clear_clicked,
-                                                       "Discard all captured frames and start over",
-                                                       "lightyellow")
-        self.frames_label = self.create_and_add_label("Frames: 0", 29, 2, 30, 2, "black", bold=False)
+        self.capture_button = self.create_and_add_button(
+            "CAPTURE FRAME",
+            26,
+            2,
+            28,
+            2,
+            self._capture_clicked,
+            "Grab current frame, detect grid, and run calibration",
+            "powderblue",
+        )
+        self.load_image_button = self.create_and_add_button(
+            "LOAD IMAGE",
+            26,
+            32,
+            20,
+            2,
+            self._load_image_clicked,
+            "Load a PNG/JPG image file and use it as a calibration frame",
+            "powderblue",
+        )
+        self.clear_button = self.create_and_add_button(
+            "CLEAR FRAMES",
+            26,
+            54,
+            20,
+            2,
+            self._clear_clicked,
+            "Discard all captured frames and start over",
+            "lightyellow",
+        )
+        self.frames_label = self.create_and_add_label(
+            "Frames: 0", 29, 2, 30, 2, "black", bold=False
+        )
 
-        self.calib_status_label = self.create_and_add_label("", 32, 2, 95, 2, "gray", bold=False)
+        self.calib_status_label = self.create_and_add_label(
+            "", 32, 2, 95, 2, "gray", bold=False
+        )
 
-        self.result_label = self.create_and_add_label("", 35, 2, 95, 5, "black", bold=False)
+        self.result_label = self.create_and_add_label(
+            "", 35, 2, 95, 5, "black", bold=False
+        )
 
-        self.metrics_label = self.create_and_add_label("", 41, 2, 95, 10, "black", bold=False)
+        self.metrics_label = self.create_and_add_label(
+            "", 41, 2, 95, 10, "black", bold=False
+        )
 
-        self.save_button = self.create_and_add_button("SAVE JSON", 52, 2, 20, 2,
-                                                      self._save_clicked,
-                                                      "Save calibration result to camera_calibration.json",
-                                                      "powderblue")
+        self.save_button = self.create_and_add_button(
+            "SAVE JSON",
+            52,
+            2,
+            20,
+            2,
+            self._save_clicked,
+            "Save calibration result to camera_calibration.json",
+            "powderblue",
+        )
         self.save_button.setDisabled(True)
 
         self.preview_label = QLabel()
@@ -259,8 +456,9 @@ class CameraCalibrationLayout(Layout):
         self.plot_layout = DiagnosticPlotsLayout(self.window, 24, 95)
         self.addLayout(self.plot_layout, 28, 103, 24, 95)
 
-        self._calib = CameraCalibration(spacing_mm=self._spacing_value(),
-                                        grid_size=self._grid_size_value())
+        self._calib = CameraCalibration(
+            spacing_mm=self._spacing_value(), grid_size=self._grid_size_value()
+        )
 
     def _spacing_value(self) -> float:
         try:
@@ -300,16 +498,23 @@ class CameraCalibrationLayout(Layout):
             dot_radius = float(self.dot_radius_edit.text())
             margin = float(self.margin_edit.text())
             out = Path(settings.get("DATA_DIRECTORY")) / "calibration_grid.pdf"
-            make_circle_grid(page_w_mm=page_w, page_h_mm=page_h,
-                             spacing_mm=spacing, circle_radius_mm=dot_radius,
-                             margin_mm=margin, out_path=str(out))
+            make_circle_grid(
+                page_w_mm=page_w,
+                page_h_mm=page_h,
+                spacing_mm=spacing,
+                circle_radius_mm=dot_radius,
+                margin_mm=margin,
+                out_path=str(out),
+            )
             self.grid_status_label.setText(f"Saved: {out}")
             self.grid_status_label.setStyleSheet(
-                "QLabel {color: green; font-weight: normal}")
+                "QLabel {color: green; font-weight: normal}"
+            )
         except Exception:
             self.grid_status_label.setText("Error generating grid")
             self.grid_status_label.setStyleSheet(
-                "QLabel {color: red; font-weight: normal}")
+                "QLabel {color: red; font-weight: normal}"
+            )
 
     def _capture_clicked(self) -> None:
         if self._calib.running:
@@ -333,43 +538,52 @@ class CameraCalibrationLayout(Layout):
 
         px = _frame_to_pixmap(annotated)
         if not px.isNull():
-            self.preview_label.setPixmap(px.scaled(self.preview_label.width(),
-                                                   self.preview_label.height(), 1))
+            self.preview_label.setPixmap(
+                px.scaled(self.preview_label.width(), self.preview_label.height(), 1)
+            )
 
         if not found:
             self.calib_status_label.setText("No grid detected in this frame")
             self.calib_status_label.setStyleSheet(
-                "QLabel {color: orange; font-weight: normal}")
+                "QLabel {color: orange; font-weight: normal}"
+            )
             return
 
         n = self._calib.n_detected
         self.frames_label.setText(f"Frames: {n}")
         if n < 4:
             self.calib_status_label.setText(
-                f"Grid detected, need {4 - n} more frame(s) to calibrate")
+                f"Grid detected, need {4 - n} more frame(s) to calibrate"
+            )
             self.calib_status_label.setStyleSheet(
-                "QLabel {color: gray; font-weight: normal}")
+                "QLabel {color: gray; font-weight: normal}"
+            )
             return
 
         self._calib.calibrate_in_thread()
         self.calib_status_label.setText(f"Calibrating… ({n} frames)")
         self.calib_status_label.setStyleSheet(
-            "QLabel {color: gray; font-weight: normal}")
+            "QLabel {color: gray; font-weight: normal}"
+        )
         self.capture_button.setDisabled(True)
 
     def _load_image_clicked(self) -> None:
         if self._calib.running:
             return
         path, _ = QFileDialog.getOpenFileName(
-            None, "Open calibration image", "",
-            "Images (*.png *.jpg *.jpeg *.bmp *.tif *.tiff)")
+            None,
+            "Open calibration image",
+            "",
+            "Images (*.png *.jpg *.jpeg *.bmp *.tif *.tiff)",
+        )
         if not path:
             return
         frame = cv2.imread(path)
         if frame is None:
             self.calib_status_label.setText(f"Could not load image: {path}")
             self.calib_status_label.setStyleSheet(
-                "QLabel {color: red; font-weight: normal}")
+                "QLabel {color: red; font-weight: normal}"
+            )
             return
         self._process_frame(frame)
 
@@ -379,7 +593,9 @@ class CameraCalibrationLayout(Layout):
         self._last_annotated = None
         self.frames_label.setText("Frames: 0")
         self.calib_status_label.setText("Frames cleared")
-        self.calib_status_label.setStyleSheet("QLabel {color: gray; font-weight: normal}")
+        self.calib_status_label.setStyleSheet(
+            "QLabel {color: gray; font-weight: normal}"
+        )
         self.result_label.setText("")
         self.metrics_label.setText("")
         self.save_button.setDisabled(True)
@@ -398,24 +614,27 @@ class CameraCalibrationLayout(Layout):
         d = result["dist_coeffs"]
         k1 = d[0]
         dtype = "barrel" if k1 < 0 else "pincushion"
-        level = ("minimal" if abs(k1) < 0.05
-                 else "moderate" if abs(k1) < 0.15
-                 else "strong")
+        level = (
+            "minimal" if abs(k1) < 0.05 else "moderate" if abs(k1) < 0.15 else "strong"
+        )
         err = result["reprojection_error_px"]
         quality = "good" if err < 1.0 else "high -> retake frames"
-        text = (f"Frames used: {result['n_images_used']}\n"
-                f"Calib reproj error (all frames): {err:.4f} px  ({quality})\n"
-                f"Distortion: {level} {dtype}  (k1={k1:+.4f})\n"
-                f"k1={d[0]:+.4f}  k2={d[1]:+.4f}  "
-                f"p1={d[2]:+.4f}  p2={d[3]:+.4f}\n"
-                f"Principal pt offset: "
-                f"({result['cx_offset_px']:+.1f} px, "
-                f"{result['cy_offset_px']:+.1f} px)  "
-                f"tangential: {result['tangential']:.5f}")
+        text = (
+            f"Frames used: {result['n_images_used']}\n"
+            f"Calib reproj error (all frames): {err:.4f} px  ({quality})\n"
+            f"Distortion: {level} {dtype}  (k1={k1:+.4f})\n"
+            f"k1={d[0]:+.4f}  k2={d[1]:+.4f}  "
+            f"p1={d[2]:+.4f}  p2={d[3]:+.4f}\n"
+            f"Principal pt offset: "
+            f"({result['cx_offset_px']:+.1f} px, "
+            f"{result['cy_offset_px']:+.1f} px)  "
+            f"tangential: {result['tangential']:.5f}"
+        )
         self.result_label.setText(text)
         self.calib_status_label.setText("Calibration complete")
         self.calib_status_label.setStyleSheet(
-            "QLabel {color: green; font-weight: normal}")
+            "QLabel {color: green; font-weight: normal}"
+        )
         self.save_button.setEnabled(True)
         if self._calib.diagnostic_data is not None:
             self.plot_layout.update(self._calib.diagnostic_data)
@@ -442,18 +661,19 @@ class CameraCalibrationLayout(Layout):
         tx = m.get("tilt_x_deg", 0.0)
         ty = m.get("tilt_y_deg", 0.0)
         roll = m["roll_deg"]
-        lines = ["Physical adjustment",
-                f"  Tilt total:       {m['tilt_deg']:5.2f}°  "
-                f"[{tag(m['tilt_deg'], 2.0, 5.0)}]  (good<2°, ok<5°)",
-                f"    Tilt X (L/R):   {tx:+6.2f}°  "
-                f"[{tag(abs(tx), 2.0, 5.0)}]  {hint_x(tx)}",
-                f"    Tilt Y (F/B):   {ty:+6.2f}°  "
-                f"[{tag(abs(ty), 2.0, 5.0)}]  {hint_y(ty)}",
-                f"  Roll:             {roll:5.2f}°  "
-                f"[{tag(roll, 1.0, 3.0)}]  {hint_roll(roll)}",
-                "Pose quality (latest frame vs calibrated model)",
-                f"  Reproj error:     {m['reproj_err']:5.3f} px  "
-                f"[{tag(m['reproj_err'], 0.5, 1.5)}]  (good<0.5, ok<1.5)",
+        lines = [
+            "Physical adjustment",
+            f"  Tilt total:       {m['tilt_deg']:5.2f}°  "
+            f"[{tag(m['tilt_deg'], 2.0, 5.0)}]  (good<2°, ok<5°)",
+            f"    Tilt X (L/R):   {tx:+6.2f}°  "
+            f"[{tag(abs(tx), 2.0, 5.0)}]  {hint_x(tx)}",
+            f"    Tilt Y (F/B):   {ty:+6.2f}°  "
+            f"[{tag(abs(ty), 2.0, 5.0)}]  {hint_y(ty)}",
+            f"  Roll:             {roll:5.2f}°  "
+            f"[{tag(roll, 1.0, 3.0)}]  {hint_roll(roll)}",
+            "Pose quality (latest frame vs calibrated model)",
+            f"  Reproj error:     {m['reproj_err']:5.3f} px  "
+            f"[{tag(m['reproj_err'], 0.5, 1.5)}]  (good<0.5, ok<1.5)",
         ]
         self.metrics_label.setText("\n".join(lines))
 
@@ -462,14 +682,18 @@ class CameraCalibrationLayout(Layout):
             return
         self.update_status_label_buttons()
 
-        display = self._last_annotated if self._last_annotated is not None else cam_box.frame
+        display = (
+            self._last_annotated if self._last_annotated is not None else cam_box.frame
+        )
         if display is not None:
             try:
                 px = _frame_to_pixmap(display)
                 if not px.isNull():
                     self.preview_label.setPixmap(
-                        px.scaled(self.preview_label.width(),
-                                  self.preview_label.height(), 1))
+                        px.scaled(
+                            self.preview_label.width(), self.preview_label.height(), 1
+                        )
+                    )
             except Exception:
                 pass
 
@@ -479,14 +703,17 @@ class CameraCalibrationLayout(Layout):
         if self._calib.error:
             self.calib_status_label.setText("Calibration failed, check log")
             self.calib_status_label.setStyleSheet(
-                "QLabel {color: red; font-weight: normal}")
+                "QLabel {color: red; font-weight: normal}"
+            )
             self.capture_button.setEnabled(True)
             self._calib.error = False
             return
 
-        if (not self._calib.running
-                and self._calib.result is not self._result
-                and self._calib.result is not None):
+        if (
+            not self._calib.running
+            and self._calib.result is not self._result
+            and self._calib.result is not None
+        ):
             self._result = self._calib.result
             self._show_result(self._result)
             self.capture_button.setEnabled(True)

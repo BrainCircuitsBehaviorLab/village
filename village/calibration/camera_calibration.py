@@ -8,16 +8,17 @@ from threading import Thread
 import cv2
 import numpy as np
 
+from village.custom_classes.calibration_base import CalibrationBase
 from village.scripts.log import log
 from village.settings import settings
-from village.custom_classes.calibration_base import CalibrationBase
 
 
 class CameraCalibration(CalibrationBase):
     name = "camera_calibration"
 
-    def __init__(self, spacing_mm: float = 50,
-                 grid_size: tuple[int, int] | None = None) -> None:
+    def __init__(
+        self, spacing_mm: float = 50, grid_size: tuple[int, int] | None = None
+    ) -> None:
         self.spacing_mm = spacing_mm
         self.measured_spacing_mm: float | None = None
         self.grid_size = grid_size
@@ -62,8 +63,9 @@ class CameraCalibration(CalibrationBase):
         if self._image_size is None:
             self._image_size = (gray.shape[1], gray.shape[0])
 
-        obj_pts, img_pts = _detect_grid(gray, self._detector,
-                                        self.spacing_mm, self.grid_size)
+        obj_pts, img_pts = _detect_grid(
+            gray, self._detector, self.spacing_mm, self.grid_size
+        )
         found = obj_pts is not None
         if found:
             self._obj_points.append(obj_pts)
@@ -73,8 +75,7 @@ class CameraCalibration(CalibrationBase):
             if self.result is not None:
                 K = np.array(self.result["camera_matrix"])
                 dist = np.array(self.result["dist_coeffs"])
-                self.live_metrics = _compute_live_metrics(obj_pts, img_pts,
-                                                          K, dist)
+                self.live_metrics = _compute_live_metrics(obj_pts, img_pts, K, dist)
 
         return annotated, found
 
@@ -97,8 +98,14 @@ class CameraCalibration(CalibrationBase):
     def save(self, out_path: Path) -> None:
         if self.result is None:
             return
-        keys = ("camera_matrix", "dist_coeffs", "reprojection_error_px",
-                "image_size_wh", "n_images_used", "spacing_mm")
+        keys = (
+            "camera_matrix",
+            "dist_coeffs",
+            "reprojection_error_px",
+            "image_size_wh",
+            "n_images_used",
+            "spacing_mm",
+        )
         data = {k: self.result[k] for k in keys if k in self.result}
         with open(out_path, "w") as f:
             json.dump(data, f, indent=2)
@@ -106,35 +113,45 @@ class CameraCalibration(CalibrationBase):
     def _run(self) -> None:
         try:
             K, dist, rvecs, tvecs, err = _run_calibration(
-                self._obj_points, self._img_points, self._image_size)
+                self._obj_points, self._img_points, self._image_size
+            )
             d = dist.ravel()
             w, h = self._image_size
             _tang = float(np.sqrt(d[2] ** 2 + d[3] ** 2)) if len(d) >= 4 else 0.0
-            self.result = {"camera_matrix": K.tolist(), "dist_coeffs": d.tolist(),
-                           "reprojection_error_px": float(err),
-                           "image_size_wh": list(self._image_size),
-                           "n_images_used": self.n_detected,
-                           "spacing_mm": self.spacing_mm,
-                           "k1": float(d[0]),
-                           "tangential": _tang,
-                           "cx_offset_px": float(K[0, 2] - w / 2),
-                           "cy_offset_px": float(K[1, 2] - h / 2)}
+            self.result = {
+                "camera_matrix": K.tolist(),
+                "dist_coeffs": d.tolist(),
+                "reprojection_error_px": float(err),
+                "image_size_wh": list(self._image_size),
+                "n_images_used": self.n_detected,
+                "spacing_mm": self.spacing_mm,
+                "k1": float(d[0]),
+                "tangential": _tang,
+                "cx_offset_px": float(K[0, 2] - w / 2),
+                "cy_offset_px": float(K[1, 2] - h / 2),
+            }
 
             self.diagnostic_data = _compute_diagnostic_data(
-                                    self._obj_points, self._img_points,
-                                    K, dist, rvecs, tvecs, self._image_size,
-                                    spacing_mm=self.measured_spacing_mm or self.spacing_mm,
-                                    grid_size=self.grid_size)
+                self._obj_points,
+                self._img_points,
+                K,
+                dist,
+                rvecs,
+                tvecs,
+                self._image_size,
+                spacing_mm=self.measured_spacing_mm or self.spacing_mm,
+                grid_size=self.grid_size,
+            )
         except Exception:
-            log.error("Camera calibration error",
-                      exception=traceback.format_exc())
+            log.error("Camera calibration error", exception=traceback.format_exc())
             self.error = True
         finally:
             self.running = False
 
 
-def _compute_spacing_px(img_pts: np.ndarray,
-                        grid_size: tuple[int, int] | None) -> float:
+def _compute_spacing_px(
+    img_pts: np.ndarray, grid_size: tuple[int, int] | None
+) -> float:
     pts = img_pts.reshape(-1, 2)
     if grid_size is not None:
         cols, rows = grid_size
@@ -168,25 +185,29 @@ def _make_blob_detector(spacing_px: float | None = None) -> cv2.SimpleBlobDetect
     return cv2.SimpleBlobDetector_create(params)
 
 
-def _detect_grid(gray: np.ndarray, detector: cv2.SimpleBlobDetector,
-                 spacing_mm: float, grid_size: tuple[int, int] | None
-                 ) -> tuple[np.ndarray | None, np.ndarray | None]:
+def _detect_grid(
+    gray: np.ndarray,
+    detector: cv2.SimpleBlobDetector,
+    spacing_mm: float,
+    grid_size: tuple[int, int] | None,
+) -> tuple[np.ndarray | None, np.ndarray | None]:
     if grid_size is not None:
-        found, corners = cv2.findCirclesGrid(gray, grid_size,
-                                             flags=cv2.CALIB_CB_SYMMETRIC_GRID,
-                                             blobDetector=detector)
+        found, corners = cv2.findCirclesGrid(
+            gray, grid_size, flags=cv2.CALIB_CB_SYMMETRIC_GRID, blobDetector=detector
+        )
         if not found:
             return None, None
         cols, rows = grid_size
         obj_pts = np.zeros((cols * rows, 3), np.float32)
-        obj_pts[:, :2] = (np.mgrid[0:cols, 0:rows].T.reshape(-1, 2) * spacing_mm)
+        obj_pts[:, :2] = np.mgrid[0:cols, 0:rows].T.reshape(-1, 2) * spacing_mm
         return obj_pts, corners
 
     return _cluster_grid(gray, detector, spacing_mm)
 
 
-def _cluster_grid(gray: np.ndarray, detector: cv2.SimpleBlobDetector,
-                  spacing_mm: float) -> tuple[np.ndarray | None, np.ndarray | None]:
+def _cluster_grid(
+    gray: np.ndarray, detector: cv2.SimpleBlobDetector, spacing_mm: float
+) -> tuple[np.ndarray | None, np.ndarray | None]:
     keypoints = detector.detect(gray)
     if len(keypoints) < 4:
         return None, None
@@ -217,15 +238,17 @@ def _cluster_grid(gray: np.ndarray, detector: cv2.SimpleBlobDetector,
     if len(img_pts) < 4:
         return None, None
 
-    return (np.array(obj_pts, np.float32),
-            np.array(img_pts, np.float32).reshape(-1, 1, 2))
+    return (
+        np.array(obj_pts, np.float32),
+        np.array(img_pts, np.float32).reshape(-1, 1, 2),
+    )
 
 
-def _draw_grid(frame: np.ndarray, img_pts: np.ndarray,
-               grid_size: tuple[int, int] | None) -> None:
+def _draw_grid(
+    frame: np.ndarray, img_pts: np.ndarray, grid_size: tuple[int, int] | None
+) -> None:
     if grid_size is not None:
-        cv2.drawChessboardCorners(frame, grid_size,
-                                  img_pts.reshape(-1, 1, 2), True)
+        cv2.drawChessboardCorners(frame, grid_size, img_pts.reshape(-1, 1, 2), True)
     pts = img_pts.reshape(-1, 2)
     for pt in pts:
         x, y = int(pt[0]), int(pt[1])
@@ -233,22 +256,32 @@ def _draw_grid(frame: np.ndarray, img_pts: np.ndarray,
         cv2.circle(frame, (x, y), 7, (0, 0, 0), 1)
 
 
-def _run_calibration(obj_points: list[np.ndarray], img_points: list[np.ndarray],
-                     image_size: tuple[int, int]) -> tuple[np.ndarray, np.ndarray, list, list, float]:
-    _, K, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points,
-                                                   image_size, None, None)
-    total = sum(cv2.norm(ip, cv2.projectPoints(op, rv, tv, K, dist)[0], cv2.NORM_L2) / len(ip)
-                for op, ip, rv, tv in zip(obj_points, img_points, rvecs, tvecs))
+def _run_calibration(
+    obj_points: list[np.ndarray],
+    img_points: list[np.ndarray],
+    image_size: tuple[int, int],
+) -> tuple[np.ndarray, np.ndarray, list, list, float]:
+    _, K, dist, rvecs, tvecs = cv2.calibrateCamera(
+        obj_points, img_points, image_size, None, None
+    )
+    total = sum(
+        cv2.norm(ip, cv2.projectPoints(op, rv, tv, K, dist)[0], cv2.NORM_L2) / len(ip)
+        for op, ip, rv, tv in zip(obj_points, img_points, rvecs, tvecs)
+    )
     return K, dist, rvecs, tvecs, total / len(obj_points)
 
 
-def _compute_diagnostic_data(obj_points: list[np.ndarray],
-                             img_points: list[np.ndarray],
-                             K: np.ndarray, dist: np.ndarray,
-                             rvecs: list, tvecs: list,
-                             image_size: tuple[int, int],
-                             spacing_mm: float = 17.0,
-                             grid_size: tuple[int, int] | None = None) -> dict:
+def _compute_diagnostic_data(
+    obj_points: list[np.ndarray],
+    img_points: list[np.ndarray],
+    K: np.ndarray,
+    dist: np.ndarray,
+    rvecs: list,
+    tvecs: list,
+    image_size: tuple[int, int],
+    spacing_mm: float = 17.0,
+    grid_size: tuple[int, int] | None = None,
+) -> dict:
     all_pts, all_errs = [], []
     for op, ip, rv, tv in zip(obj_points, img_points, rvecs, tvecs):
         proj, _ = cv2.projectPoints(op, rv, tv, K, dist)
@@ -261,11 +294,13 @@ def _compute_diagnostic_data(obj_points: list[np.ndarray],
 
     w, h = image_size
     step = max(w, h) // 20
-    gx, gy = np.meshgrid(np.arange(step // 2, w, step),
-                          np.arange(step // 2, h, step))
+    gx, gy = np.meshgrid(np.arange(step // 2, w, step), np.arange(step // 2, h, step))
     grid_pts = np.stack([gx.ravel(), gy.ravel()], axis=1).astype(np.float32)
     undist_pts = cv2.undistortPoints(
-        grid_pts.reshape(-1, 1, 2), K, dist, P=K,
+        grid_pts.reshape(-1, 1, 2),
+        K,
+        dist,
+        P=K,
     ).reshape(-1, 2)
 
     # Alignment metrics from last frame
@@ -300,31 +335,44 @@ def _compute_diagnostic_data(obj_points: list[np.ndarray],
                 neighbours = []
                 if j + 1 < cols:
                     neighbours.append(
-                        np.linalg.norm(pts_grid[i, j + 1] - pts_grid[i, j]))
+                        np.linalg.norm(pts_grid[i, j + 1] - pts_grid[i, j])
+                    )
                 if i + 1 < rows:
                     neighbours.append(
-                        np.linalg.norm(pts_grid[i + 1, j] - pts_grid[i, j]))
+                        np.linalg.norm(pts_grid[i + 1, j] - pts_grid[i, j])
+                    )
                 if neighbours:
                     scale_vals.append(np.mean(neighbours) / cm_per_dot)
                     scale_pos.append(pts_grid[i, j])
         scale_data = {"vals": np.array(scale_vals), "pos": np.array(scale_pos)}
 
-    return {"pts": pts, "errs": errs, "grid_pts": grid_pts, 
-            "disp": undist_pts - grid_pts, "image_size": image_size,
-            "last_pts": last_ip, "grid_size": grid_size,
-            "tilt_total": tilt_total, "tilt_x_deg": tilt_x_deg,
-            "tilt_y_deg": tilt_y_deg, "roll_deg": roll_deg,
-            "roll_rad": roll_rad, "roll_top_row": roll_top_row,
-            "scale_data": scale_data}
+    return {
+        "pts": pts,
+        "errs": errs,
+        "grid_pts": grid_pts,
+        "disp": undist_pts - grid_pts,
+        "image_size": image_size,
+        "last_pts": last_ip,
+        "grid_size": grid_size,
+        "tilt_total": tilt_total,
+        "tilt_x_deg": tilt_x_deg,
+        "tilt_y_deg": tilt_y_deg,
+        "roll_deg": roll_deg,
+        "roll_rad": roll_rad,
+        "roll_top_row": roll_top_row,
+        "scale_data": scale_data,
+    }
 
 
-def _compute_live_metrics(obj_pts: np.ndarray, img_pts: np.ndarray,
-                          K: np.ndarray, dist: np.ndarray) -> dict:
+def _compute_live_metrics(
+    obj_pts: np.ndarray, img_pts: np.ndarray, K: np.ndarray, dist: np.ndarray
+) -> dict:
     _, rvec, tvec = cv2.solvePnP(obj_pts, img_pts, K, dist)
 
     proj, _ = cv2.projectPoints(obj_pts, rvec, tvec, K, dist)
-    reproj_err = float(np.mean(np.linalg.norm(
-                        proj.reshape(-1, 2) - img_pts.reshape(-1, 2), axis=1)))
+    reproj_err = float(
+        np.mean(np.linalg.norm(proj.reshape(-1, 2) - img_pts.reshape(-1, 2), axis=1))
+    )
 
     R, _ = cv2.Rodrigues(rvec)
     tilt_deg = float(np.degrees(np.arccos(np.clip(abs(R[2, 2]), 0.0, 1.0))))
@@ -341,13 +389,16 @@ def _compute_live_metrics(obj_pts: np.ndarray, img_pts: np.ndarray,
     else:
         roll_deg = 0.0
 
-    return {"reproj_err": reproj_err, "tilt_deg": tilt_deg,
-            "tilt_x_deg": tilt_x_deg, "tilt_y_deg": tilt_y_deg,
-            "roll_deg": roll_deg}
+    return {
+        "reproj_err": reproj_err,
+        "tilt_deg": tilt_deg,
+        "tilt_x_deg": tilt_x_deg,
+        "tilt_y_deg": tilt_y_deg,
+        "roll_deg": roll_deg,
+    }
 
 
-def undistort_image(img: np.ndarray, K: np.ndarray,
-                    dist: np.ndarray) -> np.ndarray:
+def undistort_image(img: np.ndarray, K: np.ndarray, dist: np.ndarray) -> np.ndarray:
     # Undistort an image using the given camera matrix and
     # distortion coefficients.
     h, w = img.shape[:2]
@@ -355,8 +406,7 @@ def undistort_image(img: np.ndarray, K: np.ndarray,
     return cv2.undistort(img, K, dist, None, new_K)
 
 
-def undistort_points(points: np.ndarray, K: np.ndarray,
-                     dist: np.ndarray) -> np.ndarray:
+def undistort_points(points: np.ndarray, K: np.ndarray, dist: np.ndarray) -> np.ndarray:
     # Undistort 2D points using the given camera matrix and
     # distortion coefficients.
     """points: Nx2 array of (x, y)."""

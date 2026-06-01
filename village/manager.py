@@ -178,8 +178,9 @@ class Manager:
     def auto_no_mouse(self) -> AutoNoMouse_Base:
         """Return the AutoNoMouse instance for the current task, or the generic one."""
         task_name = getattr(self.task, "name", "")
-        return (self._auto_no_mouse_instances.get(task_name)
-                or self._auto_no_mouse_instances.get("", AutoNoMouse_Base()))
+        return self._auto_no_mouse_instances.get(
+            task_name
+        ) or self._auto_no_mouse_instances.get("", AutoNoMouse_Base())
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,

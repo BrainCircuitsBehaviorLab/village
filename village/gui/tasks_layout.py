@@ -9,6 +9,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
     QComboBox,
+    QLabel,
     QLineEdit,
     QListWidget,
     QListWidgetItem,
@@ -17,7 +18,6 @@ from PyQt5.QtWidgets import (
     QTabWidget,
     QVBoxLayout,
     QWidget,
-    QLabel,
 )
 
 from village.classes.enums import State

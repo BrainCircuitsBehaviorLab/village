@@ -1,7 +1,8 @@
 import bisect
-from dataclasses import dataclass
-from threading import Event as ThEvent, Thread
 from collections import deque
+from dataclasses import dataclass
+from threading import Event as ThEvent
+from threading import Thread
 
 from village.custom_classes.task import Task
 from village.scripts.time_utils import time_utils
@@ -10,10 +11,11 @@ from village.scripts.time_utils import time_utils
 @dataclass
 class AutonomouseParam:
     """Descriptor for a single inject_trial keyword argument."""
-    name: str       # name passed to inject_trial
-    type_: type     # float or int for now TODO: support bool, str, etc. if needed, or infer from default
+
+    name: str  # name passed to inject_trial
+    type_: type  # float or int for now TODO: support bool, str, etc. if needed, or infer from default
     default: float  # default value
-    label: str      # UI label text
+    label: str  # UI label text
     min_val: float = 0.0
     max_val: float = 1.0
     tooltip: str = ""
@@ -30,7 +32,7 @@ class AutoNoMouse_Base:
     To be subclassed in task folder.
     """
 
-    TASK_NAME: str = ""   # to be set in subclass to restrict to a specific task
+    TASK_NAME: str = ""  # to be set in subclass to restrict to a specific task
     PARAMS: list[AutonomouseParam] = []
 
     def __init__(self, task: Task = None) -> None:
@@ -105,8 +107,7 @@ class AutoNoMouse_Base:
 
     @property
     def injecting(self) -> bool:
-        return (self._inject_thread is not None
-                and self._inject_thread.is_alive())
+        return self._inject_thread is not None and self._inject_thread.is_alive()
 
     def stop_inject(self) -> None:
         self._inject_stop_event.set()
@@ -137,6 +138,7 @@ class AutoNoMouse_Base:
                     break
                 self.inject_trial(**kwargs)
                 self._inject_stop_event.wait(interval)
+
         self._inject_thread = Thread(target=_run, daemon=True)
         self._inject_thread.start()
 
