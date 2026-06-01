@@ -120,6 +120,12 @@ class AutoNoMouse_Base:
             self.run_trial()
         self.stop()
 
+    def update_params(self, **kwargs) -> None:
+        """Update param attributes on a running instance."""
+        for param in self.PARAMS:
+            if param.name in kwargs:
+                setattr(self, param.name, param.clamp(kwargs[param.name]))
+
     def run_trial(self) -> None:
         """Override in subclass. Sequence of actions to perform for
         one trial, e.g. pokes and position updates."""

@@ -1260,10 +1260,12 @@ class VirtualMouseLayout(Layout):
                 widget.setChecked(bool(param.default))
                 widget.setToolTip(param.tooltip)
                 self.addWidget(widget, row, col_auto + 10, 2, 4)
+                widget.stateChanged.connect(self._on_param_changed)
             else:
                 widget = self.create_and_add_line_edit(
                     str(param.default), row, col_auto + 10, 4, 2, lambda: None
                 )
+                widget.editingFinished.connect(self._on_param_changed)
             self._inject_param_widgets[param.name] = widget
             row += 2
         return row
@@ -1331,6 +1333,10 @@ class VirtualMouseLayout(Layout):
             if not injector.injecting and self.inject_button.text() == "■  Stop Inject":
                 self.inject_button.setText("Inject Trials")
                 self.inject_button.setStyleSheet("background-color: lightgreen;")
+
+    def _on_param_changed(self) -> None:
+        if self._anm is not None and self._anm.running:
+            self._anm.update_params(**self._get_inject_kwargs())
 
     def _inject_trials(self) -> None:
         injector = manager.auto_no_mouse
