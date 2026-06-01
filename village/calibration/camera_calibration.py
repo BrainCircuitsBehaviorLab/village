@@ -112,6 +112,8 @@ class CameraCalibration(CalibrationBase):
 
     def _run(self) -> None:
         try:
+            if self._image_size is None:
+                return
             K, dist, rvecs, tvecs, err = _run_calibration(
                 self._obj_points, self._img_points, self._image_size
             )

@@ -13,7 +13,7 @@ class AutonomouseParam:
     """Descriptor for a single inject_trial keyword argument."""
 
     name: str  # name passed to inject_trial
-    type_: type  # float or int for now TODO: support bool, str, etc. if needed, or infer from default
+    type_: type  # for now supports float, int, or bool
     default: float  # default value
     label: str  # UI label text
     min_val: float = 0.0
@@ -35,7 +35,7 @@ class AutoNoMouse_Base:
     TASK_NAME: str = ""  # to be set in subclass to restrict to a specific task
     PARAMS: list[AutonomouseParam] = []
 
-    def __init__(self, task: Task = None) -> None:
+    def __init__(self, task: Task | None = None) -> None:
         self.task = task
         self._thread: Thread | None = None
         self._inject_thread: Thread | None = None
@@ -107,7 +107,8 @@ class AutoNoMouse_Base:
 
     @property
     def injecting(self) -> bool:
-        return self._inject_thread is not None and self._inject_thread.is_alive()
+        return (self._inject_thread is not None and
+                self._inject_thread.is_alive())
 
     def stop_inject(self) -> None:
         self._inject_stop_event.set()
