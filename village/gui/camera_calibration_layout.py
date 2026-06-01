@@ -682,7 +682,8 @@ class CameraCalibrationLayout(Layout):
         self.update_status_label_buttons()
 
         display = (
-            self._last_annotated if self._last_annotated is not None
+            self._last_annotated
+            if self._last_annotated is not None
             else cam_box.frame if isinstance(cam_box, Camera) else None
         )
         if display is not None:
