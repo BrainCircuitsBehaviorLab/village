@@ -15,7 +15,7 @@ from village.calibration.camera_calibration import (
 )
 from village.calibration.camera_calibration_grid import make_circle_grid
 from village.classes.enums import State
-from village.devices.camera import cam_box
+from village.devices.camera import Camera, cam_box
 from village.gui.layout import Layout
 from village.manager import manager
 from village.scripts.utils import create_pixmap
@@ -524,10 +524,10 @@ class CameraCalibrationLayout(Layout):
     def _capture_clicked(self) -> None:
         if self._calib.running:
             return
-        frame = cam_box.frame
-        if frame is None:
+        if not isinstance(cam_box, Camera):
             self.calib_status_label.setText("No frame available")
             return
+        frame = cam_box.frame
         self._process_frame(frame)
 
     def _process_frame(self, frame: np.ndarray) -> None:
@@ -691,7 +691,7 @@ class CameraCalibrationLayout(Layout):
 
         display = (
             self._last_annotated if self._last_annotated is not None
-            else cam_box.frame
+            else cam_box.frame if isinstance(cam_box, Camera) else None
         )
         if display is not None:
             try:

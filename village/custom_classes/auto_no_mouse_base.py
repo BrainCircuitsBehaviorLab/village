@@ -5,6 +5,7 @@ from threading import Event as ThEvent
 from threading import Thread
 
 from village.custom_classes.task import Task
+from village.devices.camera import Camera
 from village.scripts.time_utils import time_utils
 
 
@@ -70,8 +71,10 @@ class AutoNoMouse_Base:
         Replaces cam_box position (x, y) lists with AutoNoMouse positions.
         Called when AutoNoMouse stops, just before cam_box.stop_recording(),
         so cam_box.save_csv() picks them up and records them."""
+        if self.task is None:
+            return
         cam = self.task.cam_box
-        if not self._position_log or not hasattr(cam, "camera_timestamps"):
+        if not self._position_log or not isinstance(cam, Camera):
             return
 
         ts_log = [t for t, _, _ in self._position_log]
@@ -94,6 +97,8 @@ class AutoNoMouse_Base:
         cam.y_positions = new_y
 
     def _set_overlay(self, instance: "AutoNoMouse_Base | None") -> None:
+        if self.task is None:
+            return
         try:
             itd = self.task.cam_box.items_to_draw
             itd["auto_no_mouse"] = instance is not None
@@ -114,6 +119,8 @@ class AutoNoMouse_Base:
         self._inject_stop_event.set()
 
     def _run(self) -> None:
+        if self.task is None:
+            return
         while (
             not self._stop_event.is_set()
             and self.task.current_trial <= self.task.maximum_number_of_trials
@@ -151,12 +158,16 @@ class AutoNoMouse_Base:
 
     def poke(self, port: int, duration: float = 0.1) -> None:
         """Simulate a nose-poke in and out on port."""
+        if self.task is None:
+            return
         self.task.bpod.manual_override_input(f"Port{port}In")
         self._stop_event.wait(duration)
         self.task.bpod.manual_override_input(f"Port{port}Out")
 
     def set_position(self, x: float, y: float) -> None:
         """Update the virtual animal's position and trace."""
+        if self.task is None:
+            return
         self.task.current_x = x
         self.task.current_y = y
         pt = (int(x), int(y))
