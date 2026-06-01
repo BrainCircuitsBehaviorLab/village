@@ -28,12 +28,10 @@ if TYPE_CHECKING:
 def _frame_to_pixmap(frame: np.ndarray) -> QPixmap:
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     h, w = rgb.shape[:2]
-    return QPixmap.fromImage(QImage(rgb.data, w, h, w * 3,
-                                    QImage.Format_RGB888))
+    return QPixmap.fromImage(QImage(rgb.data, w, h, w * 3, QImage.Format_RGB888))
 
 
-def _make_diagnostic_plots(diag: dict,
-                           width_in: float, height_in: float) -> plt.Figure:
+def _make_diagnostic_plots(diag: dict, width_in: float, height_in: float) -> plt.Figure:
     pts = diag["pts"]
     errs = diag["errs"]
     mags = np.linalg.norm(errs, axis=1)
@@ -58,8 +56,7 @@ def _make_diagnostic_plots(diag: dict,
 
     # (0,0) residual reprojection error
     ax = axes[0, 0]
-    ax.tricontourf(pts[:, 0], pts[:, 1], mags,
-                   levels=10, cmap="hot", alpha=0.25)
+    ax.tricontourf(pts[:, 0], pts[:, 1], mags, levels=10, cmap="hot", alpha=0.25)
     q = ax.quiver(
         pts[:, 0],
         pts[:, 1],
@@ -119,8 +116,7 @@ def _make_diagnostic_plots(diag: dict,
                 center + [-cr * hw - sr * hh, -sr * hw + cr * hh],
             ]
         )
-        ax.scatter(last_pts[:, 0], last_pts[:, 1],
-                   s=3, c="steelblue", zorder=3)
+        ax.scatter(last_pts[:, 0], last_pts[:, 1], s=3, c="steelblue", zorder=3)
         ax.plot(
             *np.vstack([tl, tr, br, bl, tl]).T,
             "r-",
@@ -168,8 +164,7 @@ def _make_diagnostic_plots(diag: dict,
     if scale_data is not None and len(scale_data["vals"]) > 3:
         sp = scale_data["pos"]
         sv = scale_data["vals"]
-        tcf2 = ax.tricontourf(sp[:, 0], sp[:, 1],
-                              sv, levels=15, cmap="viridis")
+        tcf2 = ax.tricontourf(sp[:, 0], sp[:, 1], sv, levels=15, cmap="viridis")
         fig.colorbar(tcf2, ax=ax, label="px / cm", **cb_args)
         ax.set_xlim(0, w)
         ax.set_ylim(h, 0)
@@ -209,8 +204,7 @@ class DiagnosticPlotsLayout(Layout):
 
     def update(self, diag: dict) -> None:
         try:
-            fig = _make_diagnostic_plots(diag,
-                                         self.plot_width, self.plot_height)
+            fig = _make_diagnostic_plots(diag, self.plot_width, self.plot_height)
             self.plot_label.setPixmap(create_pixmap(fig))
             plt.close(fig)
         except Exception:
@@ -544,8 +538,8 @@ class CameraCalibrationLayout(Layout):
         px = _frame_to_pixmap(annotated)
         if not px.isNull():
             self.preview_label.setPixmap(
-                px.scaled(self.preview_label.width(),
-                          self.preview_label.height(), 1))
+                px.scaled(self.preview_label.width(), self.preview_label.height(), 1)
+            )
 
         if not found:
             self.calib_status_label.setText("No grid detected in this frame")
@@ -620,9 +614,7 @@ class CameraCalibrationLayout(Layout):
         k1 = d[0]
         dtype = "barrel" if k1 < 0 else "pincushion"
         level = (
-            "minimal" if abs(k1) < 0.05
-            else "moderate" if abs(k1) < 0.15
-            else "strong"
+            "minimal" if abs(k1) < 0.05 else "moderate" if abs(k1) < 0.15 else "strong"
         )
         err = result["reprojection_error_px"]
         quality = "good" if err < 1.0 else "high -> retake frames"
@@ -690,16 +682,17 @@ class CameraCalibrationLayout(Layout):
         self.update_status_label_buttons()
 
         display = (
-            self._last_annotated if self._last_annotated is not None
-            else cam_box.frame
+            self._last_annotated if self._last_annotated is not None else cam_box.frame
         )
         if display is not None:
             try:
                 px = _frame_to_pixmap(display)
                 if not px.isNull():
                     self.preview_label.setPixmap(
-                        px.scaled(self.preview_label.width(),
-                                  self.preview_label.height(), 1))
+                        px.scaled(
+                            self.preview_label.width(), self.preview_label.height(), 1
+                        )
+                    )
             except Exception:
                 pass
 
