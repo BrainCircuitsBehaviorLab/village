@@ -112,8 +112,7 @@ class AutoNoMouse_Base:
 
     @property
     def injecting(self) -> bool:
-        return (self._inject_thread is not None and
-                self._inject_thread.is_alive())
+        return self._inject_thread is not None and self._inject_thread.is_alive()
 
     def stop_inject(self) -> None:
         self._inject_stop_event.set()
