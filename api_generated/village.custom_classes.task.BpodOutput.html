@@ -8,6 +8,7 @@
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,7 +87,8 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Sound &amp; Touchscreen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -95,9 +97,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Core, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/triggers.html">Custom Interaction Triggers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/calibrations.html">Custom Calibrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/auto.html">Custom AutoNoMouse</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; TROUBLESHOOTING</a><ul>
@@ -110,10 +115,13 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.bpod_water_calibration.html">bpod_water_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.camera_calibration.html">camera_calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.classes.html">classes</a><ul>
@@ -175,6 +183,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.calibration_base.html">calibration_base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -219,6 +228,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.camera.html">camera</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.chip.html">chip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.get_motor_old.html">get_motor_old</a></li>
@@ -226,15 +236,13 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.led_strip.html">led_strip</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.led_strip.html">led_strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.scale.Scale.html">Scale</a></li>
@@ -246,6 +254,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.telegram_bot.html">telegram_bot</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -253,7 +262,18 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.calibration_layout.html">calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.gui.html">gui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.tasks_layout.html">tasks_layout</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
@@ -270,6 +290,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -282,6 +303,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.import_all.html">import_all</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.log.html">log</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.log.Log.html">Log</a></li>
 </ul>
@@ -342,6 +364,8 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="village.manager.html">manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.main.html">main</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -378,144 +402,6 @@ data-aria-dark="Switch to auto color mode">
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#village.custom_classes.task.BpodOutput"><code class="docutils literal notranslate"><span class="pre">BpodOutput</span></code></a><ul>
 <li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.BNC1High"><code class="docutils literal notranslate">BNC1High</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.BNC1Low"><code class="docutils literal notranslate">BNC1Low</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.BNC2High"><code class="docutils literal notranslate">BNC2High</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.BNC2Low"><code class="docutils literal notranslate">BNC2Low</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter1Reset"><code class="docutils literal notranslate">GlobalCounter1Reset</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter2Reset"><code class="docutils literal notranslate">GlobalCounter2Reset</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter3Reset"><code class="docutils literal notranslate">GlobalCounter3Reset</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter4Reset"><code class="docutils literal notranslate">GlobalCounter4Reset</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter5Reset"><code class="docutils literal notranslate">GlobalCounter5Reset</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer1Cancel"><code class="docutils literal notranslate">GlobalTimer1Cancel</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer1Trig"><code class="docutils literal notranslate">GlobalTimer1Trig</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer2Cancel"><code class="docutils literal notranslate">GlobalTimer2Cancel</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer2Trig"><code class="docutils literal notranslate">GlobalTimer2Trig</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer3Cancel"><code class="docutils literal notranslate">GlobalTimer3Cancel</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer3Trig"><code class="docutils literal notranslate">GlobalTimer3Trig</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer4Cancel"><code class="docutils literal notranslate">GlobalTimer4Cancel</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer4Trig"><code class="docutils literal notranslate">GlobalTimer4Trig</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer5Cancel"><code class="docutils literal notranslate">GlobalTimer5Cancel</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer5Trig"><code class="docutils literal notranslate">GlobalTimer5Trig</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM1"><code class="docutils literal notranslate">PWM1</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM2"><code class="docutils literal notranslate">PWM2</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM3"><code class="docutils literal notranslate">PWM3</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM4"><code class="docutils literal notranslate">PWM4</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM5"><code class="docutils literal notranslate">PWM5</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM6"><code class="docutils literal notranslate">PWM6</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM7"><code class="docutils literal notranslate">PWM7</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM8"><code class="docutils literal notranslate">PWM8</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial1"><code class="docutils literal notranslate">Serial1</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial2"><code class="docutils literal notranslate">Serial2</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial3"><code class="docutils literal notranslate">Serial3</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial4"><code class="docutils literal notranslate">Serial4</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial5"><code class="docutils literal notranslate">Serial5</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode1"><code class="docutils literal notranslate">SoftCode1</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode10"><code class="docutils literal notranslate">SoftCode10</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode11"><code class="docutils literal notranslate">SoftCode11</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode12"><code class="docutils literal notranslate">SoftCode12</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode13"><code class="docutils literal notranslate">SoftCode13</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode14"><code class="docutils literal notranslate">SoftCode14</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode15"><code class="docutils literal notranslate">SoftCode15</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode16"><code class="docutils literal notranslate">SoftCode16</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode17"><code class="docutils literal notranslate">SoftCode17</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode18"><code class="docutils literal notranslate">SoftCode18</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode19"><code class="docutils literal notranslate">SoftCode19</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode2"><code class="docutils literal notranslate">SoftCode2</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode20"><code class="docutils literal notranslate">SoftCode20</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode21"><code class="docutils literal notranslate">SoftCode21</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode22"><code class="docutils literal notranslate">SoftCode22</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode23"><code class="docutils literal notranslate">SoftCode23</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode24"><code class="docutils literal notranslate">SoftCode24</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode25"><code class="docutils literal notranslate">SoftCode25</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode26"><code class="docutils literal notranslate">SoftCode26</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode27"><code class="docutils literal notranslate">SoftCode27</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode28"><code class="docutils literal notranslate">SoftCode28</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode29"><code class="docutils literal notranslate">SoftCode29</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode3"><code class="docutils literal notranslate">SoftCode3</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode30"><code class="docutils literal notranslate">SoftCode30</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode31"><code class="docutils literal notranslate">SoftCode31</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode32"><code class="docutils literal notranslate">SoftCode32</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode33"><code class="docutils literal notranslate">SoftCode33</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode34"><code class="docutils literal notranslate">SoftCode34</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode35"><code class="docutils literal notranslate">SoftCode35</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode36"><code class="docutils literal notranslate">SoftCode36</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode37"><code class="docutils literal notranslate">SoftCode37</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode38"><code class="docutils literal notranslate">SoftCode38</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode39"><code class="docutils literal notranslate">SoftCode39</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode4"><code class="docutils literal notranslate">SoftCode4</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode40"><code class="docutils literal notranslate">SoftCode40</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode41"><code class="docutils literal notranslate">SoftCode41</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode42"><code class="docutils literal notranslate">SoftCode42</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode43"><code class="docutils literal notranslate">SoftCode43</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode44"><code class="docutils literal notranslate">SoftCode44</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode45"><code class="docutils literal notranslate">SoftCode45</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode46"><code class="docutils literal notranslate">SoftCode46</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode47"><code class="docutils literal notranslate">SoftCode47</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode48"><code class="docutils literal notranslate">SoftCode48</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode49"><code class="docutils literal notranslate">SoftCode49</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode5"><code class="docutils literal notranslate">SoftCode5</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode50"><code class="docutils literal notranslate">SoftCode50</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode51"><code class="docutils literal notranslate">SoftCode51</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode52"><code class="docutils literal notranslate">SoftCode52</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode53"><code class="docutils literal notranslate">SoftCode53</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode54"><code class="docutils literal notranslate">SoftCode54</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode55"><code class="docutils literal notranslate">SoftCode55</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode56"><code class="docutils literal notranslate">SoftCode56</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode57"><code class="docutils literal notranslate">SoftCode57</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode58"><code class="docutils literal notranslate">SoftCode58</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode59"><code class="docutils literal notranslate">SoftCode59</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode6"><code class="docutils literal notranslate">SoftCode6</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode60"><code class="docutils literal notranslate">SoftCode60</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode61"><code class="docutils literal notranslate">SoftCode61</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode62"><code class="docutils literal notranslate">SoftCode62</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode63"><code class="docutils literal notranslate">SoftCode63</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode64"><code class="docutils literal notranslate">SoftCode64</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode65"><code class="docutils literal notranslate">SoftCode65</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode66"><code class="docutils literal notranslate">SoftCode66</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode67"><code class="docutils literal notranslate">SoftCode67</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode68"><code class="docutils literal notranslate">SoftCode68</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode69"><code class="docutils literal notranslate">SoftCode69</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode7"><code class="docutils literal notranslate">SoftCode7</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode70"><code class="docutils literal notranslate">SoftCode70</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode71"><code class="docutils literal notranslate">SoftCode71</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode72"><code class="docutils literal notranslate">SoftCode72</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode73"><code class="docutils literal notranslate">SoftCode73</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode74"><code class="docutils literal notranslate">SoftCode74</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode75"><code class="docutils literal notranslate">SoftCode75</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode76"><code class="docutils literal notranslate">SoftCode76</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode77"><code class="docutils literal notranslate">SoftCode77</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode78"><code class="docutils literal notranslate">SoftCode78</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode79"><code class="docutils literal notranslate">SoftCode79</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode8"><code class="docutils literal notranslate">SoftCode8</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode80"><code class="docutils literal notranslate">SoftCode80</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode81"><code class="docutils literal notranslate">SoftCode81</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode82"><code class="docutils literal notranslate">SoftCode82</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode83"><code class="docutils literal notranslate">SoftCode83</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode84"><code class="docutils literal notranslate">SoftCode84</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode85"><code class="docutils literal notranslate">SoftCode85</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode86"><code class="docutils literal notranslate">SoftCode86</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode87"><code class="docutils literal notranslate">SoftCode87</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode88"><code class="docutils literal notranslate">SoftCode88</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode89"><code class="docutils literal notranslate">SoftCode89</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode9"><code class="docutils literal notranslate">SoftCode9</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode90"><code class="docutils literal notranslate">SoftCode90</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode91"><code class="docutils literal notranslate">SoftCode91</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode92"><code class="docutils literal notranslate">SoftCode92</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode93"><code class="docutils literal notranslate">SoftCode93</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode94"><code class="docutils literal notranslate">SoftCode94</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode95"><code class="docutils literal notranslate">SoftCode95</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode96"><code class="docutils literal notranslate">SoftCode96</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode97"><code class="docutils literal notranslate">SoftCode97</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode98"><code class="docutils literal notranslate">SoftCode98</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve1"><code class="docutils literal notranslate">Valve1</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve2"><code class="docutils literal notranslate">Valve2</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve3"><code class="docutils literal notranslate">Valve3</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve4"><code class="docutils literal notranslate">Valve4</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve5"><code class="docutils literal notranslate">Valve5</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve6"><code class="docutils literal notranslate">Valve6</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve7"><code class="docutils literal notranslate">Valve7</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve8"><code class="docutils literal notranslate">Valve8</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -608,1133 +494,7 @@ data-aria-dark="Switch to auto color mode">
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.__init__" title="village.custom_classes.task.BpodOutput.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</div>
 <p class="rubric">Attributes</p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.BNC1High" title="village.custom_classes.task.BpodOutput.BNC1High"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BNC1High</span></code></a></p></td>
-<td><p>BNC</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.BNC1Low" title="village.custom_classes.task.BpodOutput.BNC1Low"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BNC1Low</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.BNC2High" title="village.custom_classes.task.BpodOutput.BNC2High"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BNC2High</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.BNC2Low" title="village.custom_classes.task.BpodOutput.BNC2Low"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BNC2Low</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter1Reset" title="village.custom_classes.task.BpodOutput.GlobalCounter1Reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalCounter1Reset</span></code></a></p></td>
-<td><p>GlobalCounterReset</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter2Reset" title="village.custom_classes.task.BpodOutput.GlobalCounter2Reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalCounter2Reset</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter3Reset" title="village.custom_classes.task.BpodOutput.GlobalCounter3Reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalCounter3Reset</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter4Reset" title="village.custom_classes.task.BpodOutput.GlobalCounter4Reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalCounter4Reset</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalCounter5Reset" title="village.custom_classes.task.BpodOutput.GlobalCounter5Reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalCounter5Reset</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer1Cancel" title="village.custom_classes.task.BpodOutput.GlobalTimer1Cancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer1Cancel</span></code></a></p></td>
-<td><p>GlobalTimerCancel</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer1Trig" title="village.custom_classes.task.BpodOutput.GlobalTimer1Trig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer1Trig</span></code></a></p></td>
-<td><p>GlobalTimerTrig</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer2Cancel" title="village.custom_classes.task.BpodOutput.GlobalTimer2Cancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer2Cancel</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer2Trig" title="village.custom_classes.task.BpodOutput.GlobalTimer2Trig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer2Trig</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer3Cancel" title="village.custom_classes.task.BpodOutput.GlobalTimer3Cancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer3Cancel</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer3Trig" title="village.custom_classes.task.BpodOutput.GlobalTimer3Trig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer3Trig</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer4Cancel" title="village.custom_classes.task.BpodOutput.GlobalTimer4Cancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer4Cancel</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer4Trig" title="village.custom_classes.task.BpodOutput.GlobalTimer4Trig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer4Trig</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer5Cancel" title="village.custom_classes.task.BpodOutput.GlobalTimer5Cancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer5Cancel</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.GlobalTimer5Trig" title="village.custom_classes.task.BpodOutput.GlobalTimer5Trig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GlobalTimer5Trig</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM1" title="village.custom_classes.task.BpodOutput.PWM1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM1</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM2" title="village.custom_classes.task.BpodOutput.PWM2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM2</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM3" title="village.custom_classes.task.BpodOutput.PWM3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM3</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM4" title="village.custom_classes.task.BpodOutput.PWM4"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM4</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM5" title="village.custom_classes.task.BpodOutput.PWM5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM5</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM6" title="village.custom_classes.task.BpodOutput.PWM6"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM6</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM7" title="village.custom_classes.task.BpodOutput.PWM7"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM7</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.PWM8" title="village.custom_classes.task.BpodOutput.PWM8"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM8</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial1" title="village.custom_classes.task.BpodOutput.Serial1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Serial1</span></code></a></p></td>
-<td><p>Serial</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial2" title="village.custom_classes.task.BpodOutput.Serial2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Serial2</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial3" title="village.custom_classes.task.BpodOutput.Serial3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Serial3</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial4" title="village.custom_classes.task.BpodOutput.Serial4"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Serial4</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Serial5" title="village.custom_classes.task.BpodOutput.Serial5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Serial5</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode1" title="village.custom_classes.task.BpodOutput.SoftCode1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode1</span></code></a></p></td>
-<td><p>SoftCode</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode10" title="village.custom_classes.task.BpodOutput.SoftCode10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode10</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode11" title="village.custom_classes.task.BpodOutput.SoftCode11"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode11</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode12" title="village.custom_classes.task.BpodOutput.SoftCode12"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode12</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode13" title="village.custom_classes.task.BpodOutput.SoftCode13"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode13</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode14" title="village.custom_classes.task.BpodOutput.SoftCode14"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode14</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode15" title="village.custom_classes.task.BpodOutput.SoftCode15"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode15</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode16" title="village.custom_classes.task.BpodOutput.SoftCode16"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode16</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode17" title="village.custom_classes.task.BpodOutput.SoftCode17"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode17</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode18" title="village.custom_classes.task.BpodOutput.SoftCode18"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode18</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode19" title="village.custom_classes.task.BpodOutput.SoftCode19"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode19</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode2" title="village.custom_classes.task.BpodOutput.SoftCode2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode2</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode20" title="village.custom_classes.task.BpodOutput.SoftCode20"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode20</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode21" title="village.custom_classes.task.BpodOutput.SoftCode21"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode21</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode22" title="village.custom_classes.task.BpodOutput.SoftCode22"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode22</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode23" title="village.custom_classes.task.BpodOutput.SoftCode23"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode23</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode24" title="village.custom_classes.task.BpodOutput.SoftCode24"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode24</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode25" title="village.custom_classes.task.BpodOutput.SoftCode25"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode25</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode26" title="village.custom_classes.task.BpodOutput.SoftCode26"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode26</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode27" title="village.custom_classes.task.BpodOutput.SoftCode27"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode27</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode28" title="village.custom_classes.task.BpodOutput.SoftCode28"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode28</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode29" title="village.custom_classes.task.BpodOutput.SoftCode29"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode29</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode3" title="village.custom_classes.task.BpodOutput.SoftCode3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode3</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode30" title="village.custom_classes.task.BpodOutput.SoftCode30"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode30</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode31" title="village.custom_classes.task.BpodOutput.SoftCode31"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode31</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode32" title="village.custom_classes.task.BpodOutput.SoftCode32"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode32</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode33" title="village.custom_classes.task.BpodOutput.SoftCode33"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode33</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode34" title="village.custom_classes.task.BpodOutput.SoftCode34"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode34</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode35" title="village.custom_classes.task.BpodOutput.SoftCode35"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode35</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode36" title="village.custom_classes.task.BpodOutput.SoftCode36"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode36</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode37" title="village.custom_classes.task.BpodOutput.SoftCode37"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode37</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode38" title="village.custom_classes.task.BpodOutput.SoftCode38"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode38</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode39" title="village.custom_classes.task.BpodOutput.SoftCode39"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode39</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode4" title="village.custom_classes.task.BpodOutput.SoftCode4"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode4</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode40" title="village.custom_classes.task.BpodOutput.SoftCode40"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode40</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode41" title="village.custom_classes.task.BpodOutput.SoftCode41"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode41</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode42" title="village.custom_classes.task.BpodOutput.SoftCode42"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode42</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode43" title="village.custom_classes.task.BpodOutput.SoftCode43"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode43</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode44" title="village.custom_classes.task.BpodOutput.SoftCode44"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode44</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode45" title="village.custom_classes.task.BpodOutput.SoftCode45"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode45</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode46" title="village.custom_classes.task.BpodOutput.SoftCode46"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode46</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode47" title="village.custom_classes.task.BpodOutput.SoftCode47"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode47</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode48" title="village.custom_classes.task.BpodOutput.SoftCode48"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode48</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode49" title="village.custom_classes.task.BpodOutput.SoftCode49"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode49</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode5" title="village.custom_classes.task.BpodOutput.SoftCode5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode5</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode50" title="village.custom_classes.task.BpodOutput.SoftCode50"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode50</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode51" title="village.custom_classes.task.BpodOutput.SoftCode51"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode51</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode52" title="village.custom_classes.task.BpodOutput.SoftCode52"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode52</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode53" title="village.custom_classes.task.BpodOutput.SoftCode53"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode53</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode54" title="village.custom_classes.task.BpodOutput.SoftCode54"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode54</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode55" title="village.custom_classes.task.BpodOutput.SoftCode55"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode55</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode56" title="village.custom_classes.task.BpodOutput.SoftCode56"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode56</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode57" title="village.custom_classes.task.BpodOutput.SoftCode57"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode57</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode58" title="village.custom_classes.task.BpodOutput.SoftCode58"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode58</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode59" title="village.custom_classes.task.BpodOutput.SoftCode59"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode59</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode6" title="village.custom_classes.task.BpodOutput.SoftCode6"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode6</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode60" title="village.custom_classes.task.BpodOutput.SoftCode60"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode60</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode61" title="village.custom_classes.task.BpodOutput.SoftCode61"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode61</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode62" title="village.custom_classes.task.BpodOutput.SoftCode62"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode62</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode63" title="village.custom_classes.task.BpodOutput.SoftCode63"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode63</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode64" title="village.custom_classes.task.BpodOutput.SoftCode64"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode64</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode65" title="village.custom_classes.task.BpodOutput.SoftCode65"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode65</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode66" title="village.custom_classes.task.BpodOutput.SoftCode66"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode66</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode67" title="village.custom_classes.task.BpodOutput.SoftCode67"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode67</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode68" title="village.custom_classes.task.BpodOutput.SoftCode68"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode68</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode69" title="village.custom_classes.task.BpodOutput.SoftCode69"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode69</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode7" title="village.custom_classes.task.BpodOutput.SoftCode7"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode7</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode70" title="village.custom_classes.task.BpodOutput.SoftCode70"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode70</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode71" title="village.custom_classes.task.BpodOutput.SoftCode71"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode71</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode72" title="village.custom_classes.task.BpodOutput.SoftCode72"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode72</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode73" title="village.custom_classes.task.BpodOutput.SoftCode73"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode73</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode74" title="village.custom_classes.task.BpodOutput.SoftCode74"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode74</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode75" title="village.custom_classes.task.BpodOutput.SoftCode75"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode75</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode76" title="village.custom_classes.task.BpodOutput.SoftCode76"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode76</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode77" title="village.custom_classes.task.BpodOutput.SoftCode77"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode77</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode78" title="village.custom_classes.task.BpodOutput.SoftCode78"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode78</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode79" title="village.custom_classes.task.BpodOutput.SoftCode79"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode79</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode8" title="village.custom_classes.task.BpodOutput.SoftCode8"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode8</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode80" title="village.custom_classes.task.BpodOutput.SoftCode80"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode80</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode81" title="village.custom_classes.task.BpodOutput.SoftCode81"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode81</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode82" title="village.custom_classes.task.BpodOutput.SoftCode82"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode82</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode83" title="village.custom_classes.task.BpodOutput.SoftCode83"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode83</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode84" title="village.custom_classes.task.BpodOutput.SoftCode84"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode84</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode85" title="village.custom_classes.task.BpodOutput.SoftCode85"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode85</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode86" title="village.custom_classes.task.BpodOutput.SoftCode86"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode86</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode87" title="village.custom_classes.task.BpodOutput.SoftCode87"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode87</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode88" title="village.custom_classes.task.BpodOutput.SoftCode88"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode88</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode89" title="village.custom_classes.task.BpodOutput.SoftCode89"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode89</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode9" title="village.custom_classes.task.BpodOutput.SoftCode9"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode9</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode90" title="village.custom_classes.task.BpodOutput.SoftCode90"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode90</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode91" title="village.custom_classes.task.BpodOutput.SoftCode91"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode91</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode92" title="village.custom_classes.task.BpodOutput.SoftCode92"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode92</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode93" title="village.custom_classes.task.BpodOutput.SoftCode93"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode93</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode94" title="village.custom_classes.task.BpodOutput.SoftCode94"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode94</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode95" title="village.custom_classes.task.BpodOutput.SoftCode95"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode95</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode96" title="village.custom_classes.task.BpodOutput.SoftCode96"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode96</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode97" title="village.custom_classes.task.BpodOutput.SoftCode97"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode97</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.SoftCode98" title="village.custom_classes.task.BpodOutput.SoftCode98"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftCode98</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve1" title="village.custom_classes.task.BpodOutput.Valve1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Valve1</span></code></a></p></td>
-<td><p>Valve</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve2" title="village.custom_classes.task.BpodOutput.Valve2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Valve2</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve3" title="village.custom_classes.task.BpodOutput.Valve3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Valve3</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve4" title="village.custom_classes.task.BpodOutput.Valve4"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Valve4</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve5" title="village.custom_classes.task.BpodOutput.Valve5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Valve5</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve6" title="village.custom_classes.task.BpodOutput.Valve6"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Valve6</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve7" title="village.custom_classes.task.BpodOutput.Valve7"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Valve7</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#village.custom_classes.task.BpodOutput.Valve8" title="village.custom_classes.task.BpodOutput.Valve8"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Valve8</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.BNC1High">
-<span class="sig-name descname"><span class="pre">BNC1High</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'BNC1High'</span></span></dt>
-<dd><p>BNC</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.BNC1Low">
-<span class="sig-name descname"><span class="pre">BNC1Low</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'BNC1Low'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.BNC2High">
-<span class="sig-name descname"><span class="pre">BNC2High</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'BNC2High'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.BNC2Low">
-<span class="sig-name descname"><span class="pre">BNC2Low</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'BNC2Low'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalCounter1Reset">
-<span class="sig-name descname"><span class="pre">GlobalCounter1Reset</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalCounter1Reset'</span></span></dt>
-<dd><p>GlobalCounterReset</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalCounter2Reset">
-<span class="sig-name descname"><span class="pre">GlobalCounter2Reset</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalCounter2Reset'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalCounter3Reset">
-<span class="sig-name descname"><span class="pre">GlobalCounter3Reset</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalCounter3Reset'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalCounter4Reset">
-<span class="sig-name descname"><span class="pre">GlobalCounter4Reset</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalCounter4Reset'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalCounter5Reset">
-<span class="sig-name descname"><span class="pre">GlobalCounter5Reset</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalCounter5Reset'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer1Cancel">
-<span class="sig-name descname"><span class="pre">GlobalTimer1Cancel</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer1Cancel'</span></span></dt>
-<dd><p>GlobalTimerCancel</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer1Trig">
-<span class="sig-name descname"><span class="pre">GlobalTimer1Trig</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer1Trig'</span></span></dt>
-<dd><p>GlobalTimerTrig</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer2Cancel">
-<span class="sig-name descname"><span class="pre">GlobalTimer2Cancel</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer2Cancel'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer2Trig">
-<span class="sig-name descname"><span class="pre">GlobalTimer2Trig</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer2Trig'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer3Cancel">
-<span class="sig-name descname"><span class="pre">GlobalTimer3Cancel</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer3Cancel'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer3Trig">
-<span class="sig-name descname"><span class="pre">GlobalTimer3Trig</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer3Trig'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer4Cancel">
-<span class="sig-name descname"><span class="pre">GlobalTimer4Cancel</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer4Cancel'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer4Trig">
-<span class="sig-name descname"><span class="pre">GlobalTimer4Trig</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer4Trig'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer5Cancel">
-<span class="sig-name descname"><span class="pre">GlobalTimer5Cancel</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer5Cancel'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.GlobalTimer5Trig">
-<span class="sig-name descname"><span class="pre">GlobalTimer5Trig</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GlobalTimer5Trig'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.PWM1">
-<span class="sig-name descname"><span class="pre">PWM1</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PWM1'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.PWM2">
-<span class="sig-name descname"><span class="pre">PWM2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PWM2'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.PWM3">
-<span class="sig-name descname"><span class="pre">PWM3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PWM3'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.PWM4">
-<span class="sig-name descname"><span class="pre">PWM4</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PWM4'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.PWM5">
-<span class="sig-name descname"><span class="pre">PWM5</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PWM5'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.PWM6">
-<span class="sig-name descname"><span class="pre">PWM6</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PWM6'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.PWM7">
-<span class="sig-name descname"><span class="pre">PWM7</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PWM7'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.PWM8">
-<span class="sig-name descname"><span class="pre">PWM8</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PWM8'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Serial1">
-<span class="sig-name descname"><span class="pre">Serial1</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Serial1'</span></span></dt>
-<dd><p>Serial</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Serial2">
-<span class="sig-name descname"><span class="pre">Serial2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Serial2'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Serial3">
-<span class="sig-name descname"><span class="pre">Serial3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Serial3'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Serial4">
-<span class="sig-name descname"><span class="pre">Serial4</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Serial4'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Serial5">
-<span class="sig-name descname"><span class="pre">Serial5</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Serial5'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode1">
-<span class="sig-name descname"><span class="pre">SoftCode1</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode1'</span></span></dt>
-<dd><p>SoftCode</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode10">
-<span class="sig-name descname"><span class="pre">SoftCode10</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode10'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode11">
-<span class="sig-name descname"><span class="pre">SoftCode11</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode11'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode12">
-<span class="sig-name descname"><span class="pre">SoftCode12</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode12'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode13">
-<span class="sig-name descname"><span class="pre">SoftCode13</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode13'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode14">
-<span class="sig-name descname"><span class="pre">SoftCode14</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode14'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode15">
-<span class="sig-name descname"><span class="pre">SoftCode15</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode15'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode16">
-<span class="sig-name descname"><span class="pre">SoftCode16</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode16'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode17">
-<span class="sig-name descname"><span class="pre">SoftCode17</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode17'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode18">
-<span class="sig-name descname"><span class="pre">SoftCode18</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode18'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode19">
-<span class="sig-name descname"><span class="pre">SoftCode19</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode19'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode2">
-<span class="sig-name descname"><span class="pre">SoftCode2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode2'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode20">
-<span class="sig-name descname"><span class="pre">SoftCode20</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode20'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode21">
-<span class="sig-name descname"><span class="pre">SoftCode21</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode21'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode22">
-<span class="sig-name descname"><span class="pre">SoftCode22</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode22'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode23">
-<span class="sig-name descname"><span class="pre">SoftCode23</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode23'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode24">
-<span class="sig-name descname"><span class="pre">SoftCode24</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode24'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode25">
-<span class="sig-name descname"><span class="pre">SoftCode25</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode25'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode26">
-<span class="sig-name descname"><span class="pre">SoftCode26</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode26'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode27">
-<span class="sig-name descname"><span class="pre">SoftCode27</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode27'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode28">
-<span class="sig-name descname"><span class="pre">SoftCode28</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode28'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode29">
-<span class="sig-name descname"><span class="pre">SoftCode29</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode29'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode3">
-<span class="sig-name descname"><span class="pre">SoftCode3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode3'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode30">
-<span class="sig-name descname"><span class="pre">SoftCode30</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode30'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode31">
-<span class="sig-name descname"><span class="pre">SoftCode31</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode31'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode32">
-<span class="sig-name descname"><span class="pre">SoftCode32</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode32'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode33">
-<span class="sig-name descname"><span class="pre">SoftCode33</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode33'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode34">
-<span class="sig-name descname"><span class="pre">SoftCode34</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode34'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode35">
-<span class="sig-name descname"><span class="pre">SoftCode35</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode35'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode36">
-<span class="sig-name descname"><span class="pre">SoftCode36</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode36'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode37">
-<span class="sig-name descname"><span class="pre">SoftCode37</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode37'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode38">
-<span class="sig-name descname"><span class="pre">SoftCode38</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode38'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode39">
-<span class="sig-name descname"><span class="pre">SoftCode39</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode39'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode4">
-<span class="sig-name descname"><span class="pre">SoftCode4</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode4'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode40">
-<span class="sig-name descname"><span class="pre">SoftCode40</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode40'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode41">
-<span class="sig-name descname"><span class="pre">SoftCode41</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode41'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode42">
-<span class="sig-name descname"><span class="pre">SoftCode42</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode42'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode43">
-<span class="sig-name descname"><span class="pre">SoftCode43</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode43'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode44">
-<span class="sig-name descname"><span class="pre">SoftCode44</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode44'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode45">
-<span class="sig-name descname"><span class="pre">SoftCode45</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode45'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode46">
-<span class="sig-name descname"><span class="pre">SoftCode46</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode46'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode47">
-<span class="sig-name descname"><span class="pre">SoftCode47</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode47'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode48">
-<span class="sig-name descname"><span class="pre">SoftCode48</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode48'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode49">
-<span class="sig-name descname"><span class="pre">SoftCode49</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode49'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode5">
-<span class="sig-name descname"><span class="pre">SoftCode5</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode5'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode50">
-<span class="sig-name descname"><span class="pre">SoftCode50</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode50'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode51">
-<span class="sig-name descname"><span class="pre">SoftCode51</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode51'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode52">
-<span class="sig-name descname"><span class="pre">SoftCode52</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode52'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode53">
-<span class="sig-name descname"><span class="pre">SoftCode53</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode53'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode54">
-<span class="sig-name descname"><span class="pre">SoftCode54</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode54'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode55">
-<span class="sig-name descname"><span class="pre">SoftCode55</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode55'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode56">
-<span class="sig-name descname"><span class="pre">SoftCode56</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode56'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode57">
-<span class="sig-name descname"><span class="pre">SoftCode57</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode57'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode58">
-<span class="sig-name descname"><span class="pre">SoftCode58</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode58'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode59">
-<span class="sig-name descname"><span class="pre">SoftCode59</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode59'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode6">
-<span class="sig-name descname"><span class="pre">SoftCode6</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode6'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode60">
-<span class="sig-name descname"><span class="pre">SoftCode60</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode60'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode61">
-<span class="sig-name descname"><span class="pre">SoftCode61</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode61'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode62">
-<span class="sig-name descname"><span class="pre">SoftCode62</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode62'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode63">
-<span class="sig-name descname"><span class="pre">SoftCode63</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode63'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode64">
-<span class="sig-name descname"><span class="pre">SoftCode64</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode64'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode65">
-<span class="sig-name descname"><span class="pre">SoftCode65</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode65'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode66">
-<span class="sig-name descname"><span class="pre">SoftCode66</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode66'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode67">
-<span class="sig-name descname"><span class="pre">SoftCode67</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode67'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode68">
-<span class="sig-name descname"><span class="pre">SoftCode68</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode68'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode69">
-<span class="sig-name descname"><span class="pre">SoftCode69</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode69'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode7">
-<span class="sig-name descname"><span class="pre">SoftCode7</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode7'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode70">
-<span class="sig-name descname"><span class="pre">SoftCode70</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode70'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode71">
-<span class="sig-name descname"><span class="pre">SoftCode71</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode71'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode72">
-<span class="sig-name descname"><span class="pre">SoftCode72</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode72'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode73">
-<span class="sig-name descname"><span class="pre">SoftCode73</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode73'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode74">
-<span class="sig-name descname"><span class="pre">SoftCode74</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode74'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode75">
-<span class="sig-name descname"><span class="pre">SoftCode75</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode75'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode76">
-<span class="sig-name descname"><span class="pre">SoftCode76</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode76'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode77">
-<span class="sig-name descname"><span class="pre">SoftCode77</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode77'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode78">
-<span class="sig-name descname"><span class="pre">SoftCode78</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode78'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode79">
-<span class="sig-name descname"><span class="pre">SoftCode79</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode79'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode8">
-<span class="sig-name descname"><span class="pre">SoftCode8</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode8'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode80">
-<span class="sig-name descname"><span class="pre">SoftCode80</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode80'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode81">
-<span class="sig-name descname"><span class="pre">SoftCode81</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode81'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode82">
-<span class="sig-name descname"><span class="pre">SoftCode82</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode82'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode83">
-<span class="sig-name descname"><span class="pre">SoftCode83</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode83'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode84">
-<span class="sig-name descname"><span class="pre">SoftCode84</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode84'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode85">
-<span class="sig-name descname"><span class="pre">SoftCode85</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode85'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode86">
-<span class="sig-name descname"><span class="pre">SoftCode86</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode86'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode87">
-<span class="sig-name descname"><span class="pre">SoftCode87</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode87'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode88">
-<span class="sig-name descname"><span class="pre">SoftCode88</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode88'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode89">
-<span class="sig-name descname"><span class="pre">SoftCode89</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode89'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode9">
-<span class="sig-name descname"><span class="pre">SoftCode9</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode9'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode90">
-<span class="sig-name descname"><span class="pre">SoftCode90</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode90'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode91">
-<span class="sig-name descname"><span class="pre">SoftCode91</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode91'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode92">
-<span class="sig-name descname"><span class="pre">SoftCode92</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode92'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode93">
-<span class="sig-name descname"><span class="pre">SoftCode93</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode93'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode94">
-<span class="sig-name descname"><span class="pre">SoftCode94</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode94'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode95">
-<span class="sig-name descname"><span class="pre">SoftCode95</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode95'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode96">
-<span class="sig-name descname"><span class="pre">SoftCode96</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode96'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode97">
-<span class="sig-name descname"><span class="pre">SoftCode97</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode97'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.SoftCode98">
-<span class="sig-name descname"><span class="pre">SoftCode98</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SoftCode98'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Valve1">
-<span class="sig-name descname"><span class="pre">Valve1</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Valve1'</span></span></dt>
-<dd><p>Valve</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Valve2">
-<span class="sig-name descname"><span class="pre">Valve2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Valve2'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Valve3">
-<span class="sig-name descname"><span class="pre">Valve3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Valve3'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Valve4">
-<span class="sig-name descname"><span class="pre">Valve4</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Valve4'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Valve5">
-<span class="sig-name descname"><span class="pre">Valve5</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Valve5'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Valve6">
-<span class="sig-name descname"><span class="pre">Valve6</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Valve6'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Valve7">
-<span class="sig-name descname"><span class="pre">Valve7</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Valve7'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.custom_classes.task.BpodOutput.Valve8">
-<span class="sig-name descname"><span class="pre">Valve8</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Valve8'</span></span></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </section>
@@ -1776,9 +536,10 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=fccb973d"></script>
+      <script src="../_static/documentation_options.js?v=38e0f4aa"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script src="../_static/lightbox.js?v=59078c7a"></script></body>

@@ -8,6 +8,7 @@
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,7 +87,8 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Sound &amp; Touchscreen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -95,9 +97,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Core, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/triggers.html">Custom Interaction Triggers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/calibrations.html">Custom Calibrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/auto.html">Custom AutoNoMouse</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; TROUBLESHOOTING</a><ul>
@@ -110,10 +115,13 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.html">camera_calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.html">sound_calibration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
@@ -175,6 +183,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.html">calibration_base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -219,6 +228,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.camera.html">camera</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
@@ -226,15 +236,13 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
@@ -246,6 +254,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.html">telegram_bot</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -253,7 +262,18 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui.html">gui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.html">monitor_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
@@ -270,6 +290,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -282,6 +303,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.import_all.html">import_all</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.log.Log.html">Log</a></li>
 </ul>
@@ -342,6 +364,8 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.manager.html">manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.main.html">main</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul class="current">
@@ -376,9 +400,16 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#hardware-construction">Hardware Construction</a><ul>
+<li><a class="reference internal" href="#phase-1-frame-construction">Phase 1: Frame Construction</a></li>
+<li><a class="reference internal" href="#phase-2-base-assembly">Phase 2: Base Assembly</a></li>
+<li><a class="reference internal" href="#phase-3-rfid-load-cell">Phase 3: RFID &amp; Load Cell</a></li>
+<li><a class="reference internal" href="#phase-4-servo-motors">Phase 4: Servo Motors</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#hardware-connections">Hardware Connections</a><ul>
-<li><a class="reference internal" href="#phase-1-core-raspberry-pi-assembly">Phase 1: Core Raspberry Pi Assembly</a></li>
-<li><a class="reference internal" href="#phase-2-hat-stacking-architecture">Phase 2: HAT Stacking Architecture</a></li>
+<li><a class="reference internal" href="#phase-1-raspberry-pi-assembly">Phase 1: Raspberry Pi Assembly</a></li>
+<li><a class="reference internal" href="#phase-2-hat-stacking">Phase 2: HAT Stacking</a></li>
 <li><a class="reference internal" href="#phase-3-peripheral-power-distribution">Phase 3: Peripheral &amp; Power Distribution</a></li>
 </ul>
 </li>
@@ -457,40 +488,346 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="system-assembly-guide">
 <h1>System Assembly Guide</h1>
+<section id="hardware-construction">
+<h2>Hardware Construction</h2>
+<p>You will need a few basic tools: Allen key, screwdriver, scissors, double-sided tape, and glue.</p>
+<section id="phase-1-frame-construction">
+<h3>Phase 1: Frame Construction</h3>
+<p>The frame is built using 20×20 V-slot aluminum profiles.</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components</strong>: Parts required for the standard 2-homecage version (without Eco-HAB).</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/frame1.png"><img alt="../_images/frame1.png" src="../_images/frame1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Connections</strong>: Pieces are connected using corner couplings and set screws.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/frame2.png"><img alt="../_images/frame2.png" src="../_images/frame2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Base</strong>: Build the base first.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/frame3.png"><img alt="../_images/frame3.png" src="../_images/frame3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Vertical Pieces</strong>: Add the vertical pieces.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/frame4.png"><img alt="../_images/frame4.png" src="../_images/frame4.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Camera Mount</strong>: Slide the 3D-printed camera mount base onto an aluminum profile.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/frame5.png"><img alt="../_images/frame5.png" src="../_images/frame5.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Enclosure</strong>: Place the 3D-printed Raspberry Pi enclosure and complete the aluminum structure.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/frame6.png"><img alt="../_images/frame6.png" src="../_images/frame6.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+</section>
+<section id="phase-2-base-assembly">
+<h3>Phase 2: Base Assembly</h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Acrylic Base</strong>: Mount the 3D-printed parts onto a 3 mm matte white acrylic base. The matte finish is important to avoid reflections.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/base1.png"><img alt="../_images/base1.png" src="../_images/base1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>RFID Antenna Slot</strong>: This piece has an internal slot for an antenna. The RFID module used in this build has a built-in antenna, so no external one is needed. However, if using a different RFID module or an Eco-HAB to manage multiple antennas, one can be placed between these two pieces.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/base2.png"><img alt="../_images/base2.png" src="../_images/base2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Bonding</strong>: Glue the two pieces together.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/base3.png"><img alt="../_images/base3.png" src="../_images/base3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Parts Mounting</strong>: Secure the 3D-printed parts onto the acrylic base using M4 screws, tightening from below.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/base4.png"><img alt="../_images/base4.png" src="../_images/base4.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Frame Installation</strong>: Place the assembled base onto the aluminum frame structure.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/base5.png"><img alt="../_images/base5.png" src="../_images/base5.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+</section>
+<section id="phase-3-rfid-load-cell">
+<h3>Phase 3: RFID &amp; Load Cell</h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Scale &amp; RFID Modules</strong>: Mount the scale module (load cell with 3D-printed part) and the RFID module onto the base.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/rfid1.png"><img alt="../_images/rfid1.png" src="../_images/rfid1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Load Cell Assembly</strong>: Attach the 3D-printed part on top of the load cell using M4 screws.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/rfid2.png"><img alt="../_images/rfid2.png" src="../_images/rfid2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Scale Positioning</strong>: Mount the scale onto the base using M5 screws. It must sit straight and centered, without touching any of the surrounding parts.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/rfid3.png"><img alt="../_images/rfid3.png" src="../_images/rfid3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>RFID Wiring</strong>: This build uses the ID-20LA RFID reader (125 kHz). Solder a 5-pin JST-PH connector following the pin order shown in the diagram. See the <a class="reference external" href="https://www.id-innovations.com/ID-3%2612%2620LA(en)%20V2.01%2020200526.pdf">specifications</a> for the full pinout.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/rfid4.png"><img alt="../_images/rfid4.png" src="../_images/rfid4.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>RFID Installation</strong>: Slide the RFID module into its designated slot. Secure it with a small piece of tape to prevent movement.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/rfid5.png"><img alt="../_images/rfid5.png" src="../_images/rfid5.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Final Result</strong>: The completed assembly with both sensors in place.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/rfid6.png"><img alt="../_images/rfid6.png" src="../_images/rfid6.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+</section>
+<section id="phase-4-servo-motors">
+<h3>Phase 4: Servo Motors</h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Servo Motors Overview</strong>: Position the servo motors and attach the doors to them.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/servos1.png"><img alt="../_images/servos1.png" src="../_images/servos1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Horn Bonding</strong>: Glue the servo horns onto the servos.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/servos2.png"><img alt="../_images/servos2.png" src="../_images/servos2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Servo Mounting</strong>: Secure each servo in position using at least 2 M4 screws.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/servos3.png"><img alt="../_images/servos3.png" src="../_images/servos3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Door Attachment</strong>: Connect the doors to the servo motors.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/servos4.png"><img alt="../_images/servos4.png" src="../_images/servos4.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
 <section id="hardware-connections">
 <h2>Hardware Connections</h2>
-<div class="admonition-critical-power-wiring-warning admonition">
+<div class="warning admonition">
 <p class="admonition-title">CRITICAL POWER &amp; WIRING WARNING</p>
-<p>Never hot-plug peripherals: Ensure the main power supply is completely disconnected before plugging or unplugging any HAT, board, servo, or sensor.</p>
+<p>Never hot-plug peripherals: ensure the main power supply is completely disconnected before plugging or unplugging any HAT, board, servo, or sensor.</p>
 </div>
-<section id="phase-1-core-raspberry-pi-assembly">
-<h3>Phase 1: Core Raspberry Pi Assembly</h3>
-<p><strong>Storage &amp; Cooling</strong>: Insert the pre-loaded microSD card into the Raspberry Pi 5 slot. Securely mount the official Active Cooler onto the Raspberry Pi processor.
-<strong>Camera Integration</strong>: Connect the two camera ribbon cables to the Pi. For optimal signal integrity, keep these cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable. If 50 cm is not long enough to reach your operant box camera mount, use a ribbon cable extension paired with a dedicated FFC adapter.</p>
-<a class="reference internal image-reference" href="../_images/boards1.png"><img alt="../_images/boards1.png" class="align-center" src="../_images/boards1.png" style="width: 70%;" />
+<section id="phase-1-raspberry-pi-assembly">
+<h3>Phase 1: Raspberry Pi Assembly</h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Storage</strong>: Insert the pre-loaded microSD card into the Raspberry Pi 5 slot.
+<strong>Cooling</strong>: Securely mount the official Active Cooler onto the processor.
+<strong>Camera Integration</strong>: Connect the two camera ribbon cables to the Pi. Keep cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable; use an extension with a dedicated FFC adapter if needed.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/boards1.png"><img alt="../_images/boards1.png" src="../_images/boards1.png" style="width: 100%;" />
 </a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Enclosure Mounting</strong>: Place the Raspberry Pi into its dedicated 3D-printed enclosure (Raspberry Box) and secure it with screws.</p>
-<a class="reference internal image-reference" href="../_images/boards2.png"><img alt="../_images/boards2.png" class="align-center" src="../_images/boards2.png" style="width: 70%;" />
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/boards2.png"><img alt="../_images/boards2.png" src="../_images/boards2.png" style="width: 100%;" />
 </a>
+</div>
+</div>
+</div>
 </section>
-<section id="phase-2-hat-stacking-architecture">
-<h3>Phase 2: HAT Stacking Architecture</h3>
-<p><strong>Main HAT Preparation</strong>: Insert two 5A fuses into their designated slots on the Main HAT. To ensure proper vertical clearance and prevent short circuits between components, install a GPIO header extension/spacer alongside plastic standoffs on the board.</p>
-<a class="reference internal image-reference" href="../_images/boards3.png"><img alt="../_images/boards3.png" class="align-center" src="../_images/boards3.png" style="width: 70%;" />
+<section id="phase-2-hat-stacking">
+<h3>Phase 2: HAT Stacking</h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Main HAT Preparation</strong>: Insert two 5A fuses into their designated slots on the Main HAT. Install a GPIO header extension/spacer alongside plastic standoffs to ensure proper vertical clearance and prevent short circuits.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/boards3.png"><img alt="../_images/boards3.png" src="../_images/boards3.png" style="width: 100%;" />
 </a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Main HAT Mounting</strong>: Align and carefully press the Main HAT down onto the Raspberry Pi’s 40-pin GPIO header.</p>
-<a class="reference internal image-reference" href="../_images/boards4.png"><img alt="../_images/boards4.png" class="align-center" src="../_images/boards4.png" style="width: 70%;" />
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/boards4.png"><img alt="../_images/boards4.png" src="../_images/boards4.png" style="width: 100%;" />
 </a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Audio HAT Preparation</strong>: Install another GPIO header extension/spacer and plastic standoffs onto the Audio HAT to stack it safely above the previous layer.</p>
-<a class="reference internal image-reference" href="../_images/boards5.png"><img alt="../_images/boards5.png" class="align-center" src="../_images/boards5.png" style="width: 70%;" />
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/boards5.png"><img alt="../_images/boards5.png" src="../_images/boards5.png" style="width: 100%;" />
 </a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Audio HAT Mounting</strong>: Press the Audio HAT firmly on top of the Main HAT, completing the primary hardware stack.</p>
-<a class="reference internal image-reference" href="../_images/boards6.png"><img alt="../_images/boards6.png" class="align-center" src="../_images/boards6.png" style="width: 70%;" />
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/boards6.png"><img alt="../_images/boards6.png" src="../_images/boards6.png" style="width: 100%;" />
 </a>
+</div>
+</div>
+</div>
 </section>
 <section id="phase-3-peripheral-power-distribution">
 <h3>Phase 3: Peripheral &amp; Power Distribution</h3>
-<p><strong>Corridor Board Setup</strong>: Mount the Corridor Board in its fixed position on the physical corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale (load cell), white LED strips, and IR illumination LEDs. Always double-check wiring polarities against the board silk-screen before insertion.</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Corridor Board Setup</strong>: Mount the Corridor Board in its fixed position on the physical corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale (load cell), white LED strips, and IR illumination LEDs. Always verify wiring polarities against the board silk-screen before insertion.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+</div>
+</div>
+</div>
 </section>
 </section>
 </section>
@@ -532,9 +869,10 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=fccb973d"></script>
+      <script src="../_static/documentation_options.js?v=38e0f4aa"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script src="../_static/lightbox.js?v=59078c7a"></script></body>

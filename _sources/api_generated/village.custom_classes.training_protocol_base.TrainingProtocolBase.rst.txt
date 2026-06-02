@@ -6,7 +6,6 @@ TrainingProtocolBase
 .. autoclass:: TrainingProtocolBase
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ TrainingProtocolBase
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~TrainingProtocolBase.__init__
       ~TrainingProtocolBase.check_variables

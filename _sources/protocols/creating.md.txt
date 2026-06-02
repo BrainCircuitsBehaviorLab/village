@@ -50,7 +50,7 @@ code/
 
 In Example 1, each script corresponds to a distinct training stage:
 
-1. `habituation` — animals get acquainted with the behavioral box.
+1. `habituation` — animals get acquainted with the operant box.
 2. `lick_teaching` — animals learn to interact with the behavioral ports.
 3. `simple_task` — a simplified version of the final task.
 4. `final_task` — the full experimental task.

@@ -1,0 +1,26 @@
+rfid
+====
+
+.. automodule:: village.devices.rfid
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

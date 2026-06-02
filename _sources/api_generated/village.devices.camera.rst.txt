@@ -1,0 +1,26 @@
+camera
+======
+
+.. automodule:: village.devices.camera
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

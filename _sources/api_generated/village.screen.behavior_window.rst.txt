@@ -1,0 +1,26 @@
+behavior\_window
+================
+
+.. automodule:: village.screen.behavior_window
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

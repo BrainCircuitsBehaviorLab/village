@@ -10,7 +10,7 @@ Next, go to the `DATA` screen and select the `SUBJECTS` table. By clicking the `
 - `name`: The subject’s name.
 - `tag`: The ID of its RFID capsule.
 - `basal_weight`: Weigh the animal to record its baseline weight as a reference.
-- `active`: Controls when the subject is allowed to access the behavioral box. The available options are:
+- `active`: Controls when the subject is allowed to access the operant box. The available options are:
   - **ON**: the subject can access the box at any time.
   - **OFF**: the subject cannot access the box.
   - **Custom schedule**: by double-clicking the cell, a dialog opens where you can select specific days of the week and, for each day, the individual hours (0–23) during which the subject is active. This allows fine-grained control — for example, restricting access to weekdays between 8:00 and 20:00.

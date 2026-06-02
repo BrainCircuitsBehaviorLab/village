@@ -10,6 +10,7 @@ When the GUI launches, the system automatically checks connections with essentia
 
 Once the GUI is active, a menu will appear at the top with the following options: `MAIN`, `MONITOR`, `SUBJECTS`, `TASKS`, `DATA`, `CALIBRATION` and `SETTINGS`.
 
+
 ---
 
 ### MAIN
@@ -51,7 +52,7 @@ A secondary group of tabs is located at the bottom of the screen to monitor syst
 
 *   **`INFO`:** Displays a live stream of recent system events and operational logs. Double-clicking any logged event opens an expanded window with detailed diagnostic information.
 *   **`PLOT`:** Renders an interactive graphical chart illustrating both successful entries and denied entry attempts for all subjects over the past seven days.
-*   **`DETECTION SETTINGS`:** Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and behavioral box tracking systems. A comprehensive breakdown of these parameters is available in the [Animal Detection Section][DETECTION].
+*   **`DETECTION SETTINGS`:** Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and operant box tracking systems. A comprehensive breakdown of these parameters is available in the [Animal Detection Section][DETECTION].
 
 ---
 

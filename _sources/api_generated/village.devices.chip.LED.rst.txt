@@ -6,7 +6,6 @@ LED
 .. autoclass:: LED
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ LED
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~LED.__init__
       ~LED.off

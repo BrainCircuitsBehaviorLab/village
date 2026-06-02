@@ -6,7 +6,6 @@ NullSoftCodeToBpod
 .. autoclass:: NullSoftCodeToBpod
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ NullSoftCodeToBpod
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~NullSoftCodeToBpod.__init__
       ~NullSoftCodeToBpod.kill

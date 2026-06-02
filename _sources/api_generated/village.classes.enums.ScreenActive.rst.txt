@@ -6,7 +6,6 @@ ScreenActive
 .. autoclass:: ScreenActive
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ ScreenActive
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~ScreenActive.keys
       ~ScreenActive.values
@@ -28,6 +28,7 @@ ScreenActive
    .. rubric:: Attributes
 
    .. autosummary::
+      :no-index:
    
       ~ScreenActive.SCREEN
       ~ScreenActive.TOUCHSCREEN

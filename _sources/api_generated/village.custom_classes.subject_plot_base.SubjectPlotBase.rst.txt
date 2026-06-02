@@ -6,7 +6,6 @@ SubjectPlotBase
 .. autoclass:: SubjectPlotBase
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ SubjectPlotBase
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~SubjectPlotBase.__init__
       ~SubjectPlotBase.create_plot

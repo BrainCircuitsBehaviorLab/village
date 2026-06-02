@@ -6,7 +6,6 @@ NullChip
 .. autoclass:: NullChip
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ NullChip
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~NullChip.__init__
       ~NullChip.set_pwm
@@ -26,6 +26,7 @@ NullChip
    .. rubric:: Attributes
 
    .. autosummary::
+      :no-index:
    
       ~NullChip.error
    

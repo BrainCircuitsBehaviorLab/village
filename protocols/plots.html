@@ -2,12 +2,13 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Custom Plotting - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Custom Interaction Triggers" href="triggers.html" /><link rel="prev" title="Core, Audio &amp; Video Functions" href="functions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Custom Plotting - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Custom Scheduled Actions" href="scheduled.html" /><link rel="prev" title="Custom Camera Interaction" href="camera.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/plots.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,7 +87,8 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/touchscreen.html">Sound &amp; Touchscreen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -95,9 +97,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="task.html">Task Development Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="functions.html">Core, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Custom Plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="triggers.html">Custom Interaction Triggers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calibrations.html">Custom Calibrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto.html">Custom AutoNoMouse</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; TROUBLESHOOTING</a><ul>
@@ -110,10 +115,13 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration.html">camera_calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.sound_calibration.html">sound_calibration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
@@ -175,6 +183,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_base.html">calibration_base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -219,6 +228,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.camera.html">camera</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
@@ -226,15 +236,13 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
@@ -246,6 +254,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.telegram_bot.html">telegram_bot</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -253,7 +262,18 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui.html">gui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.monitor_layout.html">monitor_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
@@ -270,6 +290,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -282,6 +303,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.import_all.html">import_all</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.log.Log.html">Log</a></li>
 </ul>
@@ -342,6 +364,8 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.manager.html">manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.main.html">main</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -457,16 +481,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="functions.html">
+    <a href="camera.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Core, Audio &amp; Video Functions</div></div>
+        <span>Previous</span><div class="title">Custom Camera Interaction</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="triggers.html">
+    <a href="scheduled.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Custom Interaction Triggers</div>
+        <div class="title">Custom Scheduled Actions</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -488,9 +512,10 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=fccb973d"></script>
+      <script src="../_static/documentation_options.js?v=38e0f4aa"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script src="../_static/lightbox.js?v=59078c7a"></script></body>

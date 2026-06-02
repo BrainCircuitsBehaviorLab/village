@@ -8,6 +8,7 @@
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=9454f7d5" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=41c927e4" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,7 +87,8 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/touchscreen.html">Soundcard &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/toolbar.html">Toolbar Controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/touchscreen.html">Sound &amp; Touchscreen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -95,9 +97,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../../../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/task.html">Task Development Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../protocols/functions.html">Core, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/plots.html">Custom Plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../protocols/triggers.html">Custom Interaction Triggers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/calibrations.html">Custom Calibrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/auto.html">Custom AutoNoMouse</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting_index.html">MAINTENANCE &amp; TROUBLESHOOTING</a><ul>
@@ -110,10 +115,13 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.html">camera_calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.html">sound_calibration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a><ul>
@@ -175,6 +183,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.after_session_base.AfterSessionBase.html">AfterSessionBase</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.calibration_base.html">calibration_base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -219,6 +228,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.camera.html">camera</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.chip.html">chip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
@@ -226,15 +236,13 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.html">led_strip</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.html">led_strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.Scale.html">Scale</a></li>
@@ -246,6 +254,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.html">telegram_bot</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -253,7 +262,18 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui_window.html">gui_window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.main_layout.html">main_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.html">monitor_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.plots.html">plots</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.plots.corridor_plot.html">corridor_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
@@ -270,6 +290,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.screen.html">screen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.screen.video_worker.html">video_worker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
@@ -282,6 +303,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.import_all.html">import_all</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.log.html">log</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.log.Log.html">Log</a></li>
 </ul>
@@ -342,6 +364,8 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.manager.html">manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.main.html">main</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../resources_index.html">RESOURCES</a><ul>
@@ -411,7 +435,7 @@ data-aria-dark="Switch to auto color mode">
           <h1>Source code for village.custom_classes.change_cycle_base</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;</span>
 </span><span data-line="2"><span class="sd">This module runs when cycle day/night changes and there is no animal</span>
-</span><span data-line="3"><span class="sd">in the behavioural box.</span>
+</span><span data-line="3"><span class="sd">in the operant box.</span>
 </span><span data-line="4">
 </span><span data-line="5"><span class="sd">1. Deletes the old videos.</span>
 </span><span data-line="6"><span class="sd">2. You can override this class in your project code to implement custom behavior.</span>
@@ -428,63 +452,60 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="ChangeCycleBase">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.change_cycle_base.ChangeCycleBase.html#village.custom_classes.change_cycle_base.ChangeCycleBase">[docs]</a>
 </span><span data-line="17"><span class="k">class</span><span class="w"> </span><span class="nc">ChangeCycleBase</span><span class="p">:</span>
-</span><span data-line="18"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for operations performed during the day/night cycle change.</span>
+</span><span data-line="18"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for operations performed during the day/night cycle transition.</span>
 </span><span data-line="19">
-</span><span data-line="20"><span class="sd">    This class handles cleanup tasks such as deleting old video files and ensuring</span>
-</span><span data-line="21"><span class="sd">    disk space is managed, potentially backing up data before deletion.</span>
-</span><span data-line="22"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="23">
+</span><span data-line="20"><span class="sd">    Handles cleanup tasks such as deleting old video files. Can be configured</span>
+</span><span data-line="21"><span class="sd">    to operate safely, deleting only videos that have already been synced</span>
+</span><span data-line="22"><span class="sd">    to an external location.</span>
+</span><span data-line="23"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="24">
 <div class="viewcode-block" id="ChangeCycleBase.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.change_cycle_base.ChangeCycleBase.html#village.custom_classes.change_cycle_base.ChangeCycleBase.__init__">[docs]</a>
-</span><span data-line="24">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="25"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the ChangeCycleBase instance with settings.&quot;&quot;&quot;</span>
-</span><span data-line="26">        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VIDEOS_DIRECTORY&quot;</span><span class="p">)</span>
-</span><span data-line="27">        <span class="bp">self</span><span class="o">.</span><span class="n">days</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DAYS_OF_VIDEO_STORAGE&quot;</span><span class="p">)</span>
-</span><span data-line="28">        <span class="bp">self</span><span class="o">.</span><span class="n">safe</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAFE_DELETE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span>
-</span><span data-line="29">        <span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYNC_DIRECTORY&quot;</span><span class="p">),</span> <span class="s2">&quot;videos&quot;</span><span class="p">))</span>
-</span><span data-line="30">        <span class="bp">self</span><span class="o">.</span><span class="n">remote_user</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER_USER&quot;</span><span class="p">)</span>
-</span><span data-line="31">        <span class="bp">self</span><span class="o">.</span><span class="n">remote_host</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER_HOST&quot;</span><span class="p">)</span>
-</span><span data-line="32">        <span class="bp">self</span><span class="o">.</span><span class="n">sync_type</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYNC_TYPE&quot;</span><span class="p">)</span>
-</span><span data-line="33">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="34">            <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER_PORT&quot;</span><span class="p">))</span>
-</span><span data-line="35">        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span data-line="36">            <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span></div>
+</span><span data-line="25">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="26"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the ChangeCycleBase instance with settings.&quot;&quot;&quot;</span>
+</span><span data-line="27">        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VIDEOS_DIRECTORY&quot;</span><span class="p">)</span>
+</span><span data-line="28">        <span class="bp">self</span><span class="o">.</span><span class="n">days</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DAYS_OF_VIDEO_STORAGE&quot;</span><span class="p">)</span>
+</span><span data-line="29">        <span class="bp">self</span><span class="o">.</span><span class="n">safe</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAFE_DELETE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span>
+</span><span data-line="30">        <span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYNC_DIRECTORY&quot;</span><span class="p">),</span> <span class="s2">&quot;videos&quot;</span><span class="p">))</span>
+</span><span data-line="31">        <span class="bp">self</span><span class="o">.</span><span class="n">remote_user</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER_USER&quot;</span><span class="p">)</span>
+</span><span data-line="32">        <span class="bp">self</span><span class="o">.</span><span class="n">remote_host</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER_HOST&quot;</span><span class="p">)</span>
+</span><span data-line="33">        <span class="bp">self</span><span class="o">.</span><span class="n">sync_type</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYNC_TYPE&quot;</span><span class="p">)</span>
+</span><span data-line="34">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="35">            <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER_PORT&quot;</span><span class="p">))</span>
+</span><span data-line="36">        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span data-line="37">            <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-</span><span data-line="37">
+</span><span data-line="38">
 <div class="viewcode-block" id="ChangeCycleBase.run">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.change_cycle_base.ChangeCycleBase.html#village.custom_classes.change_cycle_base.ChangeCycleBase.run">[docs]</a>
-</span><span data-line="38">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="39"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the cycle change logic, primarily old data removal.</span>
-</span><span data-line="40">
-</span><span data-line="41"><span class="sd">        Calls the safe_removal_script to delete old videos, optionally backing them up</span>
-</span><span data-line="42"><span class="sd">        locally or to a remote server based on settings.</span>
-</span><span data-line="43"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="44">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_type</span> <span class="o">==</span> <span class="n">SyncType</span><span class="o">.</span><span class="n">HD</span><span class="p">:</span>
-</span><span data-line="45">            <span class="n">safe_removal_script</span><span class="p">(</span>
-</span><span data-line="46">                <span class="n">directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
-</span><span data-line="47">                <span class="n">days</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">days</span><span class="p">,</span>
-</span><span data-line="48">                <span class="n">safe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">safe</span><span class="p">,</span>
-</span><span data-line="49">                <span class="n">backup_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span><span class="p">,</span>
-</span><span data-line="50">                <span class="n">remote</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span data-line="51">            <span class="p">)</span>
-</span><span data-line="52">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_type</span> <span class="o">==</span> <span class="n">SyncType</span><span class="o">.</span><span class="n">SERVER</span><span class="p">:</span>
-</span><span data-line="53">            <span class="n">safe_removal_script</span><span class="p">(</span>
-</span><span data-line="54">                <span class="n">directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
-</span><span data-line="55">                <span class="n">days</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">days</span><span class="p">,</span>
-</span><span data-line="56">                <span class="n">safe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">safe</span><span class="p">,</span>
-</span><span data-line="57">                <span class="n">backup_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span><span class="p">,</span>
-</span><span data-line="58">                <span class="n">remote</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span data-line="59">                <span class="n">remote_user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">remote_user</span><span class="p">,</span>
-</span><span data-line="60">                <span class="n">remote_host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">remote_host</span><span class="p">,</span>
-</span><span data-line="61">                <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
-</span><span data-line="62">            <span class="p">)</span></div>
+</span><span data-line="39">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="40"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the cycle change logic, primarily old data removal.&quot;&quot;&quot;</span>
+</span><span data-line="41">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_type</span> <span class="o">==</span> <span class="n">SyncType</span><span class="o">.</span><span class="n">HD</span><span class="p">:</span>
+</span><span data-line="42">            <span class="n">safe_removal_script</span><span class="p">(</span>
+</span><span data-line="43">                <span class="n">directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+</span><span data-line="44">                <span class="n">days</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">days</span><span class="p">,</span>
+</span><span data-line="45">                <span class="n">safe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">safe</span><span class="p">,</span>
+</span><span data-line="46">                <span class="n">backup_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span><span class="p">,</span>
+</span><span data-line="47">                <span class="n">remote</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span data-line="48">            <span class="p">)</span>
+</span><span data-line="49">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_type</span> <span class="o">==</span> <span class="n">SyncType</span><span class="o">.</span><span class="n">SERVER</span><span class="p">:</span>
+</span><span data-line="50">            <span class="n">safe_removal_script</span><span class="p">(</span>
+</span><span data-line="51">                <span class="n">directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+</span><span data-line="52">                <span class="n">days</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">days</span><span class="p">,</span>
+</span><span data-line="53">                <span class="n">safe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">safe</span><span class="p">,</span>
+</span><span data-line="54">                <span class="n">backup_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span><span class="p">,</span>
+</span><span data-line="55">                <span class="n">remote</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="56">                <span class="n">remote_user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">remote_user</span><span class="p">,</span>
+</span><span data-line="57">                <span class="n">remote_host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">remote_host</span><span class="p">,</span>
+</span><span data-line="58">                <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+</span><span data-line="59">            <span class="p">)</span></div>
 </div>
 
-</span><span data-line="63">
-</span><span data-line="64">
-</span><span data-line="65"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span data-line="66">    <span class="n">change_cycle</span> <span class="o">=</span> <span class="n">ChangeCycleBase</span><span class="p">()</span>
-</span><span data-line="67">    <span class="n">change_cycle</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span data-line="60">
+</span><span data-line="61">
+</span><span data-line="62"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span data-line="63">    <span class="n">change_cycle</span> <span class="o">=</span> <span class="n">ChangeCycleBase</span><span class="p">()</span>
+</span><span data-line="64">    <span class="n">change_cycle</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -509,9 +530,10 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=fccb973d"></script>
+      <script src="../../../_static/documentation_options.js?v=38e0f4aa"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../../../_static/shibuya.js?v=50760d75"></script>
       <script src="../../../_static/lightbox.js?v=59078c7a"></script></body>

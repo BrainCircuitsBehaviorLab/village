@@ -1,0 +1,26 @@
+monitor\_layout
+===============
+
+.. automodule:: village.gui.monitor_layout
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

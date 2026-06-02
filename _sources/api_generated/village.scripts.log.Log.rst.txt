@@ -6,7 +6,6 @@ Log
 .. autoclass:: Log
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ Log
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~Log.__init__
       ~Log.alarm

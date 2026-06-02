@@ -1,0 +1,26 @@
+settings\_layout
+================
+
+.. automodule:: village.gui.settings_layout
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

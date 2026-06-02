@@ -6,7 +6,6 @@ SoundDevice
 .. autoclass:: SoundDevice
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ SoundDevice
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~SoundDevice.__init__
       ~SoundDevice.create_sound_vec

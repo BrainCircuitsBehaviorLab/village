@@ -6,7 +6,6 @@ State
 .. autoclass:: State
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ State
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~State.keys
       ~State.values
@@ -35,6 +35,7 @@ State
    .. rubric:: Attributes
 
    .. autosummary::
+      :no-index:
    
       ~State.WAIT
       ~State.DETECTION

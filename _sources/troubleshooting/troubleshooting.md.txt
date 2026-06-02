@@ -2,7 +2,13 @@
 
 The Training Village is a multi-component system where hardware, software, and behavior intersect. Minor miscalibrations or component failures can lead to sub-optimal performance. Typically, small issues may arise during the first few days of deployment as the animals habituate and the sensors are fine-tuned.
 
-When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly to these alarms by logging in remotely to investigate the core telemetry logs and video feeds.
+When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly to these alarms by logging in remotely to investigate exactamente cual fue la causa del error, mirando los videos del corridor y la operant box. Una puerta que no cierra bien o un fallo de iluminacion puede producir diferentes tipos de errores, WRONG RFID DETECTION, que haya 2 animales dentro de la operant box, que el sistema crea que hay un animal en la operant box pero no haya ninguno, que el sistema crea que no hay ningun animal en la operant box pero en realidad haya uno.
+
+
+The Training Village is a multi-component system where hardware, software, and behavior intersect. Minor miscalibrations or component failures can lead to suboptimal performance. Typically, small issues may arise during the first few days of deployment as the animals habituate and the sensors are fine-tuned.
+
+When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly by logging in remotely to investigate the root cause of the error, reviewing the corridor and operant box video recordings. For example: a door that does not close properly or a lighting failure can produce several types of errors: incorrect RFID detection, two animals simultaneously entering the operant box, the system registering an animal as present when the box is empty, or the system failing to detect an animal that is actually inside.
+
 
 ---
 
@@ -77,14 +83,14 @@ Thanks to this rule, no matter what microcontroller you plug into that specific 
 | **`MOTOR1_CORRIDOR_INDEX`** | `4` | Pin channel for Corridor Door 1 Servo |
 | **`MOTOR2_CORRIDOR_INDEX`** | `5` | Pin channel for Corridor Door 2 Servo |
 | **`VISIBLE_LIGHT_CORRIDOR_INDEX`** | `6` | Pin channel for White LED illumination strip |
-| **`IR_LIGHT_CORRIDOR_INDEX`**| `7` | Pin channel for Infrared LED arrays |
+| **`IR_LIGHT_CORRIDOR_INDEX`**| `0` | Pin channel for Infrared LED arrays |
 | **`SCALE_ADDRESS`** | `0x48` | Onboard scale/load cell amplifier address |
 | **`TEMP_SENSOR_ADDRESS`** | `0x44` | Ambient temperature sensor address |
 | **`CHIP_BOX_ADDRESS`** | `0x6a` | Main I2C chip address on the Box Board |
 | **`MOTOR1_BOX_INDEX`** | `4` | Pin channel for Box Module Servo 1 |
 | **`MOTOR2_BOX_INDEX`** | `5` | Pin channel for Box Module Servo 2 |
 | **`VISIBLE_LIGHT_BOX_INDEX`** | `6` | Pin channel for Box Visible light |
-| **`IR_LIGHT_BOX_INDEX`** | `7` | Pin channel for Box IR light |
+| **`IR_LIGHT_BOX_INDEX`** | `0` | Pin channel for Box IR light |
 
 
 ---

@@ -37,7 +37,7 @@ Some initial settings must be configured before the system can be used.  Navigat
 *   **`DEVICE ADDRESSES`:** Hardware indexing parameters. Use this section to remap camera IDs or servo motors IDs.
 
 
-[BACKUP]: /system_operation/system.md
+[BACKUP]: /preparation/backup.md
 [TELEGRAM]: /preparation/telegram.md
 [REMOTE]: /preparation/heartbeat.md
 [ALARM]: /troubleshooting/alarm.md

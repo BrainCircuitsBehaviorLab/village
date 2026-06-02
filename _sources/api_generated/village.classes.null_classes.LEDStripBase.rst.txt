@@ -6,7 +6,6 @@ LEDStripBase
 .. autoclass:: LEDStripBase
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ LEDStripBase
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~LEDStripBase.__init__
       ~LEDStripBase.clear_strip
@@ -28,6 +28,7 @@ LEDStripBase
    .. rubric:: Attributes
 
    .. autosummary::
+      :no-index:
    
       ~LEDStripBase.error
       ~LEDStripBase.num_leds

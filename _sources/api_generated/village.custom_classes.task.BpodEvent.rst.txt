@@ -6,7 +6,6 @@ BpodEvent
 .. autoclass:: BpodEvent
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ BpodEvent
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~BpodEvent.__init__
       ~BpodEvent.is_condition
@@ -32,6 +32,7 @@ BpodEvent
    .. rubric:: Attributes
 
    .. autosummary::
+      :no-index:
    
       ~BpodEvent.BNC1High
       ~BpodEvent.BNC1Low

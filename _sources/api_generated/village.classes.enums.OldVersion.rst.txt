@@ -6,7 +6,6 @@ OldVersion
 .. autoclass:: OldVersion
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ OldVersion
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~OldVersion.keys
       ~OldVersion.values
@@ -28,6 +28,7 @@ OldVersion
    .. rubric:: Attributes
 
    .. autosummary::
+      :no-index:
    
       ~OldVersion.OFF
       ~OldVersion.V01

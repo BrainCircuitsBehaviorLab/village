@@ -6,7 +6,6 @@ OnlinePlotBase
 .. autoclass:: OnlinePlotBase
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ OnlinePlotBase
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~OnlinePlotBase.__init__
       ~OnlinePlotBase.close

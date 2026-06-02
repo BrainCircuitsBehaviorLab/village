@@ -6,7 +6,6 @@ MotorOld
 .. autoclass:: MotorOld
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ MotorOld
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~MotorOld.__init__
       ~MotorOld.close

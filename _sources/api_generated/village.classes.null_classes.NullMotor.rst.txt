@@ -6,7 +6,6 @@ NullMotor
 .. autoclass:: NullMotor
    :members:
    :show-inheritance:
-   :inherited-members:
 
    
    .. automethod:: __init__
@@ -15,6 +14,7 @@ NullMotor
    .. rubric:: Methods
 
    .. autosummary::
+      :no-index:
    
       ~NullMotor.__init__
       ~NullMotor.close
@@ -27,6 +27,7 @@ NullMotor
    .. rubric:: Attributes
 
    .. autosummary::
+      :no-index:
    
       ~NullMotor.close_angle
       ~NullMotor.error
