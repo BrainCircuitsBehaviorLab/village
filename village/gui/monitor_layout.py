@@ -35,7 +35,7 @@ from village.classes.enums import (
     Info,
     ScreenActive,
 )
-from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.chip import (
     Motor,
@@ -292,6 +292,17 @@ class LabelButtons:
             coords = settings.get(self.name)
             coords = list(coords)
             coords[self.index] = int(self.label_value)
+            if self.direction in ["empty_limit", "subject_limit"]:
+                if coords[0] >= coords[1]:
+                    self.label_value = settings.get(self.name)[self.index]
+                    self.label3.setText(str(self.label_value))
+                    return
+            else:
+                left, top, right, bottom = coords[0], coords[1], coords[2], coords[3]
+                if right <= left or bottom <= top:
+                    self.label_value = settings.get(self.name)[self.index]
+                    self.label3.setText(str(self.label_value))
+                    return
             settings.set(self.name, coords)
 
         cam_corridor.change = True
@@ -1114,7 +1125,7 @@ class VirtualMouseLayout(Layout):
                 )
                 self.buttons.append(button)
 
-        self._anm: AutoNoMouse_Base | None = None
+        self._anm: AutoNoMouseBase | None = None
 
         if settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON:
             self.auto_no_mouse_button = self.create_and_add_button(

@@ -118,23 +118,9 @@ class Task:
         Object that holds all the session parameters defined in the training
         protocol. Read and write its attributes to implement adaptive training.
 
-    self.sound_calibration.get_sound_gain(speaker, dB, sound_name)
-        to convert a target dB level into a hardware gain value.
-
-        Example::
-
-            gain = self.sound_calibration.get_sound_gain(
-                speaker=1, dB=65.0, sound_name="white_noise"
-            )
-
-    self.bpod_water_calibration.get_valve_time(port, volume)
-        to convert a target volume (µl) into the valve open time (seconds).
-
-        Example::
-
-            valve_time = self.bpod_water_calibration.get_valve_time(
-                port=1, volume=5.0  # 5 µl
-            )
+    self.calibrations : Calibrations
+        Object that holds the task's calibrations. Call its methods to convert
+        between hardware values and real-world units.
 
     self.bpod : BpodController
         Low-level Bpod interface (state machine construction, sending, etc.).

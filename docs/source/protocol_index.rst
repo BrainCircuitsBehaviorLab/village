@@ -9,10 +9,11 @@ PROTOCOL & TASK DESIGN
 .. toctree::
     :maxdepth: 1
 
-    protocols/using.md
     protocols/creating.md
     protocols/task.md
     protocols/functions.md
-    protocols/data.md
+    protocols/camera.md
     protocols/plots.md
-    protocols/triggers.md
+    protocols/scheduled.md
+    protocols/calibrations.md
+    protocols/auto.md

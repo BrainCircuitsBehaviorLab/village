@@ -1,3 +1,4 @@
+import threading
 import traceback
 
 from PCA9685_smbus2 import PCA9685  # type: ignore
@@ -61,25 +62,34 @@ class Motor:
         ticks = self.servo_pulse(pulse_ms)
         self.pwm.set_pwm(self.channel, 0, ticks)
 
+    def disable(self) -> None:
+        """Stops PWM signal to release holding torque."""
+        self.pwm.set_pwm(self.channel, 0, 4096)
+
     def open(self) -> None:
         """Moves the motor to the open position."""
         self.move(self.open_angle)
+        threading.Timer(1.0, self.disable).start()
 
     def close(self) -> None:
         """Moves the motor to the close position."""
         self.move(self.close_angle)
+        threading.Timer(1.0, self.disable).start()
 
 
 class LED:
-    def __init__(self, channel: int, nchannels: int, pwm) -> None:
+    def __init__(self, channel: int, led_strip: bool, pwm) -> None:
         self.channel = channel
-        self.nchannels = nchannels
+        self.led_strip = led_strip
         self.pwm = pwm
 
     def set(self, value: float) -> None:
         ticks = int(4095 * value)
-        for c in range(self.channel, self.channel + self.nchannels):
-            pwm_corridor.set_pwm(self.channel, 0, ticks)
+        if self.led_strip:
+            self.pwm.set_pwm(self.channel, 0, ticks)
+        else:
+            for c in range(self.channel, self.channel + 4):
+                self.pwm.set_pwm(c, 0, (4095 - ticks))
 
     def on(self) -> None:
         """Turns the LED on."""
@@ -139,11 +149,11 @@ motor_box2 = get_motor(
     settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_VALUES"), pwm_box
 )
 visible_light_corridor = LED(
-    settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"), 1, pwm_corridor
+    settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"), True, pwm_corridor
 )
-ir_light_corridor = LED(settings.get("IR_LIGHT_CORRIDOR_INDEX"), 4, pwm_corridor)
-visible_light_box = LED(settings.get("VISIBLE_LIGHT_BOX_INDEX"), 1, pwm_box)
-ir_light_box = LED(settings.get("IR_LIGHT_BOX_INDEX"), 4, pwm_box)
+ir_light_corridor = LED(settings.get("IR_LIGHT_CORRIDOR_INDEX"), False, pwm_corridor)
+visible_light_box = LED(settings.get("VISIBLE_LIGHT_BOX_INDEX"), True, pwm_box)
+ir_light_box = LED(settings.get("IR_LIGHT_BOX_INDEX"), False, pwm_box)
 
 if old_version_motor:
     motor_corridor1 = get_motor_old(

@@ -8,8 +8,9 @@
 
 import os
 import sys
-import setuptools_scm  # type: ignore
 from unittest.mock import MagicMock
+
+import setuptools_scm  # type: ignore
 
 
 # Manually mock PyQt5 to avoid infinite recursion in sphinx-autodoc-typehints
@@ -49,6 +50,52 @@ sys.modules["PyQt5.QtCore"] = mock_core
 sys.modules["PyQt5.QtGui"] = MagicMock()
 sys.modules["PyQt5.QtWidgets"] = MagicMock()
 
+# Mock controllers and hardware-specific modules that create hardware connections
+# at module-level import time. These only run on Raspberry Pi and fail on macOS
+# with OSError [Errno 45] or ModuleNotFoundError for Linux-only libraries.
+sys.modules["village.controllers.arduino_controller"] = MagicMock()
+sys.modules["village.controllers.bpod_controller"] = MagicMock()
+
+_hardware_village_modules = [
+    "village.classes.abstract_classes",
+    "village.calibration.bpod_water_calibration",
+    "village.calibration.camera_calibration",
+    "village.calibration.sound_calibration",
+    "village.custom_classes.calibration_base",
+    "village.devices.camera",
+    "village.devices.led_strip",
+    "village.devices.rfid",
+    "village.devices.telegram_bot",
+    "village.gui.calibration_layout",
+    "village.gui.data_layout",
+    "village.gui.gui",
+    "village.gui.gui_window",
+    "village.gui.layout",
+    "village.gui.main_layout",
+    "village.gui.monitor_layout",
+    "village.gui.settings_layout",
+    "village.gui.tasks_layout",
+    "village.main",
+    "village.manager",
+    "village.screen.behavior_window",
+    "village.scripts.import_all",
+]
+import types as _types
+
+for _mod_name in _hardware_village_modules:
+    _mod = sys.modules.get(_mod_name)
+    if _mod is None:
+        _stub = _types.ModuleType(_mod_name)
+        _stub.__all__ = []
+        _stub.__path__ = []
+        # Allow `from stub_module import AnyName` (non-dunder only)
+        def _stub_getattr(name, _n=_mod_name):
+            if name.startswith("__") and name.endswith("__"):
+                raise AttributeError(name)
+            return type(name, (), {"__module__": _n})
+        _stub.__getattr__ = _stub_getattr
+        sys.modules[_mod_name] = _stub
+
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
 autodoc_mock_imports = [
@@ -77,6 +124,8 @@ autodoc_mock_imports = [
     "gpiod",
     "picamera2",
     "libcamera",
+    "PCA9685_smbus2",
+    "pi5neo",
 ]
 
 # Add the module path to sys.path here.
@@ -119,6 +168,7 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinxcontrib.video",
     "sphinx_sitemap",
+    "sphinx_design",
     "myst_parser",
     "nbsphinx",
 ]
@@ -143,7 +193,6 @@ myst_enable_extensions = [
 # Automatically add anchors to markdown headings
 myst_heading_anchors = 3
 
-suppress_warnings = ["autosummary", "ref.duplicate"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -179,7 +228,7 @@ html_theme_options = {
     "color_mode": "light",
     "github_url": "https://github.com/BrainCircuitsBehaviorLab/village",
     "nav_links": [
-        {"title": "Documentation", "url": "initial_setup/prerequisites"},
+        {"title": "Documentation", "url": "overview/system"},
         {"title": "API", "url": "api_index"},
         {"title": "Resources", "url": "resources/list_of_parts"},
         {"title": "FAQ", "url": "faq/faq"},
@@ -210,6 +259,7 @@ sitemap_url_scheme = "{link}"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.svg"
 html_css_files = ["custom.css"]
+html_js_files = ["lightbox.js"]
 
 # Ignore links and anchors
 linkcheck_ignore = [
@@ -223,4 +273,11 @@ linkcheck_anchors_ignore_for_url = [
 
 autosectionlabel_prefix_document = True
 
-suppress_warnings = ["docutils", "image.not_readable", "myst.header"]
+suppress_warnings = [
+    "docutils",
+    "image.not_readable",
+    "myst.header",
+    "autosummary",
+    "ref.duplicate",
+    "ref.python",
+]

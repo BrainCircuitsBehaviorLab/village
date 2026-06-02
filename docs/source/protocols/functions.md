@@ -1,1 +1,1 @@
-## Core, Audio & Video Functions
+## Direct, Audio & Video Functions

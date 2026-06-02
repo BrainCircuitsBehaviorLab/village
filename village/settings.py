@@ -183,7 +183,7 @@ no backup is found.""",
         int,
         """Maximum time allowed (in seconds) to sync data. If synchronization is
 not completed within this time, the process will stop to allow other animals to access
-the behavioral box.""",
+the operant box.""",
     ),
     Setting(
         "SYNC_DESTINATION",
@@ -230,7 +230,7 @@ device_settings = [
     ),
     Setting(
         "IR_LIGHT_CORRIDOR_INDEX",
-        7,
+        0,
         int,
         "The index of the infrared light of the corridor.",
     ),
@@ -247,7 +247,7 @@ device_settings = [
     ),
     Setting(
         "IR_LIGHT_BOX_INDEX",
-        7,
+        0,
         int,
         "The index of the infrared light of the box.",
     ),
@@ -281,7 +281,7 @@ specified number of hours.""",
         6,
         int,
         """Checked hourly. This alarm is triggered if no session is performed in the
-behavioral box within a specified number of hours.""",
+operant box within a specified number of hours.""",
     ),
 ]
 
@@ -306,7 +306,7 @@ triggered.""",
         400,
         int,
         """This check is performed every time the system switches between day and night.
-If any animal drinks less than the specified minimum water intake (in mL) over a 24-hour
+If any animal drinks less than the specified minimum water intake (in µL) over a 24-hour
 period, an alarm is triggered.""",
     ),
 ]
@@ -393,18 +393,16 @@ corridor_settings = [
         "08:00",
         str,
         """This setting defines when the daytime cycle begins. At the start of each
-cycle, the system performs various checks. The entry plot for the behavioral box uses
-this value to distinguish between day and night periods. If lighting conditions differ
-between day and night, the system will adjust detection thresholds accordingly.""",
+cycle, the system performs various checks. The lights in the corridor will be adjusted
+accordingly if they are in AUTO mode.""",
     ),
     Setting(
         "NIGHTTIME",
         "20:00",
         str,
         """This setting defines when the nighttime cycle begins. At the start of each
-cycle, the system performs various checks. The entry plot for the behavioral box uses
-this value to distinguish between day and night periods. If lighting conditions differ
-between day and night, the system will adjust detection thresholds accordingly.""",
+cycle, the system performs various checks. The lights in the corridor will be adjusted
+accordingly if they are in AUTO mode.""",
     ),
     Setting(
         "DETECTION_COLOR",
@@ -498,9 +496,9 @@ preventing unnecessary processing.""",
 controller_settings = [
     Setting(
         "BEHAVIOR_CONTROLLER",
-        "BPOD",
+        "RASPBERRY",
         ControllerEnum,
-        """The controller used to run the behavioral box. The options are:
+        """The controller used to run the operant box. The options are:
         BPOD: The Bpod controller. ARDUINO: A custom controller that can be
         Arduino based. RASPBERRY: No need for an external controller.
         """,
@@ -509,12 +507,11 @@ controller_settings = [
         "CONTROLLER_PORT",
         "/dev/controller",
         str,
-        """The USB serial port of the controller device
-(e.g., Bpod, Arduino-compatible board...). Set this to the device path in /dev/.
-Note: USB serial device names (e.g., ttyACM0, ttyACM1) may change each time the system
-boots or if multiple devices are connected. To ensure a consistent device name,
-it is recommended to create a symbolic link using udev rules. See the documentation
-section "Udev rules for consistent USB device naming" for detailed instructions.
+        """The USB serial port path of the controller device (e.g., Bpod,
+Arduino-compatible board). By default, this is set to '/dev/controller'. The system
+features a pre-configured udev rule that automatically generates this consistent
+symbolic link, so no manual configuration is required. Simply ensure the controller is
+plugged into the designated USB port as specified in the hardware guide.
 """,
     ),
 ]
@@ -581,7 +578,7 @@ detection threshold.""",
         [400, 300, 500, 350, 100],
         list[int],
         """The fourth area of the corridor, located between the second door and the
-behavioral box. Values include left, top, right, and bottom coordinates, along with the
+operant box. Values include left, top, right, and bottom coordinates, along with the
 detection threshold.""",
     ),
     Setting(

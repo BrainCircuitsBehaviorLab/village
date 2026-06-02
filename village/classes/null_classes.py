@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import QWidget
 
 from village.classes.enums import Active
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
-from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
@@ -258,9 +257,9 @@ class NullCamera:
     trial: int = -1
     is_recording: bool = False
     show_time_info: bool = False
+    timing: int = 0
     x_position: int = -1
     y_position: int = -1
-    chrono = time_utils.Chrono()
     trigger_event = threading.Event()
     items_to_draw: dict[str, Any]
 

@@ -12,6 +12,29 @@ from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
+_WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+
+def convert_active(value: str) -> str:
+    """Normalise an 'active' schedule value for storage.
+
+    Accepts the new pipe-separated hour format, legacy hyphen-separated day
+    format, ON/OFF variants, and empty strings.
+    """
+    value = value.strip()
+    if not value:
+        return "ON"
+    if value in ("ON", "On", "on"):
+        return "ON"
+    if value in ("OFF", "Off", "off"):
+        return "OFF"
+    if "|" in value:
+        return value
+    days = [day.strip() for day in value.split("-")]
+    if all(day in _WEEKDAYS for day in days):
+        return "-".join(days)
+    return "OFF"
+
 
 class Collection:
     """Manages a collection of data entries stored in a CSV file and a pandas DataFrame.
@@ -36,7 +59,8 @@ class Collection:
         self.columns: list[str] = columns
         self.types: list[Type] = types
         self.dict = {col: t for col, t in zip(self.columns, self.types)}
-        self.path: Path = Path(settings.get("SYSTEM_DIRECTORY")) / (name + ".csv")
+        filename = name if name.endswith(".csv") else name + ".csv"
+        self.path: Path = Path(settings.get("SYSTEM_DIRECTORY")) / filename
         self.df = pd.DataFrame()
 
         if name != "":
@@ -213,30 +237,17 @@ class Collection:
 
         if "next_session_time" in new_df.columns:
             new_df["next_session_time"] = pd.to_datetime(
-                new_df["next_session_time"], format="%Y-%m-%d %H:%M:%S", errors="coerce"
+                new_df["next_session_time"], format="mixed", errors="coerce"
             )
             new_df["next_session_time"] = new_df["next_session_time"].fillna(
-                time_utils.now()
+                time_utils.now().replace(microsecond=0)
             )
 
         for col in new_df.columns:
-            if new_df[col].dtype == "datetime64[ns]":
+            if pd.api.types.is_datetime64_any_dtype(new_df[col]):
                 new_df[col] = new_df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
 
         if "active" in new_df.columns:
-            weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-
-            def convert_active(value) -> str:
-                value = value.strip()
-                if value in ("ON", "On", "on"):
-                    return "ON"
-                else:
-                    days = [day.strip() for day in value.split("-")]
-                    if all(day in weekdays for day in days):
-                        return "-".join(days)
-                    else:
-                        return "OFF"
-
             new_df["active"] = new_df["active"].apply(convert_active)
 
         if "next_settings" in new_df.columns:

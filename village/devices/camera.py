@@ -113,7 +113,6 @@ class Camera:
         x_position (int): Centroid X coordinate.
         y_position (int): Centroid Y coordinate.
         frames (list[int]): List of frame numbers.
-        timings (list[int]): List of timings.
         trials (list[int]): List of trial numbers.
         annotations (list[str]): List of annotations.
         x_positions (list[int]): List of X positions.
@@ -128,7 +127,7 @@ class Camera:
         scale (float): Font scale.
         thickness_text (int): Font thickness.
         frame_number (int): Current frame number.
-        chrono (time_utils.Chrono): Chronometer for timing.
+        camera_timestamp_start (float): Start timestamp for recording.
         masks (list): Detection masks for each area.
         counts (list[int]): Pixel counts for each area.
         error (str): Error message.
@@ -212,7 +211,6 @@ class Camera:
         self.x_position = -1
         self.y_position = -1
         self.frames: list[int] = []
-        self.timings: list[int] = []
         self.trials: list[int] = []
         self.annotations: list[str] = []
         self.x_positions: list[int] = []
@@ -251,7 +249,7 @@ class Camera:
             self.thickness_text = 2
 
         self.frame_number = 0
-        self.chrono = time_utils.Chrono()
+        self.camera_timestamp_start = 0.0
 
         self.masks: list[Any] = [-1, -1, -1, -1]
         self.counts: list[int] = [-1, -1, -1, -1]
@@ -378,7 +376,7 @@ class Camera:
         """
         self.filename = os.path.splitext(os.path.basename(path_video))[0]
         time_start = time_utils.now_string_for_filename()
-        self.chrono.reset()
+        self.camera_timestamp_start = 0.0
         if path_video != "":
             self.path_video = path_video
             self.path_csv = path_csv
@@ -415,13 +413,13 @@ class Camera:
         self.annotation = ""
         self.trial = 0
         self.frames = []
-        self.timings = []
         self.camera_timestamps = []
         self.x_positions = []
         self.y_positions = []
         self.trials = []
         self.annotations = []
         self.frame_number = 0
+        self.camera_timestamp_start = 0.0
         self.error = ""
         self.filename = ""
         self.x_position = -1
@@ -430,7 +428,6 @@ class Camera:
         self.area2_is_triggered = False
         self.area3_is_triggered = False
         self.area4_is_triggered = False
-        self.chrono.reset()
         self.camera_timestamp = time_utils.now_timestamp()
 
     def save_csv(self) -> None:
@@ -440,7 +437,6 @@ class Camera:
 
         if self.tracking:
             frames = tuple(self.frames)
-            timings = tuple(self.timings)
             trials = tuple(self.trials)
             annotations = tuple(self.annotations)
             x_positions = tuple(self.x_positions)
@@ -450,7 +446,6 @@ class Camera:
             rows = list(
                 zip(
                     frames,
-                    timings,
                     trials,
                     annotations,
                     camera_timestamps,
@@ -463,7 +458,6 @@ class Camera:
                 rows,
                 columns=[
                     "frame",
-                    "ms",
                     "trial",
                     "annotation",
                     "timestamp",
@@ -474,7 +468,6 @@ class Camera:
 
         else:
             frames = tuple(self.frames)
-            timings = tuple(self.timings)
             trials = tuple(self.trials)
             annotations = tuple(self.annotations)
             camera_timestamps = tuple(self.camera_timestamps)
@@ -482,7 +475,6 @@ class Camera:
             rows = list(
                 zip(
                     frames,
-                    timings,
                     trials,
                     annotations,
                     camera_timestamps,
@@ -493,7 +485,6 @@ class Camera:
                 rows,
                 columns=[
                     "frame",
-                    "ms",
                     "trial",
                     "annotation",
                     "timestamp",
@@ -546,7 +537,6 @@ class Camera:
             self.set_properties()
             self.change = False
         self.frame_number += 1
-        self.timing = self.chrono.get_milliseconds()
 
         with MappedArray(request, "main") as m:
             self.frame = m.array
@@ -555,6 +545,11 @@ class Camera:
                 sensor_timestamp = metadata["SensorTimestamp"]
                 self.camera_timestamp = time_utils.monotonic_ns_to_timestamps(
                     sensor_timestamp
+                )
+                if self.is_recording and self.camera_timestamp_start == 0.0:
+                    self.camera_timestamp_start = self.camera_timestamp
+                self.timing = int(
+                    (self.camera_timestamp - self.camera_timestamp_start) * 1000
                 )
                 self.get_gray_frame()
                 self.detect_and_trigger()
@@ -654,8 +649,13 @@ class Camera:
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
                 roi = self.gray_frame[y1:y2, x1:x2]
+                if roi.size == 0:
+                    self.masks[index] = -1
+                    self.counts[index] = -1
+                    continue
                 threshold = self.thresholds[index]
                 _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
+                roi_bin = np.asarray(roi_bin, dtype=np.uint8)
                 sub = mask[y1:y2, x1:x2]
                 np.maximum(sub, roi_bin, out=sub)
                 self.masks[index] = roi_bin
@@ -725,8 +725,13 @@ class Camera:
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
                 roi = self.gray_frame[y1:y2, x1:x2]
+                if roi.size == 0:
+                    self.masks[index] = -1
+                    self.counts[index] = -1
+                    continue
                 threshold = self.thresholds[index]
                 _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
+                roi_bin = np.asarray(roi_bin, dtype=np.uint8)
                 sub = mask[y1:y2, x1:x2]
                 np.maximum(sub, roi_bin, out=sub)
                 self.masks[index] = roi_bin
@@ -950,7 +955,6 @@ class Camera:
         """Appends current frame data to internal lists for CSV export."""
         if self.is_recording:
             self.frames.append(self.frame_number)
-            self.timings.append(self.timing)
             self.trials.append(self.trial)
             self.annotations.append(self.annotation)
             self.camera_timestamps.append(self.camera_timestamp)

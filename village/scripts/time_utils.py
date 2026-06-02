@@ -172,7 +172,10 @@ class TimeUtils:
         Returns:
             datetime.datetime: Parsed datetime object.
         """
-        return datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+        try:
+            return datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            return datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S.%f")
 
     def time_from_setting_string(self, string: str) -> datetime.time:
         """Parses a time string from settings.

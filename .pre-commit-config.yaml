@@ -3,6 +3,8 @@ exclude: 'conf\.py|^village/pybpodapi/v2\.(2|3)/'
 # Configuring https://pre-commit.ci/
 ci:
     autoupdate_schedule: monthly
+    skip:
+      - pytest-unit
 
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -47,3 +49,11 @@ repos:
       - id: codespell
         additional_dependencies:
         - tomli
+    - repo: local
+      hooks:
+      - id: pytest-unit
+        name: Run unit tests
+        entry: python -m pytest tests/test_unit/ --no-cov -q
+        language: system
+        pass_filenames: false
+        always_run: true

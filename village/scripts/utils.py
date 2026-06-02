@@ -5,7 +5,7 @@ import re
 import shutil
 import subprocess
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
 from pathlib import Path
 from typing import Any
@@ -59,8 +59,13 @@ def change_system_directory_settings() -> None:
         try:
             os.rename(old_system_directory, new_system_directory)
         except Exception:
-            pass
+            logging.warning(
+                "Could not rename system directory from %s to %s",
+                old_system_directory,
+                new_system_directory,
+            )
 
+    Path(new_system_directory).mkdir(parents=True, exist_ok=True)
     settings.set("SYSTEM_DIRECTORY", new_system_directory)
 
 
@@ -169,117 +174,109 @@ def download_github_repositories(repositories: list[str]) -> None:
         change_directory_settings(new_path=new_path)
 
 
-def is_active_regular(value: str) -> bool:
-    """Checks if the current day allows activity based on a simple schedule.
+_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+_ALL_HOURS: frozenset[int] = frozenset(range(24))
 
-    Args:
-        value (str): "ON", "OFF", or a hyphen-separated list of active days
-                     (e.g., "Mon-Wed-Fri").
 
-    Returns:
-        bool: True if active today, False otherwise.
+def _hours_spec_to_set(spec: str) -> frozenset[int]:
+    """Parse a comma-separated hour-range spec into a frozenset of hours.
+
+    Example: "8-11,16-23" -> frozenset({8,9,10,11,16,...,23})
     """
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    weekday_number = time_utils.now().weekday()
-    today = days[weekday_number]
+    hours: set[int] = set()
+    for part in spec.split(","):
+        part = part.strip()
+        if "-" in part:
+            start, end = part.split("-", 1)
+            hours.update(range(int(start), int(end) + 1))
+        elif part.isdigit():
+            hours.add(int(part))
+    return frozenset(hours)
 
+
+def _hours_set_to_spec(hours: frozenset[int] | set[int]) -> str | None:
+    """Convert a set of active hours to a compact range spec.
+
+    Returns None if all 24 hours are active (no spec needed).
+    Example: {8,9,10,11,16,...,23} -> "8-11,16-23"
+    """
+    if frozenset(hours) == _ALL_HOURS:
+        return None
+    if not hours:
+        return ""
+    sorted_h = sorted(hours)
+    ranges = []
+    start = end = sorted_h[0]
+    for h in sorted_h[1:]:
+        if h == end + 1:
+            end = h
+        else:
+            ranges.append(f"{start}-{end}" if start != end else str(start))
+            start = end = h
+    ranges.append(f"{start}-{end}" if start != end else str(start))
+    return ",".join(ranges)
+
+
+def _parse_schedule(value: str) -> dict[str, frozenset[int]]:
+    """Parse a schedule string into {day: frozenset_of_active_hours}.
+
+    Formats:
+      "Mon|Tue:8-11,16-23|Wed"  new format (pipe-separated, hour ranges)
+      "Mon-Wed-Fri"              legacy format (all 24 hours for each day)
+    """
+    schedule: dict[str, frozenset[int]] = {}
+    if "|" in value or ":" in value:
+        parts = value.split("|")
+    else:
+        parts = [p for p in value.split("-") if p in _DAYS]
+    for part in parts:
+        if ":" in part:
+            day, hours_spec = part.split(":", 1)
+            if day in _DAYS:
+                schedule[day] = _hours_spec_to_set(hours_spec)
+        elif part in _DAYS:
+            schedule[part] = _ALL_HOURS
+    return schedule
+
+
+def is_active_regular(value: str) -> bool:
+    """Return True if the current calendar day is scheduled as active."""
     if value == "ON":
         return True
-    elif today in value.split("-"):
-        return True
-    else:
+    if value == "OFF":
         return False
+    today = _DAYS[time_utils.now().weekday()]
+    return today in _parse_schedule(value)
 
 
 def is_active(value: str) -> bool:
-    """Check if a schedule string dictates activity at the current time.
-
-    The value can be "ON", "OFF", or a range of days (e.g., "Mon-Fri").
-    Uses DAYTIME and NIGHTTIME settings to determine active hours within those days.
-
-    Args:
-        value (str): The schedule string to evaluate.
-
-    Returns:
-        bool: True if active right now, False otherwise.
-    """
+    """Return True if the current hour is within the scheduled active hours."""
     if value == "ON":
         return True
-    elif value == "OFF":
+    if value == "OFF":
         return False
-
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     now = time_utils.now()
-    day_init_time = time_utils.time_from_setting_string(settings.get("DAYTIME"))
-    night_init_time = time_utils.time_from_setting_string(settings.get("NIGHTTIME"))
-    first_init_time = min([day_init_time, night_init_time])
-
-    active_days = value.split("-")
-    active_time_ranges = []
-
-    for day in active_days:
-        day_index = days.index(day)
-        day_date = time_utils.date_from_previous_weekday(day_index)
-        range_24 = time_utils.range_24_hours(day_date, first_init_time)
-        active_time_ranges.append(range_24)
-
-    for start_time, end_time in active_time_ranges:
-        if start_time <= now <= end_time:
-            return True
-
-    return False
+    today = _DAYS[now.weekday()]
+    schedule = _parse_schedule(value)
+    if today not in schedule:
+        return False
+    return now.hour in schedule[today]
 
 
-def calculate_active_hours(df: pd.DataFrame) -> dict[str, int]:
-    """Calculates the total active hours for different entities based on a DataFrame.
-
-    The DataFrame is expected to have 'name' and 'active' columns.
-
-    Args:
-        df (pd.DataFrame): Input dataframe with schedule information.
-
-    Returns:
-        dict[str, int]: Dictionary mapping names to total active hours.
-    """
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    weekday_number = time_utils.now().weekday()
-    today = days[weekday_number]
-
-    result = {}
-
-    for _, row in df.iterrows():
-        name = row["name"]
-        active = row["active"]
-
-        active_time = 0
-
-        if active != "OFF":
-            if active == "ON":
-                active_days = "Mon-Tue-Wed-Thu-Fri-Sat-Sun"
-            else:
-                active_days = active.split("-")
-
-            if weekday_number == 0:
-                yesterday = days[6]
-                day_before_yesterday = days[5]
-            elif weekday_number == 1:
-                yesterday = days[0]
-                day_before_yesterday = days[6]
-            else:
-                yesterday = days[weekday_number - 1]
-                day_before_yesterday = days[weekday_number - 2]
-
-            if today in active_days:
-                time = time_utils.time_since_day_started()
-                active_time += int(time.total_seconds() / 3600)
-                if yesterday in active_days:
-                    active_time += 24
-                    if day_before_yesterday in active_days:
-                        active_time += 24
-
-        result[name] = active_time
-
-    return result
+def active_last_24_hours(value: str) -> bool:
+    """Return True if every hour in the last 24 h was scheduled as active."""
+    if value == "ON":
+        return True
+    if value == "OFF":
+        return False
+    now = time_utils.now()
+    schedule = _parse_schedule(value)
+    for delta in range(25):
+        check_dt = now - timedelta(hours=delta)
+        day_name = _DAYS[check_dt.weekday()]
+        if day_name not in schedule or check_dt.hour not in schedule[day_name]:
+            return False
+    return True
 
 
 def delete_all_elements_from_layout(layout: QLayout) -> None:

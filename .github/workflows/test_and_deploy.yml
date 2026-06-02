@@ -11,6 +11,8 @@ on:
 jobs:
   linting:
     runs-on: ubuntu-latest
+    env:
+      SKIP: pytest-unit
     steps:
       - uses: neuroinformatics-unit/actions/lint@v2
 

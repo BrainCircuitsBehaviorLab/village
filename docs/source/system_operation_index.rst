@@ -12,7 +12,11 @@ SYSTEM OPERATION
     system_operation/GUI.md
     system_operation/settings.md
     system_operation/subject.md
+    system_operation/manual.md
     system_operation/corridor.md
     system_operation/detection.md
-    system_operation/animal.md
-    system_operation/system.md
+    system_operation/toolbar.md
+    system_operation/touchscreen.md
+    system_operation/data.md
+    system_operation/timing.md
+    system_operation/state_machine.md

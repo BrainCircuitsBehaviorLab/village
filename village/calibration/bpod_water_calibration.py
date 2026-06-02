@@ -157,7 +157,7 @@ class BpodWaterCalibration(CalibrationBase):
         except Exception:
             raise ValueError(
                 f"\n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n\n"
-                f"Cannot provide a valid time for {volume} ul on port {port}.\n"
+                f"Cannot provide a valid time for {volume} µl on port {port}.\n"
                 f"1. Make sure you have calibrated the valves/pumps you are using.\n"
                 f"2. Make sure the volume is within calibration range.\n"
                 f"3. Check bpod_water_calibration.csv in 'data'.\n"

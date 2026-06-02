@@ -30,7 +30,7 @@ from village.classes.subject import Subject
 from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
 from village.custom_classes.after_session_base import AfterSessionBase
-from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
@@ -101,8 +101,8 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
-        self._auto_no_mouse_instances: dict[str, AutoNoMouse_Base] = {
-            "": AutoNoMouse_Base()
+        self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
+            "": AutoNoMouseBase()
         }
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
@@ -133,6 +133,7 @@ class Manager:
         self.cycle_change_detector = time_utils.CycleChangeDetector(
             settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
         )
+        utils.change_system_directory_settings()
         utils.download_github_repositories(settings.get("GITHUB_REPOSITORY_EXAMPLES"))
         utils.create_directories()
         self.create_collections()
@@ -173,14 +174,15 @@ class Manager:
         self.cam_box: Camera | NullCamera = NullCamera()
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
+        self.task.calibrations = self.calibrations
 
     @property
-    def auto_no_mouse(self) -> AutoNoMouse_Base:
+    def auto_no_mouse(self) -> AutoNoMouseBase:
         """Return the AutoNoMouse instance for the current task, or the generic one."""
         task_name = getattr(self.task, "name", "")
         return self._auto_no_mouse_instances.get(
             task_name
-        ) or self._auto_no_mouse_instances.get("", AutoNoMouse_Base())
+        ) or self._auto_no_mouse_instances.get("", AutoNoMouseBase())
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,
@@ -455,6 +457,7 @@ class Manager:
     def reset_subject_task_training(self) -> None:
         """Resets the subject, task, and training attributes to default states."""
         self.task = Task()
+        self.task.calibrations = self.calibrations
         self.subject = Subject()
         self.training.restore()
         self.max_time_counter = 1
@@ -585,6 +588,10 @@ class Manager:
         """Checks the state of the corridor lights and sets them based
         on the current cycle."""
         cycle = self.cycle_change_detector.cycle_text
+        log.info(
+            f"check_corridor_lights: visible={self.visible_corridor_cycle} "
+            f"ir={self.ir_corridor_cycle} cycle={cycle}"
+        )
 
         if self.visible_corridor_cycle == Cycle.ON:
             visible_light_corridor.on()
@@ -624,7 +631,7 @@ class Manager:
         elif self.visible_box_cycle == Cycle.OFF:
             visible_light_box.off()
         elif task_running:
-            visible_light_box
+            visible_light_box.on()
         else:
             visible_light_box.off()
 
@@ -728,7 +735,10 @@ class Manager:
         active_subjects = subjects.loc[
             subjects["active"].apply(utils.is_active), "name"
         ].tolist()
-        active_hours = utils.calculate_active_hours(subjects)
+        active_24h = {
+            row["name"]: utils.active_last_24_hours(row["active"])
+            for _, row in subjects.iterrows()
+        }
 
         report_text = "REPORT last " + str(hours) + "h\n\n"
         report_text += "state: " + self.state.name + ", subject: " + self.subject.name
@@ -744,13 +754,13 @@ class Manager:
                 detections_str = str(subject_detections[sub])
             except KeyError:
                 detections_str = "0"
-                if active_hours[sub] >= 23:
+                if active_24h.get(sub, False):
                     non_detected_subjects.append(sub)
             try:
                 sessions_str = str(subject_sessions[sub])
             except KeyError:
                 sessions_str = "0"
-                if active_hours[sub] >= 23:
+                if active_24h.get(sub, False):
                     non_session_subjects.append(sub)
             try:
                 water = subject_water[sub]
@@ -758,7 +768,7 @@ class Manager:
             except KeyError:
                 water = 0
                 water_str = "0"
-            if active_hours[sub] >= 23 and water < minimum_water:
+            if active_24h.get(sub, False) and water < minimum_water:
                 low_water_subjects.append(sub)
             try:
                 weight_str = str(round(subject_weight[sub], 2))
