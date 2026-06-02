@@ -67,7 +67,7 @@ class TrainingProtocolBase:
                 "The variable maximum_duration is required (must be a positive float)"
             )
 
-    # OVERWRITE THESE METHOD IN YOUR TRAINING PROTOCOL
+    # OVERWRITE THESE METHODS IN YOUR TRAINING PROTOCOL
     def default_training_settings(self) -> None:
         """Sets the default values for the training settings. Must be overridden."""
         raise TrainingError("The method default_training_settings(self) is required")

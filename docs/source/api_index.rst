@@ -1,8 +1,6 @@
 API
 ===
 
-.. currentmodule:: village
-
 .. autosummary::
    :toctree: api_generated
    :template: custom_module_template.rst

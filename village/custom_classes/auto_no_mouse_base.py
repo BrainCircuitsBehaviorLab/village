@@ -4,10 +4,10 @@ from collections import deque
 from village.custom_classes.task import Task
 
 
-class AutoNoMouse_Base:
+class AutoNoMouseBase:
     """Base class for automated task execution without a real animal.
 
-    To be subclassed in task folder.
+    Can be subclassed in your project/code folder.
     """
 
     def __init__(self) -> None:
@@ -33,7 +33,7 @@ class AutoNoMouse_Base:
         self.trace.clear()
         self.position = None
 
-    def _set_overlay(self, instance: "AutoNoMouse_Base | None") -> None:
+    def _set_overlay(self, instance: "AutoNoMouseBase | None") -> None:
         try:
             itd = self.task.cam_box.items_to_draw
             itd["auto_no_mouse"] = instance is not None

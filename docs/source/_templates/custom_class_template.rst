@@ -5,7 +5,6 @@
 .. autoclass:: {{ objname }}
    :members:
    :show-inheritance:
-   :inherited-members:
 
    {% block methods %}
    .. automethod:: __init__
@@ -14,6 +13,7 @@
    .. rubric:: {{ _('Methods') }}
 
    .. autosummary::
+      :no-index:
    {% for item in methods %}
       ~{{ name }}.{{ item }}
    {%- endfor %}
@@ -25,6 +25,7 @@
    .. rubric:: {{ _('Attributes') }}
 
    .. autosummary::
+      :no-index:
    {% for item in attributes %}
       ~{{ name }}.{{ item }}
    {%- endfor %}

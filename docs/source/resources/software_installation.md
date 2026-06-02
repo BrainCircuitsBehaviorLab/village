@@ -117,7 +117,7 @@ sudo raspi-config
 
 2. Go to `Advanced Options` and select X11 (instead of Wayland).
 
-Then, you need to configure the system to recognize a screen even if none is physically connected, so the software renders properly when accessed remotely. If you want to use an additional screen to present stimuli in the behavioral box, you need to set the system to work with two screens.
+Then, you need to configure the system to recognize a screen even if none is physically connected, so the software renders properly when accessed remotely. If you want to use an additional screen to present stimuli in the operant box, you need to set the system to work with two screens.
 
 3. Modify the file: `/boot/firmware/cmdline.txt`
 

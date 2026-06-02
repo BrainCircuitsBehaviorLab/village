@@ -37,6 +37,21 @@ To set up detection in the corridor, you must configure four distinct bounding b
 *   **`Area 3`:** Starts where Area 2 ends and extends to the second door. It should be large enough to fully contain one mouse but not exceed that size significantly. This is the area where the RFID reader is located.
 *   **`Area 4`:** Should cover the corridor section after the second door.
 
+```{image} /_static/areas.png
+:width: 40%
+:align: center
+```
+
+```{admonition} Important
+:class: tip
+Access is granted only when Areas 1, 2, and 4 are empty and Area 3 is occupied by
+exactly one animal. Consequently, Area 3 should be sized to fully accommodate a single
+animal while remaining small enough to make it harder for two animals to fit inside it
+simultaneously.
+That said, when animals are very close together it may be unavoidable that two of them
+are completely inside Area 3, which is why the system also enforces a maximum pixel
+count condition, described below.
+```
 
 The system classifies the occupancy of each area based on three key parameters:
 *   **`threshold`:** The numerical value that determines whether a pixel is classified as white or black. This parameter is adjusted independently for each area. It should be tuned so that when the area is completely empty, the detected pixel count is zero, and when an animal is present, it captures the maximum possible number of pixels.
@@ -68,7 +83,7 @@ Even with conservative thresholds, two animals can be misdetected as a single su
 
 <img src="/_static/entrances.png" class="zoomable" alt="entrances" />
 
-When an animal is detected by the RFID antenna, the system evaluates the real-time pixel status of all four regions. For the system to safely open the gate and permit entry into the behavioral arena, **Areas 1, 2, and 4 must be completely empty, and pixel detection must be restricted exclusively to Area 3**.
+When an animal is detected by the RFID antenna, the system evaluates the real-time pixel status of all four regions. For the system to safely open the gate and permit entry into the behavioral arena, **Areas 1, 2, and 4 must be empty (below empty_limit), and Area 3 must contain only one mouse (below subject_limit)**.
 
 These conditions must remain stable for a minimum hold-duration of **500 ms**, and no other RFID scans must have occurred within the previous 15 seconds. Both timing parameters can be customized under `SETTINGS` -> `CORRIDOR SETTINGS`.
 

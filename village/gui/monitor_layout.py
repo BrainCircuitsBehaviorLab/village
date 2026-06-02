@@ -34,7 +34,7 @@ from village.classes.enums import (
     Info,
     ScreenActive,
 )
-from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.chip import (
     Motor,
@@ -1123,7 +1123,7 @@ class VirtualMouseLayout(Layout):
                 )
                 self.buttons.append(button)
 
-        self._anm: AutoNoMouse_Base | None = None
+        self._anm: AutoNoMouseBase | None = None
 
         if settings.get("CAM_BOX_TRACKING_POSITION") == Active.ON:
             self.auto_no_mouse_button = self.create_and_add_button(

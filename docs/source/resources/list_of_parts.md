@@ -82,7 +82,7 @@ For a comprehensive, step-by-step walkthrough on assembling these components, pl
 
 
 
-[3D]: /_static_3d.zip/
+[3D]: /_static/3d.zip
 [CAD]: /_static/cad.zip
 [PCB]: /_static/pcb_boards.zip
 [ASSEMBLY]: /resources/hardware.md
