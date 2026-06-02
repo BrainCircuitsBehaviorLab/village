@@ -73,7 +73,11 @@ class AutoNoMouseBase:
         if self.task is None:
             return
         cam = self.task.cam_box
-        if not self._position_log or not hasattr(cam, "camera_timestamps"):
+        if not self._position_log or not (
+            hasattr(cam, "camera_timestamps")
+            and hasattr(cam, "x_positions")
+            and hasattr(cam, "y_positions")
+        ):
             return
 
         ts_log = [t for t, _, _ in self._position_log]
