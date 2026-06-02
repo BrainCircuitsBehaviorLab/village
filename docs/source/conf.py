@@ -80,13 +80,20 @@ _hardware_village_modules = [
     "village.screen.behavior_window",
     "village.scripts.import_all",
 ]
+import types as _types
+
 for _mod_name in _hardware_village_modules:
     _mod = sys.modules.get(_mod_name)
     if _mod is None:
-        import types as _types
         _stub = _types.ModuleType(_mod_name)
         _stub.__all__ = []
         _stub.__path__ = []
+        # Allow `from stub_module import AnyName` (non-dunder only)
+        def _stub_getattr(name, _n=_mod_name):
+            if name.startswith("__") and name.endswith("__"):
+                raise AttributeError(name)
+            return type(name, (), {"__module__": _n})
+        _stub.__getattr__ = _stub_getattr
         sys.modules[_mod_name] = _stub
 
 # Used when building API docs, put the dependencies

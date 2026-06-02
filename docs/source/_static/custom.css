@@ -1,3 +1,74 @@
+/* ── Unify all link/hover colors to site violet ─────────── */
+/* Overrides shibuya's built-in indigo (#6e56cf) with our violet */
+html.light {
+    --sy-c-link: #8B00FF;
+    --sy-c-link-hover: #6600CC;
+}
+html.dark {
+    --sy-c-link: #B366FF;
+    --sy-c-link-hover: #CC88FF;
+    --sy-c-background: #25252f;
+    /* Admonition backgrounds: override near-invisible dark surfaces */
+    --note-1: #0c1e3f;
+    --note-2: rgba(0, 144, 255, 0.18);
+    --important-1: #1e1040;
+    --important-2: rgba(110, 86, 207, 0.22);
+    --warning-1: #321500;
+    --warning-2: rgba(247, 107, 21, 0.22);
+    --tip-1: #0a2518;
+    --tip-2: rgba(0, 170, 100, 0.20);
+    --hint-1: #0a2518;
+    --hint-2: rgba(0, 170, 100, 0.20);
+    --danger-1: #2e0c0c;
+    --danger-2: rgba(220, 50, 50, 0.20);
+    --caution-1: #321500;
+    --caution-2: rgba(247, 107, 21, 0.22);
+    --error-1: #2e0c0c;
+    --error-2: rgba(220, 50, 50, 0.20);
+    --attention-1: #321500;
+    --attention-2: rgba(247, 107, 21, 0.22);
+    --seealso-1: #0c1e3f;
+    --seealso-2: rgba(0, 144, 255, 0.18);
+}
+
+/* ── Active top navbar link ────────────────────────────── */
+/* Colour + underline only — no font-weight change */
+.sy-head-links a.sy-nav-active {
+    color: #8B00FF !important;
+    border-bottom: 2px solid #8B00FF;
+    padding-bottom: 2px;
+}
+
+/* Dark mode: lighter purple */
+html.dark .sy-head-links a.sy-nav-active {
+    color: #B366FF !important;
+    border-bottom-color: #B366FF;
+}
+
+/* ── Remove rounded hover-background on active navbar link ─ */
+/* Prevents shibuya's border-radius:6px from curving our border-bottom */
+.sy-head-links .link:hover > a.sy-nav-active {
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}
+
+/* ── Sidebar section labels (dark mode) ────────────────── */
+html.dark .globaltoc .toctree-l1 > a {
+    color: #B366FF !important;
+}
+html.dark .globaltoc .toctree-l2 > a {
+    color: #B366FF !important;
+}
+
+/* ── List markers (dark mode) ──────────────────────────── */
+html.dark .yue ul > li::marker,
+html.dark ul.purple-bullets li::marker {
+    color: #B366FF !important;
+}
+html.dark .yue ol > li::marker {
+    color: #B366FF !important;
+}
+
 /* Lightbox overlay */
 #lb-overlay {
     display: none;
@@ -101,7 +172,6 @@ ul.purple-bullets li::marker {
     font-weight: 700;
     text-decoration: none !important;
     color: #8B00FF !important;
-    opacity: 0.85;
 }
 
 /* Level 2 (Initial Setup, System Operation, etc.): label, not clickable */
@@ -112,7 +182,6 @@ ul.purple-bullets li::marker {
     font-size: 0.82rem;
     text-decoration: none !important;
     color: #8B00FF !important;
-    opacity: 0.7;
     white-space: nowrap;
 }
 
