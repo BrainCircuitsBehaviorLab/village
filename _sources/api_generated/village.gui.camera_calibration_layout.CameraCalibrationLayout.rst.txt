@@ -1,0 +1,27 @@
+CameraCalibrationLayout
+=======================
+
+.. currentmodule:: village.gui.camera_calibration_layout
+
+.. autoclass:: CameraCalibrationLayout
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~CameraCalibrationLayout.__init__
+      ~CameraCalibrationLayout.draw
+      ~CameraCalibrationLayout.update_gui
+   
+   
+
+   
+   
+   

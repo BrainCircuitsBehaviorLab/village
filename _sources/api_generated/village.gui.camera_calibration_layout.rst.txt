@@ -1,0 +1,35 @@
+camera\_calibration\_layout
+===========================
+
+.. automodule:: village.gui.camera_calibration_layout
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      CameraCalibrationLayout
+      DiagnosticPlotsLayout
+   
+   
+
+   
+   
+   
+
+
+

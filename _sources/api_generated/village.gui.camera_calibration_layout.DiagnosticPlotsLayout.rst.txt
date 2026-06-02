@@ -1,0 +1,27 @@
+DiagnosticPlotsLayout
+=====================
+
+.. currentmodule:: village.gui.camera_calibration_layout
+
+.. autoclass:: DiagnosticPlotsLayout
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~DiagnosticPlotsLayout.__init__
+      ~DiagnosticPlotsLayout.draw
+      ~DiagnosticPlotsLayout.update
+   
+   
+
+   
+   
+   
