@@ -5,7 +5,6 @@ from threading import Event as ThEvent
 from threading import Thread
 
 from village.custom_classes.task import Task
-from village.devices.camera import Camera
 from village.scripts.time_utils import time_utils
 
 
@@ -74,7 +73,7 @@ class AutoNoMouseBase:
         if self.task is None:
             return
         cam = self.task.cam_box
-        if not self._position_log or not isinstance(cam, Camera):
+        if not self._position_log or not hasattr(cam, "camera_timestamps"):
             return
 
         ts_log = [t for t, _, _ in self._position_log]
