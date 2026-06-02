@@ -1,6 +1,6 @@
-## Soundcard & Touchscreen Integration
+## Sound & Touchscreen Integration
 
-### Soundcard Integration
+### Sound Integration
 
 The Training Village uses the **HiFiBerry DAC+ Pro** HAT for audio output. Connect it
 directly on top of the Raspberry Pi or on top of the Main HAT if one is installed. Audio

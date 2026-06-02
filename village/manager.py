@@ -30,7 +30,7 @@ from village.classes.subject import Subject
 from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
 from village.custom_classes.after_session_base import AfterSessionBase
-from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
@@ -101,8 +101,8 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
-        self._auto_no_mouse_instances: dict[str, AutoNoMouse_Base] = {
-            "": AutoNoMouse_Base()
+        self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
+            "": AutoNoMouseBase()
         }
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
@@ -177,12 +177,12 @@ class Manager:
         self.task.calibrations = self.calibrations
 
     @property
-    def auto_no_mouse(self) -> AutoNoMouse_Base:
+    def auto_no_mouse(self) -> AutoNoMouseBase:
         """Return the AutoNoMouse instance for the current task, or the generic one."""
         task_name = getattr(self.task, "name", "")
         return self._auto_no_mouse_instances.get(
             task_name
-        ) or self._auto_no_mouse_instances.get("", AutoNoMouse_Base())
+        ) or self._auto_no_mouse_instances.get("", AutoNoMouseBase())
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,

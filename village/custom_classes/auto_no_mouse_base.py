@@ -27,10 +27,10 @@ class AutonomouseParam:
         return max(self.min_val, min(self.max_val, self.type_(val)))
 
 
-class AutoNoMouse_Base:
+class AutoNoMouseBase:
     """Base class for automated task execution without a real animal.
 
-    To be subclassed in task folder.
+    Can be subclassed in your project/code folder.
     """
 
     TASK_NAME: str = ""  # to be set in subclass to restrict to a specific task
@@ -96,7 +96,7 @@ class AutoNoMouse_Base:
         cam.x_positions = new_x
         cam.y_positions = new_y
 
-    def _set_overlay(self, instance: "AutoNoMouse_Base | None") -> None:
+    def _set_overlay(self, instance: "AutoNoMouseBase | None") -> None:
         if self.task is None:
             return
         try:

@@ -50,10 +50,44 @@ sys.modules["PyQt5.QtCore"] = mock_core
 sys.modules["PyQt5.QtGui"] = MagicMock()
 sys.modules["PyQt5.QtWidgets"] = MagicMock()
 
-# Mock controllers that create hardware connections at module-level import time.
-# These only run on Raspberry Pi and fail on macOS with OSError [Errno 45].
+# Mock controllers and hardware-specific modules that create hardware connections
+# at module-level import time. These only run on Raspberry Pi and fail on macOS
+# with OSError [Errno 45] or ModuleNotFoundError for Linux-only libraries.
 sys.modules["village.controllers.arduino_controller"] = MagicMock()
 sys.modules["village.controllers.bpod_controller"] = MagicMock()
+
+_hardware_village_modules = [
+    "village.classes.abstract_classes",
+    "village.calibration.bpod_water_calibration",
+    "village.calibration.camera_calibration",
+    "village.calibration.sound_calibration",
+    "village.custom_classes.calibration_base",
+    "village.devices.camera",
+    "village.devices.led_strip",
+    "village.devices.rfid",
+    "village.devices.telegram_bot",
+    "village.gui.calibration_layout",
+    "village.gui.data_layout",
+    "village.gui.gui",
+    "village.gui.gui_window",
+    "village.gui.layout",
+    "village.gui.main_layout",
+    "village.gui.monitor_layout",
+    "village.gui.settings_layout",
+    "village.gui.tasks_layout",
+    "village.main",
+    "village.manager",
+    "village.screen.behavior_window",
+    "village.scripts.import_all",
+]
+for _mod_name in _hardware_village_modules:
+    _mod = sys.modules.get(_mod_name)
+    if _mod is None:
+        import types as _types
+        _stub = _types.ModuleType(_mod_name)
+        _stub.__all__ = []
+        _stub.__path__ = []
+        sys.modules[_mod_name] = _stub
 
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
@@ -127,6 +161,7 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinxcontrib.video",
     "sphinx_sitemap",
+    "sphinx_design",
     "myst_parser",
     "nbsphinx",
 ]
@@ -151,7 +186,6 @@ myst_enable_extensions = [
 # Automatically add anchors to markdown headings
 myst_heading_anchors = 3
 
-suppress_warnings = ["autosummary", "ref.duplicate"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -232,4 +266,11 @@ linkcheck_anchors_ignore_for_url = [
 
 autosectionlabel_prefix_document = True
 
-suppress_warnings = ["docutils", "image.not_readable", "myst.header"]
+suppress_warnings = [
+    "docutils",
+    "image.not_readable",
+    "myst.header",
+    "autosummary",
+    "ref.duplicate",
+    "ref.python",
+]

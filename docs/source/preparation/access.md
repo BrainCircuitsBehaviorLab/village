@@ -30,13 +30,13 @@ You can rename and save this connection to your favorites for quick access.
 
 RealVNC is an excellent choice because the server software comes pre-installed by default on Raspberry Pi OS. You will need to create an account, but the free **Lite** tier is ideal for managing a standalone system.
 
-#### From your Raspberry Pi 5:
+#### From your Raspberry Pi 5 (RealVNC):
 1. Navigate to the [RealVNC Lite Access Subscription Page][LITE] and create a free account (eligible for non-commercial/research use). If you encounter any verification issues, follow these [detailed instructions][INSTRUCTIONS].
 2. Open the **RealVNC Server** application on your Raspberry Pi (accessible via the desktop taskbar or the main application menu).
 3. Sign in to the server window using your newly created credentials to link the Raspberry Pi to your team’s account.
 4. Once linked, the RealVNC window will display a cloud connectivity code (allowing you to connect from outside the university/institution network) as well as a local IP address (for faster connections when your laptop is on the same local network).
 
-#### From your external computer or smartphone:
+#### From your external computer or smartphone (RealVNC):
 1. Install and open **RealVNC Viewer** on your external computer, laptop, or smartphone.
 2. Log in with your team's RealVNC credentials.
 3. Select your Raspberry Pi directly from your team's cloud device list. Alternatively, if you are working on the same local network, you can connect instantly by typing the Raspberry Pi's local IP address directly into the search bar.

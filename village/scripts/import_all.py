@@ -11,7 +11,7 @@ from village.calibration.bpod_water_calibration import BpodWaterCalibration
 from village.calibration.camera_calibration import CameraCalibration
 from village.calibration.sound_calibration import SoundCalibration
 from village.custom_classes.after_session_base import AfterSessionBase
-from village.custom_classes.auto_no_mouse_base import AutoNoMouse_Base
+from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.custom_classes.calibration_base import CalibrationBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
@@ -152,7 +152,7 @@ def import_all(manager) -> None:
                         c = cls()
                         manager.camera_draw = c
                         camera_draw_correct = True
-                elif issubclass(cls, AutoNoMouse_Base) and cls != AutoNoMouse_Base:
+                elif issubclass(cls, AutoNoMouseBase) and cls != AutoNoMouseBase:
                     auto_no_mouse_found += 1
                     instance = cls()
                     manager._auto_no_mouse_instances[cls.TASK_NAME] = instance
