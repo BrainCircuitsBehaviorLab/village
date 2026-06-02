@@ -101,7 +101,9 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
-        self.auto_no_mouse: AutoNoMouse_Base = AutoNoMouse_Base()
+        self._auto_no_mouse_instances: dict[str, AutoNoMouse_Base] = {
+            "": AutoNoMouse_Base()
+        }
         self.state: State = State.WAIT
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
@@ -173,6 +175,14 @@ class Manager:
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
         self.task.calibrations = self.calibrations
+
+    @property
+    def auto_no_mouse(self) -> AutoNoMouse_Base:
+        """Return the AutoNoMouse instance for the current task, or the generic one."""
+        task_name = getattr(self.task, "name", "")
+        return self._auto_no_mouse_instances.get(
+            task_name
+        ) or self._auto_no_mouse_instances.get("", AutoNoMouse_Base())
 
     def create_collections(self) -> None:
         """Creates and initializes data collections for events, summaries,

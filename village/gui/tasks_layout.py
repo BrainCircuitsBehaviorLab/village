@@ -9,6 +9,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
     QComboBox,
+    QLabel,
     QLineEdit,
     QListWidget,
     QListWidgetItem,
@@ -225,12 +226,23 @@ class TasksLayout(Layout):
                 manager.task.name, 0, 2, 60, 2, "black"
             )
             self.name_label.setProperty("type", "optional")
-            self.info_label = self.central_sub_layout.create_and_add_label(
-                manager.task.info, 2, 2, 60, 30, "black"
+
+            self.info_label = QLabel(manager.task.info)
+            self.info_label.setStyleSheet(
+                "QLabel { font-family: 'Courier New'; font-size: 8pt;"
+                " font-weight: normal; color: black; }"
             )
             self.info_label.setWordWrap(True)
             self.info_label.setProperty("type", "optional")
             self.info_label.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+            self.info_scroll = QScrollArea()
+            self.info_scroll.setWidget(self.info_label)
+            self.info_scroll.setWidgetResizable(True)
+            self.info_scroll.setProperty("type", "optional")
+            col_w = self.central_sub_layout.column_width
+            row_h = self.central_sub_layout.row_height
+            self.info_scroll.setFixedSize(60 * col_w, 30 * row_h)
+            self.central_sub_layout.addWidget(self.info_scroll, 2, 2, 30, 60)
             self.create_gui_properties(testing_training=False)
 
     def training_button_clicked(self) -> None:

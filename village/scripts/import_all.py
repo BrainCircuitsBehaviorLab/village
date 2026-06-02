@@ -56,7 +56,7 @@ def import_all(manager) -> None:
 
     for cal_cls in (BpodWaterCalibration, SoundCalibration, CameraCalibration):
         instance = cal_cls()
-        cal_cls._instance = instance
+        setattr(cal_cls, "_instance", instance)
         setattr(manager.calibrations, instance.name, instance)
 
     for root, _, files in os.walk(directory):
@@ -154,10 +154,9 @@ def import_all(manager) -> None:
                         camera_draw_correct = True
                 elif issubclass(cls, AutoNoMouse_Base) and cls != AutoNoMouse_Base:
                     auto_no_mouse_found += 1
-                    if auto_no_mouse_found == 1:
-                        d = cls()
-                        manager.auto_no_mouse = d
-                        auto_no_mouse_correct = True
+                    instance = cls()
+                    manager._auto_no_mouse_instances[cls.TASK_NAME] = instance
+                    auto_no_mouse_correct = True
                 elif issubclass(cls, CalibrationBase) and cls not in (
                     CalibrationBase,
                     CameraCalibration,
