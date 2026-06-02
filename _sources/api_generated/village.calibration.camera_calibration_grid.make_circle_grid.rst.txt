@@ -1,0 +1,6 @@
+make\_circle\_grid
+==================
+
+.. currentmodule:: village.calibration.camera_calibration_grid
+
+.. autofunction:: make_circle_grid

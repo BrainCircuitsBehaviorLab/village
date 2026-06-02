@@ -1,7 +1,7 @@
-telegram\_bot
-=============
+led\_strip
+==========
 
-.. automodule:: village.devices.telegram_bot
+.. automodule:: village.devices.led_strip
    :no-members:
    :no-undoc-members:
    :no-inherited-members:
@@ -18,19 +18,11 @@ telegram\_bot
       :toctree:
       :template: custom_base_template.rst
    
-      get_telegram_bot
+      get_led_strip
    
    
 
    
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:
-      :template: custom_class_template.rst
-   
-      TelegramBot
    
    
 

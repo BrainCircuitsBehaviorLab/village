@@ -32,6 +32,7 @@
    :recursive:
 
    calibration_layout
+   camera_calibration_layout
    data_layout
    gui
    gui_window

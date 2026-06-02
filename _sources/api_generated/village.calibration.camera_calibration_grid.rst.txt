@@ -1,7 +1,7 @@
-import\_all
-===========
+camera\_calibration\_grid
+=========================
 
-.. automodule:: village.scripts.import_all
+.. automodule:: village.calibration.camera_calibration_grid
    :no-members:
    :no-undoc-members:
    :no-inherited-members:
@@ -18,7 +18,7 @@ import\_all
       :toctree:
       :template: custom_base_template.rst
    
-      import_all
+      make_circle_grid
    
    
 
