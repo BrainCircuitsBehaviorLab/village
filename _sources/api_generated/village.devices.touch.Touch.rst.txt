@@ -17,8 +17,6 @@ Touch
       :no-index:
    
       ~Touch.__init__
-      ~Touch.clear
-      ~Touch.get_events
       ~Touch.stop
    
    

@@ -101,6 +101,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/scheduled.html">Custom Scheduled Actions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/calibrations.html">Custom Calibrations</a></li>
@@ -228,6 +229,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.TouchTriggerBase.html">TouchTriggerBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
@@ -273,7 +278,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.touch.html">touch</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.touch.get_touch.html">get_touch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.touch.Touch.html">Touch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.touch.TouchEvent.html">TouchEvent</a></li>
 </ul>
 </li>
 </ul>
@@ -418,6 +422,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#phase-2-base-assembly">Phase 2: Base Assembly</a></li>
 <li><a class="reference internal" href="#phase-3-rfid-load-cell">Phase 3: RFID &amp; Load Cell</a></li>
 <li><a class="reference internal" href="#phase-4-servo-motors">Phase 4: Servo Motors</a></li>
+<li><a class="reference internal" href="#phase-5-illumination">Phase 5: Illumination</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#hardware-connections">Hardware Connections</a><ul>
@@ -506,11 +511,10 @@ data-aria-dark="Switch to auto color mode">
 <p>You will need a few basic tools: Allen key, screwdriver, scissors, double-sided tape, and glue.</p>
 <section id="phase-1-frame-construction">
 <h3>Phase 1: Frame Construction</h3>
-<p>The frame is built using 20×20 V-slot aluminum profiles.</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Components</strong>: Parts required for the standard 2-homecage version (without Eco-HAB).</p>
+<p><strong>Components</strong>: Parts required for the standard 2-homecage version (without Eco-HAB). The frame is built using 20×20 V-slot aluminum profiles.</p>
 </div>
 <div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
 <a class="reference internal image-reference" href="../_images/frame1.png"><img alt="../_images/frame1.png" src="../_images/frame1.png" style="width: 100%;" />
@@ -579,7 +583,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Acrylic Base</strong>: Mount the 3D-printed parts onto a 3 mm matte white acrylic base. The matte finish is important to avoid reflections.</p>
+<p><strong>Components</strong>: 3D-printed parts and a 3 mm matte white acrylic base. The matte finish is important to avoid reflections.</p>
 </div>
 <div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
 <a class="reference internal image-reference" href="../_images/base1.png"><img alt="../_images/base1.png" src="../_images/base1.png" style="width: 100%;" />
@@ -637,7 +641,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Scale &amp; RFID Modules</strong>: Mount the scale module (load cell with 3D-printed part) and the RFID module onto the base.</p>
+<p><strong>Components</strong>: Scale module (load cell with 3D-printed part) and RFID module.</p>
 </div>
 <div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
 <a class="reference internal image-reference" href="../_images/rfid1.png"><img alt="../_images/rfid1.png" src="../_images/rfid1.png" style="width: 100%;" />
@@ -706,7 +710,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Servo Motors Overview</strong>: Position the servo motors and attach the doors to them.</p>
+<p><strong>Components</strong>: Servo motors and doors.</p>
 </div>
 <div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
 <a class="reference internal image-reference" href="../_images/servos1.png"><img alt="../_images/servos1.png" src="../_images/servos1.png" style="width: 100%;" />
@@ -743,6 +747,64 @@ data-aria-dark="Switch to auto color mode">
 </div>
 <div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
 <a class="reference internal image-reference" href="../_images/servos4.png"><img alt="../_images/servos4.png" src="../_images/servos4.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+</section>
+<section id="phase-5-illumination">
+<h3>Phase 5: Illumination</h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components</strong>: White LED strip and IR LEDs. In both cases, the connection requires only two bare wires (ground and power), with no connector.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/leds1.png"><img alt="../_images/leds1.png" src="../_images/leds1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>LED Strip Placement</strong>: Mount the LED strip on the frame, starting from the vertical profile furthest from the corridor and continuing along the horizontal ceiling profile. Leave approximately 20 cm from the floor to the start of the strip so that the light always stays above the animals’ heads.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/leds2.png"><img alt="../_images/leds2.png" src="../_images/leds2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Diffusers</strong>: Place the plastic diffusers over the LED strip using adhesive tape.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/leds3.png"><img alt="../_images/leds3.png" src="../_images/leds3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>IR LED Assembly</strong>: Insert the IR LEDs into their plastic holders — they snap into place.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/leds4.png"><img alt="../_images/leds4.png" src="../_images/leds4.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>IR LED Mounting</strong>: Attach the plastic holders with the IR LEDs to the vertical profile opposite the white LED strip — the vertical aluminum profile closest to the corridor. The two 3D-printed mounting parts allow for some adjustment, enabling the IR LEDs to be oriented for optimal illumination of the corridor while minimizing reflections.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/leds5.png"><img alt="../_images/leds5.png" src="../_images/leds5.png" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -882,7 +944,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c630e840"></script>
+      <script src="../_static/documentation_options.js?v=c3ca1ab6"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -42,5 +42,6 @@
    session_plot_base
    subject_plot_base
    task
+   touch_trigger_base
    training_protocol_base
 

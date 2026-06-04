@@ -31,7 +31,6 @@ touch
       :template: custom_class_template.rst
    
       Touch
-      TouchEvent
    
    
 

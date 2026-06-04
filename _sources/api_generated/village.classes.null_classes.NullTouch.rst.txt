@@ -17,19 +17,10 @@ NullTouch
       :no-index:
    
       ~NullTouch.__init__
-      ~NullTouch.clear
-      ~NullTouch.get_events
       ~NullTouch.stop
    
    
 
    
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :no-index:
-   
-      ~NullTouch.events
    
    

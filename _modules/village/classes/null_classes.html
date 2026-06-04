@@ -101,6 +101,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/task.html">Task Development Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/camera.html">Custom Camera Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/plots.html">Custom Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/scheduled.html">Custom Scheduled Actions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/calibrations.html">Custom Calibrations</a></li>
@@ -228,6 +229,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.touch_trigger_base.TouchTriggerBase.html">TouchTriggerBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
@@ -273,7 +278,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.touch.html">touch</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.get_touch.html">get_touch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.Touch.html">Touch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.TouchEvent.html">TouchEvent</a></li>
 </ul>
 </li>
 </ul>
@@ -1044,55 +1048,41 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="NullTouch">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTouch.html#village.classes.null_classes.NullTouch">[docs]</a>
 </span><span data-line="419"><span class="k">class</span><span class="w"> </span><span class="nc">NullTouch</span><span class="p">:</span>
-</span><span data-line="420">    <span class="n">events</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="421">
-<div class="viewcode-block" id="NullTouch.get_events">
-<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTouch.html#village.classes.null_classes.NullTouch.get_events">[docs]</a>
-</span><span data-line="422">    <span class="k">def</span><span class="w"> </span><span class="nf">get_events</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span data-line="423">        <span class="k">return</span> <span class="p">[]</span></div>
-
-</span><span data-line="424">
-<div class="viewcode-block" id="NullTouch.clear">
-<a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTouch.html#village.classes.null_classes.NullTouch.clear">[docs]</a>
-</span><span data-line="425">    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="426">        <span class="k">return</span></div>
-
-</span><span data-line="427">
 <div class="viewcode-block" id="NullTouch.stop">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTouch.html#village.classes.null_classes.NullTouch.stop">[docs]</a>
-</span><span data-line="428">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="429">        <span class="k">return</span></div>
+</span><span data-line="420">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="421">        <span class="k">return</span></div>
 </div>
 
-</span><span data-line="430">
-</span><span data-line="431">
+</span><span data-line="422">
+</span><span data-line="423">
 <div class="viewcode-block" id="NullLEDStrip">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html#village.classes.null_classes.NullLEDStrip">[docs]</a>
-</span><span data-line="432"><span class="k">class</span><span class="w"> </span><span class="nc">NullLEDStrip</span><span class="p">:</span>
-</span><span data-line="433"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for LED strip&quot;&quot;&quot;</span>
-</span><span data-line="434">
-</span><span data-line="435">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;LED strip not available.&quot;</span>
-</span><span data-line="436">    <span class="n">num_leds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-</span><span data-line="437">
+</span><span data-line="424"><span class="k">class</span><span class="w"> </span><span class="nc">NullLEDStrip</span><span class="p">:</span>
+</span><span data-line="425"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for LED strip&quot;&quot;&quot;</span>
+</span><span data-line="426">
+</span><span data-line="427">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;LED strip not available.&quot;</span>
+</span><span data-line="428">    <span class="n">num_leds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span data-line="429">
 <div class="viewcode-block" id="NullLEDStrip.set_led_color">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html#village.classes.null_classes.NullLEDStrip.set_led_color">[docs]</a>
-</span><span data-line="438">    <span class="k">def</span><span class="w"> </span><span class="nf">set_led_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">red</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="439"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the color of a specific LED&quot;&quot;&quot;</span>
-</span><span data-line="440">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dummy LED </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> changed to </span><span class="si">{</span><span class="p">(</span><span class="n">red</span><span class="p">,</span><span class="w"> </span><span class="n">green</span><span class="p">,</span><span class="w"> </span><span class="n">blue</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</span><span data-line="430">    <span class="k">def</span><span class="w"> </span><span class="nf">set_led_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">red</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="431"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the color of a specific LED&quot;&quot;&quot;</span>
+</span><span data-line="432">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dummy LED </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> changed to </span><span class="si">{</span><span class="p">(</span><span class="n">red</span><span class="p">,</span><span class="w"> </span><span class="n">green</span><span class="p">,</span><span class="w"> </span><span class="n">blue</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="441">
+</span><span data-line="433">
 <div class="viewcode-block" id="NullLEDStrip.update_strip">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html#village.classes.null_classes.NullLEDStrip.update_strip">[docs]</a>
-</span><span data-line="442">    <span class="k">def</span><span class="w"> </span><span class="nf">update_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="443"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the LED strip to show changes&quot;&quot;&quot;</span>
-</span><span data-line="444">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip updated&quot;</span><span class="p">)</span></div>
+</span><span data-line="434">    <span class="k">def</span><span class="w"> </span><span class="nf">update_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="435"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the LED strip to show changes&quot;&quot;&quot;</span>
+</span><span data-line="436">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip updated&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="445">
+</span><span data-line="437">
 <div class="viewcode-block" id="NullLEDStrip.clear_strip">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html#village.classes.null_classes.NullLEDStrip.clear_strip">[docs]</a>
-</span><span data-line="446">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="447"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all LEDs&quot;&quot;&quot;</span>
-</span><span data-line="448">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip cleared&quot;</span><span class="p">)</span></div>
+</span><span data-line="438">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="439"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all LEDs&quot;&quot;&quot;</span>
+</span><span data-line="440">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip cleared&quot;</span><span class="p">)</span></div>
 </div>
 
 </span></pre></div>
@@ -1119,7 +1109,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=c630e840"></script>
+      <script src="../../../_static/documentation_options.js?v=c3ca1ab6"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

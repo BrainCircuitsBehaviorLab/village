@@ -101,6 +101,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/scheduled.html">Custom Scheduled Actions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/calibrations.html">Custom Calibrations</a></li>
@@ -228,6 +229,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.touch_trigger_base.TouchTriggerBase.html">TouchTriggerBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
@@ -273,7 +278,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.devices.touch.html">touch</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.touch.get_touch.html">get_touch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.touch.Touch.html">Touch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.touch.TouchEvent.html">TouchEvent</a></li>
 </ul>
 </li>
 </ul>
@@ -415,9 +419,6 @@ data-aria-dark="Switch to auto color mode">
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#village.classes.null_classes.NullTouch"><code class="docutils literal notranslate"><span class="pre">NullTouch</span></code></a><ul>
 <li><a class="reference internal" href="#village.classes.null_classes.NullTouch.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullTouch.events"><code class="docutils literal notranslate">events</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullTouch.get_events"><code class="docutils literal notranslate">get_events()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullTouch.clear"><code class="docutils literal notranslate">clear()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullTouch.stop"><code class="docutils literal notranslate">stop()</span></code></a></li>
 </ul>
 </li>
@@ -510,22 +511,6 @@ data-aria-dark="Switch to auto color mode">
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
-<p class="rubric">Attributes</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullTouch.events">
-<span class="sig-name descname"><span class="pre">events</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullTouch.get_events">
-<span class="sig-name descname"><span class="pre">get_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullTouch.get_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullTouch.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullTouch.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullTouch.stop">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullTouch.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -572,7 +557,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c630e840"></script>
+      <script src="../_static/documentation_options.js?v=c3ca1ab6"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

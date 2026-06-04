@@ -101,6 +101,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/scheduled.html">Custom Scheduled Actions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/calibrations.html">Custom Calibrations</a></li>
@@ -228,6 +229,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.TouchTriggerBase.html">TouchTriggerBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
@@ -273,7 +278,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.touch.html">touch</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.touch.get_touch.html">get_touch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.touch.Touch.html">Touch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.touch.TouchEvent.html">TouchEvent</a></li>
 </ul>
 </li>
 </ul>
@@ -424,6 +428,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#udev-rules-for-consistent-usb-device-naming">Udev Rules for Consistent USB Device Naming</a></li>
 <li><a class="reference internal" href="#grant-permissions-for-maximum-process-priority">Grant Permissions for Maximum Process Priority</a></li>
 <li><a class="reference internal" href="#adjust-memory-and-disk-cache-behavior">Adjust Memory and Disk Cache Behavior</a></li>
+<li><a class="reference internal" href="#grant-access-to-input-devices">Grant access to input devices</a></li>
 <li><a class="reference internal" href="#optional-increase-spi-buffer-size-for-led-strip">Optional: Increase SPI buffer size for LED strip</a></li>
 <li><a class="reference internal" href="#install-training-village">Install Training Village</a></li>
 <li><a class="reference internal" href="#create-an-alias-and-run-the-training-village">Create an Alias and Run the Training Village</a></li>
@@ -726,6 +731,17 @@ Python environment:</p></li>
 </span></pre></div>
 </div>
 </section>
+<section id="grant-access-to-input-devices">
+<h2>Grant access to input devices</h2>
+<p>The touchscreen is read via <code class="docutils literal notranslate"><span class="pre">evdev</span></code>, which requires access to <code class="docutils literal notranslate"><span class="pre">/dev/input/</span></code> devices.
+Add your user to the <code class="docutils literal notranslate"><span class="pre">input</span></code> group:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>input<span class="w"> </span><span class="nv">$USER</span>
+</span></pre></div>
+</div>
+<p>Log out of the desktop session and log back in for the change to take effect
+(a full reboot also works, but is not necessary). You can verify it with <code class="docutils literal notranslate"><span class="pre">groups</span></code>,
+which should include <code class="docutils literal notranslate"><span class="pre">input</span></code> in the output.</p>
+</section>
 <section id="optional-increase-spi-buffer-size-for-led-strip">
 <h2>Optional: Increase SPI buffer size for LED strip</h2>
 <ol class="arabic simple">
@@ -843,7 +859,7 @@ Python environment:</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c630e840"></script>
+      <script src="../_static/documentation_options.js?v=c3ca1ab6"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

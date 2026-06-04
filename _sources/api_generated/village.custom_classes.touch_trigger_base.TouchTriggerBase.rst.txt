@@ -1,0 +1,26 @@
+TouchTriggerBase
+================
+
+.. currentmodule:: village.custom_classes.touch_trigger_base
+
+.. autoclass:: TouchTriggerBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~TouchTriggerBase.__init__
+      ~TouchTriggerBase.trigger
+   
+   
+
+   
+   
+   
