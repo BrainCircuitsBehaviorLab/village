@@ -13,6 +13,7 @@ PROTOCOL & TASK DESIGN
     protocols/task.md
     protocols/functions.md
     protocols/camera.md
+    protocols/touchscreen.md
     protocols/plots.md
     protocols/scheduled.md
     protocols/calibrations.md

@@ -51,6 +51,7 @@ from village.devices.scale import scale
 from village.devices.sound_device import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
+from village.devices.touch import touch
 from village.gui.gui import Gui
 from village.manager import manager
 from village.scripts.error_queue import error_queue
@@ -94,6 +95,7 @@ manager.errors += (
 )
 if manager.errors != "":
     log.error(manager.errors)
+manager.touch = touch
 log.start("VILLAGE")
 
 

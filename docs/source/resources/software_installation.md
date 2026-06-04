@@ -216,6 +216,21 @@ These settings prioritize the use of RAM over disk cache whenever possible, in o
 sudo sysctl -p
 ```
 
+
+### Grant access to input devices
+
+The touchscreen is read via `evdev`, which requires access to `/dev/input/` devices.
+Add your user to the `input` group:
+
+```bash
+sudo usermod -aG input $USER
+```
+
+Log out of the desktop session and log back in for the change to take effect
+(a full reboot also works, but is not necessary). You can verify it with `groups`,
+which should include `input` in the output.
+
+
 ### Optional: Increase SPI buffer size for LED strip
 
 1. Modify the file: `/boot/firmware/cmdline.txt`

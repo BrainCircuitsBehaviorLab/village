@@ -417,14 +417,6 @@ class NullScreen(QWidget):
 
 
 class NullTouch:
-    events: list = []
-
-    def get_events(self) -> list:
-        return []
-
-    def clear(self) -> None:
-        return
-
     def stop(self) -> None:
         return
 

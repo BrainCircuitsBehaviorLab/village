@@ -22,7 +22,7 @@ from village.classes.enums import (
     State,
     SyncType,
 )
-from village.classes.null_classes import NullCamera
+from village.classes.null_classes import NullCamera, NullTouch
 from village.classes.subject import Subject
 from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
@@ -36,6 +36,7 @@ from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
 from village.custom_classes.task import Task
+from village.custom_classes.touch_trigger_base import TouchTriggerBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.devices.chip import (
     ir_light_box,
@@ -52,6 +53,7 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.devices.camera import Camera
+    from village.devices.touch import Touch
 
 
 class Manager:
@@ -98,6 +100,7 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
+        self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
         self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
             "": AutoNoMouseBase()
         }
@@ -168,6 +171,7 @@ class Manager:
         self.healthchecks_url = settings.get("HEALTHCHECKS_URL")
 
         self.cam_box: Camera | NullCamera = NullCamera()
+        self.touch: Touch | NullTouch = NullTouch()
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
         self.task.calibrations = self.calibrations
@@ -326,6 +330,7 @@ class Manager:
             self.task.functions = self.functions
             self.direct_functions.task = self.task
             self.camera_trigger.task = self.task
+            self.touch_trigger.task = self.task
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -349,6 +354,7 @@ class Manager:
         self.task.functions = self.functions
         self.direct_functions.task = self.task
         self.camera_trigger.task = self.task
+        self.touch_trigger.task = self.task
         log.start(task=self.task.name, subject="None")
         self.run_task_in_thread()
 
@@ -387,6 +393,7 @@ class Manager:
                 self.task.functions = self.functions
                 self.direct_functions.task = self.task
                 self.camera_trigger.task = self.task
+                self.touch_trigger.task = self.task
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True

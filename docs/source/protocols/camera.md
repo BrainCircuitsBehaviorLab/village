@@ -1,5 +1,11 @@
 ## Custom Camera Interaction
 
+```{admonition} Note
+:class: note
+All custom camera interaction described on this page — triggers, annotations, and
+custom drawing — applies exclusively to the **box camera** (`cam_box`). The corridor
+camera (`cam_corridor`) does not support these features.
+```
 
 ### Camera Triggers
 
@@ -77,3 +83,91 @@ class CameraTrigger(CameraTriggerBase):
                     (cam.y_position - cam.height / 2) ** 2) ** 0.5
         if distance < 50:
             cam.write_text("Animal in the center area")
+```
+
+---
+
+### Custom Camera Drawing
+
+#### Annotating the frame from a task
+
+The simplest way to overlay text on the camera feed is to call `write_text()` from
+the task. The text is rendered on every subsequent frame and stays visible until it
+is changed or cleared.
+
+```python
+from village.devices.camera import cam_box
+
+# Show a label — persists across frames until changed
+cam_box.write_text("reward delivered")
+
+# Clear the annotation
+cam_box.write_text("")
+```
+
+The annotation is also saved frame-by-frame in the session CSV alongside the
+position data, so it can be used to mark task events for post-hoc analysis.
+
+For anything beyond plain text — shapes, coloured overlays, position-dependent
+graphics — use the `CameraDrawBase` subclass described below.
+
+#### Drawing with CameraDrawBase
+
+Every frame, after the built-in overlays are rendered, the `draw` method of
+`CameraDrawBase` is called. By default it does nothing. You can subclass it to
+draw any additional elements directly on the camera frame using OpenCV.
+
+Create a file named `camera_draw` inside your project's `code` directory and define
+a class named `CameraDraw` that inherits from `CameraDrawBase`. The system will
+automatically detect it and use it instead of the default base class.
+
+```python
+from village.custom_classes.camera_draw_base import CameraDrawBase
+
+import cv2
+
+class CameraDraw(CameraDrawBase):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def draw(self, cam) -> None:
+        """Called on every frame. Draw directly on cam.frame (BGR numpy array).
+
+        Available on cam:
+        - cam.frame          — the current frame as a numpy array (BGR, read/write)
+        - cam.x_position     — detected animal x position in pixels (-1 if not found)
+        - cam.y_position     — detected animal y position in pixels (-1 if not found)
+        - cam.width          — frame width in pixels
+        - cam.height         — frame height in pixels
+        - cam.items_to_draw  — dict populated by the task, used to pass data here
+
+        self.task gives access to the current task's variables and methods.
+        """
+        # Draw a red circle at the animal's position whenever it is detected
+        if cam.x_position != -1:
+            cv2.circle(
+                cam.frame,
+                (cam.x_position, cam.y_position),
+                radius=20,
+                color=(0, 0, 255),   # BGR
+                thickness=2,
+            )
+
+        # Draw a custom shape passed from the task via items_to_draw
+        rect = cam.items_to_draw.get("reward_zone")
+        if rect is not None:
+            x, y, w, h = rect
+            cv2.rectangle(cam.frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+```
+
+`cam.items_to_draw` is a plain dictionary that the task can populate at any point
+during a session to pass coordinates, labels, or any other data to the drawing
+function without coupling the task directly to the camera module:
+
+```python
+# Inside the task, at any point:
+from village.devices.camera import cam_box
+
+cam_box.items_to_draw["reward_zone"] = (200, 150, 80, 80)
+```

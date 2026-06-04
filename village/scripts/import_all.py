@@ -21,6 +21,7 @@ from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
 from village.custom_classes.task import Task
+from village.custom_classes.touch_trigger_base import TouchTriggerBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
 from village.settings import settings
@@ -40,6 +41,7 @@ def import_all(manager) -> None:
     change_cycle_found = 0
     camera_trigger_found = 0
     camera_draw_found = 0
+    touch_trigger_found = 0
     auto_no_mouse_found = 0
     direct_functions_found = 0
     direct_functions_correct = False
@@ -51,6 +53,7 @@ def import_all(manager) -> None:
     change_cycle_correct = False
     camera_trigger_correct = False
     camera_draw_correct = False
+    touch_trigger_correct = False
     auto_no_mouse_correct = False
     sound_path = ""
 
@@ -152,6 +155,12 @@ def import_all(manager) -> None:
                         c = cls()
                         manager.camera_draw = c
                         camera_draw_correct = True
+                elif issubclass(cls, TouchTriggerBase) and cls != TouchTriggerBase:
+                    touch_trigger_found += 1
+                    if touch_trigger_found == 1:
+                        tt = cls()
+                        manager.touch_trigger = tt
+                        touch_trigger_correct = True
                 elif issubclass(cls, AutoNoMouseBase) and cls != AutoNoMouseBase:
                     auto_no_mouse_found += 1
                     instance = cls()
@@ -203,6 +212,7 @@ def import_all(manager) -> None:
         ("Change Cycle Run", change_cycle_found, change_cycle_correct),
         ("Camera Trigger", camera_trigger_found, camera_trigger_correct),
         ("Camera Draw", camera_draw_found, camera_draw_correct),
+        ("Touch Trigger", touch_trigger_found, touch_trigger_correct),
         ("Auto No Mouse", auto_no_mouse_found, auto_no_mouse_correct),
         ("Direct Functions", direct_functions_found, direct_functions_correct),
     ]
