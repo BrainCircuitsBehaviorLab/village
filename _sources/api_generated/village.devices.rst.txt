@@ -37,7 +37,9 @@
    motor_old
    rfid
    scale
+   screen
    sound_device
    telegram_bot
    temp_sensor
+   touch
 

@@ -1,6 +1,6 @@
 ## Custom Scheduled Actions
 
-Some actions run automatically at fixed points in the system lifecycle. By default, a data synchronization is triggered after each session ends, and old video files are deleted during each day/night cycle transition (the retention period is configurable in Settings).
+Some actions run automatically at fixed points in the system lifecycle. By default, a data synchronization is triggered after each session ends, and old video files are deleted during each day/night cycle transition (the retention period is configurable in `SETTINGS`).
 
 You can override or extend this behavior by creating custom classes in your project. For example, you might want to sync data in a different way, or send a notification (email, Telegram, Slack, etc.) after each session.
 

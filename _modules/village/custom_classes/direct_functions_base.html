@@ -88,7 +88,9 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/touchscreen.html">Sound &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/sound.html">Sound Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/screen.html">Screen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -144,6 +146,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Info.html">Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.State.html">State</a></li>
@@ -152,12 +155,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.html">null_classes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.LEDStripBase.html">LEDStripBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCalibrationBase.html">NullCalibrationBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html">NullLEDStrip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html">NullSoftCodeToBpod</a></li>
@@ -165,6 +168,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullStateMachine.html">NullStateMachine</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullTelegramBot.html">NullTelegramBot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullTempSensor.html">NullTempSensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullTouch.html">NullTouch</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.html">settings_class</a><ul>
@@ -253,6 +257,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.Scale.html">Scale</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.screen.html">screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.html">sound_device</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
@@ -263,6 +268,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.touch.html">touch</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.get_touch.html">get_touch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.Touch.html">Touch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.TouchEvent.html">TouchEvent</a></li>
 </ul>
 </li>
 </ul>
@@ -295,14 +306,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.plots.weights_plot.html">weights_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.plots.weights_plot.weights_plot.html">weights_plot</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.screen.html">screen</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.screen.video_worker.html">video_worker</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
 </li>
 </ul>
@@ -443,29 +446,40 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for village.custom_classes.direct_functions_base</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="2"><span class="sd">Override this class in your project to define functions triggered by softcodes</span>
-</span><span data-line="3"><span class="sd">sent from the behavioral controller.</span>
+<span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">cam_box</span>
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
 </span><span data-line="4">
-</span><span data-line="5"><span class="sd">Example:</span>
-</span><span data-line="6"><span class="sd">    class SoftcodeFunctions(SoftcodeFunctionsBase):</span>
-</span><span data-line="7"><span class="sd">        def function1(self):</span>
-</span><span data-line="8"><span class="sd">            self.task.water_valve.open()</span>
-</span><span data-line="9">
-</span><span data-line="10"><span class="sd">        def function2(self):</span>
-</span><span data-line="11"><span class="sd">            self.behaviour_window.show_image(&quot;reward.png&quot;)</span>
-</span><span data-line="12"><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="13">
-</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
-</span><span data-line="15">
-</span><span data-line="16">
+</span><span data-line="5">
 <div class="viewcode-block" id="DirectFunctionsBase">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html#village.custom_classes.direct_functions_base.DirectFunctionsBase">[docs]</a>
-</span><span data-line="17"><span class="k">class</span><span class="w"> </span><span class="nc">DirectFunctionsBase</span><span class="p">:</span>
+</span><span data-line="6"><span class="k">class</span><span class="w"> </span><span class="nc">DirectFunctionsBase</span><span class="p">:</span>
+</span><span data-line="7"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="8"><span class="sd">    Override this class in your project to define functions triggered directly.</span>
+</span><span data-line="9"><span class="sd">    For example, you can trigger these functions from the behaviour controller, the</span>
+</span><span data-line="10"><span class="sd">    camera trigger, or the GUI buttons.</span>
+</span><span data-line="11"><span class="sd">    These functions can not accept arguments because they are triggered directly, but</span>
+</span><span data-line="12"><span class="sd">    they can use self.task and then use some of the variables or settings of the</span>
+</span><span data-line="13"><span class="sd">    task.</span>
+</span><span data-line="14">
+</span><span data-line="15"><span class="sd">    Example:</span>
+</span><span data-line="16"><span class="sd">        class DirectFunctions(DirectFunctionsBase):</span>
+</span><span data-line="17"><span class="sd">            def function1(self):</span>
+</span><span data-line="18"><span class="sd">                self.task.water_valve.open()</span>
+</span><span data-line="19">
+</span><span data-line="20"><span class="sd">            def function2(self):</span>
+</span><span data-line="21"><span class="sd">                self.task.screen.show_image(&quot;reward.png&quot;)</span>
+</span><span data-line="22">
+</span><span data-line="23"><span class="sd">            def function3(self):</span>
+</span><span data-line="24"><span class="sd">                self.</span>
+</span><span data-line="25"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="26">
 <div class="viewcode-block" id="DirectFunctionsBase.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html#village.custom_classes.direct_functions_base.DirectFunctionsBase.__init__">[docs]</a>
-</span><span data-line="18">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span></div>
+</span><span data-line="27">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="28">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span>
+</span><span data-line="29">        <span class="nb">print</span><span class="p">(</span><span class="n">cam_box</span><span class="p">)</span>
+</span><span data-line="30">        <span class="nb">print</span><span class="p">(</span><span class="n">sound_device</span><span class="p">)</span></div>
 </div>
 
 </span></pre></div>
@@ -492,7 +506,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=3dedde02"></script>
+      <script src="../../../_static/documentation_options.js?v=c630e840"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

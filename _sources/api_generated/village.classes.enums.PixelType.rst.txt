@@ -1,0 +1,38 @@
+PixelType
+=========
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: PixelType
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~PixelType.keys
+      ~PixelType.values
+      ~PixelType.get_index_from_value
+      ~PixelType.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~PixelType.RGB
+      ~PixelType.GRB
+      ~PixelType.RGBW
+      ~PixelType.GRBW
+   
+   

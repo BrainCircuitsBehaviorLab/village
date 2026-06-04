@@ -1,0 +1,6 @@
+get\_touch
+==========
+
+.. currentmodule:: village.devices.touch
+
+.. autofunction:: get_touch

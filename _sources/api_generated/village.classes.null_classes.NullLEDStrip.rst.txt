@@ -1,9 +1,9 @@
-LEDStripBase
+NullLEDStrip
 ============
 
 .. currentmodule:: village.classes.null_classes
 
-.. autoclass:: LEDStripBase
+.. autoclass:: NullLEDStrip
    :members:
    :show-inheritance:
 
@@ -16,10 +16,10 @@ LEDStripBase
    .. autosummary::
       :no-index:
    
-      ~LEDStripBase.__init__
-      ~LEDStripBase.clear_strip
-      ~LEDStripBase.set_led_color
-      ~LEDStripBase.update_strip
+      ~NullLEDStrip.__init__
+      ~NullLEDStrip.clear_strip
+      ~NullLEDStrip.set_led_color
+      ~NullLEDStrip.update_strip
    
    
 
@@ -30,7 +30,7 @@ LEDStripBase
    .. autosummary::
       :no-index:
    
-      ~LEDStripBase.error
-      ~LEDStripBase.num_leds
+      ~NullLEDStrip.error
+      ~NullLEDStrip.num_leds
    
    

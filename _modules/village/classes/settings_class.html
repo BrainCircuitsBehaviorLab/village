@@ -88,7 +88,9 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/corridor.html">Corridor Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/touchscreen.html">Sound &amp; Touchscreen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/sound.html">Sound Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/screen.html">Screen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -144,6 +146,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Info.html">Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.State.html">State</a></li>
@@ -152,12 +155,12 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.html">null_classes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.LEDStripBase.html">LEDStripBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCalibrationBase.html">NullCalibrationBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html">NullLEDStrip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html">NullSoftCodeToBpod</a></li>
@@ -165,6 +168,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullStateMachine.html">NullStateMachine</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullTelegramBot.html">NullTelegramBot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullTempSensor.html">NullTempSensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.null_classes.NullTouch.html">NullTouch</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.classes.settings_class.html">settings_class</a><ul>
@@ -253,6 +257,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.Scale.html">Scale</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.screen.html">screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.html">sound_device</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
@@ -263,6 +268,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.touch.html">touch</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.get_touch.html">get_touch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.Touch.html">Touch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.touch.TouchEvent.html">TouchEvent</a></li>
 </ul>
 </li>
 </ul>
@@ -295,14 +306,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.plots.weights_plot.html">weights_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.plots.weights_plot.weights_plot.html">weights_plot</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.screen.html">screen</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.screen.behavior_window.html">behavior_window</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.screen.video_worker.html">video_worker</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.screen.video_worker.VideoWorker.html">VideoWorker</a></li>
 </ul>
 </li>
 </ul>
@@ -456,371 +459,377 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="11">    <span class="n">Cycle</span><span class="p">,</span>
 </span><span data-line="12">    <span class="n">Info</span><span class="p">,</span>
 </span><span data-line="13">    <span class="n">OldVersion</span><span class="p">,</span>
-</span><span data-line="14">    <span class="n">ScreenActive</span><span class="p">,</span>
-</span><span data-line="15">    <span class="n">SuperEnum</span><span class="p">,</span>
-</span><span data-line="16">    <span class="n">SyncType</span><span class="p">,</span>
-</span><span data-line="17"><span class="p">)</span>
-</span><span data-line="18">
+</span><span data-line="14">    <span class="n">PixelType</span><span class="p">,</span>
+</span><span data-line="15">    <span class="n">ScreenActive</span><span class="p">,</span>
+</span><span data-line="16">    <span class="n">SuperEnum</span><span class="p">,</span>
+</span><span data-line="17">    <span class="n">SyncType</span><span class="p">,</span>
+</span><span data-line="18"><span class="p">)</span>
 </span><span data-line="19">
+</span><span data-line="20">
 <div class="viewcode-block" id="Setting">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Setting.html#village.classes.settings_class.Setting">[docs]</a>
-</span><span data-line="20"><span class="k">class</span><span class="w"> </span><span class="nc">Setting</span><span class="p">:</span>
-</span><span data-line="21"><span class="w">    </span><span class="sd">&quot;&quot;&quot;A class representing a single configuration setting.</span>
-</span><span data-line="22">
-</span><span data-line="23"><span class="sd">    Attributes:</span>
-</span><span data-line="24"><span class="sd">        key (str): The name/identifier of the setting.</span>
-</span><span data-line="25"><span class="sd">        value (Any): The current value of the setting.</span>
-</span><span data-line="26"><span class="sd">        value_type (type): The expected type of the value (e.g., int, float, str, enum).</span>
-</span><span data-line="27"><span class="sd">        description (str): A description of what the setting controls.</span>
-</span><span data-line="28"><span class="sd">        type0 (type): The base type (e.g., list if value_type is list[int]).</span>
-</span><span data-line="29"><span class="sd">        type1 (type | None): The inner type for lists (e.g., int if value_type</span>
-</span><span data-line="30"><span class="sd">        is list[int]).</span>
-</span><span data-line="31"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="32">
+</span><span data-line="21"><span class="k">class</span><span class="w"> </span><span class="nc">Setting</span><span class="p">:</span>
+</span><span data-line="22"><span class="w">    </span><span class="sd">&quot;&quot;&quot;A class representing a single configuration setting.</span>
+</span><span data-line="23">
+</span><span data-line="24"><span class="sd">    Attributes:</span>
+</span><span data-line="25"><span class="sd">        key (str): The name/identifier of the setting.</span>
+</span><span data-line="26"><span class="sd">        value (Any): The current value of the setting.</span>
+</span><span data-line="27"><span class="sd">        value_type (type): The expected type of the value (e.g., int, float, str, enum).</span>
+</span><span data-line="28"><span class="sd">        description (str): A description of what the setting controls.</span>
+</span><span data-line="29"><span class="sd">        type0 (type): The base type (e.g., list if value_type is list[int]).</span>
+</span><span data-line="30"><span class="sd">        type1 (type | None): The inner type for lists (e.g., int if value_type</span>
+</span><span data-line="31"><span class="sd">        is list[int]).</span>
+</span><span data-line="32"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="33">
 <div class="viewcode-block" id="Setting.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Setting.html#village.classes.settings_class.Setting.__init__">[docs]</a>
-</span><span data-line="33">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span data-line="34">        <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">factory_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">value_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
-</span><span data-line="35">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="36"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a new Setting.</span>
-</span><span data-line="37">
-</span><span data-line="38"><span class="sd">        Args:</span>
-</span><span data-line="39"><span class="sd">            key (str): The name of the setting.</span>
-</span><span data-line="40"><span class="sd">            factory_value (Any): The default value. For enums, this is the</span>
-</span><span data-line="41"><span class="sd">            string representation.</span>
-</span><span data-line="42"><span class="sd">            value_type (type): The type of the value.</span>
-</span><span data-line="43"><span class="sd">            description (str): A brief description of the setting.</span>
-</span><span data-line="44"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="45">        <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">key</span>
-</span><span data-line="46">        <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">factory_value</span>
-</span><span data-line="47">        <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">value_type</span>
-</span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">description</span>
-</span><span data-line="49">
-</span><span data-line="50">        <span class="bp">self</span><span class="o">.</span><span class="n">type0</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="51">            <span class="n">value_type</span><span class="o">.</span><span class="n">__origin__</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value_type</span><span class="p">,</span> <span class="s2">&quot;__origin__&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">value_type</span>
-</span><span data-line="52">        <span class="p">)</span>
-</span><span data-line="53">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="54">            <span class="bp">self</span><span class="o">.</span><span class="n">type1</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">value_type</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="55">        <span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-</span><span data-line="56">            <span class="bp">self</span><span class="o">.</span><span class="n">type1</span> <span class="o">=</span> <span class="kc">None</span></div>
+</span><span data-line="34">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+</span><span data-line="35">        <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">factory_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">value_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="36">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="37"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a new Setting.</span>
+</span><span data-line="38">
+</span><span data-line="39"><span class="sd">        Args:</span>
+</span><span data-line="40"><span class="sd">            key (str): The name of the setting.</span>
+</span><span data-line="41"><span class="sd">            factory_value (Any): The default value. For enums, this is the</span>
+</span><span data-line="42"><span class="sd">            string representation.</span>
+</span><span data-line="43"><span class="sd">            value_type (type): The type of the value.</span>
+</span><span data-line="44"><span class="sd">            description (str): A brief description of the setting.</span>
+</span><span data-line="45"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="46">        <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">key</span>
+</span><span data-line="47">        <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">factory_value</span>
+</span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">value_type</span>
+</span><span data-line="49">        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">description</span>
+</span><span data-line="50">
+</span><span data-line="51">        <span class="bp">self</span><span class="o">.</span><span class="n">type0</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="52">            <span class="n">value_type</span><span class="o">.</span><span class="n">__origin__</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value_type</span><span class="p">,</span> <span class="s2">&quot;__origin__&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">value_type</span>
+</span><span data-line="53">        <span class="p">)</span>
+</span><span data-line="54">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="55">            <span class="bp">self</span><span class="o">.</span><span class="n">type1</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">value_type</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="56">        <span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+</span><span data-line="57">            <span class="bp">self</span><span class="o">.</span><span class="n">type1</span> <span class="o">=</span> <span class="kc">None</span></div>
 </div>
 
-</span><span data-line="57">
 </span><span data-line="58">
+</span><span data-line="59">
 <div class="viewcode-block" id="Settings">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings">[docs]</a>
-</span><span data-line="59"><span class="k">class</span><span class="w"> </span><span class="nc">Settings</span><span class="p">:</span>
-</span><span data-line="60"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages system settings, including storage, retrieval, and grouping.</span>
-</span><span data-line="61">
-</span><span data-line="62"><span class="sd">    Settings are grouped by category (main, sound, screen, etc.) and backed by</span>
-</span><span data-line="63"><span class="sd">    QSettings for persistent storage.</span>
-</span><span data-line="64"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="65">
+</span><span data-line="60"><span class="k">class</span><span class="w"> </span><span class="nc">Settings</span><span class="p">:</span>
+</span><span data-line="61"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages system settings, including storage, retrieval, and grouping.</span>
+</span><span data-line="62">
+</span><span data-line="63"><span class="sd">    Settings are grouped by category (main, sound, screen, etc.) and backed by</span>
+</span><span data-line="64"><span class="sd">    QSettings for persistent storage.</span>
+</span><span data-line="65"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="66">
 <div class="viewcode-block" id="Settings.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.__init__">[docs]</a>
-</span><span data-line="66">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span data-line="67">        <span class="bp">self</span><span class="p">,</span>
-</span><span data-line="68">        <span class="n">main_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="69">        <span class="n">sound_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="70">        <span class="n">screen_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="71">        <span class="n">touchscreen_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="72">        <span class="n">telegram_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="73">        <span class="n">directory_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="74">        <span class="n">sync_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="75">        <span class="n">server_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="76">        <span class="n">device_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="77">        <span class="n">hourly_alarm_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="78">        <span class="n">cycle_alarm_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="79">        <span class="n">session_alarm_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="80">        <span class="n">cam_framerate_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="81">        <span class="n">corridor_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="82">        <span class="n">extra_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="83">        <span class="n">controller_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="84">        <span class="n">bpod_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="85">        <span class="n">camera_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="86">        <span class="n">motor_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="87">        <span class="n">visual_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="88">        <span class="n">hidden_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
-</span><span data-line="89">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="90">
-</span><span data-line="91">        <span class="bp">self</span><span class="o">.</span><span class="n">main_settings</span> <span class="o">=</span> <span class="n">main_settings</span>
-</span><span data-line="92">        <span class="bp">self</span><span class="o">.</span><span class="n">sound_settings</span> <span class="o">=</span> <span class="n">sound_settings</span>
-</span><span data-line="93">        <span class="bp">self</span><span class="o">.</span><span class="n">screen_settings</span> <span class="o">=</span> <span class="n">screen_settings</span>
-</span><span data-line="94">        <span class="bp">self</span><span class="o">.</span><span class="n">touchscreen_settings</span> <span class="o">=</span> <span class="n">touchscreen_settings</span>
-</span><span data-line="95">        <span class="bp">self</span><span class="o">.</span><span class="n">telegram_settings</span> <span class="o">=</span> <span class="n">telegram_settings</span>
-</span><span data-line="96">        <span class="bp">self</span><span class="o">.</span><span class="n">directory_settings</span> <span class="o">=</span> <span class="n">directory_settings</span>
-</span><span data-line="97">        <span class="bp">self</span><span class="o">.</span><span class="n">sync_settings</span> <span class="o">=</span> <span class="n">sync_settings</span>
-</span><span data-line="98">        <span class="bp">self</span><span class="o">.</span><span class="n">server_settings</span> <span class="o">=</span> <span class="n">server_settings</span>
-</span><span data-line="99">        <span class="bp">self</span><span class="o">.</span><span class="n">device_settings</span> <span class="o">=</span> <span class="n">device_settings</span>
-</span><span data-line="100">        <span class="bp">self</span><span class="o">.</span><span class="n">hourly_alarm_settings</span> <span class="o">=</span> <span class="n">hourly_alarm_settings</span>
-</span><span data-line="101">        <span class="bp">self</span><span class="o">.</span><span class="n">cycle_alarm_settings</span> <span class="o">=</span> <span class="n">cycle_alarm_settings</span>
-</span><span data-line="102">        <span class="bp">self</span><span class="o">.</span><span class="n">session_alarm_settings</span> <span class="o">=</span> <span class="n">session_alarm_settings</span>
-</span><span data-line="103">        <span class="bp">self</span><span class="o">.</span><span class="n">cam_framerate_settings</span> <span class="o">=</span> <span class="n">cam_framerate_settings</span>
-</span><span data-line="104">        <span class="bp">self</span><span class="o">.</span><span class="n">corridor_settings</span> <span class="o">=</span> <span class="n">corridor_settings</span>
-</span><span data-line="105">        <span class="bp">self</span><span class="o">.</span><span class="n">extra_settings</span> <span class="o">=</span> <span class="n">extra_settings</span>
-</span><span data-line="106">        <span class="bp">self</span><span class="o">.</span><span class="n">controller_settings</span> <span class="o">=</span> <span class="n">controller_settings</span>
-</span><span data-line="107">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod_settings</span> <span class="o">=</span> <span class="n">bpod_settings</span>
-</span><span data-line="108">        <span class="bp">self</span><span class="o">.</span><span class="n">camera_settings</span> <span class="o">=</span> <span class="n">camera_settings</span>
-</span><span data-line="109">        <span class="bp">self</span><span class="o">.</span><span class="n">motor_settings</span> <span class="o">=</span> <span class="n">motor_settings</span>
-</span><span data-line="110">        <span class="bp">self</span><span class="o">.</span><span class="n">visual_settings</span> <span class="o">=</span> <span class="n">visual_settings</span>
-</span><span data-line="111">        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_settings</span> <span class="o">=</span> <span class="n">hidden_settings</span>
-</span><span data-line="112">        <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span> <span class="o">=</span> <span class="n">QSettings</span><span class="p">(</span><span class="s2">&quot;village&quot;</span><span class="p">,</span> <span class="s2">&quot;village&quot;</span><span class="p">)</span>
-</span><span data-line="113">
-</span><span data-line="114">        <span class="bp">self</span><span class="o">.</span><span class="n">restorable_settings</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="115">            <span class="n">main_settings</span>
-</span><span data-line="116">            <span class="o">+</span> <span class="n">sound_settings</span>
-</span><span data-line="117">            <span class="o">+</span> <span class="n">screen_settings</span>
-</span><span data-line="118">            <span class="o">+</span> <span class="n">touchscreen_settings</span>
-</span><span data-line="119">            <span class="o">+</span> <span class="n">sync_settings</span>
-</span><span data-line="120">            <span class="o">+</span> <span class="n">server_settings</span>
-</span><span data-line="121">            <span class="o">+</span> <span class="n">device_settings</span>
-</span><span data-line="122">            <span class="o">+</span> <span class="n">hourly_alarm_settings</span>
-</span><span data-line="123">            <span class="o">+</span> <span class="n">cycle_alarm_settings</span>
-</span><span data-line="124">            <span class="o">+</span> <span class="n">session_alarm_settings</span>
-</span><span data-line="125">            <span class="o">+</span> <span class="n">cam_framerate_settings</span>
-</span><span data-line="126">            <span class="o">+</span> <span class="n">corridor_settings</span>
-</span><span data-line="127">            <span class="o">+</span> <span class="n">extra_settings</span>
-</span><span data-line="128">            <span class="o">+</span> <span class="n">controller_settings</span>
-</span><span data-line="129">            <span class="o">+</span> <span class="n">bpod_settings</span>
-</span><span data-line="130">            <span class="o">+</span> <span class="n">visual_settings</span>
-</span><span data-line="131">        <span class="p">)</span>
-</span><span data-line="132">
-</span><span data-line="133">        <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="134">            <span class="bp">self</span><span class="o">.</span><span class="n">restorable_settings</span>
-</span><span data-line="135">            <span class="o">+</span> <span class="n">telegram_settings</span>
-</span><span data-line="136">            <span class="o">+</span> <span class="n">directory_settings</span>
-</span><span data-line="137">            <span class="o">+</span> <span class="n">camera_settings</span>
-</span><span data-line="138">            <span class="o">+</span> <span class="n">motor_settings</span>
-</span><span data-line="139">            <span class="o">+</span> <span class="n">hidden_settings</span>
-</span><span data-line="140">        <span class="p">)</span>
-</span><span data-line="141">
-</span><span data-line="142">        <span class="bp">self</span><span class="o">.</span><span class="n">check_settings</span><span class="p">()</span></div>
+</span><span data-line="67">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+</span><span data-line="68">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="69">        <span class="n">main_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="70">        <span class="n">sound_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="71">        <span class="n">screen_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="72">        <span class="n">touchscreen_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="73">        <span class="n">telegram_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="74">        <span class="n">directory_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="75">        <span class="n">sync_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="76">        <span class="n">server_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="77">        <span class="n">device_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="78">        <span class="n">led_strip_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="79">        <span class="n">hourly_alarm_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="80">        <span class="n">cycle_alarm_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="81">        <span class="n">session_alarm_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="82">        <span class="n">cam_framerate_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="83">        <span class="n">corridor_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="84">        <span class="n">extra_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="85">        <span class="n">controller_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="86">        <span class="n">bpod_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="87">        <span class="n">camera_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="88">        <span class="n">motor_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="89">        <span class="n">visual_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="90">        <span class="n">hidden_settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Setting</span><span class="p">],</span>
+</span><span data-line="91">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="92">
+</span><span data-line="93">        <span class="bp">self</span><span class="o">.</span><span class="n">main_settings</span> <span class="o">=</span> <span class="n">main_settings</span>
+</span><span data-line="94">        <span class="bp">self</span><span class="o">.</span><span class="n">sound_settings</span> <span class="o">=</span> <span class="n">sound_settings</span>
+</span><span data-line="95">        <span class="bp">self</span><span class="o">.</span><span class="n">screen_settings</span> <span class="o">=</span> <span class="n">screen_settings</span>
+</span><span data-line="96">        <span class="bp">self</span><span class="o">.</span><span class="n">touchscreen_settings</span> <span class="o">=</span> <span class="n">touchscreen_settings</span>
+</span><span data-line="97">        <span class="bp">self</span><span class="o">.</span><span class="n">telegram_settings</span> <span class="o">=</span> <span class="n">telegram_settings</span>
+</span><span data-line="98">        <span class="bp">self</span><span class="o">.</span><span class="n">directory_settings</span> <span class="o">=</span> <span class="n">directory_settings</span>
+</span><span data-line="99">        <span class="bp">self</span><span class="o">.</span><span class="n">sync_settings</span> <span class="o">=</span> <span class="n">sync_settings</span>
+</span><span data-line="100">        <span class="bp">self</span><span class="o">.</span><span class="n">server_settings</span> <span class="o">=</span> <span class="n">server_settings</span>
+</span><span data-line="101">        <span class="bp">self</span><span class="o">.</span><span class="n">device_settings</span> <span class="o">=</span> <span class="n">device_settings</span>
+</span><span data-line="102">        <span class="bp">self</span><span class="o">.</span><span class="n">led_strip_settings</span> <span class="o">=</span> <span class="n">led_strip_settings</span>
+</span><span data-line="103">        <span class="bp">self</span><span class="o">.</span><span class="n">hourly_alarm_settings</span> <span class="o">=</span> <span class="n">hourly_alarm_settings</span>
+</span><span data-line="104">        <span class="bp">self</span><span class="o">.</span><span class="n">cycle_alarm_settings</span> <span class="o">=</span> <span class="n">cycle_alarm_settings</span>
+</span><span data-line="105">        <span class="bp">self</span><span class="o">.</span><span class="n">session_alarm_settings</span> <span class="o">=</span> <span class="n">session_alarm_settings</span>
+</span><span data-line="106">        <span class="bp">self</span><span class="o">.</span><span class="n">cam_framerate_settings</span> <span class="o">=</span> <span class="n">cam_framerate_settings</span>
+</span><span data-line="107">        <span class="bp">self</span><span class="o">.</span><span class="n">corridor_settings</span> <span class="o">=</span> <span class="n">corridor_settings</span>
+</span><span data-line="108">        <span class="bp">self</span><span class="o">.</span><span class="n">extra_settings</span> <span class="o">=</span> <span class="n">extra_settings</span>
+</span><span data-line="109">        <span class="bp">self</span><span class="o">.</span><span class="n">controller_settings</span> <span class="o">=</span> <span class="n">controller_settings</span>
+</span><span data-line="110">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod_settings</span> <span class="o">=</span> <span class="n">bpod_settings</span>
+</span><span data-line="111">        <span class="bp">self</span><span class="o">.</span><span class="n">camera_settings</span> <span class="o">=</span> <span class="n">camera_settings</span>
+</span><span data-line="112">        <span class="bp">self</span><span class="o">.</span><span class="n">motor_settings</span> <span class="o">=</span> <span class="n">motor_settings</span>
+</span><span data-line="113">        <span class="bp">self</span><span class="o">.</span><span class="n">visual_settings</span> <span class="o">=</span> <span class="n">visual_settings</span>
+</span><span data-line="114">        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_settings</span> <span class="o">=</span> <span class="n">hidden_settings</span>
+</span><span data-line="115">        <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span> <span class="o">=</span> <span class="n">QSettings</span><span class="p">(</span><span class="s2">&quot;village&quot;</span><span class="p">,</span> <span class="s2">&quot;village&quot;</span><span class="p">)</span>
+</span><span data-line="116">
+</span><span data-line="117">        <span class="bp">self</span><span class="o">.</span><span class="n">restorable_settings</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="118">            <span class="n">main_settings</span>
+</span><span data-line="119">            <span class="o">+</span> <span class="n">sound_settings</span>
+</span><span data-line="120">            <span class="o">+</span> <span class="n">screen_settings</span>
+</span><span data-line="121">            <span class="o">+</span> <span class="n">touchscreen_settings</span>
+</span><span data-line="122">            <span class="o">+</span> <span class="n">sync_settings</span>
+</span><span data-line="123">            <span class="o">+</span> <span class="n">server_settings</span>
+</span><span data-line="124">            <span class="o">+</span> <span class="n">device_settings</span>
+</span><span data-line="125">            <span class="o">+</span> <span class="n">led_strip_settings</span>
+</span><span data-line="126">            <span class="o">+</span> <span class="n">hourly_alarm_settings</span>
+</span><span data-line="127">            <span class="o">+</span> <span class="n">cycle_alarm_settings</span>
+</span><span data-line="128">            <span class="o">+</span> <span class="n">session_alarm_settings</span>
+</span><span data-line="129">            <span class="o">+</span> <span class="n">cam_framerate_settings</span>
+</span><span data-line="130">            <span class="o">+</span> <span class="n">corridor_settings</span>
+</span><span data-line="131">            <span class="o">+</span> <span class="n">extra_settings</span>
+</span><span data-line="132">            <span class="o">+</span> <span class="n">controller_settings</span>
+</span><span data-line="133">            <span class="o">+</span> <span class="n">bpod_settings</span>
+</span><span data-line="134">            <span class="o">+</span> <span class="n">visual_settings</span>
+</span><span data-line="135">        <span class="p">)</span>
+</span><span data-line="136">
+</span><span data-line="137">        <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="138">            <span class="bp">self</span><span class="o">.</span><span class="n">restorable_settings</span>
+</span><span data-line="139">            <span class="o">+</span> <span class="n">telegram_settings</span>
+</span><span data-line="140">            <span class="o">+</span> <span class="n">directory_settings</span>
+</span><span data-line="141">            <span class="o">+</span> <span class="n">camera_settings</span>
+</span><span data-line="142">            <span class="o">+</span> <span class="n">motor_settings</span>
+</span><span data-line="143">            <span class="o">+</span> <span class="n">hidden_settings</span>
+</span><span data-line="144">        <span class="p">)</span>
+</span><span data-line="145">
+</span><span data-line="146">        <span class="bp">self</span><span class="o">.</span><span class="n">check_settings</span><span class="p">()</span></div>
 
-</span><span data-line="143">
+</span><span data-line="147">
 <div class="viewcode-block" id="Settings.restore_factory_settings">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.restore_factory_settings">[docs]</a>
-</span><span data-line="144">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_factory_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="145"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all restorable settings to their factory default values.&quot;&quot;&quot;</span>
-</span><span data-line="146">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">restorable_settings</span><span class="p">:</span>
-</span><span data-line="147">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-</span><span data-line="148">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
-</span><span data-line="149">            <span class="n">old_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
-</span><span data-line="150">            <span class="k">if</span> <span class="n">old_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="151">                <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+</span><span data-line="148">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_factory_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="149"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all restorable settings to their factory default values.&quot;&quot;&quot;</span>
+</span><span data-line="150">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">restorable_settings</span><span class="p">:</span>
+</span><span data-line="151">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="152">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
+</span><span data-line="153">            <span class="n">old_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+</span><span data-line="154">            <span class="k">if</span> <span class="n">old_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="155">                <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
-</span><span data-line="152">
+</span><span data-line="156">
 <div class="viewcode-block" id="Settings.restore_visual_settings">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.restore_visual_settings">[docs]</a>
-</span><span data-line="153">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_visual_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="154"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset visual settings to their factory default values.&quot;&quot;&quot;</span>
-</span><span data-line="155">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">visual_settings</span><span class="p">:</span>
-</span><span data-line="156">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+</span><span data-line="157">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_visual_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="158"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset visual settings to their factory default values.&quot;&quot;&quot;</span>
+</span><span data-line="159">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">visual_settings</span><span class="p">:</span>
+</span><span data-line="160">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
-</span><span data-line="157">
+</span><span data-line="161">
 <div class="viewcode-block" id="Settings.restore_directory_settings">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.restore_directory_settings">[docs]</a>
-</span><span data-line="158">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_directory_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="159"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset directory settings to their factory default values.&quot;&quot;&quot;</span>
-</span><span data-line="160">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory_settings</span><span class="p">:</span>
-</span><span data-line="161">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+</span><span data-line="162">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_directory_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="163"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset directory settings to their factory default values.&quot;&quot;&quot;</span>
+</span><span data-line="164">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory_settings</span><span class="p">:</span>
+</span><span data-line="165">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
-</span><span data-line="162">
+</span><span data-line="166">
 <div class="viewcode-block" id="Settings.restore_all_settings">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.restore_all_settings">[docs]</a>
-</span><span data-line="163">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_all_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="164"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize all settings with their factory defaults in QSettings.&quot;&quot;&quot;</span>
-</span><span data-line="165">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
-</span><span data-line="166">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+</span><span data-line="167">    <span class="k">def</span><span class="w"> </span><span class="nf">restore_all_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="168"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize all settings with their factory defaults in QSettings.&quot;&quot;&quot;</span>
+</span><span data-line="169">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
+</span><span data-line="170">            <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
-</span><span data-line="167">
+</span><span data-line="171">
 <div class="viewcode-block" id="Settings.add_new_settings">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.add_new_settings">[docs]</a>
-</span><span data-line="168">    <span class="k">def</span><span class="w"> </span><span class="nf">add_new_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="169"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Add any missing settings to QSettings with their default values.&quot;&quot;&quot;</span>
-</span><span data-line="170">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
-</span><span data-line="171">            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">allKeys</span><span class="p">():</span>
-</span><span data-line="172">                <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+</span><span data-line="172">    <span class="k">def</span><span class="w"> </span><span class="nf">add_new_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="173"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Add any missing settings to QSettings with their default values.&quot;&quot;&quot;</span>
+</span><span data-line="174">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
+</span><span data-line="175">            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">allKeys</span><span class="p">():</span>
+</span><span data-line="176">                <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
-</span><span data-line="173">
+</span><span data-line="177">
 <div class="viewcode-block" id="Settings.check_settings">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.check_settings">[docs]</a>
-</span><span data-line="174">    <span class="k">def</span><span class="w"> </span><span class="nf">check_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="175"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure all required settings exist in storage.</span>
-</span><span data-line="176">
-</span><span data-line="177"><span class="sd">        If it&#39;s the first launch, creates all factory settings.</span>
-</span><span data-line="178"><span class="sd">        Otherwise, adds any new settings that are missing.</span>
-</span><span data-line="179"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="180">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FIRST_LAUNCH&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="181">            <span class="bp">self</span><span class="o">.</span><span class="n">restore_all_settings</span><span class="p">()</span>
-</span><span data-line="182">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="183">            <span class="bp">self</span><span class="o">.</span><span class="n">add_new_settings</span><span class="p">()</span></div>
+</span><span data-line="178">    <span class="k">def</span><span class="w"> </span><span class="nf">check_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="179"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure all required settings exist in storage.</span>
+</span><span data-line="180">
+</span><span data-line="181"><span class="sd">        If it&#39;s the first launch, creates all factory settings.</span>
+</span><span data-line="182"><span class="sd">        Otherwise, adds any new settings that are missing.</span>
+</span><span data-line="183"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="184">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FIRST_LAUNCH&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="185">            <span class="bp">self</span><span class="o">.</span><span class="n">restore_all_settings</span><span class="p">()</span>
+</span><span data-line="186">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="187">            <span class="bp">self</span><span class="o">.</span><span class="n">add_new_settings</span><span class="p">()</span></div>
 
-</span><span data-line="184">
+</span><span data-line="188">
 <div class="viewcode-block" id="Settings.get">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.get">[docs]</a>
-</span><span data-line="185">    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span data-line="186"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the value of a setting.</span>
-</span><span data-line="187">
-</span><span data-line="188"><span class="sd">        Args:</span>
-</span><span data-line="189"><span class="sd">            key (str): The identifier of the setting.</span>
-</span><span data-line="190">
-</span><span data-line="191"><span class="sd">        Returns:</span>
-</span><span data-line="192"><span class="sd">            Any: The value of the setting converted to its appropriate type,</span>
-</span><span data-line="193"><span class="sd">            or None if the setting or value is invalid.</span>
-</span><span data-line="194"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="195">        <span class="n">setting</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="196">        <span class="k">if</span> <span class="n">setting</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="197">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="198">        <span class="nb">type</span> <span class="o">=</span> <span class="n">setting</span><span class="o">.</span><span class="n">value_type</span>
-</span><span data-line="199">
-</span><span data-line="200">        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span data-line="201">        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="202">            <span class="k">return</span> <span class="n">setting</span><span class="o">.</span><span class="n">value</span>
+</span><span data-line="189">    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span data-line="190"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the value of a setting.</span>
+</span><span data-line="191">
+</span><span data-line="192"><span class="sd">        Args:</span>
+</span><span data-line="193"><span class="sd">            key (str): The identifier of the setting.</span>
+</span><span data-line="194">
+</span><span data-line="195"><span class="sd">        Returns:</span>
+</span><span data-line="196"><span class="sd">            Any: The value of the setting converted to its appropriate type,</span>
+</span><span data-line="197"><span class="sd">            or None if the setting or value is invalid.</span>
+</span><span data-line="198"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="199">        <span class="n">setting</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="200">        <span class="k">if</span> <span class="n">setting</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="201">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="202">        <span class="nb">type</span> <span class="o">=</span> <span class="n">setting</span><span class="o">.</span><span class="n">value_type</span>
 </span><span data-line="203">
-</span><span data-line="204">        <span class="c1"># If QSettings returns a QVariant/PyQt object/string that is not the value</span>
-</span><span data-line="205">        <span class="c1"># we expect but contains &quot;QSettings&quot;, it&#39;s likely a Sphinx build</span>
-</span><span data-line="206">        <span class="c1"># artifact or mock issue.</span>
-</span><span data-line="207">        <span class="n">val_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-</span><span data-line="208">        <span class="k">if</span> <span class="s2">&quot;QSettings&quot;</span> <span class="ow">in</span> <span class="n">val_str</span> <span class="ow">or</span> <span class="s2">&quot;PyQt5&quot;</span> <span class="ow">in</span> <span class="n">val_str</span><span class="p">:</span>
-</span><span data-line="209">            <span class="k">return</span> <span class="n">setting</span><span class="o">.</span><span class="n">value</span>
-</span><span data-line="210">
-</span><span data-line="211">        <span class="n">str_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-</span><span data-line="212">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="213">            <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="214">                <span class="k">return</span> <span class="n">str_value</span>
-</span><span data-line="215">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
-</span><span data-line="216">                <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="217">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
-</span><span data-line="218">                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="219">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Active</span><span class="p">:</span>
-</span><span data-line="220">                <span class="k">return</span> <span class="n">Active</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="221">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Color</span><span class="p">:</span>
-</span><span data-line="222">                <span class="k">return</span> <span class="n">Color</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="223">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">ControllerEnum</span><span class="p">:</span>
-</span><span data-line="224">                <span class="k">return</span> <span class="n">ControllerEnum</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="225">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">SyncType</span><span class="p">:</span>
-</span><span data-line="226">                <span class="k">return</span> <span class="n">SyncType</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="227">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Actions</span><span class="p">:</span>
-</span><span data-line="228">                <span class="k">return</span> <span class="n">Actions</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="229">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Info</span><span class="p">:</span>
-</span><span data-line="230">                <span class="k">return</span> <span class="n">Info</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="231">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Cycle</span><span class="p">:</span>
-</span><span data-line="232">                <span class="k">return</span> <span class="n">Cycle</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="233">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">ScreenActive</span><span class="p">:</span>
-</span><span data-line="234">                <span class="k">return</span> <span class="n">ScreenActive</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="235">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">AreaActive</span><span class="p">:</span>
-</span><span data-line="236">                <span class="k">return</span> <span class="n">AreaActive</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="237">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">OldVersion</span><span class="p">:</span>
-</span><span data-line="238">                <span class="k">return</span> <span class="n">OldVersion</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
-</span><span data-line="239">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span data-line="240">                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span data-line="241">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-</span><span data-line="242">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="243">                    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
-</span><span data-line="244">                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span data-line="245">                    <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-</span><span data-line="246">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-</span><span data-line="247">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="248">                    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
-</span><span data-line="249">                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span data-line="250">                    <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-</span><span data-line="251">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">list</span><span class="p">[</span><span class="n">Active</span><span class="p">]:</span>
-</span><span data-line="252">                <span class="k">return</span> <span class="p">[</span><span class="n">Active</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
-</span><span data-line="253">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="254">                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span data-line="255">        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span data-line="256">            <span class="k">return</span> <span class="kc">None</span></div>
+</span><span data-line="204">        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</span><span data-line="205">        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="206">            <span class="k">return</span> <span class="n">setting</span><span class="o">.</span><span class="n">value</span>
+</span><span data-line="207">
+</span><span data-line="208">        <span class="c1"># If QSettings returns a QVariant/PyQt object/string that is not the value</span>
+</span><span data-line="209">        <span class="c1"># we expect but contains &quot;QSettings&quot;, it&#39;s likely a Sphinx build</span>
+</span><span data-line="210">        <span class="c1"># artifact or mock issue.</span>
+</span><span data-line="211">        <span class="n">val_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</span><span data-line="212">        <span class="k">if</span> <span class="s2">&quot;QSettings&quot;</span> <span class="ow">in</span> <span class="n">val_str</span> <span class="ow">or</span> <span class="s2">&quot;PyQt5&quot;</span> <span class="ow">in</span> <span class="n">val_str</span><span class="p">:</span>
+</span><span data-line="213">            <span class="k">return</span> <span class="n">setting</span><span class="o">.</span><span class="n">value</span>
+</span><span data-line="214">
+</span><span data-line="215">        <span class="n">str_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</span><span data-line="216">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="217">            <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="218">                <span class="k">return</span> <span class="n">str_value</span>
+</span><span data-line="219">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="220">                <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="221">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="222">                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="223">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Active</span><span class="p">:</span>
+</span><span data-line="224">                <span class="k">return</span> <span class="n">Active</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="225">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Color</span><span class="p">:</span>
+</span><span data-line="226">                <span class="k">return</span> <span class="n">Color</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="227">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">ControllerEnum</span><span class="p">:</span>
+</span><span data-line="228">                <span class="k">return</span> <span class="n">ControllerEnum</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="229">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">SyncType</span><span class="p">:</span>
+</span><span data-line="230">                <span class="k">return</span> <span class="n">SyncType</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="231">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Actions</span><span class="p">:</span>
+</span><span data-line="232">                <span class="k">return</span> <span class="n">Actions</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="233">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Info</span><span class="p">:</span>
+</span><span data-line="234">                <span class="k">return</span> <span class="n">Info</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="235">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">Cycle</span><span class="p">:</span>
+</span><span data-line="236">                <span class="k">return</span> <span class="n">Cycle</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="237">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">ScreenActive</span><span class="p">:</span>
+</span><span data-line="238">                <span class="k">return</span> <span class="n">ScreenActive</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="239">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">AreaActive</span><span class="p">:</span>
+</span><span data-line="240">                <span class="k">return</span> <span class="n">AreaActive</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="241">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">OldVersion</span><span class="p">:</span>
+</span><span data-line="242">                <span class="k">return</span> <span class="n">OldVersion</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="243">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">PixelType</span><span class="p">:</span>
+</span><span data-line="244">                <span class="k">return</span> <span class="n">PixelType</span><span class="p">(</span><span class="n">str_value</span><span class="p">)</span>
+</span><span data-line="245">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span data-line="246">                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</span><span data-line="247">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+</span><span data-line="248">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="249">                    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+</span><span data-line="250">                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span data-line="251">                    <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+</span><span data-line="252">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+</span><span data-line="253">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="254">                    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+</span><span data-line="255">                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span data-line="256">                    <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+</span><span data-line="257">            <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="nb">list</span><span class="p">[</span><span class="n">Active</span><span class="p">]:</span>
+</span><span data-line="258">                <span class="k">return</span> <span class="p">[</span><span class="n">Active</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+</span><span data-line="259">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="260">                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</span><span data-line="261">        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span data-line="262">            <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span data-line="257">
+</span><span data-line="263">
 <div class="viewcode-block" id="Settings.get_text">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.get_text">[docs]</a>
-</span><span data-line="258">    <span class="k">def</span><span class="w"> </span><span class="nf">get_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="259"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the string representation of the value of a setting.&quot;&quot;&quot;</span>
-</span><span data-line="260">        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">))</span></div>
+</span><span data-line="264">    <span class="k">def</span><span class="w"> </span><span class="nf">get_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="265"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the string representation of the value of a setting.&quot;&quot;&quot;</span>
+</span><span data-line="266">        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">))</span></div>
 
-</span><span data-line="261">
+</span><span data-line="267">
 <div class="viewcode-block" id="Settings.get_values">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.get_values">[docs]</a>
-</span><span data-line="262">    <span class="k">def</span><span class="w"> </span><span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span data-line="263"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the possible values of a setting when it is a enum or list of enums&quot;&quot;&quot;</span>
-</span><span data-line="264">        <span class="n">type0</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">type0</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="265">        <span class="n">type1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">type1</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="266">        <span class="k">if</span> <span class="n">type0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="267">            <span class="k">return</span> <span class="p">[]</span>
-</span><span data-line="268">        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type0</span><span class="p">,</span> <span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="269">            <span class="k">return</span> <span class="n">type0</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-</span><span data-line="270">        <span class="k">elif</span> <span class="n">type1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="271">            <span class="k">return</span> <span class="p">[]</span>
-</span><span data-line="272">        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type1</span><span class="p">,</span> <span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="273">            <span class="k">return</span> <span class="n">type1</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-</span><span data-line="274">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="275">            <span class="k">return</span> <span class="p">[]</span></div>
+</span><span data-line="268">    <span class="k">def</span><span class="w"> </span><span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span data-line="269"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the possible values of a setting when it is a enum or list of enums&quot;&quot;&quot;</span>
+</span><span data-line="270">        <span class="n">type0</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">type0</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="271">        <span class="n">type1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">type1</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="272">        <span class="k">if</span> <span class="n">type0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="273">            <span class="k">return</span> <span class="p">[]</span>
+</span><span data-line="274">        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type0</span><span class="p">,</span> <span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="275">            <span class="k">return</span> <span class="n">type0</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</span><span data-line="276">        <span class="k">elif</span> <span class="n">type1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="277">            <span class="k">return</span> <span class="p">[]</span>
+</span><span data-line="278">        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type1</span><span class="p">,</span> <span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="279">            <span class="k">return</span> <span class="n">type1</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</span><span data-line="280">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="281">            <span class="k">return</span> <span class="p">[]</span></div>
 
-</span><span data-line="276">
+</span><span data-line="282">
 <div class="viewcode-block" id="Settings.get_index">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.get_index">[docs]</a>
-</span><span data-line="277">    <span class="k">def</span><span class="w"> </span><span class="nf">get_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span data-line="278"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the index of the value of a setting when it is a enum or list of enums&quot;&quot;&quot;</span>
-</span><span data-line="279">        <span class="n">type0</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">type0</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="280">        <span class="k">if</span> <span class="n">type0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="281">            <span class="k">return</span> <span class="mi">0</span>
-</span><span data-line="282">        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type0</span><span class="p">,</span> <span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="283">            <span class="k">return</span> <span class="n">type0</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-</span><span data-line="284">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="285">            <span class="k">return</span> <span class="mi">0</span></div>
+</span><span data-line="283">    <span class="k">def</span><span class="w"> </span><span class="nf">get_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="284"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the index of the value of a setting when it is a enum or list of enums&quot;&quot;&quot;</span>
+</span><span data-line="285">        <span class="n">type0</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">type0</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="286">        <span class="k">if</span> <span class="n">type0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="287">            <span class="k">return</span> <span class="mi">0</span>
+</span><span data-line="288">        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type0</span><span class="p">,</span> <span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="289">            <span class="k">return</span> <span class="n">type0</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+</span><span data-line="290">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="291">            <span class="k">return</span> <span class="mi">0</span></div>
 
-</span><span data-line="286">
+</span><span data-line="292">
 <div class="viewcode-block" id="Settings.get_indices">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.get_indices">[docs]</a>
-</span><span data-line="287">    <span class="k">def</span><span class="w"> </span><span class="nf">get_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-</span><span data-line="288"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the index of the value of a setting when it is a enum or list of enums&quot;&quot;&quot;</span>
-</span><span data-line="289">        <span class="n">type1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">type1</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="290">        <span class="k">if</span> <span class="n">type1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="291">            <span class="k">return</span> <span class="p">[]</span>
-</span><span data-line="292">        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type1</span><span class="p">,</span> <span class="n">SuperEnum</span><span class="p">):</span>
-</span><span data-line="293">            <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span data-line="294">            <span class="k">return</span> <span class="p">[</span><span class="n">type1</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
-</span><span data-line="295">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="296">            <span class="k">return</span> <span class="p">[]</span></div>
+</span><span data-line="293">    <span class="k">def</span><span class="w"> </span><span class="nf">get_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+</span><span data-line="294"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the index of the value of a setting when it is a enum or list of enums&quot;&quot;&quot;</span>
+</span><span data-line="295">        <span class="n">type1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">type1</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="296">        <span class="k">if</span> <span class="n">type1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="297">            <span class="k">return</span> <span class="p">[]</span>
+</span><span data-line="298">        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type1</span><span class="p">,</span> <span class="n">SuperEnum</span><span class="p">):</span>
+</span><span data-line="299">            <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</span><span data-line="300">            <span class="k">return</span> <span class="p">[</span><span class="n">type1</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+</span><span data-line="301">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="302">            <span class="k">return</span> <span class="p">[]</span></div>
 
-</span><span data-line="297">
+</span><span data-line="303">
 <div class="viewcode-block" id="Settings.get_description">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.get_description">[docs]</a>
-</span><span data-line="298">    <span class="k">def</span><span class="w"> </span><span class="nf">get_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="299"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the description of a setting.&quot;&quot;&quot;</span>
-</span><span data-line="300">        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">description</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+</span><span data-line="304">    <span class="k">def</span><span class="w"> </span><span class="nf">get_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="305"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the description of a setting.&quot;&quot;&quot;</span>
+</span><span data-line="306">        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">description</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="301">
+</span><span data-line="307">
 <div class="viewcode-block" id="Settings.get_type">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.get_type">[docs]</a>
-</span><span data-line="302">    <span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="303"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the type of a setting.&quot;&quot;&quot;</span>
-</span><span data-line="304">        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">value_type</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+</span><span data-line="308">    <span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="309"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the type of a setting.&quot;&quot;&quot;</span>
+</span><span data-line="310">        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">value_type</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">key</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 
-</span><span data-line="305">
+</span><span data-line="311">
 <div class="viewcode-block" id="Settings.set">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.set">[docs]</a>
-</span><span data-line="306">    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="307">        <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+</span><span data-line="312">    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="313">        <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-</span><span data-line="308">
+</span><span data-line="314">
 <div class="viewcode-block" id="Settings.sync">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.sync">[docs]</a>
-</span><span data-line="309">    <span class="k">def</span><span class="w"> </span><span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="310">        <span class="c1"># force to save the settings in disk,</span>
-</span><span data-line="311">        <span class="c1"># only necessary when the application is not closed but reloaded</span>
-</span><span data-line="312">        <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span></div>
+</span><span data-line="315">    <span class="k">def</span><span class="w"> </span><span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="316">        <span class="c1"># force to save the settings in disk,</span>
+</span><span data-line="317">        <span class="c1"># only necessary when the application is not closed but reloaded</span>
+</span><span data-line="318">        <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span></div>
 
-</span><span data-line="313">
+</span><span data-line="319">
 <div class="viewcode-block" id="Settings.print">
 <a class="viewcode-back" href="../../../api_generated/village.classes.settings_class.Settings.html#village.classes.settings_class.Settings.print">[docs]</a>
-</span><span data-line="314">    <span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="315">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
-</span><span data-line="316">            <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
-</span><span data-line="317">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;value:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">))</span>
-</span><span data-line="318">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;value_type:&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value_type</span><span class="p">)</span>
-</span><span data-line="319">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;default_value:&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-</span><span data-line="320">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+</span><span data-line="320">    <span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="321">        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_settings</span><span class="p">:</span>
+</span><span data-line="322">            <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+</span><span data-line="323">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;value:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">key</span><span class="p">))</span>
+</span><span data-line="324">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;value_type:&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value_type</span><span class="p">)</span>
+</span><span data-line="325">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;default_value:&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="326">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 </div>
 
 </span></pre></div>
@@ -847,7 +856,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=3dedde02"></script>
+      <script src="../../../_static/documentation_options.js?v=c630e840"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

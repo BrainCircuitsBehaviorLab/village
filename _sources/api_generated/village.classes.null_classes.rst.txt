@@ -22,12 +22,12 @@ null\_classes
       :toctree:
       :template: custom_class_template.rst
    
-      LEDStripBase
       NullBpod
       NullCalibrationBase
       NullCamera
       NullChip
       NullCollection
+      NullLEDStrip
       NullMotor
       NullScale
       NullSoftCodeToBpod
@@ -35,6 +35,7 @@ null\_classes
       NullStateMachine
       NullTelegramBot
       NullTempSensor
+      NullTouch
    
    
 

@@ -1,7 +1,7 @@
-behavior\_window
-================
+screen
+======
 
-.. automodule:: village.screen.behavior_window
+.. automodule:: village.devices.screen
    :no-members:
    :no-undoc-members:
    :no-inherited-members:

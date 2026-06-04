@@ -1,0 +1,35 @@
+NullTouch
+=========
+
+.. currentmodule:: village.classes.null_classes
+
+.. autoclass:: NullTouch
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~NullTouch.__init__
+      ~NullTouch.clear
+      ~NullTouch.get_events
+      ~NullTouch.stop
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~NullTouch.events
+   
+   

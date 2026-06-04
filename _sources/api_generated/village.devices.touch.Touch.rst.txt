@@ -1,0 +1,28 @@
+Touch
+=====
+
+.. currentmodule:: village.devices.touch
+
+.. autoclass:: Touch
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~Touch.__init__
+      ~Touch.clear
+      ~Touch.get_events
+      ~Touch.stop
+   
+   
+
+   
+   
+   
