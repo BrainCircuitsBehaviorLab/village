@@ -10,6 +10,7 @@ from village.classes.settings_class import (
     Cycle,
     Info,
     OldVersion,
+    PixelType,
     ScreenActive,
     Setting,
     Settings,
@@ -73,6 +74,14 @@ using real-world units instead of pixels.""",
 ]
 
 touchscreen_settings = [
+    Setting(
+        "TOUCHSCREEN_DEVICE",
+        "",
+        str,
+        """Name of the touchscreen input device as it appears in
+/proc/bus/input/devices (e.g. 'USB Touch USB Touch'). The system uses this
+name to locate the device path automatically at startup.""",
+    ),
     Setting(
         "TOUCH_RESOLUTION",
         [4096, 4096],
@@ -209,6 +218,35 @@ server_settings = [
         str,
         """The port number used to connect to the remote server. Leave this field empty
 if you don't need to specify a particular port for the SSH connection.""",
+    ),
+]
+
+led_strip_settings = [
+    Setting(
+        "SPI_DEVICE",
+        "/dev/spidev0.0",
+        str,
+        "SPI device path used to communicate with the LED strip.",
+    ),
+    Setting(
+        "NUMBER_OF_LEDS",
+        10,
+        int,
+        "Number of LEDs in the strip.",
+    ),
+    Setting(
+        "SPI_SPEED_KHZ",
+        800,
+        int,
+        "SPI bus speed in kHz.",
+    ),
+    Setting(
+        "PIXEL_TYPE",
+        "RGB",
+        PixelType,
+        """Color channel order of the LED strip pixels.
+RGB and GRB are for 3-channel LEDs; RGBW and GRBW are for 4-channel LEDs
+with a dedicated white channel.""",
     ),
 ]
 
@@ -788,6 +826,7 @@ settings = Settings(
     sync_settings,
     server_settings,
     device_settings,
+    led_strip_settings,
     hourly_alarm_settings,
     cycle_alarm_settings,
     session_alarm_settings,

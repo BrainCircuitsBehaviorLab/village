@@ -13,7 +13,6 @@ API
     village.devices
     village.gui
     village.plots
-    village.screen
     village.scripts
     village.manager
     village.main

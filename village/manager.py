@@ -22,10 +22,7 @@ from village.classes.enums import (
     State,
     SyncType,
 )
-from village.classes.null_classes import (
-    NullBehaviorWindow,
-    NullCamera,
-)
+from village.classes.null_classes import NullCamera
 from village.classes.subject import Subject
 from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
@@ -46,6 +43,7 @@ from village.devices.chip import (
     visible_light_box,
     visible_light_corridor,
 )
+from village.devices.screen import screen
 from village.devices.temp_sensor import temp_sensor
 from village.scripts import utils
 from village.scripts.log import log
@@ -54,7 +52,6 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.devices.camera import Camera
-    from village.screen.behavior_window import BehaviorWindow
 
 
 class Manager:
@@ -170,7 +167,6 @@ class Manager:
 
         self.healthchecks_url = settings.get("HEALTHCHECKS_URL")
 
-        self.behavior_window: BehaviorWindow | NullBehaviorWindow = NullBehaviorWindow()
         self.cam_box: Camera | NullCamera = NullCamera()
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
@@ -329,6 +325,7 @@ class Manager:
             self.task.calibrations = self.calibrations
             self.task.functions = self.functions
             self.direct_functions.task = self.task
+            self.camera_trigger.task = self.task
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -351,6 +348,7 @@ class Manager:
         self.task.controller_type = self.controller_type
         self.task.functions = self.functions
         self.direct_functions.task = self.task
+        self.camera_trigger.task = self.task
         log.start(task=self.task.name, subject="None")
         self.run_task_in_thread()
 
@@ -388,6 +386,7 @@ class Manager:
                 self.task.controller_type = self.controller_type
                 self.task.functions = self.functions
                 self.direct_functions.task = self.task
+                self.camera_trigger.task = self.task
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -498,8 +497,8 @@ class Manager:
             run_mode (str): The mode in which the task was run (e.g., "Auto", "Manual").
         """
         # TODO kill the touchscreen reading
-        self.behavior_window.load_draw_function(None)
-        self.behavior_window.stop_drawing()
+        screen.load_draw_function(None)
+        screen.stop_drawing()
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
             run_mode
         )
@@ -824,19 +823,6 @@ class Manager:
             log.alarm("Low disk space (less than 10GB)")
 
         self.send_heartbeat()
-
-    def run_softcode_function(self, number: int) -> None:
-        """Runs a user-defined softcode function.
-
-        Args:
-            number (int): The function index (1-based).
-        """
-        try:
-            self.functions[number]()
-        except Exception:
-            log.error(
-                "Error running function" + str(number), exception=traceback.format_exc()
-            )
 
 
 manager = Manager()

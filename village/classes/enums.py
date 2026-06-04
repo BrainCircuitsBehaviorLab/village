@@ -231,3 +231,10 @@ class Save(SuperEnum):
     NO = "NO"
     ZERO = "ZERO"
     ERROR = "ERROR"
+
+
+class PixelType(SuperEnum):
+    RGB = "RGB"
+    GRB = "GRB"
+    RGBW = "RGBW"
+    GRBW = "GRBW"

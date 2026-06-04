@@ -361,8 +361,12 @@ class NullCamera:
         return
 
 
-class NullBehaviorWindow(QWidget):
+class NullScreen(QWidget):
     background_color = None
+    width_px: int = 0
+    height_px: int = 0
+    width_mm: int = 0
+    height_mm: int = 0
 
     def start_drawing(self) -> None:
         """Starts the drawing mode."""
@@ -412,7 +416,20 @@ class NullBehaviorWindow(QWidget):
         return None
 
 
-class LEDStripBase:
+class NullTouch:
+    events: list = []
+
+    def get_events(self) -> list:
+        return []
+
+    def clear(self) -> None:
+        return
+
+    def stop(self) -> None:
+        return
+
+
+class NullLEDStrip:
     """Base class for LED strip"""
 
     error: str = "LED strip not available."

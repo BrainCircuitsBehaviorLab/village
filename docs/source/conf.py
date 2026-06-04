@@ -77,7 +77,7 @@ _hardware_village_modules = [
     "village.gui.tasks_layout",
     "village.main",
     "village.manager",
-    "village.screen.behavior_window",
+    "village.devices.screen",
     "village.scripts.import_all",
 ]
 import types as _types
@@ -126,6 +126,7 @@ autodoc_mock_imports = [
     "libcamera",
     "PCA9685_smbus2",
     "pi5neo",
+    "evdev",
 ]
 
 # Add the module path to sys.path here.

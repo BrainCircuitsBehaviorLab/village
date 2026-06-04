@@ -16,7 +16,9 @@ SYSTEM OPERATION
     system_operation/corridor.md
     system_operation/detection.md
     system_operation/toolbar.md
-    system_operation/touchscreen.md
+    system_operation/sound.md
+    system_operation/screen.md
+    system_operation/led_strip.md
     system_operation/data.md
     system_operation/timing.md
     system_operation/state_machine.md

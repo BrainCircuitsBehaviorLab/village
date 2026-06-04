@@ -11,6 +11,7 @@ from village.classes.enums import (
     Cycle,
     Info,
     OldVersion,
+    PixelType,
     ScreenActive,
     SuperEnum,
     SyncType,
@@ -74,6 +75,7 @@ class Settings:
         sync_settings: list[Setting],
         server_settings: list[Setting],
         device_settings: list[Setting],
+        led_strip_settings: list[Setting],
         hourly_alarm_settings: list[Setting],
         cycle_alarm_settings: list[Setting],
         session_alarm_settings: list[Setting],
@@ -97,6 +99,7 @@ class Settings:
         self.sync_settings = sync_settings
         self.server_settings = server_settings
         self.device_settings = device_settings
+        self.led_strip_settings = led_strip_settings
         self.hourly_alarm_settings = hourly_alarm_settings
         self.cycle_alarm_settings = cycle_alarm_settings
         self.session_alarm_settings = session_alarm_settings
@@ -119,6 +122,7 @@ class Settings:
             + sync_settings
             + server_settings
             + device_settings
+            + led_strip_settings
             + hourly_alarm_settings
             + cycle_alarm_settings
             + session_alarm_settings
@@ -236,6 +240,8 @@ class Settings:
                 return AreaActive(str_value)
             elif type == OldVersion:
                 return OldVersion(str_value)
+            elif type == PixelType:
+                return PixelType(str_value)
             elif type == list[str]:
                 return self.saved_settings.value(key)
             elif type == list[int]:
