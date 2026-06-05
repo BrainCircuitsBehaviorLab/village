@@ -451,39 +451,35 @@ data-aria-dark="Switch to auto color mode">
   <article class="yue" role="main">
           <h1>Source code for village.custom_classes.direct_functions_base</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
-</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">cam_box</span>
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
-</span><span data-line="4">
-</span><span data-line="5">
+</span><span data-line="2">
+</span><span data-line="3">
 <div class="viewcode-block" id="DirectFunctionsBase">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html#village.custom_classes.direct_functions_base.DirectFunctionsBase">[docs]</a>
-</span><span data-line="6"><span class="k">class</span><span class="w"> </span><span class="nc">DirectFunctionsBase</span><span class="p">:</span>
-</span><span data-line="7"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="8"><span class="sd">    Override this class in your project to define functions triggered directly.</span>
-</span><span data-line="9"><span class="sd">    For example, you can trigger these functions from the behaviour controller, the</span>
-</span><span data-line="10"><span class="sd">    camera trigger, or the GUI buttons.</span>
-</span><span data-line="11"><span class="sd">    These functions can not accept arguments because they are triggered directly, but</span>
-</span><span data-line="12"><span class="sd">    they can use self.task and then use some of the variables or settings of the</span>
-</span><span data-line="13"><span class="sd">    task.</span>
-</span><span data-line="14">
-</span><span data-line="15"><span class="sd">    Example:</span>
-</span><span data-line="16"><span class="sd">        class DirectFunctions(DirectFunctionsBase):</span>
-</span><span data-line="17"><span class="sd">            def function1(self):</span>
-</span><span data-line="18"><span class="sd">                self.task.water_valve.open()</span>
-</span><span data-line="19">
-</span><span data-line="20"><span class="sd">            def function2(self):</span>
-</span><span data-line="21"><span class="sd">                self.task.screen.show_image(&quot;reward.png&quot;)</span>
-</span><span data-line="22">
-</span><span data-line="23"><span class="sd">            def function3(self):</span>
-</span><span data-line="24"><span class="sd">                self.</span>
-</span><span data-line="25"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="26">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">DirectFunctionsBase</span><span class="p">:</span>
+</span><span data-line="5"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="6"><span class="sd">    Override this class in your project to define functions triggered directly.</span>
+</span><span data-line="7"><span class="sd">    For example, you can trigger these functions from the behaviour controller, the</span>
+</span><span data-line="8"><span class="sd">    camera trigger, or the GUI buttons.</span>
+</span><span data-line="9"><span class="sd">    These functions can not accept arguments because they are triggered directly, but</span>
+</span><span data-line="10"><span class="sd">    they can use self.task and then use some of the variables or settings of the</span>
+</span><span data-line="11"><span class="sd">    task.</span>
+</span><span data-line="12">
+</span><span data-line="13"><span class="sd">    Example:</span>
+</span><span data-line="14"><span class="sd">        class DirectFunctions(DirectFunctionsBase):</span>
+</span><span data-line="15"><span class="sd">            def function1(self):</span>
+</span><span data-line="16"><span class="sd">                self.task.water_valve.open()</span>
+</span><span data-line="17">
+</span><span data-line="18"><span class="sd">            def function2(self):</span>
+</span><span data-line="19"><span class="sd">                self.task.screen.show_image(&quot;reward.png&quot;)</span>
+</span><span data-line="20">
+</span><span data-line="21"><span class="sd">            def function3(self):</span>
+</span><span data-line="22"><span class="sd">                self.</span>
+</span><span data-line="23"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="24">
 <div class="viewcode-block" id="DirectFunctionsBase.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html#village.custom_classes.direct_functions_base.DirectFunctionsBase.__init__">[docs]</a>
-</span><span data-line="27">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="28">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span>
-</span><span data-line="29">        <span class="nb">print</span><span class="p">(</span><span class="n">cam_box</span><span class="p">)</span>
-</span><span data-line="30">        <span class="nb">print</span><span class="p">(</span><span class="n">sound_device</span><span class="p">)</span></div>
+</span><span data-line="25">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="26">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span></div>
 </div>
 
 </span></pre></div>
@@ -510,7 +506,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=55540f80"></script>
+      <script src="../../../_static/documentation_options.js?v=b1edc603"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
