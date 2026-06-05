@@ -222,7 +222,7 @@ sudo sysctl -p
 The touchscreen is read via `evdev`, which requires access to `/dev/input/` devices.
 Add your user to the `input` group:
 
-```bash
+```
 sudo usermod -aG input $USER
 ```
 

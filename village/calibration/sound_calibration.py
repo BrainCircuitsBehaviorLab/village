@@ -899,7 +899,7 @@ class SoundCalibration(CalibrationBase):
         self.reset_values_after_ok_or_add2(delete_df=False)
 
     def stop_button_clicked(self) -> None:
-        if manager.state.can_stop_task():
+        if manager.state.task_is_running():
             log.info("Task manually stopped.", subject=manager.subject.name)
             manager.state = State.SAVE_MANUAL
         elif manager.state.can_go_to_wait():

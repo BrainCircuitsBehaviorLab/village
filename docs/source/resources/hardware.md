@@ -144,7 +144,7 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**Frame Installation**: Place the assembled base onto the aluminum frame structure.
+**Frame Installation**: Place the assembled base onto the aluminum frame structure. You can now slide the camera mount along the profile to align it roughly above the corridor pieces, so the camera records the corridor from directly overhead. Once in position, secure the camera mount with an M4 screw.
 :::
 :::{grid-item}
 :columns: 8
@@ -308,7 +308,7 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**LED Strip Placement**: Mount the LED strip on the frame, starting from the vertical profile furthest from the corridor and continuing along the horizontal ceiling profile. Leave approximately 20 cm from the floor to the start of the strip so that the light always stays above the animals' heads.
+**LED Strip Placement**: Mount the LED strip on the frame, starting from the vertical profile furthest from the corridor and continuing along the horizontal ceiling profile. Leave approximately 20 cm from the floor to the start of the strip so that the light always stays above the animals' heads. Along the horizontal profile, extend the strip to approximately the position of the camera mount (which should sit roughly above the corridor pieces).
 :::
 :::{grid-item}
 :columns: 8

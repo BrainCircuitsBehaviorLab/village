@@ -559,7 +559,7 @@ class Camera:
                 self.write_csv()
                 if self.name == "BOX" and self.is_recording:
                     self.areas_box_ok()
-        if self.name == "BOX":
+        if self.name == "BOX" and manager.state.task_is_running():
             manager.camera_draw.draw(self)
 
     def get_gray_frame(self) -> None:
@@ -613,7 +613,8 @@ class Camera:
                 x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
             )
 
-        manager.camera_trigger.trigger(self)
+        if manager.state.task_is_running():
+            manager.camera_trigger.trigger(self)
 
     def detect_black(self) -> None:
         """Detects black objects in defined areas using thresholding."""

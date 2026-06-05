@@ -27,7 +27,7 @@ regardless of whether a physical monitor is connected to HDMI-1.
 
 **Step 1 — Edit the boot configuration:**
 
-```bash
+```
 sudo nano /boot/firmware/cmdline.txt
 ```
 
@@ -210,4 +210,42 @@ Set `TOUCH_RESOLUTION` to `[Max_X + 1, Max_Y + 1]` — in this example `[4096, 4
 ```{admonition} Note
 :class: tip
 If `evtest` is not installed: `sudo apt install evtest`
+```
+
+**Step 3 — Prevent the touchscreen from controlling the desktop:**
+
+When Training Village is running, Python grabs the touchscreen device exclusively
+via `evdev` (`device.grab()`), so touch events never reach the graphical layer of
+the OS — the animals cannot accidentally interact with the desktop. However, when
+Training Village is not running the device is released and libinput (the input
+layer used by the desktop compositor) picks it up again.
+
+To prevent this permanently — regardless of whether Training Village is running —
+create a udev rule that tells libinput to always ignore the device. Replace
+`USB Touch USB Touch` with the exact name you found in Step 1.
+
+Create the file `/etc/udev/rules.d/99-touchscreen-grab.rules`:
+
+```
+sudo nano /etc/udev/rules.d/99-touchscreen-grab.rules
+```
+
+Add the following line, replacing `USB Touch USB Touch` with the exact device name
+found in Step 1:
+
+```
+SUBSYSTEM=="input", ATTRS{name}=="USB Touch USB Touch", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+```
+
+Save and close the file (`Ctrl+O`, `Enter`, `Ctrl+X`).
+
+This makes libinput ignore the device completely. It remains accessible at
+`/dev/input/eventX` so Training Village can still read it via `evdev`, but the OS
+will never treat it as a pointer device.
+
+Apply the rule without rebooting:
+
+```
+sudo udevadm control --reload-rules
+sudo udevadm trigger
 ```

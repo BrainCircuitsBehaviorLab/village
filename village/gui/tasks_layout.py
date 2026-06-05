@@ -186,7 +186,7 @@ class TasksLayout(Layout):
     # ── Button state management ────────────────────────────────────────────────
 
     def check_buttons(self) -> None:
-        if manager.state.can_stop_task():
+        if manager.state.task_is_running():
             self.run_task_button.setEnabled(False)
             self.menu_list.setEnabled(False)
             for line_edit in self.line_edits.values():

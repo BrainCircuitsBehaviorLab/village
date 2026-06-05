@@ -75,7 +75,8 @@ class Touch:
                         px = int(_x * self._px_per_touch_x)
                         py = int(_y * self._px_per_touch_y)
                         _last_t = t
-                        manager.touch_trigger.trigger(px, py, t)
+                        if manager.state.task_is_running():
+                            manager.touch_trigger.trigger(px, py, t)
         except Exception:
             try:
                 error_queue.put_nowait(("touchscreen", traceback.format_exc()))

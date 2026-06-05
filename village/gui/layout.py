@@ -371,7 +371,7 @@ class Layout(QGridLayout):
         )
         manager.update_text()
         self.status_label.setText(manager.text)
-        if manager.state.can_stop_task():
+        if manager.state.task_is_running():
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop a running task")
             self.stop_button.setEnabled(True)
@@ -621,7 +621,7 @@ class Layout(QGridLayout):
 
     def stop_button_clicked(self) -> None:
         """Handles stop button click to stop tasks, sync, or reset state."""
-        if manager.state.can_stop_task():
+        if manager.state.task_is_running():
             if manager.state == State.RUN_MANUAL:
                 log.info("Task manually stopped.", subject=manager.subject.name)
                 manager.state = State.SAVE_MANUAL
