@@ -532,44 +532,45 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="75">                        <span class="n">px</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_x</span><span class="p">)</span>
 </span><span data-line="76">                        <span class="n">py</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_y</span><span class="p">)</span>
 </span><span data-line="77">                        <span class="n">_last_t</span> <span class="o">=</span> <span class="n">t</span>
-</span><span data-line="78">                        <span class="n">manager</span><span class="o">.</span><span class="n">touch_trigger</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</span><span data-line="79">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="80">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="81">                <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;touchscreen&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
-</span><span data-line="82">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="83">                <span class="k">pass</span>
-</span><span data-line="84">
+</span><span data-line="78">                        <span class="k">if</span> <span class="n">manager</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">task_is_running</span><span class="p">():</span>
+</span><span data-line="79">                            <span class="n">manager</span><span class="o">.</span><span class="n">touch_trigger</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</span><span data-line="80">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="81">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="82">                <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;touchscreen&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
+</span><span data-line="83">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="84">                <span class="k">pass</span>
+</span><span data-line="85">
 <div class="viewcode-block" id="Touch.stop">
 <a class="viewcode-back" href="../../../api_generated/village.devices.touch.Touch.html#village.devices.touch.Touch.stop">[docs]</a>
-</span><span data-line="85">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="86"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the reader thread.&quot;&quot;&quot;</span>
-</span><span data-line="87">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="88">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="89">            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span data-line="90">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="91">            <span class="k">pass</span></div>
+</span><span data-line="86">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="87"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the reader thread.&quot;&quot;&quot;</span>
+</span><span data-line="88">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="89">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="90">            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="91">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="92">            <span class="k">pass</span></div>
 </div>
 
-</span><span data-line="92">
 </span><span data-line="93">
+</span><span data-line="94">
 <div class="viewcode-block" id="get_touch">
 <a class="viewcode-back" href="../../../api_generated/village.devices.touch.get_touch.html#village.devices.touch.get_touch">[docs]</a>
-</span><span data-line="94"><span class="k">def</span><span class="w"> </span><span class="nf">get_touch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Touch</span> <span class="o">|</span> <span class="n">NullTouch</span><span class="p">:</span>
-</span><span data-line="95">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScreenActive</span>
-</span><span data-line="96">
-</span><span data-line="97">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SCREEN&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ScreenActive</span><span class="o">.</span><span class="n">TOUCHSCREEN</span><span class="p">:</span>
-</span><span data-line="98">        <span class="k">return</span> <span class="n">NullTouch</span><span class="p">()</span>
-</span><span data-line="99">    <span class="k">try</span><span class="p">:</span>
-</span><span data-line="100">        <span class="n">ts</span> <span class="o">=</span> <span class="n">Touch</span><span class="p">()</span>
-</span><span data-line="101">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Touchscreen successfully initialized&quot;</span><span class="p">)</span>
-</span><span data-line="102">        <span class="k">return</span> <span class="n">ts</span>
-</span><span data-line="103">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="104">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not initialize touchscreen&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
-</span><span data-line="105">        <span class="k">return</span> <span class="n">NullTouch</span><span class="p">()</span></div>
+</span><span data-line="95"><span class="k">def</span><span class="w"> </span><span class="nf">get_touch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Touch</span> <span class="o">|</span> <span class="n">NullTouch</span><span class="p">:</span>
+</span><span data-line="96">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScreenActive</span>
+</span><span data-line="97">
+</span><span data-line="98">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SCREEN&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ScreenActive</span><span class="o">.</span><span class="n">TOUCHSCREEN</span><span class="p">:</span>
+</span><span data-line="99">        <span class="k">return</span> <span class="n">NullTouch</span><span class="p">()</span>
+</span><span data-line="100">    <span class="k">try</span><span class="p">:</span>
+</span><span data-line="101">        <span class="n">ts</span> <span class="o">=</span> <span class="n">Touch</span><span class="p">()</span>
+</span><span data-line="102">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Touchscreen successfully initialized&quot;</span><span class="p">)</span>
+</span><span data-line="103">        <span class="k">return</span> <span class="n">ts</span>
+</span><span data-line="104">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="105">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not initialize touchscreen&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+</span><span data-line="106">        <span class="k">return</span> <span class="n">NullTouch</span><span class="p">()</span></div>
 
-</span><span data-line="106">
 </span><span data-line="107">
-</span><span data-line="108"><span class="n">touch</span> <span class="o">=</span> <span class="n">get_touch</span><span class="p">()</span>
+</span><span data-line="108">
+</span><span data-line="109"><span class="n">touch</span> <span class="o">=</span> <span class="n">get_touch</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -594,7 +595,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=c3ca1ab6"></script>
+      <script src="../../../_static/documentation_options.js?v=55540f80"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

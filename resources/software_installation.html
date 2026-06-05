@@ -735,7 +735,7 @@ Python environment:</p></li>
 <h2>Grant access to input devices</h2>
 <p>The touchscreen is read via <code class="docutils literal notranslate"><span class="pre">evdev</span></code>, which requires access to <code class="docutils literal notranslate"><span class="pre">/dev/input/</span></code> devices.
 Add your user to the <code class="docutils literal notranslate"><span class="pre">input</span></code> group:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>input<span class="w"> </span><span class="nv">$USER</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">sudo usermod -aG input $USER
 </span></pre></div>
 </div>
 <p>Log out of the desktop session and log back in for the change to take effect
@@ -859,7 +859,7 @@ which should include <code class="docutils literal notranslate"><span class="pre
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c3ca1ab6"></script>
+      <script src="../_static/documentation_options.js?v=55540f80"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

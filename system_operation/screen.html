@@ -524,7 +524,7 @@ no physical monitor required)</em>.</p></li>
 <p>To configure this, you need to tell the system to treat both HDMI ports as active,
 regardless of whether a physical monitor is connected to HDMI-1.</p>
 <p><strong>Step 1 — Edit the boot configuration:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">sudo<span class="w"> </span>nano<span class="w"> </span>/boot/firmware/cmdline.txt
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">cmdline</span><span class="o">.</span><span class="n">txt</span>
 </span></pre></div>
 </div>
 <p>Replace:</p>
@@ -722,6 +722,33 @@ events). The value you need is the <code class="docutils literal notranslate"><s
 <p class="admonition-title">Note</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">evtest</span></code> is not installed: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">evtest</span></code></p>
 </div>
+<p><strong>Step 3 — Prevent the touchscreen from controlling the desktop:</strong></p>
+<p>When Training Village is running, Python grabs the touchscreen device exclusively
+via <code class="docutils literal notranslate"><span class="pre">evdev</span></code> (<code class="docutils literal notranslate"><span class="pre">device.grab()</span></code>), so touch events never reach the graphical layer of
+the OS — the animals cannot accidentally interact with the desktop. However, when
+Training Village is not running the device is released and libinput (the input
+layer used by the desktop compositor) picks it up again.</p>
+<p>To prevent this permanently — regardless of whether Training Village is running —
+create a udev rule that tells libinput to always ignore the device. Replace
+<code class="docutils literal notranslate"><span class="pre">USB</span> <span class="pre">Touch</span> <span class="pre">USB</span> <span class="pre">Touch</span></code> with the exact name you found in Step 1.</p>
+<p>Create the file <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-touchscreen-grab.rules</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">udev</span><span class="o">/</span><span class="n">rules</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="mi">99</span><span class="o">-</span><span class="n">touchscreen</span><span class="o">-</span><span class="n">grab</span><span class="o">.</span><span class="n">rules</span>
+</span></pre></div>
+</div>
+<p>Add the following line, replacing <code class="docutils literal notranslate"><span class="pre">USB</span> <span class="pre">Touch</span> <span class="pre">USB</span> <span class="pre">Touch</span></code> with the exact device name
+found in Step 1:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">SUBSYSTEM</span><span class="o">==</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="n">ATTRS</span><span class="p">{</span><span class="n">name</span><span class="p">}</span><span class="o">==</span><span class="s2">&quot;USB Touch USB Touch&quot;</span><span class="p">,</span> <span class="n">ENV</span><span class="p">{</span><span class="n">LIBINPUT_IGNORE_DEVICE</span><span class="p">}</span><span class="o">=</span><span class="s2">&quot;1&quot;</span>
+</span></pre></div>
+</div>
+<p>Save and close the file (<code class="docutils literal notranslate"><span class="pre">Ctrl+O</span></code>, <code class="docutils literal notranslate"><span class="pre">Enter</span></code>, <code class="docutils literal notranslate"><span class="pre">Ctrl+X</span></code>).</p>
+<p>This makes libinput ignore the device completely. It remains accessible at
+<code class="docutils literal notranslate"><span class="pre">/dev/input/eventX</span></code> so Training Village can still read it via <code class="docutils literal notranslate"><span class="pre">evdev</span></code>, but the OS
+will never treat it as a pointer device.</p>
+<p>Apply the rule without rebooting:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">udevadm</span> <span class="n">control</span> <span class="o">--</span><span class="n">reload</span><span class="o">-</span><span class="n">rules</span>
+</span><span data-line="2"><span class="n">sudo</span> <span class="n">udevadm</span> <span class="n">trigger</span>
+</span></pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -763,7 +790,7 @@ events). The value you need is the <code class="docutils literal notranslate"><s
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c3ca1ab6"></script>
+      <script src="../_static/documentation_options.js?v=55540f80"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

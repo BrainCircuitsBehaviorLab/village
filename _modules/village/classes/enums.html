@@ -659,13 +659,13 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="158">            <span class="k">return</span> <span class="kc">False</span></div>
 
 </span><span data-line="159">
-<div class="viewcode-block" id="State.can_stop_task">
-<a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.can_stop_task">[docs]</a>
-</span><span data-line="160">    <span class="k">def</span><span class="w"> </span><span class="nf">can_stop_task</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="161"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the running task can be stopped.</span>
+<div class="viewcode-block" id="State.task_is_running">
+<a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.task_is_running">[docs]</a>
+</span><span data-line="160">    <span class="k">def</span><span class="w"> </span><span class="nf">task_is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="161"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a task is currently running.</span>
 </span><span data-line="162">
 </span><span data-line="163"><span class="sd">        Returns:</span>
-</span><span data-line="164"><span class="sd">            bool: True if task can be stopped.</span>
+</span><span data-line="164"><span class="sd">            bool: True if a task is running.</span>
 </span><span data-line="165"><span class="sd">        &quot;&quot;&quot;</span>
 </span><span data-line="166">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span>
 </span><span data-line="167">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
@@ -792,7 +792,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=c3ca1ab6"></script>
+      <script src="../../../_static/documentation_options.js?v=55540f80"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

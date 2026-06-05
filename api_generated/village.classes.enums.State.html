@@ -443,7 +443,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.classes.enums.State.can_exit"><code class="docutils literal notranslate">can_exit()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.enums.State.can_edit_data"><code class="docutils literal notranslate">can_edit_data()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.enums.State.can_calibrate_scale"><code class="docutils literal notranslate">can_calibrate_scale()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.enums.State.can_stop_task"><code class="docutils literal notranslate">can_stop_task()</span></code></a></li>
+<li><a class="reference internal" href="#village.classes.enums.State.task_is_running"><code class="docutils literal notranslate">task_is_running()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.enums.State.can_stop_syncing"><code class="docutils literal notranslate">can_stop_syncing()</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.enums.State.can_go_to_wait"><code class="docutils literal notranslate">can_go_to_wait()</span></code></a></li>
 </ul>
@@ -688,12 +688,12 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.enums.State.can_stop_task">
-<span class="sig-name descname"><span class="pre">can_stop_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_stop_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Checks if the running task can be stopped.</p>
+<dt class="sig sig-object py" id="village.classes.enums.State.task_is_running">
+<span class="sig-name descname"><span class="pre">task_is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.task_is_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if a task is currently running.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if task can be stopped.</p>
+<dd class="field-odd"><p>True if a task is running.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
@@ -770,7 +770,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c3ca1ab6"></script>
+      <script src="../_static/documentation_options.js?v=55540f80"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
