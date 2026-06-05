@@ -1,6 +1,4 @@
 from village.custom_classes.task import Task
-from village.devices.camera import cam_box
-from village.devices.sound_device import sound_device
 
 
 class DirectFunctionsBase:
@@ -26,5 +24,3 @@ class DirectFunctionsBase:
 
     def __init__(self) -> None:
         self.task: Task = Task()
-        print(cam_box)
-        print(sound_device)
