@@ -256,7 +256,6 @@ class NullCamera:
     error: str = "Error connecting to the camera "
     trial: int = -1
     is_recording: bool = False
-    show_time_info: bool = False
     timing: int = 0
     x_position: int = -1
     y_position: int = -1

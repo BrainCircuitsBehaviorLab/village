@@ -92,38 +92,47 @@ class CameraTrigger(CameraTriggerBase):
 #### Annotating the frame from a task
 
 The simplest way to overlay text on the camera feed is to call `write_text()` from
-the task. The text is rendered on every subsequent frame and stays visible until it
-is changed or cleared.
+the task. The text is rendered on every subsequent frame at a fixed position in the
+status bar and stays visible until it is changed or cleared.
 
 ```python
 from village.devices.camera import cam_box
 
-# Show a label — persists across frames until changed
-cam_box.write_text("reward delivered")
-
-# Clear the annotation
-cam_box.write_text("")
+cam_box.write_text("reward delivered")   # persists across frames until changed
+cam_box.write_text("")                   # clear
 ```
 
 The annotation is also saved frame-by-frame in the session CSV alongside the
-position data, so it can be used to mark task events for post-hoc analysis.
+position data, so it is useful for marking task events for post-hoc analysis.
 
 For anything beyond plain text — shapes, coloured overlays, position-dependent
 graphics — use the `CameraDrawBase` subclass described below.
 
+---
+
 #### Drawing with CameraDrawBase
 
-Every frame, after the built-in overlays are rendered, the `draw` method of
-`CameraDrawBase` is called. By default it does nothing. You can subclass it to
-draw any additional elements directly on the camera frame using OpenCV.
+`CameraDrawBase` exposes two methods that are called automatically on every frame:
+
+| Method | Renderer | Destination |
+|--------|----------|-------------|
+| `draw(cam)` | cv2 (modifies `cam.frame`) | **disk and screen** |
+| `draw_preview(cam, painter)` | QPainter (widget overlay) | **screen only** |
+
+The default implementation of `draw` writes the status bar texts and pixel counts
+for both cameras, and for the CORRIDOR camera also draws the thresholded detection
+mask and area rectangles. The default `draw_preview` draws those same overlays for
+the BOX camera via QPainter so they appear on screen but are not encoded into the
+video file.
 
 Create a file named `camera_draw` inside your project's `code` directory and define
-a class named `CameraDraw` that inherits from `CameraDrawBase`. The system will
-automatically detect it and use it instead of the default base class.
+a class named `CameraDraw` that inherits from `CameraDrawBase`. The system detects
+it automatically and uses it instead of the base class.
+
+**Overriding `draw`** — runs on every frame, changes are saved to disk:
 
 ```python
 from village.custom_classes.camera_draw_base import CameraDrawBase
-
 import cv2
 
 class CameraDraw(CameraDrawBase):
@@ -132,20 +141,10 @@ class CameraDraw(CameraDrawBase):
         super().__init__()
 
     def draw(self, cam) -> None:
-        """Called on every frame. Draw directly on cam.frame (BGR numpy array).
+        super().draw(cam)   # keep default status bar and detection overlays
 
-        Available on cam:
-        - cam.frame          — the current frame as a numpy array (BGR, read/write)
-        - cam.x_position     — detected animal x position in pixels (-1 if not found)
-        - cam.y_position     — detected animal y position in pixels (-1 if not found)
-        - cam.width          — frame width in pixels
-        - cam.height         — frame height in pixels
-        - cam.items_to_draw  — dict populated by the task, used to pass data here
-
-        self.task gives access to the current task's variables and methods.
-        """
-        # Draw a red circle at the animal's position whenever it is detected
-        if cam.x_position != -1:
+        # Add a red circle at the animal's position (BOX only, task running)
+        if cam.name == "BOX" and cam.task_is_running and cam.x_position != -1:
             cv2.circle(
                 cam.frame,
                 (cam.x_position, cam.y_position),
@@ -153,21 +152,54 @@ class CameraDraw(CameraDrawBase):
                 color=(0, 0, 255),   # BGR
                 thickness=2,
             )
-
-        # Draw a custom shape passed from the task via items_to_draw
-        rect = cam.items_to_draw.get("reward_zone")
-        if rect is not None:
-            x, y, w, h = rect
-            cv2.rectangle(cam.frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 ```
 
-`cam.items_to_draw` is a plain dictionary that the task can populate at any point
-during a session to pass coordinates, labels, or any other data to the drawing
-function without coupling the task directly to the camera module:
+**Overriding `draw_preview`** — runs at preview framerate, screen only:
+
+```python
+from PyQt5.QtCore import QRect
+from PyQt5.QtGui import QBrush, QColor, QPainter
+
+    def draw_preview(self, cam, painter) -> None:
+        super().draw_preview(cam, painter)   # keep default detection overlays
+
+        # Highlight the reward zone on screen (never saved to video)
+        zone = cam.items_to_draw.get("reward_zone")
+        if zone and cam.name == "BOX":
+            device = painter.device()
+            sx = device.width() / cam.width
+            sy = device.height() / cam.height
+            x, y, w, h = zone
+            painter.setPen(QColor(0, 255, 0))
+            painter.setBrush(QBrush())
+            painter.drawRect(QRect(int(x*sx), int(y*sy), int(w*sx), int(h*sy)))
+```
+
+Both methods receive these attributes on `cam` (updated every frame):
+
+| Attribute | Description |
+|-----------|-------------|
+| `cam.name` | `'BOX'` or `'CORRIDOR'` |
+| `cam.task_is_running` | `True` during RUN_* states |
+| `cam.frame` | Current BGR numpy array (read/write, cv2 only) |
+| `cam.width`, `cam.height` | Frame dimensions in pixels |
+| `cam.x_position`, `cam.y_position` | Tracked animal position (`-1` if not detected) |
+| `cam.tracking` | Whether position tracking is active |
+| `cam.view_detection` | Whether detection overlays are enabled in the GUI |
+| `cam.annotation` | Current `write_text()` string |
+| `cam.items_to_draw` | Dict populated by the task (see below) |
+| `self.task` | The current task instance |
+
+#### Passing data from the task via `items_to_draw`
+
+`cam.items_to_draw` is a plain dictionary. The task can populate it at any point
+to pass coordinates, labels, or any other data to the drawing methods without
+coupling the task directly to this class:
 
 ```python
 # Inside the task, at any point:
 from village.devices.camera import cam_box
 
-cam_box.items_to_draw["reward_zone"] = (200, 150, 80, 80)
+cam_box.items_to_draw["reward_zone"] = (200, 150, 80, 80)   # x, y, w, h
+cam_box.items_to_draw["reward_zone"] = None                  # remove
 ```

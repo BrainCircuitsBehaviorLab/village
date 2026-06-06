@@ -321,8 +321,6 @@ class Manager:
             self.task.cam_box.start_recording(
                 self.task.video_path, self.task.video_data_path
             )
-        else:
-            self.task.cam_box.show_time_info = True
         try:
             self.weight = np.nan
             self.task.controller_type = self.controller_type

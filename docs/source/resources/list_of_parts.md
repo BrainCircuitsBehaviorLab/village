@@ -31,6 +31,8 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 *   2 x 3mm Matte White Acrylic Doors (laser-cut or CNC-machined)
 *   1 x 4mm Transparent Acrylic Lid (laser-cut or CNC-machined)
 *   4 x 4mm Transparent Acrylic Lid Stops (laser-cut or CNC-machined)
+*   20 x M4 screws, 12 mm length
+*   2 x M5 screws, 25 mm length
 
 #### Small Setup Configuration (2 Home Cages)
 *   2 x Standard Home Cages (modified with custom cutouts to host the connecting tubes)
@@ -39,6 +41,7 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
     *   2 x 55 cm length
     *   4 x 45 cm length
     *   6 x 34 cm length
+*   15 x corner couplings for the aluminum profiles
 
 #### Large Setup Configuration (4 Home Cages / EcoHab Compatible)
 *   4 x Standard Home Cages (modified with custom cutouts to host the connecting tubes)
@@ -48,6 +51,7 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
     *   2 x 55 cm length
     *   4 x 65 cm length
     *   6 x 38 cm length
+*   15 x corner couplings for the aluminum profiles
 
 ---
 
