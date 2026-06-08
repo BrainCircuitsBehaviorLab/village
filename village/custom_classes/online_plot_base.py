@@ -20,34 +20,6 @@ class OnlinePlotBase:
         self.fig: Figure | None = None
         self.active = False
 
-    def ensure_figure(self) -> None:
-        """Ensures that the matplotlib figure exists, creating it if necessary."""
-        if self.fig is None or getattr(self.fig, "canvas", None) is None:
-            self.create_figure_and_axes()
-
-    def close(self) -> None:
-        """Closes the matplotlib figure and resets the state."""
-        try:
-            if self.fig is not None:
-                plt.close(self.fig)
-        finally:
-            self.fig = None
-            self.active = False
-
-    def update_canvas(self, df: pd.DataFrame) -> None:
-        """Updates the plot with new data and redraws the canvas.
-
-        Args:
-            df (pd.DataFrame): The dataframe containing the latest session data.
-        """
-        try:
-            self.ensure_figure()
-            self.update_plot(df)
-            if self.fig is not None and self.fig.canvas is not None:
-                self.fig.canvas.draw_idle()
-        except Exception:
-            pass
-
     def create_figure_and_axes(self) -> None:
         """Creates the figure and axes. Should be overridden by subclasses."""
         width = 10
@@ -71,3 +43,31 @@ class OnlinePlotBase:
             return
 
         df.plot(kind="scatter", x="TRIAL_START", y="trial", ax=self.ax)
+
+    def ensure_figure(self) -> None:
+        """Ensures that the matplotlib figure exists, creating it if necessary."""
+        if self.fig is None or getattr(self.fig, "canvas", None) is None:
+            self.create_figure_and_axes()
+
+    def update_canvas(self, df: pd.DataFrame) -> None:
+        """Updates the plot with new data and redraws the canvas.
+
+        Args:
+            df (pd.DataFrame): The dataframe containing the latest session data.
+        """
+        try:
+            self.ensure_figure()
+            self.update_plot(df)
+            if self.fig is not None and self.fig.canvas is not None:
+                self.fig.canvas.draw_idle()
+        except Exception:
+            pass
+
+    def close(self) -> None:
+        """Closes the matplotlib figure and resets the state."""
+        try:
+            if self.fig is not None:
+                plt.close(self.fig)
+        finally:
+            self.fig = None
+            self.active = False
