@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 
 if TYPE_CHECKING:
     from village.devices.camera import Camera
@@ -21,7 +21,7 @@ class CameraTriggerBase:
     def __init__(self) -> None:
         """Initializes the CameraTriggerBase instance."""
         self.name = "Camera Trigger"
-        self.task = Task()
+        self.task = TaskBase()
 
     def trigger(self, cam: Camera) -> None:
         """Evaluates camera triggers and performs corresponding actions.
@@ -29,7 +29,8 @@ class CameraTriggerBase:
         Called on every frame to check whether the subject has entered any
         defined area or reached a specific position in the camera feed.
 
-        Available area triggers (return True when the subject is detected):
+        Available area triggers (return True if the area is marked as a TRIGGER area
+        and a subject is detected within it):
         - cam.area1_is_triggered
         - cam.area2_is_triggered
         - cam.area3_is_triggered

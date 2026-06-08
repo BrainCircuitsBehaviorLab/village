@@ -20,7 +20,7 @@ from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 from village.custom_classes.touch_trigger_base import TouchTriggerBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
@@ -98,7 +98,7 @@ def import_all(manager) -> None:
                 if cls.__module__ != module_name:
                     continue
 
-                if issubclass(cls, Task) and cls != Task:
+                if issubclass(cls, TaskBase) and cls != TaskBase:
                     name = cls.__name__
                     _ = cls()
                     if name not in tasks:

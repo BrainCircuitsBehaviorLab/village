@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import QLabel, QMessageBox, QScrollArea, QWidget
 
 from village.classes.enums import Active, ControllerEnum, State
 from village.custom_classes.calibration_base import CalibrationBase
-from village.custom_classes.task import BpodEvent, Task
+from village.custom_classes.task_base import BpodEvent, TaskBase
 from village.devices.sound_device import sound_device
 from village.gui.layout import Layout
 from village.manager import manager
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 # ── Sound runner (internal) ────────────────────────────────────────────────────
 
 
-class SoundCalibrationTask(Task):
+class SoundCalibrationTask(TaskBase):
     """Plays a sound at a given gain/duration for calibration measurement."""
 
     def __init__(

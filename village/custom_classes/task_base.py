@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 
 class TaskError(Exception):
-    """Exception raised for errors in the Task class."""
+    """Exception raised for errors in the TaskBase class."""
 
     def __init__(self, message) -> None:
         super().__init__(message)
@@ -43,10 +43,10 @@ class BpodOutput(OutputChannel):
     pass
 
 
-class Task:
+class TaskBase:
     """Base class for defining behavioral tasks.
 
-    Subclass ``Task`` to implement your own task. You must override four methods
+    Subclass ``TaskBase`` to implement your own task. You must override four methods
     and may optionally call helper methods and read certain attributes during
     execution.
 
@@ -87,6 +87,15 @@ class Task:
 
             self.register_value("correct", 1)
             self.register_value("response_time", 0.432)
+
+    execute_function(self, i: int) -> None:
+        Executes a registered function.
+
+        Args:
+            i (int): The function index (1-99).
+
+        Example::
+            self.execute_function(1)  # executes the function registered at index 1
 
     ──────────────────────────────────────────────────────────
     ATTRIBUTES YOU CAN READ INSIDE YOUR TASK
@@ -178,7 +187,10 @@ class Task:
         self.current_x = 0.0
         self.current_y = 0.0
 
-    # OVERWRITE THESE METHODS IN YOUR TASKS
+    # ----------------------------------------------------------------------------------
+    # Top-level methods — OVERRIDE these in subclasses is required
+    # ----------------------------------------------------------------------------------
+
     def start(self) -> None:
         """Starts the task. Must be overridden by subclasses."""
         raise TaskError("The method start(self) is required")
@@ -195,7 +207,10 @@ class Task:
         """Closes the task and releases resources. Must be overridden."""
         raise TaskError("The method close(self) is required")
 
-    # METHODS TO USE IN YOUR TASKS, BUT NOT OVERWRITE
+    # ----------------------------------------------------------------------------------
+    # Helper methods - you can call these inside your task methods
+    # ----------------------------------------------------------------------------------
+
     def register_value(self, name: str, value: Any) -> None:
         """Registers a custom value to be saved with the trial data.
 
@@ -206,7 +221,10 @@ class Task:
         self.recorder.add_value(name, value)
         self.trial_data[name] = value
 
-    # DO NOT OVERWRITE THESE METHODS
+    # ----------------------------------------------------------------------------------
+    # Helper or private methods - you don't need to call or override them
+    # ----------------------------------------------------------------------------------
+
     def execute_function(self, i: int) -> None:
         """Executes a registered function.
 
@@ -474,7 +492,7 @@ class Task:
     def get_name(cls) -> str:
         """Returns the name of the task class."""
         name = cls.__name__
-        if name == "Task":
+        if name == "TaskBase":
             return "None"
         else:
             return name

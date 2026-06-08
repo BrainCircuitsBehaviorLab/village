@@ -1,15 +1,9 @@
 ## Custom Camera Interaction
 
-```{admonition} Note
-:class: note
-All custom camera interaction described on this page — triggers, annotations, and
-custom drawing — applies exclusively to the **box camera** (`cam_box`). The corridor
-camera (`cam_corridor`) does not support these features.
-```
-
 ### Camera Triggers
 
-Every time a frame is captured from the box camera, if `CAM_BOX_TRACKING` is enabled,
+Every time a frame is captured from the box camera, if `CAM_BOX_TRACKING` is enabled
+and a task is running,
 the (x, y) position of the animal inside the operant box is computed and the `trigger`
 method of `CameraTriggerBase` is called.
 
@@ -26,6 +20,11 @@ You can override this behavior by creating a custom class in your project. Creat
 file named `camera_trigger` inside your project's `code` directory and define a class
 named `CameraTrigger` that inherits from `CameraTriggerBase`.
 If the system detects a class inheriting from `CameraTriggerBase` in your project, it will use your custom class instead of the default base class.
+
+In the following example, a subclass is created that writes a text when the subject
+is detected in Area1, executes direct function number 2 when detected in Area2,
+and triggers function number 6 when detected within a circular region at the center
+of the image.
 
 ```python
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
@@ -47,7 +46,8 @@ class CameraTrigger(CameraTriggerBase):
         Called on every frame to check whether the subject has entered any
         defined area or reached a specific position in the camera feed.
 
-        Available area triggers (return True when the subject is detected):
+        Available area triggers (return True if the area is marked as a TRIGGER area
+        and a subject is detected within it):
         - cam.area1_is_triggered
         - cam.area2_is_triggered
         - cam.area3_is_triggered
@@ -65,24 +65,18 @@ class CameraTrigger(CameraTriggerBase):
             and position data.
         """
 
-        # Check if the animal is in any of the 4 defined areas
+        # Check if the animal is in some of the defined areas
         if cam.area1_is_triggered:
-            cam.write_text("Area 1 triggered")
+            cam.write_text("Area 1 triggered") # write an annotation text to the cam
 
         if cam.area2_is_triggered:
-            cam.write_text("Area 2 triggered")
-
-        if cam.area3_is_triggered:
-            cam.write_text("Area 3 triggered")
-
-        if cam.area4_is_triggered:
-            cam.write_text("Area 4 triggered")
+            self.task.execute_function(2) # execute the direct function number 2
 
         # Check if the animal is within a 50-pixel radius of the center
         distance = ((cam.x_position - cam.width / 2) ** 2 +
                     (cam.y_position - cam.height / 2) ** 2) ** 0.5
         if distance < 50:
-            cam.write_text("Animal in the center area")
+            self.task.execute_function(6) # execute the direct function number 6
 ```
 
 ---
@@ -121,9 +115,9 @@ graphics — use the `CameraDrawBase` subclass described below.
 
 The default implementation of `draw` writes the status bar texts and pixel counts
 for both cameras, and for the CORRIDOR camera also draws the thresholded detection
-mask and area rectangles. The default `draw_preview` draws those same overlays for
-the BOX camera via QPainter so they appear on screen but are not encoded into the
-video file.
+mask and area rectangles (if VIEW_DETECTION is active).
+The default `draw_preview` draws those same overlays for the BOX camera via QPainter
+so they appear on screen but are not encoded into the video file.
 
 Create a file named `camera_draw` inside your project's `code` directory and define
 a class named `CameraDraw` that inherits from `CameraDrawBase`. The system detects
@@ -177,18 +171,45 @@ from PyQt5.QtGui import QBrush, QColor, QPainter
 
 Both methods receive these attributes on `cam` (updated every frame):
 
-| Attribute | Description |
-|-----------|-------------|
-| `cam.name` | `'BOX'` or `'CORRIDOR'` |
-| `cam.task_is_running` | `True` during RUN_* states |
-| `cam.frame` | Current BGR numpy array (read/write, cv2 only) |
-| `cam.width`, `cam.height` | Frame dimensions in pixels |
-| `cam.x_position`, `cam.y_position` | Tracked animal position (`-1` if not detected) |
-| `cam.tracking` | Whether position tracking is active |
-| `cam.view_detection` | Whether detection overlays are enabled in the GUI |
-| `cam.annotation` | Current `write_text()` string |
-| `cam.items_to_draw` | Dict populated by the task (see below) |
-| `self.task` | The current task instance |
+**Identity & state**
+
+- `cam.name` — `'BOX'` or `'CORRIDOR'`.
+- `cam.task_is_running` — `True` if a task is active, `False` if not.
+- `cam.view_detection` — whether detection overlays are enabled in the GUI.
+- `cam.tracking` — whether animal position tracking is active (BOX only).
+- `cam.color` — `Color.BLACK` or `Color.WHITE`: which pixels to detect.
+
+**Frame data**
+
+- `cam.frame` — current frame as a BGR numpy array (read/write, cv2 only).
+- `cam.width`, `cam.height` — frame dimensions in pixels.
+- `cam.frame_number` — frames captured since recording started.
+- `cam.timing` — milliseconds elapsed since recording started.
+
+**Session info**
+
+- `cam.filename` — base name of the current video file (empty if not recording).
+- `cam.trial` — current trial number (0 if no task running or CORRIDOR camera).
+- `cam.annotation` — current `write_text()` string; persists until changed.
+- `cam.items_to_draw` — plain `dict` for passing arbitrary data from the task (see below).
+
+**Detection areas**
+
+- `cam.number_of_areas` — number of configurable areas (always 4).
+- `cam.areas` — list of `[x1, y1, x2, y2]` pixel coordinates per area.
+- `cam.areas_active` — bool list, whether each area is enabled.
+- `cam.areas_allowed` — bool list, whether animals are allowed in each area.
+
+**Detection results**
+
+- `cam.masks` — grayscale numpy arrays with the thresholded mask per area.
+- `cam.counts` — detected pixel count per area.
+- `cam.x_position`, `cam.y_position` — tracked animal position in pixels (`-1` if not detected).
+
+**Task access**
+
+- `self.task` — the current task instance.
+
 
 #### Passing data from the task via `items_to_draw`
 

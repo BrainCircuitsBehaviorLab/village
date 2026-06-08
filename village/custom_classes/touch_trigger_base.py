@@ -1,4 +1,4 @@
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 
 
 class TouchTriggerBase:
@@ -14,7 +14,7 @@ class TouchTriggerBase:
     def __init__(self) -> None:
         """Initializes the TouchTriggerBase instance."""
         self.name = "Touch Trigger"
-        self.task = Task()
+        self.task = TaskBase()
 
     def trigger(self, x: int, y: int, timestamp: float) -> None:
         """Called whenever a touch event passes the debounce interval.

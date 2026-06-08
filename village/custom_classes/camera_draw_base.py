@@ -8,7 +8,7 @@ from PyQt5.QtCore import QPoint, QRect
 from PyQt5.QtGui import QBrush, QColor, QImage, QPainter, QPen
 
 from village.classes.enums import Color
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -18,6 +18,12 @@ if TYPE_CHECKING:
 
 class CameraDrawBase:
     """Base class for defining custom camera draw on frame behavior.
+
+    Override this class to add or change the default drawing behavior on the camera
+    feed for both BOX and CORRIDOR cameras.
+
+    You have access to self.task, so any variable or function defined in the
+    task can be used to specify the drawing behavior to perform.
 
     Two methods are called automatically on every frame:
 
@@ -72,11 +78,15 @@ class CameraDrawBase:
     - ``cam.counts`` — detected pixel count per area.
     - ``cam.x_position``, ``cam.y_position`` — tracked animal position in pixels
       (``-1`` if not detected).
+
+    **Task access**
+
+    - ``self.task`` — the current task instance.
     """
 
     def __init__(self) -> None:
         self.name = "Camera Draw"
-        self.task = Task()
+        self.task = TaskBase()
         self.color_areas = [
             tuple(settings.get("COLOR_AREA1")),
             tuple(settings.get("COLOR_AREA2")),
@@ -88,20 +98,19 @@ class CameraDrawBase:
         self.detection_color = tuple(settings.get("COLOR_DETECTION"))
         self.detection_size = settings.get("DETECTION_CIRCLE_SIZE")
 
-    # ------------------------------------------------------------------
-    # Top-level methods — override these in subclasses
-    # ------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------
+    # Top-level methods — OVERRIDE these in subclass to specify custom drawing behavior
+    # ----------------------------------------------------------------------------------
 
     def draw(self, cam: Camera) -> None:
         """Default cv2 drawing — goes to disk and screen.
+        Status texts and pixel counts always run for both cameras.
+        Detection (thresholded mask + areas) is CORRIDOR-only here so it goes to
+        disk. For BOX, detection goes to draw_preview (screen only).
 
         Args:
             cam: The camera instance.
         """
-
-        # Status texts and pixel counts always run for both cameras.
-        # Detection (thresholded mask + areas) is CORRIDOR-only here so it goes to
-        # disk. For BOX, detection goes to draw_preview (screen only).
 
         self.write_status_texts(cam)
         self.write_pixel_detection_texts(cam)
@@ -128,9 +137,9 @@ class CameraDrawBase:
             self.draw_detection_areas_box(cam, painter, scale_x, scale_y)
             self.draw_detection_position_box(cam, painter, scale_x, scale_y)
 
-    # ------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------
     # cv2 helper methods — called from draw(), also available in subclasses
-    # ------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------
 
     def write_status_texts(self, cam: Camera) -> None:
         """Draws the text status bar background and writes filename/timing text."""
@@ -235,6 +244,10 @@ class CameraDrawBase:
                         color_areas[i],
                         self.thickness_line,
                     )
+
+    # ----------------------------------------------------------------------------------
+    # QPainter helper methods — called from draw_preview(), also available in subclasses
+    # ----------------------------------------------------------------------------------
 
     def draw_detection_mask_box(
         self,

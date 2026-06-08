@@ -1,4 +1,4 @@
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 
 
 class DirectFunctionsBase:
@@ -23,4 +23,4 @@ class DirectFunctionsBase:
     """
 
     def __init__(self) -> None:
-        self.task: Task = Task()
+        self.task: TaskBase = TaskBase()

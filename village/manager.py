@@ -35,7 +35,7 @@ from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 from village.custom_classes.touch_trigger_base import TouchTriggerBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.devices.chip import (
@@ -62,7 +62,7 @@ class Manager:
 
     Attributes:
         subject (Subject): Instance of Subject class.
-        task (Task): Instance of Task class.
+        task (TaskBase): Instance of TaskBase class.
         training (Training): Instance of Training class.
         bpod (BpodController): Instance of BpodController class.
         arduino (ArduinoController): Instance of ArduinoController class.
@@ -91,7 +91,7 @@ class Manager:
     def __init__(self) -> None:
         """Initializes the Manager with default settings and initializes collections."""
         self.subject = Subject()
-        self.task = Task()
+        self.task = TaskBase()
         self.training: TrainingProtocolBase = TrainingProtocolBase()
         self.subject_plot: SubjectPlotBase = SubjectPlotBase()
         self.session_plot: SessionPlotBase = SessionPlotBase()
@@ -375,7 +375,7 @@ class Manager:
                     subject=self.subject.name,
                 )
                 return False
-            elif issubclass(cls, Task):
+            elif issubclass(cls, TaskBase):
                 self.task = cls()
                 self.task.subject = self.subject.name
                 self.task.settings = self.training.settings
@@ -399,7 +399,7 @@ class Manager:
                 log.alarm(
                     "Error running task: "
                     + task_name
-                    + " is not a subclass of Task."
+                    + " is not a subclass of TaskBase."
                     + " Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
                 )
@@ -460,7 +460,7 @@ class Manager:
 
     def reset_subject_task_training(self) -> None:
         """Resets the subject, task, and training attributes to default states."""
-        self.task = Task()
+        self.task = TaskBase()
         self.task.calibrations = self.calibrations
         self.subject = Subject()
         self.training.restore()

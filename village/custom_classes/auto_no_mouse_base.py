@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from threading import Event as ThEvent
 from threading import Thread
 
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 from village.scripts.time_utils import time_utils
 
 
@@ -35,7 +35,7 @@ class AutoNoMouseBase:
     TASK_NAME: str = ""  # to be set in subclass to restrict to a specific task
     PARAMS: list[AutonomouseParam] = []
 
-    def __init__(self, task: Task | None = None) -> None:
+    def __init__(self, task: TaskBase | None = None) -> None:
         self.task = task
         self._thread: Thread | None = None
         self._inject_thread: Thread | None = None

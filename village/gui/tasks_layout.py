@@ -22,14 +22,14 @@ from PyQt5.QtWidgets import (
 
 from village.classes.enums import State
 from village.classes.subject import Subject
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 from village.gui.layout import Layout
 from village.manager import manager
 from village.scripts.log import log
 from village.settings import settings
 
 if TYPE_CHECKING:
-    from village.custom_classes.task import Task
+    from village.custom_classes.task_base import TaskBase
     from village.gui.gui_window import GuiWindow
     from village.gui.layout import LineEdit
 
@@ -211,7 +211,7 @@ class TasksLayout(Layout):
     # ── Task / training selection ──────────────────────────────────────────────
 
     def select_task(self, cls: Type, name: str) -> None:
-        if issubclass(cls, Task):
+        if issubclass(cls, TaskBase):
             self.subject_index = 0
             self.testing_training = False
             self.selected = name
