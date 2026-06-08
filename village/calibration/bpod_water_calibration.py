@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import QLabel, QMessageBox, QPushButton, QScrollArea, QWidg
 
 from village.classes.enums import ControllerEnum, State
 from village.custom_classes.calibration_base import CalibrationBase
-from village.custom_classes.task import BpodEvent, Task
+from village.custom_classes.task_base import BpodEvent, TaskBase
 from village.gui.layout import Label, Layout, LineEdit
 from village.manager import manager
 from village.scripts import utils
@@ -31,7 +31,7 @@ if TYPE_CHECKING:
 # ── Bpod task (internal) ───────────────────────────────────────────────────────
 
 
-class BpodWaterCalibrationTask(Task):
+class BpodWaterCalibrationTask(TaskBase):
     """Bpod task for calibrating water delivery valves."""
 
     def __init__(
@@ -949,7 +949,7 @@ class BpodWaterCalibration(CalibrationBase):
         self.test_row_dicts.append(row_dict)
 
     def stop_button_clicked(self) -> None:
-        if manager.state.can_stop_task():
+        if manager.state.task_is_running():
             log.info("Task manually stopped.", subject=manager.subject.name)
             manager.state = State.SAVE_MANUAL
         elif manager.state.can_go_to_wait():

@@ -22,31 +22,36 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 
 *   1 x Dedicated 5V, 3A Power Supply (for the Main HAT)
 *   1 x 1 kg Load Cell (Note: The custom Corridor Board integrates the HX711 amplifier onboard; only the physical load cell sensor is needed)
-*   2 x TowerPro MG995 Servo Motors (11 kg/cm torque, 5V)
+*   2 x Standard-size servo motor (≥5 kg/cm torque, 5V)
 *   1 x [SparkFun RFID Reader ID-20LA (125 kHz)](https://www.sparkfun.com/rfid-reader-id-20la-125-khz.html)
+*   1 x 5-pin JST-PH connector
 *   1 x Set of RFID Glass Transponder Capsules (125 kHz) for animal identification
 *   1 x Complete set of 3D-printed structural components
 *   1 x 3mm Matte White Acrylic Base (laser-cut or CNC-machined)
 *   2 x 3mm Matte White Acrylic Doors (laser-cut or CNC-machined)
 *   1 x 4mm Transparent Acrylic Lid (laser-cut or CNC-machined)
 *   4 x 4mm Transparent Acrylic Lid Stops (laser-cut or CNC-machined)
+*   20 x M4 screws, 12 mm length
+*   2 x M5 screws, 25 mm length
 
 #### Small Setup Configuration (2 Home Cages)
 *   2 x Standard Home Cages (modified with custom cutouts to host the connecting tubes)
 *   2 x Transparent Acrylic Connection Tubes (30 mm internal diameter, 34 mm external diameter, 16 cm length)
-*   1 x Set of 20x20 mm Aluminum T-Slot Profiles (Slot 6 mm), cut to the following lengths:
+*   1 x Set of 20x20 mm Aluminum V-Slot Profiles (Slot 6 mm), cut to the following lengths:
     *   2 x 55 cm length
     *   4 x 45 cm length
     *   6 x 34 cm length
+*   15 x corner couplings for the aluminum profiles
 
 #### Large Setup Configuration (4 Home Cages / EcoHab Compatible)
 *   4 x Standard Home Cages (modified with custom cutouts to host the connecting tubes)
 *   3 x Transparent Acrylic Connection Tubes (30 mm internal diameter, 34 mm external diameter, 26 cm length)
 *   1 x Transparent Acrylic Connection Tube (30 mm internal diameter, 34 mm external diameter, 10 cm length)
-*   1 x Set of 20x20 mm Aluminum T-Slot Profiles (Slot 6 mm), cut to the following lengths:
+*   1 x Set of 20x20 mm Aluminum V-Slot Profiles (Slot 6 mm), cut to the following lengths:
     *   2 x 55 cm length
     *   4 x 65 cm length
     *   6 x 38 cm length
+*   15 x corner couplings for the aluminum profiles
 
 ---
 

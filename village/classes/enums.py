@@ -157,11 +157,11 @@ class State(SuperEnum):
         else:
             return False
 
-    def can_stop_task(self) -> bool:
-        """Checks if the running task can be stopped.
+    def task_is_running(self) -> bool:
+        """Checks if a task is currently running.
 
         Returns:
-            bool: True if task can be stopped.
+            bool: True if a task is running.
         """
         if self in (
             State.RUN_FIRST,
@@ -231,3 +231,10 @@ class Save(SuperEnum):
     NO = "NO"
     ZERO = "ZERO"
     ERROR = "ERROR"
+
+
+class PixelType(SuperEnum):
+    RGB = "RGB"
+    GRB = "GRB"
+    RGBW = "RGBW"
+    GRBW = "GRBW"

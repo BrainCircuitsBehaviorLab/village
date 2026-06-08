@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
 
 if TYPE_CHECKING:
     from village.devices.camera import Camera
@@ -11,27 +11,44 @@ if TYPE_CHECKING:
 class CameraTriggerBase:
     """Base class for defining custom camera trigger behavior.
 
-    This class can be overridden to implement specific actions when detection areas
-    are triggered or to monitor subject position.
+    Override this class to implement specific actions when an animal enters
+    a detection area or reaches a specific position in the camera feed.
+
+    You have access to self.task, so any variable or function defined in the
+    task can be used to specify the actions to perform.
     """
 
     def __init__(self) -> None:
         """Initializes the CameraTriggerBase instance."""
         self.name = "Camera Trigger"
-        self.task = Task()
+        self.task = TaskBase()
 
     def trigger(self, cam: Camera) -> None:
         """Evaluates camera triggers and performs corresponding actions.
 
-        This method is called to check if any defined areas in the camera view
-        have been triggered (e.g., by the subject entering them).
+        Called on every frame to check whether the subject has entered any
+        defined area or reached a specific position in the camera feed.
+
+        Available area triggers (return True if the area is marked as a TRIGGER area
+        and a subject is detected within it):
+        - cam.area1_is_triggered
+        - cam.area2_is_triggered
+        - cam.area3_is_triggered
+        - cam.area4_is_triggered
+
+        Available position properties:
+        - cam.x_position, cam.y_position (subject position in pixels)
+        - cam.width, cam.height (camera feed dimensions in pixels)
+
+        Other:
+        - cam.write_text("text") to overlay text on the camera feed
 
         Args:
-            cam (Camera): The camera instance providing the trigger status.
+            cam (Camera): The camera instance providing trigger status
+            and position data.
         """
-        # the camera automatically returns a True value if the subject is detected
-        # within any of the predefined trigger areas.
-        # then we can assign a function to be executed when the area is triggered
+
+        # Check if the animal is in any of the 4 defined areas
         if cam.area1_is_triggered:
             cam.write_text("Area 1 triggered")
 
@@ -44,4 +61,8 @@ class CameraTriggerBase:
         if cam.area4_is_triggered:
             cam.write_text("Area 4 triggered")
 
-        # or you can check the position of the animal manually
+        # Check if the animal is within a 50-pixel radius of the center
+        # distance = ((cam.x_position - cam.width / 2) ** 2 +
+        #             (cam.y_position - cam.height / 2) ** 2) ** 0.5
+        # if distance < 50:
+        #     cam.write_text("Animal in the center area")

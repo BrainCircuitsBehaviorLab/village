@@ -256,7 +256,6 @@ class NullCamera:
     error: str = "Error connecting to the camera "
     trial: int = -1
     is_recording: bool = False
-    show_time_info: bool = False
     timing: int = 0
     x_position: int = -1
     y_position: int = -1
@@ -361,8 +360,12 @@ class NullCamera:
         return
 
 
-class NullBehaviorWindow(QWidget):
+class NullScreen(QWidget):
     background_color = None
+    width_px: int = 0
+    height_px: int = 0
+    width_mm: int = 0
+    height_mm: int = 0
 
     def start_drawing(self) -> None:
         """Starts the drawing mode."""
@@ -412,7 +415,12 @@ class NullBehaviorWindow(QWidget):
         return None
 
 
-class LEDStripBase:
+class NullTouch:
+    def stop(self) -> None:
+        return
+
+
+class NullLEDStrip:
     """Base class for LED strip"""
 
     error: str = "LED strip not available."

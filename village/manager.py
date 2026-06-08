@@ -22,10 +22,7 @@ from village.classes.enums import (
     State,
     SyncType,
 )
-from village.classes.null_classes import (
-    NullBehaviorWindow,
-    NullCamera,
-)
+from village.classes.null_classes import NullCamera, NullTouch
 from village.classes.subject import Subject
 from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
@@ -38,7 +35,8 @@ from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
-from village.custom_classes.task import Task
+from village.custom_classes.task_base import TaskBase
+from village.custom_classes.touch_trigger_base import TouchTriggerBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.devices.chip import (
     ir_light_box,
@@ -46,6 +44,7 @@ from village.devices.chip import (
     visible_light_box,
     visible_light_corridor,
 )
+from village.devices.screen import screen
 from village.devices.temp_sensor import temp_sensor
 from village.scripts import utils
 from village.scripts.log import log
@@ -54,7 +53,7 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.devices.camera import Camera
-    from village.screen.behavior_window import BehaviorWindow
+    from village.devices.touch import Touch
 
 
 class Manager:
@@ -63,7 +62,7 @@ class Manager:
 
     Attributes:
         subject (Subject): Instance of Subject class.
-        task (Task): Instance of Task class.
+        task (TaskBase): Instance of TaskBase class.
         training (Training): Instance of Training class.
         bpod (BpodController): Instance of BpodController class.
         arduino (ArduinoController): Instance of ArduinoController class.
@@ -92,7 +91,7 @@ class Manager:
     def __init__(self) -> None:
         """Initializes the Manager with default settings and initializes collections."""
         self.subject = Subject()
-        self.task = Task()
+        self.task = TaskBase()
         self.training: TrainingProtocolBase = TrainingProtocolBase()
         self.subject_plot: SubjectPlotBase = SubjectPlotBase()
         self.session_plot: SessionPlotBase = SessionPlotBase()
@@ -101,6 +100,7 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
+        self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
         self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
             "": AutoNoMouseBase()
         }
@@ -170,8 +170,8 @@ class Manager:
 
         self.healthchecks_url = settings.get("HEALTHCHECKS_URL")
 
-        self.behavior_window: BehaviorWindow | NullBehaviorWindow = NullBehaviorWindow()
         self.cam_box: Camera | NullCamera = NullCamera()
+        self.touch: Touch | NullTouch = NullTouch()
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
         self.task.calibrations = self.calibrations
@@ -321,14 +321,14 @@ class Manager:
             self.task.cam_box.start_recording(
                 self.task.video_path, self.task.video_data_path
             )
-        else:
-            self.task.cam_box.show_time_info = True
         try:
             self.weight = np.nan
             self.task.controller_type = self.controller_type
             self.task.calibrations = self.calibrations
             self.task.functions = self.functions
             self.direct_functions.task = self.task
+            self.camera_trigger.task = self.task
+            self.touch_trigger.task = self.task
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -351,6 +351,8 @@ class Manager:
         self.task.controller_type = self.controller_type
         self.task.functions = self.functions
         self.direct_functions.task = self.task
+        self.camera_trigger.task = self.task
+        self.touch_trigger.task = self.task
         log.start(task=self.task.name, subject="None")
         self.run_task_in_thread()
 
@@ -373,7 +375,7 @@ class Manager:
                     subject=self.subject.name,
                 )
                 return False
-            elif issubclass(cls, Task):
+            elif issubclass(cls, TaskBase):
                 self.task = cls()
                 self.task.subject = self.subject.name
                 self.task.settings = self.training.settings
@@ -388,6 +390,8 @@ class Manager:
                 self.task.controller_type = self.controller_type
                 self.task.functions = self.functions
                 self.direct_functions.task = self.task
+                self.camera_trigger.task = self.task
+                self.touch_trigger.task = self.task
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -395,7 +399,7 @@ class Manager:
                 log.alarm(
                     "Error running task: "
                     + task_name
-                    + " is not a subclass of Task."
+                    + " is not a subclass of TaskBase."
                     + " Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
                 )
@@ -456,7 +460,7 @@ class Manager:
 
     def reset_subject_task_training(self) -> None:
         """Resets the subject, task, and training attributes to default states."""
-        self.task = Task()
+        self.task = TaskBase()
         self.task.calibrations = self.calibrations
         self.subject = Subject()
         self.training.restore()
@@ -498,8 +502,8 @@ class Manager:
             run_mode (str): The mode in which the task was run (e.g., "Auto", "Manual").
         """
         # TODO kill the touchscreen reading
-        self.behavior_window.load_draw_function(None)
-        self.behavior_window.stop_drawing()
+        screen.load_draw_function(None)
+        screen.stop_drawing()
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
             run_mode
         )
@@ -824,19 +828,6 @@ class Manager:
             log.alarm("Low disk space (less than 10GB)")
 
         self.send_heartbeat()
-
-    def run_softcode_function(self, number: int) -> None:
-        """Runs a user-defined softcode function.
-
-        Args:
-            number (int): The function index (1-based).
-        """
-        try:
-            self.functions[number]()
-        except Exception:
-            log.error(
-                "Error running function" + str(number), exception=traceback.format_exc()
-            )
 
 
 manager = Manager()

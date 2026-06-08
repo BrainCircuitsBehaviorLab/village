@@ -21,6 +21,7 @@ except Exception:
     pass
 
 from PyQt5.QtCore import QTimer
+from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.null_classes import NullCamera
@@ -58,16 +59,18 @@ class LowFreqQPicamera2(QPicamera2):
         _good_frame (int): The interval at which frames should be rendered.
     """
 
-    def __init__(self, picam2, *args, framerate, **kwargs) -> None:
+    def __init__(self, picam2, *args, framerate, cam=None, **kwargs) -> None:
         """Initializes the LowFreqQPicamera2.
 
         Args:
             picam2: The Picamera2 instance.
             framerate (int): The full framerate of the camera.
+            cam: The Camera instance owning this widget (for draw_preview).
         """
         super().__init__(picam2, *args, **kwargs)
         self._frame_counter = 0
         self._good_frame = framerate // int(settings.get("CAM_PREVIEWS_FRAMERATE"))
+        self._cam = cam
 
     def render_request(self, completed_request) -> None:
         """Renders requests only at the specified subsampled rate.
@@ -79,6 +82,15 @@ class LowFreqQPicamera2(QPicamera2):
         if self._frame_counter == self._good_frame:
             self._frame_counter = 0
             super().render_request(completed_request)
+
+    def paintEvent(self, event) -> None:
+        """Renders the camera frame then draws screen-only overlays."""
+        super().paintEvent(event)
+        if self._cam is not None:
+            painter = QPainter(self)
+            self._cam.task_is_running = manager.state.task_is_running()
+            manager.camera_draw.draw_preview(self._cam, painter)
+            painter.end()
 
 
 # the camera class
@@ -133,7 +145,6 @@ class Camera:
         error (str): Error message.
         error_frame (int): Frame number where error occurred.
         is_recording (bool): Recording status.
-        show_time_info (bool): Whether to display time info on frame.
         two_mice_detections (int): Counter for multiple mouse detections.
         prohibited_detections (int): Counter for prohibited area detections.
         area4_alarm_timer (time_utils.Timer): Timer for area 4 alarms.
@@ -194,17 +205,8 @@ class Camera:
         self.filename = ""
         self.cam.pre_callback = self.pre_process
 
-        color_area1 = tuple(settings.get("COLOR_AREA1"))
-        color_area2 = tuple(settings.get("COLOR_AREA2"))
-        color_area3 = tuple(settings.get("COLOR_AREA3"))
-        color_area4 = tuple(settings.get("COLOR_AREA4"))
-        self.color_areas = [color_area1, color_area2, color_area3, color_area4]
-        self.thickness_line = settings.get("RECTANGLES_LINEWIDTH")
-        self.detection_color = tuple(settings.get("COLOR_DETECTION"))
-        self.detection_size = settings.get("DETECTION_CIRCLE_SIZE")
-        self.color_rectangle = (255, 255, 255)
-        self.color_text = (0, 0, 0)
         self.change = True
+        self.task_is_running: bool = False
         self.annotation = ""
         self.trial = 0
         self.tracking = False
@@ -216,37 +218,11 @@ class Camera:
         self.x_positions: list[int] = []
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
-        self.pre_process_timestamps: list[float] = []
         self.items_to_draw: dict[str, Any] = {}
 
         if self.change:
             self.set_properties()
             self.change = False
-
-        self.origin_rectangle = (0, 0)
-        self.end_rectangle = (self.width, int(self.height / 12))
-
-        self.origin_text1 = (3, int(self.height / 32))
-        self.origin_text2 = (3, int(self.height / 15))
-
-        origin_area1 = (int(self.width * 0.375), int(self.height / 15))
-        origin_area2 = (int(self.width * 0.53125), int(self.height / 15))
-        origin_area3 = (int(self.width * 0.6875), int(self.height / 15))
-        origin_area4 = (int(self.width * 0.84375), int(self.height / 15))
-
-        self.origin_areas = [
-            origin_area1,
-            origin_area2,
-            origin_area3,
-            origin_area4,
-        ]
-
-        self.font = cv2.FONT_HERSHEY_SIMPLEX
-        self.scale = self.width * 0.000625
-        if self.width <= 640:
-            self.thickness_text = 1
-        else:
-            self.thickness_text = 2
 
         self.frame_number = 0
         self.camera_timestamp_start = 0.0
@@ -258,7 +234,6 @@ class Camera:
         self.error_frame = 0
 
         self.is_recording = False
-        self.show_time_info = False
 
         self.two_mice_detections = 0
         self.prohibited_detections = 0
@@ -271,6 +246,8 @@ class Camera:
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
+
+        self.task_is_running = False
 
         self.cam.start()
         if self.name == "CORRIDOR":
@@ -391,7 +368,6 @@ class Camera:
             )
         self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
-        self.show_time_info = True
         self.camera_timestamp = time_utils.now_timestamp()
         if self.name == "BOX":
             self.watchdog_timer.start()
@@ -405,7 +381,6 @@ class Camera:
             self.save_csv()
         if self.name == "BOX":
             self.watchdog_timer.stop()
-        self.show_time_info = False
         self.reset_values()
 
     def reset_values(self) -> None:
@@ -551,16 +526,13 @@ class Camera:
                 self.timing = int(
                     (self.camera_timestamp - self.camera_timestamp_start) * 1000
                 )
+                self.task_is_running = manager.state.task_is_running()
                 self.get_gray_frame()
                 self.detect_and_trigger()
-                self.draw_detection()
-                self.draw_rectangles()
-                self.write_texts()
-                self.write_pixel_detection()
+                manager.camera_draw.draw(self)
                 self.write_csv()
                 if self.name == "BOX" and self.is_recording:
                     self.areas_box_ok()
-        manager.camera_draw.draw(self)
 
     def get_gray_frame(self) -> None:
         """Converts the current frame to grayscale."""
@@ -613,7 +585,7 @@ class Camera:
                 x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
             )
 
-        if manager.camera_trigger is not None:
+        if self.task_is_running:
             manager.camera_trigger.trigger(self)
 
     def detect_black(self) -> None:
@@ -816,141 +788,6 @@ class Camera:
             self.x_position = -1
             self.y_position = -1
 
-    def draw_detection(self) -> None:
-        """Draws detection results (thresholded views or position) on the frame."""
-        if self.view_detection:
-            if self.color == Color.BLACK:
-                self.draw_thresholded_black()
-            else:
-                self.draw_thresholded_white()
-            if self.tracking:
-                self.draw_position()
-
-    def draw_rectangles(self) -> None:
-        """Draws the status bar background and detection area rectangles."""
-        cv2.rectangle(
-            self.frame,
-            self.origin_rectangle,
-            self.end_rectangle,
-            self.color_rectangle,
-            -1,
-        )
-
-        if self.view_detection:
-            for i in range(self.number_of_areas):
-                if self.areas_active[i]:
-                    cv2.rectangle(
-                        self.frame,
-                        (self.areas[i][0], self.areas[i][1]),
-                        (self.areas[i][2], self.areas[i][3]),
-                        self.color_areas[i],
-                        self.thickness_line,
-                    )
-                    if not self.areas_allowed[i]:
-                        cv2.line(
-                            self.frame,
-                            (self.areas[i][0], self.areas[i][1]),
-                            (self.areas[i][2], self.areas[i][3]),
-                            self.color_areas[i],
-                            self.thickness_line,
-                        )
-                        cv2.line(
-                            self.frame,
-                            (self.areas[i][2], self.areas[i][1]),
-                            (self.areas[i][0], self.areas[i][3]),
-                            self.color_areas[i],
-                            self.thickness_line,
-                        )
-
-    def write_texts(self) -> None:
-        """Writes status text (filename, trial, timing) onto the frame."""
-        if not self.show_time_info:
-            self.frame_number = 0
-            self.timing = 0
-
-        text_trial = "trial: " + str(self.trial) if self.trial != 0 else ""
-        text_filename = (
-            self.filename
-            if self.filename != ""
-            else time_utils.string_from_timestamp(self.camera_timestamp)
-        )
-        text_frame = "frame: " + str(self.frame_number)
-        text_timing = time_utils.format_duration(self.timing)
-
-        text1 = text_filename + "  " + text_trial + "  " + self.annotation
-        text2 = text_timing + "  " + text_frame
-
-        cv2.putText(
-            self.frame,
-            text1,
-            self.origin_text1,
-            self.font,
-            self.scale,
-            self.color_text,
-            self.thickness_text,
-        )
-
-        cv2.putText(
-            self.frame,
-            text2,
-            self.origin_text2,
-            self.font,
-            self.scale,
-            self.color_text,
-            self.thickness_text,
-        )
-
-    def write_pixel_detection(self) -> None:
-        """Writes pixel count for each area on the frame."""
-        for i in range(self.number_of_areas):
-            if self.areas_active[i]:
-                cv2.putText(
-                    self.frame,
-                    "area" + str(i + 1) + ": " + str(self.counts[i]),
-                    self.origin_areas[i],
-                    self.font,
-                    self.scale,
-                    self.color_areas[i],
-                    self.thickness_text,
-                )
-
-    def draw_thresholded_black(self) -> None:
-        """Draws the thresholded view for black detection on the frame."""
-        for i, f in enumerate(self.areas):
-            if self.areas_active[i]:
-                try:
-                    mask = cv2.bitwise_not(
-                        cv2.cvtColor(self.masks[i], cv2.COLOR_GRAY2BGRA)
-                    )
-                    self.frame[f[1] : f[3], f[0] : f[2]] = cv2.bitwise_and(
-                        self.frame[f[1] : f[3], f[0] : f[2]], mask
-                    )
-                except Exception:
-                    pass
-
-    def draw_thresholded_white(self) -> None:
-        """Draws the thresholded view for white detection on the frame."""
-        for i, f in enumerate(self.areas):
-            if self.areas_active[i]:
-                try:
-                    mask = cv2.cvtColor(self.masks[i], cv2.COLOR_GRAY2BGRA)
-                    self.frame[f[1] : f[3], f[0] : f[2]] = cv2.bitwise_or(
-                        self.frame[f[1] : f[3], f[0] : f[2]], mask
-                    )
-                except Exception:
-                    pass
-
-    def draw_position(self) -> None:
-        """Draws the current tracked position on the frame."""
-        if self.x_position != -1 and self.y_position != -1:
-            cv2.circle(
-                self.frame,
-                (self.x_position, self.y_position),
-                self.detection_size,
-                self.detection_color,
-                -1,
-            )
-
     def write_csv(self) -> None:
         """Appends current frame data to internal lists for CSV export."""
         if self.is_recording:
@@ -970,7 +807,9 @@ class Camera:
         """
         if self.cam._preview is not None:
             self.cam.stop_preview()
-        self.window = LowFreqQPicamera2(picam2=self.cam, framerate=self.framerate)
+        self.window = LowFreqQPicamera2(
+            picam2=self.cam, framerate=self.framerate, cam=self
+        )
         return self.window
 
     def write_text(self, text: str) -> None:

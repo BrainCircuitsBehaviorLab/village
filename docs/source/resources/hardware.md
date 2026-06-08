@@ -6,12 +6,10 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 
 #### Phase 1: Frame Construction
 
-The frame is built using 20×20 V-slot aluminum profiles.
-
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**Components**: Parts required for the standard 2-homecage version (without Eco-HAB).
+**Components**: Parts required for the standard 2-homecage version (without Eco-HAB). The frame is built using 20×20 V-slot aluminum profiles.
 :::
 :::{grid-item}
 :columns: 8
@@ -94,7 +92,7 @@ The frame is built using 20×20 V-slot aluminum profiles.
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**Acrylic Base**: Mount the 3D-printed parts onto a 3 mm matte white acrylic base. The matte finish is important to avoid reflections.
+**Components**: 3D-printed parts and a 3 mm matte white acrylic base. The matte finish is important to avoid reflections.
 :::
 :::{grid-item}
 :columns: 8
@@ -146,7 +144,7 @@ The frame is built using 20×20 V-slot aluminum profiles.
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**Frame Installation**: Place the assembled base onto the aluminum frame structure.
+**Frame Installation**: Place the assembled base onto the aluminum frame structure. You can now slide the camera mount along the profile to align it roughly above the corridor pieces, so the camera records the corridor from directly overhead. Once in position, secure the camera mount with an M4 screw.
 :::
 :::{grid-item}
 :columns: 8
@@ -162,7 +160,7 @@ The frame is built using 20×20 V-slot aluminum profiles.
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**Scale & RFID Modules**: Mount the scale module (load cell with 3D-printed part) and the RFID module onto the base.
+**Components**: Scale module (load cell with 3D-printed part) and RFID module.
 :::
 :::{grid-item}
 :columns: 8
@@ -242,7 +240,7 @@ The frame is built using 20×20 V-slot aluminum profiles.
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**Servo Motors Overview**: Position the servo motors and attach the doors to them.
+**Components**: Servo motors and doors.
 :::
 :::{grid-item}
 :columns: 8
@@ -286,6 +284,74 @@ The frame is built using 20×20 V-slot aluminum profiles.
 :::{grid-item}
 :columns: 8
 ```{image} /_static/servos4.png
+:width: 100%
+```
+:::
+::::
+
+
+#### Phase 5: Illumination
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Components**: White LED strip and IR LEDs. In both cases, the connection requires only two bare wires (ground and power), with no connector.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/leds1.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**LED Strip Placement**: Mount the LED strip on the frame, starting from the vertical profile furthest from the corridor and continuing along the horizontal ceiling profile. Leave approximately 20 cm from the floor to the start of the strip so that the light always stays above the animals' heads. Along the horizontal profile, extend the strip to approximately the position of the camera mount (which should sit roughly above the corridor pieces).
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/leds2.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Diffusers**: Place the plastic diffusers over the LED strip using adhesive tape.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/leds3.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**IR LED Assembly**: Insert the IR LEDs into their plastic holders — they snap into place.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/leds4.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**IR LED Mounting**: Attach the plastic holders with the IR LEDs to the vertical profile opposite the white LED strip — the vertical aluminum profile closest to the corridor. The two 3D-printed mounting parts allow for some adjustment, enabling the IR LEDs to be oriented for optimal illumination of the corridor while minimizing reflections.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/leds5.png
 :width: 100%
 ```
 :::

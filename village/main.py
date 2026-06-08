@@ -38,8 +38,6 @@ import queue
 import threading
 import time
 
-from PyQt5.QtWidgets import QWidget
-
 from village.classes.enums import Active, State
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.chip import (
@@ -53,6 +51,7 @@ from village.devices.scale import scale
 from village.devices.sound_device import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
+from village.devices.touch import touch
 from village.gui.gui import Gui
 from village.manager import manager
 from village.scripts.error_queue import error_queue
@@ -96,16 +95,13 @@ manager.errors += (
 )
 if manager.errors != "":
     log.error(manager.errors)
+manager.touch = touch
 log.start("VILLAGE")
 
 
 # create a secondary thread
-def system_run(bevavior_window: QWidget) -> None:
-    """Runs the main system control loop in a secondary thread.
-
-    Args:
-        bevavior_window (QWidget): The main behavior window widget.
-    """
+def system_run() -> None:
+    """Runs the main system control loop in a secondary thread."""
     id = ""
     multiple = False
     checking_subject_requirements = True
@@ -535,12 +531,9 @@ def main() -> None:
     """
     # create the GUI that will run in the main thread
     gui = Gui()
-    manager.behavior_window = gui.behavior_window
 
     # start the secondary thread (control of the system)
-    system_state = threading.Thread(
-        target=system_run, args=(manager.behavior_window,), daemon=True
-    )
+    system_state = threading.Thread(target=system_run, daemon=True)
     system_state.start()
 
     # start the GUI

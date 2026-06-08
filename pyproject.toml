@@ -17,6 +17,8 @@ dependencies = [
     "scipy",
     "fire",
     "gpiod",
+    "evdev",
+    "pi5neo",
     "calplot",
 ]
 

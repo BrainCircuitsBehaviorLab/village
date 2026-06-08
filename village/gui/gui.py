@@ -1,21 +1,14 @@
 import os
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from PyQt5.QtGui import QFont, QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
-from village.classes.enums import ScreenActive
-from village.classes.null_classes import NullBehaviorWindow
 from village.devices.camera import cam_box, cam_corridor
 from village.gui.gui_window import GuiWindow
-from village.screen.behavior_window import BehaviorWindow
 from village.scripts.log import log
 from village.settings import settings
-
-if TYPE_CHECKING:
-    from village.screen.behavior_window import BehaviorWindow
 
 
 class Gui:
@@ -41,33 +34,10 @@ class Gui:
         self.q_app.setWindowIcon(QIcon(str(iconpath)))  # Set the icon
 
         # get the resolution of the primary monitor
-        screen = QGuiApplication.screens()[0]
-        self.geometry = screen.geometry()
-
-        if settings.get("USE_SCREEN") != ScreenActive.OFF:
-            self.create_behavior_window()
-        else:
-            self.behavior_window: BehaviorWindow | NullBehaviorWindow = (
-                NullBehaviorWindow()
-            )
+        primary_screen = QGuiApplication.screens()[0]
+        self.geometry = primary_screen.geometry()
 
         self.gui_window = GuiWindow(self)
-
-    def create_behavior_window(self) -> None:
-        """Creates and configures the behavior window on the secondary monitor."""
-        # get the resolution of the secondary monitor
-        try:
-            screen = QGuiApplication.screens()[1]
-            geometry = screen.geometry()
-
-            self.behavior_window = BehaviorWindow(geometry)
-            settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
-        except IndexError:
-            log.error(
-                "Secondary screen not detected. "
-                "Behavior window will not be displayed."
-            )
-            self.behavior_window = NullBehaviorWindow()
 
     def exit_app(self) -> None:
         """Exits the application gracefully.
