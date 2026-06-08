@@ -222,11 +222,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.html">task</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.Task.html">Task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
@@ -454,7 +454,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="2">
 </span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 </span><span data-line="4">
-</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskBase</span>
 </span><span data-line="6">
 </span><span data-line="7"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
 </span><span data-line="8">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">Camera</span>
@@ -477,7 +477,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="21">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="22"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the CameraTriggerBase instance.&quot;&quot;&quot;</span>
 </span><span data-line="23">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Camera Trigger&quot;</span>
-</span><span data-line="24">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span></div>
+</span><span data-line="24">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">TaskBase</span><span class="p">()</span></div>
 
 </span><span data-line="25">
 <div class="viewcode-block" id="CameraTriggerBase.trigger">
@@ -488,44 +488,45 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="29"><span class="sd">        Called on every frame to check whether the subject has entered any</span>
 </span><span data-line="30"><span class="sd">        defined area or reached a specific position in the camera feed.</span>
 </span><span data-line="31">
-</span><span data-line="32"><span class="sd">        Available area triggers (return True when the subject is detected):</span>
-</span><span data-line="33"><span class="sd">        - cam.area1_is_triggered</span>
-</span><span data-line="34"><span class="sd">        - cam.area2_is_triggered</span>
-</span><span data-line="35"><span class="sd">        - cam.area3_is_triggered</span>
-</span><span data-line="36"><span class="sd">        - cam.area4_is_triggered</span>
-</span><span data-line="37">
-</span><span data-line="38"><span class="sd">        Available position properties:</span>
-</span><span data-line="39"><span class="sd">        - cam.x_position, cam.y_position (subject position in pixels)</span>
-</span><span data-line="40"><span class="sd">        - cam.width, cam.height (camera feed dimensions in pixels)</span>
-</span><span data-line="41">
-</span><span data-line="42"><span class="sd">        Other:</span>
-</span><span data-line="43"><span class="sd">        - cam.write_text(&quot;text&quot;) to overlay text on the camera feed</span>
-</span><span data-line="44">
-</span><span data-line="45"><span class="sd">        Args:</span>
-</span><span data-line="46"><span class="sd">            cam (Camera): The camera instance providing trigger status</span>
-</span><span data-line="47"><span class="sd">            and position data.</span>
-</span><span data-line="48"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="49">
-</span><span data-line="50">        <span class="c1"># Check if the animal is in any of the 4 defined areas</span>
-</span><span data-line="51">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area1_is_triggered</span><span class="p">:</span>
-</span><span data-line="52">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;Area 1 triggered&quot;</span><span class="p">)</span>
-</span><span data-line="53">
-</span><span data-line="54">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area2_is_triggered</span><span class="p">:</span>
-</span><span data-line="55">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;Area 2 triggered&quot;</span><span class="p">)</span>
-</span><span data-line="56">
-</span><span data-line="57">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area3_is_triggered</span><span class="p">:</span>
-</span><span data-line="58">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;Area 3 triggered&quot;</span><span class="p">)</span>
-</span><span data-line="59">
-</span><span data-line="60">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area4_is_triggered</span><span class="p">:</span>
-</span><span data-line="61">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;Area 4 triggered&quot;</span><span class="p">)</span></div>
+</span><span data-line="32"><span class="sd">        Available area triggers (return True if the area is marked as a TRIGGER area</span>
+</span><span data-line="33"><span class="sd">        and a subject is detected within it):</span>
+</span><span data-line="34"><span class="sd">        - cam.area1_is_triggered</span>
+</span><span data-line="35"><span class="sd">        - cam.area2_is_triggered</span>
+</span><span data-line="36"><span class="sd">        - cam.area3_is_triggered</span>
+</span><span data-line="37"><span class="sd">        - cam.area4_is_triggered</span>
+</span><span data-line="38">
+</span><span data-line="39"><span class="sd">        Available position properties:</span>
+</span><span data-line="40"><span class="sd">        - cam.x_position, cam.y_position (subject position in pixels)</span>
+</span><span data-line="41"><span class="sd">        - cam.width, cam.height (camera feed dimensions in pixels)</span>
+</span><span data-line="42">
+</span><span data-line="43"><span class="sd">        Other:</span>
+</span><span data-line="44"><span class="sd">        - cam.write_text(&quot;text&quot;) to overlay text on the camera feed</span>
+</span><span data-line="45">
+</span><span data-line="46"><span class="sd">        Args:</span>
+</span><span data-line="47"><span class="sd">            cam (Camera): The camera instance providing trigger status</span>
+</span><span data-line="48"><span class="sd">            and position data.</span>
+</span><span data-line="49"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="50">
+</span><span data-line="51">        <span class="c1"># Check if the animal is in any of the 4 defined areas</span>
+</span><span data-line="52">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area1_is_triggered</span><span class="p">:</span>
+</span><span data-line="53">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;Area 1 triggered&quot;</span><span class="p">)</span>
+</span><span data-line="54">
+</span><span data-line="55">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area2_is_triggered</span><span class="p">:</span>
+</span><span data-line="56">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;Area 2 triggered&quot;</span><span class="p">)</span>
+</span><span data-line="57">
+</span><span data-line="58">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area3_is_triggered</span><span class="p">:</span>
+</span><span data-line="59">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;Area 3 triggered&quot;</span><span class="p">)</span>
+</span><span data-line="60">
+</span><span data-line="61">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area4_is_triggered</span><span class="p">:</span>
+</span><span data-line="62">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;Area 4 triggered&quot;</span><span class="p">)</span></div>
 </div>
 
-</span><span data-line="62">
-</span><span data-line="63">        <span class="c1"># Check if the animal is within a 50-pixel radius of the center</span>
-</span><span data-line="64">        <span class="c1"># distance = ((cam.x_position - cam.width / 2) ** 2 +</span>
-</span><span data-line="65">        <span class="c1">#             (cam.y_position - cam.height / 2) ** 2) ** 0.5</span>
-</span><span data-line="66">        <span class="c1"># if distance &lt; 50:</span>
-</span><span data-line="67">        <span class="c1">#     cam.write_text(&quot;Animal in the center area&quot;)</span>
+</span><span data-line="63">
+</span><span data-line="64">        <span class="c1"># Check if the animal is within a 50-pixel radius of the center</span>
+</span><span data-line="65">        <span class="c1"># distance = ((cam.x_position - cam.width / 2) ** 2 +</span>
+</span><span data-line="66">        <span class="c1">#             (cam.y_position - cam.height / 2) ** 2) ** 0.5</span>
+</span><span data-line="67">        <span class="c1"># if distance &lt; 50:</span>
+</span><span data-line="68">        <span class="c1">#     cam.write_text(&quot;Animal in the center area&quot;)</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -550,7 +551,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=b1edc603"></script>
+      <script src="../../../_static/documentation_options.js?v=8a09a7d4"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

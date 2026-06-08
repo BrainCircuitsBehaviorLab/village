@@ -1,0 +1,40 @@
+TaskBase
+========
+
+.. currentmodule:: village.custom_classes.task_base
+
+.. autoclass:: TaskBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~TaskBase.__init__
+      ~TaskBase.after_trial
+      ~TaskBase.close
+      ~TaskBase.concatenate_trial_data
+      ~TaskBase.create_paths
+      ~TaskBase.create_trial
+      ~TaskBase.disconnect_and_save
+      ~TaskBase.do_trial
+      ~TaskBase.execute_function
+      ~TaskBase.get_name
+      ~TaskBase.register_value
+      ~TaskBase.run
+      ~TaskBase.run_in_thread
+      ~TaskBase.save_csv
+      ~TaskBase.save_json
+      ~TaskBase.start
+   
+   
+
+   
+   
+   

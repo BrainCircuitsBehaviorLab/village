@@ -18,6 +18,14 @@ CameraDrawBase
    
       ~CameraDrawBase.__init__
       ~CameraDrawBase.draw
+      ~CameraDrawBase.draw_detection_areas_box
+      ~CameraDrawBase.draw_detection_areas_corridor
+      ~CameraDrawBase.draw_detection_mask_box
+      ~CameraDrawBase.draw_detection_mask_corridor
+      ~CameraDrawBase.draw_detection_position_box
+      ~CameraDrawBase.draw_preview
+      ~CameraDrawBase.write_pixel_detection_texts
+      ~CameraDrawBase.write_status_texts
    
    
 

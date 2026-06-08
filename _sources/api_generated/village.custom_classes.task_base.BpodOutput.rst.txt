@@ -1,7 +1,7 @@
 BpodOutput
 ==========
 
-.. currentmodule:: village.custom_classes.task
+.. currentmodule:: village.custom_classes.task_base
 
 .. autoclass:: BpodOutput
    :members:

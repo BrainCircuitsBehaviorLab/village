@@ -222,11 +222,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.html">task</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.Task.html">Task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
@@ -450,7 +450,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for village.custom_classes.touch_trigger_base</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
+<span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskBase</span>
 </span><span data-line="2">
 </span><span data-line="3">
 <div class="viewcode-block" id="TouchTriggerBase">
@@ -470,7 +470,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="14">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="15"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the TouchTriggerBase instance.&quot;&quot;&quot;</span>
 </span><span data-line="16">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Touch Trigger&quot;</span>
-</span><span data-line="17">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">()</span></div>
+</span><span data-line="17">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">TaskBase</span><span class="p">()</span></div>
 
 </span><span data-line="18">
 <div class="viewcode-block" id="TouchTriggerBase.trigger">
@@ -510,7 +510,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=b1edc603"></script>
+      <script src="../../../_static/documentation_options.js?v=8a09a7d4"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

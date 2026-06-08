@@ -1,7 +1,7 @@
-task
-====
+task\_base
+==========
 
-.. automodule:: village.custom_classes.task
+.. automodule:: village.custom_classes.task_base
    :no-members:
    :no-undoc-members:
    :no-inherited-members:
@@ -24,7 +24,7 @@ task
    
       BpodEvent
       BpodOutput
-      Task
+      TaskBase
    
    
 

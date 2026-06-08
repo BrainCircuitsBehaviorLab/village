@@ -2,19 +2,19 @@
 
 
 To create a task, create a Python file, and within it, a class with the task’s name,
-inheriting functionality from the generic `Task` class. This process is straightforward.
+inheriting functionality from the generic `TaskBase` class. This process is straightforward.
 Let’s look at an example:
 
-Let's explore the task `habituation.py` inside your code folder. The structure of the
+Let's explore the file `habituation.py` inside your code folder. The structure of the
 task is the following:
 
 
 ```python
-from village.classes.task import Event, Output, Task
+from village.classes.task_base import Event, Output, TaskBase
 from village.manager import manager
 
 
-class Habituation(Task):
+class Habituation(TaskBase):
     """
     This class defines the task.
 

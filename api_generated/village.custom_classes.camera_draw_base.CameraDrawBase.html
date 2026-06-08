@@ -222,11 +222,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task.html">task</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.Task.html">Task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
@@ -420,6 +420,14 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase"><code class="docutils literal notranslate"><span class="pre">CameraDrawBase</span></code></a><ul>
 <li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.draw"><code class="docutils literal notranslate">draw()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.draw_preview"><code class="docutils literal notranslate">draw_preview()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.write_status_texts"><code class="docutils literal notranslate">write_status_texts()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.write_pixel_detection_texts"><code class="docutils literal notranslate">write_pixel_detection_texts()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_mask_corridor"><code class="docutils literal notranslate">draw_detection_mask_corridor()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_areas_corridor"><code class="docutils literal notranslate">draw_detection_areas_corridor()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_mask_box"><code class="docutils literal notranslate">draw_detection_mask_box()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_areas_box"><code class="docutils literal notranslate">draw_detection_areas_box()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_position_box"><code class="docutils literal notranslate">draw_detection_position_box()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -506,21 +514,146 @@ data-aria-dark="Switch to auto color mode">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">CameraDrawBase</span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for defining custom camera draw on frame behavior.</p>
-<p>This class can be overridden to implement specific actions.</p>
+<p>Override this class to add or change the default drawing behavior on the camera
+feed for both BOX and CORRIDOR cameras.</p>
+<p>You have access to self.task, so any variable or function defined in the
+task can be used to specify the drawing behavior to perform.</p>
+<p>Two methods are called automatically on every frame:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">draw(cam)</span></code></dt><dd><p>Uses cv2 to draw on <code class="docutils literal notranslate"><span class="pre">cam.frame</span></code>; changes go to disk and screen.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">draw_preview(cam,</span> <span class="pre">painter)</span></code></dt><dd><p>Uses QPainter; goes to screen only — never saved to the video file.</p>
+</dd>
+</dl>
+<p>The following <code class="docutils literal notranslate"><span class="pre">cam</span></code> attributes are updated every frame and available
+inside both methods:</p>
+<p><strong>Identity &amp; state</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.name</span></code> — <code class="docutils literal notranslate"><span class="pre">'BOX'</span></code> or <code class="docutils literal notranslate"><span class="pre">'CORRIDOR'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.task_is_running</span></code> — <code class="docutils literal notranslate"><span class="pre">True</span></code> if a task is active, <code class="docutils literal notranslate"><span class="pre">False</span></code> if not.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.view_detection</span></code> — whether detection overlays are enabled in the GUI.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.tracking</span></code> — whether animal position tracking is active (BOX only).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.color</span></code> — <code class="docutils literal notranslate"><span class="pre">Color.BLACK</span></code> or <code class="docutils literal notranslate"><span class="pre">Color.WHITE</span></code>: which pixels to detect.</p></li>
+</ul>
+<p><strong>Frame data</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.frame</span></code> — current frame as a BGR numpy array (read/write).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.width</span></code>, <code class="docutils literal notranslate"><span class="pre">cam.height</span></code> — frame dimensions in pixels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.frame_number</span></code> — frames captured since recording started.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.timing</span></code> — milliseconds elapsed since recording started.</p></li>
+</ul>
+<p><strong>Session info</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.filename</span></code> — base name of the current video file (empty if not recording).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.trial</span></code> — current trial number (0 if no task running or CORRIDOR camera).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.annotation</span></code> — short text rendered on every frame at a fixed position in
+the status bar. Set it from a task with <code class="docutils literal notranslate"><span class="pre">cam_box.write_text(&quot;reward&quot;)</span></code>;
+it persists until changed. Also saved frame-by-frame to the session CSV, so
+it is useful for marking task events for post-hoc analysis.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.items_to_draw</span></code> — plain <code class="docutils literal notranslate"><span class="pre">dict</span></code> for passing arbitrary data from the task
+to the drawing methods without coupling the task to this class. The task
+populates it at any point (e.g. <code class="docutils literal notranslate"><span class="pre">cam_box.items_to_draw[&quot;target&quot;]</span> <span class="pre">=</span> <span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">r)</span></code>)
+and <code class="docutils literal notranslate"><span class="pre">draw</span></code> / <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> can read it to render complex overlays such as
+circles, custom shapes, or stimulus boundaries.</p></li>
+</ul>
+<p><strong>Detection areas</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.number_of_areas</span></code> — number of configurable areas (always 4).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas</span></code> — list of <code class="docutils literal notranslate"><span class="pre">[x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2]</span></code> pixel coordinates per area.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_active</span></code> — bool list, whether each area is enabled.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_allowed</span></code> — bool list, whether animals are allowed in each area.</p></li>
+</ul>
+<p><strong>Detection results</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.masks</span></code> — grayscale numpy arrays with the thresholded mask per area.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.counts</span></code> — detected pixel count per area.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.x_position</span></code>, <code class="docutils literal notranslate"><span class="pre">cam.y_position</span></code> — tracked animal position in pixels
+(<code class="docutils literal notranslate"><span class="pre">-1</span></code> if not detected).</p></li>
+</ul>
+<p><strong>Task access</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self.task</span></code> — the current task instance.</p></li>
+</ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Initializes the CameraDrawBase instance.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <p class="rubric">Methods</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Draws on the camera frame based on the camera’s state.
-:param cam: The camera instance providing the
-:type cam: Camera
-:param frame and state.:</p>
+<dd><p>Default cv2 drawing — goes to disk and screen.
+Status texts and pixel counts always run for both cameras.
+Detection (thresholded mask + areas) is CORRIDOR-only here so it goes to
+disk. For BOX, detection goes to draw_preview (screen only).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cam</strong> – The camera instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.draw_preview">
+<span class="sig-name descname"><span class="pre">draw_preview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">painter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPainter</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw_preview"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Default QPainter drawing — goes to screen only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cam</strong> – The camera instance.</p></li>
+<li><p><strong>painter</strong> – Active QPainter on the preview widget.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.write_status_texts">
+<span class="sig-name descname"><span class="pre">write_status_texts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.write_status_texts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Draws the text status bar background and writes filename/timing text.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.write_pixel_detection_texts">
+<span class="sig-name descname"><span class="pre">write_pixel_detection_texts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.write_pixel_detection_texts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes pixel count for each active area onto the frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_mask_corridor">
+<span class="sig-name descname"><span class="pre">draw_detection_mask_corridor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw_detection_mask_corridor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Blends the thresholded detection mask into the frame via cv2.</p>
+<p>For black detection: darkens detected pixels using bitwise_and.
+For white detection: brightens detected pixels using bitwise_or.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_areas_corridor">
+<span class="sig-name descname"><span class="pre">draw_detection_areas_corridor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw_detection_areas_corridor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Draws detection area rectangles onto the frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_mask_box">
+<span class="sig-name descname"><span class="pre">draw_detection_mask_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">painter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPainter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw_detection_mask_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Draws thresholded detection masks via QPainter (screen only).</p>
+<p>Converts each area’s grayscale mask to a semi-transparent RGBA QImage
+and draws it at the scaled position on the preview widget.
+Black detection → dark overlay where the animal is.
+White detection → bright overlay where the animal is.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_areas_box">
+<span class="sig-name descname"><span class="pre">draw_detection_areas_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">painter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPainter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw_detection_areas_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Draws area rectangles (and X for NOT_ALLOWED areas) via QPainter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.camera_draw_base.CameraDrawBase.draw_detection_position_box">
+<span class="sig-name descname"><span class="pre">draw_detection_position_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">painter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPainter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw_detection_position_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Draws a filled circle at the tracked animal position via QPainter.</p>
 </dd></dl>
 
 </dd></dl>
@@ -564,7 +697,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=b1edc603"></script>
+      <script src="../_static/documentation_options.js?v=8a09a7d4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

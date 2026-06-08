@@ -56,7 +56,6 @@ NullCamera
       ~NullCamera.error
       ~NullCamera.is_recording
       ~NullCamera.path_picture
-      ~NullCamera.show_time_info
       ~NullCamera.timing
       ~NullCamera.trial
       ~NullCamera.trigger_event

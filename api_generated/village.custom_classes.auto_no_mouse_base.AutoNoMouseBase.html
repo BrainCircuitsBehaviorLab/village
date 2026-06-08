@@ -222,11 +222,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task.html">task</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.Task.html">Task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
@@ -517,13 +517,13 @@ data-aria-dark="Switch to auto color mode">
 <h1>AutoNoMouseBase</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouseBase">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">AutoNoMouseBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.custom_classes.task.Task.html#village.custom_classes.task.Task" title="village.custom_classes.task.Task"><span class="pre">Task</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouseBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">AutoNoMouseBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.custom_classes.task_base.TaskBase.html#village.custom_classes.task_base.TaskBase" title="village.custom_classes.task_base.TaskBase"><span class="pre">TaskBase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouseBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for automated task execution without a real animal.</p>
 <p>Can be subclassed in your project/code folder.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="village.custom_classes.auto_no_mouse_base.AutoNoMouseBase.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.custom_classes.task.Task.html#village.custom_classes.task.Task" title="village.custom_classes.task.Task"><span class="pre">Task</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouseBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.custom_classes.task_base.TaskBase.html#village.custom_classes.task_base.TaskBase" title="village.custom_classes.task_base.TaskBase"><span class="pre">TaskBase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/auto_no_mouse_base.html#AutoNoMouseBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -656,7 +656,7 @@ Append one mock trial row directly to session_df.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=b1edc603"></script>
+      <script src="../_static/documentation_options.js?v=8a09a7d4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

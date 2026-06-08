@@ -41,7 +41,7 @@
    online_plot_base
    session_plot_base
    subject_plot_base
-   task
+   task_base
    touch_trigger_base
    training_protocol_base
 

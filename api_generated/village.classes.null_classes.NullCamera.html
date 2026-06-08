@@ -222,11 +222,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task.html">task</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.Task.html">Task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
@@ -434,7 +434,6 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.error"><code class="docutils literal notranslate">error</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.trial"><code class="docutils literal notranslate">trial</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.is_recording"><code class="docutils literal notranslate">is_recording</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullCamera.show_time_info"><code class="docutils literal notranslate">show_time_info</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.timing"><code class="docutils literal notranslate">timing</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.x_position"><code class="docutils literal notranslate">x_position</span></code></a></li>
 <li><a class="reference internal" href="#village.classes.null_classes.NullCamera.y_position"><code class="docutils literal notranslate">y_position</span></code></a></li>
@@ -623,11 +622,6 @@ data-aria-dark="Switch to auto color mode">
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.show_time_info">
-<span class="sig-name descname"><span class="pre">show_time_info</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.timing">
 <span class="sig-name descname"><span class="pre">timing</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span></dt>
 <dd></dd></dl>
@@ -644,7 +638,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.trigger_event">
-<span class="sig-name descname"><span class="pre">trigger_event</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;threading.Event</span> <span class="pre">at</span> <span class="pre">0x7f7cefd45810:</span> <span class="pre">unset&gt;</span></span></dt>
+<span class="sig-name descname"><span class="pre">trigger_event</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;threading.Event</span> <span class="pre">at</span> <span class="pre">0x7f38f7eac990:</span> <span class="pre">unset&gt;</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -666,7 +660,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="village.classes.null_classes.NullCamera.start_preview_window">
-<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='140174582776976'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCamera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">start_preview_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QWidget'</span> <span class="pre">id='139882657993104'&gt;</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullCamera.start_preview_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Starts the preview window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -849,7 +843,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=b1edc603"></script>
+      <script src="../_static/documentation_options.js?v=8a09a7d4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

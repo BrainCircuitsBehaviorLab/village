@@ -222,11 +222,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.html">task</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.BpodEvent.html">BpodEvent</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.BpodOutput.html">BpodOutput</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.Task.html">Task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task.TaskError.html">village.custom_classes.task.TaskError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
@@ -477,71 +477,71 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="21">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 </span><span data-line="22">
-<div class="viewcode-block" id="OnlinePlotBase.ensure_figure">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure">[docs]</a>
-</span><span data-line="23">    <span class="k">def</span><span class="w"> </span><span class="nf">ensure_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="24"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensures that the matplotlib figure exists, creating it if necessary.&quot;&quot;&quot;</span>
-</span><span data-line="25">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;canvas&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="26">            <span class="bp">self</span><span class="o">.</span><span class="n">create_figure_and_axes</span><span class="p">()</span></div>
-
-</span><span data-line="27">
-<div class="viewcode-block" id="OnlinePlotBase.close">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.close">[docs]</a>
-</span><span data-line="28">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="29"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes the matplotlib figure and resets the state.&quot;&quot;&quot;</span>
-</span><span data-line="30">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="31">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="32">                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">)</span>
-</span><span data-line="33">        <span class="k">finally</span><span class="p">:</span>
-</span><span data-line="34">            <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="35">            <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span></div>
-
-</span><span data-line="36">
-<div class="viewcode-block" id="OnlinePlotBase.update_canvas">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.update_canvas">[docs]</a>
-</span><span data-line="37">    <span class="k">def</span><span class="w"> </span><span class="nf">update_canvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="38"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the plot with new data and redraws the canvas.</span>
-</span><span data-line="39">
-</span><span data-line="40"><span class="sd">        Args:</span>
-</span><span data-line="41"><span class="sd">            df (pd.DataFrame): The dataframe containing the latest session data.</span>
-</span><span data-line="42"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="43">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="44">            <span class="bp">self</span><span class="o">.</span><span class="n">ensure_figure</span><span class="p">()</span>
-</span><span data-line="45">            <span class="bp">self</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</span><span data-line="46">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">canvas</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="47">                <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw_idle</span><span class="p">()</span>
-</span><span data-line="48">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="49">            <span class="k">pass</span></div>
-
-</span><span data-line="50">
 <div class="viewcode-block" id="OnlinePlotBase.create_figure_and_axes">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes">[docs]</a>
-</span><span data-line="51">    <span class="k">def</span><span class="w"> </span><span class="nf">create_figure_and_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="52"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the figure and axes. Should be overridden by subclasses.&quot;&quot;&quot;</span>
-</span><span data-line="53">        <span class="n">width</span> <span class="o">=</span> <span class="mi">10</span>
-</span><span data-line="54">        <span class="n">height</span> <span class="o">=</span> <span class="mi">8</span>
-</span><span data-line="55">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span></div>
+</span><span data-line="23">    <span class="k">def</span><span class="w"> </span><span class="nf">create_figure_and_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="24"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the figure and axes. Should be overridden by subclasses.&quot;&quot;&quot;</span>
+</span><span data-line="25">        <span class="n">width</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span data-line="26">        <span class="n">height</span> <span class="o">=</span> <span class="mi">8</span>
+</span><span data-line="27">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span></div>
 
-</span><span data-line="56">
-</span><span data-line="57">        <span class="c1"># self.fig = plt.figure(figsize=(width, height))</span>
-</span><span data-line="58">        <span class="c1"># self.ax1 = self.fig.add_subplot(121)</span>
-</span><span data-line="59">        <span class="c1"># self.ax2 = self.fig.add_subplot(122)</span>
-</span><span data-line="60">
+</span><span data-line="28">
+</span><span data-line="29">        <span class="c1"># self.fig = plt.figure(figsize=(width, height))</span>
+</span><span data-line="30">        <span class="c1"># self.ax1 = self.fig.add_subplot(121)</span>
+</span><span data-line="31">        <span class="c1"># self.ax2 = self.fig.add_subplot(122)</span>
+</span><span data-line="32">
 <div class="viewcode-block" id="OnlinePlotBase.update_plot">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.update_plot">[docs]</a>
-</span><span data-line="61">    <span class="k">def</span><span class="w"> </span><span class="nf">update_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="62"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the plot content. Should be overridden by subclasses.</span>
-</span><span data-line="63">
-</span><span data-line="64"><span class="sd">        Args:</span>
-</span><span data-line="65"><span class="sd">            df (pd.DataFrame): The dataframe containing the latest session data.</span>
-</span><span data-line="66"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="67">        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="68">
-</span><span data-line="69">        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span data-line="70">            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Online Plot (no data)&quot;</span><span class="p">)</span>
-</span><span data-line="71">            <span class="k">return</span>
-</span><span data-line="72">
-</span><span data-line="73">        <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;scatter&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;TRIAL_START&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;trial&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="p">)</span></div>
+</span><span data-line="33">    <span class="k">def</span><span class="w"> </span><span class="nf">update_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="34"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the plot content. Should be overridden by subclasses.</span>
+</span><span data-line="35">
+</span><span data-line="36"><span class="sd">        Args:</span>
+</span><span data-line="37"><span class="sd">            df (pd.DataFrame): The dataframe containing the latest session data.</span>
+</span><span data-line="38"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="39">        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="40">
+</span><span data-line="41">        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span data-line="42">            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Online Plot (no data)&quot;</span><span class="p">)</span>
+</span><span data-line="43">            <span class="k">return</span>
+</span><span data-line="44">
+</span><span data-line="45">        <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;scatter&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;TRIAL_START&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;trial&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="p">)</span></div>
+
+</span><span data-line="46">
+<div class="viewcode-block" id="OnlinePlotBase.ensure_figure">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure">[docs]</a>
+</span><span data-line="47">    <span class="k">def</span><span class="w"> </span><span class="nf">ensure_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="48"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensures that the matplotlib figure exists, creating it if necessary.&quot;&quot;&quot;</span>
+</span><span data-line="49">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;canvas&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="50">            <span class="bp">self</span><span class="o">.</span><span class="n">create_figure_and_axes</span><span class="p">()</span></div>
+
+</span><span data-line="51">
+<div class="viewcode-block" id="OnlinePlotBase.update_canvas">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.update_canvas">[docs]</a>
+</span><span data-line="52">    <span class="k">def</span><span class="w"> </span><span class="nf">update_canvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="53"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the plot with new data and redraws the canvas.</span>
+</span><span data-line="54">
+</span><span data-line="55"><span class="sd">        Args:</span>
+</span><span data-line="56"><span class="sd">            df (pd.DataFrame): The dataframe containing the latest session data.</span>
+</span><span data-line="57"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="58">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="59">            <span class="bp">self</span><span class="o">.</span><span class="n">ensure_figure</span><span class="p">()</span>
+</span><span data-line="60">            <span class="bp">self</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</span><span data-line="61">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">canvas</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="62">                <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw_idle</span><span class="p">()</span>
+</span><span data-line="63">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="64">            <span class="k">pass</span></div>
+
+</span><span data-line="65">
+<div class="viewcode-block" id="OnlinePlotBase.close">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html#village.custom_classes.online_plot_base.OnlinePlotBase.close">[docs]</a>
+</span><span data-line="66">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="67"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes the matplotlib figure and resets the state.&quot;&quot;&quot;</span>
+</span><span data-line="68">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="69">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="70">                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">)</span>
+</span><span data-line="71">        <span class="k">finally</span><span class="p">:</span>
+</span><span data-line="72">            <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="73">            <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span></div>
 </div>
 
 </span></pre></div>
@@ -568,7 +568,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=b1edc603"></script>
+      <script src="../../../_static/documentation_options.js?v=8a09a7d4"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
