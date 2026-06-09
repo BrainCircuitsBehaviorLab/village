@@ -83,14 +83,17 @@ class LowFreqQPicamera2(QPicamera2):
             self._frame_counter = 0
             super().render_request(completed_request)
 
-    def paintEvent(self, event) -> None:
-        """Renders the camera frame then draws screen-only overlays."""
-        super().paintEvent(event)
-        if self._cam is not None:
-            painter = QPainter(self)
-            self._cam.task_is_running = manager.state.task_is_running()
-            manager.camera_draw.draw_preview(self._cam, painter)
-            painter.end()
+    def drawForeground(self, painter: QPainter, rect) -> None:
+        """Draws screen-only overlays on top of the camera frame
+        (which is a QGraphicsView in QPicamera2!)."""
+        super().drawForeground(painter, rect)
+        if self._cam is None:
+            return
+        painter.save()
+        painter.resetTransform()
+        self._cam.task_is_running = manager.state.task_is_running()
+        manager.camera_draw.draw_preview(self._cam, painter)
+        painter.restore()
 
 
 # the camera class
