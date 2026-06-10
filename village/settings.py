@@ -48,6 +48,14 @@ tethered ephys or optogenetics recordings.""",
         """Enables the Operant Box PCB. This setting allows the Raspberry Pi to control
 some box components, such as LED stimuli, visible/infrared lighting, and motors.""",
     ),
+    Setting(
+        "FAVOURITE_TASK",
+        "None",
+        str,
+        """A favourite (★) task that is preselected when opening the TASKS
+        tab, so that the user can start a session immediately.
+        Set to None to disable preselection.""",
+    ),
 ]
 
 sound_settings = [
@@ -770,6 +778,7 @@ visual_settings = [
 
 hidden_settings = [
     Setting("FIRST_LAUNCH", "OFF", Active, "First launch of the system."),
+    Setting("LAST_SUBJECT", "None", str, "The last subject selected in the TASKS tab."),
     Setting(
         "GITHUB_REPOSITORIES_DOWNLOADED",
         "OFF",

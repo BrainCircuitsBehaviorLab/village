@@ -205,6 +205,9 @@ class SettingsLayout(Layout):
         with suppress(AttributeError, RuntimeError):
             self._pending["SOUND_DEVICE"] = self.sound_device_combobox.currentText()
         with suppress(AttributeError, RuntimeError):
+            txt = self.favourite_task_combobox.currentText()
+            self._pending["FAVOURITE_TASK"] = txt
+        with suppress(AttributeError, RuntimeError):
             self._pending["PROJECT_DIRECTORY"] = (
                 self.project_directory_combobox.currentText()
             )
@@ -760,6 +763,11 @@ class SettingsLayout(Layout):
         except Exception:
             pass
 
+        try:
+            settings.set("FAVOURITE_TASK", self.favourite_task_combobox.currentText())
+        except Exception:
+            pass
+
         cam_corridor.change = True
         cam_box.change = True
 
@@ -870,6 +878,22 @@ class SettingsLayout(Layout):
                 self.change_sound_device,
             )
             self.sound_device_combobox.setProperty("type", type)
+
+        elif s.key == "FAVOURITE_TASK":
+            possible_values = ["None"] + list(manager.tasks.keys())
+            value = self._get(s.key)
+            index = possible_values.index(value) if value in possible_values else 0
+            self.favourite_task_combobox = self.create_and_add_combo_box(
+                s.key,
+                row,
+                column + width,
+                size2,
+                2,
+                possible_values,
+                index,
+                self.settings_changed,
+            )
+            self.favourite_task_combobox.setProperty("type", type)
 
         elif s.value_type in (str, int, float):
             project_dir = self._get("PROJECT_DIRECTORY")
