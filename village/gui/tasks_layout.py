@@ -71,14 +71,12 @@ class TasksLayout(Layout):
         self.line_edits: dict[str, LineEdit] = {}
         self.tasks_button.setDisabled(True)
 
-        # Centered between menu end (col 25) and right panel (col 89): (89-25-20)//2=22
-        _btn_col = C_COL + (SETTINGS_COL - C_COL - 20) // 2  # = 47
         self.run_task_button = self.create_and_add_button(
             "RUN TASK",
             C_ROW,
-            _btn_col,
-            20,
-            2,
+            C_COL + 24,
+            34,
+            3,
             self.run_task_button_clicked,
             "Run the selected task",
             "powderblue",
@@ -86,6 +84,7 @@ class TasksLayout(Layout):
 
         self._draw_menu()
         self._draw_content_area()
+        self._draw_subject_selector()
         self.check_buttons()
 
         favourite = settings.get("FAVOURITE_TASK")
@@ -145,6 +144,38 @@ class TasksLayout(Layout):
             cls = manager.tasks[name]
             self.select_task(cls, name)
 
+    # ── Subject selector ─────────────────────────────────────────────────────
+    def _draw_subject_selector(self) -> None:
+        mylist = ["None"] + manager.subjects.df["name"].tolist()
+        self.possible_subjects = [x for x in mylist
+                                  if not pd.isna(x)
+                                  and not (isinstance(x, str)
+                                           and x.strip() == "")]
+        last_subject = settings.get("LAST_SUBJECT")
+        if last_subject in self.possible_subjects:
+            self.subject_index = self.possible_subjects.index(last_subject)
+        else:
+            self.subject_index = 0
+
+        self.subject_label = self.create_and_add_label(
+            "Subject", C_ROW, C_COL + 4, 14, 1, "black")
+        self.subject_combo = self.create_and_add_combo_box(
+            "subject", C_ROW + 1, C_COL + 4, 16, 2, self.possible_subjects,
+            self.subject_index, self.select_subject)
+        self.subject_up_button = self.create_and_add_button(
+            "▲", C_ROW + 1, C_COL + 20, 2, 1, lambda: self._step_subject(-1),
+            "Previous subject")
+        self.subject_down_button = self.create_and_add_button(
+            "▼", C_ROW + 2, C_COL + 20, 2, 1, lambda: self._step_subject(1),
+            "Next subject")
+
+    def _step_subject(self, delta: int) -> None:
+        if not self.possible_subjects:
+            return
+        n = len(self.possible_subjects)
+        self.subject_combo.setCurrentIndex(
+            (self.subject_combo.currentIndex() + delta) % n)
+
     # ── Content area ───────────────────────────────────────────────────────────
 
     def _draw_content_area(self) -> None:
@@ -193,6 +224,11 @@ class TasksLayout(Layout):
     # ── Button state management ────────────────────────────────────────────────
 
     def check_buttons(self) -> None:
+        subject_enabled = (not manager.state.task_is_running()
+                           and (self.testing_training or self.selected != ""))
+        self.subject_combo.setEnabled(subject_enabled)
+        self.subject_up_button.setEnabled(subject_enabled)
+        self.subject_down_button.setEnabled(subject_enabled)
         if manager.state.task_is_running():
             self.run_task_button.setEnabled(False)
             self.menu_list.setEnabled(False)
@@ -219,7 +255,6 @@ class TasksLayout(Layout):
 
     def select_task(self, cls: Type, name: str) -> None:
         if issubclass(cls, TaskBase):
-            self.subject_index = 0
             self.testing_training = False
             self.selected = name
             self.central_sub_layout.delete_optional_widgets("optional")
@@ -250,10 +285,9 @@ class TasksLayout(Layout):
             row_h = self.central_sub_layout.row_height
             self.info_scroll.setFixedSize(60 * col_w, 30 * row_h)
             self.central_sub_layout.addWidget(self.info_scroll, 2, 2, 30, 60)
-            self.create_gui_properties(testing_training=False)
+            self._apply_current_subject(testing_training=False)
 
     def training_button_clicked(self) -> None:
-        self.subject_index = 0
         self.testing_training = True
         self.selected = ""
         self.central_sub_layout.delete_optional_widgets("optional")
@@ -262,7 +296,15 @@ class TasksLayout(Layout):
         self.right_layout_general.delete_optional_widgets("optional2")
         self.check_buttons()
         manager.reset_subject_task_training()
-        self.create_gui_properties(testing_training=True)
+        self._apply_current_subject(testing_training=True)
+
+    def _apply_current_subject(self, testing_training: bool) -> None:
+        """Loads the selector's subject, or builds defaults when None."""
+        subject = self.subject_combo.currentText()
+        if subject != "None":
+            self.select_subject(subject, "subject")
+        else:
+            self.create_gui_properties(testing_training=testing_training)
 
     # ── GUI properties panel ───────────────────────────────────────────────────
 
@@ -271,29 +313,6 @@ class TasksLayout(Layout):
         self.central_sub_layout.delete_optional_widgets("optional2")
         self.right_layout_general.delete_optional_widgets("optional2")
         self.restart_tab_panel()
-
-        self.subject_label = self.right_layout_general.create_and_add_label(
-            "Subject", 0, 2, 20, 2, "black"
-        )
-        self.subject_label.setProperty("type", "optional")
-
-        mylist = ["None"] + manager.subjects.df["name"].tolist()
-        self.possible_subjects = [
-            x
-            for x in mylist
-            if not pd.isna(x) and not (isinstance(x, str) and x.strip() == "")
-        ]
-        self.subject_combo = self.right_layout_general.create_and_add_combo_box(
-            "subject",
-            0,
-            32,
-            30,
-            2,
-            self.possible_subjects,
-            self.subject_index,
-            self.select_subject,
-        )
-        self.subject_combo.setProperty("type", "optional")
 
         remove_names = [
             "next_task",
@@ -358,6 +377,8 @@ class TasksLayout(Layout):
 
     def select_subject(self, value: str, key: str) -> None:
         self.subject_index = self.subject_combo.currentIndex()
+        settings.set("LAST_SUBJECT", value)
+        settings.sync()
         current_value = ""
         if value != "None":
             manager.subject.subject_series = manager.subjects.get_last_entry(
