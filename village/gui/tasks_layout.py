@@ -147,10 +147,11 @@ class TasksLayout(Layout):
     # ── Subject selector ─────────────────────────────────────────────────────
     def _draw_subject_selector(self) -> None:
         mylist = ["None"] + manager.subjects.df["name"].tolist()
-        self.possible_subjects = [x for x in mylist
-                                  if not pd.isna(x)
-                                  and not (isinstance(x, str)
-                                           and x.strip() == "")]
+        self.possible_subjects = [
+            x
+            for x in mylist
+            if not pd.isna(x) and not (isinstance(x, str) and x.strip() == "")
+        ]
         last_subject = settings.get("LAST_SUBJECT")
         if last_subject in self.possible_subjects:
             self.subject_index = self.possible_subjects.index(last_subject)
@@ -158,23 +159,44 @@ class TasksLayout(Layout):
             self.subject_index = 0
 
         self.subject_label = self.create_and_add_label(
-            "Subject", C_ROW, C_COL + 4, 14, 1, "black")
+            "Subject", C_ROW, C_COL + 4, 14, 1, "black"
+        )
         self.subject_combo = self.create_and_add_combo_box(
-            "subject", C_ROW + 1, C_COL + 4, 16, 2, self.possible_subjects,
-            self.subject_index, self.select_subject)
+            "subject",
+            C_ROW + 1,
+            C_COL + 4,
+            16,
+            2,
+            self.possible_subjects,
+            self.subject_index,
+            self.select_subject,
+        )
         self.subject_up_button = self.create_and_add_button(
-            "▲", C_ROW + 1, C_COL + 20, 2, 1, lambda: self._step_subject(-1),
-            "Previous subject")
+            "▲",
+            C_ROW + 1,
+            C_COL + 20,
+            2,
+            1,
+            lambda: self._step_subject(-1),
+            "Previous subject",
+        )
         self.subject_down_button = self.create_and_add_button(
-            "▼", C_ROW + 2, C_COL + 20, 2, 1, lambda: self._step_subject(1),
-            "Next subject")
+            "▼",
+            C_ROW + 2,
+            C_COL + 20,
+            2,
+            1,
+            lambda: self._step_subject(1),
+            "Next subject",
+        )
 
     def _step_subject(self, delta: int) -> None:
         if not self.possible_subjects:
             return
         n = len(self.possible_subjects)
         self.subject_combo.setCurrentIndex(
-            (self.subject_combo.currentIndex() + delta) % n)
+            (self.subject_combo.currentIndex() + delta) % n
+        )
 
     # ── Content area ───────────────────────────────────────────────────────────
 
@@ -224,8 +246,9 @@ class TasksLayout(Layout):
     # ── Button state management ────────────────────────────────────────────────
 
     def check_buttons(self) -> None:
-        subject_enabled = (not manager.state.task_is_running()
-                           and (self.testing_training or self.selected != ""))
+        subject_enabled = not manager.state.task_is_running() and (
+            self.testing_training or self.selected != ""
+        )
         self.subject_combo.setEnabled(subject_enabled)
         self.subject_up_button.setEnabled(subject_enabled)
         self.subject_down_button.setEnabled(subject_enabled)

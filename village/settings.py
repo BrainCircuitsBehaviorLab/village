@@ -778,10 +778,7 @@ visual_settings = [
 
 hidden_settings = [
     Setting("FIRST_LAUNCH", "OFF", Active, "First launch of the system."),
-    Setting(
-        "LAST_SUBJECT", "None", str,
-        "The last subject selected in the TASKS tab."
-    ),
+    Setting("LAST_SUBJECT", "None", str, "The last subject selected in the TASKS tab."),
     Setting(
         "GITHUB_REPOSITORIES_DOWNLOADED",
         "OFF",

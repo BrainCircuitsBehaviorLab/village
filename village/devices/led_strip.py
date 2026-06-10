@@ -1,7 +1,7 @@
 import traceback
 from typing import Any
 
-from pi5neo import Pi5Neo, EPixelType
+from pi5neo import EPixelType, Pi5Neo
 
 from village.classes.null_classes import NullLEDStrip
 from village.scripts.log import log

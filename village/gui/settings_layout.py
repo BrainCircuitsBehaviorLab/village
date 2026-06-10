@@ -764,8 +764,7 @@ class SettingsLayout(Layout):
             pass
 
         try:
-            settings.set("FAVOURITE_TASK",
-                         self.favourite_task_combobox.currentText())
+            settings.set("FAVOURITE_TASK", self.favourite_task_combobox.currentText())
         except Exception:
             pass
 
@@ -883,11 +882,17 @@ class SettingsLayout(Layout):
         elif s.key == "FAVOURITE_TASK":
             possible_values = ["None"] + list(manager.tasks.keys())
             value = self._get(s.key)
-            index = (possible_values.index(value)
-                     if value in possible_values else 0)
+            index = possible_values.index(value) if value in possible_values else 0
             self.favourite_task_combobox = self.create_and_add_combo_box(
-                s.key, row, column + width, size2, 2,
-                possible_values, index, self.settings_changed)
+                s.key,
+                row,
+                column + width,
+                size2,
+                2,
+                possible_values,
+                index,
+                self.settings_changed,
+            )
             self.favourite_task_combobox.setProperty("type", type)
 
         elif s.value_type in (str, int, float):
