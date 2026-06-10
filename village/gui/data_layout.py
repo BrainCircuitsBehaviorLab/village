@@ -172,7 +172,10 @@ class TableView(QTableView):
                         )
                         if reply == QMessageBox.No:
                             return
-                    super().mouseDoubleClickEvent(event)
+                    try:
+                        super().mouseDoubleClickEvent(event)
+                    except RuntimeError:
+                        return
                     self.save_changes_in_df()
             elif flags & Qt.ItemIsEditable:
                 text = "Wait until the box is empty or synchronization is complete"
@@ -224,7 +227,10 @@ class TableView(QTableView):
             self.clearSelection()
 
     def save_changes_in_df(self, update: bool = True) -> None:
-        model = self._model()
+        try:
+            model = self._model()
+        except RuntimeError:
+            return
         if update:
             model.complete_df.loc[model.df.index] = model.df
         if manager.table == DataTable.SUBJECTS:
