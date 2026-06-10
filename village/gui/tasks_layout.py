@@ -88,6 +88,11 @@ class TasksLayout(Layout):
         self._draw_content_area()
         self.check_buttons()
 
+        favourite = settings.get("FAVOURITE_TASK")
+        items = self._menu_items()
+        if favourite and favourite != "None" and favourite in items:
+            self.menu_list.setCurrentRow(items.index(favourite))
+
     # ── Left menu ──────────────────────────────────────────────────────────────
 
     def _draw_menu(self) -> None:
@@ -116,8 +121,10 @@ class TasksLayout(Layout):
         )
         self.menu_list.addItem(training_item)
 
+        favourite = settings.get("FAVOURITE_TASK")
         for key in manager.tasks:
-            item = QListWidgetItem(key)
+            label = f"★ {key}" if key == favourite else key
+            item = QListWidgetItem(label)
             item.setToolTip(f"Select the task {key}")
             self.menu_list.addItem(item)
 
