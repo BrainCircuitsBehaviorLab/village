@@ -19,6 +19,7 @@ class OnlinePlotBase:
         self.name = "Online Plot"
         self.fig: Figure | None = None
         self.active = False
+        self.window_geometry: tuple[int, int, int, int] | None = None
 
     def create_figure_and_axes(self) -> None:
         """Creates the figure and axes. Should be overridden by subclasses."""

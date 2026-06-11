@@ -677,8 +677,10 @@ class Layout(QGridLayout):
                     self.column_width * 62,
                     self.row_height * 20,
                 )
+                custom_geom = getattr(manager.online_plot, "window_geometry",
+                                      None)
                 self.plot_dialog: OnlinePlotDialog = OnlinePlotDialog()
-                self.plot_dialog.setGeometry(*geom)
+                self.plot_dialog.setGeometry(*(custom_geom or geom))
                 self.plot_dialog.show()
 
     def closeEvent(self, event: QCloseEvent) -> None:
