@@ -69,7 +69,14 @@ sudo apt install python3-pyqt5.qtmultimedia
 sudo apt install libqt5multimedia5-plugins
 ```
 
-4. Install VS Code:
+4. Install evdev
+
+```
+sudo apt install python3-evdev
+```
+
+
+5. Install VS Code:
 
 ```
 sudo apt install code
@@ -105,8 +112,10 @@ pip install pandas
 pip install seaborn
 pip install calplot
 pip install PCA9685-smbus2
-pip install evdev
 pip install pi5neo
+pip install pyarrow
+pip install ahrs
+pip install bleak
 ```
 
 ### Screen Settings

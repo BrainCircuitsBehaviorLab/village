@@ -127,6 +127,17 @@ autodoc_mock_imports = [
     "PCA9685_smbus2",
     "pi5neo",
     "evdev",
+    "pyarrow",
+    "pyarrow.parquet",
+    "ahrs",
+    "ahrs.common",
+    "ahrs.common.orientation",
+    "ahrs.filters",
+    "bleak",
+    "bleak.backends",
+    "bleak.backends.device",
+    "BpodPorts",
+    "utils_functions",
 ]
 
 # Add the module path to sys.path here.

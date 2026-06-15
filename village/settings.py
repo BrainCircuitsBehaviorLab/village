@@ -229,6 +229,7 @@ if you don't need to specify a particular port for the SSH connection.""",
     ),
 ]
 
+
 led_strip_settings = [
     Setting(
         "SPI_DEVICE",
@@ -263,10 +264,25 @@ device_settings = [
         "CHIP_CORRIDOR_ADDRESS", "0x55", str, "The address of the corridor PWM chip."
     ),
     Setting(
-        "MOTOR1_CORRIDOR_INDEX", 4, int, "The index of the motor 1 of the corridor."
+        "MOTOR1_CORRIDOR_INDEX",
+        4,
+        int,
+        """The index of the motor 1 of the corridor. Corresponds to the first door,
+which is the one closer to the homecage.""",
     ),
     Setting(
-        "MOTOR2_CORRIDOR_INDEX", 5, int, "The index of the motor 2 of the corridor."
+        "MOTOR2_CORRIDOR_INDEX",
+        5,
+        int,
+        """The index of the motor 2 of the corridor. Corresponds to the second door,
+which is the one closer to the operant box.""",
+    ),
+    Setting(
+        "MOTOR3_CORRIDOR_INDEX",
+        6,
+        int,
+        """The index of the motor 3 of the corridor. This motor can be used for
+additional functions, such as raising or lowering a water bottle in the home cage.""",
     ),
     Setting(
         "VISIBLE_LIGHT_CORRIDOR_INDEX",
@@ -285,6 +301,9 @@ device_settings = [
     Setting("CHIP_BOX_ADDRESS", "0x6a", str, "The address of the box PWM chip."),
     Setting("MOTOR1_BOX_INDEX", 4, int, "The index of the motor 1 of the box."),
     Setting("MOTOR2_BOX_INDEX", 5, int, "The index of the motor 2 of the box."),
+    Setting("MOTOR3_BOX_INDEX", 6, int, "The index of the motor 3 of the box."),
+    Setting("MOTOR4_BOX_INDEX", 7, int, "The index of the motor 4 of the box."),
+    Setting("MOTOR5_BOX_INDEX", 8, int, "The index of the motor 5 of the box."),
     Setting(
         "VISIBLE_LIGHT_BOX_INDEX",
         6,
@@ -763,6 +782,24 @@ motor_settings = [
         [50, 80],
         list[int],
         "Opening and closing angles for door 2 (values between 0 and 180 degrees).",
+    ),
+    Setting(
+        "MOTOR3_VALUES",
+        [50, 80],
+        list[int],
+        "Opening and closing angles for door 3 (values between 0 and 180 degrees).",
+    ),
+    Setting(
+        "MOTOR4_VALUES",
+        [50, 80],
+        list[int],
+        "Opening and closing angles for door 4 (values between 0 and 180 degrees).",
+    ),
+    Setting(
+        "MOTOR5_VALUES",
+        [50, 80],
+        list[int],
+        "Opening and closing angles for door 5 (values between 0 and 180 degrees).",
     ),
 ]
 

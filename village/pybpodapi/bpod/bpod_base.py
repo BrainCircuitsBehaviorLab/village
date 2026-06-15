@@ -48,7 +48,7 @@ class BpodBase(object):
         bnc_ports,
         behavior_ports,
     ):
-        self.recorder = TrialRecorder(same_clock=False)
+        self.recorder = TrialRecorder()
         self._current_trial = None
         self._trial_count = 0
 
@@ -269,7 +269,7 @@ class BpodBase(object):
         # Store the trial timestamps in case bpod is using live_timestamps
 
         self._bpodcom_run_state_machine()
-        self.raspberry_trial_start = time_utils.now().timestamp()
+        self.raspberry_trial_start = time_utils.now_timestamp()
 
         if self._new_sma_sent:
             try:
@@ -286,7 +286,7 @@ class BpodBase(object):
                     self.send_state_machine(sma)
                     self.trial_timestamps = []
                     self._bpodcom_run_state_machine()
-                    self.raspberry_trial_start = time_utils.now().timestamp()
+                    self.raspberry_trial_start = time_utils.now_timestamp()
                     status = self._bpodcom_state_machine_installation_status()
                     self._new_sma_sent = False
                     bpod_trial_start = self._bpodcom_get_trial_timestamp_start()
@@ -299,7 +299,7 @@ class BpodBase(object):
                 self.send_state_machine(sma)
                 self.trial_timestamps = []
                 self._bpodcom_run_state_machine()
-                self.raspberry_trial_start = time_utils.now().timestamp()
+                self.raspberry_trial_start = time_utils.now_timestamp()
                 status = self._bpodcom_state_machine_installation_status()
                 self._new_sma_sent = False
                 bpod_trial_start = self._bpodcom_get_trial_timestamp_start()
@@ -490,7 +490,7 @@ class BpodBase(object):
                     current_trial.add_event(
                         EventOccurrence(event_id, event_name, event_timestamp)
                     )
-                    self.recorder.add_event(event_name, event_timestamp)
+                    self.recorder.add_controller_event(event_name, event_timestamp)
                     self.trial_timestamps.append(event_timestamp)
 
                     # input matrix

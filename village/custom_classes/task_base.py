@@ -188,7 +188,7 @@ class TaskBase:
         self.current_y = 0.0
 
     # ----------------------------------------------------------------------------------
-    # Top-level methods — OVERRIDE these in subclasses is required
+    # Top-level methods — OVERRIDE these in your task is required
     # ----------------------------------------------------------------------------------
 
     def start(self) -> None:
@@ -208,8 +208,73 @@ class TaskBase:
         raise TaskError("The method close(self) is required")
 
     # ----------------------------------------------------------------------------------
-    # Helper methods - you can call these inside your task methods
+    # Helper methods - you can call them from your task to register events and values
     # ----------------------------------------------------------------------------------
+
+    # if you are using bpod the following methods are automatically called with
+    # the correct timestamps, so you never need to call them yourself:
+    # register_start_trial
+    # register_end_trial
+    # register_enter_state
+    # register_controller_event
+
+    def register_start_trial(
+        self, raspberry_timestamp: float, controller_timestamp: float
+    ) -> None:
+        """Registers the start of a trial. We use 2 timestamps because we use the start
+        of the trial to synchronize the clocks between the raspberry and the controller.
+        If you are not using a controller, (i.e. the controller is the same raspberry),
+        the controller_timestamp is exactly the same as the raspberry timestamp. To get
+        the raspberry timestamp you can use time_utils.now_timestamp().
+
+        Args:
+            raspberry_timestamp (float): Raspberry time.
+            controller_timestamp (float): Controller clock timestamp.
+        """
+        self.recorder.start_trial(raspberry_timestamp, controller_timestamp)
+
+    def register_end_trial(self, controller_timestamp: float = 0.0) -> None:
+        """Registers the end of a trial. If you are not using a controller, (i.e. the
+        controller is the same raspberry), the controller_timestamp is exactly
+        the same as the raspberry timestamp.
+        Args:
+            controller_timestamp (float): Controller clock timestamp.
+        """
+        self.recorder.end_trial(controller_timestamp)
+
+    def register_enter_state(
+        self, state_name: str, controller_timestamp: float
+    ) -> None:
+        """Registers the entry into a Bpod state.
+
+        Args:
+            state_name (str): The name of the state entered.
+            controller_timestamp (float): Controller clock timestamp.
+        """
+        self.recorder.add_controller_event(f"enter_{state_name}", controller_timestamp)
+
+    def register_controller_event(self, name: str, controller_timestamp: float) -> None:
+        """Registers a custom event using a controller clock timestamp.
+
+        Args:
+            name (str): The name of the event (column header).
+            controller_timestamp (float): Controller clock timestamp.
+        """
+        self.recorder.add_controller_event(name, controller_timestamp)
+
+    # for bpod controller, arduino controller or raspberry pi controller, you can use
+    # the following methods to register events and values
+    def register_raspberry_event(self, name: str, raspberry_timestamp: float) -> None:
+        """Registers a custom event using a raspberry timestamp.
+        If you are using bpod, you may want to call this for events that are generated
+        asynchronously from the bpod state machine, for example when executing direct
+        functions or when using a camera to detect or trigger events.
+
+        Args:
+            name (str): The name of the event (column header).
+            raspberry_timestamp (float): Raspberry time.
+        """
+        self.recorder.add_raspberry_event(name, raspberry_timestamp)
 
     def register_value(self, name: str, value: Any) -> None:
         """Registers a custom value to be saved with the trial data.
@@ -221,10 +286,6 @@ class TaskBase:
         self.recorder.add_value(name, value)
         self.trial_data[name] = value
 
-    # ----------------------------------------------------------------------------------
-    # Helper or private methods - you don't need to call or override them
-    # ----------------------------------------------------------------------------------
-
     def execute_function(self, i: int) -> None:
         """Executes a registered function.
 
@@ -234,6 +295,9 @@ class TaskBase:
         if 1 <= i <= 99:
             self.functions[i]()
 
+    # ----------------------------------------------------------------------------------
+    # Helper or private methods - you don't need to call or override them
+    # ----------------------------------------------------------------------------------
     def run_in_thread(self, daemon: bool = True) -> None:
         """Runs the task in a separate background thread.
 
@@ -307,8 +371,16 @@ class TaskBase:
         trials: int = 0
         water: int = 0
         settings_str: str = ""
-        self.close()
+        try:
+            self.close()
+        except Exception:
+            log.alarm(
+                "Error closing the task: " + self.name,
+                subject=self.subject,
+                exception=traceback.format_exc(),
+            )
         sound_device.stop()
+        self.recorder.close()
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod.stop()
         self.cam_box.stop_recording()

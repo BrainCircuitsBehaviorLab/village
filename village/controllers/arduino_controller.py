@@ -6,7 +6,7 @@ class ArduinoController:
         super().__init__()
 
         self.connected = False
-        self.recorder = TrialRecorder(same_clock=False)
+        self.recorder = TrialRecorder()
 
     def check_connection(self) -> None:
         self.error = ""

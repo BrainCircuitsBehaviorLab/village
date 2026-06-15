@@ -141,12 +141,22 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
 
 motor_corridor1: Motor | MotorOld | NullMotor
 motor_corridor2: Motor | MotorOld | NullMotor
+motor_corridor3: Motor | MotorOld | NullMotor
 
 motor_box1 = get_motor(
     settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_VALUES"), pwm_box
 )
 motor_box2 = get_motor(
     settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_VALUES"), pwm_box
+)
+motor_box3 = get_motor(
+    settings.get("MOTOR3_BOX_INDEX"), settings.get("MOTOR3_VALUES"), pwm_box
+)
+motor_box4 = get_motor(
+    settings.get("MOTOR4_BOX_INDEX"), settings.get("MOTOR4_VALUES"), pwm_box
+)
+motor_box5 = get_motor(
+    settings.get("MOTOR5_BOX_INDEX"), settings.get("MOTOR5_VALUES"), pwm_box
 )
 visible_light_corridor = LED(
     settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"), True, pwm_corridor
@@ -162,6 +172,7 @@ if old_version_motor:
     motor_corridor2 = get_motor_old(
         settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES")
     )
+    motor_corridor3 = NullMotor()
 else:
     motor_corridor1 = get_motor(
         settings.get("MOTOR1_CORRIDOR_INDEX"),
@@ -171,6 +182,11 @@ else:
     motor_corridor2 = get_motor(
         settings.get("MOTOR2_CORRIDOR_INDEX"),
         settings.get("MOTOR2_VALUES"),
+        pwm_corridor,
+    )
+    motor_corridor3 = get_motor(
+        settings.get("MOTOR3_CORRIDOR_INDEX"),
+        settings.get("MOTOR3_VALUES"),
         pwm_corridor,
     )
     motor_corridor1.error = error_corridor

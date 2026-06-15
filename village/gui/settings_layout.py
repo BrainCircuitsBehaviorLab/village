@@ -53,6 +53,7 @@ MENU_SECTIONS = [
     "CAMERA SETTINGS",
     "SOUND SETTINGS",
     "SCREEN SETTINGS",
+    "LED STRIP SETTINGS",
     "SYNC SETTINGS",
     "TELEGRAM SETTINGS",
     "ADVANCED SETTINGS",
@@ -68,6 +69,7 @@ MENU_TOOLTIPS: dict[str, str] = {
     "CAMERA SETTINGS": ("Camera framerates, resolution and tracking settings."),
     "SOUND SETTINGS": "Soundcard and audio device configuration.",
     "SCREEN SETTINGS": ("Screen or touchscreen configuration for behavioral stimuli."),
+    "LED STRIP SETTINGS": ("LED strip or LED matrix configuration for visual stimuli."),
     "SYNC SETTINGS": "Data synchronization to external drive or remote server.",
     "TELEGRAM SETTINGS": ("Telegram and alarm settings for notifications."),
     "ADVANCED SETTINGS": ("Advanced and visual settings."),
@@ -389,6 +391,12 @@ class SettingsLayout(Layout):
                         )
                         row += 2
 
+        elif name == "LED STRIP SETTINGS":
+            for s in settings.led_strip_settings:
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
+
         elif name == "CAMERA SETTINGS":
             for s in settings.cam_framerate_settings:
                 if self._should_show(s.key):
@@ -486,6 +494,23 @@ class SettingsLayout(Layout):
         elif name == "DEVICE ADDRESSES":
             for s in settings.device_settings:
                 if self._should_show(s.key):
+                    if s.key == "CHIP_CORRIDOR_ADDRESS":
+                        sub = self.create_and_add_label(
+                            "CORRIDOR BOARD ADDRESSES",
+                            row,
+                            C_COL,
+                            C_LABEL_W,
+                            2,
+                            "black",
+                        )
+                        sub.setProperty("type", name)
+                        row += 2
+                    elif s.key == "CHIP_BOX_ADDRESS":
+                        sub = self.create_and_add_label(
+                            "BOX BOARD ADDRESSES", row, C_COL, C_LABEL_W, 2, "black"
+                        )
+                        sub.setProperty("type", name)
+                        row += 2
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
@@ -651,6 +676,10 @@ class SettingsLayout(Layout):
             "USE_CORRIDOR",
             "USE_BOX_BOARD",
             "CAM_BOX_TRACKING_POSITION",
+            "SPI_DEVICE",
+            "NUMBER_OF_LEDS",
+            "SPI_SPEED_KHZ",
+            "PIXEL_TYPE",
         ]
 
         # Keys in the current section's tracking lists (will be processed with

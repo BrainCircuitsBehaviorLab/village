@@ -43,8 +43,12 @@ from village.devices.chip import (
     ir_light_corridor,
     motor_box1,
     motor_box2,
+    motor_box3,
+    motor_box4,
+    motor_box5,
     motor_corridor1,
     motor_corridor2,
+    motor_corridor3,
     visible_light_box,
     visible_light_corridor,
 )
@@ -518,6 +522,7 @@ class CorridorLayout(Layout):
         """Draws the motor, scale and LEDs controls."""
         self.draw_motor_buttons("MOTOR1", 9, 2, motor_corridor1)
         self.draw_motor_buttons("MOTOR2", 14, 2, motor_corridor2)
+        self.draw_motor_buttons("MOTOR3", 19, 2, motor_corridor3)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
             "RFID reader: ", 1, 9, 12, 2, "black"
@@ -576,7 +581,7 @@ class CorridorLayout(Layout):
         self.change_angles: PushButton = self.create_and_add_button(
             "SET MOTOR ANGLES",
             19,
-            2,
+            22,
             16,
             2,
             self.change_angles_clicked,
@@ -685,12 +690,14 @@ class CorridorLayout(Layout):
         motor1_close_val = settings.get("MOTOR1_VALUES")[1]
         motor2_open_val = settings.get("MOTOR2_VALUES")[0]
         motor2_close_val = settings.get("MOTOR2_VALUES")[1]
+        motor3_open_val = settings.get("MOTOR3_VALUES")[0]
+        motor3_close_val = settings.get("MOTOR3_VALUES")[1]
         self.reply = QDialog()
         self.reply.setWindowTitle("Motor angles")
         x = self.column_width * 84
         y = self.row_height * 19
         width = self.column_width * 32
-        height = self.row_height * 12
+        height = self.row_height * 18
         self.reply.setGeometry(x, y, width, height)
         layout = QVBoxLayout()
 
@@ -717,6 +724,18 @@ class CorridorLayout(Layout):
         self.lineEdit4 = QLineEdit()
         self.lineEdit4.setPlaceholderText(str(motor2_close_val))
         layout.addWidget(self.lineEdit4)
+
+        label = QLabel("Motor3 open angle:")
+        layout.addWidget(label)
+        self.lineEdit5 = QLineEdit()
+        self.lineEdit5.setPlaceholderText(str(motor3_open_val))
+        layout.addWidget(self.lineEdit5)
+
+        label = QLabel("Motor3 close angle:")
+        layout.addWidget(label)
+        self.lineEdit6 = QLineEdit()
+        self.lineEdit6.setPlaceholderText(str(motor3_close_val))
+        layout.addWidget(self.lineEdit6)
 
         btns_layout = QHBoxLayout()
         self.btn_ok = QPushButton("CHANGE")
@@ -746,12 +765,23 @@ class CorridorLayout(Layout):
                 val4 = int(self.lineEdit4.text())
             except ValueError:
                 val4 = int(motor2_close_val)
+            try:
+                val5 = int(self.lineEdit5.text())
+            except ValueError:
+                val5 = int(motor3_open_val)
+            try:
+                val6 = int(self.lineEdit6.text())
+            except ValueError:
+                val6 = int(motor3_close_val)
             settings.set("MOTOR1_VALUES", (val1, val2))
             settings.set("MOTOR2_VALUES", (val3, val4))
+            settings.set("MOTOR3_VALUES", (val5, val6))
             motor_corridor1.open_angle = val1
             motor_corridor1.close_angle = val2
             motor_corridor2.open_angle = val3
             motor_corridor2.close_angle = val4
+            motor_corridor3.open_angle = val5
+            motor_corridor3.close_angle = val6
 
     def calibrate_scale_clicked(self) -> None:
         """Opens the scale calibration wizard."""
@@ -830,8 +860,14 @@ class BoxLayout(Layout):
             bpod_col = 12
 
         if manager.use_of_box_chip:
+            box_col2 = box_col + 18
+
             self.draw_motor_buttons("MOTOR1", box_row + 5, box_col, motor_box1)
             self.draw_motor_buttons("MOTOR2", box_row + 10, box_col, motor_box2)
+            self.draw_motor_buttons("MOTOR3", box_row + 15, box_col, motor_box3)
+
+            self.draw_motor_buttons("MOTOR4", box_row + 5, box_col2, motor_box4)
+            self.draw_motor_buttons("MOTOR5", box_row + 10, box_col2, motor_box5)
 
             self.visible_label: Label = self.create_and_add_label(
                 "Visible light: ", box_row, 9, 12, 2, "black"
@@ -872,7 +908,7 @@ class BoxLayout(Layout):
             self.change_angles: PushButton = self.create_and_add_button(
                 "SET MOTOR ANGLES",
                 box_row + 15,
-                box_col,
+                box_col2,
                 16,
                 2,
                 self.change_angles_clicked,
@@ -954,38 +990,38 @@ class BoxLayout(Layout):
         motor1_close_val = settings.get("MOTOR1_VALUES")[1]
         motor2_open_val = settings.get("MOTOR2_VALUES")[0]
         motor2_close_val = settings.get("MOTOR2_VALUES")[1]
+        motor3_open_val = settings.get("MOTOR3_VALUES")[0]
+        motor3_close_val = settings.get("MOTOR3_VALUES")[1]
+        motor4_open_val = settings.get("MOTOR4_VALUES")[0]
+        motor4_close_val = settings.get("MOTOR4_VALUES")[1]
+        motor5_open_val = settings.get("MOTOR5_VALUES")[0]
+        motor5_close_val = settings.get("MOTOR5_VALUES")[1]
         self.reply = QDialog()
         self.reply.setWindowTitle("Motor angles")
         x = self.column_width * 84
         y = self.row_height * 19
         width = self.column_width * 32
-        height = self.row_height * 12
+        height = self.row_height * 28
         self.reply.setGeometry(x, y, width, height)
         layout = QVBoxLayout()
 
-        label = QLabel("Motor1 open angle:")
-        layout.addWidget(label)
-        self.lineEdit1 = QLineEdit()
-        self.lineEdit1.setPlaceholderText(str(motor1_open_val))
-        layout.addWidget(self.lineEdit1)
-
-        label = QLabel("Motor1 close angle:")
-        layout.addWidget(label)
-        self.lineEdit2 = QLineEdit()
-        self.lineEdit2.setPlaceholderText(str(motor1_close_val))
-        layout.addWidget(self.lineEdit2)
-
-        label = QLabel("Motor2 open angle:")
-        layout.addWidget(label)
-        self.lineEdit3 = QLineEdit()
-        self.lineEdit3.setPlaceholderText(str(motor2_open_val))
-        layout.addWidget(self.lineEdit3)
-
-        label = QLabel("Motor2 close angle:")
-        layout.addWidget(label)
-        self.lineEdit4 = QLineEdit()
-        self.lineEdit4.setPlaceholderText(str(motor2_close_val))
-        layout.addWidget(self.lineEdit4)
+        for label_text, placeholder, attr in [
+            ("Motor1 open angle:", motor1_open_val, "lineEdit1"),
+            ("Motor1 close angle:", motor1_close_val, "lineEdit2"),
+            ("Motor2 open angle:", motor2_open_val, "lineEdit3"),
+            ("Motor2 close angle:", motor2_close_val, "lineEdit4"),
+            ("Motor3 open angle:", motor3_open_val, "lineEdit5"),
+            ("Motor3 close angle:", motor3_close_val, "lineEdit6"),
+            ("Motor4 open angle:", motor4_open_val, "lineEdit7"),
+            ("Motor4 close angle:", motor4_close_val, "lineEdit8"),
+            ("Motor5 open angle:", motor5_open_val, "lineEdit9"),
+            ("Motor5 close angle:", motor5_close_val, "lineEdit10"),
+        ]:
+            layout.addWidget(QLabel(label_text))
+            edit = QLineEdit()
+            edit.setPlaceholderText(str(placeholder))
+            layout.addWidget(edit)
+            setattr(self, attr, edit)
 
         btns_layout = QHBoxLayout()
         self.btn_ok = QPushButton("CHANGE")
@@ -999,28 +1035,56 @@ class BoxLayout(Layout):
         self.btn_cancel.clicked.connect(self.reply.reject)
 
         if self.reply.exec_():
-            try:
-                val1 = int(self.lineEdit1.text())
-            except ValueError:
-                val1 = int(motor1_open_val)
-            try:
-                val2 = int(self.lineEdit2.text())
-            except ValueError:
-                val2 = int(motor1_close_val)
-            try:
-                val3 = int(self.lineEdit3.text())
-            except ValueError:
-                val3 = int(motor2_open_val)
-            try:
-                val4 = int(self.lineEdit4.text())
-            except ValueError:
-                val4 = int(motor2_close_val)
-            settings.set("MOTOR1_VALUES", (val1, val2))
-            settings.set("MOTOR2_VALUES", (val3, val4))
-            motor_box1.open_angle = val1
-            motor_box1.close_angle = val2
-            motor_box2.open_angle = val3
-            motor_box2.close_angle = val4
+            defaults = [
+                motor1_open_val,
+                motor1_close_val,
+                motor2_open_val,
+                motor2_close_val,
+                motor3_open_val,
+                motor3_close_val,
+                motor4_open_val,
+                motor4_close_val,
+                motor5_open_val,
+                motor5_close_val,
+            ]
+            attrs = [
+                "lineEdit1",
+                "lineEdit2",
+                "lineEdit3",
+                "lineEdit4",
+                "lineEdit5",
+                "lineEdit6",
+                "lineEdit7",
+                "lineEdit8",
+                "lineEdit9",
+                "lineEdit10",
+            ]
+            vals = []
+            for attr, default in zip(attrs, defaults):
+                try:
+                    vals.append(int(getattr(self, attr).text()))
+                except ValueError:
+                    vals.append(int(default))
+
+            for key, o, c in [
+                ("MOTOR1_VALUES", vals[0], vals[1]),
+                ("MOTOR2_VALUES", vals[2], vals[3]),
+                ("MOTOR3_VALUES", vals[4], vals[5]),
+                ("MOTOR4_VALUES", vals[6], vals[7]),
+                ("MOTOR5_VALUES", vals[8], vals[9]),
+            ]:
+                settings.set(key, (o, c))
+
+            motor_box1.open_angle = vals[0]
+            motor_box1.close_angle = vals[1]
+            motor_box2.open_angle = vals[2]
+            motor_box2.close_angle = vals[3]
+            motor_box3.open_angle = vals[4]
+            motor_box3.close_angle = vals[5]
+            motor_box4.open_angle = vals[6]
+            motor_box4.close_angle = vals[7]
+            motor_box5.open_angle = vals[8]
+            motor_box5.close_angle = vals[9]
 
     def disable_all(self) -> None:
         """Disables all port buttons."""

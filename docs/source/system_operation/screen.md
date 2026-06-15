@@ -55,14 +55,15 @@ set the resolution to **1280×720** or lower, and apply.
 ### Resolution and display latency
 
 Keep the stimulus display at 1280×720 or below. Higher resolutions significantly
-increase CPU load on the Raspberry Pi, which in turn increases stimulus presentation
+increase CPU load on the Raspberry Pi, leading to greater stimulus presentation
 latency.
 
 The system operates at a **60 Hz refresh rate** (one frame every 16.6 ms). Because the
-next frame is preloaded in the buffer while the current one is being displayed, the
-latency from issuing a display command to the frame appearing on screen is typically
-one full frame plus the remaining portion of the current frame. In practice, measured
-latencies are **mean = 27.4 ms, SD = 7.5 ms**.
+next frame is preloaded in the buffer while the current one is displayed, the latency
+from issuing a display command to the frame appearing on screen spans approximately
+one full frame plus the remaining portion of the current frame — equivalent to roughly
+1.5 × frame duration plus 2–3 ms of controller-to-Raspberry Pi communication.
+Measured latencies: **mean = 27.4 ms, SD = 7.5 ms**.
 
 ### Using the screen in tasks
 

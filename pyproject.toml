@@ -20,6 +20,9 @@ dependencies = [
     "evdev",
     "pi5neo",
     "calplot",
+    "pyarrow",
+    "ahrs",
+    "bleak",
 ]
 
 license = {text = "MIT"}

@@ -10,34 +10,16 @@ class TrialRecorder:
     """Universal trial data recorder for all controller types.
 
     Records states, events, and values during a trial.
-    Generates both a raw CSV (line per event) and a per-trial data dictionary.
-
-    Args:
-        same_clock: If True (default), timestamps are already in raspberry time.
-            If False, a different device clock is used and timestamps
-            are auto-converted using the offset from start_trial().
-
-    Usage (same clock - Arduino/Raspberry):
-        recorder = TrialRecorder()
-        recorder.start_trial(datetime.now().timestamp())
-        recorder.add_event("Port1In", datetime.now().timestamp())
-        recorder.end_trial(datetime.now().timestamp())
-
-    Usage (different clock - Bpod):
-        recorder = TrialRecorder(same_clock=False)
-        recorder.start_trial(raspberry_timestamp, controller_timestamp=0.0)
-        recorder.add_event("Port1In", 2.5)  # controller-relative
-        # → stored as raspberry_timestamp + 2.5
+    Generates both a raw CSV (line per event) and a per-trial data dictionary
     """
 
     CSV_COLUMNS = ["TRIAL", "START", "END", "MSG", "VALUE"]
 
-    def __init__(self, same_clock: bool = True) -> None:
+    def __init__(self) -> None:
         self._csv_path = str(Path(settings.get("SESSIONS_DIRECTORY"), "session.csv"))
         self._csv_file = None
         self._csv_writer = None
         self._trial_number: int = 0
-        self._same_clock = same_clock
         self._time_offset: float = 0.0
 
         # Current trial state
@@ -62,33 +44,25 @@ class TrialRecorder:
     def _to_absolute(self, controller_timestamp: float) -> float:
         """Convert a controller timestamp to absolute raspberry time.
         Round to 4 decimals so that data is easier to read and occupies less space.
-
-        If same_clock=True, returns timestamp unchanged.
-        If same_clock=False, adds the offset computed in start_trial.
         """
-        if self._same_clock:
-            return round(controller_timestamp, 4)
         return round(controller_timestamp + self._time_offset, 4)
 
     def start_trial(
-        self, controller_timestamp: float, raspberry_timestamp: float
+        self, raspberry_timestamp: float, controller_timestamp: float
     ) -> None:
         """Mark the beginning of a new trial.
 
         Args:
-            controller_timestamp: Controller clock value at trial start.
-                If same_clock=True, this is the raspberry time directly.
-                Only used when same_clock=False.
             raspberry_timestamp: Raspberry time (UNIX epoch in seconds).
-                The offset is computed as:
+            controller_timestamp: Controller clock value at trial start. If you are
+            not using a controller, this should be the same as raspberry_timestamp.
+
+        The offset is computed as:
                 offset = raspberry_timestamp - controller_timestamp
         """
         self._trial_number += 1
 
-        if not self._same_clock:
-            self._time_offset = raspberry_timestamp - controller_timestamp
-        else:
-            self._time_offset = 0.0
+        self._time_offset = raspberry_timestamp - controller_timestamp
 
         self._trial_start = round(raspberry_timestamp, 4)
         self._current_state = None
@@ -115,14 +89,29 @@ class TrialRecorder:
         timestamp_str = f"{abs_ts:.4f}"
         self._write_csv_row(timestamp_str, "", f"_Transition_to_{state_name}", "")
 
-    def add_event(self, event_name: str, controller_timestamp: float) -> None:
-        """Record an event occurrence.
+    def add_controller_event(
+        self, event_name: str, controller_timestamp: float
+    ) -> None:
+        """Record an event using a controller clock timestamp.
 
         Args:
             event_name: Name of the event.
-            controller_timestamp: Controller clock timestamp.
+            controller_timestamp: Controller clock timestamp, converted to
+                absolute raspberry time.
         """
-        abs_ts = self._to_absolute(controller_timestamp)
+        self._add_event(event_name, self._to_absolute(controller_timestamp))
+
+    def add_raspberry_event(self, event_name: str, raspberry_timestamp: float) -> None:
+        """Record an event using an already-absolute raspberry timestamp.
+
+        Args:
+            event_name: Name of the event.
+            raspberry_timestamp: Raspberry time, used as-is regardless of
+                whether a controller is being used.
+        """
+        self._add_event(event_name, round(raspberry_timestamp, 4))
+
+    def _add_event(self, event_name: str, abs_ts: float) -> None:
         if event_name not in self._events:
             self._events[event_name] = []
         self._events[event_name].append(abs_ts)

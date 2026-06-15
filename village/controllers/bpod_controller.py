@@ -34,7 +34,7 @@ class BpodController:
             NullSoftCodeToBpod()
         )
         self.connected = False
-        self.recorder = TrialRecorder(same_clock=False)
+        self.recorder = TrialRecorder()
 
     def _make_bpod(self) -> Bpod:
         return Bpod(

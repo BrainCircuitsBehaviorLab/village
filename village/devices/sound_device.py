@@ -46,16 +46,25 @@ class SoundDevice:
         """Initializes the SoundDevice with settings."""
         self.samplerate = int(settings.get("SAMPLERATE"))
         self.channels = 2
-        self.latency = "high"
+        self.latency = "low"
+        self.blocksize = 1024  # TODO test 512
         devices = get_sound_devices()
         device = settings.get("SOUND_DEVICE")
         self.index = devices.index(device) if device in devices else 0
         self.error = ""
 
         sd.default.device = device
+        sd.default.blocksize = self.blocksize
         sd.default.samplerate = self.samplerate
         sd.default.channels = self.channels
         sd.default.latency = self.latency
+
+        device_info = sd.query_devices(self.index, "output")
+        print(
+            f"Sound device default latencies: "
+            f"low={device_info['default_low_output_latency']}, "
+            f"high={device_info['default_high_output_latency']}"
+        )
 
         self.stream = None
         self.sound: np.ndarray[np.float32] = np.empty(0, dtype=np.float32)
