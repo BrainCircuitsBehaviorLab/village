@@ -430,7 +430,7 @@ class NullLEDStrip:
         """Set the color of a specific LED"""
         print(f"Dummy LED {index} changed to {(red, green, blue)}")
 
-    def update_strip(self) -> None:
+    def update_strip(self, sleep_duration: float | None = None) -> None:
         """Update the LED strip to show changes"""
         print("Dummy LED strip updated")
 
