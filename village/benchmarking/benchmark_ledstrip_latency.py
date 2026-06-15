@@ -1,7 +1,9 @@
-from village.devices.led_strip import get_led_strip
-from pi5neo import EPixelType
-import numpy as np
 from time import perf_counter
+
+import numpy as np
+from pi5neo import EPixelType
+
+from village.devices.led_strip import get_led_strip
 
 spi = 800  # has to be 800 kHz
 iters = 10
@@ -15,16 +17,24 @@ for num_led in num_leds_list:
     # Measure initialization latency
     for iter_idx in range(iters):
         start_init = perf_counter()
-        led_strip = get_led_strip("/dev/spidev0.0", num_leds=num_led,
-                                  spi_speed_khz=spi, pixel_type=EPixelType.RGB,
-                                  quiet_mode=True)
+        led_strip = get_led_strip(
+            "/dev/spidev0.0",
+            num_leds=num_led,
+            spi_speed_khz=spi,
+            pixel_type=EPixelType.RGB,
+            quiet_mode=True,
+        )
         t_init = perf_counter() - start_init
         initialize_durations[num_led][iter_idx] = t_init
 
     # Create one strip for update benchmarking
-    led_strip = get_led_strip("/dev/spidev0.0", num_leds=num_led,
-                              spi_speed_khz=spi, pixel_type=EPixelType.RGB,
-                              quiet_mode=True)
+    led_strip = get_led_strip(
+        "/dev/spidev0.0",
+        num_leds=num_led,
+        spi_speed_khz=spi,
+        pixel_type=EPixelType.RGB,
+        quiet_mode=True,
+    )
 
     # Measure fill and update latency
     for iter_idx in range(iters):
@@ -46,21 +56,27 @@ for num_led in num_leds_list:
 
 print("Initialization latencies (s):")
 for n in num_leds_list:
-    print(f"{n:3d} LEDs: "
-          f"{initialize_durations[n].mean()*1000:.3f} ms "
-          f"± {initialize_durations[n].std()*1000:.3f} ms")
+    print(
+        f"{n:3d} LEDs: "
+        f"{initialize_durations[n].mean()*1000:.3f} ms "
+        f"± {initialize_durations[n].std()*1000:.3f} ms"
+    )
 
 print("\nFill latencies (s):")
 for n in num_leds_list:
-    print(f"{n:3d} LEDs: "
-          f"{fill_durations[n].mean()*1000:.3f} ms "
-          f"± {fill_durations[n].std()*1000:.3f} ms")
+    print(
+        f"{n:3d} LEDs: "
+        f"{fill_durations[n].mean()*1000:.3f} ms "
+        f"± {fill_durations[n].std()*1000:.3f} ms"
+    )
 
 print("\nUpdate latencies (s):")
 for n in num_leds_list:
-    print(f"{n:3d} LEDs: "
-          f"{update_durations[n].mean()*1000:.3f} ms "
-          f"± {update_durations[n].std()*1000:.3f} ms")
+    print(
+        f"{n:3d} LEDs: "
+        f"{update_durations[n].mean()*1000:.3f} ms "
+        f"± {update_durations[n].std()*1000:.3f} ms"
+    )
 
 
 # Results:
