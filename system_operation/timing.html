@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Timing &amp; Clock Synchronization - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="System Logic (State Machine)" href="state_machine.html" /><link rel="prev" title="Saved Data and Video" href="data.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Timing, Clocks &amp; Latencies - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="System Logic (State Machine)" href="state_machine.html" /><link rel="prev" title="Saved Data and Video" href="data.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/timing.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -23,7 +23,7 @@
     
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/timing.html"/>
-  <meta property="og:title" content="Timing &amp; Clock Synchronization"/>
+  <meta property="og:title" content="Timing, Clocks &amp; Latencies"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -92,7 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -254,6 +254,17 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.export_csv.html">export_csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid_task.html">optogrid_task</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid_task.S5OptoGrid.html">S5OptoGrid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a></li>
@@ -418,12 +429,21 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#absolute-time-unix-epoch">Absolute Time (Unix Epoch)</a></li>
+<li><a class="reference internal" href="#raspberry-pi-monotonic-clock-time-utils">Raspberry Pi Monotonic Clock (<code class="docutils literal notranslate"><span class="pre">time_utils</span></code>)</a></li>
 <li><a class="reference internal" href="#hardware-synchronization">Hardware Synchronization</a><ul>
-<li><a class="reference internal" href="#raspberry-pi-only-native-execution"><strong>1. Raspberry Pi only (native execution)</strong></a></li>
-<li><a class="reference internal" href="#coprocessor-integrated-setups-bpod-or-arduino"><strong>2. Coprocessor-integrated setups (Bpod or Arduino)</strong></a></li>
+<li><a class="reference internal" href="#raspberry-pi-only-native-execution">1. Raspberry Pi only (native execution)</a></li>
+<li><a class="reference internal" href="#controller-integrated-setups-bpod-or-arduino">2. Controller-integrated setups (Bpod or Arduino)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#precision-limits-clock-drift">Precision Limits &amp; Clock Drift</a></li>
+<li><a class="reference internal" href="#latency-reference">Latency Reference</a><ul>
+<li><a class="reference internal" href="#triggers">Triggers</a></li>
+<li><a class="reference internal" href="#communication">Communication</a></li>
+<li><a class="reference internal" href="#actions">Actions</a></li>
+<li><a class="reference internal" href="#cpu-load-and-latency">CPU Load and Latency</a></li>
+<li><a class="reference internal" href="#summary-table">Summary Table</a></li>
+</ul>
+</li>
 </ul>
 </div></div>
   </aside>
@@ -449,7 +469,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Timing &amp; Clock Synchronization</strong>
+        <strong itemprop="name">Timing, Clocks &amp; Latencies</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -497,13 +517,12 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="timing-clock-synchronization">
-<h1>Timing &amp; Clock Synchronization</h1>
+          <section id="timing-clocks-latencies">
+<h1>Timing, Clocks &amp; Latencies</h1>
 <section id="absolute-time-unix-epoch">
 <h2>Absolute Time (Unix Epoch)</h2>
-<p>All timestamps across the platform conform to standard <strong>Unix Epoch Time</strong> — a
-floating-point value representing total seconds elapsed since January 1, 1970,
-00:00:00 UTC:</p>
+<p>All timestamps across the platform use standard <strong>Unix Epoch Time</strong> — a floating-point
+value representing the total seconds elapsed since January 1, 1970, 00:00:00 UTC:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[\text{Timestamp} = 1748300000.123 \longrightarrow \text{Precise calendar moment in time}\]</div>
@@ -511,50 +530,218 @@ floating-point value representing total seconds elapsed since January 1, 1970,
 <p>This format is consistent across all Linux subsystems, making it straightforward to
 subtract timestamps to compute durations or compare events across independent rigs.</p>
 </section>
+<section id="raspberry-pi-monotonic-clock-time-utils">
+<h2>Raspberry Pi Monotonic Clock (<code class="docutils literal notranslate"><span class="pre">time_utils</span></code>)</h2>
+<p>On the Raspberry Pi, all timestamps are produced by calling a <strong>monotonic clock</strong>
+exposed through <code class="docutils literal notranslate"><span class="pre">time_utils</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> — returns a <code class="docutils literal notranslate"><span class="pre">float</span></code> Unix epoch timestamp (equivalent
+to <code class="docutils literal notranslate"><span class="pre">time.time()</span></code>, but backed by <code class="docutils literal notranslate"><span class="pre">time_utils</span></code>’ monotonic clock).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code> — returns a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object (equivalent to
+<code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>, but backed by <code class="docutils literal notranslate"><span class="pre">time_utils</span></code>’ monotonic clock).</p></li>
+</ul>
+<p><strong>What is a monotonic clock?</strong> Unlike the wall clock, <code class="docutils literal notranslate"><span class="pre">time.monotonic()</span></code> always
+advances at a steady rate and can never jump backwards or be adjusted by NTP
+corrections, manual clock changes, or DST transitions. This guarantees that
+elapsed-time measurements and event ordering <em>within a session</em> remain consistent,
+even if the system’s wall clock is corrected while the session is running.</p>
+<p><code class="docutils literal notranslate"><span class="pre">village/scripts/time_utils.py</span></code> keeps two reference values, captured at the same
+instant:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">_base_wall</span></code>: a <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code> snapshot (wall-clock time).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_base_mono_ns</span></code>: the corresponding <code class="docutils literal notranslate"><span class="pre">time.monotonic_ns()</span></code> value.</p></li>
+</ul>
+<p>Every call to <code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code> returns <code class="docutils literal notranslate"><span class="pre">_base_wall</span></code> advanced by however much the
+monotonic clock has progressed since that snapshot:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">now</span><span class="p">()</span> <span class="o">=</span> <span class="n">_base_wall</span> <span class="o">+</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">monotonic_ns</span><span class="p">()</span> <span class="o">-</span> <span class="n">_base_mono_ns</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p><strong>Resynchronization:</strong> <code class="docutils literal notranslate"><span class="pre">time_utils.sync()</span></code> re-captures <code class="docutils literal notranslate"><span class="pre">_base_wall</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_base_mono_ns</span></code> from the current wall clock. It is called automatically by the main
+loop in the <code class="docutils literal notranslate"><span class="pre">SYNC</span></code> state, which runs between sessions (after a session ends and before
+the next one can start). Any wall-clock drift or correction is therefore absorbed
+between sessions and never occurs in the middle of one.</p>
+<p><strong>Usage in custom tasks:</strong> when writing task scripts that record timestamps to be
+compared with the rest of the platform’s data, do not call <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code> directly. Use instead:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> — returns a <code class="docutils literal notranslate"><span class="pre">float</span></code> Unix epoch timestamp.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code> — returns a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>.</p></li>
+</ul>
+<p>This keeps your timestamps in the same clock domain as the rest of the recorded data,
+avoiding small inconsistencies caused by wall-clock corrections.</p>
+</section>
 <section id="hardware-synchronization">
 <h2>Hardware Synchronization</h2>
-<p>Depending on your setup, hardware timing is managed through one of two pathways:</p>
+<p>Depending on your setup, hardware timing is managed through one of two pathways.</p>
 <section id="raspberry-pi-only-native-execution">
-<h3><strong>1. Raspberry Pi only (native execution)</strong></h3>
-<p>Timestamps are derived directly from the Linux system clock via <code class="docutils literal notranslate"><span class="pre">time.time()</span></code>.</p>
+<h3>1. Raspberry Pi only (native execution)</h3>
+<p>Timestamps are derived from the Raspberry Pi master clock via
+<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> (see <a class="reference internal" href="#raspberry-pi-monotonic-clock-time-utils"><span class="std std-ref">Raspberry Pi Monotonic Clock</span></a>
+above), which tracks the Linux system clock and is resynchronized only between
+sessions.</p>
 </section>
-<section id="coprocessor-integrated-setups-bpod-or-arduino">
-<h3><strong>2. Coprocessor-integrated setups (Bpod or Arduino)</strong></h3>
+<section id="controller-integrated-setups-bpod-or-arduino">
+<h3>2. Controller-integrated setups (Bpod or Arduino)</h3>
 <p>Microcontrollers maintain independent internal hardware timers. To align these with the
 Raspberry Pi master clock, a synchronization handshake is performed at the start of
 every trial:</p>
-<ol class="arabic simple">
-<li><p>At the moment the state machine launches a trial, two clock values are captured
-simultaneously:</p>
+<ol class="arabic">
+<li><p>When <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> is called, two clock values are captured simultaneously.
+Bpod calls this function automatically when launching a trial state machine; for
+other controllers it must be called explicitly from the task at trial onset.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>: Current Unix epoch time on the master clock.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">coprocessor_timestamp</span></code>: Reset to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> as the microcontroller begins the
-trial loop.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>: current Unix epoch time on the master clock.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code>: reset to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> as the microcontroller begins the trial
+loop.</p></li>
 </ul>
 </li>
-<li><p>A constant offset is computed:
-<code class="docutils literal notranslate"><span class="pre">offset</span> <span class="pre">=</span> <span class="pre">raspberry_timestamp</span> <span class="pre">-</span> <span class="pre">coprocessor_timestamp</span></code></p></li>
-<li><p>As serial data packets arrive from the microcontroller, their hardware timestamps are
-converted to absolute Unix time before being written to disk:
-<code class="docutils literal notranslate"><span class="pre">timestamp_absolute</span> <span class="pre">=</span> <span class="pre">coprocessor_timestamp</span> <span class="pre">+</span> <span class="pre">offset</span></code></p></li>
+<li><p>A constant offset is computed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">offset</span> <span class="o">=</span> <span class="n">raspberry_timestamp</span> <span class="o">-</span> <span class="n">controller_timestamp</span>
+</span></pre></div>
+</div>
+</li>
+<li><p>As serial data packets arrive from the microcontroller, their hardware timestamps
+are converted to absolute Unix time before being written to disk:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">timestamp_absolute</span> <span class="o">=</span> <span class="n">controller_timestamp</span> <span class="o">+</span> <span class="n">offset</span>
+</span></pre></div>
+</div>
+</li>
 </ol>
-<p>This approach preserves the sub-millisecond precision of the external hardware controller
-while writing all data in master Unix Epoch time.</p>
+<p>This approach preserves the sub-millisecond precision of the external hardware
+controller while writing all data in master Unix Epoch time.</p>
 </section>
 </section>
 <section id="precision-limits-clock-drift">
 <h2>Precision Limits &amp; Clock Drift</h2>
-<p>This synchronization model assumes the computed offset remains stable throughout a trial.
-In practice, physical oscillator variations can cause minor clock drift of up to
+<p>This synchronization model assumes the computed offset remains stable throughout a
+trial. In practice, physical oscillator variations can cause minor clock drift of up to
 <strong>~1 ms per minute</strong> relative to the Raspberry Pi.</p>
 <ul class="simple">
-<li><p><strong>Short trials (&lt; 1–2 minutes):</strong> Drift is negligible and can be safely ignored for
+<li><p><strong>Short trials (&lt; 1–2 minutes):</strong> drift is negligible and can be safely ignored for
 standard behavioral analysis.</p></li>
-<li><p><strong>Long trials:</strong> In paradigms with very long trials, it is advisable to
-handle timestamps that depend on the coprocessor separately from those derived solely
-from the Raspberry Pi clock. For example in a 15 minutes trial, cumulative drift can
+<li><p><strong>Long trials:</strong> in paradigms with very long trials, it is advisable to handle
+timestamps that depend on the controller separately from those derived solely from
+the Raspberry Pi clock. For example, in a 15-minute trial, cumulative drift can
 introduce up to <strong>15 ms of offset</strong> by the end of a single trial.</p></li>
 </ul>
+</section>
+<hr class="docutils" />
+<section id="latency-reference">
+<h2>Latency Reference</h2>
+<p>This section describes the latency of each component in the system. The total latency
+of any event is the sum of three terms:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">total</span> <span class="n">latency</span> <span class="o">=</span> <span class="n">trigger</span> <span class="n">latency</span> <span class="o">+</span> <span class="n">communication</span> <span class="n">latency</span> <span class="o">+</span> <span class="n">action</span> <span class="n">latency</span>
+</span></pre></div>
+</div>
+<section id="triggers">
+<h3>Triggers</h3>
+<p><strong>Controller trigger (Bpod / Arduino)</strong>
+Port pokes, photogate detections, and state-machine transitions handled entirely within
+the microcontroller complete in <strong>microseconds</strong> — effectively instantaneous.</p>
+<p><strong>Touchscreen trigger</strong>
+The touchscreen communicates with the Raspberry Pi over USB using the HID protocol.
+When a physical touch occurs, the touchscreen controller samples the contact,
+packages it as a HID input report, and transmits it over USB. The USB host controller
+polls HID devices at a fixed interval — typically every 8 ms (125 Hz polling rate) —
+so the report can wait up to one full polling interval before being read. The Linux
+kernel then delivers the event through the <code class="docutils literal notranslate"><span class="pre">evdev</span></code> subsystem, which adds negligible
+overhead. The dominant source of latency is therefore the USB polling interval itself,
+which explains the measured <strong>mean = 4.1 ms, SD = 2.4 ms</strong>.</p>
+<p><strong>Camera trigger</strong>
+When a frame is captured by the camera sensor, it passes through the internal
+picamera2 pipeline before being handed to the callback, where the detection algorithm runs. The total camera trigger latency is <strong>mean = 22.3 ms, SD = 6.3 ms</strong>.</p>
+</section>
+<section id="communication">
+<h3>Communication</h3>
+<p>If both the trigger and the resulting action execute on the same device, communication
+cost is zero. When a trigger on one device causes an action on the other, the serial
+link introduces additional latency:</p>
+<ul class="simple">
+<li><p><strong>Bpod Softcode</strong> (USB serial, 1–255 numeric value): <strong>mean = 2.5 ms, SD = 0.3 ms</strong>.</p></li>
+<li><p><strong>Arduino serial message</strong> (USB serial, 1 byte): <strong>mean = 2.5 ms, SD = 0.3 ms</strong>.</p></li>
+</ul>
+</section>
+<section id="actions">
+<h3>Actions</h3>
+<p><strong>Port LEDs or water delivery (controller)</strong>
+Effectively instantaneous — <strong>microseconds</strong>.</p>
+<p><strong>LED strip or matrix (Raspberry Pi)</strong>
+<code class="docutils literal notranslate"><span class="pre">update_strip()</span></code> always sends the entire pixel buffer to the strip’s controller chip
+over SPI, regardless of how many LEDs actually changed, so its latency scales with
+strip length at roughly 0.04 ms per LED at the default <code class="docutils literal notranslate"><span class="pre">SPI_SPEED_KHZ</span></code> = 800.
+For a 144-LED strip or matrix: <strong>mean = 5.8 ms, SD = 0.2 ms</strong>.</p>
+<p><strong>Sound playback (Raspberry Pi DAC Pro)</strong>
+The DAC Pro operates at 192 kHz with a buffer of 1024 samples (5.33 ms). Audio output
+begins at the start of the next buffer fill cycle, so playback latency depends on how
+much of the current buffer has already been consumed at the moment the play command is
+issued: <strong>mean = 5.5 ms, SD = 0.9 ms</strong>.</p>
+<p><strong>Image display on screen</strong>
+The stimulus display operates at <strong>60 Hz</strong> (one frame every 16.6 ms) at a resolution
+of 1280×720 or below. Higher resolutions significantly increase CPU load on the
+Raspberry Pi, leading to greater stimulus presentation latency. Because the next frame
+is preloaded in the buffer while the current one is displayed, the latency from issuing
+a display command to the frame appearing on screen spans approximately one full frame
+plus the remaining portion of the current frame: <strong>mean = 24.9 ms, SD = 7.5 ms</strong>.</p>
+</section>
+<section id="cpu-load-and-latency">
+<h3>CPU Load and Latency</h3>
+<p>Communication and action latencies are both sensitive to CPU load. The platform
+implements several measures to keep CPU usage low during sessions:</p>
+<ul class="simple">
+<li><p>Expensive background processes are suspended during sessions (e.g. the Python
+garbage collector, system update checks) and re-enabled when the system returns to
+the <code class="docutils literal notranslate"><span class="pre">WAIT</span></code> state.</p></li>
+<li><p>Cameras are configured at 640×480 / 30 fps (operant box) and 10 fps (corridor)
+by default. If these values are increased, latencies should be re-measured
+experimentally to confirm they remain within acceptable bounds.</p></li>
+<li><p>Unused features can be disabled to reduce CPU load. For example, if position
+tracking is not required to trigger events, it can be turned off during sessions and
+performed offline afterwards.</p></li>
+</ul>
+</section>
+<section id="summary-table">
+<h3>Summary Table</h3>
+<p>End-to-end latencies (mean ± SD, in ms) measured experimentally for each combination
+of trigger and action. Communication cost is included where applicable (controller ↔
+Raspberry Pi serial link: 2.5 ms mean; same-device triggers: 0 ms).</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Trigger</p></th>
+<th class="head"><p>Port LED / water</p></th>
+<th class="head"><p>LED strip / matrix (144 LEDs)</p></th>
+<th class="head"><p>Sound</p></th>
+<th class="head"><p>Screen</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Controller</p></td>
+<td><p>0 ± 0</p></td>
+<td><p>8.3 ± 0.4</p></td>
+<td><p>8.0 ± 0.9</p></td>
+<td><p>27.4 ± 7.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>Touchscreen</p></td>
+<td><p>6.6 ± 2.4</p></td>
+<td><p>9.9 ± 2.4</p></td>
+<td><p>9.6 ± 2.6</p></td>
+<td><p>29.0 ± 7.9</p></td>
+</tr>
+<tr class="row-even"><td><p>Camera</p></td>
+<td><p>24.8 ± 6.3</p></td>
+<td><p>28.1 ± 6.3</p></td>
+<td><p>27.8 ± 6.4</p></td>
+<td><p>47.2 ± 9.8</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Note on Latency Measurements:</p>
+<p>All latency values reported here were obtained experimentally using an oscilloscope. Visual stimulus latencies were measured with a photodiode placed on the display, while auditory stimulus latencies were measured using a direct electrical connection to the audio signal. These measurements correspond to the default system configuration described above. Any modifications to camera settings, display resolution, or other relevant hardware or software parameters may affect latency and should therefore be validated with new measurements. For experiments requiring precise temporal control, we strongly recommend measuring latencies directly within the specific experimental setup rather than relying solely on the reference values provided here.</p>
+</div>
+</section>
 </section>
 </section>
 
@@ -595,7 +782,7 @@ introduce up to <strong>15 ms of offset</strong> by the end of a single trial.</
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=e13701a2"></script>
+      <script src="../_static/documentation_options.js?v=316ebc0f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

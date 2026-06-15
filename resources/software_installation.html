@@ -92,7 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -254,6 +254,17 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.export_csv.html">export_csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid_task.html">optogrid_task</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid_task.S5OptoGrid.html">S5OptoGrid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a></li>
@@ -580,6 +591,12 @@ data-aria-dark="Switch to auto color mode">
 </span></pre></div>
 </div>
 <ol class="arabic simple" start="4">
+<li><p>Install evdev</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">evdev</span>
+</span></pre></div>
+</div>
+<ol class="arabic simple" start="5">
 <li><p>Install VS Code:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">code</span>
@@ -616,8 +633,10 @@ Python environment:</p></li>
 </span><span data-line="10"><span class="n">pip</span> <span class="n">install</span> <span class="n">seaborn</span>
 </span><span data-line="11"><span class="n">pip</span> <span class="n">install</span> <span class="n">calplot</span>
 </span><span data-line="12"><span class="n">pip</span> <span class="n">install</span> <span class="n">PCA9685</span><span class="o">-</span><span class="n">smbus2</span>
-</span><span data-line="13"><span class="n">pip</span> <span class="n">install</span> <span class="n">evdev</span>
-</span><span data-line="14"><span class="n">pip</span> <span class="n">install</span> <span class="n">pi5neo</span>
+</span><span data-line="13"><span class="n">pip</span> <span class="n">install</span> <span class="n">pi5neo</span>
+</span><span data-line="14"><span class="n">pip</span> <span class="n">install</span> <span class="n">pyarrow</span>
+</span><span data-line="15"><span class="n">pip</span> <span class="n">install</span> <span class="n">ahrs</span>
+</span><span data-line="16"><span class="n">pip</span> <span class="n">install</span> <span class="n">bleak</span>
 </span></pre></div>
 </div>
 </section>
@@ -859,7 +878,7 @@ which should include <code class="docutils literal notranslate"><span class="pre
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=e13701a2"></script>
+      <script src="../_static/documentation_options.js?v=316ebc0f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

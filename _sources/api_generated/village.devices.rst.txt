@@ -35,6 +35,8 @@
    chip
    led_strip
    motor_old
+   optogrid
+   optogrid_task
    rfid
    scale
    screen

@@ -92,7 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/data.html">Saved Data and Video</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -254,6 +254,17 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.export_csv.html">export_csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.optogrid_task.html">optogrid_task</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid_task.S5OptoGrid.html">S5OptoGrid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a></li>
@@ -505,206 +516,215 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="46"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the SoundDevice with settings.&quot;&quot;&quot;</span>
 </span><span data-line="47">        <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAMPLERATE&quot;</span><span class="p">))</span>
 </span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span data-line="49">        <span class="bp">self</span><span class="o">.</span><span class="n">latency</span> <span class="o">=</span> <span class="s2">&quot;high&quot;</span>
-</span><span data-line="50">        <span class="n">devices</span> <span class="o">=</span> <span class="n">get_sound_devices</span><span class="p">()</span>
-</span><span data-line="51">        <span class="n">device</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SOUND_DEVICE&quot;</span><span class="p">)</span>
-</span><span data-line="52">        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">devices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span> <span class="k">else</span> <span class="mi">0</span>
-</span><span data-line="53">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="54">
-</span><span data-line="55">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
-</span><span data-line="56">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span>
-</span><span data-line="57">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span>
-</span><span data-line="58">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">latency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">latency</span>
-</span><span data-line="59">
-</span><span data-line="60">        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="61">        <span class="bp">self</span><span class="o">.</span><span class="n">sound</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="62">
-</span><span data-line="63">        <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="p">:</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
-</span><span data-line="64">
-</span><span data-line="65">        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_audio_worker</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="66">        <span class="bp">self</span><span class="o">.</span><span class="n">thread_running</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="67">        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
-
+</span><span data-line="49">        <span class="bp">self</span><span class="o">.</span><span class="n">latency</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
+</span><span data-line="50">        <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">=</span> <span class="mi">1024</span>  <span class="c1"># TODO test 512</span>
+</span><span data-line="51">        <span class="n">devices</span> <span class="o">=</span> <span class="n">get_sound_devices</span><span class="p">()</span>
+</span><span data-line="52">        <span class="n">device</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SOUND_DEVICE&quot;</span><span class="p">)</span>
+</span><span data-line="53">        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">devices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span> <span class="k">else</span> <span class="mi">0</span>
+</span><span data-line="54">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="55">
+</span><span data-line="56">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+</span><span data-line="57">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span>
+</span><span data-line="58">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span>
+</span><span data-line="59">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span>
+</span><span data-line="60">        <span class="n">sd</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">latency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">latency</span>
+</span><span data-line="61">
+</span><span data-line="62">        <span class="n">device_info</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">query_devices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+</span><span data-line="63">        <span class="nb">print</span><span class="p">(</span>
+</span><span data-line="64">            <span class="sa">f</span><span class="s2">&quot;Sound device default latencies: &quot;</span>
+</span><span data-line="65">            <span class="sa">f</span><span class="s2">&quot;low=</span><span class="si">{</span><span class="n">device_info</span><span class="p">[</span><span class="s1">&#39;default_low_output_latency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
+</span><span data-line="66">            <span class="sa">f</span><span class="s2">&quot;high=</span><span class="si">{</span><span class="n">device_info</span><span class="p">[</span><span class="s1">&#39;default_high_output_latency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span data-line="67">        <span class="p">)</span>
 </span><span data-line="68">
+</span><span data-line="69">        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="70">        <span class="bp">self</span><span class="o">.</span><span class="n">sound</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="71">
+</span><span data-line="72">        <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="p">:</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span><span data-line="73">
+</span><span data-line="74">        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_audio_worker</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="75">        <span class="bp">self</span><span class="o">.</span><span class="n">thread_running</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="76">        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+</span><span data-line="77">
 <div class="viewcode-block" id="SoundDevice.load">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.load">[docs]</a>
-</span><span data-line="69">    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="70"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads sound data into the playback queue.</span>
-</span><span data-line="71">
-</span><span data-line="72"><span class="sd">        Args:</span>
-</span><span data-line="73"><span class="sd">            left (Any): Left channel data (array-like).</span>
-</span><span data-line="74"><span class="sd">            right (Any): Right channel data (array-like).</span>
-</span><span data-line="75">
-</span><span data-line="76"><span class="sd">        Raises:</span>
-</span><span data-line="77"><span class="sd">            ValueError: If inputs are invalid or lengths differ.</span>
-</span><span data-line="78"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="79">        <span class="k">if</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="80">            <span class="n">left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
-</span><span data-line="81">        <span class="k">elif</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="82">            <span class="n">right</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">))</span>
-</span><span data-line="83">        <span class="k">elif</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="84">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sound error: Both vectors left and right are None.&quot;</span><span class="p">)</span>
-</span><span data-line="85">
-</span><span data-line="86">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">):</span>
-</span><span data-line="87">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span data-line="88">                <span class="s2">&quot;Sound error: Left and right vectors must have same length.&quot;</span>
-</span><span data-line="89">            <span class="p">)</span>
-</span><span data-line="90">
-</span><span data-line="91">        <span class="n">new_sound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_sound_vec</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
-</span><span data-line="92">
-</span><span data-line="93">        <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="n">new_sound</span><span class="p">))</span></div>
-
+</span><span data-line="78">    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="79"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads sound data into the playback queue.</span>
+</span><span data-line="80">
+</span><span data-line="81"><span class="sd">        Args:</span>
+</span><span data-line="82"><span class="sd">            left (Any): Left channel data (array-like).</span>
+</span><span data-line="83"><span class="sd">            right (Any): Right channel data (array-like).</span>
+</span><span data-line="84">
+</span><span data-line="85"><span class="sd">        Raises:</span>
+</span><span data-line="86"><span class="sd">            ValueError: If inputs are invalid or lengths differ.</span>
+</span><span data-line="87"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="88">        <span class="k">if</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="89">            <span class="n">left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
+</span><span data-line="90">        <span class="k">elif</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="91">            <span class="n">right</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">))</span>
+</span><span data-line="92">        <span class="k">elif</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="93">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sound error: Both vectors left and right are None.&quot;</span><span class="p">)</span>
 </span><span data-line="94">
+</span><span data-line="95">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">):</span>
+</span><span data-line="96">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span data-line="97">                <span class="s2">&quot;Sound error: Left and right vectors must have same length.&quot;</span>
+</span><span data-line="98">            <span class="p">)</span>
+</span><span data-line="99">
+</span><span data-line="100">        <span class="n">new_sound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_sound_vec</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+</span><span data-line="101">
+</span><span data-line="102">        <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="n">new_sound</span><span class="p">))</span></div>
+
+</span><span data-line="103">
 <div class="viewcode-block" id="SoundDevice.get_sound_from_wav">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.get_sound_from_wav">[docs]</a>
-</span><span data-line="95">    <span class="k">def</span><span class="w"> </span><span class="nf">get_sound_from_wav</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-</span><span data-line="96">        <span class="n">media_directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_DIRECTORY&quot;</span><span class="p">)</span>
-</span><span data-line="97">        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">media_directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-</span><span data-line="98">        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-</span><span data-line="99">            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not exist.&quot;</span><span class="p">)</span>
-</span><span data-line="100">
-</span><span data-line="101">        <span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span data-line="102">        <span class="k">if</span> <span class="n">samplerate</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">:</span>
-</span><span data-line="103">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span data-line="104">                <span class="sa">f</span><span class="s2">&quot;Expected samplerate </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="si">}</span><span class="s2">, but got </span><span class="si">{</span><span class="n">samplerate</span><span class="si">}</span><span class="s2">.&quot;</span>
-</span><span data-line="105">            <span class="p">)</span>
-</span><span data-line="106">
-</span><span data-line="107">        <span class="c1"># Normalize to float32 in range [-1.0, 1.0] if needed</span>
-</span><span data-line="108">        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span>
-</span><span data-line="109">            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-</span><span data-line="110">                <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
-</span><span data-line="111">                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_val</span>
-</span><span data-line="112">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="113">                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="114">
-</span><span data-line="115">        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="116">            <span class="n">left</span> <span class="o">=</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span>
-</span><span data-line="117">        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-</span><span data-line="118">            <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
-</span><span data-line="119">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="120">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported number of channels in WAV file.&quot;</span><span class="p">)</span>
-</span><span data-line="121">
-</span><span data-line="122">        <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span></div>
-
+</span><span data-line="104">    <span class="k">def</span><span class="w"> </span><span class="nf">get_sound_from_wav</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+</span><span data-line="105">        <span class="n">media_directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_DIRECTORY&quot;</span><span class="p">)</span>
+</span><span data-line="106">        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">media_directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+</span><span data-line="107">        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span><span data-line="108">            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not exist.&quot;</span><span class="p">)</span>
+</span><span data-line="109">
+</span><span data-line="110">        <span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span data-line="111">        <span class="k">if</span> <span class="n">samplerate</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">:</span>
+</span><span data-line="112">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span data-line="113">                <span class="sa">f</span><span class="s2">&quot;Expected samplerate </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="si">}</span><span class="s2">, but got </span><span class="si">{</span><span class="n">samplerate</span><span class="si">}</span><span class="s2">.&quot;</span>
+</span><span data-line="114">            <span class="p">)</span>
+</span><span data-line="115">
+</span><span data-line="116">        <span class="c1"># Normalize to float32 in range [-1.0, 1.0] if needed</span>
+</span><span data-line="117">        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span>
+</span><span data-line="118">            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+</span><span data-line="119">                <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
+</span><span data-line="120">                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_val</span>
+</span><span data-line="121">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="122">                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </span><span data-line="123">
+</span><span data-line="124">        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="125">            <span class="n">left</span> <span class="o">=</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span>
+</span><span data-line="126">        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+</span><span data-line="127">            <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+</span><span data-line="128">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="129">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported number of channels in WAV file.&quot;</span><span class="p">)</span>
+</span><span data-line="130">
+</span><span data-line="131">        <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span></div>
+
+</span><span data-line="132">
 <div class="viewcode-block" id="SoundDevice.play">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.play">[docs]</a>
-</span><span data-line="124">    <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="125"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Triggers playback of the loaded sound.&quot;&quot;&quot;</span>
-</span><span data-line="126">        <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;play&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
+</span><span data-line="133">    <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="134"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Triggers playback of the loaded sound.&quot;&quot;&quot;</span>
+</span><span data-line="135">        <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;play&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
 
-</span><span data-line="127">
+</span><span data-line="136">
 <div class="viewcode-block" id="SoundDevice.stop">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.stop">[docs]</a>
-</span><span data-line="128">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="129"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops playback.&quot;&quot;&quot;</span>
-</span><span data-line="130">        <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;stop&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
+</span><span data-line="137">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="138"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops playback.&quot;&quot;&quot;</span>
+</span><span data-line="139">        <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;stop&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
 
-</span><span data-line="131">
-</span><span data-line="132">    <span class="k">def</span><span class="w"> </span><span class="nf">_audio_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="133"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Worker function for the audio thread to handle stream operations.&quot;&quot;&quot;</span>
-</span><span data-line="134">        <span class="n">current_sound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="135">        <span class="n">stream</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OutputStream</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
-</span><span data-line="136">
-</span><span data-line="137">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="138">            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_running</span><span class="p">:</span>
-</span><span data-line="139">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="140">                    <span class="n">command</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-</span><span data-line="141">
-</span><span data-line="142">                    <span class="k">if</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;load&quot;</span><span class="p">:</span>
-</span><span data-line="143">                        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="144">                            <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span data-line="145">                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="146">                            <span class="k">pass</span>
-</span><span data-line="147">                        <span class="n">current_sound</span> <span class="o">=</span> <span class="n">data</span>
-</span><span data-line="148">                        <span class="n">stream</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OutputStream</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
-</span><span data-line="149">                        <span class="n">stream</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span data-line="140">
+</span><span data-line="141">    <span class="k">def</span><span class="w"> </span><span class="nf">_audio_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="142"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Worker function for the audio thread to handle stream operations.&quot;&quot;&quot;</span>
+</span><span data-line="143">        <span class="n">current_sound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="144">        <span class="n">stream</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OutputStream</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+</span><span data-line="145">
+</span><span data-line="146">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="147">            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_running</span><span class="p">:</span>
+</span><span data-line="148">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="149">                    <span class="n">command</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 </span><span data-line="150">
-</span><span data-line="151">                    <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;play&quot;</span><span class="p">:</span>
-</span><span data-line="152">                        <span class="k">if</span> <span class="n">current_sound</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="153">                            <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">current_sound</span><span class="p">)</span>
-</span><span data-line="154">
-</span><span data-line="155">                    <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;stop&quot;</span><span class="p">:</span>
-</span><span data-line="156">                        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="157">                            <span class="n">stream</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</span><span data-line="158">                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="159">                            <span class="k">pass</span>
-</span><span data-line="160">
-</span><span data-line="161">                    <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;shutdown&quot;</span><span class="p">:</span>
-</span><span data-line="162">                        <span class="k">break</span>
+</span><span data-line="151">                    <span class="k">if</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;load&quot;</span><span class="p">:</span>
+</span><span data-line="152">                        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="153">                            <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="154">                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="155">                            <span class="k">pass</span>
+</span><span data-line="156">                        <span class="n">current_sound</span> <span class="o">=</span> <span class="n">data</span>
+</span><span data-line="157">                        <span class="n">stream</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OutputStream</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+</span><span data-line="158">                        <span class="n">stream</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span data-line="159">
+</span><span data-line="160">                    <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;play&quot;</span><span class="p">:</span>
+</span><span data-line="161">                        <span class="k">if</span> <span class="n">current_sound</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="162">                            <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">current_sound</span><span class="p">)</span>
 </span><span data-line="163">
-</span><span data-line="164">                <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
-</span><span data-line="165">                    <span class="k">continue</span>
-</span><span data-line="166">
-</span><span data-line="167">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="168">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="169">                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;exception&quot;</span><span class="p">)</span>
-</span><span data-line="170">                <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;sound&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
-</span><span data-line="171">            <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Full</span><span class="p">:</span>
-</span><span data-line="172">                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error queue full, cannot log audio error&quot;</span><span class="p">)</span>
-</span><span data-line="173">                <span class="k">pass</span>
-</span><span data-line="174">
-</span><span data-line="175">        <span class="k">finally</span><span class="p">:</span>
-</span><span data-line="176">            <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="177">                <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span data-line="178">
+</span><span data-line="164">                    <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;stop&quot;</span><span class="p">:</span>
+</span><span data-line="165">                        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="166">                            <span class="n">stream</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span><span data-line="167">                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="168">                            <span class="k">pass</span>
+</span><span data-line="169">
+</span><span data-line="170">                    <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;shutdown&quot;</span><span class="p">:</span>
+</span><span data-line="171">                        <span class="k">break</span>
+</span><span data-line="172">
+</span><span data-line="173">                <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+</span><span data-line="174">                    <span class="k">continue</span>
+</span><span data-line="175">
+</span><span data-line="176">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="177">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="178">                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;exception&quot;</span><span class="p">)</span>
+</span><span data-line="179">                <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;sound&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
+</span><span data-line="180">            <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Full</span><span class="p">:</span>
+</span><span data-line="181">                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error queue full, cannot log audio error&quot;</span><span class="p">)</span>
+</span><span data-line="182">                <span class="k">pass</span>
+</span><span data-line="183">
+</span><span data-line="184">        <span class="k">finally</span><span class="p">:</span>
+</span><span data-line="185">            <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="186">                <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="187">
 <div class="viewcode-block" id="SoundDevice.shutdown">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.shutdown">[docs]</a>
-</span><span data-line="179">    <span class="k">def</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="180"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Shuts down the audio thread and stream.&quot;&quot;&quot;</span>
-</span><span data-line="181">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_running</span><span class="p">:</span>
-</span><span data-line="182">            <span class="bp">self</span><span class="o">.</span><span class="n">thread_running</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="183">            <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;shutdown&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-</span><span data-line="184">            <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span></div>
+</span><span data-line="188">    <span class="k">def</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="189"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Shuts down the audio thread and stream.&quot;&quot;&quot;</span>
+</span><span data-line="190">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_running</span><span class="p">:</span>
+</span><span data-line="191">            <span class="bp">self</span><span class="o">.</span><span class="n">thread_running</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="192">            <span class="bp">self</span><span class="o">.</span><span class="n">command_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;shutdown&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+</span><span data-line="193">            <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span></div>
 
-</span><span data-line="185">
-</span><span data-line="186">    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="187"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Destructor to ensure shutdown.&quot;&quot;&quot;</span>
-</span><span data-line="188">        <span class="bp">self</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-</span><span data-line="189">
+</span><span data-line="194">
+</span><span data-line="195">    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="196"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Destructor to ensure shutdown.&quot;&quot;&quot;</span>
+</span><span data-line="197">        <span class="bp">self</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</span><span data-line="198">
 <div class="viewcode-block" id="SoundDevice.create_sound_vec">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.create_sound_vec">[docs]</a>
-</span><span data-line="190">    <span class="nd">@staticmethod</span>
-</span><span data-line="191">    <span class="k">def</span><span class="w"> </span><span class="nf">create_sound_vec</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]:</span>
-</span><span data-line="192"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Interleaves left and right channels into a stereo array.</span>
-</span><span data-line="193">
-</span><span data-line="194"><span class="sd">        Args:</span>
-</span><span data-line="195"><span class="sd">            left (np.ndarray): Left channel data.</span>
-</span><span data-line="196"><span class="sd">            right (np.ndarray): Right channel data.</span>
-</span><span data-line="197">
-</span><span data-line="198"><span class="sd">        Returns:</span>
-</span><span data-line="199"><span class="sd">            np.ndarray[np.float32]: Interleaved stereo data.</span>
-</span><span data-line="200"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="201">        <span class="n">sound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">])</span>
-</span><span data-line="202">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
+</span><span data-line="199">    <span class="nd">@staticmethod</span>
+</span><span data-line="200">    <span class="k">def</span><span class="w"> </span><span class="nf">create_sound_vec</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]:</span>
+</span><span data-line="201"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Interleaves left and right channels into a stereo array.</span>
+</span><span data-line="202">
+</span><span data-line="203"><span class="sd">        Args:</span>
+</span><span data-line="204"><span class="sd">            left (np.ndarray): Left channel data.</span>
+</span><span data-line="205"><span class="sd">            right (np.ndarray): Right channel data.</span>
+</span><span data-line="206">
+</span><span data-line="207"><span class="sd">        Returns:</span>
+</span><span data-line="208"><span class="sd">            np.ndarray[np.float32]: Interleaved stereo data.</span>
+</span><span data-line="209"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="210">        <span class="n">sound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">])</span>
+</span><span data-line="211">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
 </div>
 
-</span><span data-line="203">
-</span><span data-line="204">
+</span><span data-line="212">
+</span><span data-line="213">
 <div class="viewcode-block" id="get_sound_device">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.get_sound_device.html#village.devices.sound_device.get_sound_device">[docs]</a>
-</span><span data-line="205"><span class="k">def</span><span class="w"> </span><span class="nf">get_sound_device</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SoundDevice</span> <span class="o">|</span> <span class="n">NullSoundDevice</span><span class="p">:</span>
-</span><span data-line="206"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to initialize the SoundDevice.</span>
-</span><span data-line="207">
-</span><span data-line="208"><span class="sd">    Returns:</span>
-</span><span data-line="209"><span class="sd">        SoundDeviceBase: An initialized SoundDevice or base class if disabled/failed.</span>
-</span><span data-line="210"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="211">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SOUNDCARD&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
-</span><span data-line="212">        <span class="k">return</span> <span class="n">NullSoundDevice</span><span class="p">()</span>
-</span><span data-line="213">    <span class="k">else</span><span class="p">:</span>
-</span><span data-line="214">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="215">            <span class="n">sound_device</span> <span class="o">=</span> <span class="n">SoundDevice</span><span class="p">()</span>
-</span><span data-line="216">            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sound device successfully initialized&quot;</span><span class="p">)</span>
-</span><span data-line="217">            <span class="k">return</span> <span class="n">sound_device</span>
-</span><span data-line="218">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="219">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="220">                <span class="s2">&quot;Could not initialize sound device&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
-</span><span data-line="221">            <span class="p">)</span>
-</span><span data-line="222">            <span class="k">return</span> <span class="n">NullSoundDevice</span><span class="p">()</span></div>
+</span><span data-line="214"><span class="k">def</span><span class="w"> </span><span class="nf">get_sound_device</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SoundDevice</span> <span class="o">|</span> <span class="n">NullSoundDevice</span><span class="p">:</span>
+</span><span data-line="215"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to initialize the SoundDevice.</span>
+</span><span data-line="216">
+</span><span data-line="217"><span class="sd">    Returns:</span>
+</span><span data-line="218"><span class="sd">        SoundDeviceBase: An initialized SoundDevice or base class if disabled/failed.</span>
+</span><span data-line="219"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="220">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SOUNDCARD&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
+</span><span data-line="221">        <span class="k">return</span> <span class="n">NullSoundDevice</span><span class="p">()</span>
+</span><span data-line="222">    <span class="k">else</span><span class="p">:</span>
+</span><span data-line="223">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="224">            <span class="n">sound_device</span> <span class="o">=</span> <span class="n">SoundDevice</span><span class="p">()</span>
+</span><span data-line="225">            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sound device successfully initialized&quot;</span><span class="p">)</span>
+</span><span data-line="226">            <span class="k">return</span> <span class="n">sound_device</span>
+</span><span data-line="227">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="228">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="229">                <span class="s2">&quot;Could not initialize sound device&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+</span><span data-line="230">            <span class="p">)</span>
+</span><span data-line="231">            <span class="k">return</span> <span class="n">NullSoundDevice</span><span class="p">()</span></div>
 
-</span><span data-line="223">
-</span><span data-line="224">
-</span><span data-line="225"><span class="n">sound_device</span> <span class="o">=</span> <span class="n">get_sound_device</span><span class="p">()</span>
+</span><span data-line="232">
+</span><span data-line="233">
+</span><span data-line="234"><span class="n">sound_device</span> <span class="o">=</span> <span class="n">get_sound_device</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -729,7 +749,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=e13701a2"></script>
+      <script src="../../../_static/documentation_options.js?v=316ebc0f"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

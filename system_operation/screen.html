@@ -92,7 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
-<li class="toctree-l3"><a class="reference internal" href="timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -254,6 +254,17 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.export_csv.html">export_csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid_task.html">optogrid_task</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid_task.S5OptoGrid.html">S5OptoGrid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.rfid.html">rfid</a></li>
@@ -545,13 +556,14 @@ set the resolution to <strong>1280×720</strong> or lower, and apply.</p>
 <section id="resolution-and-display-latency">
 <h2>Resolution and display latency</h2>
 <p>Keep the stimulus display at 1280×720 or below. Higher resolutions significantly
-increase CPU load on the Raspberry Pi, which in turn increases stimulus presentation
+increase CPU load on the Raspberry Pi, leading to greater stimulus presentation
 latency.</p>
 <p>The system operates at a <strong>60 Hz refresh rate</strong> (one frame every 16.6 ms). Because the
-next frame is preloaded in the buffer while the current one is being displayed, the
-latency from issuing a display command to the frame appearing on screen is typically
-one full frame plus the remaining portion of the current frame. In practice, measured
-latencies are <strong>mean = 27.4 ms, SD = 7.5 ms</strong>.</p>
+next frame is preloaded in the buffer while the current one is displayed, the latency
+from issuing a display command to the frame appearing on screen spans approximately
+one full frame plus the remaining portion of the current frame — equivalent to roughly
+1.5 × frame duration plus 2–3 ms of controller-to-Raspberry Pi communication.
+Measured latencies: <strong>mean = 27.4 ms, SD = 7.5 ms</strong>.</p>
 </section>
 <section id="using-the-screen-in-tasks">
 <h2>Using the screen in tasks</h2>
@@ -790,7 +802,7 @@ will never treat it as a pointer device.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=e13701a2"></script>
+      <script src="../_static/documentation_options.js?v=316ebc0f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

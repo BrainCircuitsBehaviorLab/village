@@ -92,7 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/data.html">Saved Data and Video</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -254,6 +254,17 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.export_csv.html">export_csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.optogrid_task.html">optogrid_task</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid_task.S5OptoGrid.html">S5OptoGrid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a></li>
@@ -635,40 +646,56 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="141">
 </span><span data-line="142"><span class="n">motor_corridor1</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
 </span><span data-line="143"><span class="n">motor_corridor2</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
-</span><span data-line="144">
-</span><span data-line="145"><span class="n">motor_box1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
-</span><span data-line="146">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_BOX_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">),</span> <span class="n">pwm_box</span>
-</span><span data-line="147"><span class="p">)</span>
-</span><span data-line="148"><span class="n">motor_box2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
-</span><span data-line="149">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_BOX_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">),</span> <span class="n">pwm_box</span>
-</span><span data-line="150"><span class="p">)</span>
-</span><span data-line="151"><span class="n">visible_light_corridor</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span>
-</span><span data-line="152">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VISIBLE_LIGHT_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="kc">True</span><span class="p">,</span> <span class="n">pwm_corridor</span>
-</span><span data-line="153"><span class="p">)</span>
-</span><span data-line="154"><span class="n">ir_light_corridor</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IR_LIGHT_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pwm_corridor</span><span class="p">)</span>
-</span><span data-line="155"><span class="n">visible_light_box</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VISIBLE_LIGHT_BOX_INDEX&quot;</span><span class="p">),</span> <span class="kc">True</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">)</span>
-</span><span data-line="156"><span class="n">ir_light_box</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IR_LIGHT_BOX_INDEX&quot;</span><span class="p">),</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">)</span>
-</span><span data-line="157">
-</span><span data-line="158"><span class="k">if</span> <span class="n">old_version_motor</span><span class="p">:</span>
-</span><span data-line="159">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span>
-</span><span data-line="160">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">)</span>
-</span><span data-line="161">    <span class="p">)</span>
-</span><span data-line="162">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span>
-</span><span data-line="163">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">)</span>
-</span><span data-line="164">    <span class="p">)</span>
-</span><span data-line="165"><span class="k">else</span><span class="p">:</span>
-</span><span data-line="166">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
-</span><span data-line="167">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_CORRIDOR_INDEX&quot;</span><span class="p">),</span>
-</span><span data-line="168">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">),</span>
-</span><span data-line="169">        <span class="n">pwm_corridor</span><span class="p">,</span>
-</span><span data-line="170">    <span class="p">)</span>
-</span><span data-line="171">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
-</span><span data-line="172">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_CORRIDOR_INDEX&quot;</span><span class="p">),</span>
-</span><span data-line="173">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">),</span>
-</span><span data-line="174">        <span class="n">pwm_corridor</span><span class="p">,</span>
-</span><span data-line="175">    <span class="p">)</span>
-</span><span data-line="176">    <span class="n">motor_corridor1</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error_corridor</span>
-</span><span data-line="177">    <span class="n">motor_box1</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error_box</span>
+</span><span data-line="144"><span class="n">motor_corridor3</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
+</span><span data-line="145">
+</span><span data-line="146"><span class="n">motor_box1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="147">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_BOX_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">),</span> <span class="n">pwm_box</span>
+</span><span data-line="148"><span class="p">)</span>
+</span><span data-line="149"><span class="n">motor_box2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="150">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_BOX_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">),</span> <span class="n">pwm_box</span>
+</span><span data-line="151"><span class="p">)</span>
+</span><span data-line="152"><span class="n">motor_box3</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="153">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR3_BOX_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR3_VALUES&quot;</span><span class="p">),</span> <span class="n">pwm_box</span>
+</span><span data-line="154"><span class="p">)</span>
+</span><span data-line="155"><span class="n">motor_box4</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="156">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR4_BOX_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR4_VALUES&quot;</span><span class="p">),</span> <span class="n">pwm_box</span>
+</span><span data-line="157"><span class="p">)</span>
+</span><span data-line="158"><span class="n">motor_box5</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="159">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR5_BOX_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR5_VALUES&quot;</span><span class="p">),</span> <span class="n">pwm_box</span>
+</span><span data-line="160"><span class="p">)</span>
+</span><span data-line="161"><span class="n">visible_light_corridor</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span>
+</span><span data-line="162">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VISIBLE_LIGHT_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="kc">True</span><span class="p">,</span> <span class="n">pwm_corridor</span>
+</span><span data-line="163"><span class="p">)</span>
+</span><span data-line="164"><span class="n">ir_light_corridor</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IR_LIGHT_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pwm_corridor</span><span class="p">)</span>
+</span><span data-line="165"><span class="n">visible_light_box</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VISIBLE_LIGHT_BOX_INDEX&quot;</span><span class="p">),</span> <span class="kc">True</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">)</span>
+</span><span data-line="166"><span class="n">ir_light_box</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IR_LIGHT_BOX_INDEX&quot;</span><span class="p">),</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">)</span>
+</span><span data-line="167">
+</span><span data-line="168"><span class="k">if</span> <span class="n">old_version_motor</span><span class="p">:</span>
+</span><span data-line="169">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span>
+</span><span data-line="170">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">)</span>
+</span><span data-line="171">    <span class="p">)</span>
+</span><span data-line="172">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span>
+</span><span data-line="173">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_CORRIDOR_INDEX&quot;</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">)</span>
+</span><span data-line="174">    <span class="p">)</span>
+</span><span data-line="175">    <span class="n">motor_corridor3</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
+</span><span data-line="176"><span class="k">else</span><span class="p">:</span>
+</span><span data-line="177">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="178">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_CORRIDOR_INDEX&quot;</span><span class="p">),</span>
+</span><span data-line="179">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR1_VALUES&quot;</span><span class="p">),</span>
+</span><span data-line="180">        <span class="n">pwm_corridor</span><span class="p">,</span>
+</span><span data-line="181">    <span class="p">)</span>
+</span><span data-line="182">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="183">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_CORRIDOR_INDEX&quot;</span><span class="p">),</span>
+</span><span data-line="184">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR2_VALUES&quot;</span><span class="p">),</span>
+</span><span data-line="185">        <span class="n">pwm_corridor</span><span class="p">,</span>
+</span><span data-line="186">    <span class="p">)</span>
+</span><span data-line="187">    <span class="n">motor_corridor3</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="188">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR3_CORRIDOR_INDEX&quot;</span><span class="p">),</span>
+</span><span data-line="189">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MOTOR3_VALUES&quot;</span><span class="p">),</span>
+</span><span data-line="190">        <span class="n">pwm_corridor</span><span class="p">,</span>
+</span><span data-line="191">    <span class="p">)</span>
+</span><span data-line="192">    <span class="n">motor_corridor1</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error_corridor</span>
+</span><span data-line="193">    <span class="n">motor_box1</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error_box</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -693,7 +720,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=e13701a2"></script>
+      <script src="../../../_static/documentation_options.js?v=316ebc0f"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

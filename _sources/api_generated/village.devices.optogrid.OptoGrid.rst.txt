@@ -1,0 +1,51 @@
+OptoGrid
+========
+
+.. currentmodule:: village.devices.optogrid
+
+.. autoclass:: OptoGrid
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~OptoGrid.__init__
+      ~OptoGrid.configure_imu
+      ~OptoGrid.connect
+      ~OptoGrid.disconnect
+      ~OptoGrid.program
+      ~OptoGrid.read_battery_mv
+      ~OptoGrid.read_device_id
+      ~OptoGrid.read_last_stim_ms
+      ~OptoGrid.read_uled_check
+      ~OptoGrid.scan
+      ~OptoGrid.start
+      ~OptoGrid.start_imu_logging
+      ~OptoGrid.status
+      ~OptoGrid.stop
+      ~OptoGrid.stop_imu_logging
+      ~OptoGrid.sync
+      ~OptoGrid.toggle_sham_led
+      ~OptoGrid.toggle_status_led
+      ~OptoGrid.trigger
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~OptoGrid.imu_logging
+      ~OptoGrid.is_connected
+   
+   

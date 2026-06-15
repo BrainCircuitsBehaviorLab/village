@@ -26,6 +26,11 @@ TaskBase
       ~TaskBase.do_trial
       ~TaskBase.execute_function
       ~TaskBase.get_name
+      ~TaskBase.register_controller_event
+      ~TaskBase.register_end_trial
+      ~TaskBase.register_enter_state
+      ~TaskBase.register_raspberry_event
+      ~TaskBase.register_start_trial
       ~TaskBase.register_value
       ~TaskBase.run
       ~TaskBase.run_in_thread

@@ -1,0 +1,34 @@
+optogrid\_task
+==============
+
+.. automodule:: village.devices.optogrid_task
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      S5OptoGrid
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,40 @@
+OptoSetting
+===========
+
+.. currentmodule:: village.devices.optogrid
+
+.. autoclass:: OptoSetting
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~OptoSetting.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~OptoSetting.amplitude
+      ~OptoSetting.duration
+      ~OptoSetting.led_selection
+      ~OptoSetting.period
+      ~OptoSetting.pulse_width
+      ~OptoSetting.pwm_frequency
+      ~OptoSetting.ramp_down
+      ~OptoSetting.ramp_up
+      ~OptoSetting.sequence_length
+   
+   

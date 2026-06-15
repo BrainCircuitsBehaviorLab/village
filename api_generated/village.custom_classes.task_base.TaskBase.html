@@ -92,7 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing &amp; Clock Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
@@ -254,6 +254,17 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.export_csv.html">export_csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.optogrid_task.html">optogrid_task</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid_task.S5OptoGrid.html">S5OptoGrid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a></li>
@@ -423,6 +434,11 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.create_trial"><code class="docutils literal notranslate">create_trial()</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.after_trial"><code class="docutils literal notranslate">after_trial()</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.close"><code class="docutils literal notranslate">close()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.register_start_trial"><code class="docutils literal notranslate">register_start_trial()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.register_end_trial"><code class="docutils literal notranslate">register_end_trial()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.register_enter_state"><code class="docutils literal notranslate">register_enter_state()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.register_controller_event"><code class="docutils literal notranslate">register_controller_event()</span></code></a></li>
+<li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.register_raspberry_event"><code class="docutils literal notranslate">register_raspberry_event()</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.register_value"><code class="docutils literal notranslate">register_value()</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.execute_function"><code class="docutils literal notranslate">execute_function()</span></code></a></li>
 <li><a class="reference internal" href="#village.custom_classes.task_base.TaskBase.run_in_thread"><code class="docutils literal notranslate">run_in_thread()</span></code></a></li>
@@ -633,6 +649,79 @@ Primarily used inside <code class="docutils literal notranslate"><span class="pr
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.task_base.TaskBase.register_start_trial">
+<span class="sig-name descname"><span class="pre">register_start_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raspberry_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_start_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Registers the start of a trial. We use 2 timestamps because we use the start
+of the trial to synchronize the clocks between the raspberry and the controller.
+If you are not using a controller, (i.e. the controller is the same raspberry),
+the controller_timestamp is exactly the same as the raspberry timestamp. To get
+the raspberry timestamp you can use time_utils.now_timestamp().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raspberry_timestamp</strong> (<em>float</em>) – Raspberry time.</p></li>
+<li><p><strong>controller_timestamp</strong> (<em>float</em>) – Controller clock timestamp.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.task_base.TaskBase.register_end_trial">
+<span class="sig-name descname"><span class="pre">register_end_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_end_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Registers the end of a trial. If you are not using a controller, (i.e. the
+controller is the same raspberry), the controller_timestamp is exactly
+the same as the raspberry timestamp.
+:param controller_timestamp: Controller clock timestamp.
+:type controller_timestamp: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.task_base.TaskBase.register_enter_state">
+<span class="sig-name descname"><span class="pre">register_enter_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_enter_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Registers the entry into a Bpod state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_name</strong> (<em>str</em>) – The name of the state entered.</p></li>
+<li><p><strong>controller_timestamp</strong> (<em>float</em>) – Controller clock timestamp.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.task_base.TaskBase.register_controller_event">
+<span class="sig-name descname"><span class="pre">register_controller_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_controller_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Registers a custom event using a controller clock timestamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the event (column header).</p></li>
+<li><p><strong>controller_timestamp</strong> (<em>float</em>) – Controller clock timestamp.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.custom_classes.task_base.TaskBase.register_raspberry_event">
+<span class="sig-name descname"><span class="pre">register_raspberry_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raspberry_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_raspberry_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Registers a custom event using a raspberry timestamp.
+If you are using bpod, you may want to call this for events that are generated
+asynchronously from the bpod state machine, for example when executing direct
+functions or when using a camera to detect or trigger events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the event (column header).</p></li>
+<li><p><strong>raspberry_timestamp</strong> (<em>float</em>) – Raspberry time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="village.custom_classes.task_base.TaskBase.register_value">
 <span class="sig-name descname"><span class="pre">register_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Registers a custom value to be saved with the trial data.</p>
@@ -799,7 +888,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=e13701a2"></script>
+      <script src="../_static/documentation_options.js?v=316ebc0f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

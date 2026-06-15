@@ -1,0 +1,36 @@
+IMUConfig
+=========
+
+.. currentmodule:: village.devices.optogrid
+
+.. autoclass:: IMUConfig
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~IMUConfig.__init__
+      ~IMUConfig.columns
+      ~IMUConfig.validate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~IMUConfig.save_accel_gyro
+      ~IMUConfig.save_magnetometer
+      ~IMUConfig.save_orientation
+   
+   

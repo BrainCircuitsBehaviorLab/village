@@ -1,0 +1,45 @@
+S5OptoGrid
+==========
+
+.. currentmodule:: village.devices.optogrid_task
+
+.. autoclass:: S5OptoGrid
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~S5OptoGrid.__init__
+      ~S5OptoGrid.after_trial
+      ~S5OptoGrid.close
+      ~S5OptoGrid.concatenate_trial_data
+      ~S5OptoGrid.create_paths
+      ~S5OptoGrid.create_trial
+      ~S5OptoGrid.disconnect_and_save
+      ~S5OptoGrid.do_trial
+      ~S5OptoGrid.execute_function
+      ~S5OptoGrid.get_name
+      ~S5OptoGrid.register_controller_event
+      ~S5OptoGrid.register_end_trial
+      ~S5OptoGrid.register_enter_state
+      ~S5OptoGrid.register_raspberry_event
+      ~S5OptoGrid.register_start_trial
+      ~S5OptoGrid.register_value
+      ~S5OptoGrid.run
+      ~S5OptoGrid.run_in_thread
+      ~S5OptoGrid.save_csv
+      ~S5OptoGrid.save_json
+      ~S5OptoGrid.start
+   
+   
+
+   
+   
+   
