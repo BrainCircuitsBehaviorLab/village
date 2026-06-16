@@ -19,11 +19,13 @@ OptoGrid
       ~OptoGrid.__init__
       ~OptoGrid.configure_imu
       ~OptoGrid.connect
+      ~OptoGrid.connect_async
       ~OptoGrid.disconnect
       ~OptoGrid.program
       ~OptoGrid.read_battery_mv
       ~OptoGrid.read_device_id
       ~OptoGrid.read_last_stim_ms
+      ~OptoGrid.read_params
       ~OptoGrid.read_uled_check
       ~OptoGrid.scan
       ~OptoGrid.start
@@ -45,7 +47,9 @@ OptoGrid
    .. autosummary::
       :no-index:
    
+      ~OptoGrid.address
       ~OptoGrid.imu_logging
       ~OptoGrid.is_connected
+      ~OptoGrid.is_connecting
    
    

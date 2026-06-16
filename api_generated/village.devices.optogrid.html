@@ -124,6 +124,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.optogrid_calibration.html">optogrid_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.optogrid_calibration.OptoGridCalibration.html">OptoGridCalibration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a></li>
 </ul>
 </li>
@@ -258,6 +262,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">optogrid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.export_csv.html">export_csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.og_connect.html">og_connect</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
@@ -545,6 +550,9 @@ accel+gyro only when not (yaw will drift)</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="village.devices.optogrid.export_csv.html#village.devices.optogrid.export_csv" title="village.devices.optogrid.export_csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_csv</span></code></a>(parquet_path[, csv_path])</p></td>
 <td><p>Convert a Parquet IMU log to CSV.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="village.devices.optogrid.og_connect.html#village.devices.optogrid.og_connect" title="village.devices.optogrid.og_connect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">og_connect</span></code></a>(device_name, sessions_directory, ...)</p></td>
+<td><p>Create and connect an OptoGrid.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -555,7 +563,7 @@ accel+gyro only when not (yaw will drift)</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="village.devices.optogrid.IMUConfig.html#village.devices.optogrid.IMUConfig" title="village.devices.optogrid.IMUConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IMUConfig</span></code></a>([save_accel_gyro, ...])</p></td>
 <td><p>What to WRITE to disk.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid" title="village.devices.optogrid.OptoGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptoGrid</span></code></a>(sessions_directory, filename[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid" title="village.devices.optogrid.OptoGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptoGrid</span></code></a>([sessions_directory, filename, ...])</p></td>
 <td><p>Synchronous, thread-safe BLE driver for the OptoGrid, with optional IMU logging.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="village.devices.optogrid.OptoSetting.html#village.devices.optogrid.OptoSetting" title="village.devices.optogrid.OptoSetting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptoSetting</span></code></a>([sequence_length, ...])</p></td>
@@ -604,7 +612,7 @@ accel+gyro only when not (yaw will drift)</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=316ebc0f"></script>
+      <script src="../_static/documentation_options.js?v=aab2d62d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

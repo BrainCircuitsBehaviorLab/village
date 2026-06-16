@@ -1,0 +1,6 @@
+og\_connect
+===========
+
+.. currentmodule:: village.devices.optogrid
+
+.. autofunction:: og_connect

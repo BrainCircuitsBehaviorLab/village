@@ -34,5 +34,6 @@
    bpod_water_calibration
    camera_calibration
    camera_calibration_grid
+   optogrid_calibration
    sound_calibration
 

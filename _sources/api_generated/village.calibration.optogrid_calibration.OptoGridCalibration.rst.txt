@@ -1,0 +1,35 @@
+OptoGridCalibration
+===================
+
+.. currentmodule:: village.calibration.optogrid_calibration
+
+.. autoclass:: OptoGridCalibration
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~OptoGridCalibration.__init__
+      ~OptoGridCalibration.draw
+      ~OptoGridCalibration.is_active
+      ~OptoGridCalibration.update_gui
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~OptoGridCalibration.name
+   
+   
