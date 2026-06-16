@@ -215,8 +215,8 @@ class OptoGrid:
 
     def __init__(
         self,
-        sessions_directory: str,
-        filename: str,
+        sessions_directory: str = "",
+        filename: str = "",
         device_name: str = "OptoGrid 1",
         command_timeout: float = 5.0,
         scan_timeout: float = 4.0,
@@ -237,6 +237,8 @@ class OptoGrid:
         self._loop: Optional[asyncio.AbstractEventLoop] = None
         self._thread: Optional[threading.Thread] = None
 
+        self._connecting: bool = False
+
         # IMU runtime state
         self._imu_active = False
         self._imu_sample_rate = 100
@@ -253,6 +255,8 @@ class OptoGrid:
         self._mag_offset = np.array([0.0, 0.0, 0.0])
         self._mag_scale = np.array([1.0, 1.0, 1.0])
         self._mag_seen = False  # whether we are currently receiving valid mag
+
+        self.start()
 
     # ---- IMU config can be changed before a logging session -------------- #
 
@@ -316,6 +320,14 @@ class OptoGrid:
     def is_connected(self) -> bool:
         return self._client is not None and self._client.is_connected
 
+    @property
+    def is_connecting(self) -> bool:
+        return self._connecting
+
+    @property
+    def address(self) -> Optional[str]:
+        return getattr(self._selected, "address", None)
+
     def status(self) -> str:
         """Human-readable connection status, e.g. for a GUI label."""
         if not self.is_connected:
@@ -324,7 +336,7 @@ class OptoGrid:
         address = getattr(self._selected, "address", "Unknown Address")
         return f"Connected to {name} ({address})"
 
-    def connect(self, identifier: Optional[str] = None, timeout: float = 5.0) -> bool:
+    def connect(self, identifier: Optional[str] = None, timeout: float = 10.0) -> bool:
         target = identifier or self.device_name
         try:
             if self._submit(self._connect(target), timeout=timeout):
@@ -409,6 +421,34 @@ class OptoGrid:
             print(f"ble_log: {msg}")
         except Exception as e:
             print(f"Error in device log handler: {e}")
+
+    def connect_async(
+        self,
+        identifier: Optional[str] = None,
+        timeout: float = 10.0,
+        imu_logging: bool = False,
+    ) -> None:
+        """Connect in a background thread. Returns immediately.
+        Check is_connected / is_connecting for status."""
+        if self._connecting:
+            print("Already connecting, ignoring request")
+            return
+        threading.Thread(
+            target=self._run_connect_async,
+            args=(identifier, timeout, imu_logging),
+            daemon=True,
+        ).start()
+
+    def _run_connect_async(
+        self, identifier: Optional[str], timeout: float, imu_logging: bool
+    ) -> None:
+        self._connecting = True
+        try:
+            success = self.connect(identifier=identifier, timeout=timeout)
+            if success and imu_logging:
+                self.start_imu_logging()
+        finally:
+            self._connecting = False
 
     def disconnect(self) -> bool:
         try:
@@ -815,6 +855,23 @@ class OptoGrid:
             print(f"Error: Device-id read failed: {e}")
             return None
 
+    def read_params(self) -> Optional[dict[str, str]]:
+        """Read all opto parameters and device info from the connected device."""
+        if not self.is_connected:
+            return None
+        result: dict[str, str] = {}
+        for key, uuid in OPTO_CHAR_MAP.items():
+            try:
+                result[key] = self._submit(self._read(uuid))
+            except Exception:
+                result[key] = "—"
+        for label, uuid in (("device_id", DEVICE_ID_UUID), ("firmware", FIRMWARE_UUID)):
+            try:
+                result[label] = self._submit(self._read(uuid))
+            except Exception:
+                result[label] = "—"
+        return result
+
     async def _read(self, uuid: str) -> str:
         assert self._client is not None
         val = await self._client.read_gatt_char(uuid)
@@ -828,6 +885,30 @@ class OptoGrid:
 
     def __exit__(self, *exc) -> None:
         self.stop()
+
+
+# --------------------------------------------------------------------------- #
+# Module-level helpers
+# --------------------------------------------------------------------------- #
+
+
+def og_connect(
+    device_name: str,
+    sessions_directory: str,
+    filename: str,
+    imu_logging: bool = True,
+) -> tuple[OptoSetting, OptoGrid, bool]:
+    """Create and connect an OptoGrid. Returns (OptoSetting(), og, connected).
+    Designed to be called from a background thread so it doesn't block the main loop."""
+    og = OptoGrid(
+        device_name=device_name,
+        sessions_directory=sessions_directory,
+        filename=filename,
+    )
+    success = og.connect()
+    if success and imu_logging:
+        og.start_imu_logging()
+    return OptoSetting(), og, success
 
 
 # --------------------------------------------------------------------------- #

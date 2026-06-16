@@ -7,7 +7,6 @@ from utils_functions import get_delay_probabilities
 
 from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
 from village.devices.optogrid import OptoGrid, OptoSetting
-from village.scripts.log import log
 
 
 class S5OptoGrid(TaskBase):
@@ -47,23 +46,15 @@ class S5OptoGrid(TaskBase):
         self.bpod.manual_override_output("BNC" + str(2) + "High")
         time.sleep(1)  # wait for the device to be powered up
 
-        # Connect to OptoGrid at session start
+        # Connect to OptoGrid in background at session start
         if self.settings.opto_sess == 1:
-            self.current_opto_setting = OptoSetting()
             self.og = OptoGrid(
                 device_name=self.settings.optogrid_device_name,
                 sessions_directory=self.sessions_directory,
                 filename=self.filename,
             )
-            self.og.start()
-            success = self.og.connect()
-            if not success:
-                log.alarm(
-                    "Could not connect to OptoGrid. Check connection and device name."
-                )
-                self.settings.opto_sess = 0
-            else:
-                self.og.start_imu_logging()
+            print("Connecting to OptoGrid in background, may take a few seconds...")
+            self.og.connect_async(imu_logging=True)
 
         # counters
         self.trial_count = 0
@@ -129,28 +120,21 @@ class S5OptoGrid(TaskBase):
             self.is_opto_trial = False
 
         # OptoGrid Trial-wise configuration
-        if self.settings.opto_sess == 1:
-            print("This is Opto Session")
-            if self.is_opto_trial:
-                print("This is an Opto Trial")
-                # Step 1: Check connection
+        if self.settings.opto_sess == 1 and self.is_opto_trial:
+            if not self.og.is_connected:
+                print("OptoGrid not connected, skipping opto this trial.")
+                self.is_opto_trial = False
+                print("Reconnecting in background...")
+                self.og.connect_async(imu_logging=True)
+            else:
                 battery_val = self.og.read_battery_mv()
-                print(f"OptoGrid voltage: {battery_val} mV")
                 if battery_val is None:
-                    print("Warning: OptoGrid not connected")
-                    print("Attempting to reconnect...")
-                    reconnect_success = self.og.connect()
-                    if not reconnect_success:
-                        print("Warning: Reconnect failed, turning off opto session")
-                        self.settings.opto_sess = 0
-                        self.is_opto_trial = False
-                        log.alarm("Turning off opto trial and sess")
-                    else:
-                        self.og.start_imu_logging()
-
-                # Step 2: If connected, program this trail's opto settings
-                if self.settings.opto_sess == 1 and self.is_opto_trial:
-                    print("Programming OptoGrid for this trial...")
+                    print("Warning: battery read failed, skipping opto this trial.")
+                    self.is_opto_trial = False
+                    print("Reconnecting in background...")
+                    self.og.connect_async(imu_logging=True)
+                else:
+                    print(f"OptoGrid voltage: {battery_val} mV, programming trial...")
                     self.current_opto_setting = OptoSetting(
                         sequence_length=int(self.settings.opto_sequence_length),
                         led_selection=int(
@@ -166,8 +150,7 @@ class S5OptoGrid(TaskBase):
                         ramp_up=int(random.choice(self.settings.opto_ramp_up)),
                         ramp_down=int(random.choice(self.settings.opto_ramp_down)),
                     )
-
-                    _ = self.og.program(self.current_opto_setting)
+                    self.og.program(self.current_opto_setting)
 
         opto_output = BpodOutput.SoftCode3 if self.is_opto_trial else ""
 
@@ -266,6 +249,9 @@ class S5OptoGrid(TaskBase):
         )
 
     def after_trial(self):
+        # Turn on NeuroLux, it gets turned off after each trial
+        self.bpod.manual_override_output("BNC" + str(2) + "High")
+
         self.trial_count += 1
 
         def _event_key(ev):
@@ -382,22 +368,23 @@ class S5OptoGrid(TaskBase):
         self.register_value("rewarded_side", rewarded_side)
         self.register_value("delay_cues", self.signed_delay)
 
-        # #SAVE OPTO PARAMETERS
+        # SAVE OPTO PARAMETERS
         if self.settings.opto_sess == 1:
             self.register_value("is_opto_trial", self.is_opto_trial)
-            opto = self.current_opto_setting
-            self.register_value("opto_sequence_length", opto.sequence_length)
-            self.register_value("opto_led_selection", opto.led_selection)
-            self.register_value("opto_duration", opto.duration)
-            self.register_value("opto_period", opto.period)
-            self.register_value("opto_pulse_width", opto.pulse_width)
-            self.register_value("opto_amplitude", opto.amplitude)
-            self.register_value("opto_pwm_frequency", opto.pwm_frequency)
-            self.register_value("opto_ramp_up", opto.ramp_up)
-            self.register_value("opto_ramp_down", opto.ramp_down)
-            self.register_value("battery_end", self.og.read_battery_mv())
-            self.register_value("uled_check", self.og.read_uled_check())
-            self.register_value("last_stim_time", self.og.read_last_stim_ms())
+            if self.is_opto_trial:
+                opto = self.current_opto_setting
+                self.register_value("opto_sequence_length", opto.sequence_length)
+                self.register_value("opto_led_selection", opto.led_selection)
+                self.register_value("opto_duration", opto.duration)
+                self.register_value("opto_period", opto.period)
+                self.register_value("opto_pulse_width", opto.pulse_width)
+                self.register_value("opto_amplitude", opto.amplitude)
+                self.register_value("opto_pwm_frequency", opto.pwm_frequency)
+                self.register_value("opto_ramp_up", opto.ramp_up)
+                self.register_value("opto_ramp_down", opto.ramp_down)
+                self.register_value("battery_end", self.og.read_battery_mv())
+                self.register_value("uled_check", self.og.read_uled_check())
+                self.register_value("last_stim_time", self.og.read_last_stim_ms())
 
         print("registration")
         print(f"Rewarded side: {rewarded_side}")
