@@ -74,6 +74,9 @@ class SoundCalibrationTask(TaskBase):
             log.error("Error calibrating sound", exception=traceback.format_exc())
             self.calibrations.sound_calibration_error = True
 
+    def after_trial(self) -> None:
+        pass
+
     def close(self) -> None:
         pass
 
