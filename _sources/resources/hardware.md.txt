@@ -372,8 +372,10 @@ Never hot-plug peripherals: ensure the main power supply is completely disconnec
 :::{grid-item}
 :columns: 4
 **Storage**: Insert the pre-loaded microSD card into the Raspberry Pi 5 slot.
-**Cooling**: Securely mount the official Active Cooler onto the processor.
-**Camera Integration**: Connect the two camera ribbon cables to the Pi. Keep cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable; use an extension with a dedicated FFC adapter if needed.
+
+**Cooling**: Securely mount the [official Active Cooler](https://pip-assets.raspberrypi.com/categories/993-raspberry-pi-active-cooler/documents/RP-008188-DS-2-raspberry-pi-active-cooler-product-brief.pdf) onto the processor.
+
+**Camera Integration**: Connect the two camera ribbon cables to the Pi. Keep cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable; use an extension with a dedicated FFC adapter if needed for the box camera. See the [official camera installation guide](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera).
 :::
 :::{grid-item}
 :columns: 8

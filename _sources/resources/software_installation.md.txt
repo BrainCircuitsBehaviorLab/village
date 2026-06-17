@@ -76,7 +76,13 @@ sudo apt install python3-evdev
 ```
 
 
-5. Install VS Code:
+5. Install evtest
+````
+sudo apt install evtest
+```
+
+
+6. Install VS Code:
 
 ```
 sudo apt install code
@@ -186,10 +192,10 @@ sudo nano 99-usb.rules
 3. Add the following line to the file. By targeting the serial `tty` subsystem instead of a specific naming pattern, this rule seamlessly captures both `ttyACM*` and `ttyUSB*` devices, mapping whichever device is plugged into that exact physical port to the alias `controller`:
 
 ```
-SUBSYSTEM=="tty", KERNELS=="3-1:1.0", SYMLINK+="controller"
+SUBSYSTEM=="tty", KERNELS=="1-1:1.0", SYMLINK+="controller"
 ```
 
-Note: The USB port identifier (KERNELS=="3-1:1.0") may vary depending on the physical USB port you are using. For reference, the 3-1:1.0 port on the Raspberry Pi is usually the bottom USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command `dmesg` after connecting the device.
+Note: The USB port identifier (KERNELS=="1-1:1.0") may vary depending on the physical USB port you are using. For reference, the 1-1:1.0 port on the Raspberry Pi is usually the bottom USB port next to the Ethernet connection. To confirm the exact port identifier, you can use the command `dmesg` after connecting the device.
 
 4. Activate the new rule by triggering the Udev process:
 
