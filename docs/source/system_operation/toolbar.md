@@ -17,7 +17,7 @@ By default, the system synchronizes data with an external device or server after
 ### Manually Changing States
 
 - **`GO TO WAIT STATE`**: Use this when the system believes a subject is inside the box but it is not. This can happen if a door does not close properly and the animal escapes back to the home cage without the system detecting it.
-- **`WAIT FOR SUBJECT EXIT`**: Use this when the system believes there is no subject in the box (WAIT state) but there is one. This can happen if two mice enter the operant box simultaneously and the system detects one exiting, switching to WAIT state while the other is still inside.
+- **`SUBJECT IN BOX`**: Use this when the system believes there is no subject in the box (WAIT state) but there is one. This can happen if two mice enter the operant box simultaneously and the system detects one exiting, switching to WAIT state while the other is still inside.
 
 ### Exit
 

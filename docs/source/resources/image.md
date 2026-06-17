@@ -26,4 +26,4 @@ Training Village is an open-source project. We’d be glad if you’d like to do
 
 [GITHUB]: https://github.com/BrainCircuitsBehaviorLab/village
 [IMAGER]: https://www.raspberrypi.com/software/
-[LINk]: https://drive.google.com/file/d/1_GPpJvMfvM43qBDeu-I1vmESrCpsJoe1/view?usp=sharing
+[LINK]: https://drive.google.com/file/d/1_GPpJvMfvM43qBDeu-I1vmESrCpsJoe1/view?usp=sharing

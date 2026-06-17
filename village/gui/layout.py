@@ -331,7 +331,7 @@ class Layout(QGridLayout):
         self.online_or_force_button = self.create_and_add_button(
             "ONLINE PLOTS",
             3,
-            150,
+            152,
             16,
             3,
             self.online_or_force_button_clicked,
@@ -342,8 +342,8 @@ class Layout(QGridLayout):
         self.stop_button = self.create_and_add_button(
             "",
             3,
-            166,
-            22,
+            168,
+            16,
             3,
             self.stop_button_clicked,
             "Stop a running task",
@@ -353,8 +353,8 @@ class Layout(QGridLayout):
         self.exit_button = self.create_and_add_button(
             "EXIT",
             3,
-            188,
-            12,
+            184,
+            16,
             3,
             self.exit_button_clicked,
             "Exit the application",
@@ -395,7 +395,7 @@ class Layout(QGridLayout):
             self.stop_button.setToolTip(text)
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
@@ -403,7 +403,7 @@ class Layout(QGridLayout):
             )
             self.online_or_force_button.setEnabled(False)
             self.online_or_force_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
             )
         elif manager.state.can_stop_syncing():
             self.stop_button.setText("STOP SYNC")
@@ -422,10 +422,10 @@ class Layout(QGridLayout):
             )
             self.online_or_force_button.setEnabled(False)
             self.online_or_force_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
             )
         else:
-            self.stop_button.setText("WAIT FOR SUBJECT EXIT")
+            self.stop_button.setText("SUBJECT IN BOX")
             text = (
                 "The system thinks there is no subject in the box (currently in WAIT) "
                 + "but there is one. Use this to make the system wait for the "
@@ -433,7 +433,7 @@ class Layout(QGridLayout):
             )
             self.stop_button.setToolTip(text)
             self.stop_button.setStyleSheet(
-                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
+                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
             )
             self.online_or_force_button.setText("FORCE SYNC")
             self.online_or_force_button.setToolTip(
