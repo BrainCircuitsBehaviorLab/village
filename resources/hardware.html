@@ -429,20 +429,17 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#hardware-construction">Hardware Construction</a><ul>
-<li><a class="reference internal" href="#phase-1-frame-construction">Phase 1: Frame Construction</a></li>
-<li><a class="reference internal" href="#phase-2-base-assembly">Phase 2: Base Assembly</a></li>
-<li><a class="reference internal" href="#phase-3-rfid-load-cell">Phase 3: RFID &amp; Load Cell</a></li>
-<li><a class="reference internal" href="#phase-4-servo-motors">Phase 4: Servo Motors</a></li>
-<li><a class="reference internal" href="#phase-5-illumination">Phase 5: Illumination</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#hardware-connections">Hardware Connections</a><ul>
-<li><a class="reference internal" href="#phase-1-raspberry-pi-assembly">Phase 1: Raspberry Pi Assembly</a></li>
-<li><a class="reference internal" href="#phase-2-hat-stacking">Phase 2: HAT Stacking</a></li>
-<li><a class="reference internal" href="#phase-3-peripheral-power-distribution">Phase 3: Peripheral &amp; Power Distribution</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#frame-construction">Frame Construction</a></li>
+<li><a class="reference internal" href="#base-assembly">Base Assembly</a></li>
+<li><a class="reference internal" href="#rfid-load-cell">RFID &amp; Load Cell</a></li>
+<li><a class="reference internal" href="#servo-motors">Servo Motors</a></li>
+<li><a class="reference internal" href="#illumination">Illumination</a></li>
+<li><a class="reference internal" href="#corridor-board">Corridor Board</a></li>
+<li><a class="reference internal" href="#corridor-parts">Corridor Parts</a></li>
+<li><a class="reference internal" href="#acrylic-cover">Acrylic Cover</a></li>
+<li><a class="reference internal" href="#homecages">Homecages</a></li>
+<li><a class="reference internal" href="#raspberry-pi-assembly">Raspberry Pi Assembly</a></li>
+<li><a class="reference internal" href="#corridor-camera">Corridor Camera</a></li>
 </ul>
 </div></div>
   </aside>
@@ -518,11 +515,10 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="system-assembly-guide">
 <h1>System Assembly Guide</h1>
-<section id="hardware-construction">
-<h2>Hardware Construction</h2>
-<p>You will need a few basic tools: Allen key, screwdriver, scissors, double-sided tape, and glue.</p>
-<section id="phase-1-frame-construction">
-<h3>Phase 1: Frame Construction</h3>
+<p>For the assembly of the system, you will only need a few basic tools: Allen key,
+screwdriver, scissors, double-sided tape, and glue.</p>
+<section id="frame-construction">
+<h2>Frame Construction</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
@@ -590,8 +586,9 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </section>
-<section id="phase-2-base-assembly">
-<h3>Phase 2: Base Assembly</h3>
+<hr class="docutils" />
+<section id="base-assembly">
+<h2>Base Assembly</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
@@ -606,7 +603,11 @@ data-aria-dark="Switch to auto color mode">
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>RFID Antenna Slot</strong>: This piece has an internal slot for an antenna. The RFID module used in this build has a built-in antenna, so no external one is needed. However, if using a different RFID module or an Eco-HAB to manage multiple antennas, one can be placed between these two pieces.</p>
+<p><strong>RFID Antenna Slot</strong>: This piece includes a slot designed to hold an external antenna
+between its two parts. The RFID module used in this build has a built-in antenna, so
+this slot is not needed in the standard setup. However, if you use a different RFID
+module — or an Eco-HAB to manage multiple antennas — you can insert an external
+antenna here.</p>
 </div>
 <div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
 <a class="reference internal image-reference" href="../_images/base2.png"><img alt="../_images/base2.png" src="../_images/base2.png" style="width: 100%;" />
@@ -648,8 +649,9 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </section>
-<section id="phase-3-rfid-load-cell">
-<h3>Phase 3: RFID &amp; Load Cell</h3>
+<hr class="docutils" />
+<section id="rfid-load-cell">
+<h2>RFID &amp; Load Cell</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
@@ -708,7 +710,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Final Result</strong>: The completed assembly with both sensors in place.</p>
+<p><strong>Cable Management</strong>: Attach the two plastic cable guides to the base using double-sided tape, as shown in the image. This completes the assembly with both sensors in place.</p>
 </div>
 <div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
 <a class="reference internal image-reference" href="../_images/rfid6.png"><img alt="../_images/rfid6.png" src="../_images/rfid6.png" style="width: 100%;" />
@@ -717,8 +719,9 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </section>
-<section id="phase-4-servo-motors">
-<h3>Phase 4: Servo Motors</h3>
+<hr class="docutils" />
+<section id="servo-motors">
+<h2>Servo Motors</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
@@ -764,8 +767,9 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </section>
-<section id="phase-5-illumination">
-<h3>Phase 5: Illumination</h3>
+<hr class="docutils" />
+<section id="illumination">
+<h2>Illumination</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
@@ -822,16 +826,176 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </section>
+<hr class="docutils" />
+<section id="corridor-board">
+<h2>Corridor Board</h2>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components</strong>: Corridor Board and an Ethernet cable.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/corridor_connections1.png"><img alt="../_images/corridor_connections1.png" src="../_images/corridor_connections1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Peripheral Connections</strong>: Mount the Corridor Board in its fixed position on the physical
+corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale
+(load cell), white LED strips, and IR illumination LEDs. Always verify wiring polarities
+against the board’s silk-screen labels before insertion. Finally, connect an Ethernet
+cable to link this board to the main Raspberry Pi board.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/corridor_connections2.png"><img alt="../_images/corridor_connections2.png" src="../_images/corridor_connections2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Enclosure Closure</strong>: Once all connections are made, place the cover to close the enclosure housing the Corridor Board, and cover the cable guides as well.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/corridor_connections3.png"><img alt="../_images/corridor_connections3.png" src="../_images/corridor_connections3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
 </section>
 <hr class="docutils" />
-<section id="hardware-connections">
-<h2>Hardware Connections</h2>
+<section id="corridor-parts">
+<h2>Corridor Parts</h2>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components</strong>: The corridor is made up of 5 3D-printed parts.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/corridor_parts1.png"><img alt="../_images/corridor_parts1.png" src="../_images/corridor_parts1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Scale Cover</strong>: Start by fitting the piece that covers the scale — it simply clicks onto the base.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/corridor_parts2.png"><img alt="../_images/corridor_parts2.png" src="../_images/corridor_parts2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Remaining Parts</strong>: Place the remaining corridor pieces onto their bases.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/corridor_parts3.png"><img alt="../_images/corridor_parts3.png" src="../_images/corridor_parts3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="acrylic-cover">
+<h2>Acrylic Cover</h2>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components</strong>: A transparent acrylic cover and 4 transparent acrylic stoppers.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/cover1.png"><img alt="../_images/cover1.png" src="../_images/cover1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Cover Installation</strong>: Slide the cover in from one side until it clicks into position.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/cover2.png"><img alt="../_images/cover2.png" src="../_images/cover2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Stoppers</strong>: Place all 4 stoppers in their designated positions on top of the cover. This is important — they prevent an animal from pushing the cover up and lifting it off.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/cover3.png"><img alt="../_images/cover3.png" src="../_images/cover3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="homecages">
+<h2>Homecages</h2>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components &amp; Drilling</strong>: 2 homecages, an acrylic tube, and 5 3D-printed connectors. Use a hole saw to drill 3 cm diameter circular openings in the positions shown. Both homecages need a centered hole on one side to connect them to each other. The homecage that connects to the corridor needs an additional hole on another side, offset slightly so that the assembly sits correctly on the base when connected.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/homecages1.png"><img alt="../_images/homecages1.png" src="../_images/homecages1.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Connector Bonding</strong>: Glue the 3D-printed connectors onto the homecages.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/homecages2.png"><img alt="../_images/homecages2.png" src="../_images/homecages2.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Tube Assembly</strong>: Attach the pieces that support the acrylic tube to the homecage connectors, then insert the tube between them.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/homecages3.png"><img alt="../_images/homecages3.png" src="../_images/homecages3.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Final Placement</strong>: Place the homecages onto the base and connect them to the corridor.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/homecages4.png"><img alt="../_images/homecages4.png" src="../_images/homecages4.png" style="width: 100%;" />
+</a>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="raspberry-pi-assembly">
+<h2>Raspberry Pi Assembly</h2>
 <div class="warning admonition">
 <p class="admonition-title">CRITICAL POWER &amp; WIRING WARNING</p>
 <p>Never hot-plug peripherals: ensure the main power supply is completely disconnected before plugging or unplugging any HAT, board, servo, or sensor.</p>
 </div>
-<section id="phase-1-raspberry-pi-assembly">
-<h3>Phase 1: Raspberry Pi Assembly</h3>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
@@ -856,9 +1020,6 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
-</section>
-<section id="phase-2-hat-stacking">
-<h3>Phase 2: HAT Stacking</h3>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
@@ -904,18 +1065,20 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </section>
-<section id="phase-3-peripheral-power-distribution">
-<h3>Phase 3: Peripheral &amp; Power Distribution</h3>
+<hr class="docutils" />
+<section id="corridor-camera">
+<h2>Corridor Camera</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Corridor Board Setup</strong>: Mount the Corridor Board in its fixed position on the physical corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale (load cell), white LED strips, and IR illumination LEDs. Always verify wiring polarities against the board silk-screen before insertion.</p>
+<p><strong>Camera Mounting</strong>: Place the corridor camera onto its mount above the corridor and secure it with the 3D-printed plastic cover.</p>
 </div>
 <div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="reference internal image-reference" href="../_images/final.png"><img alt="../_images/final.png" src="../_images/final.png" style="width: 100%;" />
+</a>
 </div>
 </div>
 </div>
-</section>
 </section>
 </section>
 
@@ -956,11 +1119,11 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1e7422ae"></script>
+      <script src="../_static/documentation_options.js?v=7da7dab4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=712293c8"></script></body>
+      <script src="../_static/lightbox.js"></script></body>
 </html>

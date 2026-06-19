@@ -1,10 +1,9 @@
 ## System Assembly Guide
 
-### Hardware Construction
+For the assembly of the system, you will only need a few basic tools: Allen key,
+screwdriver, scissors, double-sided tape, and glue.
 
-You will need a few basic tools: Allen key, screwdriver, scissors, double-sided tape, and glue.
-
-#### Phase 1: Frame Construction
+### Frame Construction
 
 ::::{grid} 2
 :::{grid-item}
@@ -32,7 +31,6 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 :::
 ::::
 
-
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
@@ -58,7 +56,6 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 ```
 :::
 ::::
-
 
 ::::{grid} 2
 :::{grid-item}
@@ -86,8 +83,9 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 :::
 ::::
 
+---
 
-#### Phase 2: Base Assembly
+### Base Assembly
 
 ::::{grid} 2
 :::{grid-item}
@@ -105,7 +103,11 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**RFID Antenna Slot**: This piece has an internal slot for an antenna. The RFID module used in this build has a built-in antenna, so no external one is needed. However, if using a different RFID module or an Eco-HAB to manage multiple antennas, one can be placed between these two pieces.
+**RFID Antenna Slot**: This piece includes a slot designed to hold an external antenna
+between its two parts. The RFID module used in this build has a built-in antenna, so
+this slot is not needed in the standard setup. However, if you use a different RFID
+module — or an Eco-HAB to manage multiple antennas — you can insert an external
+antenna here.
 :::
 :::{grid-item}
 :columns: 8
@@ -154,8 +156,9 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 :::
 ::::
 
+---
 
-#### Phase 3: RFID & Load Cell
+### RFID & Load Cell
 
 ::::{grid} 2
 :::{grid-item}
@@ -225,7 +228,7 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**Final Result**: The completed assembly with both sensors in place.
+**Cable Management**: Attach the two plastic cable guides to the base using double-sided tape, as shown in the image. This completes the assembly with both sensors in place.
 :::
 :::{grid-item}
 :columns: 8
@@ -235,7 +238,9 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 :::
 ::::
 
-#### Phase 4: Servo Motors
+---
+
+### Servo Motors
 
 ::::{grid} 2
 :::{grid-item}
@@ -289,8 +294,9 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 :::
 ::::
 
+---
 
-#### Phase 5: Illumination
+### Illumination
 
 ::::{grid} 2
 :::{grid-item}
@@ -359,14 +365,201 @@ You will need a few basic tools: Allen key, screwdriver, scissors, double-sided 
 
 ---
 
-### Hardware Connections
+### Corridor Board
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Components**: Corridor Board and an Ethernet cable.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/corridor_connections1.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Peripheral Connections**: Mount the Corridor Board in its fixed position on the physical
+corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale
+(load cell), white LED strips, and IR illumination LEDs. Always verify wiring polarities
+against the board's silk-screen labels before insertion. Finally, connect an Ethernet
+cable to link this board to the main Raspberry Pi board.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/corridor_connections2.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Enclosure Closure**: Once all connections are made, place the cover to close the enclosure housing the Corridor Board, and cover the cable guides as well.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/corridor_connections3.png
+:width: 100%
+```
+:::
+::::
+
+---
+
+### Corridor Parts
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Components**: The corridor is made up of 5 3D-printed parts.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/corridor_parts1.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Scale Cover**: Start by fitting the piece that covers the scale — it simply clicks onto the base.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/corridor_parts2.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Remaining Parts**: Place the remaining corridor pieces onto their bases.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/corridor_parts3.png
+:width: 100%
+```
+:::
+::::
+
+---
+
+### Acrylic Cover
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Components**: A transparent acrylic cover and 4 transparent acrylic stoppers.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/cover1.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Cover Installation**: Slide the cover in from one side until it clicks into position.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/cover2.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Stoppers**: Place all 4 stoppers in their designated positions on top of the cover. This is important — they prevent an animal from pushing the cover up and lifting it off.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/cover3.png
+:width: 100%
+```
+:::
+::::
+
+---
+
+### Homecages
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Components & Drilling**: 2 homecages, an acrylic tube, and 5 3D-printed connectors. Use a hole saw to drill 3 cm diameter circular openings in the positions shown. Both homecages need a centered hole on one side to connect them to each other. The homecage that connects to the corridor needs an additional hole on another side, offset slightly so that the assembly sits correctly on the base when connected.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/homecages1.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Connector Bonding**: Glue the 3D-printed connectors onto the homecages.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/homecages2.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Tube Assembly**: Attach the pieces that support the acrylic tube to the homecage connectors, then insert the tube between them.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/homecages3.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
+**Final Placement**: Place the homecages onto the base and connect them to the corridor.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/homecages4.png
+:width: 100%
+```
+:::
+::::
+
+---
+
+### Raspberry Pi Assembly
 
 ```{admonition} CRITICAL POWER & WIRING WARNING
 :class: warning
 Never hot-plug peripherals: ensure the main power supply is completely disconnected before plugging or unplugging any HAT, board, servo, or sensor.
 ```
-
-#### Phase 1: Raspberry Pi Assembly
 
 ::::{grid} 2
 :::{grid-item}
@@ -397,8 +590,6 @@ Never hot-plug peripherals: ensure the main power supply is completely disconnec
 ```
 :::
 ::::
-
-#### Phase 2: HAT Stacking
 
 ::::{grid} 2
 :::{grid-item}
@@ -452,14 +643,19 @@ Never hot-plug peripherals: ensure the main power supply is completely disconnec
 :::
 ::::
 
-#### Phase 3: Peripheral & Power Distribution
+---
+
+### Corridor Camera
 
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
-**Corridor Board Setup**: Mount the Corridor Board in its fixed position on the physical corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale (load cell), white LED strips, and IR illumination LEDs. Always verify wiring polarities against the board silk-screen before insertion.
+**Camera Mounting**: Place the corridor camera onto its mount above the corridor and secure it with the 3D-printed plastic cover.
 :::
 :::{grid-item}
 :columns: 8
+```{image} /_static/final.png
+:width: 100%
+```
 :::
 ::::
