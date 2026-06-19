@@ -1,5 +1,6 @@
-## System Assembly Guide
+## Assembly Guide
 
+This is a guide for assembling the standard 2-homecage version (without Eco-HAB).
 For the assembly of the system, you will only need a few basic tools: Allen key,
 screwdriver, scissors, double-sided tape, and glue.
 

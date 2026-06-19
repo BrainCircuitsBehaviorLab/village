@@ -11,3 +11,5 @@ HARDWARE RESOURCES
 
     resources/list_of_parts.md
     resources/hardware.md
+    resources/hardware_large.md
+    resources/hardware_rats.md
