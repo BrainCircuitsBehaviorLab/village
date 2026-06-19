@@ -80,8 +80,18 @@
 <strong>bioRxiv</strong>. <a href="https://doi.org/10.64898/2026.01.12.698970">https://doi.org/10.64898/2026.01.12.698970</a></p>
 </div>
 
-<!-- ── SECTION 8: About the Project ── -->
+
+
+<!-- ── SECTION 8: Source Code ── -->
 <div class="full-bleed" style="background: #f7f5ff; padding: 2rem 2rem 1.5rem 2rem; margin-bottom: 4px;">
+<div style="padding: 2.5rem 2rem; margin-bottom: 4px;">
+<h1 style="font-size: 1.6rem;">Source Code</h1>
+<p>Training Village is fully open-source. We’d be glad if you’d like to download, collaborate, or report issues on our <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub page</a>.</p>
+</div>
+
+
+
+<!-- ── SECTION 9: About the Project ── -->
 <p><strong>Developed by:</strong></p>
 <a href="https://braincircuitsbehavior.org"
 style="color:#8B00FF; font-size:24px; font-weight:normal;
