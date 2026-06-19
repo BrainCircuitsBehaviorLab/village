@@ -156,8 +156,11 @@ class CameraDrawBase:
             cam.timing = 0
 
         text_trial = "trial: " + str(cam.trial) if cam.trial != 0 else ""
-        text_filename = cam.filename if cam.filename != "" else "No task running"
-        text1 = text_filename + "  " + text_trial + "  " + cam.annotation
+        if cam.name == "CORRIDOR":
+            text_first = time_utils.now_string()
+        else:
+            text_first = cam.filename if cam.filename != "" else "No task running"
+        text1 = text_first + "  " + text_trial + "  " + cam.annotation
         text2 = (
             time_utils.format_duration(cam.timing) + "  frame: " + str(cam.frame_number)
         )
