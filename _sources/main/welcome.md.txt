@@ -83,15 +83,15 @@
 
 
 <!-- ── SECTION 8: Source Code ── -->
-<div class="full-bleed" style="background: #f7f5ff; padding: 2rem 2rem 1.5rem 2rem; margin-bottom: 4px;">
-<div style="padding: 2.5rem 2rem; margin-bottom: 4px;">
+<div class="full-bleed" style="background: #f7f5ff; padding: 2.5rem 2rem; margin-bottom: 4px;">
 <h1 style="font-size: 1.6rem;">Source Code</h1>
-<p>Training Village is fully open-source. We’d be glad if you’d like to download, collaborate, or report issues on our <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub page</a>.</p>
+<p>Training Village is fully open-source. You are welcome to explore the code, contribute, or report issues on our <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub page</a>.</p>
 </div>
 
 
 
 <!-- ── SECTION 9: About the Project ── -->
+<div style="padding: 2.5rem 2rem; margin-bottom: 4px;">
 <p><strong>Developed by:</strong></p>
 <a href="https://braincircuitsbehavior.org"
 style="color:#8B00FF; font-size:24px; font-weight:normal;
@@ -103,4 +103,5 @@ BRAIN CIRCUITS AND BEHAVIOR LAB
   <img src="_static/AEI.png" alt="AEI logo" style="height: 70px;">
   <img src="_static/ERC.png" alt="ERC logo" style="height: 70px;">
   <img src="_static/CELLEX.png" alt="Cellex logo" style="height: 70px;">
+</div>
 </div>
