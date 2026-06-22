@@ -28,9 +28,7 @@ except Exception:
     _BLEAK_AVAILABLE = False
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_BRAIN_MAP_PATH = os.path.normpath(
-    os.path.join(_HERE, "..", "optogrid-manager", "dashboard", "brainmap.png")
-)
+_BRAIN_MAP_PATH = os.path.join(_HERE, "brainmap.png")
 
 _PARAM_LABELS: dict[str, tuple[str, str]] = {
     "sequence_length": ("Sequence Length", "count"),

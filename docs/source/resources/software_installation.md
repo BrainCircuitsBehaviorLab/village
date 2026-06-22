@@ -77,7 +77,8 @@ sudo apt install python3-evdev
 
 
 5. Install evtest
-````
+
+```
 sudo apt install evtest
 ```
 

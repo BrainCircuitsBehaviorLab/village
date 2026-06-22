@@ -1,4 +1,4 @@
-## List of Parts
+## List of Parts & Design Files
 
 Below are the detailed component lists required to print, source, and assemble the Training Village system.
 
