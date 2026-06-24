@@ -27,7 +27,10 @@ The system features universal operant box compatibility. While it natively commu
 
 Thanks to high-speed communication between the Raspberry Pi and the behavioral controller (if used), experimental workloads are efficiently split between the two devices:
 
-*   **The Raspberry Pi** handles heavy computational and multimedia tasks, such as real-time position monitoring via video-tracking, triggering localized sound or video playback based on events or animal coordinates, managing LED matrices, or driving servo motors.
+*   **The Raspberry Pi** handles heavy computational and multimedia tasks, such as
+real-time position monitoring via video-tracking, triggering localized sound or video
+playback based on events or animal coordinates, and managing LEDs and servo motors.
+
 *   **The Behavioral Controller (Bpod/Arduino)** can be used for time-critical or high-precision events, such as photogate detection, delivering water rewards at a behavioral port, or sending rapid TTL signals to external hardware like optogenetic lasers.
 
 A custom main HAT is mounted onto the Raspberry Pi 5 to handle power and data distribution. It receives a 5V power supply and utilizes two Ethernet ports to safely bridge both power and data to two specialized satellite boards.
@@ -44,7 +47,7 @@ Controls the following peripherals installed in the corridor:
   <li><strong>RFID Reader:</strong> Used in tandem with the video camera to reliably identify individual animals.</li>
   <li><strong>Weighing Scale:</strong> Features an integrated load cell within the corridor to automatically weigh animals as they return to their home cages.</li>
   <li><strong>Visible &amp; Infrared (IR) Lighting:</strong> Manages a 12:12h day/night cycle to safeguard animal welfare while providing IR night-vision for the cameras during dark phases.</li>
-  <li><strong>2 Servo Motors:</strong> Controls the corridor doors providing automated access to the operant box.</li>
+<li><strong>3 Servo Motors:</strong> Two control the corridor doors, providing automated access to the operant box. A third is available for custom use in the home cages (for example, blocking or releasing access to a water bottle).</li>
   <li><strong>Integrated Ambient Temperature Sensor:</strong> Continuously monitors the corridor environment.</li>
 </ul>
 </td>
@@ -64,9 +67,11 @@ Controls the following peripherals installed in the corridor:
 <td style="width:70%; vertical-align:top; padding-right:2em; border:none;">
 Features optional connectors for the user to utilize as needed:
 <ul>
-  <li><strong>2 Servo Motor Connectors:</strong> For managing mechanisms inside the box.</li>
+  <li><strong>5 Servo Motor Connectors:</strong> For managing mechanisms inside the box.</li>
   <li><strong>Internal Visible &amp; Infrared (IR) Lighting Connectors:</strong> To provide illumination inside the box.</li>
   <li><strong>Addressable/Programmable LED Connector:</strong> To connect programmable LED strips or matrices, specifically dedicated to delivering precise visual stimuli during tasks.</li>
+  <li><strong>Integrated Sound Amplifier:</strong> Standard passive speakers cannot be driven directly from the Raspberry Pi DAC RCA output. For convenience, the system features a built-in sound amplifier with a flat frequency response; this allows researchers to route the DAC's RCA output directly into the box board and connect passive 4 to 8 Ohm speakers directly to it.</li>
+
 </ul>
 </td>
 <td style="width:30%; vertical-align:top; border:none;">

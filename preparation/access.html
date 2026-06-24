@@ -524,9 +524,14 @@ data-aria-dark="Switch to auto color mode">
 <p>AnyDesk is highly reliable, easy to deploy, and its free tier is fully sufficient for lab operations.</p>
 <section id="from-your-raspberry-pi-5">
 <h3>From your Raspberry Pi 5:</h3>
-<ol class="arabic simple">
+<ol class="arabic">
 <li><p>Open the web browser on your Raspberry Pi, go to the AnyDesk download page, and download the <strong>Raspberry Pi / Debian (64-bit / ARM64)</strong> <code class="docutils literal notranslate"><span class="pre">.deb</span></code> package.</p></li>
-<li><p>Install the downloaded package by double-clicking it or using the terminal.</p></li>
+<li><p>Open a terminal and install it with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">~/</span><span class="n">Downloads</span><span class="o">/</span><span class="n">anydesk_</span><span class="o">*.</span><span class="n">deb</span>
+</span></pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">anydesk_*.deb</span></code> with the exact filename if needed (e.g. <code class="docutils literal notranslate"><span class="pre">anydesk_6.4.2-1_arm64.deb</span></code>).</p>
+</li>
 <li><p>Launch AnyDesk and write down the unique <strong>AnyDesk Address</strong> assigned to your device.</p></li>
 <li><p>Navigate to <em>Settings → Access</em>, then look for <strong>Unattended Access</strong>. Check the option to enable it and set a secure password. This allows authorized lab members to connect remotely at any time without needing someone to manually accept the incoming request on the Pi.</p></li>
 </ol>
@@ -615,7 +620,7 @@ Our system explicitly runs on an <strong>X11 display server</strong> instead of 
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4a9dbf69"></script>
+      <script src="../_static/documentation_options.js?v=9d8f3182"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

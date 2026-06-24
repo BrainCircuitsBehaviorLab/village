@@ -565,6 +565,19 @@ Never hot-plug peripherals: ensure the main power supply is completely disconnec
 ::::{grid} 2
 :::{grid-item}
 :columns: 4
+**Components**: Boards, cameras and accessories required for the Raspberry Pi assembly.
+:::
+:::{grid-item}
+:columns: 8
+```{image} /_static/boards0.png
+:width: 100%
+```
+:::
+::::
+
+::::{grid} 2
+:::{grid-item}
+:columns: 4
 **Storage**: Insert the pre-loaded microSD card into the Raspberry Pi 5 slot.
 
 **Cooling**: Securely mount the [official Active Cooler](https://pip-assets.raspberrypi.com/categories/993-raspberry-pi-active-cooler/documents/RP-008188-DS-2-raspberry-pi-active-cooler-product-brief.pdf) onto the processor.
