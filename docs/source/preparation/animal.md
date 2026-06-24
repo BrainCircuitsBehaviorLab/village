@@ -17,10 +17,25 @@ Move the animals to the TV room. Handle them while offering rewards (5-10 minute
 Handle the animals while offering rewards. Record their weights. Implant them with the microtransponder.
 
 **Day 3:**
-Handle the animals while offering rewards. Record their weights. Place them in the TV home-cages with the doors giving access to the operant box closed. Begin water restriction by providing 2.5% citric acid (CA) in their water bottle.
+Handle the animals while offering rewards. Record their weights. Place the animals in the Training Village home-cages and begin water restriction by providing 2.5% citric acid (CA) in their water bottle. At this stage, corridor access is not yet open: one of the 3D-printed plastic pieces (visible in the image below) acts as a blocker, sealing the home-cage exit toward the corridor. This piece will be removed on Day 4.
+
+::::{grid} 2
+:::{grid-item}
+:columns: 8
+```{image} /_static/stoppers.png
+:width: 100%
+```
+:::
+:::{grid-item}
+:columns: 4
+The blocker piece fits over the home-cage opening, preventing animals from entering the corridor while still allowing them to settle into their new environment.
+:::
+::::
 
 **Day 4:**
-Open the access to the operant box.
+Remove the blocker piece from each home-cage opening to grant animals access to the corridor. Door 1 will remain open, while Door 2 remains closed. With the RFID reader active, any detected animal will be granted access to the operant box automatically.
+
+Before this step, make sure all animals have been registered in the system with their corresponding RFID code — see [Subject Management](../system_operation/subject.md) for instructions on how to add subjects.
 
 ```{admonition} Notes on the CA:
 :class: tip

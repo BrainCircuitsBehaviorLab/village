@@ -328,26 +328,30 @@ class Layout(QGridLayout):
         self.calibration_button = NavTabProxy(self.nav_tab_bar, 5)
         self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
-        self.online_or_force_button = self.create_and_add_button(
-            "ONLINE PLOTS",
-            3,
-            152,
-            16,
-            3,
-            self.online_or_force_button_clicked,
-            "Show live plots while a task is running",
-            "lightgray",
+        self.state_label = self.create_and_add_label(
+            "", 3, 120, 32, 3, "black", right_aligment=True
         )
 
         self.stop_button = self.create_and_add_button(
             "",
             3,
-            168,
+            152,
             16,
             3,
             self.stop_button_clicked,
-            "Stop a running task",
-            "lightcoral",
+            "",
+            "lightgray",
+        )
+
+        self.online_or_force_button = self.create_and_add_button(
+            "ONLINE PLOTS",
+            3,
+            168,
+            16,
+            3,
+            self.online_button_clicked,
+            "Show live plots while a task is running",
+            "lightgray",
         )
 
         self.exit_button = self.create_and_add_button(
@@ -369,86 +373,68 @@ class Layout(QGridLayout):
             "QToolTip {background-color: white; color: black;"
             " font-size: 10pt; padding: 4px}"
         )
+        _red = "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
+        _gray = "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
+        _off = (
+            "QPushButton {background-color: #e0e0e0; font-weight: bold;"
+            " color: #999999}" + _tt
+        )
         manager.update_text()
         self.status_label.setText(manager.text)
-        if manager.state.task_is_running():
-            self.stop_button.setText("STOP TASK")
-            self.stop_button.setToolTip("Stop a running task")
-            self.stop_button.setEnabled(True)
-            self.stop_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
-            )
-            self.online_or_force_button.setText("ONLINE PLOTS")
-            self.online_or_force_button.setToolTip(
-                "Show live plots while a task is running"
-            )
-            self.online_or_force_button.setEnabled(True)
-            self.online_or_force_button.setStyleSheet(
-                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
-            )
-        elif manager.state.can_go_to_wait():
-            self.stop_button.setText("GO TO WAIT STATE")
-            text = (
-                "The system thinks there is a subject in the box, but there isn't. "
-                + "Use this to return to WAIT state."
-            )
-            self.stop_button.setToolTip(text)
-            self.stop_button.setEnabled(True)
-            self.stop_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
-            )
-            self.online_or_force_button.setText("FORCE SYNC")
-            self.online_or_force_button.setToolTip(
-                "Force synchronisation with external device or server"
-            )
-            self.online_or_force_button.setEnabled(False)
-            self.online_or_force_button.setStyleSheet(
-                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
-            )
-        elif manager.state.can_stop_syncing():
-            self.stop_button.setText("STOP SYNC")
-            text = (
-                "Stop data synchronization. Sync will resume automatically after "
-                + "the next session."
-            )
-            self.stop_button.setToolTip(text)
-            self.stop_button.setEnabled(True)
-            self.stop_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
-            )
-            self.online_or_force_button.setText("FORCE SYNC")
-            self.online_or_force_button.setToolTip(
-                "Force synchronisation with external device or server"
-            )
-            self.online_or_force_button.setEnabled(False)
-            self.online_or_force_button.setStyleSheet(
-                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
-            )
-        else:
-            self.stop_button.setText("SUBJECT IN BOX")
-            text = (
-                "The system thinks there is no subject in the box (currently in WAIT) "
-                + "but there is one. Use this to make the system wait for the "
-                + "subject to exit."
-            )
-            self.stop_button.setToolTip(text)
-            self.stop_button.setStyleSheet(
-                "QPushButton {background-color: lightcoral; font-weight: bold}" + _tt
-            )
-            self.online_or_force_button.setText("FORCE SYNC")
-            self.online_or_force_button.setToolTip(
-                "Force synchronisation with external device or server"
-            )
-            self.online_or_force_button.setStyleSheet(
-                "QPushButton {background-color: lightgray; font-weight: bold}" + _tt
-            )
 
-            if manager.state == State.WAIT:
-                self.stop_button.setEnabled(True)
-                self.online_or_force_button.setEnabled(True)
-            else:
-                self.stop_button.setEnabled(False)
-                self.online_or_force_button.setEnabled(False)
+        state = manager.state
+        if state == State.RUN_MANUAL:
+            self.state_label.setText("Manual task running")
+            self.stop_button.setText("STOP TASK")
+            self.stop_button.setToolTip("Stop the running task")
+            self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(_red)
+            self.online_or_force_button.setEnabled(True)
+            self.online_or_force_button.setStyleSheet(_gray)
+        elif state.task_is_running():
+            self.state_label.setText("Auto task running")
+            self.stop_button.setText("STOP TASK")
+            self.stop_button.setToolTip("Stop the running task")
+            self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(_red)
+            self.online_or_force_button.setEnabled(True)
+            self.online_or_force_button.setStyleSheet(_gray)
+        elif state == State.WAIT_EXIT:
+            self.state_label.setText("Task finished — subject still inside")
+            self.stop_button.setText("CHANGE STATE")
+            self.stop_button.setToolTip("Open options to change the system state")
+            self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(_gray)
+            self.online_or_force_button.setEnabled(False)
+            self.online_or_force_button.setStyleSheet(_off)
+        elif state.can_stop_syncing():
+            self.state_label.setText("Syncing data")
+            self.stop_button.setText("STOP SYNC")
+            self.stop_button.setToolTip(
+                "Stop synchronization. It will resume automatically"
+                " after the next session."
+            )
+            self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(_red)
+            self.online_or_force_button.setEnabled(False)
+            self.online_or_force_button.setStyleSheet(_off)
+        elif state == State.WAIT:
+            self.state_label.setText("Waiting for subject")
+            self.stop_button.setText("CHANGE STATE")
+            self.stop_button.setToolTip("Open options to change the system state")
+            self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet(_gray)
+            self.online_or_force_button.setEnabled(False)
+            self.online_or_force_button.setStyleSheet(_off)
+        else:
+            self.state_label.setText("")
+            self.stop_button.setText("")
+            self.stop_button.setEnabled(False)
+            self.stop_button.setStyleSheet(_off)
+            self.online_or_force_button.setEnabled(False)
+            self.online_or_force_button.setStyleSheet(_off)
+
+        self.online_or_force_button.setText("ONLINE PLOTS")
 
     def exit_button_clicked(self) -> None:
         """Handles exit button click, confirming exit and saving data if needed."""
@@ -620,8 +606,9 @@ class Layout(QGridLayout):
                 )
 
     def stop_button_clicked(self) -> None:
-        """Handles stop button click to stop tasks, sync, or reset state."""
-        if manager.state.task_is_running():
+        """Handles stop button click based on current button text."""
+        btn_text = self.stop_button.text()
+        if btn_text == "STOP TASK":
             if manager.state == State.RUN_MANUAL:
                 log.info("Task manually stopped.", subject=manager.subject.name)
                 manager.state = State.SAVE_MANUAL
@@ -632,16 +619,50 @@ class Layout(QGridLayout):
                 )
                 manager.state = State.OPEN_DOOR2_STOP
                 log.info("Going to OPEN_DOOR2_STOP State")
-        elif manager.state.can_go_to_wait():
-            manager.getting_weights = False
-            manager.state = State.WAIT
-            log.info("Going to WAIT State")
-        elif manager.state.can_stop_syncing():
+        elif btn_text == "STOP SYNC":
             manager.after_session.cancel_event.set()
-        elif manager.state == State.WAIT:
-            manager.state = State.WAIT_EXIT
-            log.info("Going to WAIT_EXIT State")
+        elif btn_text == "CHANGE STATE":
+            self._change_state_dialog()
+            return
         self.update_gui()
+
+    def _change_state_dialog(self) -> None:
+        """Opens a dialog with state-correction options based on the current state."""
+        label = self.state_label.text()
+        msg = QMessageBox(self.window)
+        msg.setWindowTitle("Change State")
+
+        if label == "Task finished — subject still inside":
+            msg.setText(
+                "The system thinks there is a subject in the box, but there isn't."
+            )
+            go_wait = msg.addButton("GO TO WAIT STATE", QMessageBox.AcceptRole)
+            msg.addButton("Cancel", QMessageBox.RejectRole)
+            msg.exec_()
+            if msg.clickedButton() == go_wait:
+                manager.getting_weights = False
+                manager.state = State.WAIT
+                log.info("Going to WAIT State")
+                self.update_gui()
+
+        elif label == "Waiting for subject":
+            msg.setText("Select an action:")
+            force_sync = msg.addButton("Force data sync", QMessageBox.AcceptRole)
+            subject_inside = msg.addButton(
+                "Subject is inside the box", QMessageBox.AcceptRole
+            )
+            msg.addButton("Cancel", QMessageBox.RejectRole)
+            msg.exec_()
+            if msg.clickedButton() == force_sync:
+                manager.detection_change = True
+                manager.after_session_flag = True
+                manager.state = State.SYNC
+                log.info("Going to SYNC State")
+                self.update_gui()
+            elif msg.clickedButton() == subject_inside:
+                manager.state = State.WAIT_EXIT
+                log.info("Going to WAIT_EXIT State")
+                self.update_gui()
 
     def close_online_plot_window(self) -> None:
         """Closes the online plot window if it is open."""
@@ -650,37 +671,30 @@ class Layout(QGridLayout):
         except Exception:
             pass
 
-    def online_or_force_button_clicked(self) -> None:
+    def online_button_clicked(self) -> None:
         """Handles the online plots button click to show or update the plot window."""
-        if manager.state == State.WAIT:
-            manager.detection_change = True
-            manager.state = State.SYNC
-            manager.after_session_flag = True
-            log.info("Going to SYNC State")
-            manager.state = State.SYNC
-        else:
-            try:
-                manager.online_plot.update_canvas(manager.task.session_df)
-            except Exception:
-                log.error(
-                    "Error in online plot",
-                    subject=manager.subject.name,
-                    exception=traceback.format_exc(),
-                )
+        try:
+            manager.online_plot.update_canvas(manager.task.session_df)
+        except Exception:
+            log.error(
+                "Error in online plot",
+                subject=manager.subject.name,
+                exception=traceback.format_exc(),
+            )
 
-            if not manager.online_plot.active:
-                manager.online_plot.active = True
-                manager.online_plot.update_canvas(manager.task.session_df.copy())
-                geom = (
-                    self.column_width * 10,
-                    self.row_height * 5,
-                    self.column_width * 62,
-                    self.row_height * 20,
-                )
-                custom_geom = getattr(manager.online_plot, "window_geometry", None)
-                self.plot_dialog: OnlinePlotDialog = OnlinePlotDialog()
-                self.plot_dialog.setGeometry(*(custom_geom or geom))
-                self.plot_dialog.show()
+        if not manager.online_plot.active:
+            manager.online_plot.active = True
+            manager.online_plot.update_canvas(manager.task.session_df.copy())
+            geom = (
+                self.column_width * 10,
+                self.row_height * 5,
+                self.column_width * 62,
+                self.row_height * 20,
+            )
+            custom_geom = getattr(manager.online_plot, "window_geometry", None)
+            self.plot_dialog: OnlinePlotDialog = OnlinePlotDialog()
+            self.plot_dialog.setGeometry(*(custom_geom or geom))
+            self.plot_dialog.show()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         """Ignores the close event to prevent closing the layout directly."""

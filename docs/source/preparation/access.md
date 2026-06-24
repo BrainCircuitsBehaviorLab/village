@@ -12,7 +12,11 @@ AnyDesk is highly reliable, easy to deploy, and its free tier is fully sufficien
 
 #### From your Raspberry Pi 5:
 1. Open the web browser on your Raspberry Pi, go to the AnyDesk download page, and download the **Raspberry Pi / Debian (64-bit / ARM64)** `.deb` package.
-2. Install the downloaded package by double-clicking it or using the terminal.
+2. Open a terminal and install it with:
+   ```
+   sudo apt install ~/Downloads/anydesk_*.deb
+   ```
+   Replace `anydesk_*.deb` with the exact filename if needed (e.g. `anydesk_6.4.2-1_arm64.deb`).
 3. Launch AnyDesk and write down the unique **AnyDesk Address** assigned to your device.
 4. Navigate to *Settings → Access*, then look for **Unattended Access**. Check the option to enable it and set a secure password. This allows authorized lab members to connect remotely at any time without needing someone to manually accept the incoming request on the Pi.
 

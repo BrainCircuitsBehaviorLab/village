@@ -50,9 +50,6 @@ Finally, we are currently exploring the compatibility of our system with the wir
 - **What is the maximum number of animals I can house in the Training Village and why?**<br>The number of mice you can house in the system depends on the number of cages you connect and the amount of time you need your animals to run the task every day. Assuming you connect four type-500 mouse cages (220 x 220 x 145 mm) you could in principle house up to 4 x 4 = 16 mice. However, if you aim that your animals run your task for about 90-120 mins every day (e.g. 3 sessions of ~30-40 mins), having more than 10-12 mice would be too much. A good indicator of whether the operant box is “too occupied” implying that mice are not doing as many sessions as they would if they had more access is the percentage
 <br><br>
 
-- **What is approximately the cost of all the pieces of the Training Village?**<br>The cost of 3D-printing the corridor parts, plus the Raspberry Pi and peripherals (2 cameras, RFID reader, scale, temperature sensor, etc) is around 1500€. Esto no incluye la operant box, cuyo precio puede variar enormemente dependiendo del behavior contralador que se use, si se usa touchscreen o no...
-<br><br>
-
 - **What is the approximate cost of all the components for the Training Village?**<br>The total cost for the complete bill of materials—including the 3D-printed corridor parts, the Raspberry Pi 5, and all essential peripherals (two cameras, RFID reader, weighing scale, temperature sensor, etc.)—is approximately €1,500. Please note that this estimate excludes the operant chamber itself. The final cost of the operant box can vary significantly depending on your choice of behavioral controller, whether a touchscreen interface is required, and the specific sensory stimuli modules implemented.
 <br><br>
 
