@@ -329,11 +329,10 @@ class Layout(QGridLayout):
         self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
         self.state_label = self.create_and_add_label(
-            "", 3, 70, 82, 3, "black", right_aligment=True
+            "", 3, 110, 42, 3, "black", right_aligment=True
         )
         self.state_label.setStyleSheet(
-            self.state_label.styleSheet()
-            + " QLabel { padding-right: 8px; }"
+            self.state_label.styleSheet() + " QLabel { padding-right: 8px; }"
         )
 
         self.stop_button = self.create_and_add_button(
@@ -637,10 +636,10 @@ class Layout(QGridLayout):
         msg.setWindowTitle("Change State")
 
         if label == "Task finished — subject still inside":
-            msg.setText(
-                "The system thinks there is a subject in the box, but there isn't."
+            msg.setText("Select an action:")
+            go_wait = msg.addButton(
+                "All subjects are back home, go to WAIT state", QMessageBox.AcceptRole
             )
-            go_wait = msg.addButton("GO TO WAIT STATE", QMessageBox.AcceptRole)
             msg.addButton("Cancel", QMessageBox.RejectRole)
             msg.exec_()
             if msg.clickedButton() == go_wait:
