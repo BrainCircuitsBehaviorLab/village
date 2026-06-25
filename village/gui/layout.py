@@ -419,7 +419,7 @@ class Layout(QGridLayout):
             self.online_or_force_button.setEnabled(False)
             self.online_or_force_button.setStyleSheet(_off)
         elif state == State.WAIT:
-            self.state_label.setText("Waiting for subject")
+            self.state_label.setText("In WAIT state")
             self.stop_button.setText("CHANGE STATE")
             self.stop_button.setToolTip("Open options to change the system state")
             self.stop_button.setEnabled(True)
@@ -645,7 +645,7 @@ class Layout(QGridLayout):
                 log.info("Going to WAIT State")
                 self.update_gui()
 
-        elif label == "Waiting for subject":
+        elif label == "In WAIT state":
             msg.setText("Select an action:")
             force_sync = msg.addButton("Force data sync", QMessageBox.AcceptRole)
             subject_inside = msg.addButton(
