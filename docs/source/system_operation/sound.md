@@ -5,13 +5,6 @@ directly on top of the Raspberry Pi or on top of the Main HAT if one is installe
 playback from within tasks is handled by the Python `sounddevice` library, which accesses
 the hardware through PortAudio → ALSA.
 
-### Why the DAC must be released from the system before use
-
-When the DAC is set as the active audio output in the desktop environment, the operating
-system holds exclusive access to the device, preventing the Training Village from using
-it. Setting the profile to **Off** releases the device and makes it available for the
-Training Village.
-
 
 ### Configuration
 
@@ -27,6 +20,13 @@ Training Village.
    the profile to **Off**. The operating system will no longer use the device, leaving it
    free for `sounddevice` to access directly.
 
+```{admonition} Why the DAC must be released from the system before use
+:class: warning
+When the DAC is set as the active audio output in the desktop environment, the operating
+system holds exclusive access to the device, preventing the Training Village from using
+it. Setting the profile to **Off** releases the device and makes it available for the
+Training Village.
+
 5. Launch the Training Village and select your soundcard under
    `SETTINGS` → `SOUND SETTINGS`.
 
@@ -37,9 +37,6 @@ across reboots, so the DAC will remain available to the Training Village after t
 restarts.
 ```
 
-### Latency
-Playing a sound has a measured latency of mean = 9.3ms and sd = 0.9 ms.
-
 ### Using the sound device in tasks
 
 Audio files are read from the project's **media directory**:
@@ -49,8 +46,8 @@ reference them by filename only (no path needed).
 
 The playback cycle always follows the same order:
 
-1. **`load`** — decodes the audio and stages it in the buffer.
-2. **`play`** — starts playback of whatever is currently in the buffer.
+1. **`load`** — decodes the audio and stages it in the buffer. Puede ser un proceso largo (dependiendo de la longitud del audio, cientos de ms) por lo que es conveniente hacerlo en el inter-trial interval.
+2. **`play`** — starts playback of whatever is currently in the buffer. Esto es mucho mas rapido, latencias medidas por debajo de 10ms.
 3. **`stop`** — interrupts playback mid-sound.
 
 After calling `stop`, the buffer is no longer valid and a new `load` is required

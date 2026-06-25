@@ -154,7 +154,7 @@ Three settings control touchscreen behaviour:
 | `TOUCH_INTERVAL` | Minimum seconds between two registered touches (debounce) | `0.5` |
 
 ```{admonition} Note
-:class: note
+:class: tip
 `TOUCH_RESOLUTION` is the internal coordinate range of the touch digitizer hardware —
 it is independent of and usually different from the display pixel resolution.
 The system uses both values to convert raw touch coordinates into screen pixel positions.
