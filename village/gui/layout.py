@@ -329,7 +329,11 @@ class Layout(QGridLayout):
         self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
         self.state_label = self.create_and_add_label(
-            "", 3, 120, 32, 3, "black", right_aligment=True
+            "", 3, 70, 82, 3, "black", right_aligment=True
+        )
+        self.state_label.setStyleSheet(
+            self.state_label.styleSheet()
+            + " QLabel { padding-right: 8px; }"
         )
 
         self.stop_button = self.create_and_add_button(
@@ -427,8 +431,8 @@ class Layout(QGridLayout):
             self.online_button.setEnabled(False)
             self.online_button.setStyleSheet(_off)
         else:
-            self.state_label.setText("CHANGE STATE")
-            self.stop_button.setText("")
+            self.state_label.setText("")
+            self.stop_button.setText("CHANGE STATE")
             self.stop_button.setEnabled(False)
             self.stop_button.setStyleSheet(_off)
             self.online_button.setEnabled(False)
