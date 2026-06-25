@@ -343,7 +343,7 @@ class Layout(QGridLayout):
             "lightgray",
         )
 
-        self.online_or_force_button = self.create_and_add_button(
+        self.online_button = self.create_and_add_button(
             "ONLINE PLOTS",
             3,
             168,
@@ -389,24 +389,24 @@ class Layout(QGridLayout):
             self.stop_button.setToolTip("Stop the running task")
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(_red)
-            self.online_or_force_button.setEnabled(True)
-            self.online_or_force_button.setStyleSheet(_gray)
+            self.online_button.setEnabled(True)
+            self.online_button.setStyleSheet(_gray)
         elif state.task_is_running():
             self.state_label.setText("Auto task running")
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop the running task")
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(_red)
-            self.online_or_force_button.setEnabled(True)
-            self.online_or_force_button.setStyleSheet(_gray)
+            self.online_button.setEnabled(True)
+            self.online_button.setStyleSheet(_gray)
         elif state == State.WAIT_EXIT:
             self.state_label.setText("Task finished — subject still inside")
             self.stop_button.setText("CHANGE STATE")
             self.stop_button.setToolTip("Open options to change the system state")
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(_gray)
-            self.online_or_force_button.setEnabled(False)
-            self.online_or_force_button.setStyleSheet(_off)
+            self.online_button.setEnabled(False)
+            self.online_button.setStyleSheet(_off)
         elif state.can_stop_syncing():
             self.state_label.setText("Syncing data")
             self.stop_button.setText("STOP SYNC")
@@ -416,25 +416,25 @@ class Layout(QGridLayout):
             )
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(_red)
-            self.online_or_force_button.setEnabled(False)
-            self.online_or_force_button.setStyleSheet(_off)
+            self.online_button.setEnabled(False)
+            self.online_button.setStyleSheet(_off)
         elif state == State.WAIT:
             self.state_label.setText("In WAIT state")
             self.stop_button.setText("CHANGE STATE")
             self.stop_button.setToolTip("Open options to change the system state")
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet(_gray)
-            self.online_or_force_button.setEnabled(False)
-            self.online_or_force_button.setStyleSheet(_off)
+            self.online_button.setEnabled(False)
+            self.online_button.setStyleSheet(_off)
         else:
-            self.state_label.setText("")
+            self.state_label.setText("CHANGE STATE")
             self.stop_button.setText("")
             self.stop_button.setEnabled(False)
             self.stop_button.setStyleSheet(_off)
-            self.online_or_force_button.setEnabled(False)
-            self.online_or_force_button.setStyleSheet(_off)
+            self.online_button.setEnabled(False)
+            self.online_button.setStyleSheet(_off)
 
-        self.online_or_force_button.setText("ONLINE PLOTS")
+        self.online_button.setText("ONLINE PLOTS")
 
     def exit_button_clicked(self) -> None:
         """Handles exit button click, confirming exit and saving data if needed."""
