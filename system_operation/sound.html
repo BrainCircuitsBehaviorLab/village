@@ -431,9 +431,7 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#why-the-dac-must-be-released-from-the-system-before-use">Why the DAC must be released from the system before use</a></li>
 <li><a class="reference internal" href="#configuration">Configuration</a></li>
-<li><a class="reference internal" href="#latency">Latency</a></li>
 <li><a class="reference internal" href="#using-the-sound-device-in-tasks">Using the sound device in tasks</a></li>
 <li><a class="reference internal" href="#method-reference">Method reference</a></li>
 </ul>
@@ -515,13 +513,6 @@ data-aria-dark="Switch to auto color mode">
 directly on top of the Raspberry Pi or on top of the Main HAT if one is installed. Audio
 playback from within tasks is handled by the Python <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> library, which accesses
 the hardware through PortAudio → ALSA.</p>
-<section id="why-the-dac-must-be-released-from-the-system-before-use">
-<h2>Why the DAC must be released from the system before use</h2>
-<p>When the DAC is set as the active audio output in the desktop environment, the operating
-system holds exclusive access to the device, preventing the Training Village from using
-it. Setting the profile to <strong>Off</strong> releases the device and makes it available for the
-Training Village.</p>
-</section>
 <section id="configuration">
 <h2>Configuration</h2>
 <ol class="arabic simple">
@@ -533,6 +524,14 @@ to <strong>Stereo Output</strong>.</p></li>
 <li><p>Once confirmed, return to <strong>Device Profiles</strong>, select <strong>RPi DAC Pro</strong> again, and set
 the profile to <strong>Off</strong>. The operating system will no longer use the device, leaving it
 free for <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> to access directly.</p></li>
+</ol>
+<div class="warning admonition">
+<p class="admonition-title">Why the DAC must be released from the system before use</p>
+<p>When the DAC is set as the active audio output in the desktop environment, the operating
+system holds exclusive access to the device, preventing the Training Village from using
+it. Setting the profile to <strong>Off</strong> releases the device and makes it available for the
+Training Village.</p>
+<ol class="arabic simple" start="5">
 <li><p>Launch the Training Village and select your soundcard under
 <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>.</p></li>
 </ol>
@@ -542,10 +541,7 @@ free for <code class="docutils literal notranslate"><span class="pre">sounddevic
 across reboots, so the DAC will remain available to the Training Village after the system
 restarts.</p>
 </div>
-</section>
-<section id="latency">
-<h2>Latency</h2>
-<p>Playing a sound has a measured latency of mean = 9.3ms and sd = 0.9 ms.</p>
+</div>
 </section>
 <section id="using-the-sound-device-in-tasks">
 <h2>Using the sound device in tasks</h2>
@@ -555,8 +551,8 @@ restarts.</p>
 reference them by filename only (no path needed).</p>
 <p>The playback cycle always follows the same order:</p>
 <ol class="arabic simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">load</span></code></strong> — decodes the audio and stages it in the buffer.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">play</span></code></strong> — starts playback of whatever is currently in the buffer.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">load</span></code></strong> — decodes the audio and stages it in the buffer. Puede ser un proceso largo (dependiendo de la longitud del audio, cientos de ms) por lo que es conveniente hacerlo en el inter-trial interval.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">play</span></code></strong> — starts playback of whatever is currently in the buffer. Esto es mucho mas rapido, latencias medidas por debajo de 10ms.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">stop</span></code></strong> — interrupts playback mid-sound.</p></li>
 </ol>
 <p>After calling <code class="docutils literal notranslate"><span class="pre">stop</span></code>, the buffer is no longer valid and a new <code class="docutils literal notranslate"><span class="pre">load</span></code> is required
@@ -660,7 +656,7 @@ returns both channels as <code class="docutils literal notranslate"><span class=
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a6df3624"></script>
+      <script src="../_static/documentation_options.js?v=5a97399b"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

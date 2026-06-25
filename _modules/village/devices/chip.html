@@ -550,18 +550,18 @@ data-aria-dark="Switch to auto color mode">
 <a class="viewcode-back" href="../../../api_generated/village.devices.chip.Motor.html#village.devices.chip.Motor.open">[docs]</a>
 </span><span data-line="69">    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="70"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the motor to the open position.&quot;&quot;&quot;</span>
-</span><span data-line="71">        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_angle</span><span class="p">)</span>
-</span><span data-line="72">        <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+</span><span data-line="71">        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_angle</span><span class="p">)</span></div>
 
+</span><span data-line="72">        <span class="c1">#threading.Timer(1.0, self.disable).start()</span>
 </span><span data-line="73">
 <div class="viewcode-block" id="Motor.close">
 <a class="viewcode-back" href="../../../api_generated/village.devices.chip.Motor.html#village.devices.chip.Motor.close">[docs]</a>
 </span><span data-line="74">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="75"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the motor to the close position.&quot;&quot;&quot;</span>
-</span><span data-line="76">        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span><span class="p">)</span>
-</span><span data-line="77">        <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+</span><span data-line="76">        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span><span class="p">)</span></div>
 </div>
 
+</span><span data-line="77">        <span class="c1">#threading.Timer(1.0, self.disable).start()</span>
 </span><span data-line="78">
 </span><span data-line="79">
 <div class="viewcode-block" id="LED">
@@ -723,7 +723,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=a6df3624"></script>
+      <script src="../../../_static/documentation_options.js?v=5a97399b"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
