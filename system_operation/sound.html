@@ -551,8 +551,8 @@ restarts.</p>
 reference them by filename only (no path needed).</p>
 <p>The playback cycle always follows the same order:</p>
 <ol class="arabic simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">load</span></code></strong> — decodes the audio and stages it in the buffer. Puede ser un proceso largo (dependiendo de la longitud del audio, cientos de ms) por lo que es conveniente hacerlo en el inter-trial interval.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">play</span></code></strong> — starts playback of whatever is currently in the buffer. Esto es mucho mas rapido, latencias medidas por debajo de 10ms.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">load</span></code></strong> — decodes the audio and stages it in the buffer. This can be a slow operation (hundreds of ms depending on audio length), so it is best called during the inter-trial interval.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">play</span></code></strong> — starts playback of whatever is currently in the buffer. This is much faster — measured latencies are below 10 ms.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">stop</span></code></strong> — interrupts playback mid-sound.</p></li>
 </ol>
 <p>After calling <code class="docutils literal notranslate"><span class="pre">stop</span></code>, the buffer is no longer valid and a new <code class="docutils literal notranslate"><span class="pre">load</span></code> is required
@@ -656,11 +656,12 @@ returns both channels as <code class="docutils literal notranslate"><span class=
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=5a97399b"></script>
+      <script src="../_static/documentation_options.js?v=4ae4b120"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js"></script></body>
+      <script src="../_static/lightbox.js"></script>
+      <script src="../_static/chatbot-widget.js?v=8cd12e2f"></script></body>
 </html>
