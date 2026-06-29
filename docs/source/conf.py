@@ -271,7 +271,7 @@ sitemap_url_scheme = "{link}"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.svg"
 html_css_files = ["custom.css"]
-html_js_files = ["lightbox.js"]
+html_js_files = ["lightbox.js", "chatbot-widget.js"]
 
 # Ignore links and anchors
 linkcheck_ignore = [

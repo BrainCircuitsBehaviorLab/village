@@ -1,4 +1,3 @@
-import threading
 import traceback
 
 from PCA9685_smbus2 import PCA9685  # type: ignore
@@ -69,12 +68,12 @@ class Motor:
     def open(self) -> None:
         """Moves the motor to the open position."""
         self.move(self.open_angle)
-        #threading.Timer(1.0, self.disable).start()
+        # threading.Timer(1.0, self.disable).start()
 
     def close(self) -> None:
         """Moves the motor to the close position."""
         self.move(self.close_angle)
-        #threading.Timer(1.0, self.disable).start()
+        # threading.Timer(1.0, self.disable).start()
 
 
 class LED:

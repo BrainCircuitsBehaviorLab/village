@@ -46,8 +46,8 @@ reference them by filename only (no path needed).
 
 The playback cycle always follows the same order:
 
-1. **`load`** — decodes the audio and stages it in the buffer. Puede ser un proceso largo (dependiendo de la longitud del audio, cientos de ms) por lo que es conveniente hacerlo en el inter-trial interval.
-2. **`play`** — starts playback of whatever is currently in the buffer. Esto es mucho mas rapido, latencias medidas por debajo de 10ms.
+1. **`load`** — decodes the audio and stages it in the buffer. This can be a slow operation (hundreds of ms depending on audio length), so it is best called during the inter-trial interval.
+2. **`play`** — starts playback of whatever is currently in the buffer. This is much faster — measured latencies are below 10 ms.
 3. **`stop`** — interrupts playback mid-sound.
 
 After calling `stop`, the buffer is no longer valid and a new `load` is required
