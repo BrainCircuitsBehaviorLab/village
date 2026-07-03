@@ -286,9 +286,9 @@ def main(
         remote_host (str): Remote hostname or IP.
         port (int | None): SSH port (default: None).
         maximum_sync_time (int): Maximum sync time duration in seconds.
-        Defaults to 1200.
+            Defaults to 1200.
         cancel_event (threading.Event | None): Event to signal cancellation.
-        Defaults to None.
+            Defaults to None.
     """
     # Setup logging
     log_file, file_handler = setup_logging(logs_subdirectory="rsync_logs")

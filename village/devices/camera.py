@@ -350,9 +350,9 @@ class Camera:
 
         Args:
             path_video (str): Custom video path. Defaults to automatic naming
-            based on settings.
+                based on settings.
             path_csv (str): Custom CSV path. Defaults to automatic naming
-            based on settings.
+                based on settings.
         """
         self.filename = os.path.splitext(os.path.basename(path_video))[0]
         time_start = time_utils.now_string_for_filename()

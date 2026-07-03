@@ -74,7 +74,7 @@ class TableView(QTableView):
 
         Args:
             model (Table | None, optional): The data model for the table.
-            Defaults to None.
+                Defaults to None.
         """
         super().__init__()
         if model is not None:
@@ -508,7 +508,7 @@ class Table(QAbstractTableModel):
         Args:
             index (QModelIndex): The index of the item.
             role (int, optional): The role for which data is requested.
-            Defaults to Qt.DisplayRole.
+                Defaults to Qt.DisplayRole.
 
         Returns:
             Any: The data for the given role.
@@ -551,9 +551,9 @@ class Table(QAbstractTableModel):
         Args:
             section (int): The section number (row or column index).
             orientation (Qt.Orientation): The orientation of the header
-            (Horizontal or Vertical).
+                (Horizontal or Vertical).
             role (int, optional): The role for which data is requested.
-            Defaults to Qt.DisplayRole.
+                Defaults to Qt.DisplayRole.
 
         Returns:
             Any: The header data.

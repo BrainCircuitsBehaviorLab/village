@@ -23,12 +23,17 @@ class Setting:
 
     Attributes:
         key (str): The name/identifier of the setting.
-        value (Any): The current value of the setting.
-        value_type (type): The expected type of the value (e.g., int, float, str, enum).
+        value (Any): The current default value of the setting.
+        value_type (type): The full declared type of the value. Can be a
+            simple type (``int``, ``float``, ``str``, an enum subclass) or a
+            generic list type (``list[int]``, ``list[str]``, ``list[Active]``).
         description (str): A description of what the setting controls.
-        type0 (type): The base type (e.g., list if value_type is list[int]).
-        type1 (type | None): The inner type for lists (e.g., int if value_type
-        is list[int]).
+        base_type (type): The outer/container type extracted from
+            ``value_type``. For simple types this equals ``value_type``
+            itself; for generic lists it is ``list``.
+        element_type (type | None): For list settings, the type of each
+            element (e.g. ``int`` for ``list[int]``, ``Active`` for
+            ``list[Active]``). ``None`` for non-list settings.
     """
 
     def __init__(
@@ -39,8 +44,10 @@ class Setting:
         Args:
             key (str): The name of the setting.
             factory_value (Any): The default value. For enums, this is the
-            string representation.
-            value_type (type): The type of the value.
+                string representation.
+            value_type (type): The full declared type. Can be a simple type
+                (``int``, ``float``, ``str``, an enum subclass) or a generic
+                list type (``list[int]``, ``list[Active]``, etc.).
             description (str): A brief description of the setting.
         """
         self.key: str = key
@@ -48,13 +55,13 @@ class Setting:
         self.value_type: type = value_type
         self.description: str = description
 
-        self.type0: type = (
+        self.base_type: type = (
             value_type.__origin__ if hasattr(value_type, "__origin__") else value_type
         )
         try:
-            self.type1: type | None = get_args(value_type)[0]
+            self.element_type: type | None = get_args(value_type)[0]
         except (IndexError, TypeError):
-            self.type1 = None
+            self.element_type = None
 
 
 class Settings:
@@ -267,37 +274,41 @@ class Settings:
 
     def get_values(self, key: str) -> list:
         """Get the possible values of a setting when it is a enum or list of enums"""
-        type0 = next((s.type0 for s in self.all_settings if s.key == key), None)
-        type1 = next((s.type1 for s in self.all_settings if s.key == key), None)
-        if type0 is None:
+        base_type = next((s.base_type for s in self.all_settings if s.key == key), None)
+        element_type = next(
+            (s.element_type for s in self.all_settings if s.key == key), None
+        )
+        if base_type is None:
             return []
-        elif issubclass(type0, SuperEnum):
-            return type0.values()
-        elif type1 is None:
+        elif issubclass(base_type, SuperEnum):
+            return base_type.values()
+        elif element_type is None:
             return []
-        elif issubclass(type1, SuperEnum):
-            return type1.values()
+        elif issubclass(element_type, SuperEnum):
+            return element_type.values()
         else:
             return []
 
     def get_index(self, key: str) -> int:
         """Get the index of the value of a setting when it is a enum or list of enums"""
-        type0 = next((s.type0 for s in self.all_settings if s.key == key), None)
-        if type0 is None:
+        base_type = next((s.base_type for s in self.all_settings if s.key == key), None)
+        if base_type is None:
             return 0
-        elif issubclass(type0, SuperEnum):
-            return type0.keys().index(self.saved_settings.value(key))
+        elif issubclass(base_type, SuperEnum):
+            return base_type.keys().index(self.saved_settings.value(key))
         else:
             return 0
 
     def get_indices(self, key: str) -> list[int]:
         """Get the index of the value of a setting when it is a enum or list of enums"""
-        type1 = next((s.type1 for s in self.all_settings if s.key == key), None)
-        if type1 is None:
+        element_type = next(
+            (s.element_type for s in self.all_settings if s.key == key), None
+        )
+        if element_type is None:
             return []
-        elif issubclass(type1, SuperEnum):
+        elif issubclass(element_type, SuperEnum):
             values = self.saved_settings.value(key)
-            return [type1.keys().index(v) for v in values]
+            return [element_type.keys().index(v) for v in values]
         else:
             return []
 

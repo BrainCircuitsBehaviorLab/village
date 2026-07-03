@@ -228,7 +228,7 @@ class Collection:
         Args:
             df (pd.DataFrame): The input DataFrame.
             training (TrainingProtocolBase): The training protocol for
-            custom formatting.
+                custom formatting.
 
         Returns:
             pd.DataFrame: The processed DataFrame.

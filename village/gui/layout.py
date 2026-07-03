@@ -244,7 +244,7 @@ class Layout(QGridLayout):
         Args:
             window (GuiWindow): The parent window.
             stacked (bool, optional): Whether this layout is part of a stacked widget.
-            Defaults to False.
+                Defaults to False.
             rows (int, optional): Number of rows in the grid. Defaults to 51.
             columns (int, optional): Number of columns in the grid. Defaults to 200.
         """
@@ -882,7 +882,7 @@ class Layout(QGridLayout):
             index (int): Initial index in possible_values.
             action (Callable): The function to call on toggle.
             description (str): Tooltip text.
-            Defaults to False.
+                Defaults to False.
             color (str, optional): Background color. Defaults to "lightgray".
 
         Returns:

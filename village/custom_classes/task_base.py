@@ -303,7 +303,7 @@ class TaskBase:
 
         Args:
             daemon (bool, optional): Whether to run as a daemon thread.
-            Defaults to True.
+                Defaults to True.
         """
 
         def test_run():

@@ -9,7 +9,7 @@ def find_pwmchip(target_device="1f00098000.pwm") -> str:
 
     Args:
         target_device (str): The target device name to look for.
-        Defaults to "1f00098000.pwm".
+            Defaults to "1f00098000.pwm".
 
     Returns:
         str: The path to the PWM chip or raises RuntimeError if not found.

@@ -91,7 +91,7 @@ class BpodController:
             state_name (Any): The name of the state.
             state_timer (float): Duration of the state in seconds.
             state_change_conditions (Any): Dictionary of events that trigger
-            state transitions.
+                state transitions.
             output_actions (Any): Actions to perform when entering the state.
         """
         self.sma.add_state(

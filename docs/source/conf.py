@@ -7,10 +7,37 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 import os
+import pathlib
 import sys
 from unittest.mock import MagicMock
 
 import setuptools_scm  # type: ignore
+
+# Some village modules touch the filesystem (mkdir/makedirs) as a side effect
+# of module-level singleton instantiation (e.g. `manager = Manager()`), using
+# default paths like /home/<user>/... that only exist on the real device.
+# Silence those failures here so the modules can still be imported (and thus
+# documented) on any machine running the docs build.
+_orig_os_makedirs = os.makedirs
+_orig_path_mkdir = pathlib.Path.mkdir
+
+
+def _safe_os_makedirs(name, *args, **kwargs):
+    try:
+        return _orig_os_makedirs(name, *args, **kwargs)
+    except OSError:
+        return None
+
+
+def _safe_path_mkdir(self, *args, **kwargs):
+    try:
+        return _orig_path_mkdir(self, *args, **kwargs)
+    except OSError:
+        return None
+
+
+os.makedirs = _safe_os_makedirs
+pathlib.Path.mkdir = _safe_path_mkdir
 
 
 # Manually mock PyQt5 to avoid infinite recursion in sphinx-autodoc-typehints
@@ -55,46 +82,7 @@ sys.modules["PyQt5.QtWidgets"] = MagicMock()
 # with OSError [Errno 45] or ModuleNotFoundError for Linux-only libraries.
 sys.modules["village.controllers.arduino_controller"] = MagicMock()
 sys.modules["village.controllers.bpod_controller"] = MagicMock()
-
-_hardware_village_modules = [
-    "village.classes.abstract_classes",
-    "village.calibration.bpod_water_calibration",
-    "village.calibration.camera_calibration",
-    "village.calibration.sound_calibration",
-    "village.custom_classes.calibration_base",
-    "village.devices.camera",
-    "village.devices.led_strip",
-    "village.devices.rfid",
-    "village.devices.telegram_bot",
-    "village.gui.calibration_layout",
-    "village.gui.data_layout",
-    "village.gui.gui",
-    "village.gui.gui_window",
-    "village.gui.layout",
-    "village.gui.main_layout",
-    "village.gui.monitor_layout",
-    "village.gui.settings_layout",
-    "village.gui.tasks_layout",
-    "village.main",
-    "village.manager",
-    "village.devices.screen",
-    "village.scripts.import_all",
-]
-import types as _types
-
-for _mod_name in _hardware_village_modules:
-    _mod = sys.modules.get(_mod_name)
-    if _mod is None:
-        _stub = _types.ModuleType(_mod_name)
-        _stub.__all__ = []
-        _stub.__path__ = []
-        # Allow `from stub_module import AnyName` (non-dunder only)
-        def _stub_getattr(name, _n=_mod_name):
-            if name.startswith("__") and name.endswith("__"):
-                raise AttributeError(name)
-            return type(name, (), {"__module__": _n})
-        _stub.__getattr__ = _stub_getattr
-        sys.modules[_mod_name] = _stub
+sys.modules["village.controllers.trial_recorder"] = MagicMock()
 
 # Used when building API docs, put the dependencies
 # of any class you are documenting here
@@ -145,6 +133,40 @@ autodoc_mock_imports = [
 # use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath("../.."))
 
+# village.settings hardcodes /home/<user>/village_projects/... as the default
+# project directory. That path only exists on the real device, so redirect
+# every directory-flavoured default to a writable temp dir before any other
+# village module (which may instantiate singletons that write to disk on
+# import) gets imported.
+import tempfile  # noqa: E402
+
+import village.settings as _village_settings  # noqa: E402
+from village.classes.settings_class import SuperEnum  # noqa: E402
+
+_safe_project_root = os.path.join(tempfile.gettempdir(), "village_docs_build")
+os.makedirs(_safe_project_root, exist_ok=True)
+for _setting in _village_settings.settings.all_settings:
+    if isinstance(_setting.value, str) and _setting.value.startswith(
+        _village_settings.default_project_directory
+    ):
+        _setting.value = _setting.value.replace(
+            _village_settings.default_project_directory, _safe_project_root, 1
+        )
+    # Settings.get() only converts the saved-QSettings string to the proper
+    # enum when a value was actually saved; its fallback (no value saved, the
+    # common case for a docs build) returns the raw factory string untouched.
+    # Some modules call settings.get(...).name at import time, which then
+    # crashes on a plain str. Pre-convert those factory strings here.
+    if (
+        isinstance(_setting.value, str)
+        and isinstance(_setting.value_type, type)
+        and issubclass(_setting.value_type, SuperEnum)
+    ):
+        try:
+            _setting.value = _setting.value_type(_setting.value)
+        except ValueError:
+            pass
+
 # Autodoc configuration to handle circular imports
 autodoc_default_options = {
     "members": True,
@@ -157,7 +179,7 @@ autodoc_default_options = {
 autodoc_preserve_defaults = True
 
 project = "village"
-copyright = "2024, Rafael Marin, Balma Serrano, Hernando Vergara, Jaime de la Rocha"
+copyright = "2024, Brain Circuits & Behavior Lab"
 author = "Rafael Marin"
 try:
     release = setuptools_scm.get_version(root="../..", relative_to=__file__)

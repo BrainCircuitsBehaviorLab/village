@@ -21,7 +21,7 @@ class MainLayout(Layout):
         Args:
             window (GuiWindow): The parent window.
             first_draw (bool, optional): Whether this is the first time
-            drawing on startup. Defaults to False.
+                drawing on startup. Defaults to False.
         """
         super().__init__(window)
         self._highlight_nav_button(self.main_button)

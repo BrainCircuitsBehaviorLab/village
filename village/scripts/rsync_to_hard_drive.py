@@ -201,9 +201,9 @@ def main(
         source (str): Source directory path.
         destination (str): Destination path on remote system.
         maximum_sync_time (int): Maximum sync time duration in seconds.
-        Defaults to 1800.
+            Defaults to 1800.
         cancel_event (threading.Event | None): Event to signal cancellation.
-        Defaults to None.
+            Defaults to None.
     Parameters:
     - source: Source directory path
     - destination: Destination path (on remote system)

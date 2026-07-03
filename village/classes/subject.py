@@ -18,7 +18,7 @@ class Subject:
         next_session_time (str): Timestamp for the next allowed session.
         next_settings (str): Next settings JSON string.
         subject_series (pd.Series | None): The raw pandas Series containing
-        subject data.
+            subject data.
     """
 
     def __init__(self, name: str = "None") -> None:

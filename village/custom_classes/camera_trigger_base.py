@@ -45,7 +45,7 @@ class CameraTriggerBase:
 
         Args:
             cam (Camera): The camera instance providing trigger status
-            and position data.
+                and position data.
         """
 
         # Check if the animal is in any of the 4 defined areas
