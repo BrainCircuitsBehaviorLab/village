@@ -119,16 +119,12 @@ class BpodBase(object):
         try:
             val = self._bpodcom_handshake()
         except Exception:
-            raise BpodErrorException(
-                """Error: Bpod failed to confirm connectivity.
-                Please reset Bpod and try again."""
-            )
+            raise BpodErrorException("""Error: Bpod failed to confirm connectivity.
+                Please reset Bpod and try again.""")
 
         if not val:
-            raise BpodErrorException(
-                """Error: Bpod failed to confirm connectivity.
-                Please reset Bpod and try again."""
-            )
+            raise BpodErrorException("""Error: Bpod failed to confirm connectivity.
+                Please reset Bpod and try again.""")
 
         # check the firmware version
         firmware_version, machine_type = self._bpodcom_firmware_version()
