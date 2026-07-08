@@ -1,0 +1,45 @@
+SoundCalibrationTask
+====================
+
+.. currentmodule:: village.calibration.sound_calibration
+
+.. autoclass:: SoundCalibrationTask
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~SoundCalibrationTask.__init__
+      ~SoundCalibrationTask.after_trial
+      ~SoundCalibrationTask.close
+      ~SoundCalibrationTask.concatenate_trial_data
+      ~SoundCalibrationTask.create_paths
+      ~SoundCalibrationTask.create_trial
+      ~SoundCalibrationTask.disconnect_and_save
+      ~SoundCalibrationTask.do_trial
+      ~SoundCalibrationTask.execute_function
+      ~SoundCalibrationTask.get_name
+      ~SoundCalibrationTask.register_controller_event
+      ~SoundCalibrationTask.register_end_trial
+      ~SoundCalibrationTask.register_enter_state
+      ~SoundCalibrationTask.register_raspberry_event
+      ~SoundCalibrationTask.register_start_trial
+      ~SoundCalibrationTask.register_value
+      ~SoundCalibrationTask.run
+      ~SoundCalibrationTask.run_in_thread
+      ~SoundCalibrationTask.save_csv
+      ~SoundCalibrationTask.save_json
+      ~SoundCalibrationTask.start
+   
+   
+
+   
+   
+   

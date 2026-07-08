@@ -1,0 +1,45 @@
+BpodWaterCalibrationTask
+========================
+
+.. currentmodule:: village.calibration.bpod_water_calibration
+
+.. autoclass:: BpodWaterCalibrationTask
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~BpodWaterCalibrationTask.__init__
+      ~BpodWaterCalibrationTask.after_trial
+      ~BpodWaterCalibrationTask.close
+      ~BpodWaterCalibrationTask.concatenate_trial_data
+      ~BpodWaterCalibrationTask.create_paths
+      ~BpodWaterCalibrationTask.create_trial
+      ~BpodWaterCalibrationTask.disconnect_and_save
+      ~BpodWaterCalibrationTask.do_trial
+      ~BpodWaterCalibrationTask.execute_function
+      ~BpodWaterCalibrationTask.get_name
+      ~BpodWaterCalibrationTask.register_controller_event
+      ~BpodWaterCalibrationTask.register_end_trial
+      ~BpodWaterCalibrationTask.register_enter_state
+      ~BpodWaterCalibrationTask.register_raspberry_event
+      ~BpodWaterCalibrationTask.register_start_trial
+      ~BpodWaterCalibrationTask.register_value
+      ~BpodWaterCalibrationTask.run
+      ~BpodWaterCalibrationTask.run_in_thread
+      ~BpodWaterCalibrationTask.save_csv
+      ~BpodWaterCalibrationTask.save_json
+      ~BpodWaterCalibrationTask.start
+   
+   
+
+   
+   
+   

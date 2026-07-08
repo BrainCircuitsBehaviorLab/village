@@ -1,0 +1,6 @@
+get\_led\_strip
+===============
+
+.. currentmodule:: village.devices.led_strip
+
+.. autofunction:: get_led_strip

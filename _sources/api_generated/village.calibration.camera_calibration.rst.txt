@@ -12,9 +12,27 @@ camera\_calibration
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      default_result_path
+      undistort_image
+      undistort_points
+   
    
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      CameraCalibration
    
    
 

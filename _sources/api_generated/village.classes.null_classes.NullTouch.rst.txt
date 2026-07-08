@@ -23,4 +23,11 @@ NullTouch
 
    
    
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~NullTouch.error
+   
    

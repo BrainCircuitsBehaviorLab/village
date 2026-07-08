@@ -2,12 +2,12 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>DiagnosticPlotsLayout - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="data_layout" href="village.gui.data_layout.html" /><link rel="prev" title="CameraCalibrationLayout" href="village.gui.camera_calibration_layout.CameraCalibrationLayout.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>BpodWaterCalibrationTask - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="camera_calibration" href="village.calibration.camera_calibration.html" /><link rel="prev" title="BpodWaterCalibration" href="village.calibration.bpod_water_calibration.BpodWaterCalibration.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
@@ -22,8 +22,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.html"/>
-  <meta property="og:title" content="DiagnosticPlotsLayout"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html"/>
+  <meta property="og:title" content="BpodWaterCalibrationTask"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -117,9 +117,19 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.bpod_water_calibration.html">bpod_water_calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.camera_calibration.html">camera_calibration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="village.calibration.html">calibration</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="village.calibration.bpod_water_calibration.html">bpod_water_calibration</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.bpod_water_calibration.BpodWaterCalibration.html">BpodWaterCalibration</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">BpodWaterCalibrationTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.camera_calibration.html">camera_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration.default_result_path.html">default_result_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration.undistort_image.html">undistort_image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration.undistort_points.html">undistort_points</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration.CameraCalibration.html">CameraCalibration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
@@ -128,7 +138,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.optogrid_calibration.OptoGridCalibration.html">OptoGridCalibration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.sound_calibration.SoundCalibrationTask.html">SoundCalibrationTask</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.classes.html">classes</a><ul>
@@ -197,7 +211,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.calibration_base.html">calibration_base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.calibration_base.html">calibration_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.calibration_base.CalibrationBase.html">CalibrationBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -246,7 +263,13 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.devices.html">devices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.camera.html">camera</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.camera.html">camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.chip.html">chip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.get_motor_old.html">get_motor_old</a></li>
@@ -254,7 +277,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.led_strip.html">led_strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.led_strip.html">led_strip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
@@ -268,20 +294,31 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.rfid.Rfid.html">Rfid</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.scale.Scale.html">Scale</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.screen.html">screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.sound_device.html">sound_device</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.telegram_bot.html">telegram_bot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.telegram_bot.html">telegram_bot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -294,19 +331,24 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="village.gui.html">gui</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="village.gui.camera_calibration_layout.html">camera_calibration_layout</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="village.gui.camera_calibration_layout.CameraCalibrationLayout.html">CameraCalibrationLayout</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">DiagnosticPlotsLayout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.gui.html">gui</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.gui.Gui.html">Gui</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.gui.html">gui</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.gui_window.html">gui_window</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.tasks_layout.html">tasks_layout</a></li>
 </ul>
@@ -332,7 +374,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.import_all.html">import_all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.import_all.html">import_all</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.import_all.import_all.html">import_all</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.log.html">log</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.log.Log.html">Log</a></li>
 </ul>
@@ -393,8 +438,15 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.manager.html">manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.main.html">main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.manager.html">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.manager.Manager.html">Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="village.main.html">main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.main.system_run.html">system_run</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -431,10 +483,12 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.gui.camera_calibration_layout.DiagnosticPlotsLayout"><code class="docutils literal notranslate"><span class="pre">DiagnosticPlotsLayout</span></code></a><ul>
-<li><a class="reference internal" href="#village.gui.camera_calibration_layout.DiagnosticPlotsLayout.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.gui.camera_calibration_layout.DiagnosticPlotsLayout.draw"><code class="docutils literal notranslate">draw()</span></code></a></li>
-<li><a class="reference internal" href="#village.gui.camera_calibration_layout.DiagnosticPlotsLayout.update"><code class="docutils literal notranslate">update()</span></code></a></li>
+<li><a class="reference internal" href="#village.calibration.bpod_water_calibration.BpodWaterCalibrationTask"><code class="docutils literal notranslate"><span class="pre">BpodWaterCalibrationTask</span></code></a><ul>
+<li><a class="reference internal" href="#village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+<li><a class="reference internal" href="#village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.start"><code class="docutils literal notranslate">start()</span></code></a></li>
+<li><a class="reference internal" href="#village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.create_trial"><code class="docutils literal notranslate">create_trial()</span></code></a></li>
+<li><a class="reference internal" href="#village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.after_trial"><code class="docutils literal notranslate">after_trial()</span></code></a></li>
+<li><a class="reference internal" href="#village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.close"><code class="docutils literal notranslate">close()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -458,15 +512,15 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="village.gui.html"><span itemprop="name">gui</span></a>
+        <a itemprop="item" href="village.calibration.html"><span itemprop="name">calibration</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="village.gui.camera_calibration_layout.html"><span itemprop="name">camera_calibration_layout</span></a>
+        <a itemprop="item" href="village.calibration.bpod_water_calibration.html"><span itemprop="name">bpod_water_calibration</span></a>
         <span>/</span>
         <meta itemprop="position" content="4" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">DiagnosticPlotsLayout</strong>
+        <strong itemprop="name">BpodWaterCalibrationTask</strong>
         <meta itemprop="position" content="5" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -483,7 +537,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.rst.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.rst.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -497,44 +551,59 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.rst.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.rst.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
-            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
+            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="diagnosticplotslayout">
-<h1>DiagnosticPlotsLayout</h1>
+          <section id="bpodwatercalibrationtask">
+<h1>BpodWaterCalibrationTask</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.gui.camera_calibration_layout.DiagnosticPlotsLayout">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DiagnosticPlotsLayout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GuiWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/gui/camera_calibration_layout.html#DiagnosticPlotsLayout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layout</span></code></p>
+<dt class="sig sig-object py" id="village.calibration.bpod_water_calibration.BpodWaterCalibrationTask">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">BpodWaterCalibrationTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_number_of_trials</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/calibration/bpod_water_calibration.html#BpodWaterCalibrationTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="village.custom_classes.task_base.TaskBase.html#village.custom_classes.task_base.TaskBase" title="village.custom_classes.task_base.TaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TaskBase</span></code></a></p>
+<p>Bpod task for calibrating water delivery valves.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.gui.camera_calibration_layout.DiagnosticPlotsLayout.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GuiWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/gui/camera_calibration_layout.html#DiagnosticPlotsLayout.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_number_of_trials</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/bpod_water_calibration.html#BpodWaterCalibrationTask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.gui.camera_calibration_layout.DiagnosticPlotsLayout.draw">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/gui/camera_calibration_layout.html#DiagnosticPlotsLayout.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/bpod_water_calibration.html#BpodWaterCalibrationTask.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Starts the task. Must be overridden by subclasses.</p>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.gui.camera_calibration_layout.DiagnosticPlotsLayout.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.classes.collection.Collection.html#village.classes.collection.Collection.dict" title="village.classes.collection.Collection.dict"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/gui/camera_calibration_layout.html#DiagnosticPlotsLayout.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.create_trial">
+<span class="sig-name descname"><span class="pre">create_trial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/bpod_water_calibration.html#BpodWaterCalibrationTask.create_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Creates the state machine for the current trial. Must be overridden.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.after_trial">
+<span class="sig-name descname"><span class="pre">after_trial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/bpod_water_calibration.html#BpodWaterCalibrationTask.after_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Executed after each trial completes. Must be overridden.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/bpod_water_calibration.html#BpodWaterCalibrationTask.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Closes the task and releases resources. Must be overridden.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -546,16 +615,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="village.gui.camera_calibration_layout.CameraCalibrationLayout.html">
+    <a href="village.calibration.bpod_water_calibration.BpodWaterCalibration.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">CameraCalibrationLayout</div></div>
+        <span>Previous</span><div class="title">BpodWaterCalibration</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="village.gui.data_layout.html">
+    <a href="village.calibration.camera_calibration.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">data_layout</div>
+        <div class="title">camera_calibration</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -577,7 +646,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4ae4b120"></script>
+      <script src="../_static/documentation_options.js?v=431e8aa7"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

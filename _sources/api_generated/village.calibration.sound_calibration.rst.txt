@@ -16,6 +16,15 @@ sound\_calibration
 
    
    
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      SoundCalibration
+      SoundCalibrationTask
+   
    
 
    

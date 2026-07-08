@@ -7,7 +7,7 @@
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=9454f7d5" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=9ba612c2" />
@@ -118,8 +118,18 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.calibration.html">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.html">camera_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibration.html">BpodWaterCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html">BpodWaterCalibrationTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.html">camera_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.default_result_path.html">default_result_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.undistort_image.html">undistort_image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.undistort_points.html">undistort_points</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.CameraCalibration.html">CameraCalibration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
@@ -128,7 +138,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.optogrid_calibration.OptoGridCalibration.html">OptoGridCalibration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.html">sound_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.html">sound_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.SoundCalibrationTask.html">SoundCalibrationTask</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a><ul>
@@ -197,7 +211,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.calibration_base.html">calibration_base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.calibration_base.html">calibration_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.calibration_base.CalibrationBase.html">CalibrationBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -246,7 +263,13 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.devices.html">devices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.camera.html">camera</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.camera.html">camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.chip.html">chip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
@@ -254,7 +277,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.html">led_strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.html">led_strip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
@@ -268,20 +294,31 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.rfid.Rfid.html">Rfid</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.Scale.html">Scale</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.screen.html">screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.html">sound_device</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.html">telegram_bot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.html">telegram_bot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -296,17 +333,22 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.CameraCalibrationLayout.html">CameraCalibrationLayout</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.html">DiagnosticPlotsLayout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.gui.Gui.html">Gui</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui_window.html">gui_window</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.layout.html">layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.html">monitor_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.html">monitor_layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
 </ul>
@@ -332,7 +374,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.import_all.html">import_all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.import_all.html">import_all</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.import_all.import_all.html">import_all</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.log.html">log</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.log.Log.html">Log</a></li>
 </ul>
@@ -393,8 +438,15 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.manager.html">manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.main.html">main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.manager.html">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.manager.Manager.html">Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.main.html">main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.main.system_run.html">system_run</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../resources_index.html">RESOURCES</a><ul>
@@ -471,7 +523,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QImage</span>
 </span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QWidget</span>
 </span><span data-line="7">
-</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Active</span>
+</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Active</span><span class="p">,</span> <span class="n">ScreenActive</span>
 </span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.training_protocol_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingProtocolBase</span>
 </span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 </span><span data-line="11">
@@ -535,7 +587,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="44">        <span class="n">state_change_conditions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">{},</span>
 </span><span data-line="45">        <span class="n">output_actions</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">(),</span>
 </span><span data-line="46">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="47">        <span class="k">pass</span></div>
+</span><span data-line="47">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Trying to add a state but Bpod is not connected.&quot;</span><span class="p">)</span></div>
 
 </span><span data-line="48">
 <div class="viewcode-block" id="NullStateMachine.set_global_timer">
@@ -1007,95 +1059,100 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="364">    <span class="n">background_color</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span data-line="365">    <span class="n">width_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span data-line="366">    <span class="n">height_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="367">    <span class="n">width_mm</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="368">    <span class="n">height_mm</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="369">
-</span><span data-line="370">    <span class="k">def</span><span class="w"> </span><span class="nf">start_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="371"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the drawing mode.&quot;&quot;&quot;</span>
-</span><span data-line="372">        <span class="k">return</span>
-</span><span data-line="373">
-</span><span data-line="374">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="375"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the drawing mode.&quot;&quot;&quot;</span>
-</span><span data-line="376">        <span class="k">return</span>
-</span><span data-line="377">
-</span><span data-line="378">    <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_function</span><span class="p">(</span>
-</span><span data-line="379">        <span class="bp">self</span><span class="p">,</span>
-</span><span data-line="380">        <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
-</span><span data-line="381">        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="382">        <span class="n">video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="383">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="384"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a drawing function and media.</span>
-</span><span data-line="385">
-</span><span data-line="386"><span class="sd">        Args:</span>
-</span><span data-line="387"><span class="sd">            draw_fn (Optional[Callable]): The drawing function.</span>
-</span><span data-line="388"><span class="sd">            image (str | None): Image path.</span>
-</span><span data-line="389"><span class="sd">            video (str | None): Video path.</span>
-</span><span data-line="390"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="391">        <span class="k">return</span>
-</span><span data-line="392">
-</span><span data-line="393">    <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="394"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an image.</span>
-</span><span data-line="395">
-</span><span data-line="396"><span class="sd">        Args:</span>
-</span><span data-line="397"><span class="sd">            file (str): The file path.</span>
-</span><span data-line="398"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="399">        <span class="k">return</span>
-</span><span data-line="400">
-</span><span data-line="401">    <span class="k">def</span><span class="w"> </span><span class="nf">load_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="402"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a video.</span>
-</span><span data-line="403">
-</span><span data-line="404"><span class="sd">        Args:</span>
-</span><span data-line="405"><span class="sd">            file (str): The file path.</span>
-</span><span data-line="406"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="407">        <span class="k">return</span>
-</span><span data-line="408">
-</span><span data-line="409">    <span class="k">def</span><span class="w"> </span><span class="nf">get_video_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
-</span><span data-line="410"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current video frame.</span>
-</span><span data-line="411">
-</span><span data-line="412"><span class="sd">        Returns:</span>
-</span><span data-line="413"><span class="sd">            Optional[QImage]: The current frame as a QImage.</span>
-</span><span data-line="414"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="415">        <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="367">    <span class="n">height_mm</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="368">
+</span><span data-line="369">    <span class="k">def</span><span class="w"> </span><span class="nf">start_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="370"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the drawing mode.&quot;&quot;&quot;</span>
+</span><span data-line="371">        <span class="k">return</span>
+</span><span data-line="372">
+</span><span data-line="373">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="374"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the drawing mode.&quot;&quot;&quot;</span>
+</span><span data-line="375">        <span class="k">return</span>
+</span><span data-line="376">
+</span><span data-line="377">    <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_function</span><span class="p">(</span>
+</span><span data-line="378">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="379">        <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
+</span><span data-line="380">        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="381">        <span class="n">video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="382">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="383"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a drawing function and media.</span>
+</span><span data-line="384">
+</span><span data-line="385"><span class="sd">        Args:</span>
+</span><span data-line="386"><span class="sd">            draw_fn (Optional[Callable]): The drawing function.</span>
+</span><span data-line="387"><span class="sd">            image (str | None): Image path.</span>
+</span><span data-line="388"><span class="sd">            video (str | None): Video path.</span>
+</span><span data-line="389"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="390">        <span class="k">return</span>
+</span><span data-line="391">
+</span><span data-line="392">    <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="393"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an image.</span>
+</span><span data-line="394">
+</span><span data-line="395"><span class="sd">        Args:</span>
+</span><span data-line="396"><span class="sd">            file (str): The file path.</span>
+</span><span data-line="397"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="398">        <span class="k">return</span>
+</span><span data-line="399">
+</span><span data-line="400">    <span class="k">def</span><span class="w"> </span><span class="nf">load_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="401"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a video.</span>
+</span><span data-line="402">
+</span><span data-line="403"><span class="sd">        Args:</span>
+</span><span data-line="404"><span class="sd">            file (str): The file path.</span>
+</span><span data-line="405"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="406">        <span class="k">return</span>
+</span><span data-line="407">
+</span><span data-line="408">    <span class="k">def</span><span class="w"> </span><span class="nf">get_video_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
+</span><span data-line="409"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current video frame.</span>
+</span><span data-line="410">
+</span><span data-line="411"><span class="sd">        Returns:</span>
+</span><span data-line="412"><span class="sd">            Optional[QImage]: The current frame as a QImage.</span>
+</span><span data-line="413"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="414">        <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="415">
 </span><span data-line="416">
-</span><span data-line="417">
 <div class="viewcode-block" id="NullTouch">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTouch.html#village.classes.null_classes.NullTouch">[docs]</a>
-</span><span data-line="418"><span class="k">class</span><span class="w"> </span><span class="nc">NullTouch</span><span class="p">:</span>
+</span><span data-line="417"><span class="k">class</span><span class="w"> </span><span class="nc">NullTouch</span><span class="p">:</span>
+</span><span data-line="418">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="419">        <span class="s2">&quot;&quot;</span>
+</span><span data-line="420">        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SCREEN&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ScreenActive</span><span class="o">.</span><span class="n">TOUCHSCREEN</span>
+</span><span data-line="421">        <span class="k">else</span> <span class="s2">&quot;Error connecting to the touchscreen &quot;</span>
+</span><span data-line="422">    <span class="p">)</span>
+</span><span data-line="423">
 <div class="viewcode-block" id="NullTouch.stop">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullTouch.html#village.classes.null_classes.NullTouch.stop">[docs]</a>
-</span><span data-line="419">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="420">        <span class="k">return</span></div>
+</span><span data-line="424">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="425">        <span class="k">return</span></div>
 </div>
 
-</span><span data-line="421">
-</span><span data-line="422">
+</span><span data-line="426">
+</span><span data-line="427">
 <div class="viewcode-block" id="NullLEDStrip">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html#village.classes.null_classes.NullLEDStrip">[docs]</a>
-</span><span data-line="423"><span class="k">class</span><span class="w"> </span><span class="nc">NullLEDStrip</span><span class="p">:</span>
-</span><span data-line="424"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for LED strip&quot;&quot;&quot;</span>
-</span><span data-line="425">
-</span><span data-line="426">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;LED strip not available.&quot;</span>
-</span><span data-line="427">    <span class="n">num_leds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-</span><span data-line="428">
+</span><span data-line="428"><span class="k">class</span><span class="w"> </span><span class="nc">NullLEDStrip</span><span class="p">:</span>
+</span><span data-line="429"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for LED strip&quot;&quot;&quot;</span>
+</span><span data-line="430">
+</span><span data-line="431">    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Error connecting to the LED strip &quot;</span>
+</span><span data-line="432">    <span class="n">num_leds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span data-line="433">
 <div class="viewcode-block" id="NullLEDStrip.set_led_color">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html#village.classes.null_classes.NullLEDStrip.set_led_color">[docs]</a>
-</span><span data-line="429">    <span class="k">def</span><span class="w"> </span><span class="nf">set_led_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">red</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="430"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the color of a specific LED&quot;&quot;&quot;</span>
-</span><span data-line="431">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dummy LED </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> changed to </span><span class="si">{</span><span class="p">(</span><span class="n">red</span><span class="p">,</span><span class="w"> </span><span class="n">green</span><span class="p">,</span><span class="w"> </span><span class="n">blue</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</span><span data-line="434">    <span class="k">def</span><span class="w"> </span><span class="nf">set_led_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">red</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="435"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the color of a specific LED&quot;&quot;&quot;</span>
+</span><span data-line="436">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dummy LED </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> changed to </span><span class="si">{</span><span class="p">(</span><span class="n">red</span><span class="p">,</span><span class="w"> </span><span class="n">green</span><span class="p">,</span><span class="w"> </span><span class="n">blue</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="432">
+</span><span data-line="437">
 <div class="viewcode-block" id="NullLEDStrip.update_strip">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html#village.classes.null_classes.NullLEDStrip.update_strip">[docs]</a>
-</span><span data-line="433">    <span class="k">def</span><span class="w"> </span><span class="nf">update_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sleep_duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="434"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the LED strip to show changes&quot;&quot;&quot;</span>
-</span><span data-line="435">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip updated&quot;</span><span class="p">)</span></div>
+</span><span data-line="438">    <span class="k">def</span><span class="w"> </span><span class="nf">update_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sleep_duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="439"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the LED strip to show changes&quot;&quot;&quot;</span>
+</span><span data-line="440">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip updated&quot;</span><span class="p">)</span></div>
 
-</span><span data-line="436">
+</span><span data-line="441">
 <div class="viewcode-block" id="NullLEDStrip.clear_strip">
 <a class="viewcode-back" href="../../../api_generated/village.classes.null_classes.NullLEDStrip.html#village.classes.null_classes.NullLEDStrip.clear_strip">[docs]</a>
-</span><span data-line="437">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="438"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all LEDs&quot;&quot;&quot;</span>
-</span><span data-line="439">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip cleared&quot;</span><span class="p">)</span></div>
+</span><span data-line="442">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="443"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all LEDs&quot;&quot;&quot;</span>
+</span><span data-line="444">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dummy LED strip cleared&quot;</span><span class="p">)</span></div>
 </div>
 
 </span></pre></div>
@@ -1122,7 +1179,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=4ae4b120"></script>
+      <script src="../../../_static/documentation_options.js?v=431e8aa7"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

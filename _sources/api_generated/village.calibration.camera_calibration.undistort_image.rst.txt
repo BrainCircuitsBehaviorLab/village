@@ -1,0 +1,6 @@
+undistort\_image
+================
+
+.. currentmodule:: village.calibration.camera_calibration
+
+.. autofunction:: undistort_image

@@ -16,6 +16,14 @@ monitor\_layout
 
    
    
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      LabelButtons
+   
    
 
    

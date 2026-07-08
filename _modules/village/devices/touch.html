@@ -7,7 +7,7 @@
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=9454f7d5" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=9ba612c2" />
@@ -118,8 +118,18 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.calibration.html">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.html">camera_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.html">bpod_water_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibration.html">BpodWaterCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html">BpodWaterCalibrationTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.html">camera_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.default_result_path.html">default_result_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.undistort_image.html">undistort_image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.undistort_points.html">undistort_points</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration.CameraCalibration.html">CameraCalibration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
@@ -128,7 +138,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.optogrid_calibration.OptoGridCalibration.html">OptoGridCalibration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.html">sound_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.html">sound_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.calibration.sound_calibration.SoundCalibrationTask.html">SoundCalibrationTask</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.classes.html">classes</a><ul>
@@ -197,7 +211,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.calibration_base.html">calibration_base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.calibration_base.html">calibration_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.calibration_base.CalibrationBase.html">CalibrationBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -246,7 +263,13 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.devices.html">devices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.camera.html">camera</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.camera.html">camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.chip.html">chip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
@@ -254,7 +277,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.html">led_strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.html">led_strip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
@@ -268,20 +294,31 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.rfid.html">rfid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.rfid.Rfid.html">Rfid</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.scale.Scale.html">Scale</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.screen.html">screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.html">sound_device</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.html">telegram_bot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.html">telegram_bot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -296,17 +333,22 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.CameraCalibrationLayout.html">CameraCalibrationLayout</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.DiagnosticPlotsLayout.html">DiagnosticPlotsLayout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.gui.Gui.html">Gui</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui_window.html">gui_window</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.layout.html">layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.html">monitor_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.html">monitor_layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.tasks_layout.html">tasks_layout</a></li>
 </ul>
@@ -332,7 +374,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.import_all.html">import_all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.import_all.html">import_all</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.import_all.import_all.html">import_all</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.log.html">log</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.log.Log.html">Log</a></li>
 </ul>
@@ -393,8 +438,15 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.manager.html">manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.main.html">main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.manager.html">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.manager.Manager.html">Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.main.html">main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.main.system_run.html">system_run</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../resources_index.html">RESOURCES</a><ul>
@@ -467,124 +519,127 @@ data-aria-dark="Switch to auto color mode">
 <span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
-</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
-</span><span data-line="5">
-</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">evdev</span>
-</span><span data-line="7">
-</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.null_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullTouch</span>
-</span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">village.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">manager</span>
-</span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.error_queue</span><span class="w"> </span><span class="kn">import</span> <span class="n">error_queue</span>
-</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
-</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
-</span><span data-line="13">
-</span><span data-line="14">
-</span><span data-line="15"><span class="k">def</span><span class="w"> </span><span class="nf">_find_touchscreen_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="16"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the path of the device whose name matches TOUCHSCREEN_DEVICE.&quot;&quot;&quot;</span>
-</span><span data-line="17">    <span class="n">name</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TOUCHSCREEN_DEVICE&quot;</span><span class="p">)</span>
-</span><span data-line="18">    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">evdev</span><span class="o">.</span><span class="n">list_devices</span><span class="p">():</span>
-</span><span data-line="19">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="20">            <span class="k">if</span> <span class="n">evdev</span><span class="o">.</span><span class="n">InputDevice</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
-</span><span data-line="21">                <span class="k">return</span> <span class="n">path</span>
-</span><span data-line="22">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="23">            <span class="k">continue</span>
-</span><span data-line="24">    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Touchscreen device &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
-</span><span data-line="25">
-</span><span data-line="26">
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="kn">import</span><span class="w"> </span><span class="nn">evdev</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.null_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullTouch</span>
+</span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">village.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">manager</span>
+</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.error_queue</span><span class="w"> </span><span class="kn">import</span> <span class="n">error_queue</span>
+</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+</span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+</span><span data-line="15">
+</span><span data-line="16">
+</span><span data-line="17"><span class="k">def</span><span class="w"> </span><span class="nf">_find_touchscreen_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="18"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the path of the device whose name matches TOUCHSCREEN_DEVICE.&quot;&quot;&quot;</span>
+</span><span data-line="19">    <span class="n">name</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TOUCHSCREEN_DEVICE&quot;</span><span class="p">)</span>
+</span><span data-line="20">    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">evdev</span><span class="o">.</span><span class="n">list_devices</span><span class="p">():</span>
+</span><span data-line="21">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="22">            <span class="k">if</span> <span class="n">evdev</span><span class="o">.</span><span class="n">InputDevice</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+</span><span data-line="23">                <span class="k">return</span> <span class="n">path</span>
+</span><span data-line="24">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="25">            <span class="k">continue</span>
+</span><span data-line="26">    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Touchscreen device &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+</span><span data-line="27">
+</span><span data-line="28">
 <div class="viewcode-block" id="Touch">
 <a class="viewcode-back" href="../../../api_generated/village.devices.touch.Touch.html#village.devices.touch.Touch">[docs]</a>
-</span><span data-line="27"><span class="k">class</span><span class="w"> </span><span class="nc">Touch</span><span class="p">:</span>
-</span><span data-line="28"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads touch events from a Linux input device via evdev.</span>
-</span><span data-line="29">
-</span><span data-line="30"><span class="sd">    Works with both single-touch (ABS_X/ABS_Y) and multi-touch</span>
-</span><span data-line="31"><span class="sd">    (ABS_MT_POSITION_X/Y) devices, treating all contacts as a single pointer.</span>
-</span><span data-line="32">
-</span><span data-line="33"><span class="sd">    Touch events are debounced by TOUCH_INTERVAL seconds. Each event that</span>
-</span><span data-line="34"><span class="sd">    passes the debounce filter is forwarded directly to</span>
-</span><span data-line="35"><span class="sd">    manager.touch_trigger.trigger(x, y).</span>
-</span><span data-line="36"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="37">
+</span><span data-line="29"><span class="k">class</span><span class="w"> </span><span class="nc">Touch</span><span class="p">:</span>
+</span><span data-line="30"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads touch events from a Linux input device via evdev.</span>
+</span><span data-line="31">
+</span><span data-line="32"><span class="sd">    Works with both single-touch (ABS_X/ABS_Y) and multi-touch</span>
+</span><span data-line="33"><span class="sd">    (ABS_MT_POSITION_X/Y) devices, treating all contacts as a single pointer.</span>
+</span><span data-line="34">
+</span><span data-line="35"><span class="sd">    Touch events are debounced by TOUCH_INTERVAL seconds. Each event that</span>
+</span><span data-line="36"><span class="sd">    passes the debounce filter is forwarded directly to</span>
+</span><span data-line="37"><span class="sd">    manager.touch_trigger.trigger(x, y).</span>
+</span><span data-line="38"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="39">
 <div class="viewcode-block" id="Touch.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.devices.touch.Touch.html#village.devices.touch.Touch.__init__">[docs]</a>
-</span><span data-line="38">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="39">        <span class="n">path</span> <span class="o">=</span> <span class="n">_find_touchscreen_path</span><span class="p">()</span>
-</span><span data-line="40">        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">evdev</span><span class="o">.</span><span class="n">InputDevice</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span data-line="41">        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">grab</span><span class="p">()</span>  <span class="c1"># exclusive access to the device</span>
-</span><span data-line="42">        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">set_clock_id</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># CLOCK_MONOTONIC — same as time.monotonic()</span>
-</span><span data-line="43">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_interval</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TOUCH_INTERVAL&quot;</span><span class="p">)</span>
-</span><span data-line="44">        <span class="n">touch_resolution_x</span><span class="p">,</span> <span class="n">touch_resolution_y</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TOUCH_RESOLUTION&quot;</span><span class="p">)</span>
-</span><span data-line="45">        <span class="bp">self</span><span class="o">.</span><span class="n">width_px</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_px</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SCREEN_RESOLUTION&quot;</span><span class="p">)</span>
-</span><span data-line="46">        <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_px</span> <span class="o">/</span> <span class="n">touch_resolution_x</span>
-</span><span data-line="47">        <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_y</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_px</span> <span class="o">/</span> <span class="n">touch_resolution_y</span>
-</span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="49">        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="50">        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+</span><span data-line="40">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="41">        <span class="n">path</span> <span class="o">=</span> <span class="n">_find_touchscreen_path</span><span class="p">()</span>
+</span><span data-line="42">        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">evdev</span><span class="o">.</span><span class="n">InputDevice</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span data-line="43">        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">grab</span><span class="p">()</span>  <span class="c1"># exclusive access to the device</span>
+</span><span data-line="44">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_interval</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TOUCH_INTERVAL&quot;</span><span class="p">)</span>
+</span><span data-line="45">        <span class="n">touch_resolution_x</span><span class="p">,</span> <span class="n">touch_resolution_y</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TOUCH_RESOLUTION&quot;</span><span class="p">)</span>
+</span><span data-line="46">        <span class="bp">self</span><span class="o">.</span><span class="n">width_px</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_px</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SCREEN_RESOLUTION&quot;</span><span class="p">)</span>
+</span><span data-line="47">        <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_px</span> <span class="o">/</span> <span class="n">touch_resolution_x</span>
+</span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_y</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_px</span> <span class="o">/</span> <span class="n">touch_resolution_y</span>
+</span><span data-line="49">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="50">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="51">        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="52">        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
-</span><span data-line="51">
-</span><span data-line="52">    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="53">        <span class="n">_x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="54">        <span class="n">_y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="55">        <span class="n">_last_t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="56">
-</span><span data-line="57">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="58">            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_loop</span><span class="p">():</span>
-</span><span data-line="59">                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
-</span><span data-line="60">                    <span class="k">break</span>
-</span><span data-line="61">                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">EV_ABS</span><span class="p">:</span>
-</span><span data-line="62">                    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">code</span> <span class="ow">in</span> <span class="p">(</span>
-</span><span data-line="63">                        <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">ABS_X</span><span class="p">,</span>
-</span><span data-line="64">                        <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">ABS_MT_POSITION_X</span><span class="p">,</span>
-</span><span data-line="65">                    <span class="p">):</span>
-</span><span data-line="66">                        <span class="n">_x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">value</span>
-</span><span data-line="67">                    <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">code</span> <span class="ow">in</span> <span class="p">(</span>
-</span><span data-line="68">                        <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">ABS_Y</span><span class="p">,</span>
-</span><span data-line="69">                        <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">ABS_MT_POSITION_Y</span><span class="p">,</span>
-</span><span data-line="70">                    <span class="p">):</span>
-</span><span data-line="71">                        <span class="n">_y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">value</span>
-</span><span data-line="72">                <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">EV_SYN</span><span class="p">:</span>
-</span><span data-line="73">                    <span class="n">t</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
-</span><span data-line="74">                    <span class="k">if</span> <span class="n">t</span> <span class="o">-</span> <span class="n">_last_t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">touch_interval</span><span class="p">:</span>
-</span><span data-line="75">                        <span class="n">px</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_x</span><span class="p">)</span>
-</span><span data-line="76">                        <span class="n">py</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_y</span><span class="p">)</span>
-</span><span data-line="77">                        <span class="n">_last_t</span> <span class="o">=</span> <span class="n">t</span>
-</span><span data-line="78">                        <span class="k">if</span> <span class="n">manager</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">task_is_running</span><span class="p">():</span>
-</span><span data-line="79">                            <span class="n">manager</span><span class="o">.</span><span class="n">touch_trigger</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</span><span data-line="80">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="81">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="82">                <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;touchscreen&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
-</span><span data-line="83">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="84">                <span class="k">pass</span>
-</span><span data-line="85">
+</span><span data-line="53">
+</span><span data-line="54">    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="55">        <span class="n">_x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="56">        <span class="n">_y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="57">        <span class="n">_last_t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="58">
+</span><span data-line="59">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="60">            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read_loop</span><span class="p">():</span>
+</span><span data-line="61">                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+</span><span data-line="62">                    <span class="k">break</span>
+</span><span data-line="63">                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">EV_ABS</span><span class="p">:</span>
+</span><span data-line="64">                    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">code</span> <span class="ow">in</span> <span class="p">(</span>
+</span><span data-line="65">                        <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">ABS_X</span><span class="p">,</span>
+</span><span data-line="66">                        <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">ABS_MT_POSITION_X</span><span class="p">,</span>
+</span><span data-line="67">                    <span class="p">):</span>
+</span><span data-line="68">                        <span class="n">_x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">value</span>
+</span><span data-line="69">                    <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">code</span> <span class="ow">in</span> <span class="p">(</span>
+</span><span data-line="70">                        <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">ABS_Y</span><span class="p">,</span>
+</span><span data-line="71">                        <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">ABS_MT_POSITION_Y</span><span class="p">,</span>
+</span><span data-line="72">                    <span class="p">):</span>
+</span><span data-line="73">                        <span class="n">_y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">value</span>
+</span><span data-line="74">                <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">evdev</span><span class="o">.</span><span class="n">ecodes</span><span class="o">.</span><span class="n">EV_SYN</span><span class="p">:</span>
+</span><span data-line="75">                    <span class="n">t</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+</span><span data-line="76">                    <span class="k">if</span> <span class="n">t</span> <span class="o">-</span> <span class="n">_last_t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">touch_interval</span><span class="p">:</span>
+</span><span data-line="77">                        <span class="n">px</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_x</span><span class="p">)</span>
+</span><span data-line="78">                        <span class="n">py</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_px_per_touch_y</span><span class="p">)</span>
+</span><span data-line="79">                        <span class="n">_last_t</span> <span class="o">=</span> <span class="n">t</span>
+</span><span data-line="80">                        <span class="k">if</span> <span class="n">manager</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">task_is_running</span><span class="p">():</span>
+</span><span data-line="81">                            <span class="n">ts</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
+</span><span data-line="82">                            <span class="n">manager</span><span class="o">.</span><span class="n">touch_trigger</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+</span><span data-line="83">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="84">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="85">                <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;touchscreen&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
+</span><span data-line="86">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="87">                <span class="k">pass</span>
+</span><span data-line="88">
 <div class="viewcode-block" id="Touch.stop">
 <a class="viewcode-back" href="../../../api_generated/village.devices.touch.Touch.html#village.devices.touch.Touch.stop">[docs]</a>
-</span><span data-line="86">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="87"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the reader thread.&quot;&quot;&quot;</span>
-</span><span data-line="88">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="89">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="90">            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span data-line="91">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="92">            <span class="k">pass</span></div>
+</span><span data-line="89">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="90"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the reader thread.&quot;&quot;&quot;</span>
+</span><span data-line="91">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="92">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="93">            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="94">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="95">            <span class="k">pass</span></div>
 </div>
 
-</span><span data-line="93">
-</span><span data-line="94">
+</span><span data-line="96">
+</span><span data-line="97">
 <div class="viewcode-block" id="get_touch">
 <a class="viewcode-back" href="../../../api_generated/village.devices.touch.get_touch.html#village.devices.touch.get_touch">[docs]</a>
-</span><span data-line="95"><span class="k">def</span><span class="w"> </span><span class="nf">get_touch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Touch</span> <span class="o">|</span> <span class="n">NullTouch</span><span class="p">:</span>
-</span><span data-line="96">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScreenActive</span>
-</span><span data-line="97">
-</span><span data-line="98">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SCREEN&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ScreenActive</span><span class="o">.</span><span class="n">TOUCHSCREEN</span><span class="p">:</span>
-</span><span data-line="99">        <span class="k">return</span> <span class="n">NullTouch</span><span class="p">()</span>
-</span><span data-line="100">    <span class="k">try</span><span class="p">:</span>
-</span><span data-line="101">        <span class="n">ts</span> <span class="o">=</span> <span class="n">Touch</span><span class="p">()</span>
-</span><span data-line="102">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Touchscreen successfully initialized&quot;</span><span class="p">)</span>
-</span><span data-line="103">        <span class="k">return</span> <span class="n">ts</span>
-</span><span data-line="104">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="105">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not initialize touchscreen&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
-</span><span data-line="106">        <span class="k">return</span> <span class="n">NullTouch</span><span class="p">()</span></div>
+</span><span data-line="98"><span class="k">def</span><span class="w"> </span><span class="nf">get_touch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Touch</span> <span class="o">|</span> <span class="n">NullTouch</span><span class="p">:</span>
+</span><span data-line="99">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScreenActive</span>
+</span><span data-line="100">
+</span><span data-line="101">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SCREEN&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ScreenActive</span><span class="o">.</span><span class="n">TOUCHSCREEN</span><span class="p">:</span>
+</span><span data-line="102">        <span class="k">return</span> <span class="n">NullTouch</span><span class="p">()</span>
+</span><span data-line="103">    <span class="k">try</span><span class="p">:</span>
+</span><span data-line="104">        <span class="n">ts</span> <span class="o">=</span> <span class="n">Touch</span><span class="p">()</span>
+</span><span data-line="105">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Touchscreen successfully initialized&quot;</span><span class="p">)</span>
+</span><span data-line="106">        <span class="k">return</span> <span class="n">ts</span>
+</span><span data-line="107">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="108">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not initialize touchscreen&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+</span><span data-line="109">        <span class="k">return</span> <span class="n">NullTouch</span><span class="p">()</span></div>
 
-</span><span data-line="107">
-</span><span data-line="108">
-</span><span data-line="109"><span class="n">touch</span> <span class="o">=</span> <span class="n">get_touch</span><span class="p">()</span>
+</span><span data-line="110">
+</span><span data-line="111">
+</span><span data-line="112"><span class="n">touch</span> <span class="o">=</span> <span class="n">get_touch</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -609,7 +664,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=4ae4b120"></script>
+      <script src="../../../_static/documentation_options.js?v=431e8aa7"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

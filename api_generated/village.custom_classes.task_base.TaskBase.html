@@ -7,7 +7,7 @@
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=9454f7d5" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
@@ -118,8 +118,18 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_index.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="village.calibration.html">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.bpod_water_calibration.html">bpod_water_calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.camera_calibration.html">camera_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.bpod_water_calibration.html">bpod_water_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.bpod_water_calibration.BpodWaterCalibration.html">BpodWaterCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.bpod_water_calibration.BpodWaterCalibrationTask.html">BpodWaterCalibrationTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.camera_calibration.html">camera_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration.default_result_path.html">default_result_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration.undistort_image.html">undistort_image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration.undistort_points.html">undistort_points</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration.CameraCalibration.html">CameraCalibration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
 </ul>
@@ -128,7 +138,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.calibration.optogrid_calibration.OptoGridCalibration.html">OptoGridCalibration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.calibration.sound_calibration.html">sound_calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.sound_calibration.SoundCalibration.html">SoundCalibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.calibration.sound_calibration.SoundCalibrationTask.html">SoundCalibrationTask</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.classes.html">classes</a><ul>
@@ -197,7 +211,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.calibration_base.html">calibration_base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.calibration_base.html">calibration_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.calibration_base.CalibrationBase.html">CalibrationBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -246,7 +263,13 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.devices.html">devices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.camera.html">camera</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.camera.html">camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.get_camera.html">get_camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.print_info_about_the_connected_cameras.html">print_info_about_the_connected_cameras</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.Camera.html">Camera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.camera.LowFreqQPicamera2.html">LowFreqQPicamera2</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.chip.html">chip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.get_motor.html">get_motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.get_motor_old.html">get_motor_old</a></li>
@@ -254,7 +277,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.led_strip.html">led_strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.led_strip.html">led_strip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
@@ -268,20 +294,31 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.rfid.html">rfid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.rfid.Rfid.html">Rfid</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.scale.Scale.html">Scale</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.screen.html">screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.sound_device.html">sound_device</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.devices.telegram_bot.html">telegram_bot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.telegram_bot.html">telegram_bot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.get_telegram_bot.html">get_telegram_bot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.telegram_bot.TelegramBot.html">TelegramBot</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.temp_sensor.html">temp_sensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
@@ -296,17 +333,22 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.camera_calibration_layout.html">camera_calibration_layout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.camera_calibration_layout.CameraCalibrationLayout.html">CameraCalibrationLayout</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.gui.camera_calibration_layout.DiagnosticPlotsLayout.html">DiagnosticPlotsLayout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.gui.html">gui</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.gui.Gui.html">Gui</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.data_layout.html">data_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.gui.html">gui</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.gui_window.html">gui_window</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.layout.html">layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.layout.NavTabProxy.html">NavTabProxy</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.main_layout.html">main_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.gui.monitor_layout.html">monitor_layout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.gui.monitor_layout.LabelButtons.html">LabelButtons</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.settings_layout.html">settings_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.gui.tasks_layout.html">tasks_layout</a></li>
 </ul>
@@ -332,7 +374,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.global_csv_for_subject.main.html">main</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="village.scripts.import_all.html">import_all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.import_all.html">import_all</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.import_all.import_all.html">import_all</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.log.html">log</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.log.Log.html">Log</a></li>
 </ul>
@@ -393,8 +438,15 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="village.manager.html">manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="village.main.html">main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="village.manager.html">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.manager.Manager.html">Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="village.main.html">main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.main.main.html">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="village.main.system_run.html">system_run</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
@@ -542,24 +594,37 @@ data-aria-dark="Switch to auto color mode">
 <p>Subclass <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code> to implement your own task. You must override four methods
 and may optionally call helper methods and read certain attributes during
 execution.</p>
+<p>The task starts by calling <code class="docutils literal notranslate"><span class="pre">start()</span></code>, then enters a loop where it calls
+<code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> followed by <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code>. The loop continues until the
+maximum number of trials is reached, the maximum duration is exceeded,
+or <code class="docutils literal notranslate"><span class="pre">force_stop</span></code> is set to True. Finally, <code class="docutils literal notranslate"><span class="pre">close()</span></code> is called to
+clean up resources.</p>
 <p>──────────────────────────────────────────────────────────
 METHODS YOU MUST OVERRIDE
 ──────────────────────────────────────────────────────────</p>
 <dl class="simple">
-<dt>start(self) -&gt; None</dt><dd><p>Called once before the trial loop begins.
+<dt>start(self)</dt><dd><p>Called once before the trial loop begins.
 Use it to configure hardware, pre-compute stimuli, open files, etc.</p>
 </dd>
-<dt>create_trial(self) -&gt; None</dt><dd><p>Called at the beginning of every trial.
-Build and send the Bpod state machine here (or set up stimuli for
-non-Bpod controllers). The state machine runs to completion before
-<code class="docutils literal notranslate"><span class="pre">after_trial</span></code> is called.</p>
+<dt>create_trial(self)</dt><dd><p>Called at the beginning of every trial.
+If using Bpod: each call starts with an empty state machine. Add states
+with <code class="docutils literal notranslate"><span class="pre">bpod.add_state</span></code> and, when the method returns, the state machine
+is sent and run automatically. <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> is called once it
+finishes.
+If not using Bpod: you are responsible for creating and running the
+trial logic yourself.</p>
 </dd>
-<dt>after_trial(self) -&gt; None</dt><dd><p>Called immediately after each trial finishes.
+<dt>after_trial(self)</dt><dd><p>Called immediately after each trial finishes.
 Use it to score the animal’s performance, update adaptive parameters,
-and call <code class="docutils literal notranslate"><span class="pre">register_value</span></code> to save custom columns to the data file.
-<code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> is already populated at this point.</p>
+and call <code class="docutils literal notranslate"><span class="pre">register_value</span></code> to save whatever values you need for
+the trial.
+You must always register a <code class="docutils literal notranslate"><span class="pre">water</span></code> value with the amount of water
+consumed during the trial; the system sums it across the session to
+get the total water consumption. If that total falls below a
+configurable threshold, an alarm is triggered. The threshold can be
+adjusted in the Settings tab of the GUI.</p>
 </dd>
-<dt>close(self) -&gt; None</dt><dd><p>Called once after the trial loop ends (session finished, forced stop,
+<dt>close(self)</dt><dd><p>Called once after the trial loop ends (session finished, forced stop,
 or error).
 Use it to close files, stop hardware, release resources.</p>
 </dd>
@@ -568,7 +633,34 @@ Use it to close files, stop hardware, release resources.</p>
 METHODS YOU CAN CALL (do not override)
 ──────────────────────────────────────────────────────────</p>
 <dl>
-<dt>register_value(name: str, value: Any) -&gt; None</dt><dd><p>Saves a custom value to the current trial row in the CSV.
+<dt>register_start_trial(self, raspberry_timestamp: float, controller_timestamp: float)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
+automatically.
+For other controllers, call this at the beginning of each trial to register
+the start of the trial.
+We use 2 timestamps because we use the start of the trial to synchronize the
+clocks between the raspberry and the controller.
+If you are not using a controller, (i.e. the controller is the same raspberry),
+the controller_timestamp is exactly the same as the raspberry timestamp.
+To get the raspberry timestamp you can use time_utils.now_timestamp().</p>
+</dd>
+<dt>register_end_trial(self, controller_timestamp: float = 0.0)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
+automatically.
+For other controllers, call this at the end of each trial to register the
+end of the trial.</p>
+</dd>
+<dt>register_enter_state(self, state_name: str, controller_timestamp: float)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
+automatically.
+For other controllers, call this when entering a state to register the
+entry into that state.</p>
+</dd>
+<dt>register_controller_event(self, name: str, controller_timestamp: float)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
+automatically.
+For other controllers, call this to register an event from the controller.</p>
+</dd>
+<dt>register_raspberry_event(self, name: str, raspberry_timestamp: float)</dt><dd><p>Call this to register an event from the raspberry, for example when executing
+direct functions or when using a camera to detect or trigger actions.</p>
+</dd>
+<dt>register_value(self, name: str, value: Any)</dt><dd><p>Saves a custom value to the current trial row in the CSV.
 Call this inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -576,7 +668,7 @@ Call this inside <code class="docutils literal notranslate"><span class="pre">af
 </span></pre></div>
 </div>
 </dd>
-<dt>execute_function(self, i: int) -&gt; None:</dt><dd><p>Executes a registered function.</p>
+<dt>execute_function(self, i: int)</dt><dd><p>Executes a registered function.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>i (int): The function index (1-99).</p>
 </dd>
@@ -589,36 +681,84 @@ Call this inside <code class="docutils literal notranslate"><span class="pre">af
 ATTRIBUTES YOU CAN READ INSIDE YOUR TASK
 ──────────────────────────────────────────────────────────</p>
 <dl>
-<dt>self.trial_data<span class="classifier">dict</span></dt><dd><p>Dictionary populated automatically after each trial with Bpod event
-timestamps and any values previously registered via <code class="docutils literal notranslate"><span class="pre">register_value</span></code>.
-Available inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> to drive adaptive logic.</p>
-<p>Typical keys: <code class="docutils literal notranslate"><span class="pre">&quot;trial&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;subject&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;date&quot;</span></code>,
-<code class="docutils literal notranslate"><span class="pre">&quot;system_name&quot;</span></code>, plus every key you have registered with
-<code class="docutils literal notranslate"><span class="pre">register_value</span></code>.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="2">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="3">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">+=</span> <span class="mi">1</span>
-</span></pre></div>
-</div>
-</dd>
-<dt>self.current_trial<span class="classifier">int</span></dt><dd><p>1-based index of the trial that just ran (available in both
-<code class="docutils literal notranslate"><span class="pre">create_trial</span></code> and <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>).</p>
+<dt>self.name: str</dt><dd><p>Name of the task.</p>
 </dd>
 <dt>self.subject<span class="classifier">str</span></dt><dd><p>Name of the subject running the session.</p>
+</dd>
+<dt>self.system_name<span class="classifier">str</span></dt><dd><p>Name of the system as defined in the settings tab of the GUI.</p>
+</dd>
+<dt>self.bpod<span class="classifier">BpodController</span></dt><dd><p>Bpod interface (state machine construction, sending, etc.).
+Primarily used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p>
+</dd>
+<dt>self.arduino<span class="classifier">ArduinoController</span></dt><dd><p>Arduino interface for tasks that use an Arduino instead of Bpod.</p>
 </dd>
 <dt>self.settings<span class="classifier">Settings</span></dt><dd><p>Object that holds all the session parameters defined in the training
 protocol. Read and write its attributes to implement adaptive training.</p>
 </dd>
 <dt>self.calibrations<span class="classifier">Calibrations</span></dt><dd><p>Object that holds the task’s calibrations. Call its methods to convert
 between hardware values and real-world units.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">&quot;white_noise&quot;</span>
+</span><span data-line="3"><span class="p">)</span>
+</span></pre></div>
+</div>
 </dd>
-<dt>self.bpod<span class="classifier">BpodController</span></dt><dd><p>Low-level Bpod interface (state machine construction, sending, etc.).
-Primarily used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p>
+<dt>self.cam_box<span class="classifier">Camera | NullCamera</span></dt><dd><p>Camera attached to the operant box (NullCamera if not configured).</p>
 </dd>
-<dt>self.arduino<span class="classifier">ArduinoController</span></dt><dd><p>Arduino interface for tasks that use an Arduino instead of Bpod.</p>
+<dt>self.current_trial<span class="classifier">int</span></dt><dd><p>The current trial number starting from 1</p>
 </dd>
-<dt>self.cam_box<span class="classifier">Camera | NullCamera</span></dt><dd><p>Camera attached to the behaviour box (NullCamera if not configured).</p>
+<dt>self.trial_data<span class="classifier">dict</span></dt><dd><p>Dictionary populated automatically at the end of each trial.
+Available inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<p><strong>Keys always present:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;date&quot;</span></code> (str): date string of the session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;trial&quot;</span></code> (int): current trial number.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;subject&quot;</span></code> (str): subject name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code> (str): task name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;system_name&quot;</span></code> (str): system name from settings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_START&quot;</span></code> (float): absolute timestamp (seconds, UNIX epoch)
+when the trial started.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_END&quot;</span></code> (float): absolute timestamp when the trial ended.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ordered_list_of_events&quot;</span></code> (list[str]): event names in the order
+they occurred during the trial (e.g.
+<code class="docutils literal notranslate"><span class="pre">[&quot;Port1In&quot;,</span> <span class="pre">&quot;Port1Out&quot;,</span> <span class="pre">&quot;Port1In&quot;]</span></code>).</p></li>
+</ul>
+<p><strong>Keys added per state visited (Bpod or manual):</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_START&quot;</span></code> (list[float]): timestamps of every entry
+into that state. It is a list because the same state can be visited
+more than once in a single trial.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_END&quot;</span></code> (list[float]): timestamps of every exit from
+that state, paired with the corresponding START list.</p></li>
+</ul>
+<p><strong>Keys added per event type:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;EventName&gt;&quot;</span></code> (list[float]): timestamps of every occurrence of
+that event (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Port1Out&quot;</span></code>).</p></li>
+</ul>
+<p>When using Bpod all state and event keys are filled automatically.
+When not using Bpod, call <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code> and
+<code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code> / <code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code> yourself
+to populate them.</p>
+<p><strong>Keys added by you:</strong></p>
+<ul class="simple">
+<li><p>Any name passed to <code class="docutils literal notranslate"><span class="pre">register_value</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="3">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="4">    <span class="n">t_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">&quot;STATE_stimulus_START&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="5">    <span class="n">t_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">&quot;STATE_stimulus_END&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="6">    <span class="n">response_time</span> <span class="o">=</span> <span class="n">t_end</span> <span class="o">-</span> <span class="n">t_start</span>
+</span></pre></div>
+</div>
+</dd>
+<dt>self.force_stop: bool</dt><dd><p>If made true, the task will stop.</p>
+</dd>
+<dt>self.chrono: Chrono</dt><dd><p>Using self.chrono.get_seconds() you can get the time in seconds since the
+task started.</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -755,10 +895,8 @@ functions or when using a camera to detect or trigger events.</p>
 <dd><p>Runs the task in a separate background thread.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>daemon</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to run as a daemon thread.</p></li>
-<li><p><strong>True.</strong> (<em>Defaults to</em>)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>daemon</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to run as a daemon thread.
+Defaults to True.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -891,7 +1029,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4ae4b120"></script>
+      <script src="../_static/documentation_options.js?v=431e8aa7"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -16,14 +16,18 @@ Raspberry Pi.
 
 ### Dual-screen configuration
 
+### Dual-screen configuration
+
+The goal of this configuration is to make the system **always detect two
+displays, even when no physical monitors are connected**. Forcing
+both ports to be treated as active means the two display outputs are always
+present and addressable, whether or not real monitors are attached.
+
 The system runs with two display outputs:
 
 - **HDMI-1**: Primary display showing the Training Village GUI *(can be virtual —
   no physical monitor required)*.
 - **HDMI-2**: Secondary display inside the operant box showing behavioral stimuli.
-
-To configure this, you need to tell the system to treat both HDMI ports as active,
-regardless of whether a physical monitor is connected to HDMI-1.
 
 **Step 1 — Edit the boot configuration:**
 
@@ -47,7 +51,18 @@ The `vc4.force_hotplug` flag controls which HDMI ports the system treats as conn
 `1` = HDMI-1 only, `2` = HDMI-2 only, `3` = both. The `video=HDMI-A-*` parameters set
 the resolution for each port independently.
 
-**Step 2 — Set the resolution in the desktop:**
+The `vc4.force_hotplug` flag controls which HDMI ports the system treats as
+connected regardless of whether a monitor is physically plugged in:
+`1` = HDMI-1 only, `2` = HDMI-2 only, `3` = both. Setting it to `3` is what
+guarantees both screens are always detected. The `video=HDMI-A-*` parameters
+set the resolution for each port independently.
+
+**Step 2 — Reboot:**
+
+Changes to `cmdline.txt` are only read at boot, so you must restart the
+operating system for the new display configuration to take effect.
+
+**Step 3 — Set the resolution in the desktop:**
 
 Navigate to **Raspberry Pi menu → Preferences → Control Centre → Screens → HDMI-2**,
 set the resolution to **1280×720** or lower, and apply.

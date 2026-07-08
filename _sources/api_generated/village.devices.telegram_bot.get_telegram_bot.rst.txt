@@ -1,0 +1,6 @@
+get\_telegram\_bot
+==================
+
+.. currentmodule:: village.devices.telegram_bot
+
+.. autofunction:: get_telegram_bot

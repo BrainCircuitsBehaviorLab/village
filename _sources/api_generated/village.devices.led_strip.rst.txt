@@ -12,6 +12,14 @@ led\_strip
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      get_led_strip
+   
    
 
    

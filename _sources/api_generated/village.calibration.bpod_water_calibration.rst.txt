@@ -16,6 +16,15 @@ bpod\_water\_calibration
 
    
    
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      BpodWaterCalibration
+      BpodWaterCalibrationTask
+   
    
 
    

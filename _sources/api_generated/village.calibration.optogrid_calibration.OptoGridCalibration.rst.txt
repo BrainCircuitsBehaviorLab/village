@@ -17,9 +17,26 @@ OptoGridCalibration
       :no-index:
    
       ~OptoGridCalibration.__init__
+      ~OptoGridCalibration.add_entry
+      ~OptoGridCalibration.change_last_entry
+      ~OptoGridCalibration.change_layout
+      ~OptoGridCalibration.check_split_csv
+      ~OptoGridCalibration.convert_df_to_types
+      ~OptoGridCalibration.convert_with_default
+      ~OptoGridCalibration.create_data_collection
+      ~OptoGridCalibration.create_plot
+      ~OptoGridCalibration.df_from_df
       ~OptoGridCalibration.draw
+      ~OptoGridCalibration.get_first_entry
+      ~OptoGridCalibration.get_last_calibration_df
+      ~OptoGridCalibration.get_last_entry
+      ~OptoGridCalibration.get_last_entry_name
+      ~OptoGridCalibration.init_panel
       ~OptoGridCalibration.is_active
+      ~OptoGridCalibration.reset
+      ~OptoGridCalibration.save_from_df
       ~OptoGridCalibration.update_gui
+      ~OptoGridCalibration.update_status_label_buttons
    
    
 
@@ -30,6 +47,7 @@ OptoGridCalibration
    .. autosummary::
       :no-index:
    
+      ~OptoGridCalibration.display_name
       ~OptoGridCalibration.name
    
    
