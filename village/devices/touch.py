@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import threading
+import time
 import traceback
 
 import evdev
@@ -9,6 +10,7 @@ from village.classes.null_classes import NullTouch
 from village.manager import manager
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
@@ -39,13 +41,13 @@ class Touch:
         path = _find_touchscreen_path()
         self.device = evdev.InputDevice(path)
         self.device.grab()  # exclusive access to the device
-        self.device.set_clock_id(1)  # CLOCK_MONOTONIC — same as time.monotonic()
         self.touch_interval: float = settings.get("TOUCH_INTERVAL")
         touch_resolution_x, touch_resolution_y = settings.get("TOUCH_RESOLUTION")
         self.width_px, self.height_px = settings.get("SCREEN_RESOLUTION")
         self._px_per_touch_x: float = self.width_px / touch_resolution_x
         self._px_per_touch_y: float = self.height_px / touch_resolution_y
         self._running = True
+        self.error = ""
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
 
@@ -76,7 +78,8 @@ class Touch:
                         py = int(_y * self._px_per_touch_y)
                         _last_t = t
                         if manager.state.task_is_running():
-                            manager.touch_trigger.trigger(px, py, t)
+                            ts = t - (time.time() - time_utils.now_timestamp())
+                            manager.touch_trigger.trigger(px, py, ts)
         except Exception:
             try:
                 error_queue.put_nowait(("touchscreen", traceback.format_exc()))

@@ -247,6 +247,37 @@ Log out of the desktop session and log back in for the change to take effect
 which should include `input` in the output.
 
 
+### Keep New Windows on HDMI-1
+
+When using two screens, new application windows should always open on HDMI-1 (the primary screen running the GUI), not on HDMI-2, which is reserved for displaying behavioral stimuli.
+
+1. Copy the Openbox configuration file to your home directory so it can be edited:
+
+```
+cp /etc/xdg/openbox/rpd-rc.xml ~/.config/openbox/rpd-rc.xml
+nano ~/.config/openbox/rpd-rc.xml
+```
+
+2. Find the block between `<placement>` and `</placement>` and replace it with:
+
+```
+<placement>
+  <policy>Smart</policy>
+  <center>yes</center>
+  <monitor>Primary</monitor>
+  <primaryMonitor>1</primaryMonitor>
+</placement>
+```
+
+3. Reconfigure:
+
+```
+openbox --reconfigure
+```
+
+4. Reboot the system.
+
+
 ### Optional: Increase SPI buffer size for LED strip
 
 1. Modify the file: `/boot/firmware/cmdline.txt`

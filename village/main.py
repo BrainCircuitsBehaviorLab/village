@@ -89,6 +89,7 @@ manager.errors += (
     + motor_box2.error
     + scale.error
     + temp_sensor.error
+    + touch.error
     + sound_device.error
     + telegram_bot.error
 )

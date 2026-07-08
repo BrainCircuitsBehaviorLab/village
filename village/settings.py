@@ -67,13 +67,6 @@ sound_settings = [
 screen_settings = [
     Setting("USE_SCREEN", "OFF", ScreenActive, "Use of a regular or touch screen."),
     Setting(
-        "SCREEN_SIZE_MM",
-        [400, 200],
-        list[int],
-        """Physical screen size in millimeters. Useful when positioning stimuli
-using real-world units instead of pixels.""",
-    ),
-    Setting(
         "SCREEN_RESOLUTION",
         [1600, 900],
         list[int],

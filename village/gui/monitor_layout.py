@@ -520,20 +520,20 @@ class CorridorLayout(Layout):
 
     def draw(self) -> None:
         """Draws the motor, scale and LEDs controls."""
-        self.draw_motor_buttons("MOTOR1", 9, 2, motor_corridor1)
-        self.draw_motor_buttons("MOTOR2", 14, 2, motor_corridor2)
-        self.draw_motor_buttons("MOTOR3", 19, 2, motor_corridor3)
+        self.draw_motor_buttons("MOTOR1", 6, 2, motor_corridor1)
+        self.draw_motor_buttons("MOTOR2", 11, 2, motor_corridor2)
+        self.draw_motor_buttons("MOTOR3", 16, 2, motor_corridor3)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID reader: ", 1, 9, 12, 2, "black"
+            "RFID reader: ", 1, 2, 12, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
         index = Active.get_index_from_value(manager.rfid_reader)
         self.rfid_reader_button = self.create_and_add_toggle_button(
             key,
-            1,
-            20,
+            3,
+            2,
             10,
             2,
             possible_values,
@@ -543,15 +543,15 @@ class CorridorLayout(Layout):
         )
 
         self.visible_label: Label = self.create_and_add_label(
-            "Visible light: ", 4, 9, 12, 2, "black"
+            "Visible light: ", 1, 15, 12, 2, "black"
         )
         key = "VISIBLE_CORRIDOR"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(manager.visible_corridor_cycle)
         self.visible_button = self.create_and_add_toggle_button(
             key,
-            4,
-            20,
+            3,
+            15,
             10,
             2,
             possible_values,
@@ -561,15 +561,15 @@ class CorridorLayout(Layout):
         )
 
         self.ir_label: Label = self.create_and_add_label(
-            "IR light: ", 6, 9, 12, 2, "black"
+            "IR light: ", 1, 28, 12, 2, "black"
         )
         key = "IR_CORRIDOR"
         possible_values = Cycle.values()
         index = Cycle.get_index_from_value(manager.ir_corridor_cycle)
         self.ir_button = self.create_and_add_toggle_button(
             key,
-            6,
-            20,
+            3,
+            28,
             10,
             2,
             possible_values,
@@ -580,8 +580,8 @@ class CorridorLayout(Layout):
 
         self.change_angles: PushButton = self.create_and_add_button(
             "SET MOTOR ANGLES",
-            19,
-            22,
+            21,
+            2,
             16,
             2,
             self.change_angles_clicked,
@@ -589,7 +589,7 @@ class CorridorLayout(Layout):
         )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            9,
+            6,
             22,
             16,
             2,
@@ -598,7 +598,7 @@ class CorridorLayout(Layout):
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            11,
+            8,
             22,
             16,
             2,
@@ -607,7 +607,7 @@ class CorridorLayout(Layout):
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            14,
+            11,
             22,
             16,
             2,
@@ -616,7 +616,7 @@ class CorridorLayout(Layout):
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            16,
+            13,
             22,
             16,
             2,
@@ -860,14 +860,9 @@ class BoxLayout(Layout):
             bpod_col = 12
 
         if manager.use_of_box_chip:
-            box_col2 = box_col + 18
-
             self.draw_motor_buttons("MOTOR1", box_row + 5, box_col, motor_box1)
             self.draw_motor_buttons("MOTOR2", box_row + 10, box_col, motor_box2)
             self.draw_motor_buttons("MOTOR3", box_row + 15, box_col, motor_box3)
-
-            self.draw_motor_buttons("MOTOR4", box_row + 5, box_col2, motor_box4)
-            self.draw_motor_buttons("MOTOR5", box_row + 10, box_col2, motor_box5)
 
             self.visible_label: Label = self.create_and_add_label(
                 "Visible light: ", box_row, 9, 12, 2, "black"
@@ -877,8 +872,8 @@ class BoxLayout(Layout):
             index = Cycle.get_index_from_value(manager.visible_box_cycle)
             self.visible_button = self.create_and_add_toggle_button(
                 key,
-                box_row,
-                20,
+                box_row + 2,
+                9,
                 10,
                 2,
                 possible_values,
@@ -888,7 +883,7 @@ class BoxLayout(Layout):
             )
 
             self.ir_label: Label = self.create_and_add_label(
-                "IR light: ", box_row + 2, 9, 12, 2, "black"
+                "IR light: ", box_row, 22, 12, 2, "black"
             )
             key = "IR_BOX"
             possible_values = Cycle.values()
@@ -896,7 +891,7 @@ class BoxLayout(Layout):
             self.ir_button = self.create_and_add_toggle_button(
                 key,
                 box_row + 2,
-                20,
+                22,
                 10,
                 2,
                 possible_values,
@@ -907,8 +902,8 @@ class BoxLayout(Layout):
 
             self.change_angles: PushButton = self.create_and_add_button(
                 "SET MOTOR ANGLES",
-                box_row + 15,
-                box_col2,
+                box_row + 20,
+                box_col,
                 16,
                 2,
                 self.change_angles_clicked,

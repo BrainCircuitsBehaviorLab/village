@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import textwrap
 import traceback
 from pathlib import Path
 from typing import TYPE_CHECKING, Type, Union
@@ -292,7 +293,7 @@ class TasksLayout(Layout):
             )
             self.name_label.setProperty("type", "optional")
 
-            self.info_label = QLabel(manager.task.info)
+            self.info_label = QLabel(textwrap.dedent(manager.task.info))
             self.info_label.setStyleSheet(
                 "QLabel { font-family: 'Courier New'; font-size: 8pt;"
                 " font-weight: normal; color: black; }"

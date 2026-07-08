@@ -5,7 +5,7 @@ import pandas as pd
 from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.enums import Active
+from village.classes.enums import Active, ScreenActive
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.settings import settings
 
@@ -44,7 +44,7 @@ class NullStateMachine:
         state_change_conditions: Any = {},
         output_actions: Any = (),
     ) -> None:
-        pass
+        raise RuntimeError("Trying to add a state but Bpod is not connected.")
 
     def set_global_timer(
         self,
@@ -364,7 +364,6 @@ class NullScreen(QWidget):
     background_color = None
     width_px: int = 0
     height_px: int = 0
-    width_mm: int = 0
     height_mm: int = 0
 
     def start_drawing(self) -> None:
@@ -416,6 +415,12 @@ class NullScreen(QWidget):
 
 
 class NullTouch:
+    error: str = (
+        ""
+        if settings.get("USE_SCREEN") != ScreenActive.TOUCHSCREEN
+        else "Error connecting to the touchscreen "
+    )
+
     def stop(self) -> None:
         return
 
@@ -423,7 +428,7 @@ class NullTouch:
 class NullLEDStrip:
     """Base class for LED strip"""
 
-    error: str = "LED strip not available."
+    error: str = "Error connecting to the LED strip "
     num_leds: int = 10
 
     def set_led_color(self, index: int, red: int, green: int, blue: int) -> None:

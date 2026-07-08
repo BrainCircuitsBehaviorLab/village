@@ -624,7 +624,6 @@ class SettingsLayout(Layout):
             "SOUND_DEVICE",
             "SAMPLERATE",
             "USE_SCREEN",
-            "SCREEN_SIZE_MM",
             "TOUCH_RESOLUTION",
             "TOUCH_INTERVAL",
             "TELEGRAM_TOKEN",
@@ -1031,6 +1030,15 @@ class SettingsLayout(Layout):
                     row,
                     column + width,
                     size4,
+                    2,
+                    self.settings_changed,
+                )
+            elif s.key == "TOUCHSCREEN_DEVICE":
+                line_edit = self.create_and_add_line_edit(
+                    value,
+                    row,
+                    column + width,
+                    size1 * 2,
                     2,
                     self.settings_changed,
                 )

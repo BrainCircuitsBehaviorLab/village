@@ -50,27 +50,42 @@ class TaskBase:
     and may optionally call helper methods and read certain attributes during
     execution.
 
+    The task starts by calling ``start()``, then enters a loop where it calls
+    ``create_trial()`` followed by ``after_trial()``. The loop continues until the
+    maximum number of trials is reached, the maximum duration is exceeded,
+    or ``force_stop`` is set to True. Finally, ``close()`` is called to
+    clean up resources.
+
+
     ──────────────────────────────────────────────────────────
     METHODS YOU MUST OVERRIDE
     ──────────────────────────────────────────────────────────
 
-    start(self) -> None
+    start(self)
         Called once before the trial loop begins.
         Use it to configure hardware, pre-compute stimuli, open files, etc.
 
-    create_trial(self) -> None
+    create_trial(self)
         Called at the beginning of every trial.
-        Build and send the Bpod state machine here (or set up stimuli for
-        non-Bpod controllers). The state machine runs to completion before
-        ``after_trial`` is called.
+        If using Bpod: each call starts with an empty state machine. Add states
+        with ``bpod.add_state`` and, when the method returns, the state machine
+        is sent and run automatically. ``after_trial`` is called once it
+        finishes.
+        If not using Bpod: you are responsible for creating and running the
+        trial logic yourself.
 
-    after_trial(self) -> None
+    after_trial(self)
         Called immediately after each trial finishes.
         Use it to score the animal's performance, update adaptive parameters,
-        and call ``register_value`` to save custom columns to the data file.
-        ``self.trial_data`` is already populated at this point.
+        and call ``register_value`` to save whatever values you need for
+        the trial.
+        You must always register a ``water`` value with the amount of water
+        consumed during the trial; the system sums it across the session to
+        get the total water consumption. If that total falls below a
+        configurable threshold, an alarm is triggered. The threshold can be
+        adjusted in the Settings tab of the GUI.
 
-    close(self) -> None
+    close(self)
         Called once after the trial loop ends (session finished, forced stop,
         or error).
         Use it to close files, stop hardware, release resources.
@@ -79,7 +94,39 @@ class TaskBase:
     METHODS YOU CAN CALL (do not override)
     ──────────────────────────────────────────────────────────
 
-    register_value(name: str, value: Any) -> None
+    register_start_trial(self, raspberry_timestamp: float, controller_timestamp: float)
+        No need to call this if you are using a Bpod controller, it is called
+        automatically.
+        For other controllers, call this at the beginning of each trial to register
+        the start of the trial.
+        We use 2 timestamps because we use the start of the trial to synchronize the
+        clocks between the raspberry and the controller.
+        If you are not using a controller, (i.e. the controller is the same raspberry),
+        the controller_timestamp is exactly the same as the raspberry timestamp.
+        To get the raspberry timestamp you can use time_utils.now_timestamp().
+
+    register_end_trial(self, controller_timestamp: float = 0.0)
+        No need to call this if you are using a Bpod controller, it is called
+        automatically.
+        For other controllers, call this at the end of each trial to register the
+        end of the trial.
+
+    register_enter_state(self, state_name: str, controller_timestamp: float)
+        No need to call this if you are using a Bpod controller, it is called
+        automatically.
+        For other controllers, call this when entering a state to register the
+        entry into that state.
+
+    register_controller_event(self, name: str, controller_timestamp: float)
+        No need to call this if you are using a Bpod controller, it is called
+        automatically.
+        For other controllers, call this to register an event from the controller.
+
+    register_raspberry_event(self, name: str, raspberry_timestamp: float)
+        Call this to register an event from the raspberry, for example when executing
+        direct functions or when using a camera to detect or trigger actions.
+
+    register_value(self, name: str, value: Any)
         Saves a custom value to the current trial row in the CSV.
         Call this inside ``after_trial``.
 
@@ -88,7 +135,7 @@ class TaskBase:
             self.register_value("correct", 1)
             self.register_value("response_time", 0.432)
 
-    execute_function(self, i: int) -> None:
+    execute_function(self, i: int)
         Executes a registered function.
 
         Args:
@@ -101,27 +148,21 @@ class TaskBase:
     ATTRIBUTES YOU CAN READ INSIDE YOUR TASK
     ──────────────────────────────────────────────────────────
 
-    self.trial_data : dict
-        Dictionary populated automatically after each trial with Bpod event
-        timestamps and any values previously registered via ``register_value``.
-        Available inside ``after_trial`` to drive adaptive logic.
-
-        Typical keys: ``"trial"``, ``"subject"``, ``"task"``, ``"date"``,
-        ``"system_name"``, plus every key you have registered with
-        ``register_value``.
-
-        Example::
-
-            def after_trial(self):
-                if self.trial_data.get("correct") == 1:
-                    self.settings.difficulty += 1
-
-    self.current_trial : int
-        1-based index of the trial that just ran (available in both
-        ``create_trial`` and ``after_trial``).
+    self.name: str
+        Name of the task.
 
     self.subject : str
         Name of the subject running the session.
+
+    self.system_name : str
+        Name of the system as defined in the settings tab of the GUI.
+
+    self.bpod : BpodController
+        Bpod interface (state machine construction, sending, etc.).
+        Primarily used inside ``create_trial``.
+
+    self.arduino : ArduinoController
+        Arduino interface for tasks that use an Arduino instead of Bpod.
 
     self.settings : Settings
         Object that holds all the session parameters defined in the training
@@ -131,15 +172,73 @@ class TaskBase:
         Object that holds the task's calibrations. Call its methods to convert
         between hardware values and real-world units.
 
-    self.bpod : BpodController
-        Low-level Bpod interface (state machine construction, sending, etc.).
-        Primarily used inside ``create_trial``.
+        Example::
 
-    self.arduino : ArduinoController
-        Arduino interface for tasks that use an Arduino instead of Bpod.
+            gain = self.calibrations.sound_calibration.get_sound_gain(
+                speaker=1, dB=70.0, sound_name="white_noise"
+            )
 
     self.cam_box : Camera | NullCamera
-        Camera attached to the behaviour box (NullCamera if not configured).
+        Camera attached to the operant box (NullCamera if not configured).
+
+    self.current_trial : int
+        The current trial number starting from 1
+
+    self.trial_data : dict
+        Dictionary populated automatically at the end of each trial.
+        Available inside ``after_trial``.
+
+        **Keys always present:**
+
+        - ``"date"`` (str): date string of the session.
+        - ``"trial"`` (int): current trial number.
+        - ``"subject"`` (str): subject name.
+        - ``"task"`` (str): task name.
+        - ``"system_name"`` (str): system name from settings.
+        - ``"TRIAL_START"`` (float): absolute timestamp (seconds, UNIX epoch)
+          when the trial started.
+        - ``"TRIAL_END"`` (float): absolute timestamp when the trial ended.
+        - ``"ordered_list_of_events"`` (list[str]): event names in the order
+          they occurred during the trial (e.g.
+          ``["Port1In", "Port1Out", "Port1In"]``).
+
+        **Keys added per state visited (Bpod or manual):**
+
+        - ``"STATE_<name>_START"`` (list[float]): timestamps of every entry
+          into that state. It is a list because the same state can be visited
+          more than once in a single trial.
+        - ``"STATE_<name>_END"`` (list[float]): timestamps of every exit from
+          that state, paired with the corresponding START list.
+
+        **Keys added per event type:**
+
+        - ``"<EventName>"`` (list[float]): timestamps of every occurrence of
+          that event (e.g. ``"Port1In"``, ``"Port1Out"``).
+
+        When using Bpod all state and event keys are filled automatically.
+        When not using Bpod, call ``register_enter_state`` and
+        ``register_controller_event`` / ``register_raspberry_event`` yourself
+        to populate them.
+
+        **Keys added by you:**
+
+        - Any name passed to ``register_value`` inside ``after_trial``.
+
+        Example::
+
+            def after_trial(self):
+                if self.trial_data.get("correct") == 1:
+                    self.settings.difficulty += 1
+                t_start = self.trial_data["STATE_stimulus_START"][0]
+                t_end = self.trial_data["STATE_stimulus_END"][0]
+                response_time = t_end - t_start
+
+    self.force_stop: bool
+        If made true, the task will stop.
+
+    self.chrono: Chrono
+        Using self.chrono.get_seconds() you can get the time in seconds since the
+        task started.
     """
 
     def __init__(self) -> None:

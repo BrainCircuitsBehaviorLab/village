@@ -168,7 +168,6 @@ class Screen(QOpenGLWidget):
 
         self.width_px: int = geometry.width()
         self.height_px: int = geometry.height()
-        self.width_mm, self.height_mm = settings.get("SCREEN_SIZE_MM")
 
         self.active: bool = False
         self._draw_fn: Optional[Callable] = None
@@ -372,18 +371,23 @@ def get_screen() -> "Screen | NullScreen":
     from village.classes.enums import ScreenActive
     from village.scripts.log import log
 
-    if settings.get("USE_SCREEN") == ScreenActive.OFF:
-        return NullScreen()
     try:
         secondary_screen = QGuiApplication.screens()[1]
         geometry = secondary_screen.geometry()
         settings.set("SCREEN_RESOLUTION", (geometry.width(), geometry.height()))
-        return Screen(geometry)
     except IndexError:
+        geometry = None
+
+    if settings.get("USE_SCREEN") == ScreenActive.OFF:
+        return NullScreen()
+
+    if geometry is None:
         log.error(
             "Secondary screen not detected. Behavior window will not be displayed."
         )
         return NullScreen()
+
+    return Screen(geometry)
 
 
 screen = get_screen()
