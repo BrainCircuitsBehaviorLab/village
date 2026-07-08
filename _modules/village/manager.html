@@ -1062,364 +1062,363 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="501"><span class="sd">        Args:</span>
 </span><span data-line="502"><span class="sd">            run_mode (str): The mode in which the task was run (e.g., &quot;Auto&quot;, &quot;Manual&quot;).</span>
 </span><span data-line="503"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="504">        <span class="c1"># TODO kill the touchscreen reading</span>
-</span><span data-line="505">        <span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-</span><span data-line="506">        <span class="n">screen</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
-</span><span data-line="507">        <span class="n">save</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">trials</span><span class="p">,</span> <span class="n">water</span><span class="p">,</span> <span class="n">settings_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">disconnect_and_save</span><span class="p">(</span>
-</span><span data-line="508">            <span class="n">run_mode</span>
-</span><span data-line="509">        <span class="p">)</span>
-</span><span data-line="510">        <span class="k">if</span> <span class="n">save</span> <span class="o">!=</span> <span class="n">Save</span><span class="o">.</span><span class="n">NO</span><span class="p">:</span>
-</span><span data-line="511">            <span class="bp">self</span><span class="o">.</span><span class="n">save_to_sessions_summary</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">trials</span><span class="p">,</span> <span class="n">water</span><span class="p">,</span> <span class="n">settings_str</span><span class="p">)</span>
-</span><span data-line="512">            <span class="k">if</span> <span class="n">save</span> <span class="o">==</span> <span class="n">Save</span><span class="o">.</span><span class="n">YES</span><span class="p">:</span>
-</span><span data-line="513">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="514">                    <span class="bp">self</span><span class="o">.</span><span class="n">save_to_subjects</span><span class="p">()</span>
-</span><span data-line="515">                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Session and video data saved.&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-</span><span data-line="516">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="517">                    <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span data-line="518">                        <span class="s2">&quot;Error updating the training settings for task: &quot;</span>
-</span><span data-line="519">                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span data-line="520">                        <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span data-line="521">                        <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
-</span><span data-line="522">                    <span class="p">)</span>
-</span><span data-line="523">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="524">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="525">                    <span class="bp">self</span><span class="o">.</span><span class="n">save_refractory_to_subjects</span><span class="p">()</span>
-</span><span data-line="526">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="527">                    <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span data-line="528">                        <span class="s2">&quot;Error updating the training settings for task: &quot;</span>
-</span><span data-line="529">                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span data-line="530">                        <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span data-line="531">                        <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
-</span><span data-line="532">                    <span class="p">)</span>
-</span><span data-line="533">
-</span><span data-line="534">        <span class="n">log</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-</span><span data-line="535">        <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">add_timestamp</span><span class="p">()</span>
-</span><span data-line="536">        <span class="bp">self</span><span class="o">.</span><span class="n">after_session_flag</span> <span class="o">=</span> <span class="kc">True</span></div>
+</span><span data-line="504">        <span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</span><span data-line="505">        <span class="n">screen</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
+</span><span data-line="506">        <span class="n">save</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">trials</span><span class="p">,</span> <span class="n">water</span><span class="p">,</span> <span class="n">settings_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">disconnect_and_save</span><span class="p">(</span>
+</span><span data-line="507">            <span class="n">run_mode</span>
+</span><span data-line="508">        <span class="p">)</span>
+</span><span data-line="509">        <span class="k">if</span> <span class="n">save</span> <span class="o">!=</span> <span class="n">Save</span><span class="o">.</span><span class="n">NO</span><span class="p">:</span>
+</span><span data-line="510">            <span class="bp">self</span><span class="o">.</span><span class="n">save_to_sessions_summary</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">trials</span><span class="p">,</span> <span class="n">water</span><span class="p">,</span> <span class="n">settings_str</span><span class="p">)</span>
+</span><span data-line="511">            <span class="k">if</span> <span class="n">save</span> <span class="o">==</span> <span class="n">Save</span><span class="o">.</span><span class="n">YES</span><span class="p">:</span>
+</span><span data-line="512">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="513">                    <span class="bp">self</span><span class="o">.</span><span class="n">save_to_subjects</span><span class="p">()</span>
+</span><span data-line="514">                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Session and video data saved.&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span data-line="515">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="516">                    <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span data-line="517">                        <span class="s2">&quot;Error updating the training settings for task: &quot;</span>
+</span><span data-line="518">                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="519">                        <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="520">                        <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
+</span><span data-line="521">                    <span class="p">)</span>
+</span><span data-line="522">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="523">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="524">                    <span class="bp">self</span><span class="o">.</span><span class="n">save_refractory_to_subjects</span><span class="p">()</span>
+</span><span data-line="525">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="526">                    <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span data-line="527">                        <span class="s2">&quot;Error updating the training settings for task: &quot;</span>
+</span><span data-line="528">                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="529">                        <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="530">                        <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
+</span><span data-line="531">                    <span class="p">)</span>
+</span><span data-line="532">
+</span><span data-line="533">        <span class="n">log</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span data-line="534">        <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">add_timestamp</span><span class="p">()</span>
+</span><span data-line="535">        <span class="bp">self</span><span class="o">.</span><span class="n">after_session_flag</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-</span><span data-line="537">
+</span><span data-line="536">
 <div class="viewcode-block" id="Manager.save_to_subjects">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.save_to_subjects">[docs]</a>
-</span><span data-line="538">    <span class="k">def</span><span class="w"> </span><span class="nf">save_to_subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="539"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates subject data, including next session time and training settings,</span>
-</span><span data-line="540"><span class="sd">        after a successful session.&quot;&quot;&quot;</span>
-</span><span data-line="541">        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span data-line="542">        <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">settings</span>
-</span><span data-line="543">        <span class="n">next_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_jsonstring</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;observations&quot;</span><span class="p">])</span>
-</span><span data-line="544">        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;next_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_settings</span>
-</span><span data-line="545">
-</span><span data-line="546">        <span class="n">time_val</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">time_in_future_seconds</span><span class="p">(</span>
-</span><span data-line="547">            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span><span class="p">)</span>
-</span><span data-line="548">        <span class="p">)</span>
-</span><span data-line="549">        <span class="n">time_str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">string_from_date</span><span class="p">(</span><span class="n">time_val</span><span class="p">)</span>
-</span><span data-line="550">        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_str</span>
-</span><span data-line="551">        <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
-</span><span data-line="552">        <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">save_from_df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div>
+</span><span data-line="537">    <span class="k">def</span><span class="w"> </span><span class="nf">save_to_subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="538"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates subject data, including next session time and training settings,</span>
+</span><span data-line="539"><span class="sd">        after a successful session.&quot;&quot;&quot;</span>
+</span><span data-line="540">        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="541">        <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">settings</span>
+</span><span data-line="542">        <span class="n">next_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_jsonstring</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;observations&quot;</span><span class="p">])</span>
+</span><span data-line="543">        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;next_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_settings</span>
+</span><span data-line="544">
+</span><span data-line="545">        <span class="n">time_val</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">time_in_future_seconds</span><span class="p">(</span>
+</span><span data-line="546">            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span><span class="p">)</span>
+</span><span data-line="547">        <span class="p">)</span>
+</span><span data-line="548">        <span class="n">time_str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">string_from_date</span><span class="p">(</span><span class="n">time_val</span><span class="p">)</span>
+</span><span data-line="549">        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_str</span>
+</span><span data-line="550">        <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
+</span><span data-line="551">        <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">save_from_df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div>
 
-</span><span data-line="553">
+</span><span data-line="552">
 <div class="viewcode-block" id="Manager.save_refractory_to_subjects">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.save_refractory_to_subjects">[docs]</a>
-</span><span data-line="554">    <span class="k">def</span><span class="w"> </span><span class="nf">save_refractory_to_subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="555"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the subject&#39;s next session time based on the refractory period</span>
-</span><span data-line="556"><span class="sd">        (without full save).&quot;&quot;&quot;</span>
-</span><span data-line="557">        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span data-line="558">        <span class="n">time_val</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">time_in_future_seconds</span><span class="p">(</span>
-</span><span data-line="559">            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span><span class="p">)</span>
-</span><span data-line="560">        <span class="p">)</span>
-</span><span data-line="561">        <span class="n">time_str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">string_from_date</span><span class="p">(</span><span class="n">time_val</span><span class="p">)</span>
-</span><span data-line="562">        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_str</span>
-</span><span data-line="563">        <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
-</span><span data-line="564">        <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">save_from_df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div>
+</span><span data-line="553">    <span class="k">def</span><span class="w"> </span><span class="nf">save_refractory_to_subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="554"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the subject&#39;s next session time based on the refractory period</span>
+</span><span data-line="555"><span class="sd">        (without full save).&quot;&quot;&quot;</span>
+</span><span data-line="556">        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="557">        <span class="n">time_val</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">time_in_future_seconds</span><span class="p">(</span>
+</span><span data-line="558">            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span><span class="p">)</span>
+</span><span data-line="559">        <span class="p">)</span>
+</span><span data-line="560">        <span class="n">time_str</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">string_from_date</span><span class="p">(</span><span class="n">time_val</span><span class="p">)</span>
+</span><span data-line="561">        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;next_session_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_str</span>
+</span><span data-line="562">        <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
+</span><span data-line="563">        <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">save_from_df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div>
 
-</span><span data-line="565">
+</span><span data-line="564">
 <div class="viewcode-block" id="Manager.save_to_sessions_summary">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.save_to_sessions_summary">[docs]</a>
-</span><span data-line="566">    <span class="k">def</span><span class="w"> </span><span class="nf">save_to_sessions_summary</span><span class="p">(</span>
-</span><span data-line="567">        <span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">trials</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">water</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">settings_used_str</span><span class="p">:</span> <span class="nb">str</span>
-</span><span data-line="568">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="569"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves a summary of the session to the sessions_summary collection.</span>
-</span><span data-line="570">
-</span><span data-line="571"><span class="sd">        Args:</span>
-</span><span data-line="572"><span class="sd">            duration (float): The duration of the session in seconds.</span>
-</span><span data-line="573"><span class="sd">            trials (int): The number of trials completed.</span>
-</span><span data-line="574"><span class="sd">            water (int): The amount of water delivered.</span>
-</span><span data-line="575"><span class="sd">            settings_used_str (str): The settings string used for the session.</span>
-</span><span data-line="576"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="577">        <span class="bp">self</span><span class="o">.</span><span class="n">sessions_summary</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span>
-</span><span data-line="578">            <span class="p">[</span>
-</span><span data-line="579">                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
-</span><span data-line="580">                <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span data-line="581">                <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span>
-</span><span data-line="582">                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span>
-</span><span data-line="583">                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span data-line="584">                <span class="n">duration</span><span class="p">,</span>
-</span><span data-line="585">                <span class="n">trials</span><span class="p">,</span>
-</span><span data-line="586">                <span class="n">water</span><span class="p">,</span>
-</span><span data-line="587">                <span class="n">settings_used_str</span><span class="p">,</span>
-</span><span data-line="588">            <span class="p">]</span>
-</span><span data-line="589">        <span class="p">)</span></div>
+</span><span data-line="565">    <span class="k">def</span><span class="w"> </span><span class="nf">save_to_sessions_summary</span><span class="p">(</span>
+</span><span data-line="566">        <span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">trials</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">water</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">settings_used_str</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="567">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="568"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves a summary of the session to the sessions_summary collection.</span>
+</span><span data-line="569">
+</span><span data-line="570"><span class="sd">        Args:</span>
+</span><span data-line="571"><span class="sd">            duration (float): The duration of the session in seconds.</span>
+</span><span data-line="572"><span class="sd">            trials (int): The number of trials completed.</span>
+</span><span data-line="573"><span class="sd">            water (int): The amount of water delivered.</span>
+</span><span data-line="574"><span class="sd">            settings_used_str (str): The settings string used for the session.</span>
+</span><span data-line="575"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="576">        <span class="bp">self</span><span class="o">.</span><span class="n">sessions_summary</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span>
+</span><span data-line="577">            <span class="p">[</span>
+</span><span data-line="578">                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
+</span><span data-line="579">                <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="580">                <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span>
+</span><span data-line="581">                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span>
+</span><span data-line="582">                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="583">                <span class="n">duration</span><span class="p">,</span>
+</span><span data-line="584">                <span class="n">trials</span><span class="p">,</span>
+</span><span data-line="585">                <span class="n">water</span><span class="p">,</span>
+</span><span data-line="586">                <span class="n">settings_used_str</span><span class="p">,</span>
+</span><span data-line="587">            <span class="p">]</span>
+</span><span data-line="588">        <span class="p">)</span></div>
 
-</span><span data-line="590">
+</span><span data-line="589">
 <div class="viewcode-block" id="Manager.check_corridor_lights">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.check_corridor_lights">[docs]</a>
-</span><span data-line="591">    <span class="k">def</span><span class="w"> </span><span class="nf">check_corridor_lights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="592"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks the state of the corridor lights and sets them based</span>
-</span><span data-line="593"><span class="sd">        on the current cycle.&quot;&quot;&quot;</span>
-</span><span data-line="594">        <span class="n">cycle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle_change_detector</span><span class="o">.</span><span class="n">cycle_text</span>
-</span><span data-line="595">
-</span><span data-line="596">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_corridor_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
-</span><span data-line="597">            <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="598">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_corridor_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
-</span><span data-line="599">            <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="600">        <span class="k">elif</span> <span class="n">cycle</span> <span class="o">==</span> <span class="s2">&quot;DAY&quot;</span><span class="p">:</span>
-</span><span data-line="601">            <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="602">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="603">            <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="604">
-</span><span data-line="605">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ir_corridor_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
-</span><span data-line="606">            <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="607">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ir_corridor_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
-</span><span data-line="608">            <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="609">        <span class="k">elif</span> <span class="n">cycle</span> <span class="o">==</span> <span class="s2">&quot;NIGHT&quot;</span><span class="p">:</span>
-</span><span data-line="610">            <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="611">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="612">            <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span></div>
+</span><span data-line="590">    <span class="k">def</span><span class="w"> </span><span class="nf">check_corridor_lights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="591"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks the state of the corridor lights and sets them based</span>
+</span><span data-line="592"><span class="sd">        on the current cycle.&quot;&quot;&quot;</span>
+</span><span data-line="593">        <span class="n">cycle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle_change_detector</span><span class="o">.</span><span class="n">cycle_text</span>
+</span><span data-line="594">
+</span><span data-line="595">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_corridor_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
+</span><span data-line="596">            <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="597">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_corridor_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
+</span><span data-line="598">            <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="599">        <span class="k">elif</span> <span class="n">cycle</span> <span class="o">==</span> <span class="s2">&quot;DAY&quot;</span><span class="p">:</span>
+</span><span data-line="600">            <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="601">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="602">            <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="603">
+</span><span data-line="604">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ir_corridor_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
+</span><span data-line="605">            <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="606">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ir_corridor_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
+</span><span data-line="607">            <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="608">        <span class="k">elif</span> <span class="n">cycle</span> <span class="o">==</span> <span class="s2">&quot;NIGHT&quot;</span><span class="p">:</span>
+</span><span data-line="609">            <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="610">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="611">            <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span></div>
 
-</span><span data-line="613">
+</span><span data-line="612">
 <div class="viewcode-block" id="Manager.check_box_lights">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.check_box_lights">[docs]</a>
-</span><span data-line="614">    <span class="k">def</span><span class="w"> </span><span class="nf">check_box_lights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="615"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks the state of the box lights and sets them based</span>
-</span><span data-line="616"><span class="sd">        on the current state.&quot;&quot;&quot;</span>
-</span><span data-line="617">        <span class="n">task_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">in</span> <span class="p">[</span>
-</span><span data-line="618">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
-</span><span data-line="619">            <span class="n">State</span><span class="o">.</span><span class="n">CLOSE_DOOR2</span><span class="p">,</span>
-</span><span data-line="620">            <span class="n">State</span><span class="o">.</span><span class="n">OPEN_DOOR2</span><span class="p">,</span>
-</span><span data-line="621">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
-</span><span data-line="622">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_CLOSED</span><span class="p">,</span>
-</span><span data-line="623">            <span class="n">State</span><span class="o">.</span><span class="n">SAVE_INSIDE</span><span class="p">,</span>
-</span><span data-line="624">            <span class="n">State</span><span class="o">.</span><span class="n">WAIT_EXIT</span><span class="p">,</span>
-</span><span data-line="625">            <span class="n">State</span><span class="o">.</span><span class="n">OPEN_DOOR2_STOP</span><span class="p">,</span>
-</span><span data-line="626">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span>
-</span><span data-line="627">        <span class="p">]</span>
-</span><span data-line="628">
-</span><span data-line="629">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_box_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
-</span><span data-line="630">            <span class="n">visible_light_box</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="631">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_box_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
-</span><span data-line="632">            <span class="n">visible_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="633">        <span class="k">elif</span> <span class="n">task_running</span><span class="p">:</span>
-</span><span data-line="634">            <span class="n">visible_light_box</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="635">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="636">            <span class="n">visible_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="637">
-</span><span data-line="638">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ir_box_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
-</span><span data-line="639">            <span class="n">ir_light_box</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="640">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ir_box_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
-</span><span data-line="641">            <span class="n">ir_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="642">        <span class="k">elif</span> <span class="n">task_running</span><span class="p">:</span>
-</span><span data-line="643">            <span class="n">ir_light_box</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="644">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="645">            <span class="n">ir_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span></div>
+</span><span data-line="613">    <span class="k">def</span><span class="w"> </span><span class="nf">check_box_lights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="614"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks the state of the box lights and sets them based</span>
+</span><span data-line="615"><span class="sd">        on the current state.&quot;&quot;&quot;</span>
+</span><span data-line="616">        <span class="n">task_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">in</span> <span class="p">[</span>
+</span><span data-line="617">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
+</span><span data-line="618">            <span class="n">State</span><span class="o">.</span><span class="n">CLOSE_DOOR2</span><span class="p">,</span>
+</span><span data-line="619">            <span class="n">State</span><span class="o">.</span><span class="n">OPEN_DOOR2</span><span class="p">,</span>
+</span><span data-line="620">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
+</span><span data-line="621">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_CLOSED</span><span class="p">,</span>
+</span><span data-line="622">            <span class="n">State</span><span class="o">.</span><span class="n">SAVE_INSIDE</span><span class="p">,</span>
+</span><span data-line="623">            <span class="n">State</span><span class="o">.</span><span class="n">WAIT_EXIT</span><span class="p">,</span>
+</span><span data-line="624">            <span class="n">State</span><span class="o">.</span><span class="n">OPEN_DOOR2_STOP</span><span class="p">,</span>
+</span><span data-line="625">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span>
+</span><span data-line="626">        <span class="p">]</span>
+</span><span data-line="627">
+</span><span data-line="628">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_box_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
+</span><span data-line="629">            <span class="n">visible_light_box</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="630">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_box_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
+</span><span data-line="631">            <span class="n">visible_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="632">        <span class="k">elif</span> <span class="n">task_running</span><span class="p">:</span>
+</span><span data-line="633">            <span class="n">visible_light_box</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="634">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="635">            <span class="n">visible_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="636">
+</span><span data-line="637">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ir_box_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
+</span><span data-line="638">            <span class="n">ir_light_box</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="639">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ir_box_cycle</span> <span class="o">==</span> <span class="n">Cycle</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
+</span><span data-line="640">            <span class="n">ir_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="641">        <span class="k">elif</span> <span class="n">task_running</span><span class="p">:</span>
+</span><span data-line="642">            <span class="n">ir_light_box</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="643">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="644">            <span class="n">ir_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span></div>
 
-</span><span data-line="646">
+</span><span data-line="645">
 <div class="viewcode-block" id="Manager.turn_off_all_lights">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.turn_off_all_lights">[docs]</a>
-</span><span data-line="647">    <span class="k">def</span><span class="w"> </span><span class="nf">turn_off_all_lights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="648"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Turns off all corridor and box lights.&quot;&quot;&quot;</span>
-</span><span data-line="649">        <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="650">        <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="651">        <span class="n">visible_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="652">        <span class="n">ir_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span></div>
+</span><span data-line="646">    <span class="k">def</span><span class="w"> </span><span class="nf">turn_off_all_lights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="647"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Turns off all corridor and box lights.&quot;&quot;&quot;</span>
+</span><span data-line="648">        <span class="n">visible_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="649">        <span class="n">ir_light_corridor</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="650">        <span class="n">visible_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="651">        <span class="n">ir_light_box</span><span class="o">.</span><span class="n">off</span><span class="p">()</span></div>
 
-</span><span data-line="653">
+</span><span data-line="652">
 <div class="viewcode-block" id="Manager.cycle_checks">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.cycle_checks">[docs]</a>
-</span><span data-line="654">    <span class="k">def</span><span class="w"> </span><span class="nf">cycle_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="655"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs daily cycle checks and logs alarms for missing detections,</span>
-</span><span data-line="656"><span class="sd">        sessions, or syncs.&quot;&quot;&quot;</span>
-</span><span data-line="657">        <span class="bp">self</span><span class="o">.</span><span class="n">check_corridor_lights</span><span class="p">()</span>
-</span><span data-line="658">        <span class="n">text</span><span class="p">,</span> <span class="n">non_det_subs</span><span class="p">,</span> <span class="n">non_ses_subs</span><span class="p">,</span> <span class="n">low_water_subs</span><span class="p">,</span> <span class="n">sync</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_report</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
-</span><span data-line="659">        <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="660">        <span class="k">if</span> <span class="p">(</span>
-</span><span data-line="661">            <span class="nb">len</span><span class="p">(</span><span class="n">non_det_subs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-</span><span data-line="662">            <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NO_DETECTION_SUBJECT_24H&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span>
-</span><span data-line="663">        <span class="p">):</span>
-</span><span data-line="664">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span data-line="665">                <span class="s2">&quot;Subjects not detected in the last 24 hours: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">non_det_subs</span><span class="p">)</span>
-</span><span data-line="666">            <span class="p">)</span>
-</span><span data-line="667">        <span class="k">if</span> <span class="p">(</span>
-</span><span data-line="668">            <span class="nb">len</span><span class="p">(</span><span class="n">non_ses_subs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-</span><span data-line="669">            <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NO_SESSION_SUBJECT_24H&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span>
-</span><span data-line="670">        <span class="p">):</span>
-</span><span data-line="671">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span data-line="672">                <span class="s2">&quot;Subjects with no sessions in the last 24 hours: &quot;</span>
-</span><span data-line="673">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">non_ses_subs</span><span class="p">)</span>
-</span><span data-line="674">            <span class="p">)</span>
-</span><span data-line="675">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">low_water_subs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="676">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
-</span><span data-line="677">                <span class="s2">&quot;Subjects with low water intake in the last 24 hours: &quot;</span>
-</span><span data-line="678">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">low_water_subs</span><span class="p">)</span>
-</span><span data-line="679">            <span class="p">)</span>
-</span><span data-line="680">        <span class="k">if</span> <span class="ow">not</span> <span class="n">sync</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYNC_TYPE&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">SyncType</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
-</span><span data-line="681">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No data sync in the last 24 hours.&quot;</span><span class="p">)</span>
-</span><span data-line="682">        <span class="bp">self</span><span class="o">.</span><span class="n">change_cycle_flag</span> <span class="o">=</span> <span class="kc">True</span></div>
+</span><span data-line="653">    <span class="k">def</span><span class="w"> </span><span class="nf">cycle_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="654"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs daily cycle checks and logs alarms for missing detections,</span>
+</span><span data-line="655"><span class="sd">        sessions, or syncs.&quot;&quot;&quot;</span>
+</span><span data-line="656">        <span class="bp">self</span><span class="o">.</span><span class="n">check_corridor_lights</span><span class="p">()</span>
+</span><span data-line="657">        <span class="n">text</span><span class="p">,</span> <span class="n">non_det_subs</span><span class="p">,</span> <span class="n">non_ses_subs</span><span class="p">,</span> <span class="n">low_water_subs</span><span class="p">,</span> <span class="n">sync</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_report</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+</span><span data-line="658">        <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="659">        <span class="k">if</span> <span class="p">(</span>
+</span><span data-line="660">            <span class="nb">len</span><span class="p">(</span><span class="n">non_det_subs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span><span data-line="661">            <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NO_DETECTION_SUBJECT_24H&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span>
+</span><span data-line="662">        <span class="p">):</span>
+</span><span data-line="663">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span data-line="664">                <span class="s2">&quot;Subjects not detected in the last 24 hours: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">non_det_subs</span><span class="p">)</span>
+</span><span data-line="665">            <span class="p">)</span>
+</span><span data-line="666">        <span class="k">if</span> <span class="p">(</span>
+</span><span data-line="667">            <span class="nb">len</span><span class="p">(</span><span class="n">non_ses_subs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span><span data-line="668">            <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NO_SESSION_SUBJECT_24H&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span>
+</span><span data-line="669">        <span class="p">):</span>
+</span><span data-line="670">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span data-line="671">                <span class="s2">&quot;Subjects with no sessions in the last 24 hours: &quot;</span>
+</span><span data-line="672">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">non_ses_subs</span><span class="p">)</span>
+</span><span data-line="673">            <span class="p">)</span>
+</span><span data-line="674">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">low_water_subs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="675">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span>
+</span><span data-line="676">                <span class="s2">&quot;Subjects with low water intake in the last 24 hours: &quot;</span>
+</span><span data-line="677">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">low_water_subs</span><span class="p">)</span>
+</span><span data-line="678">            <span class="p">)</span>
+</span><span data-line="679">        <span class="k">if</span> <span class="ow">not</span> <span class="n">sync</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SYNC_TYPE&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">SyncType</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
+</span><span data-line="680">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No data sync in the last 24 hours.&quot;</span><span class="p">)</span>
+</span><span data-line="681">        <span class="bp">self</span><span class="o">.</span><span class="n">change_cycle_flag</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-</span><span data-line="683">
+</span><span data-line="682">
 <div class="viewcode-block" id="Manager.create_report">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.create_report">[docs]</a>
-</span><span data-line="684">    <span class="k">def</span><span class="w"> </span><span class="nf">create_report</span><span class="p">(</span>
-</span><span data-line="685">        <span class="bp">self</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">int</span>
-</span><span data-line="686">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
-</span><span data-line="687"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a report of system activity and subject status for the</span>
-</span><span data-line="688"><span class="sd">        last N hours.</span>
-</span><span data-line="689">
-</span><span data-line="690"><span class="sd">        Args:</span>
-</span><span data-line="691"><span class="sd">            hours (int): The number of hours to report on.</span>
-</span><span data-line="692">
-</span><span data-line="693"><span class="sd">        Returns:</span>
-</span><span data-line="694"><span class="sd">            tuple: A tuple containing the report text, list of non-detected subjects,</span>
-</span><span data-line="695"><span class="sd">                   non-session subjects, low water subjects, and sync status boolean.</span>
-</span><span data-line="696"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="697">        <span class="n">minimum_water</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MINIMUM_WATER_SUBJECT_24H&quot;</span><span class="p">))</span>
-</span><span data-line="698">        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span data-line="699">        <span class="n">subjects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span data-line="700">        <span class="n">sessions_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions_summary</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span data-line="701">
-</span><span data-line="702">        <span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
-</span><span data-line="703">        <span class="n">sessions_summary</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">sessions_summary</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
-</span><span data-line="704">
-</span><span data-line="705">        <span class="n">time_hours_ago</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">hours_ago</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span>
-</span><span data-line="706">
-</span><span data-line="707">        <span class="n">detections</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span>
-</span><span data-line="708">            <span class="p">(</span>
-</span><span data-line="709">                <span class="n">events</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span>
-</span><span data-line="710">                    <span class="p">(</span><span class="s2">&quot;Subject not&quot;</span><span class="p">,</span> <span class="s2">&quot;Detection in&quot;</span><span class="p">,</span> <span class="s2">&quot;Large&quot;</span><span class="p">,</span> <span class="s2">&quot;Multiple&quot;</span><span class="p">)</span>
-</span><span data-line="711">                <span class="p">)</span>
-</span><span data-line="712">                <span class="o">|</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">)</span>
-</span><span data-line="713">            <span class="p">)</span>
-</span><span data-line="714">            <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">time_hours_ago</span><span class="p">)</span>
-</span><span data-line="715">        <span class="p">]</span>
-</span><span data-line="716">
-</span><span data-line="717">        <span class="n">sessions</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span>
-</span><span data-line="718">            <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">time_hours_ago</span><span class="p">)</span>
-</span><span data-line="719">        <span class="p">]</span>
-</span><span data-line="720">        <span class="n">syncs</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span>
-</span><span data-line="721">            <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Sync completed successfully&quot;</span><span class="p">)</span>
-</span><span data-line="722">            <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">time_hours_ago</span><span class="p">)</span>
-</span><span data-line="723">        <span class="p">]</span>
-</span><span data-line="724">        <span class="n">sync</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="725">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">syncs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="726">            <span class="n">sync</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="727">
-</span><span data-line="728">        <span class="n">sessions_summary</span> <span class="o">=</span> <span class="n">sessions_summary</span><span class="p">[</span><span class="n">sessions_summary</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">time_hours_ago</span><span class="p">]</span>
-</span><span data-line="729">
-</span><span data-line="730">        <span class="n">subject_detections</span> <span class="o">=</span> <span class="n">detections</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-</span><span data-line="731">        <span class="n">subject_sessions</span> <span class="o">=</span> <span class="n">sessions</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-</span><span data-line="732">        <span class="n">subject_water</span> <span class="o">=</span> <span class="n">sessions_summary</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)[</span><span class="s2">&quot;water&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-</span><span data-line="733">        <span class="n">subject_weight</span> <span class="o">=</span> <span class="n">sessions_summary</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-</span><span data-line="734">
-</span><span data-line="735">        <span class="n">active_subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-</span><span data-line="736">            <span class="n">subjects</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">is_active</span><span class="p">),</span> <span class="s2">&quot;name&quot;</span>
-</span><span data-line="737">        <span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-</span><span data-line="738">        <span class="n">active_24h</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="739">            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="n">utils</span><span class="o">.</span><span class="n">active_last_24_hours</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">])</span>
-</span><span data-line="740">            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subjects</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
-</span><span data-line="741">        <span class="p">}</span>
-</span><span data-line="742">
-</span><span data-line="743">        <span class="n">report_text</span> <span class="o">=</span> <span class="s2">&quot;REPORT last &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;h</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-</span><span data-line="744">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;state: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;, subject: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span>
-</span><span data-line="745">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-</span><span data-line="746">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;subject, detections, sessions, water, weight</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span data-line="747">
-</span><span data-line="748">        <span class="n">non_detected_subjects</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="749">        <span class="n">non_session_subjects</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="750">        <span class="n">low_water_subjects</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="751">
-</span><span data-line="752">        <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">active_subjects</span><span class="p">:</span>
-</span><span data-line="753">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="754">                <span class="n">detections_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subject_detections</span><span class="p">[</span><span class="n">sub</span><span class="p">])</span>
-</span><span data-line="755">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span data-line="756">                <span class="n">detections_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-</span><span data-line="757">                <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-</span><span data-line="758">                    <span class="n">non_detected_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
-</span><span data-line="759">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="760">                <span class="n">sessions_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subject_sessions</span><span class="p">[</span><span class="n">sub</span><span class="p">])</span>
-</span><span data-line="761">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span data-line="762">                <span class="n">sessions_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-</span><span data-line="763">                <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-</span><span data-line="764">                    <span class="n">non_session_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
-</span><span data-line="765">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="766">                <span class="n">water</span> <span class="o">=</span> <span class="n">subject_water</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span>
-</span><span data-line="767">                <span class="n">water_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">water</span><span class="p">))</span>
-</span><span data-line="768">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span data-line="769">                <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="770">                <span class="n">water_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-</span><span data-line="771">            <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="n">water</span> <span class="o">&lt;</span> <span class="n">minimum_water</span><span class="p">:</span>
-</span><span data-line="772">                <span class="n">low_water_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
-</span><span data-line="773">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="774">                <span class="n">weight_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">subject_weight</span><span class="p">[</span><span class="n">sub</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
-</span><span data-line="775">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span data-line="776">                <span class="n">weight_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-</span><span data-line="777">            <span class="n">report_text</span> <span class="o">+=</span> <span class="p">(</span>
-</span><span data-line="778">                <span class="n">sub</span>
-</span><span data-line="779">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-</span><span data-line="780">                <span class="o">+</span> <span class="n">detections_str</span>
-</span><span data-line="781">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-</span><span data-line="782">                <span class="o">+</span> <span class="n">sessions_str</span>
-</span><span data-line="783">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-</span><span data-line="784">                <span class="o">+</span> <span class="n">water_str</span>
-</span><span data-line="785">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-</span><span data-line="786">                <span class="o">+</span> <span class="n">weight_str</span>
-</span><span data-line="787">                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span data-line="788">            <span class="p">)</span>
-</span><span data-line="789">        <span class="k">return</span> <span class="p">(</span>
-</span><span data-line="790">            <span class="n">report_text</span><span class="p">,</span>
-</span><span data-line="791">            <span class="n">non_detected_subjects</span><span class="p">,</span>
-</span><span data-line="792">            <span class="n">non_session_subjects</span><span class="p">,</span>
-</span><span data-line="793">            <span class="n">low_water_subjects</span><span class="p">,</span>
-</span><span data-line="794">            <span class="n">sync</span><span class="p">,</span>
-</span><span data-line="795">        <span class="p">)</span></div>
+</span><span data-line="683">    <span class="k">def</span><span class="w"> </span><span class="nf">create_report</span><span class="p">(</span>
+</span><span data-line="684">        <span class="bp">self</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="685">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+</span><span data-line="686"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a report of system activity and subject status for the</span>
+</span><span data-line="687"><span class="sd">        last N hours.</span>
+</span><span data-line="688">
+</span><span data-line="689"><span class="sd">        Args:</span>
+</span><span data-line="690"><span class="sd">            hours (int): The number of hours to report on.</span>
+</span><span data-line="691">
+</span><span data-line="692"><span class="sd">        Returns:</span>
+</span><span data-line="693"><span class="sd">            tuple: A tuple containing the report text, list of non-detected subjects,</span>
+</span><span data-line="694"><span class="sd">                   non-session subjects, low water subjects, and sync status boolean.</span>
+</span><span data-line="695"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="696">        <span class="n">minimum_water</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MINIMUM_WATER_SUBJECT_24H&quot;</span><span class="p">))</span>
+</span><span data-line="697">        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="698">        <span class="n">subjects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subjects</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="699">        <span class="n">sessions_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions_summary</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="700">
+</span><span data-line="701">        <span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
+</span><span data-line="702">        <span class="n">sessions_summary</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">sessions_summary</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
+</span><span data-line="703">
+</span><span data-line="704">        <span class="n">time_hours_ago</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">hours_ago</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span>
+</span><span data-line="705">
+</span><span data-line="706">        <span class="n">detections</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span>
+</span><span data-line="707">            <span class="p">(</span>
+</span><span data-line="708">                <span class="n">events</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span>
+</span><span data-line="709">                    <span class="p">(</span><span class="s2">&quot;Subject not&quot;</span><span class="p">,</span> <span class="s2">&quot;Detection in&quot;</span><span class="p">,</span> <span class="s2">&quot;Large&quot;</span><span class="p">,</span> <span class="s2">&quot;Multiple&quot;</span><span class="p">)</span>
+</span><span data-line="710">                <span class="p">)</span>
+</span><span data-line="711">                <span class="o">|</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">)</span>
+</span><span data-line="712">            <span class="p">)</span>
+</span><span data-line="713">            <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">time_hours_ago</span><span class="p">)</span>
+</span><span data-line="714">        <span class="p">]</span>
+</span><span data-line="715">
+</span><span data-line="716">        <span class="n">sessions</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span>
+</span><span data-line="717">            <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">time_hours_ago</span><span class="p">)</span>
+</span><span data-line="718">        <span class="p">]</span>
+</span><span data-line="719">        <span class="n">syncs</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span>
+</span><span data-line="720">            <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Sync completed successfully&quot;</span><span class="p">)</span>
+</span><span data-line="721">            <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">time_hours_ago</span><span class="p">)</span>
+</span><span data-line="722">        <span class="p">]</span>
+</span><span data-line="723">        <span class="n">sync</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="724">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">syncs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="725">            <span class="n">sync</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="726">
+</span><span data-line="727">        <span class="n">sessions_summary</span> <span class="o">=</span> <span class="n">sessions_summary</span><span class="p">[</span><span class="n">sessions_summary</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">time_hours_ago</span><span class="p">]</span>
+</span><span data-line="728">
+</span><span data-line="729">        <span class="n">subject_detections</span> <span class="o">=</span> <span class="n">detections</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+</span><span data-line="730">        <span class="n">subject_sessions</span> <span class="o">=</span> <span class="n">sessions</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+</span><span data-line="731">        <span class="n">subject_water</span> <span class="o">=</span> <span class="n">sessions_summary</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)[</span><span class="s2">&quot;water&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+</span><span data-line="732">        <span class="n">subject_weight</span> <span class="o">=</span> <span class="n">sessions_summary</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+</span><span data-line="733">
+</span><span data-line="734">        <span class="n">active_subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+</span><span data-line="735">            <span class="n">subjects</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">is_active</span><span class="p">),</span> <span class="s2">&quot;name&quot;</span>
+</span><span data-line="736">        <span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</span><span data-line="737">        <span class="n">active_24h</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="738">            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="n">utils</span><span class="o">.</span><span class="n">active_last_24_hours</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">])</span>
+</span><span data-line="739">            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subjects</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
+</span><span data-line="740">        <span class="p">}</span>
+</span><span data-line="741">
+</span><span data-line="742">        <span class="n">report_text</span> <span class="o">=</span> <span class="s2">&quot;REPORT last &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;h</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+</span><span data-line="743">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;state: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;, subject: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">name</span>
+</span><span data-line="744">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+</span><span data-line="745">        <span class="n">report_text</span> <span class="o">+=</span> <span class="s2">&quot;subject, detections, sessions, water, weight</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span data-line="746">
+</span><span data-line="747">        <span class="n">non_detected_subjects</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="748">        <span class="n">non_session_subjects</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="749">        <span class="n">low_water_subjects</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="750">
+</span><span data-line="751">        <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">active_subjects</span><span class="p">:</span>
+</span><span data-line="752">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="753">                <span class="n">detections_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subject_detections</span><span class="p">[</span><span class="n">sub</span><span class="p">])</span>
+</span><span data-line="754">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span data-line="755">                <span class="n">detections_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span data-line="756">                <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+</span><span data-line="757">                    <span class="n">non_detected_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+</span><span data-line="758">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="759">                <span class="n">sessions_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subject_sessions</span><span class="p">[</span><span class="n">sub</span><span class="p">])</span>
+</span><span data-line="760">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span data-line="761">                <span class="n">sessions_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span data-line="762">                <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+</span><span data-line="763">                    <span class="n">non_session_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+</span><span data-line="764">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="765">                <span class="n">water</span> <span class="o">=</span> <span class="n">subject_water</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span>
+</span><span data-line="766">                <span class="n">water_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">water</span><span class="p">))</span>
+</span><span data-line="767">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span data-line="768">                <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="769">                <span class="n">water_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span data-line="770">            <span class="k">if</span> <span class="n">active_24h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="n">water</span> <span class="o">&lt;</span> <span class="n">minimum_water</span><span class="p">:</span>
+</span><span data-line="771">                <span class="n">low_water_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+</span><span data-line="772">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="773">                <span class="n">weight_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">subject_weight</span><span class="p">[</span><span class="n">sub</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+</span><span data-line="774">            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span data-line="775">                <span class="n">weight_str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span data-line="776">            <span class="n">report_text</span> <span class="o">+=</span> <span class="p">(</span>
+</span><span data-line="777">                <span class="n">sub</span>
+</span><span data-line="778">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+</span><span data-line="779">                <span class="o">+</span> <span class="n">detections_str</span>
+</span><span data-line="780">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+</span><span data-line="781">                <span class="o">+</span> <span class="n">sessions_str</span>
+</span><span data-line="782">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+</span><span data-line="783">                <span class="o">+</span> <span class="n">water_str</span>
+</span><span data-line="784">                <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+</span><span data-line="785">                <span class="o">+</span> <span class="n">weight_str</span>
+</span><span data-line="786">                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span data-line="787">            <span class="p">)</span>
+</span><span data-line="788">        <span class="k">return</span> <span class="p">(</span>
+</span><span data-line="789">            <span class="n">report_text</span><span class="p">,</span>
+</span><span data-line="790">            <span class="n">non_detected_subjects</span><span class="p">,</span>
+</span><span data-line="791">            <span class="n">non_session_subjects</span><span class="p">,</span>
+</span><span data-line="792">            <span class="n">low_water_subjects</span><span class="p">,</span>
+</span><span data-line="793">            <span class="n">sync</span><span class="p">,</span>
+</span><span data-line="794">        <span class="p">)</span></div>
 
-</span><span data-line="796">
+</span><span data-line="795">
 <div class="viewcode-block" id="Manager.send_heartbeat">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.send_heartbeat">[docs]</a>
-</span><span data-line="797">    <span class="k">def</span><span class="w"> </span><span class="nf">send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="798"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends a heartbeat signal to the healthcheck URL if configured.&quot;&quot;&quot;</span>
-</span><span data-line="799">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">healthchecks_url</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-</span><span data-line="800">            <span class="k">return</span>
-</span><span data-line="801">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="802">            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">healthchecks_url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-</span><span data-line="803">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="804">            <span class="k">pass</span></div>
+</span><span data-line="796">    <span class="k">def</span><span class="w"> </span><span class="nf">send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="797"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends a heartbeat signal to the healthcheck URL if configured.&quot;&quot;&quot;</span>
+</span><span data-line="798">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">healthchecks_url</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+</span><span data-line="799">            <span class="k">return</span>
+</span><span data-line="800">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="801">            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">healthchecks_url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span data-line="802">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="803">            <span class="k">pass</span></div>
 
-</span><span data-line="805">
+</span><span data-line="804">
 <div class="viewcode-block" id="Manager.hourly_checks">
 <a class="viewcode-back" href="../../api_generated/village.manager.Manager.html#village.manager.Manager.hourly_checks">[docs]</a>
-</span><span data-line="806">    <span class="k">def</span><span class="w"> </span><span class="nf">hourly_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="807"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs hourly system health checks including temperature, disk space,</span>
-</span><span data-line="808"><span class="sd">        and recent activity.&quot;&quot;&quot;</span>
-</span><span data-line="809">        <span class="n">temp</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">temp_string</span> <span class="o">=</span> <span class="n">temp_sensor</span><span class="o">.</span><span class="n">get_temperature</span><span class="p">()</span>
-</span><span data-line="810">        <span class="k">if</span> <span class="n">temp</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MAXIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
-</span><span data-line="811">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;High temperature: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
-</span><span data-line="812">        <span class="k">elif</span> <span class="n">temp</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MINIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
-</span><span data-line="813">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Low temperature: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
-</span><span data-line="814">
-</span><span data-line="815">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detections</span><span class="o">.</span><span class="n">trigger_empty</span><span class="p">():</span>
-</span><span data-line="816">            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detections</span><span class="o">.</span><span class="n">hours</span><span class="p">)</span>
-</span><span data-line="817">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No detections in the last &quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">&quot; hours&quot;</span><span class="p">)</span>
-</span><span data-line="818">
-</span><span data-line="819">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">trigger_empty</span><span class="p">():</span>
-</span><span data-line="820">            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">hours</span><span class="p">)</span>
-</span><span data-line="821">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No sessions in the last &quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">&quot; hours&quot;</span><span class="p">)</span>
-</span><span data-line="822">
-</span><span data-line="823">        <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">has_low_disk_space</span><span class="p">():</span>
-</span><span data-line="824">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Low disk space (less than 10GB)&quot;</span><span class="p">)</span>
-</span><span data-line="825">
-</span><span data-line="826">        <span class="bp">self</span><span class="o">.</span><span class="n">send_heartbeat</span><span class="p">()</span></div>
+</span><span data-line="805">    <span class="k">def</span><span class="w"> </span><span class="nf">hourly_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="806"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs hourly system health checks including temperature, disk space,</span>
+</span><span data-line="807"><span class="sd">        and recent activity.&quot;&quot;&quot;</span>
+</span><span data-line="808">        <span class="n">temp</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">temp_string</span> <span class="o">=</span> <span class="n">temp_sensor</span><span class="o">.</span><span class="n">get_temperature</span><span class="p">()</span>
+</span><span data-line="809">        <span class="k">if</span> <span class="n">temp</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MAXIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
+</span><span data-line="810">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;High temperature: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
+</span><span data-line="811">        <span class="k">elif</span> <span class="n">temp</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MINIMUM_TEMPERATURE&quot;</span><span class="p">)):</span>
+</span><span data-line="812">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Low temperature: &quot;</span> <span class="o">+</span> <span class="n">temp_string</span><span class="p">)</span>
+</span><span data-line="813">
+</span><span data-line="814">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detections</span><span class="o">.</span><span class="n">trigger_empty</span><span class="p">():</span>
+</span><span data-line="815">            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detections</span><span class="o">.</span><span class="n">hours</span><span class="p">)</span>
+</span><span data-line="816">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No detections in the last &quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">&quot; hours&quot;</span><span class="p">)</span>
+</span><span data-line="817">
+</span><span data-line="818">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">trigger_empty</span><span class="p">():</span>
+</span><span data-line="819">            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">hours</span><span class="p">)</span>
+</span><span data-line="820">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;No sessions in the last &quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">&quot; hours&quot;</span><span class="p">)</span>
+</span><span data-line="821">
+</span><span data-line="822">        <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">has_low_disk_space</span><span class="p">():</span>
+</span><span data-line="823">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">&quot;Low disk space (less than 10GB)&quot;</span><span class="p">)</span>
+</span><span data-line="824">
+</span><span data-line="825">        <span class="bp">self</span><span class="o">.</span><span class="n">send_heartbeat</span><span class="p">()</span></div>
 </div>
 
+</span><span data-line="826">
 </span><span data-line="827">
-</span><span data-line="828">
-</span><span data-line="829"><span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">()</span>
+</span><span data-line="828"><span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -1444,7 +1443,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=431e8aa7"></script>
+      <script src="../../_static/documentation_options.js?v=bd40cdc4"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/design-tabs.js?v=f930bc37"></script>
