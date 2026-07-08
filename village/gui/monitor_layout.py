@@ -58,6 +58,7 @@ from village.gui.layout import Label, Layout, PushButton
 from village.manager import manager
 from village.plots.corridor_plot import corridor_plot
 from village.scripts.log import log
+from village.scripts.time_utils import time_utils
 from village.scripts.utils import create_pixmap
 from village.settings import settings
 
@@ -1306,17 +1307,17 @@ class VirtualMouseLayout(Layout):
     def touch_clicked(self) -> None:
         """Simulates a touch action at the specified coordinates."""
         try:
+            timestamp = time_utils.now_timestamp()
             x = int(self.x_line_edit.text())
             y = int(self.y_line_edit.text())
             if x >= 0 and y >= 0:
-                print(x, y)
-                # TODO touch screen
+                manager.touch_trigger.trigger(x, y, timestamp)
         except Exception:
             self.x_line_edit.setText("0")
             self.y_line_edit.setText("0")
 
     def _build_inject_param_widgets(self) -> int:
-        """Create one label and lineedit per PARAMS entry
+        """Create one label and line_edit per PARAMS entry
         and then returns next free row for next labels."""
         col_auto = self._col_auto
         self._inject_param_widgets.clear()

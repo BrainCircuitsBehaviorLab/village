@@ -501,7 +501,6 @@ class Manager:
         Args:
             run_mode (str): The mode in which the task was run (e.g., "Auto", "Manual").
         """
-        # TODO kill the touchscreen reading
         screen.load_draw_function(None)
         screen.stop_drawing()
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
