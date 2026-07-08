@@ -6,7 +6,13 @@ from contextlib import suppress
 from typing import TYPE_CHECKING, Any
 
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QInputDialog, QListWidget, QListWidgetItem, QMessageBox
+from PyQt5.QtWidgets import (
+    QComboBox,
+    QInputDialog,
+    QListWidget,
+    QListWidgetItem,
+    QMessageBox,
+)
 
 from village.classes.enums import (
     Active,
@@ -106,6 +112,11 @@ _CONDITIONAL_KEYS: dict[str, str] = {
     "SYNC_TYPE": "SYNC SETTINGS",
 }
 
+# Enum settings rendered as a combo box instead of a toggle button
+_ENUM_COMBO_KEYS: frozenset[str] = frozenset(
+    {"USE_SCREEN", "SYNC_TYPE", "PIXEL_TYPE", "BEHAVIOR_CONTROLLER"}
+)
+
 
 class SettingsLayout(Layout):
     """Layout for viewing and modifying application settings."""
@@ -178,6 +189,8 @@ class SettingsLayout(Layout):
         self.time_edits_settings: list[Setting] = []
         self.toggle_buttons: list[ToggleButton] = []
         self.toggle_buttons_settings: list[Setting] = []
+        self.enum_combo_boxes: list[QComboBox] = []
+        self.enum_combo_boxes_settings: list[Setting] = []
         self.list_of_line_edits: list[list[LineEdit]] = []
         self.list_of_line_edits_settings: list[Setting] = []
         self.list_of_toggle_buttons: list[list[ToggleButton]] = []
@@ -196,6 +209,8 @@ class SettingsLayout(Layout):
             )
         for i, toggle_button in enumerate(self.toggle_buttons):
             self._pending[self.toggle_buttons_settings[i].key] = toggle_button.text()
+        for i, cb in enumerate(self.enum_combo_boxes):
+            self._pending[self.enum_combo_boxes_settings[i].key] = cb.currentText()
         for i, list_line in enumerate(self.list_of_line_edits):
             self._pending[self.list_of_line_edits_settings[i].key] = [
                 le.text() for le in list_line
@@ -1109,19 +1124,28 @@ class SettingsLayout(Layout):
             self.list_of_toggle_buttons.append(toggle_buttons)
             self.list_of_toggle_buttons_settings.append(s)
 
+        elif s.key in _ENUM_COMBO_KEYS:
+            possible_values = settings.get_values(s.key)
+            index = self._get_index(s.key)
+            cb = self.create_and_add_combo_box(
+                s.key,
+                row,
+                column + width,
+                size1,
+                2,
+                possible_values,
+                index,
+                self.enum_combo_changed,
+            )
+            cb.setProperty("type", type)
+            self.enum_combo_boxes.append(cb)
+            self.enum_combo_boxes_settings.append(s)
+
         else:
             possible_values = settings.get_values(s.key)
             index = self._get_index(s.key)
             size_to_use = (
-                size4
-                if s.key
-                in (
-                    "DETECTION_COLOR",
-                    "USE_SOUNDCARD",
-                    "USE_SCREEN",
-                    "BEHAVIOR_CONTROLLER",
-                )
-                else size1
+                size4 if s.key in ("DETECTION_COLOR", "USE_SOUNDCARD") else size1
             )
             toggle_button = self.create_and_add_toggle_button(
                 s.key,
@@ -1138,9 +1162,16 @@ class SettingsLayout(Layout):
             self.toggle_buttons.append(toggle_button)
             self.toggle_buttons_settings.append(s)
 
-    # ── Toggle button handler ──────────────────────────────────────────────────
+    # ── Toggle button / enum combo handlers ───────────────────────────────────
 
     def toggle_button_changed(self, value: str, key: str) -> None:
+        self._pending[key] = value
+        self.settings_changed(value, key)
+        if _CONDITIONAL_KEYS.get(key) == self._current_section:
+            self._destroy_content()
+            self.draw_section(self._current_section)
+
+    def enum_combo_changed(self, value: str, key: str) -> None:
         self._pending[key] = value
         self.settings_changed(value, key)
         if _CONDITIONAL_KEYS.get(key) == self._current_section:
