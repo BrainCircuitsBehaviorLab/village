@@ -248,6 +248,7 @@ exclude_patterns = [
     # https://github.com/sphinx-doc/sphinx/issues/1965#issuecomment-124732907
     "**/includes/**",
     "**/pybpodapi/**",
+    "main/welcome.md",
 ]
 
 # -- Options for HTML output -------------------------------------------------
