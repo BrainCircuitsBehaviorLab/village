@@ -34,9 +34,9 @@ class SoundDevice:
     """
 
     def __init__(self) -> None:
-        self.samplerate = int(settings.get("SAMPLERATE").value)
+        self.samplerate = int(settings.get("SAMPLERATE"))
         self.channels = 2
-        _blocksize_map = {44100: 128, 48000: 256, 96000: 512, 192000: 1024}
+        _blocksize_map = {44100: 256, 48000: 256, 96000: 512, 192000: 1024}
         self.blocksize = _blocksize_map.get(self.samplerate, 1024)
         devices = get_sound_devices()
         device = settings.get("SOUND_DEVICE")

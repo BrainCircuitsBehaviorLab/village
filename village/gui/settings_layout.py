@@ -114,7 +114,7 @@ _CONDITIONAL_KEYS: dict[str, str] = {
 
 # Enum settings rendered as a combo box instead of a toggle button
 _ENUM_COMBO_KEYS: frozenset[str] = frozenset(
-    {"USE_SCREEN", "SYNC_TYPE", "PIXEL_TYPE", "BEHAVIOR_CONTROLLER"}
+    {"USE_SCREEN", "SYNC_TYPE", "PIXEL_TYPE", "BEHAVIOR_CONTROLLER", "SAMPLERATE"}
 )
 
 

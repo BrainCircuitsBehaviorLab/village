@@ -251,7 +251,7 @@ class Settings:
             elif type == PixelType:
                 return PixelType(str_value)
             elif type == Samplerate:
-                return Samplerate(str_value)
+                return int(str_value)
             elif type == list[str]:
                 return self.saved_settings.value(key)
             elif type == list[int]:
