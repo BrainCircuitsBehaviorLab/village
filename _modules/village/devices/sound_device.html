@@ -560,9 +560,9 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="SoundDevice.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.__init__">[docs]</a>
 </span><span data-line="36">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="37">        <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAMPLERATE&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="37">        <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAMPLERATE&quot;</span><span class="p">))</span>
 </span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span data-line="39">        <span class="n">_blocksize_map</span> <span class="o">=</span> <span class="p">{</span><span class="mi">44100</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">48000</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">96000</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">192000</span><span class="p">:</span> <span class="mi">1024</span><span class="p">}</span>
+</span><span data-line="39">        <span class="n">_blocksize_map</span> <span class="o">=</span> <span class="p">{</span><span class="mi">44100</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">48000</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">96000</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">192000</span><span class="p">:</span> <span class="mi">1024</span><span class="p">}</span>
 </span><span data-line="40">        <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">=</span> <span class="n">_blocksize_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
 </span><span data-line="41">        <span class="n">devices</span> <span class="o">=</span> <span class="n">get_sound_devices</span><span class="p">()</span>
 </span><span data-line="42">        <span class="n">device</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SOUND_DEVICE&quot;</span><span class="p">)</span>
@@ -787,7 +787,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=735f7822"></script>
+      <script src="../../../_static/documentation_options.js?v=3c1653b2"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
