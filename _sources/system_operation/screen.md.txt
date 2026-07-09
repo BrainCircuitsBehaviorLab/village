@@ -16,8 +16,6 @@ Raspberry Pi.
 
 ### Dual-screen configuration
 
-### Dual-screen configuration
-
 The goal of this configuration is to make the system **always detect two
 displays, even when no physical monitors are connected**. Forcing
 both ports to be treated as active means the two display outputs are always

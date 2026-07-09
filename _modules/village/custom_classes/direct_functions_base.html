@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -533,19 +533,25 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="13"><span class="sd">    Example:</span>
 </span><span data-line="14"><span class="sd">        class DirectFunctions(DirectFunctionsBase):</span>
 </span><span data-line="15"><span class="sd">            def function1(self):</span>
-</span><span data-line="16"><span class="sd">                self.task.water_valve.open()</span>
-</span><span data-line="17">
-</span><span data-line="18"><span class="sd">            def function2(self):</span>
-</span><span data-line="19"><span class="sd">                self.task.screen.show_image(&quot;reward.png&quot;)</span>
+</span><span data-line="16"><span class="sd">                sound_device.load(</span>
+</span><span data-line="17"><span class="sd">                    left=self.task.stimulus_sound, right=self.task.stimulus_sound</span>
+</span><span data-line="18"><span class="sd">                    )</span>
+</span><span data-line="19"><span class="sd">                sound_device.play()</span>
 </span><span data-line="20">
-</span><span data-line="21"><span class="sd">            def function3(self):</span>
-</span><span data-line="22"><span class="sd">                self.</span>
-</span><span data-line="23"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="24">
+</span><span data-line="21"><span class="sd">            def function2(self):</span>
+</span><span data-line="22"><span class="sd">                duration = self.task.stimulus_duration</span>
+</span><span data-line="23"><span class="sd">                x_pos = self.task.stimulus_x_pos</span>
+</span><span data-line="24"><span class="sd">                y_pos = self.task.stimulus_y_pos</span>
+</span><span data-line="25"><span class="sd">                image_file = self.task.image_file</span>
+</span><span data-line="26"><span class="sd">                draw_function = draw_image_generator(screen, duration, x_pos, y_pos)</span>
+</span><span data-line="27"><span class="sd">                screen.load_draw_function(draw_function)</span>
+</span><span data-line="28"><span class="sd">                screen.load_image(image_file)</span>
+</span><span data-line="29"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="30">
 <div class="viewcode-block" id="DirectFunctionsBase.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html#village.custom_classes.direct_functions_base.DirectFunctionsBase.__init__">[docs]</a>
-</span><span data-line="25">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="26">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">:</span> <span class="n">TaskBase</span> <span class="o">=</span> <span class="n">TaskBase</span><span class="p">()</span></div>
+</span><span data-line="31">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="32">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">:</span> <span class="n">TaskBase</span> <span class="o">=</span> <span class="n">TaskBase</span><span class="p">()</span></div>
 </div>
 
 </span></pre></div>
@@ -572,7 +578,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../../../_static/documentation_options.js?v=c9500009"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

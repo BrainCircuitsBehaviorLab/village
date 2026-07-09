@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,18 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.devices.optogrid.IMUConfig"><code class="docutils literal notranslate"><span class="pre">IMUConfig</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.optogrid.IMUConfig.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.optogrid.IMUConfig.save_accel_gyro"><code class="docutils literal notranslate">save_accel_gyro</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.optogrid.IMUConfig.save_orientation"><code class="docutils literal notranslate">save_orientation</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.optogrid.IMUConfig.save_magnetometer"><code class="docutils literal notranslate">save_magnetometer</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.optogrid.IMUConfig.validate"><code class="docutils literal notranslate">validate()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.optogrid.IMUConfig.columns"><code class="docutils literal notranslate">columns()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -572,7 +561,7 @@ data-aria-dark="Switch to auto color mode">
           <section id="imuconfig">
 <h1>IMUConfig</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.devices.optogrid.IMUConfig">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">IMUConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_accel_gyro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_magnetometer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/devices/optogrid.html#IMUConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>What to WRITE to disk. The three flags are independent, with one
@@ -580,34 +569,34 @@ rule: orientation requires accel+gyro. All-off is valid (logs only sample,
 timestamp, sync). Orientation uses the magnetometer when it is being
 received; otherwise it falls back to accel+gyro (yaw will drift).</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.optogrid.IMUConfig.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_accel_gyro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_magnetometer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
 <p class="rubric">Attributes</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.optogrid.IMUConfig.save_accel_gyro">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">save_accel_gyro</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.optogrid.IMUConfig.save_orientation">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">save_orientation</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.optogrid.IMUConfig.save_magnetometer">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">save_magnetometer</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.optogrid.IMUConfig.validate">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/optogrid.html#IMUConfig.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.optogrid.IMUConfig.columns">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/devices/optogrid.html#IMUConfig.columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Ordered list of data columns to write, given the flags.</p>
 </dd></dl>
@@ -653,7 +642,7 @@ received; otherwise it falls back to accel+gyro (yaw will drift).</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

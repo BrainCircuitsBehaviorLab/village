@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,18 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.classes.null_classes.NullScale"><code class="docutils literal notranslate"><span class="pre">NullScale</span></code></a><ul>
-<li><a class="reference internal" href="#village.classes.null_classes.NullScale.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullScale.error"><code class="docutils literal notranslate">error</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullScale.tare"><code class="docutils literal notranslate">tare()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullScale.calibrate"><code class="docutils literal notranslate">calibrate()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullScale.get_weight"><code class="docutils literal notranslate">get_weight()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.null_classes.NullScale.real_weight_inference"><code class="docutils literal notranslate">real_weight_inference()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -572,29 +561,29 @@ data-aria-dark="Switch to auto color mode">
           <section id="nullscale">
 <h1>NullScale</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullScale">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">NullScale</span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullScale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullScale.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
 <p class="rubric">Attributes</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullScale.error">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">error</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Error</span> <span class="pre">connecting</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">scale</span> <span class="pre">'</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullScale.tare">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">tare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullScale.tare"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Tares the scale.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullScale.calibrate">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullScale.calibrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calibrates the scale using a known weight.</p>
 <dl class="field-list simple">
@@ -605,7 +594,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullScale.get_weight">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullScale.get_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Gets the current weight.</p>
 <dl class="field-list simple">
@@ -619,7 +608,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.null_classes.NullScale.real_weight_inference">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">real_weight_inference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullScale.real_weight_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Determines if a sequence of weight measurements represents a stable weight.</p>
 <p>Conditions to call it a real weight:
@@ -678,7 +667,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,22 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.classes.subject.Subject"><code class="docutils literal notranslate"><span class="pre">Subject</span></code></a><ul>
-<li><a class="reference internal" href="#village.classes.subject.Subject.name"><code class="docutils literal notranslate">name</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.tag"><code class="docutils literal notranslate">tag</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.basal_weight"><code class="docutils literal notranslate">basal_weight</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.active"><code class="docutils literal notranslate">active</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.next_session_time"><code class="docutils literal notranslate">next_session_time</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.next_settings"><code class="docutils literal notranslate">next_settings</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.subject_series"><code class="docutils literal notranslate">subject_series</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.create_from_subject_series"><code class="docutils literal notranslate">create_from_subject_series()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.subject.Subject.minimum_time_ok"><code class="docutils literal notranslate">minimum_time_ok()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -576,12 +561,12 @@ data-aria-dark="Switch to auto color mode">
           <section id="subject">
 <h1>Subject</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.classes.subject.Subject">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Subject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/subject.html#Subject"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents a subject in the system, holding its data and state.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.name">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">name</span></span></dt>
 <dd><p>Subject’s name.</p>
 <dl class="field-list simple">
@@ -592,7 +577,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.tag">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">tag</span></span></dt>
 <dd><p>RFID tag.</p>
 <dl class="field-list simple">
@@ -603,7 +588,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.basal_weight">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">basal_weight</span></span></dt>
 <dd><p>Basal weight.</p>
 <dl class="field-list simple">
@@ -614,7 +599,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.active">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">active</span></span></dt>
 <dd><p>Active days configuration (e.g., “Mon-Fri”, “ON”, “OFF”).</p>
 <dl class="field-list simple">
@@ -625,7 +610,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.next_session_time">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">next_session_time</span></span></dt>
 <dd><p>Timestamp for the next allowed session.</p>
 <dl class="field-list simple">
@@ -636,7 +621,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.next_settings">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">next_settings</span></span></dt>
 <dd><p>Next settings JSON string.</p>
 <dl class="field-list simple">
@@ -647,7 +632,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.subject_series">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">subject_series</span></span></dt>
 <dd><p>The raw pandas Series containing
 subject data.</p>
@@ -659,7 +644,7 @@ subject data.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/subject.html#Subject.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initializes the Subject.</p>
 <dl class="field-list simple">
@@ -671,7 +656,7 @@ subject data.</p>
 
 <p class="rubric">Methods</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.create_from_subject_series">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">create_from_subject_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/subject.html#Subject.create_from_subject_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Populates subject data from the internal pandas Series.</p>
 <dl class="field-list simple">
@@ -688,7 +673,7 @@ subject data.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.subject.Subject.minimum_time_ok">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">minimum_time_ok</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/subject.html#Subject.minimum_time_ok"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Checks if the minimum time between sessions has passed.</p>
 <dl class="field-list simple">
@@ -742,7 +727,7 @@ subject data.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

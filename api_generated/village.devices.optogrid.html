@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -559,8 +559,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="module-village.devices.optogrid">
-<span id="optogrid"></span><h1>optogrid</h1>
+          <section id="optogrid">
+<h1>optogrid</h1>
 <p>optogrid.py</p>
 <p>BLE driver for the OptoGrid device with optional IMU logging, extracted and
 cleaned from erlichlab/optogrid-manager’s HeadlessOptoGridClient.</p>
@@ -597,10 +597,10 @@ accel+gyro only when not (yaw will drift)</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.devices.optogrid.export_csv.html#village.devices.optogrid.export_csv" title="village.devices.optogrid.export_csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_csv</span></code></a>(parquet_path[, csv_path])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_csv</span></code>(parquet_path[, csv_path])</p></td>
 <td><p>Convert a Parquet IMU log to CSV.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.devices.optogrid.og_connect.html#village.devices.optogrid.og_connect" title="village.devices.optogrid.og_connect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">og_connect</span></code></a>(device_name, sessions_directory, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">og_connect</span></code>(device_name, sessions_directory, ...)</p></td>
 <td><p>Create and connect an OptoGrid.</p></td>
 </tr>
 </tbody>
@@ -610,13 +610,13 @@ accel+gyro only when not (yaw will drift)</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.devices.optogrid.IMUConfig.html#village.devices.optogrid.IMUConfig" title="village.devices.optogrid.IMUConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IMUConfig</span></code></a>([save_accel_gyro, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">IMUConfig</span></code>([save_accel_gyro, ...])</p></td>
 <td><p>What to WRITE to disk.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid" title="village.devices.optogrid.OptoGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptoGrid</span></code></a>([sessions_directory, filename, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptoGrid</span></code>([sessions_directory, filename, ...])</p></td>
 <td><p>Synchronous, thread-safe BLE driver for the OptoGrid, with optional IMU logging.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="village.devices.optogrid.OptoSetting.html#village.devices.optogrid.OptoSetting" title="village.devices.optogrid.OptoSetting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptoSetting</span></code></a>([sequence_length, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptoSetting</span></code>([sequence_length, ...])</p></td>
 <td><p>Optogenetic stimulation parameters.</p></td>
 </tr>
 </tbody>
@@ -662,7 +662,7 @@ accel+gyro only when not (yaw will drift)</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

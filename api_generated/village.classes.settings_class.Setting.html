@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,19 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting"><code class="docutils literal notranslate"><span class="pre">Setting</span></code></a><ul>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.key"><code class="docutils literal notranslate">key</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.value"><code class="docutils literal notranslate">value</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.value_type"><code class="docutils literal notranslate">value_type</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.description"><code class="docutils literal notranslate">description</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.base_type"><code class="docutils literal notranslate">base_type</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.element_type"><code class="docutils literal notranslate">element_type</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.settings_class.Setting.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -573,12 +561,12 @@ data-aria-dark="Switch to auto color mode">
           <section id="setting">
 <h1>Setting</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Setting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Setting"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class representing a single configuration setting.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.key">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">key</span></span></dt>
 <dd><p>The name/identifier of the setting.</p>
 <dl class="field-list simple">
@@ -589,7 +577,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.value">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">value</span></span></dt>
 <dd><p>The current default value of the setting.</p>
 <dl class="field-list simple">
@@ -600,7 +588,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.value_type">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">value_type</span></span></dt>
 <dd><p>The full declared type of the value. Can be a
 simple type (<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">str</span></code>, an enum subclass) or a
@@ -613,7 +601,7 @@ generic list type (<code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.description">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">description</span></span></dt>
 <dd><p>A description of what the setting controls.</p>
 <dl class="field-list simple">
@@ -624,7 +612,7 @@ generic list type (<code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.base_type">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">base_type</span></span></dt>
 <dd><p>The outer/container type extracted from
 <code class="docutils literal notranslate"><span class="pre">value_type</span></code>. For simple types this equals <code class="docutils literal notranslate"><span class="pre">value_type</span></code>
@@ -637,7 +625,7 @@ itself; for generic lists it is <code class="docutils literal notranslate"><span
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.element_type">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">element_type</span></span></dt>
 <dd><p>For list settings, the type of each
 element (e.g. <code class="docutils literal notranslate"><span class="pre">int</span></code> for <code class="docutils literal notranslate"><span class="pre">list[int]</span></code>, <code class="docutils literal notranslate"><span class="pre">Active</span></code> for
@@ -650,7 +638,7 @@ element (e.g. <code class="docutils literal notranslate"><span class="pre">int</
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.settings_class.Setting.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/settings_class.html#Setting.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initialize a new Setting.</p>
 <dl class="field-list simple">
@@ -710,7 +698,7 @@ list type (<code class="docutils literal notranslate"><span class="pre">list[int
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

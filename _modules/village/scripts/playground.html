@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -619,6 +619,38 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="89"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 </span><span data-line="90">    <span class="n">mybpod</span> <span class="o">=</span> <span class="n">BpodWithLatencyTest</span><span class="p">()</span>
 </span><span data-line="91">    <span class="n">measure_softcode_latency</span><span class="p">(</span><span class="n">mybpod</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span data-line="92">
+</span><span data-line="93">
+</span><span data-line="94"><span class="c1"># from PyQt5.QtGui import QPainter</span>
+</span><span data-line="95">
+</span><span data-line="96"><span class="c1"># from village.custom_classes.direct_functions_base import DirectFunctionsBase</span>
+</span><span data-line="97"><span class="c1"># from village.devices.screen import screen</span>
+</span><span data-line="98">
+</span><span data-line="99">
+</span><span data-line="100"><span class="c1"># def draw_video_generator(duration):</span>
+</span><span data-line="101"><span class="c1">#     def draw():</span>
+</span><span data-line="102"><span class="c1">#         with QPainter(screen) as painter:</span>
+</span><span data-line="103"><span class="c1">#             painter.setCompositionMode(QPainter.CompositionMode_Source)</span>
+</span><span data-line="104"><span class="c1">#             painter.setRenderHint(QPainter.Antialiasing, False)</span>
+</span><span data-line="105"><span class="c1">#             painter.fillRect(painter.viewport(), screen.background_color)</span>
+</span><span data-line="106"><span class="c1">#             if screen.elapsed_time &lt; duration:</span>
+</span><span data-line="107"><span class="c1">#                 frame = screen.get_video_frame()</span>
+</span><span data-line="108"><span class="c1">#                 if frame is not None:</span>
+</span><span data-line="109"><span class="c1">#                     painter.drawImage(0, 0, frame)</span>
+</span><span data-line="110">
+</span><span data-line="111"><span class="c1">#     return draw</span>
+</span><span data-line="112">
+</span><span data-line="113">
+</span><span data-line="114"><span class="c1"># class DirectFunctions(DirectFunctionsBase):</span>
+</span><span data-line="115">
+</span><span data-line="116"><span class="c1">#     # reproducir el video definido en la tarea por la duracion definida en la tarea</span>
+</span><span data-line="117"><span class="c1">#     def function13(self):</span>
+</span><span data-line="118"><span class="c1">#         duration = self.task.stimulus_duration</span>
+</span><span data-line="119"><span class="c1">#         video_file = self.task.video_file</span>
+</span><span data-line="120">
+</span><span data-line="121"><span class="c1">#         draw_function = draw_video_generator(duration)</span>
+</span><span data-line="122"><span class="c1">#         screen.load_draw_function(draw_function)</span>
+</span><span data-line="123"><span class="c1">#         screen.load_video(video_file)</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -643,7 +675,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../../../_static/documentation_options.js?v=c9500009"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

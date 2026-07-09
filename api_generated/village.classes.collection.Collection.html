@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,30 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.classes.collection.Collection"><code class="docutils literal notranslate"><span class="pre">Collection</span></code></a><ul>
-<li><a class="reference internal" href="#village.classes.collection.Collection.name"><code class="docutils literal notranslate">name</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.columns"><code class="docutils literal notranslate">columns</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.types"><code class="docutils literal notranslate">types</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.dict"><code class="docutils literal notranslate">dict</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.path"><code class="docutils literal notranslate">path</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.df"><code class="docutils literal notranslate">df</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.create_data_collection"><code class="docutils literal notranslate">create_data_collection()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.add_entry"><code class="docutils literal notranslate">add_entry()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.convert_with_default"><code class="docutils literal notranslate">convert_with_default()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.convert_df_to_types"><code class="docutils literal notranslate">convert_df_to_types()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.check_split_csv"><code class="docutils literal notranslate">check_split_csv()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.get_last_entry"><code class="docutils literal notranslate">get_last_entry()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.get_last_entry_name"><code class="docutils literal notranslate">get_last_entry_name()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.get_first_entry"><code class="docutils literal notranslate">get_first_entry()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.change_last_entry"><code class="docutils literal notranslate">change_last_entry()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.save_from_df"><code class="docutils literal notranslate">save_from_df()</span></code></a></li>
-<li><a class="reference internal" href="#village.classes.collection.Collection.df_from_df"><code class="docutils literal notranslate">df_from_df()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -584,12 +561,12 @@ data-aria-dark="Switch to auto color mode">
           <section id="collection">
 <h1>Collection</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.classes.collection.Collection">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Collection</span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Manages a collection of data entries stored in a CSV file and a pandas DataFrame.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.name">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">name</span></span></dt>
 <dd><p>Name of the collection.</p>
 <dl class="field-list simple">
@@ -600,7 +577,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.columns">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">columns</span></span></dt>
 <dd><p>List of column names.</p>
 <dl class="field-list simple">
@@ -611,7 +588,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.types">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">types</span></span></dt>
 <dd><p>List of column data types.</p>
 <dl class="field-list simple">
@@ -622,18 +599,18 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.dict">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">dict</span></span></dt>
 <dd><p>Dictionary mapping columns to types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#village.classes.collection.Collection.dict" title="village.classes.collection.Collection.dict">dict</a></p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.path">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">path</span></span></dt>
 <dd><p>Path to the CSV file.</p>
 <dl class="field-list simple">
@@ -644,7 +621,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.df">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">df</span></span></dt>
 <dd><p>The pandas DataFrame holding the data.</p>
 <dl class="field-list simple">
@@ -655,19 +632,19 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initializes the Collection.</p>
 </dd></dl>
 
 <p class="rubric">Methods</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.create_data_collection">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">create_data_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.create_data_collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.add_entry">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">add_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.add_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Adds a new entry to the collection.</p>
 <dl class="field-list simple">
@@ -678,7 +655,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.convert_with_default">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">convert_with_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.convert_with_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Converts a value to a target type, using defaults for failures.</p>
 <dl class="field-list simple">
@@ -698,7 +675,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.convert_df_to_types">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">convert_df_to_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.convert_df_to_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Converts DataFrame columns to the specified types.</p>
 <dl class="field-list simple">
@@ -715,13 +692,13 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.check_split_csv">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">check_split_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.check_split_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Checks if the CSV file is too large and splits it if necessary.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.get_last_entry">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_last_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.get_last_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Gets the last entry matching a specific value in a column.</p>
 <dl class="field-list simple">
@@ -741,7 +718,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.get_last_entry_name">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_last_entry_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.get_last_entry_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Gets the ‘name’ field of the last entry matching a condition.</p>
 <dl class="field-list simple">
@@ -761,7 +738,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.get_first_entry">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_first_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.get_first_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Gets the first entry matching a specific value in a column.</p>
 <dl class="field-list simple">
@@ -781,7 +758,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.change_last_entry">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">change_last_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.change_last_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Updates a value in the last entry of the DataFrame and saves.</p>
 <dl class="field-list simple">
@@ -795,26 +772,26 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.save_from_df">
-<span class="sig-name descname"><span class="pre">save_from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html#village.custom_classes.training_protocol_base.TrainingProtocolBase" title="village.custom_classes.training_protocol_base.TrainingProtocolBase"><span class="pre">TrainingProtocolBase</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TrainingProtocolBase()</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.save_from_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">save_from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrainingProtocolBase</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TrainingProtocolBase()</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.save_from_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Saves values from the current DataFrame to the CSV file,
 processing formatting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>training</strong> (<a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html#village.custom_classes.training_protocol_base.TrainingProtocolBase" title="village.custom_classes.training_protocol_base.TrainingProtocolBase"><em>TrainingProtocolBase</em></a>) – Protocol for formatting specific fields.</p>
+<dd class="field-odd"><p><strong>training</strong> (<em>TrainingProtocolBase</em>) – Protocol for formatting specific fields.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.classes.collection.Collection.df_from_df">
-<span class="sig-name descname"><span class="pre">df_from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html#village.custom_classes.training_protocol_base.TrainingProtocolBase" title="village.custom_classes.training_protocol_base.TrainingProtocolBase"><span class="pre">TrainingProtocolBase</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.df_from_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">df_from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrainingProtocolBase</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../_modules/village/classes/collection.html#Collection.df_from_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Processes a DataFrame for saving (formatting dates, enums, etc).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input DataFrame.</p></li>
-<li><p><strong>training</strong> (<a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html#village.custom_classes.training_protocol_base.TrainingProtocolBase" title="village.custom_classes.training_protocol_base.TrainingProtocolBase"><em>TrainingProtocolBase</em></a>) – The training protocol for
+<li><p><strong>training</strong> (<em>TrainingProtocolBase</em>) – The training protocol for
 custom formatting.</p></li>
 </ul>
 </dd>
@@ -868,7 +845,7 @@ custom formatting.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

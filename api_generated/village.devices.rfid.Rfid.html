@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,28 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid"><code class="docutils literal notranslate"><span class="pre">Rfid</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.port"><code class="docutils literal notranslate">port</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.baudrate"><code class="docutils literal notranslate">baudrate</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.multiple"><code class="docutils literal notranslate">multiple</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.time_detections"><code class="docutils literal notranslate">time_detections</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.id"><code class="docutils literal notranslate">id</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.id_history"><code class="docutils literal notranslate">id_history</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.reading"><code class="docutils literal notranslate">reading</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.s"><code class="docutils literal notranslate">s</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.thread"><code class="docutils literal notranslate">thread</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.running"><code class="docutils literal notranslate">running</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.read_serial"><code class="docutils literal notranslate">read_serial()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.clean_old_ids"><code class="docutils literal notranslate">clean_old_ids()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.update_multiple"><code class="docutils literal notranslate">update_multiple()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.stop"><code class="docutils literal notranslate">stop()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.rfid.Rfid.get_id"><code class="docutils literal notranslate">get_id()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -582,12 +561,12 @@ data-aria-dark="Switch to auto color mode">
           <section id="rfid">
 <h1>Rfid</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Rfid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/dev/ttyAMA0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Handles RFID reader communication via serial port.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.port">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">port</span></span></dt>
 <dd><p>Serial port path.</p>
 <dl class="field-list simple">
@@ -598,7 +577,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.baudrate">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">baudrate</span></span></dt>
 <dd><p>Serial baudrate.</p>
 <dl class="field-list simple">
@@ -609,7 +588,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.multiple">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">multiple</span></span></dt>
 <dd><p>Whether multiple tags where detected recently-ish.</p>
 <dl class="field-list simple">
@@ -620,7 +599,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.time_detections">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">time_detections</span></span></dt>
 <dd><p>Time window in seconds to check for duplicate IDs.</p>
 <dl class="field-list simple">
@@ -631,7 +610,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.id">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">id</span></span></dt>
 <dd><p>The most recently read RFID tag ID.</p>
 <dl class="field-list simple">
@@ -642,7 +621,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.id_history">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">id_history</span></span></dt>
 <dd><p>History of read IDs and timestamps.</p>
 <dl class="field-list simple">
@@ -653,7 +632,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.reading">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">reading</span></span></dt>
 <dd><p>Flag to control reading loop</p>
 <dl class="field-list simple">
@@ -669,7 +648,7 @@ data-aria-dark="Switch to auto color mode">
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.s">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">s</span></span></dt>
 <dd><p>The serial connection.</p>
 <dl class="field-list simple">
@@ -680,7 +659,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.thread">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">thread</span></span></dt>
 <dd><p>Background thread for reading serial data.</p>
 <dl class="field-list simple">
@@ -691,7 +670,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.running">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">running</span></span></dt>
 <dd><p>Flag to control the background thread.</p>
 <dl class="field-list simple">
@@ -702,7 +681,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/dev/ttyAMA0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9600</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initializes the RFID reader.</p>
 <dl class="field-list simple">
@@ -717,31 +696,31 @@ data-aria-dark="Switch to auto color mode">
 
 <p class="rubric">Methods</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.read_serial">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">read_serial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.read_serial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads data from the serial port in a background loop.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.clean_old_ids">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">clean_old_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.clean_old_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Removes IDs from history that are older than <cite>time_detections</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.update_multiple">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">update_multiple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.update_multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Updates the <cite>multiple</cite> flag if more than one unique ID is in history.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.stop">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Stops the serial reading thread.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.rfid.Rfid.get_id">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/devices/rfid.html#Rfid.get_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Retrieves the current RFID tag ID and multiple status.</p>
 <dl class="field-list simple">
@@ -797,7 +776,7 @@ Returns (“”, False) if reading is disabled.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

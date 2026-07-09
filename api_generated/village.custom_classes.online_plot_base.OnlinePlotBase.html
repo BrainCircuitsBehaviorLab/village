@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,18 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase"><code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code></a><ul>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes"><code class="docutils literal notranslate">create_figure_and_axes()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.update_plot"><code class="docutils literal notranslate">update_plot()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure"><code class="docutils literal notranslate">ensure_figure()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.update_canvas"><code class="docutils literal notranslate">update_canvas()</span></code></a></li>
-<li><a class="reference internal" href="#village.custom_classes.online_plot_base.OnlinePlotBase.close"><code class="docutils literal notranslate">close()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -572,7 +561,7 @@ data-aria-dark="Switch to auto color mode">
           <section id="onlineplotbase">
 <h1>OnlinePlotBase</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">OnlinePlotBase</span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class to handle creation and management of Matplotlib figures to monitor
@@ -582,20 +571,20 @@ that are part of Task.session_df.</p>
 <p>Subclasses should override <cite>create_figure_and_axes</cite> (to create axes) and
 <cite>update_plot</cite> (to draw on existing axes).</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initializes the OnlinePlotBase instance.</p>
 </dd></dl>
 
 <p class="rubric">Methods</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.create_figure_and_axes">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">create_figure_and_axes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.create_figure_and_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Creates the figure and axes. Should be overridden by subclasses.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.update_plot">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">update_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.update_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Updates the plot content. Should be overridden by subclasses.</p>
 <dl class="field-list simple">
@@ -606,13 +595,13 @@ that are part of Task.session_df.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.ensure_figure">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">ensure_figure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.ensure_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Ensures that the matplotlib figure exists, creating it if necessary.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.update_canvas">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">update_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.update_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Updates the plot with new data and redraws the canvas.</p>
 <dl class="field-list simple">
@@ -623,7 +612,7 @@ that are part of Task.session_df.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.custom_classes.online_plot_base.OnlinePlotBase.close">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/online_plot_base.html#OnlinePlotBase.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Closes the matplotlib figure and resets the state.</p>
 </dd></dl>
@@ -669,7 +658,7 @@ that are part of Task.session_df.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -318,7 +318,7 @@ cd village
 5. Install the repository.
 
 ```
-pip install -e .
+pip install -e . --config-settings editable_mode=compat
 ```
 
 6. You’re ready to start the system by simply running the `main.py` file.

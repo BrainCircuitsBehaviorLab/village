@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,33 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration"><code class="docutils literal notranslate"><span class="pre">SoundCalibration</span></code></a><ul>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.is_active"><code class="docutils literal notranslate">is_active()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.create_plot"><code class="docutils literal notranslate">create_plot()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.get_last_calibration_df"><code class="docutils literal notranslate">get_last_calibration_df()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.get_sound_gain"><code class="docutils literal notranslate">get_sound_gain()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.draw"><code class="docutils literal notranslate">draw()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.change_layout"><code class="docutils literal notranslate">change_layout()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.calibration_changed"><code class="docutils literal notranslate">calibration_changed()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.test_changed"><code class="docutils literal notranslate">test_changed()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.calibrate_button_clicked"><code class="docutils literal notranslate">calibrate_button_clicked()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.test_button_clicked"><code class="docutils literal notranslate">test_button_clicked()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.save_button_clicked"><code class="docutils literal notranslate">save_button_clicked()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.delete_button_clicked"><code class="docutils literal notranslate">delete_button_clicked()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.update_gui"><code class="docutils literal notranslate">update_gui()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.calibration_measured"><code class="docutils literal notranslate">calibration_measured()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.test_measured"><code class="docutils literal notranslate">test_measured()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.add_button_clicked"><code class="docutils literal notranslate">add_button_clicked()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.ok_button2_clicked"><code class="docutils literal notranslate">ok_button2_clicked()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.reset_values_after_ok_or_add2"><code class="docutils literal notranslate">reset_values_after_ok_or_add2()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.add_button2_clicked"><code class="docutils literal notranslate">add_button2_clicked()</span></code></a></li>
-<li><a class="reference internal" href="#village.calibration.sound_calibration.SoundCalibration.stop_button_clicked"><code class="docutils literal notranslate">stop_button_clicked()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -587,12 +561,12 @@ data-aria-dark="Switch to auto color mode">
           <section id="soundcalibration">
 <h1>SoundCalibration</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">SoundCalibration</span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="village.custom_classes.calibration_base.CalibrationBase.html#village.custom_classes.calibration_base.CalibrationBase" title="village.custom_classes.calibration_base.CalibrationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">CalibrationBase</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalibrationBase</span></code></p>
 <p>Sound speaker calibration and testing panel.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initialises the Collection. Called once by import_all.</p>
 </dd></dl>
@@ -600,106 +574,106 @@ data-aria-dark="Switch to auto color mode">
 <p class="rubric">Methods</p>
 <p class="rubric">Attributes</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.is_active">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.is_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.create_plot">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">create_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pd.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.create_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.get_last_calibration_df">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_last_calibration_df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.get_last_calibration_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.get_sound_gain">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_sound_gain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speaker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sound_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.get_sound_gain"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.draw">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Draws the calibration UI. Override in subclasses.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.change_layout">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">change_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.change_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Called before switching away from this calibration.</p>
 <p>Return False to prevent the switch (e.g. unsaved changes).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.calibration_changed">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">calibration_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.calibration_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.test_changed">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">test_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.test_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.calibrate_button_clicked">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">calibrate_button_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.calibrate_button_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.test_button_clicked">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">test_button_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.test_button_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.save_button_clicked">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">save_button_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.save_button_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.delete_button_clicked">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">delete_button_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.delete_button_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.update_gui">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">update_gui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.update_gui"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Called periodically to refresh the UI.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.calibration_measured">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">calibration_measured</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.calibration_measured"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.test_measured">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">test_measured</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.test_measured"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.add_button_clicked">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">add_button_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.add_button_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.ok_button2_clicked">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">ok_button2_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.ok_button2_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.reset_values_after_ok_or_add2">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">reset_values_after_ok_or_add2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delete_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.reset_values_after_ok_or_add2"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.add_button2_clicked">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">add_button2_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.add_button2_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.calibration.sound_calibration.SoundCalibration.stop_button_clicked">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">stop_button_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/calibration/sound_calibration.html#SoundCalibration.stop_button_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
@@ -744,7 +718,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

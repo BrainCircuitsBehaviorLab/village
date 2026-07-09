@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,17 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.devices.screen.VideoWorker"><code class="docutils literal notranslate"><span class="pre">VideoWorker</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.screen.VideoWorker.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.screen.VideoWorker.finished"><code class="docutils literal notranslate">finished</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.screen.VideoWorker.run"><code class="docutils literal notranslate">run()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.screen.VideoWorker.get_latest_qimage"><code class="docutils literal notranslate">get_latest_qimage()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.screen.VideoWorker.stop"><code class="docutils literal notranslate">stop()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -571,14 +561,14 @@ data-aria-dark="Switch to auto color mode">
           <section id="videoworker">
 <h1>VideoWorker</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.devices.screen.VideoWorker">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">VideoWorker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Worker class for decoding video frames in a separate thread.</p>
 <p>Uses OpenCV to read frames and serves them as QImages for display.
 Maintains synchronization with real-time based on the video’s FPS.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.screen.VideoWorker.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initializes the VideoWorker.</p>
 <dl class="field-list simple">
@@ -591,19 +581,19 @@ Maintains synchronization with real-time based on the video’s FPS.</p>
 <p class="rubric">Methods</p>
 <p class="rubric">Attributes</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.screen.VideoWorker.finished">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">finished</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MockSignal</span> <span class="pre">object&gt;</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.screen.VideoWorker.run">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Main loop for reading and processing video frames.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.screen.VideoWorker.get_latest_qimage">
-<span class="sig-name descname"><span class="pre">get_latest_qimage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QImage'</span> <span class="pre">id='140716731468560'&gt;</span> <span class="pre">|</span> <span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker.get_latest_qimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_latest_qimage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QImage'</span> <span class="pre">id='139992239261200'&gt;</span> <span class="pre">|</span> <span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker.get_latest_qimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the most appropriate video frame for the current time.</p>
 <p>Calculates the target frame based on elapsed time since start.</p>
 <dl class="field-list simple">
@@ -617,7 +607,13 @@ Maintains synchronization with real-time based on the video’s FPS.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.screen.VideoWorker.stop">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker.play"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sets the playback start time so get_latest_qimage starts serving frames.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Stops the video decoding loop.</p>
 </dd></dl>
@@ -663,7 +659,7 @@ Maintains synchronization with real-time based on the video’s FPS.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

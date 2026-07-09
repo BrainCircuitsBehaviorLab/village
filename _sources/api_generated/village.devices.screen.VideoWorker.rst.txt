@@ -18,6 +18,7 @@ VideoWorker
    
       ~VideoWorker.__init__
       ~VideoWorker.get_latest_qimage
+      ~VideoWorker.play
       ~VideoWorker.run
       ~VideoWorker.stop
    

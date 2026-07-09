@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -520,413 +520,463 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="2">
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 </span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">queue</span>
-</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
-</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
-</span><span data-line="8">
-</span><span data-line="9"><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
-</span><span data-line="10"><span class="kn">import</span><span class="w"> </span><span class="nn">gpiod</span>
-</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">gpiod.line</span><span class="w"> </span><span class="kn">import</span> <span class="n">Direction</span><span class="p">,</span> <span class="n">Value</span>
-</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QMutex</span><span class="p">,</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">QRect</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">pyqtSlot</span>
-</span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QGuiApplication</span><span class="p">,</span> <span class="n">QImage</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPixmap</span>
-</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QOpenGLWidget</span>
-</span><span data-line="15">
-</span><span data-line="16"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.null_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullScreen</span>
-</span><span data-line="17"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.error_queue</span><span class="w"> </span><span class="kn">import</span> <span class="n">error_queue</span>
-</span><span data-line="18"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
-</span><span data-line="19"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
-</span><span data-line="20">
-</span><span data-line="21">
+</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span data-line="7"><span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+</span><span data-line="11"><span class="kn">import</span><span class="w"> </span><span class="nn">gpiod</span>
+</span><span data-line="12"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">gpiod.line</span><span class="w"> </span><span class="kn">import</span> <span class="n">Direction</span><span class="p">,</span> <span class="n">Value</span>
+</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="15">    <span class="n">QMetaObject</span><span class="p">,</span>
+</span><span data-line="16">    <span class="n">QMutex</span><span class="p">,</span>
+</span><span data-line="17">    <span class="n">QObject</span><span class="p">,</span>
+</span><span data-line="18">    <span class="n">QRect</span><span class="p">,</span>
+</span><span data-line="19">    <span class="n">Qt</span><span class="p">,</span>
+</span><span data-line="20">    <span class="n">QThread</span><span class="p">,</span>
+</span><span data-line="21">    <span class="n">pyqtSignal</span><span class="p">,</span>
+</span><span data-line="22">    <span class="n">pyqtSlot</span><span class="p">,</span>
+</span><span data-line="23"><span class="p">)</span>
+</span><span data-line="24"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QGuiApplication</span><span class="p">,</span> <span class="n">QImage</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPixmap</span>
+</span><span data-line="25"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QOpenGLWidget</span>
+</span><span data-line="26">
+</span><span data-line="27"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.null_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullScreen</span>
+</span><span data-line="28"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
+</span><span data-line="29"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.error_queue</span><span class="w"> </span><span class="kn">import</span> <span class="n">error_queue</span>
+</span><span data-line="30"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+</span><span data-line="31"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+</span><span data-line="32">
+</span><span data-line="33">
 <div class="viewcode-block" id="VideoWorker">
 <a class="viewcode-back" href="../../../api_generated/village.devices.screen.VideoWorker.html#village.devices.screen.VideoWorker">[docs]</a>
-</span><span data-line="22"><span class="k">class</span><span class="w"> </span><span class="nc">VideoWorker</span><span class="p">(</span><span class="n">QObject</span><span class="p">):</span>
-</span><span data-line="23"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Worker class for decoding video frames in a separate thread.</span>
-</span><span data-line="24">
-</span><span data-line="25"><span class="sd">    Uses OpenCV to read frames and serves them as QImages for display.</span>
-</span><span data-line="26"><span class="sd">    Maintains synchronization with real-time based on the video&#39;s FPS.</span>
-</span><span data-line="27"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="28">
-</span><span data-line="29">    <span class="n">finished</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
-</span><span data-line="30">
+</span><span data-line="34"><span class="k">class</span><span class="w"> </span><span class="nc">VideoWorker</span><span class="p">(</span><span class="n">QObject</span><span class="p">):</span>
+</span><span data-line="35"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Worker class for decoding video frames in a separate thread.</span>
+</span><span data-line="36">
+</span><span data-line="37"><span class="sd">    Uses OpenCV to read frames and serves them as QImages for display.</span>
+</span><span data-line="38"><span class="sd">    Maintains synchronization with real-time based on the video&#39;s FPS.</span>
+</span><span data-line="39"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="40">
+</span><span data-line="41">    <span class="n">finished</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
+</span><span data-line="42">
 <div class="viewcode-block" id="VideoWorker.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.devices.screen.VideoWorker.html#village.devices.screen.VideoWorker.__init__">[docs]</a>
-</span><span data-line="31">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="32"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the VideoWorker.</span>
-</span><span data-line="33">
-</span><span data-line="34"><span class="sd">        Args:</span>
-</span><span data-line="35"><span class="sd">            path (str): Path to the video file.</span>
-</span><span data-line="36"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="37">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
-</span><span data-line="39">        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="40">
-</span><span data-line="41">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="42">        <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span> <span class="o">=</span> <span class="n">QMutex</span><span class="p">()</span>
-</span><span data-line="43">
-</span><span data-line="44">        <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="45">        <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-</span><span data-line="46">
-</span><span data-line="47">        <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-</span><span data-line="49">
-</span><span data-line="50">        <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="51">        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="52">        <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="53">        <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+</span><span data-line="43">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="44"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the VideoWorker.</span>
+</span><span data-line="45">
+</span><span data-line="46"><span class="sd">        Args:</span>
+</span><span data-line="47"><span class="sd">            path (str): Path to the video file.</span>
+</span><span data-line="48"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="49">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="50">        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+</span><span data-line="51">        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="52">
+</span><span data-line="53">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="54">        <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span> <span class="o">=</span> <span class="n">QMutex</span><span class="p">()</span>
+</span><span data-line="55">
+</span><span data-line="56">        <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="57">        <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span data-line="58">
+</span><span data-line="59">        <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="60">        <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span data-line="61">
+</span><span data-line="62">        <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="63">        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="64">        <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="65">        <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-</span><span data-line="54">
+</span><span data-line="66">
 <div class="viewcode-block" id="VideoWorker.run">
 <a class="viewcode-back" href="../../../api_generated/village.devices.screen.VideoWorker.html#village.devices.screen.VideoWorker.run">[docs]</a>
-</span><span data-line="55">    <span class="nd">@pyqtSlot</span><span class="p">()</span>
-</span><span data-line="56">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="57"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Main loop for reading and processing video frames.&quot;&quot;&quot;</span>
-</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="59">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="60">            <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-</span><span data-line="61">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
-</span><span data-line="62">                <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="63">                <span class="k">return</span>
-</span><span data-line="64">
-</span><span data-line="65">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="66">                <span class="n">fps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">))</span>
-</span><span data-line="67">                <span class="k">if</span> <span class="n">fps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="68">                    <span class="n">fps</span> <span class="o">=</span> <span class="mf">30.0</span>
-</span><span data-line="69">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="70">                <span class="n">fps</span> <span class="o">=</span> <span class="mf">30.0</span>
-</span><span data-line="71">
-</span><span data-line="72">            <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span> <span class="o">=</span> <span class="n">fps</span>
-</span><span data-line="73">            <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">fps</span> <span class="k">if</span> <span class="n">fps</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-</span><span data-line="74">            <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
-</span><span data-line="75">            <span class="bp">self</span><span class="o">.</span><span class="n">_started</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="67">    <span class="nd">@pyqtSlot</span><span class="p">()</span>
+</span><span data-line="68">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="69"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Main loop for reading and processing video frames.&quot;&quot;&quot;</span>
+</span><span data-line="70">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="71">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="72">            <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+</span><span data-line="73">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
+</span><span data-line="74">                <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="75">                <span class="k">return</span>
 </span><span data-line="76">
-</span><span data-line="77">            <span class="n">produced_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-</span><span data-line="78">
-</span><span data-line="79">            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
-</span><span data-line="80">                <span class="n">ok</span><span class="p">,</span> <span class="n">bgr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span><span data-line="81">                <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
-</span><span data-line="82">                    <span class="k">break</span>
+</span><span data-line="77">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="78">                <span class="n">fps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">))</span>
+</span><span data-line="79">                <span class="k">if</span> <span class="n">fps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="80">                    <span class="n">fps</span> <span class="o">=</span> <span class="mf">30.0</span>
+</span><span data-line="81">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="82">                <span class="n">fps</span> <span class="o">=</span> <span class="mf">30.0</span>
 </span><span data-line="83">
-</span><span data-line="84">                <span class="n">rgba</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGBA</span><span class="p">)</span>
-</span><span data-line="85">                <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-</span><span data-line="86">                <span class="n">img</span> <span class="o">=</span> <span class="n">QImage</span><span class="p">(</span><span class="n">rgba</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">QImage</span><span class="o">.</span><span class="n">Format_RGBA8888</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span data-line="87">
-</span><span data-line="88">                <span class="n">produced_idx</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="89">
-</span><span data-line="90">                <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
-</span><span data-line="91">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="92">                    <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span> <span class="o">=</span> <span class="n">img</span>
-</span><span data-line="93">                    <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span> <span class="o">=</span> <span class="n">produced_idx</span>
-</span><span data-line="94">                <span class="k">finally</span><span class="p">:</span>
-</span><span data-line="95">                    <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">unlock</span><span class="p">()</span>
-</span><span data-line="96">
-</span><span data-line="97">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="98">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="99">                <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;video&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
-</span><span data-line="100">            <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Full</span><span class="p">:</span>
-</span><span data-line="101">                <span class="k">pass</span>
-</span><span data-line="102">        <span class="k">finally</span><span class="p">:</span>
-</span><span data-line="103">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="104">                <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-</span><span data-line="105">                <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="106">            <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="107">            <span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span></div>
+</span><span data-line="84">            <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span> <span class="o">=</span> <span class="n">fps</span>
+</span><span data-line="85">            <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">fps</span> <span class="k">if</span> <span class="n">fps</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+</span><span data-line="86">
+</span><span data-line="87">            <span class="n">produced_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span data-line="88">
+</span><span data-line="89">            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+</span><span data-line="90">                <span class="n">ok</span><span class="p">,</span> <span class="n">bgr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span data-line="91">                <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+</span><span data-line="92">                    <span class="k">break</span>
+</span><span data-line="93">
+</span><span data-line="94">                <span class="n">rgba</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGBA</span><span class="p">)</span>
+</span><span data-line="95">                <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span data-line="96">                <span class="n">img</span> <span class="o">=</span> <span class="n">QImage</span><span class="p">(</span><span class="n">rgba</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">QImage</span><span class="o">.</span><span class="n">Format_RGBA8888</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="97">
+</span><span data-line="98">                <span class="n">produced_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="99">
+</span><span data-line="100">                <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
+</span><span data-line="101">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="102">                    <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span> <span class="o">=</span> <span class="n">img</span>
+</span><span data-line="103">                    <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span> <span class="o">=</span> <span class="n">produced_idx</span>
+</span><span data-line="104">                <span class="k">finally</span><span class="p">:</span>
+</span><span data-line="105">                    <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">unlock</span><span class="p">()</span>
+</span><span data-line="106">
+</span><span data-line="107">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="108">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="109">                <span class="n">error_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="s2">&quot;video&quot;</span><span class="p">,</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
+</span><span data-line="110">            <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Full</span><span class="p">:</span>
+</span><span data-line="111">                <span class="k">pass</span>
+</span><span data-line="112">        <span class="k">finally</span><span class="p">:</span>
+</span><span data-line="113">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="114">                <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+</span><span data-line="115">                <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="116">            <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="117">            <span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span></div>
 
-</span><span data-line="108">
+</span><span data-line="118">
 <div class="viewcode-block" id="VideoWorker.get_latest_qimage">
 <a class="viewcode-back" href="../../../api_generated/village.devices.screen.VideoWorker.html#village.devices.screen.VideoWorker.get_latest_qimage">[docs]</a>
-</span><span data-line="109">    <span class="k">def</span><span class="w"> </span><span class="nf">get_latest_qimage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
-</span><span data-line="110"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the most appropriate video frame for the current time.</span>
-</span><span data-line="111">
-</span><span data-line="112"><span class="sd">        Calculates the target frame based on elapsed time since start.</span>
-</span><span data-line="113">
-</span><span data-line="114"><span class="sd">        Returns:</span>
-</span><span data-line="115"><span class="sd">            Optional[QImage]: The current video frame.</span>
-</span><span data-line="116"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="117">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="118">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="119">
-</span><span data-line="120">        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
-</span><span data-line="121">        <span class="n">target_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span><span class="p">)</span>
-</span><span data-line="122">
-</span><span data-line="123">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span> <span class="o">==</span> <span class="n">target_idx</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="124">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
-</span><span data-line="125">
-</span><span data-line="126">        <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
-</span><span data-line="127">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="128">            <span class="n">latest_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span>
-</span><span data-line="129">            <span class="n">latest_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span>
-</span><span data-line="130">        <span class="k">finally</span><span class="p">:</span>
-</span><span data-line="131">            <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">unlock</span><span class="p">()</span>
+</span><span data-line="119">    <span class="k">def</span><span class="w"> </span><span class="nf">get_latest_qimage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
+</span><span data-line="120"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the most appropriate video frame for the current time.</span>
+</span><span data-line="121">
+</span><span data-line="122"><span class="sd">        Calculates the target frame based on elapsed time since start.</span>
+</span><span data-line="123">
+</span><span data-line="124"><span class="sd">        Returns:</span>
+</span><span data-line="125"><span class="sd">            Optional[QImage]: The current video frame.</span>
+</span><span data-line="126"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="127">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="128">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="129">
+</span><span data-line="130">        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+</span><span data-line="131">        <span class="n">target_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_dt</span><span class="p">)</span>
 </span><span data-line="132">
-</span><span data-line="133">        <span class="k">if</span> <span class="n">latest_img</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">latest_idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="133">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span> <span class="o">==</span> <span class="n">target_idx</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="134">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
 </span><span data-line="135">
-</span><span data-line="136">        <span class="k">if</span> <span class="n">latest_idx</span> <span class="o">&gt;=</span> <span class="n">target_idx</span><span class="p">:</span>
-</span><span data-line="137">            <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span> <span class="o">=</span> <span class="n">target_idx</span>
-</span><span data-line="138">            <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span> <span class="o">=</span> <span class="n">latest_img</span>
-</span><span data-line="139">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
-</span><span data-line="140">
-</span><span data-line="141">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span></div>
-
+</span><span data-line="136">        <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
+</span><span data-line="137">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="138">            <span class="n">latest_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latest_img</span>
+</span><span data-line="139">            <span class="n">latest_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latest_idx</span>
+</span><span data-line="140">        <span class="k">finally</span><span class="p">:</span>
+</span><span data-line="141">            <span class="bp">self</span><span class="o">.</span><span class="n">mtx</span><span class="o">.</span><span class="n">unlock</span><span class="p">()</span>
 </span><span data-line="142">
+</span><span data-line="143">        <span class="k">if</span> <span class="n">latest_img</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">latest_idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="144">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
+</span><span data-line="145">
+</span><span data-line="146">        <span class="k">if</span> <span class="n">latest_idx</span> <span class="o">&gt;=</span> <span class="n">target_idx</span><span class="p">:</span>
+</span><span data-line="147">            <span class="bp">self</span><span class="o">.</span><span class="n">_served_idx</span> <span class="o">=</span> <span class="n">target_idx</span>
+</span><span data-line="148">            <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span> <span class="o">=</span> <span class="n">latest_img</span>
+</span><span data-line="149">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span>
+</span><span data-line="150">
+</span><span data-line="151">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_served_img</span></div>
+
+</span><span data-line="152">
+<div class="viewcode-block" id="VideoWorker.play">
+<a class="viewcode-back" href="../../../api_generated/village.devices.screen.VideoWorker.html#village.devices.screen.VideoWorker.play">[docs]</a>
+</span><span data-line="153">    <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="154"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the playback start time so get_latest_qimage starts serving frames.&quot;&quot;&quot;</span>
+</span><span data-line="155">        <span class="bp">self</span><span class="o">.</span><span class="n">_play_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+</span><span data-line="156">        <span class="bp">self</span><span class="o">.</span><span class="n">_started</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+</span><span data-line="157">
 <div class="viewcode-block" id="VideoWorker.stop">
 <a class="viewcode-back" href="../../../api_generated/village.devices.screen.VideoWorker.html#village.devices.screen.VideoWorker.stop">[docs]</a>
-</span><span data-line="143">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="144"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the video decoding loop.&quot;&quot;&quot;</span>
-</span><span data-line="145">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span></div>
+</span><span data-line="158">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="159"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the video decoding loop.&quot;&quot;&quot;</span>
+</span><span data-line="160">        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span></div>
 </div>
 
-</span><span data-line="146">
-</span><span data-line="147">
-</span><span data-line="148"><span class="k">class</span><span class="w"> </span><span class="nc">Screen</span><span class="p">(</span><span class="n">QOpenGLWidget</span><span class="p">):</span>
-</span><span data-line="149"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Window for displaying stimuli (images or video) in visual behavior tasks.</span>
-</span><span data-line="150">
-</span><span data-line="151"><span class="sd">    This class handles the rendering loop, GPIO synchronization (for timestamps),</span>
-</span><span data-line="152"><span class="sd">    and displaying images or video streams.</span>
-</span><span data-line="153"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="154">
-</span><span data-line="155">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geometry</span><span class="p">:</span> <span class="n">QRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="156"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Screen.</span>
-</span><span data-line="157">
-</span><span data-line="158"><span class="sd">        Args:</span>
-</span><span data-line="159"><span class="sd">            geometry (QRect): The geometry (position and size) of the window.</span>
-</span><span data-line="160"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="161">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="162">        <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span>
-</span><span data-line="163">        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">geometry</span><span class="o">.</span><span class="n">height</span><span class="p">())</span>
-</span><span data-line="164">        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Village_Box&quot;</span><span class="p">)</span>
-</span><span data-line="165">        <span class="bp">self</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WA_OpaquePaintEvent</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-</span><span data-line="166">        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-</span><span data-line="167">        <span class="bp">self</span><span class="o">.</span><span class="n">setUpdateBehavior</span><span class="p">(</span><span class="n">QOpenGLWidget</span><span class="o">.</span><span class="n">NoPartialUpdate</span><span class="p">)</span>
-</span><span data-line="168">
-</span><span data-line="169">        <span class="bp">self</span><span class="o">.</span><span class="n">width_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
-</span><span data-line="170">        <span class="bp">self</span><span class="o">.</span><span class="n">height_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
-</span><span data-line="171">
-</span><span data-line="172">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="173">        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="174">
-</span><span data-line="175">        <span class="bp">self</span><span class="o">.</span><span class="n">_start_timing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="176">        <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="177">
-</span><span data-line="178">        <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="179">        <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_line_offset</span> <span class="o">=</span> <span class="mi">26</span>
-</span><span data-line="180">        <span class="bp">self</span><span class="o">.</span><span class="n">_init_gpio</span><span class="p">()</span>
-</span><span data-line="181">
-</span><span data-line="182">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="183">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VideoWorker</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="184">
-</span><span data-line="185">        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="186">        <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="187">
-</span><span data-line="188">        <span class="bp">self</span><span class="o">.</span><span class="n">background_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+</span><span data-line="161">
+</span><span data-line="162">
+</span><span data-line="163"><span class="k">class</span><span class="w"> </span><span class="nc">Screen</span><span class="p">(</span><span class="n">QOpenGLWidget</span><span class="p">):</span>
+</span><span data-line="164"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Window for displaying stimuli (images or video) in visual behavior tasks.</span>
+</span><span data-line="165">
+</span><span data-line="166"><span class="sd">    This class handles the rendering loop, GPIO synchronization (for timestamps),</span>
+</span><span data-line="167"><span class="sd">    and displaying images or video streams.</span>
+</span><span data-line="168"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="169">
+</span><span data-line="170">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geometry</span><span class="p">:</span> <span class="n">QRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="171"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Screen.</span>
+</span><span data-line="172">
+</span><span data-line="173"><span class="sd">        Args:</span>
+</span><span data-line="174"><span class="sd">            geometry (QRect): The geometry (position and size) of the window.</span>
+</span><span data-line="175"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="176">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="177">        <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span>
+</span><span data-line="178">        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">geometry</span><span class="o">.</span><span class="n">height</span><span class="p">())</span>
+</span><span data-line="179">        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Village_Box&quot;</span><span class="p">)</span>
+</span><span data-line="180">        <span class="bp">self</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WA_OpaquePaintEvent</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span><span data-line="181">        <span class="bp">self</span><span class="o">.</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</span><span data-line="182">        <span class="bp">self</span><span class="o">.</span><span class="n">setUpdateBehavior</span><span class="p">(</span><span class="n">QOpenGLWidget</span><span class="o">.</span><span class="n">NoPartialUpdate</span><span class="p">)</span>
+</span><span data-line="183">
+</span><span data-line="184">        <span class="bp">self</span><span class="o">.</span><span class="n">width_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
+</span><span data-line="185">        <span class="bp">self</span><span class="o">.</span><span class="n">height_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
+</span><span data-line="186">
+</span><span data-line="187">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="188">        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span data-line="189">
-</span><span data-line="190">        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="191">        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="192">        <span class="bp">self</span><span class="o">.</span><span class="n">blend</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="193">        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QPixmap</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="194">
-</span><span data-line="195">        <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
-</span><span data-line="196">        <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="197">            <span class="n">app</span><span class="o">.</span><span class="n">aboutToQuit</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_video</span><span class="p">)</span>
-</span><span data-line="198">
-</span><span data-line="199">        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</span><span data-line="200">
-</span><span data-line="201">    <span class="k">def</span><span class="w"> </span><span class="nf">_init_gpio</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="202"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the GPIO line for timestamp synchronization.&quot;&quot;&quot;</span>
-</span><span data-line="203">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="204">            <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="205">                <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_line_offset</span><span class="p">:</span> <span class="n">gpiod</span><span class="o">.</span><span class="n">LineSettings</span><span class="p">(</span>
-</span><span data-line="206">                    <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">OUTPUT</span><span class="p">,</span> <span class="n">output_value</span><span class="o">=</span><span class="n">Value</span><span class="o">.</span><span class="n">INACTIVE</span>
-</span><span data-line="207">                <span class="p">)</span>
-</span><span data-line="208">            <span class="p">}</span>
-</span><span data-line="209">            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="o">=</span> <span class="n">gpiod</span><span class="o">.</span><span class="n">request_lines</span><span class="p">(</span>
-</span><span data-line="210">                <span class="s2">&quot;/dev/gpiochip0&quot;</span><span class="p">,</span> <span class="n">consumer</span><span class="o">=</span><span class="s2">&quot;village_stim&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">cfg</span>
-</span><span data-line="211">            <span class="p">)</span>
-</span><span data-line="212">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="213">            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="214">
-</span><span data-line="215">    <span class="k">def</span><span class="w"> </span><span class="nf">initializeGL</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="216">        <span class="k">pass</span>
+</span><span data-line="190">        <span class="bp">self</span><span class="o">.</span><span class="n">_start_timing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="191">        <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="192">
+</span><span data-line="193">        <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="194">        <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_line_offset</span> <span class="o">=</span> <span class="mi">26</span>
+</span><span data-line="195">        <span class="bp">self</span><span class="o">.</span><span class="n">_init_gpio</span><span class="p">()</span>
+</span><span data-line="196">
+</span><span data-line="197">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="198">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VideoWorker</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="199">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_left</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="200">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_right</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="201">
+</span><span data-line="202">        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="203">        <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="204">
+</span><span data-line="205">        <span class="bp">self</span><span class="o">.</span><span class="n">background_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+</span><span data-line="206">
+</span><span data-line="207">        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="208">        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="209">        <span class="bp">self</span><span class="o">.</span><span class="n">blend</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="210">        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QPixmap</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="211">
+</span><span data-line="212">        <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+</span><span data-line="213">        <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="214">            <span class="n">app</span><span class="o">.</span><span class="n">aboutToQuit</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_video</span><span class="p">)</span>
+</span><span data-line="215">
+</span><span data-line="216">        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </span><span data-line="217">
-</span><span data-line="218">    <span class="k">def</span><span class="w"> </span><span class="nf">resizeGL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="219">        <span class="k">pass</span>
-</span><span data-line="220">
-</span><span data-line="221">    <span class="k">def</span><span class="w"> </span><span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="222"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Handles window close events, stopping updates and threads.&quot;&quot;&quot;</span>
-</span><span data-line="223">        <span class="bp">self</span><span class="o">.</span><span class="n">stop_video</span><span class="p">()</span>
-</span><span data-line="224">        <span class="n">event</span><span class="o">.</span><span class="n">ignore</span><span class="p">()</span>
-</span><span data-line="225">
-</span><span data-line="226">    <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_function</span><span class="p">(</span>
-</span><span data-line="227">        <span class="bp">self</span><span class="p">,</span>
-</span><span data-line="228">        <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
-</span><span data-line="229">        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="230">        <span class="n">video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="231">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="232"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the drawing function and optionally loads background media.</span>
-</span><span data-line="233">
-</span><span data-line="234"><span class="sd">        Args:</span>
-</span><span data-line="235"><span class="sd">            draw_fn (Optional[Callable]): The function to call during paint events.</span>
-</span><span data-line="236"><span class="sd">            image (str | None, optional): Filename of an image to load.</span>
-</span><span data-line="237"><span class="sd">            video (str | None, optional): Filename of a video to load.</span>
-</span><span data-line="238"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="239">        <span class="bp">self</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
-</span><span data-line="240">        <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="241">            <span class="bp">self</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-</span><span data-line="242">        <span class="k">elif</span> <span class="n">video</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="243">            <span class="bp">self</span><span class="o">.</span><span class="n">load_video</span><span class="p">(</span><span class="n">video</span><span class="p">)</span>
-</span><span data-line="244">        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_fn</span> <span class="o">=</span> <span class="n">draw_fn</span>
+</span><span data-line="218">    <span class="k">def</span><span class="w"> </span><span class="nf">_init_gpio</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="219"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the GPIO line for timestamp synchronization.&quot;&quot;&quot;</span>
+</span><span data-line="220">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="221">            <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="222">                <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_line_offset</span><span class="p">:</span> <span class="n">gpiod</span><span class="o">.</span><span class="n">LineSettings</span><span class="p">(</span>
+</span><span data-line="223">                    <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">OUTPUT</span><span class="p">,</span> <span class="n">output_value</span><span class="o">=</span><span class="n">Value</span><span class="o">.</span><span class="n">INACTIVE</span>
+</span><span data-line="224">                <span class="p">)</span>
+</span><span data-line="225">            <span class="p">}</span>
+</span><span data-line="226">            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="o">=</span> <span class="n">gpiod</span><span class="o">.</span><span class="n">request_lines</span><span class="p">(</span>
+</span><span data-line="227">                <span class="s2">&quot;/dev/gpiochip0&quot;</span><span class="p">,</span> <span class="n">consumer</span><span class="o">=</span><span class="s2">&quot;village_stim&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">cfg</span>
+</span><span data-line="228">            <span class="p">)</span>
+</span><span data-line="229">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="230">            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="231">
+</span><span data-line="232">    <span class="k">def</span><span class="w"> </span><span class="nf">initializeGL</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="233">        <span class="k">pass</span>
+</span><span data-line="234">
+</span><span data-line="235">    <span class="k">def</span><span class="w"> </span><span class="nf">resizeGL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="236">        <span class="k">pass</span>
+</span><span data-line="237">
+</span><span data-line="238">    <span class="k">def</span><span class="w"> </span><span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="239"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Handles window close events, stopping updates and threads.&quot;&quot;&quot;</span>
+</span><span data-line="240">        <span class="bp">self</span><span class="o">.</span><span class="n">stop_video</span><span class="p">()</span>
+</span><span data-line="241">        <span class="n">event</span><span class="o">.</span><span class="n">ignore</span><span class="p">()</span>
+</span><span data-line="242">
+</span><span data-line="243">    <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="244"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the drawing function. Stops any active rendering.</span>
 </span><span data-line="245">
-</span><span data-line="246">    <span class="k">def</span><span class="w"> </span><span class="nf">start_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="247"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the rendering loop and video playback with synchronization.&quot;&quot;&quot;</span>
-</span><span data-line="248">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="249">        <span class="bp">self</span><span class="o">.</span><span class="n">_start_timing</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">get_time_monotonic</span><span class="p">()</span>
-</span><span data-line="250">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span><span class="p">:</span>
-</span><span data-line="251">            <span class="bp">self</span><span class="o">.</span><span class="n">frameSwapped</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ConnectionType</span><span class="o">.</span><span class="n">UniqueConnection</span><span class="p">)</span>
-</span><span data-line="252">            <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="253">        <span class="bp">self</span><span class="o">.</span><span class="n">start_video</span><span class="p">()</span>
-</span><span data-line="254">        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-</span><span data-line="255">
-</span><span data-line="256">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="257"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the rendering loop and video playback.&quot;&quot;&quot;</span>
-</span><span data-line="258">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="259">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span><span class="p">:</span>
-</span><span data-line="260">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="261">                <span class="bp">self</span><span class="o">.</span><span class="n">frameSwapped</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">)</span>
-</span><span data-line="262">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="263">                <span class="k">pass</span>
-</span><span data-line="264">            <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="265">        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="266">        <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="267">        <span class="bp">self</span><span class="o">.</span><span class="n">stop_video</span><span class="p">()</span>
-</span><span data-line="268">        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-</span><span data-line="269">
-</span><span data-line="270">    <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="271"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an image from the media directory.</span>
-</span><span data-line="272">
-</span><span data-line="273"><span class="sd">        Args:</span>
-</span><span data-line="274"><span class="sd">            file (str): Filename of the image.</span>
-</span><span data-line="275"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="276">        <span class="n">media_directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_DIRECTORY&quot;</span><span class="p">)</span>
-</span><span data-line="277">        <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">media_directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-</span><span data-line="278">        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
-</span><span data-line="279">
-</span><span data-line="280">    <span class="k">def</span><span class="w"> </span><span class="nf">load_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="281"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a video from the media directory and prepares the playback thread.</span>
-</span><span data-line="282">
-</span><span data-line="283"><span class="sd">        Args:</span>
-</span><span data-line="284"><span class="sd">            file (str): Filename of the video.</span>
-</span><span data-line="285"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="286">        <span class="bp">self</span><span class="o">.</span><span class="n">stop_video</span><span class="p">()</span>
-</span><span data-line="287">        <span class="n">media_directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_DIRECTORY&quot;</span><span class="p">)</span>
-</span><span data-line="288">        <span class="n">video_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">media_directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-</span><span data-line="289">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="o">=</span> <span class="n">QThread</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span data-line="290">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="o">=</span> <span class="n">VideoWorker</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
-</span><span data-line="291">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">moveToThread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="p">)</span>
-</span><span data-line="292">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">started</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
-</span><span data-line="293">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_video_thread_finished</span><span class="p">)</span>
+</span><span data-line="246"><span class="sd">        Call load_image() or load_video() separately before or after this.</span>
+</span><span data-line="247">
+</span><span data-line="248"><span class="sd">        Args:</span>
+</span><span data-line="249"><span class="sd">            draw_fn (Optional[Callable]): The function to call during paint events.</span>
+</span><span data-line="250"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="251">        <span class="bp">self</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
+</span><span data-line="252">        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_fn</span> <span class="o">=</span> <span class="n">draw_fn</span>
+</span><span data-line="253">
+</span><span data-line="254">    <span class="k">def</span><span class="w"> </span><span class="nf">start_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="255"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the rendering loop. Call this when you want the stimulus to appear.&quot;&quot;&quot;</span>
+</span><span data-line="256">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+</span><span data-line="257">            <span class="k">return</span>
+</span><span data-line="258">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="259">        <span class="bp">self</span><span class="o">.</span><span class="n">_start_timing</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">get_time_monotonic</span><span class="p">()</span>
+</span><span data-line="260">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span><span class="p">:</span>
+</span><span data-line="261">            <span class="bp">self</span><span class="o">.</span><span class="n">frameSwapped</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ConnectionType</span><span class="o">.</span><span class="n">UniqueConnection</span><span class="p">)</span>
+</span><span data-line="262">            <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="263">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="264">            <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</span><span data-line="265">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_audio_left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="266">            <span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</span><span data-line="267">        <span class="n">QMetaObject</span><span class="o">.</span><span class="n">invokeMethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ConnectionType</span><span class="o">.</span><span class="n">QueuedConnection</span><span class="p">)</span>
+</span><span data-line="268">
+</span><span data-line="269">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_drawing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="270"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the rendering loop. The video thread keeps</span>
+</span><span data-line="271"><span class="sd">        running for a fast restart.&quot;&quot;&quot;</span>
+</span><span data-line="272">        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="273">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span><span class="p">:</span>
+</span><span data-line="274">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="275">                <span class="bp">self</span><span class="o">.</span><span class="n">frameSwapped</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">)</span>
+</span><span data-line="276">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="277">                <span class="k">pass</span>
+</span><span data-line="278">            <span class="bp">self</span><span class="o">.</span><span class="n">_swap_connected</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="279">        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="280">        <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="281">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_audio_left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="282">            <span class="n">sound_device</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span><span data-line="283">        <span class="n">QMetaObject</span><span class="o">.</span><span class="n">invokeMethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ConnectionType</span><span class="o">.</span><span class="n">QueuedConnection</span><span class="p">)</span>
+</span><span data-line="284">
+</span><span data-line="285">    <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="286"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an image from the media directory.</span>
+</span><span data-line="287">
+</span><span data-line="288"><span class="sd">        Args:</span>
+</span><span data-line="289"><span class="sd">            file (str): Filename of the image.</span>
+</span><span data-line="290"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="291">        <span class="n">media_directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_DIRECTORY&quot;</span><span class="p">)</span>
+</span><span data-line="292">        <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">media_directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+</span><span data-line="293">        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
 </span><span data-line="294">
-</span><span data-line="295">    <span class="k">def</span><span class="w"> </span><span class="nf">start_video</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="296"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the video playback thread.&quot;&quot;&quot;</span>
-</span><span data-line="297">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">isRunning</span><span class="p">():</span>
-</span><span data-line="298">            <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span data-line="299">
-</span><span data-line="300">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_video</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="301"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the video playback and waits for the thread to finish.&quot;&quot;&quot;</span>
-</span><span data-line="302">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="303">            <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</span><span data-line="304">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="305">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">isRunning</span><span class="p">():</span>
-</span><span data-line="306">                <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
-</span><span data-line="307">                <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</span><span data-line="308">            <span class="bp">self</span><span class="o">.</span><span class="n">_on_video_thread_finished</span><span class="p">()</span>
-</span><span data-line="309">
-</span><span data-line="310">    <span class="k">def</span><span class="w"> </span><span class="nf">_on_video_thread_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="311"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up video worker/thread resources after playback stops.&quot;&quot;&quot;</span>
-</span><span data-line="312">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="313">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="314">                <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
-</span><span data-line="315">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="316">                <span class="k">pass</span>
-</span><span data-line="317">            <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="318">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="319">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="320">                <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
-</span><span data-line="321">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="322">                <span class="k">pass</span>
-</span><span data-line="323">            <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="324">
-</span><span data-line="325">    <span class="k">def</span><span class="w"> </span><span class="nf">get_video_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
-</span><span data-line="326"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves current video frame if available.</span>
-</span><span data-line="327">
-</span><span data-line="328"><span class="sd">        Returns:</span>
-</span><span data-line="329"><span class="sd">            Optional[QImage]: The current video frame or None.</span>
-</span><span data-line="330"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="331">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="p">:</span>
-</span><span data-line="332">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="333">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">get_latest_qimage</span><span class="p">()</span>
-</span><span data-line="334">
-</span><span data-line="335">    <span class="k">def</span><span class="w"> </span><span class="nf">paintGL</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="336"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Main rendering loop called by OpenGL widget update.&quot;&quot;&quot;</span>
-</span><span data-line="337">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="338">            <span class="bp">self</span><span class="o">.</span><span class="n">clear_function</span><span class="p">()</span>
-</span><span data-line="339">            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="340">            <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="341">            <span class="k">return</span>
-</span><span data-line="342">
-</span><span data-line="343">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="344">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="345">                <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gpio_line_offset</span><span class="p">,</span> <span class="n">Value</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">)</span>
-</span><span data-line="346">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="347">                <span class="k">pass</span>
-</span><span data-line="348">
-</span><span data-line="349">        <span class="n">now</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">get_time_monotonic</span><span class="p">()</span>
-</span><span data-line="350">        <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_timing</span>
-</span><span data-line="351">        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="352">
-</span><span data-line="353">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="354">            <span class="bp">self</span><span class="o">.</span><span class="n">_draw_fn</span><span class="p">()</span>
-</span><span data-line="355">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="356">            <span class="k">pass</span>
-</span><span data-line="357">
-</span><span data-line="358">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="359">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="360">                <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gpio_line_offset</span><span class="p">,</span> <span class="n">Value</span><span class="o">.</span><span class="n">INACTIVE</span><span class="p">)</span>
-</span><span data-line="361">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="362">                <span class="k">pass</span>
-</span><span data-line="363">
-</span><span data-line="364">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="365"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clears the window by filling it with the background color.&quot;&quot;&quot;</span>
-</span><span data-line="366">        <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
-</span><span data-line="367">            <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_color</span><span class="p">)</span>
-</span><span data-line="368">
-</span><span data-line="369">
+</span><span data-line="295">    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_audio</span><span class="p">(</span>
+</span><span data-line="296">        <span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="297">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+</span><span data-line="298">        <span class="n">samplerate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAMPLERATE&quot;</span><span class="p">))</span>
+</span><span data-line="299">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="300">            <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+</span><span data-line="301">                <span class="p">[</span>
+</span><span data-line="302">                    <span class="s2">&quot;ffmpeg&quot;</span><span class="p">,</span>
+</span><span data-line="303">                    <span class="s2">&quot;-i&quot;</span><span class="p">,</span>
+</span><span data-line="304">                    <span class="n">video_path</span><span class="p">,</span>
+</span><span data-line="305">                    <span class="s2">&quot;-vn&quot;</span><span class="p">,</span>
+</span><span data-line="306">                    <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+</span><span data-line="307">                    <span class="s2">&quot;f32le&quot;</span><span class="p">,</span>
+</span><span data-line="308">                    <span class="s2">&quot;-acodec&quot;</span><span class="p">,</span>
+</span><span data-line="309">                    <span class="s2">&quot;pcm_f32le&quot;</span><span class="p">,</span>
+</span><span data-line="310">                    <span class="s2">&quot;-ar&quot;</span><span class="p">,</span>
+</span><span data-line="311">                    <span class="nb">str</span><span class="p">(</span><span class="n">samplerate</span><span class="p">),</span>
+</span><span data-line="312">                    <span class="s2">&quot;-ac&quot;</span><span class="p">,</span>
+</span><span data-line="313">                    <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+</span><span data-line="314">                    <span class="s2">&quot;pipe:1&quot;</span><span class="p">,</span>
+</span><span data-line="315">                <span class="p">],</span>
+</span><span data-line="316">                <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="317">                <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+</span><span data-line="318">            <span class="p">)</span>
+</span><span data-line="319">            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="320">                <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+</span><span data-line="321">            <span class="n">audio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span data-line="322">            <span class="k">return</span> <span class="n">audio</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">audio</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="323">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="324">            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+</span><span data-line="325">
+</span><span data-line="326">    <span class="k">def</span><span class="w"> </span><span class="nf">load_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="327"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a video from the media directory and prepares the playback thread.</span>
+</span><span data-line="328">
+</span><span data-line="329"><span class="sd">        Args:</span>
+</span><span data-line="330"><span class="sd">            file (str): Filename of the video.</span>
+</span><span data-line="331"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="332">        <span class="bp">self</span><span class="o">.</span><span class="n">stop_video</span><span class="p">()</span>
+</span><span data-line="333">        <span class="n">media_directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_DIRECTORY&quot;</span><span class="p">)</span>
+</span><span data-line="334">        <span class="n">video_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">media_directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+</span><span data-line="335">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_audio_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_audio</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+</span><span data-line="336">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_audio_left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="337">            <span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_audio_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_audio_right</span><span class="p">)</span>
+</span><span data-line="338">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="o">=</span> <span class="n">QThread</span><span class="p">()</span>
+</span><span data-line="339">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="o">=</span> <span class="n">VideoWorker</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+</span><span data-line="340">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">moveToThread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="p">)</span>
+</span><span data-line="341">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">started</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
+</span><span data-line="342">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_video_thread_finished</span><span class="p">)</span>
+</span><span data-line="343">        <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span data-line="344">
+</span><span data-line="345">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_video</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="346"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the video playback and waits for the thread to finish.&quot;&quot;&quot;</span>
+</span><span data-line="347">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="348">            <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span><span data-line="349">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="350">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">isRunning</span><span class="p">():</span>
+</span><span data-line="351">                <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</span><span data-line="352">                <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</span><span data-line="353">            <span class="bp">self</span><span class="o">.</span><span class="n">_on_video_thread_finished</span><span class="p">()</span>
+</span><span data-line="354">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_left</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="355">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_right</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="356">
+</span><span data-line="357">    <span class="k">def</span><span class="w"> </span><span class="nf">_on_video_thread_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="358"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up video worker/thread resources after playback stops.&quot;&quot;&quot;</span>
+</span><span data-line="359">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="360">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="361">                <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
+</span><span data-line="362">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="363">                <span class="k">pass</span>
+</span><span data-line="364">            <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="365">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="366">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="367">                <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
+</span><span data-line="368">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="369">                <span class="k">pass</span>
+</span><span data-line="370">            <span class="bp">self</span><span class="o">.</span><span class="n">_video_thread</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="371">
+</span><span data-line="372">    <span class="k">def</span><span class="w"> </span><span class="nf">get_video_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QImage</span><span class="p">]:</span>
+</span><span data-line="373"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves current video frame if available.</span>
+</span><span data-line="374">
+</span><span data-line="375"><span class="sd">        Returns:</span>
+</span><span data-line="376"><span class="sd">            Optional[QImage]: The current video frame or None.</span>
+</span><span data-line="377"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="378">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="p">:</span>
+</span><span data-line="379">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="380">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_worker</span><span class="o">.</span><span class="n">get_latest_qimage</span><span class="p">()</span>
+</span><span data-line="381">
+</span><span data-line="382">    <span class="k">def</span><span class="w"> </span><span class="nf">paintGL</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="383"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Main rendering loop called by OpenGL widget update.&quot;&quot;&quot;</span>
+</span><span data-line="384">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="385">            <span class="bp">self</span><span class="o">.</span><span class="n">clear_function</span><span class="p">()</span>
+</span><span data-line="386">            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="387">            <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="388">            <span class="k">return</span>
+</span><span data-line="389">
+</span><span data-line="390">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="391">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="392">                <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gpio_line_offset</span><span class="p">,</span> <span class="n">Value</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">)</span>
+</span><span data-line="393">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="394">                <span class="k">pass</span>
+</span><span data-line="395">
+</span><span data-line="396">        <span class="n">now</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">get_time_monotonic</span><span class="p">()</span>
+</span><span data-line="397">        <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_timing</span>
+</span><span data-line="398">        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="399">
+</span><span data-line="400">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="401">            <span class="bp">self</span><span class="o">.</span><span class="n">_draw_fn</span><span class="p">()</span>
+</span><span data-line="402">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="403">            <span class="k">pass</span>
+</span><span data-line="404">
+</span><span data-line="405">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="406">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="407">                <span class="bp">self</span><span class="o">.</span><span class="n">_gpio_request</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gpio_line_offset</span><span class="p">,</span> <span class="n">Value</span><span class="o">.</span><span class="n">INACTIVE</span><span class="p">)</span>
+</span><span data-line="408">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="409">                <span class="k">pass</span>
+</span><span data-line="410">
+</span><span data-line="411">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="412"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clears the window by filling it with the background color.&quot;&quot;&quot;</span>
+</span><span data-line="413">        <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
+</span><span data-line="414">            <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">background_color</span><span class="p">)</span>
+</span><span data-line="415">
+</span><span data-line="416">
 <div class="viewcode-block" id="get_screen">
 <a class="viewcode-back" href="../../../api_generated/village.devices.screen.get_screen.html#village.devices.screen.get_screen">[docs]</a>
-</span><span data-line="370"><span class="k">def</span><span class="w"> </span><span class="nf">get_screen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;Screen | NullScreen&quot;</span><span class="p">:</span>
-</span><span data-line="371">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScreenActive</span>
-</span><span data-line="372">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
-</span><span data-line="373">
-</span><span data-line="374">    <span class="k">try</span><span class="p">:</span>
-</span><span data-line="375">        <span class="n">secondary_screen</span> <span class="o">=</span> <span class="n">QGuiApplication</span><span class="o">.</span><span class="n">screens</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-</span><span data-line="376">        <span class="n">geometry</span> <span class="o">=</span> <span class="n">secondary_screen</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
-</span><span data-line="377">        <span class="n">settings</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;SCREEN_RESOLUTION&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">geometry</span><span class="o">.</span><span class="n">height</span><span class="p">()))</span>
-</span><span data-line="378">    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-</span><span data-line="379">        <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="380">
-</span><span data-line="381">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SCREEN&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">ScreenActive</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
-</span><span data-line="382">        <span class="k">return</span> <span class="n">NullScreen</span><span class="p">()</span>
-</span><span data-line="383">
-</span><span data-line="384">    <span class="k">if</span> <span class="n">geometry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="385">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="386">            <span class="s2">&quot;Secondary screen not detected. Behavior window will not be displayed.&quot;</span>
-</span><span data-line="387">        <span class="p">)</span>
-</span><span data-line="388">        <span class="k">return</span> <span class="n">NullScreen</span><span class="p">()</span>
-</span><span data-line="389">
-</span><span data-line="390">    <span class="k">return</span> <span class="n">Screen</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span></div>
+</span><span data-line="417"><span class="k">def</span><span class="w"> </span><span class="nf">get_screen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;Screen | NullScreen&quot;</span><span class="p">:</span>
+</span><span data-line="418">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScreenActive</span>
+</span><span data-line="419">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+</span><span data-line="420">
+</span><span data-line="421">    <span class="k">try</span><span class="p">:</span>
+</span><span data-line="422">        <span class="n">secondary_screen</span> <span class="o">=</span> <span class="n">QGuiApplication</span><span class="o">.</span><span class="n">screens</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+</span><span data-line="423">        <span class="n">geometry</span> <span class="o">=</span> <span class="n">secondary_screen</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
+</span><span data-line="424">        <span class="n">settings</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;SCREEN_RESOLUTION&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">geometry</span><span class="o">.</span><span class="n">height</span><span class="p">()))</span>
+</span><span data-line="425">    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+</span><span data-line="426">        <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="427">
+</span><span data-line="428">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SCREEN&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">ScreenActive</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
+</span><span data-line="429">        <span class="k">return</span> <span class="n">NullScreen</span><span class="p">()</span>
+</span><span data-line="430">
+</span><span data-line="431">    <span class="k">if</span> <span class="n">geometry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="432">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="433">            <span class="s2">&quot;Secondary screen not detected. Behavior window will not be displayed.&quot;</span>
+</span><span data-line="434">        <span class="p">)</span>
+</span><span data-line="435">        <span class="k">return</span> <span class="n">NullScreen</span><span class="p">()</span>
+</span><span data-line="436">
+</span><span data-line="437">    <span class="k">return</span> <span class="n">Screen</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span></div>
 
-</span><span data-line="391">
-</span><span data-line="392">
-</span><span data-line="393"><span class="n">screen</span> <span class="o">=</span> <span class="n">get_screen</span><span class="p">()</span>
+</span><span data-line="438">
+</span><span data-line="439">
+</span><span data-line="440"><span class="n">screen</span> <span class="o">=</span> <span class="n">get_screen</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -951,7 +1001,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../../../_static/documentation_options.js?v=c9500009"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

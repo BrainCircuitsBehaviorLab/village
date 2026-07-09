@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ba612c2" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=51e168f2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -482,19 +482,7 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#village.devices.temp_sensor.TempSensor"><code class="docutils literal notranslate"><span class="pre">TempSensor</span></code></a><ul>
-<li><a class="reference internal" href="#village.devices.temp_sensor.TempSensor.I2C_ADDR"><code class="docutils literal notranslate">I2C_ADDR</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.temp_sensor.TempSensor.bus"><code class="docutils literal notranslate">bus</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.temp_sensor.TempSensor.i2cbus"><code class="docutils literal notranslate">i2cbus</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.temp_sensor.TempSensor.error"><code class="docutils literal notranslate">error</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.temp_sensor.TempSensor.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.temp_sensor.TempSensor.start"><code class="docutils literal notranslate">start()</span></code></a></li>
-<li><a class="reference internal" href="#village.devices.temp_sensor.TempSensor.get_temperature"><code class="docutils literal notranslate">get_temperature()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -573,12 +561,12 @@ data-aria-dark="Switch to auto color mode">
           <section id="tempsensor">
 <h1>TempSensor</h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="village.devices.temp_sensor.TempSensor">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">TempSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/village/devices/temp_sensor.html#TempSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface for a temperature and humidity sensor via I2C.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.temp_sensor.TempSensor.I2C_ADDR">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">I2C_ADDR</span></span></dt>
 <dd><p>The I2C address.</p>
 <dl class="field-list simple">
@@ -589,7 +577,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.temp_sensor.TempSensor.bus">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">bus</span></span></dt>
 <dd><p>The I2C bus number.</p>
 <dl class="field-list simple">
@@ -600,7 +588,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.temp_sensor.TempSensor.i2cbus">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">i2cbus</span></span></dt>
 <dd><p>The I2C bus connection.</p>
 <dl class="field-list simple">
@@ -611,7 +599,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="village.devices.temp_sensor.TempSensor.error">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">error</span></span></dt>
 <dd><p>Error message.</p>
 <dl class="field-list simple">
@@ -622,7 +610,7 @@ data-aria-dark="Switch to auto color mode">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.temp_sensor.TempSensor.__init__">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/temp_sensor.html#TempSensor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Initializes the TempSensor.</p>
 <dl class="field-list simple">
@@ -634,13 +622,13 @@ data-aria-dark="Switch to auto color mode">
 
 <p class="rubric">Methods</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.temp_sensor.TempSensor.start">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/temp_sensor.html#TempSensor.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Configures the sensor to start measurement.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="village.devices.temp_sensor.TempSensor.get_temperature">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_temperature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/devices/temp_sensor.html#TempSensor.get_temperature"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads temperature and humidity from the sensor.</p>
 <dl class="field-list simple">
@@ -698,7 +686,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd40cdc4"></script>
+      <script src="../_static/documentation_options.js?v=c9500009"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
