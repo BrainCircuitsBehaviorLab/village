@@ -5,6 +5,8 @@
 
 :layout: landing
 
+.. title:: Training Village
+
 .. raw:: html
 
    <h1 style="text-align: center; font-size: 2.8rem;">Welcome to The Training Village</h1>
