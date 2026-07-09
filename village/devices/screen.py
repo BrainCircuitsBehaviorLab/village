@@ -295,7 +295,7 @@ class Screen(QOpenGLWidget):
     def _extract_audio(
         self, video_path: str
     ) -> tuple[Optional[np.ndarray], Optional[np.ndarray]]:
-        samplerate = int(settings.get("SAMPLERATE"))
+        samplerate = int(settings.get("SAMPLERATE").value)
         try:
             result = subprocess.run(
                 [

@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Mark logo as active when on the landing page (index)
-    var p = window.location.pathname.replace(/\/$/, "");
-    if (p === "" || p.endsWith("/index") || p.endsWith("/index.html")) {
+    var filename = window.location.pathname.split("/").pop();
+    if (filename === "" || filename === "index.html" || filename === "index") {
       isActive = true;
       brand.classList.add("sy-brand-active");
       applyLogoState(true);

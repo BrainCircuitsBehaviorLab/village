@@ -12,6 +12,7 @@ from village.classes.enums import (
     Info,
     OldVersion,
     PixelType,
+    Samplerate,
     ScreenActive,
     SuperEnum,
     SyncType,
@@ -249,6 +250,8 @@ class Settings:
                 return OldVersion(str_value)
             elif type == PixelType:
                 return PixelType(str_value)
+            elif type == Samplerate:
+                return Samplerate(str_value)
             elif type == list[str]:
                 return self.saved_settings.value(key)
             elif type == list[int]:
@@ -295,7 +298,7 @@ class Settings:
         if base_type is None:
             return 0
         elif issubclass(base_type, SuperEnum):
-            return base_type.keys().index(self.saved_settings.value(key))
+            return base_type.values().index(self.saved_settings.value(key))
         else:
             return 0
 

@@ -1,10 +1,12 @@
 import os
 import traceback
+from math import gcd
 from typing import Any
 
 import numpy as np
 import sounddevice as sd
 from scipy.io import wavfile
+from scipy.signal import resample_poly
 
 from village.classes.enums import Active
 from village.classes.null_classes import NullSoundDevice
@@ -32,9 +34,10 @@ class SoundDevice:
     """
 
     def __init__(self) -> None:
-        self.samplerate = int(settings.get("SAMPLERATE"))
+        self.samplerate = int(settings.get("SAMPLERATE").value)
         self.channels = 2
-        self.blocksize = 1024
+        _blocksize_map = {44100: 128, 48000: 256, 96000: 512, 192000: 1024}
+        self.blocksize = _blocksize_map.get(self.samplerate, 1024)
         devices = get_sound_devices()
         device = settings.get("SOUND_DEVICE")
         self.index = devices.index(device) if device in devices else 0
@@ -116,24 +119,25 @@ class SoundDevice:
         self._audio_data = new_sound
         self._pos = 0
 
-    def get_sound_from_wav(self, file: str) -> tuple[np.ndarray, np.ndarray]:
+    def get_sound_from_wav(
+        self, file: str, gain: float
+    ) -> tuple[np.ndarray, np.ndarray]:
         media_directory = settings.get("MEDIA_DIRECTORY")
         path = os.path.join(media_directory, file)
         if not os.path.exists(path):
             raise FileNotFoundError(f"File '{path}' does not exist.")
 
         samplerate, data = wavfile.read(path)
-        if samplerate != self.samplerate:
-            raise ValueError(
-                f"Expected samplerate {self.samplerate}, but got {samplerate}."
-            )
+        if np.issubdtype(data.dtype, np.integer):
+            max_val = np.iinfo(data.dtype).max
+            data = data.astype(np.float32) / max_val
+        elif data.dtype != np.float32:
+            data = data.astype(np.float32)
 
-        if data.dtype != np.float32:
-            if np.issubdtype(data.dtype, np.integer):
-                max_val = np.iinfo(data.dtype).max
-                data = data.astype(np.float32) / max_val
-            else:
-                data = data.astype(np.float32)
+        if samplerate != self.samplerate:
+            g = gcd(samplerate, self.samplerate)
+            data = resample_poly(data, self.samplerate // g, samplerate // g, axis=0)
+            data = data.astype(np.float32)
 
         if data.ndim == 1:
             left = right = data
@@ -141,6 +145,12 @@ class SoundDevice:
             left, right = data[:, 0], data[:, 1]
         else:
             raise ValueError("Unsupported number of channels in WAV file.")
+
+        if gain != 1.0:
+            if not 0.0 <= gain <= 1.0:
+                raise ValueError(f"gain must be between 0 and 1, got {gain}.")
+            left = left * gain
+            right = right * gain
 
         return left, right
 

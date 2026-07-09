@@ -238,3 +238,10 @@ class PixelType(SuperEnum):
     GRB = "GRB"
     RGBW = "RGBW"
     GRBW = "GRBW"
+
+
+class Samplerate(SuperEnum):
+    HZ44100 = "44100"
+    HZ48000 = "48000"
+    HZ96000 = "96000"
+    HZ192000 = "192000"

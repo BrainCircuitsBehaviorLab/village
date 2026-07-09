@@ -1039,7 +1039,7 @@ class SettingsLayout(Layout):
                     2,
                     self.settings_changed,
                 )
-            elif s.key in ("SYSTEM_NAME", "SAMPLERATE", "TOUCH_INTERVAL"):
+            elif s.key in ("SYSTEM_NAME", "TOUCH_INTERVAL"):
                 line_edit = self.create_and_add_line_edit(
                     value,
                     row,
