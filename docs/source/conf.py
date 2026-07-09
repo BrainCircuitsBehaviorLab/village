@@ -173,6 +173,7 @@ autodoc_default_options = {
     "member-order": "bysource",
     "undoc-members": True,
     "show-inheritance": True,
+    "no-index": True,
 }
 
 # Don't execute code during import (helps avoid circular import side effects)

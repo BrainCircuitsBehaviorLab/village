@@ -43,8 +43,8 @@ MENU_WIDTH = 22
 C_COL = 25  # content start column
 C_ROW = 7  # content start row
 
-DESC_COLS = 62  # description area width in grid columns
-SETTINGS_COL = C_COL + DESC_COLS + 2  # = 89
+DESC_COLS = 78  # description area width in grid columns
+SETTINGS_COL = C_COL + DESC_COLS + 2  # = 105
 
 MENU_ITEM_TRAINING = "TEST TRAINING PROTOCOL"
 
@@ -203,20 +203,20 @@ class TasksLayout(Layout):
 
     def _draw_content_area(self) -> None:
         self.central_layout = QVBoxLayout()
-        self.addLayout(self.central_layout, C_ROW + 3, C_COL, 37, DESC_COLS)
+        self.addLayout(self.central_layout, C_ROW + 5, C_COL + 2, 37, DESC_COLS)
 
         self.central_scroll = QScrollArea()
         self.central_scroll.setStyleSheet("QScrollArea { border: 0px }")
         self.central_scroll.setWidgetResizable(True)
         self.central_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.central_sub_widget = QWidget()
-        self.central_sub_layout = ExtraLayout(self.window, 36, 59)
+        self.central_sub_layout = ExtraLayout(self.window, 36, 75)
         self.central_sub_widget.setLayout(self.central_sub_layout)
         self.central_scroll.setWidget(self.central_sub_widget)
         self.central_layout.addWidget(self.central_scroll)
 
         self.right_layout = QVBoxLayout()
-        self.addLayout(self.right_layout, C_ROW, SETTINGS_COL, 40, 109)
+        self.addLayout(self.right_layout, C_ROW, SETTINGS_COL, 40, 92)
 
         self.right_tabs = QTabWidget()
         self.right_tabs.setStyleSheet("QTabWidget { border: 0px }")
@@ -307,8 +307,8 @@ class TasksLayout(Layout):
             self.info_scroll.setProperty("type", "optional")
             col_w = self.central_sub_layout.column_width
             row_h = self.central_sub_layout.row_height
-            self.info_scroll.setFixedSize(60 * col_w, 30 * row_h)
-            self.central_sub_layout.addWidget(self.info_scroll, 2, 2, 30, 60)
+            self.info_scroll.setFixedSize(75 * col_w, 30 * row_h)
+            self.central_sub_layout.addWidget(self.info_scroll, 2, 2, 30, 75)
             self._apply_current_subject(testing_training=False)
 
     def training_button_clicked(self) -> None:

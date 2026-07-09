@@ -2,18 +2,30 @@ from __future__ import annotations
 
 import os
 import queue
+import subprocess
 import time
 import traceback
 from typing import Callable, Optional
 
 import cv2
 import gpiod
+import numpy as np
 from gpiod.line import Direction, Value
-from PyQt5.QtCore import QMutex, QObject, QRect, Qt, QThread, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import (
+    QMetaObject,
+    QMutex,
+    QObject,
+    QRect,
+    Qt,
+    QThread,
+    pyqtSignal,
+    pyqtSlot,
+)
 from PyQt5.QtGui import QColor, QGuiApplication, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QOpenGLWidget
 
 from village.classes.null_classes import NullScreen
+from village.devices.sound_device import sound_device
 from village.scripts.error_queue import error_queue
 from village.scripts.time_utils import time_utils
 from village.settings import settings
@@ -71,8 +83,6 @@ class VideoWorker(QObject):
 
             self._fps = fps
             self._frame_dt = 1.0 / fps if fps > 0 else 0.0
-            self._play_start = time.monotonic()
-            self._started = True
 
             produced_idx = -1
 
@@ -140,6 +150,11 @@ class VideoWorker(QObject):
 
         return self._served_img
 
+    def play(self) -> None:
+        """Sets the playback start time so get_latest_qimage starts serving frames."""
+        self._play_start = time.monotonic()
+        self._started = True
+
     def stop(self) -> None:
         """Stops the video decoding loop."""
         self._running = False
@@ -181,6 +196,8 @@ class Screen(QOpenGLWidget):
 
         self._video_thread: Optional[QThread] = None
         self._video_worker: Optional[VideoWorker] = None
+        self._audio_left: Optional[np.ndarray] = None
+        self._audio_right: Optional[np.ndarray] = None
 
         self.frame = 0
         self.elapsed_time = 0.0
@@ -223,38 +240,35 @@ class Screen(QOpenGLWidget):
         self.stop_video()
         event.ignore()
 
-    def load_draw_function(
-        self,
-        draw_fn: Optional[Callable],
-        image: str | None = None,
-        video: str | None = None,
-    ) -> None:
-        """Sets the drawing function and optionally loads background media.
+    def load_draw_function(self, draw_fn: Optional[Callable]) -> None:
+        """Sets the drawing function. Stops any active rendering.
+
+        Call load_image() or load_video() separately before or after this.
 
         Args:
             draw_fn (Optional[Callable]): The function to call during paint events.
-            image (str | None, optional): Filename of an image to load.
-            video (str | None, optional): Filename of a video to load.
         """
         self.stop_drawing()
-        if image is not None:
-            self.load_image(image)
-        elif video is not None:
-            self.load_video(video)
         self._draw_fn = draw_fn
 
     def start_drawing(self) -> None:
-        """Starts the rendering loop and video playback with synchronization."""
+        """Starts the rendering loop. Call this when you want the stimulus to appear."""
+        if self.active:
+            return
         self.active = True
         self._start_timing = time_utils.get_time_monotonic()
         if not self._swap_connected:
             self.frameSwapped.connect(self.update, Qt.ConnectionType.UniqueConnection)
             self._swap_connected = True
-        self.start_video()
-        self.update()
+        if self._video_worker is not None:
+            self._video_worker.play()
+        if self._audio_left is not None:
+            sound_device.play()
+        QMetaObject.invokeMethod(self, "update", Qt.ConnectionType.QueuedConnection)
 
     def stop_drawing(self) -> None:
-        """Stops the rendering loop and video playback."""
+        """Stops the rendering loop. The video thread keeps
+        running for a fast restart."""
         self.active = False
         if self._swap_connected:
             try:
@@ -264,8 +278,9 @@ class Screen(QOpenGLWidget):
             self._swap_connected = False
         self.frame = 0
         self.elapsed_time = 0.0
-        self.stop_video()
-        self.update()
+        if self._audio_left is not None:
+            sound_device.stop()
+        QMetaObject.invokeMethod(self, "update", Qt.ConnectionType.QueuedConnection)
 
     def load_image(self, file: str) -> None:
         """Loads an image from the media directory.
@@ -277,6 +292,37 @@ class Screen(QOpenGLWidget):
         image_path = os.path.join(media_directory, file)
         self.image = QPixmap(image_path)
 
+    def _extract_audio(
+        self, video_path: str
+    ) -> tuple[Optional[np.ndarray], Optional[np.ndarray]]:
+        samplerate = int(settings.get("SAMPLERATE"))
+        try:
+            result = subprocess.run(
+                [
+                    "ffmpeg",
+                    "-i",
+                    video_path,
+                    "-vn",
+                    "-f",
+                    "f32le",
+                    "-acodec",
+                    "pcm_f32le",
+                    "-ar",
+                    str(samplerate),
+                    "-ac",
+                    "2",
+                    "pipe:1",
+                ],
+                capture_output=True,
+                timeout=30,
+            )
+            if len(result.stdout) == 0:
+                return None, None
+            audio = np.frombuffer(result.stdout, dtype=np.float32).reshape(-1, 2)
+            return audio[:, 0].copy(), audio[:, 1].copy()
+        except Exception:
+            return None, None
+
     def load_video(self, file: str) -> None:
         """Loads a video from the media directory and prepares the playback thread.
 
@@ -286,16 +332,15 @@ class Screen(QOpenGLWidget):
         self.stop_video()
         media_directory = settings.get("MEDIA_DIRECTORY")
         video_path = os.path.join(media_directory, file)
-        self._video_thread = QThread(self)
+        self._audio_left, self._audio_right = self._extract_audio(video_path)
+        if self._audio_left is not None:
+            sound_device.load(self._audio_left, self._audio_right)
+        self._video_thread = QThread()
         self._video_worker = VideoWorker(video_path)
         self._video_worker.moveToThread(self._video_thread)
         self._video_thread.started.connect(self._video_worker.run)
         self._video_thread.finished.connect(self._on_video_thread_finished)
-
-    def start_video(self) -> None:
-        """Starts the video playback thread."""
-        if self._video_thread is not None and not self._video_thread.isRunning():
-            self._video_thread.start()
+        self._video_thread.start()
 
     def stop_video(self) -> None:
         """Stops the video playback and waits for the thread to finish."""
@@ -306,6 +351,8 @@ class Screen(QOpenGLWidget):
                 self._video_thread.quit()
                 self._video_thread.wait()
             self._on_video_thread_finished()
+        self._audio_left = None
+        self._audio_right = None
 
     def _on_video_thread_finished(self) -> None:
         """Cleans up video worker/thread resources after playback stops."""

@@ -94,6 +94,17 @@ img.zoomable {
     cursor: zoom-in;
 }
 
+/* Search result highlight */
+span.highlighted {
+    background-color: #FFE066;
+    border-radius: 2px;
+    padding: 0 1px;
+}
+html.dark span.highlighted {
+    background-color: #7A5C00;
+    color: #FFE066;
+}
+
 /* Prevent horizontal scroll from full-bleed sections */
 html {
     overflow-x: hidden;

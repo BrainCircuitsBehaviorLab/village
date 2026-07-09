@@ -89,3 +89,35 @@ def measure_softcode_latency(bpod: BpodWithLatencyTest, n_trials: int = 100):
 if __name__ == "__main__":
     mybpod = BpodWithLatencyTest()
     measure_softcode_latency(mybpod, 200)
+
+
+# from PyQt5.QtGui import QPainter
+
+# from village.custom_classes.direct_functions_base import DirectFunctionsBase
+# from village.devices.screen import screen
+
+
+# def draw_video_generator(duration):
+#     def draw():
+#         with QPainter(screen) as painter:
+#             painter.setCompositionMode(QPainter.CompositionMode_Source)
+#             painter.setRenderHint(QPainter.Antialiasing, False)
+#             painter.fillRect(painter.viewport(), screen.background_color)
+#             if screen.elapsed_time < duration:
+#                 frame = screen.get_video_frame()
+#                 if frame is not None:
+#                     painter.drawImage(0, 0, frame)
+
+#     return draw
+
+
+# class DirectFunctions(DirectFunctionsBase):
+
+#     # reproducir el video definido en la tarea por la duracion definida en la tarea
+#     def function13(self):
+#         duration = self.task.stimulus_duration
+#         video_file = self.task.video_file
+
+#         draw_function = draw_video_generator(duration)
+#         screen.load_draw_function(draw_function)
+#         screen.load_video(video_file)

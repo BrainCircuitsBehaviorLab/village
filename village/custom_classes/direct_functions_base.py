@@ -13,13 +13,19 @@ class DirectFunctionsBase:
     Example:
         class DirectFunctions(DirectFunctionsBase):
             def function1(self):
-                self.task.water_valve.open()
+                sound_device.load(
+                    left=self.task.stimulus_sound, right=self.task.stimulus_sound
+                    )
+                sound_device.play()
 
             def function2(self):
-                self.task.screen.show_image("reward.png")
-
-            def function3(self):
-                self.
+                duration = self.task.stimulus_duration
+                x_pos = self.task.stimulus_x_pos
+                y_pos = self.task.stimulus_y_pos
+                image_file = self.task.image_file
+                draw_function = draw_image_generator(screen, duration, x_pos, y_pos)
+                screen.load_draw_function(draw_function)
+                screen.load_image(image_file)
     """
 
     def __init__(self) -> None:
