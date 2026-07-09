@@ -1,11 +1,14 @@
-/* ── Unify all link/hover colors to site violet ─────────── */
-/* Overrides shibuya's built-in indigo (#6e56cf) with our violet */
+/* ── Purple CSS variable (adapts to light/dark mode) ──────── */
 html.light {
-    --sy-c-link: #8B00FF;
+    --tv-purple: #8B00FF;
+    --tv-section-bg: #f7f5ff;
+    --sy-c-link: var(--tv-purple);
     --sy-c-link-hover: #6600CC;
 }
 html.dark {
-    --sy-c-link: #B366FF;
+    --tv-purple: #C07BFF;
+    --tv-section-bg: #333041;
+    --sy-c-link: var(--tv-purple);
     --sy-c-link-hover: #CC88FF;
     --sy-c-background: #25252f;
     /* Admonition backgrounds: override near-invisible dark surfaces */
@@ -32,69 +35,19 @@ html.dark {
 }
 
 /* ── Active top navbar link ────────────────────────────── */
-/* Colour + underline only — no font-weight change */
 .sy-head-links a.sy-nav-active {
-    color: #8B00FF !important;
-    border-bottom: 2px solid #8B00FF;
+    color: var(--tv-purple) !important;
+    border-bottom: 2px solid var(--tv-purple);
     padding-bottom: 2px;
 }
 
-/* Dark mode: lighter purple */
-html.dark .sy-head-links a.sy-nav-active {
-    color: #B366FF !important;
-    border-bottom-color: #B366FF;
-}
-
-/* ── Remove rounded hover-background on active navbar link ─ */
 /* Prevents shibuya's border-radius:6px from curving our border-bottom */
 .sy-head-links .link:hover > a.sy-nav-active {
     background-color: transparent !important;
     border-radius: 0 !important;
 }
 
-/* ── Sidebar section labels (dark mode) ────────────────── */
-html.dark .globaltoc .toctree-l1 > a {
-    color: #B366FF !important;
-}
-html.dark .globaltoc .toctree-l2 > a {
-    color: #B366FF !important;
-}
-
-/* ── List markers (dark mode) ──────────────────────────── */
-html.dark .yue ul > li::marker,
-html.dark ul.purple-bullets li::marker {
-    color: #B366FF !important;
-}
-html.dark .yue ol > li::marker {
-    color: #B366FF !important;
-}
-
-/* Lightbox overlay */
-#lb-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    z-index: 9999;
-    cursor: zoom-out;
-    align-items: center;
-    justify-content: center;
-}
-#lb-overlay.lb-active {
-    display: flex;
-}
-#lb-overlay img {
-    max-width: 90vw;
-    max-height: 90vh;
-    object-fit: contain;
-    border-radius: 4px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
-}
-img.zoomable {
-    cursor: zoom-in;
-}
-
-/* Search result highlight */
+/* ── Search result highlight ───────────────────────────── */
 span.highlighted {
     background-color: #FFE066;
     border-radius: 2px;
@@ -105,12 +58,11 @@ html.dark span.highlighted {
     color: #FFE066;
 }
 
-/* Prevent horizontal scroll from full-bleed sections */
+/* ── Layout ────────────────────────────────────────────── */
 html {
     overflow-x: hidden;
 }
 
-/* Full-width background, content stays at normal width */
 .full-bleed {
     position: relative;
     z-index: 0;
@@ -123,35 +75,34 @@ html {
     z-index: -1;
 }
 
-/* Purple enlarged bullets */
+/* ── List markers ──────────────────────────────────────── */
 ul.purple-bullets li::marker {
-    color: #8B00FF;
+    color: var(--tv-purple);
     font-size: 1.4em;
 }
 
-/* More visible default bullets in content */
 .yue ul > li::marker {
-    color: #8B00FF !important;
+    color: var(--tv-purple) !important;
     font-size: 1.4em;
 }
 
-/* Purple numbers for ordered lists */
 .yue ol > li::marker {
-    color: #8B00FF !important;
+    color: var(--tv-purple) !important;
     font-size: 1em;
 }
 
-/* Normal font size in table cells */
+/* ── Tables ────────────────────────────────────────────── */
 .sy-content td, .sy-content th {
     font-size: 1rem !important;
 }
 
-/* Wider content */
+/* ── Wider content ─────────────────────────────────────── */
 .sy-container,
 .sy-content {
     max-width: 1400px !important;
 }
 
+/* ── Sidebar navigation ────────────────────────────────── */
 /* Hide inactive top-level sections */
 .globaltoc .toctree-l1:not(.current) {
     display: none !important;
@@ -166,7 +117,7 @@ ul.purple-bullets li::marker {
     overflow: visible !important;
 }
 
-/* Hide all expand/collapse toggle buttons and arrows */
+/* Hide expand/collapse toggle buttons */
 .globaltoc button,
 .globaltoc .toggle,
 .globaltoc .toctree-l1 > a::after,
@@ -182,7 +133,7 @@ ul.purple-bullets li::marker {
     cursor: default;
     font-weight: 700;
     text-decoration: none !important;
-    color: #8B00FF !important;
+    color: var(--tv-purple) !important;
 }
 
 /* Level 2 (Initial Setup, System Operation, etc.): label, not clickable */
@@ -192,7 +143,7 @@ ul.purple-bullets li::marker {
     font-weight: 600;
     font-size: 0.82rem;
     text-decoration: none !important;
-    color: #8B00FF !important;
+    color: var(--tv-purple) !important;
     white-space: nowrap;
 }
 
@@ -202,12 +153,12 @@ ul.purple-bullets li::marker {
     cursor: pointer;
 }
 
-/* Reduce vertical spacing between nav items (default is 0.6rem) */
+/* Reduce vertical spacing between nav items */
 .globaltoc li {
     margin: 0.15rem 0 !important;
 }
 
-/* Wider left sidebar (default is 18rem) */
+/* ── Sidebar width ─────────────────────────────────────── */
 @media (min-width: 768px) {
     .sy-lside {
         width: 21rem !important;

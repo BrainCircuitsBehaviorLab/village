@@ -32,6 +32,7 @@ enums
       Info
       OldVersion
       PixelType
+      Samplerate
       Save
       ScreenActive
       State

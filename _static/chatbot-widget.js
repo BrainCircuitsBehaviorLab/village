@@ -19,15 +19,17 @@
     }
     #tv-chat-btn {
       position: fixed; bottom: 28px; right: 28px;
-      width: 54px; height: 54px; border-radius: 50%;
+      height: 48px; border-radius: 24px;
+      padding: 0 18px 0 14px;
       background: var(--tv-accent); border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
       box-shadow: var(--tv-shadow); z-index: 9999;
       transition: background 0.15s, transform 0.15s;
     }
-    #tv-chat-btn:hover { background: var(--tv-accent-dark); transform: scale(1.06); }
+    #tv-chat-btn:hover { background: var(--tv-accent-dark); transform: scale(1.04); }
     #tv-chat-btn:active { transform: scale(0.97); }
-    #tv-chat-btn svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #tv-chat-btn svg { width: 22px; height: 22px; flex-shrink: 0; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #tv-chat-btn-label { color: #fff; font-size: 14px; font-weight: 500; white-space: nowrap; letter-spacing: 0.01em; }
     #tv-chat-panel {
       position: fixed; bottom: 92px; right: 28px;
       width: 360px; max-height: 520px;
@@ -133,6 +135,7 @@
     document.body.insertAdjacentHTML("beforeend", `
       <button id="tv-chat-btn" aria-label="Open documentation chatbot" title="Ask about the Training Village">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span id="tv-chat-btn-label">Ask me</span>
       </button>
 
       <div id="tv-chat-panel" class="tv-hidden" role="dialog" aria-label="Training Village chatbot">

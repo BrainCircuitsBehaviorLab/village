@@ -1,0 +1,38 @@
+Samplerate
+==========
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: Samplerate
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~Samplerate.keys
+      ~Samplerate.values
+      ~Samplerate.get_index_from_value
+      ~Samplerate.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~Samplerate.HZ44100
+      ~Samplerate.HZ48000
+      ~Samplerate.HZ96000
+      ~Samplerate.HZ192000
+   
+   

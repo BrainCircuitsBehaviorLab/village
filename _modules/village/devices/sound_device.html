@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=70423902" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=51e168f2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e06a34f9" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -166,6 +166,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Info.html">Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Samplerate.html">Samplerate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.classes.enums.State.html">State</a></li>
@@ -518,240 +519,250 @@ data-aria-dark="Switch to auto color mode">
           <h1>Source code for village.devices.sound_device</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">sounddevice</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sd</span>
-</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">wavfile</span>
-</span><span data-line="8">
-</span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Active</span>
-</span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.null_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullSoundDevice</span>
-</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
-</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
-</span><span data-line="13">
-</span><span data-line="14">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">gcd</span>
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span data-line="7"><span class="kn">import</span><span class="w"> </span><span class="nn">sounddevice</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sd</span>
+</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">wavfile</span>
+</span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample_poly</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Active</span>
+</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.null_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullSoundDevice</span>
+</span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+</span><span data-line="15">
+</span><span data-line="16">
 <div class="viewcode-block" id="get_sound_devices">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.get_sound_devices.html#village.devices.sound_device.get_sound_devices">[docs]</a>
-</span><span data-line="15"><span class="k">def</span><span class="w"> </span><span class="nf">get_sound_devices</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span data-line="16"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieves a list of available sound device names.</span>
-</span><span data-line="17">
-</span><span data-line="18"><span class="sd">    Returns:</span>
-</span><span data-line="19"><span class="sd">        list[str]: A list of device names, or [&quot;No device&quot;] if none are found.</span>
-</span><span data-line="20"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="21">    <span class="n">devices</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">query_devices</span><span class="p">()</span>
-</span><span data-line="22">    <span class="n">devices_str</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">]</span>
-</span><span data-line="23">    <span class="k">return</span> <span class="n">devices_str</span> <span class="k">if</span> <span class="n">devices_str</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;No device&quot;</span><span class="p">]</span></div>
+</span><span data-line="17"><span class="k">def</span><span class="w"> </span><span class="nf">get_sound_devices</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span data-line="18"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieves a list of available sound device names.</span>
+</span><span data-line="19">
+</span><span data-line="20"><span class="sd">    Returns:</span>
+</span><span data-line="21"><span class="sd">        list[str]: A list of device names, or [&quot;No device&quot;] if none are found.</span>
+</span><span data-line="22"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="23">    <span class="n">devices</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">query_devices</span><span class="p">()</span>
+</span><span data-line="24">    <span class="n">devices_str</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">]</span>
+</span><span data-line="25">    <span class="k">return</span> <span class="n">devices_str</span> <span class="k">if</span> <span class="n">devices_str</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;No device&quot;</span><span class="p">]</span></div>
 
-</span><span data-line="24">
-</span><span data-line="25">
+</span><span data-line="26">
+</span><span data-line="27">
 <div class="viewcode-block" id="SoundDevice">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice">[docs]</a>
-</span><span data-line="26"><span class="k">class</span><span class="w"> </span><span class="nc">SoundDevice</span><span class="p">:</span>
-</span><span data-line="27"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles audio playback using a callback-based sounddevice OutputStream.</span>
-</span><span data-line="28">
-</span><span data-line="29"><span class="sd">    The stream runs permanently. load() prepares audio data, play() triggers</span>
-</span><span data-line="30"><span class="sd">    playback from the start, and stop() halts it within one callback cycle</span>
-</span><span data-line="31"><span class="sd">    (~blocksize/samplerate seconds).</span>
-</span><span data-line="32"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="33">
+</span><span data-line="28"><span class="k">class</span><span class="w"> </span><span class="nc">SoundDevice</span><span class="p">:</span>
+</span><span data-line="29"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles audio playback using a callback-based sounddevice OutputStream.</span>
+</span><span data-line="30">
+</span><span data-line="31"><span class="sd">    The stream runs permanently. load() prepares audio data, play() triggers</span>
+</span><span data-line="32"><span class="sd">    playback from the start, and stop() halts it within one callback cycle</span>
+</span><span data-line="33"><span class="sd">    (~blocksize/samplerate seconds).</span>
+</span><span data-line="34"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="35">
 <div class="viewcode-block" id="SoundDevice.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.__init__">[docs]</a>
-</span><span data-line="34">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="35">        <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAMPLERATE&quot;</span><span class="p">))</span>
-</span><span data-line="36">        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span data-line="37">        <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">=</span> <span class="mi">1024</span>
-</span><span data-line="38">        <span class="n">devices</span> <span class="o">=</span> <span class="n">get_sound_devices</span><span class="p">()</span>
-</span><span data-line="39">        <span class="n">device</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SOUND_DEVICE&quot;</span><span class="p">)</span>
-</span><span data-line="40">        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">devices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span> <span class="k">else</span> <span class="mi">0</span>
-</span><span data-line="41">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span data-line="42">
-</span><span data-line="43">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="44">        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="45">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="46">
-</span><span data-line="47">        <span class="n">device_info</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">query_devices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
-</span><span data-line="48">        <span class="nb">print</span><span class="p">(</span>
-</span><span data-line="49">            <span class="sa">f</span><span class="s2">&quot;Sound device default latencies: &quot;</span>
-</span><span data-line="50">            <span class="sa">f</span><span class="s2">&quot;low=</span><span class="si">{</span><span class="n">device_info</span><span class="p">[</span><span class="s1">&#39;default_low_output_latency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
-</span><span data-line="51">            <span class="sa">f</span><span class="s2">&quot;high=</span><span class="si">{</span><span class="n">device_info</span><span class="p">[</span><span class="s1">&#39;default_high_output_latency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span data-line="52">        <span class="p">)</span>
-</span><span data-line="53">
-</span><span data-line="54">        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OutputStream</span><span class="p">(</span>
-</span><span data-line="55">            <span class="n">samplerate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">,</span>
-</span><span data-line="56">            <span class="n">channels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span>
-</span><span data-line="57">            <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span>
-</span><span data-line="58">            <span class="n">blocksize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">,</span>
-</span><span data-line="59">            <span class="n">latency</span><span class="o">=</span><span class="s2">&quot;low&quot;</span><span class="p">,</span>
-</span><span data-line="60">            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
-</span><span data-line="61">            <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">,</span>
-</span><span data-line="62">        <span class="p">)</span>
-</span><span data-line="63">        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+</span><span data-line="36">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="37">        <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAMPLERATE&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span data-line="39">        <span class="n">_blocksize_map</span> <span class="o">=</span> <span class="p">{</span><span class="mi">44100</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">48000</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">96000</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">192000</span><span class="p">:</span> <span class="mi">1024</span><span class="p">}</span>
+</span><span data-line="40">        <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">=</span> <span class="n">_blocksize_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+</span><span data-line="41">        <span class="n">devices</span> <span class="o">=</span> <span class="n">get_sound_devices</span><span class="p">()</span>
+</span><span data-line="42">        <span class="n">device</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SOUND_DEVICE&quot;</span><span class="p">)</span>
+</span><span data-line="43">        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">devices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span> <span class="k">else</span> <span class="mi">0</span>
+</span><span data-line="44">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span data-line="45">
+</span><span data-line="46">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="47">        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="49">
+</span><span data-line="50">        <span class="n">device_info</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">query_devices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+</span><span data-line="51">        <span class="nb">print</span><span class="p">(</span>
+</span><span data-line="52">            <span class="sa">f</span><span class="s2">&quot;Sound device default latencies: &quot;</span>
+</span><span data-line="53">            <span class="sa">f</span><span class="s2">&quot;low=</span><span class="si">{</span><span class="n">device_info</span><span class="p">[</span><span class="s1">&#39;default_low_output_latency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
+</span><span data-line="54">            <span class="sa">f</span><span class="s2">&quot;high=</span><span class="si">{</span><span class="n">device_info</span><span class="p">[</span><span class="s1">&#39;default_high_output_latency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span data-line="55">        <span class="p">)</span>
+</span><span data-line="56">
+</span><span data-line="57">        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OutputStream</span><span class="p">(</span>
+</span><span data-line="58">            <span class="n">samplerate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">,</span>
+</span><span data-line="59">            <span class="n">channels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span>
+</span><span data-line="60">            <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span>
+</span><span data-line="61">            <span class="n">blocksize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">,</span>
+</span><span data-line="62">            <span class="n">latency</span><span class="o">=</span><span class="s2">&quot;low&quot;</span><span class="p">,</span>
+</span><span data-line="63">            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+</span><span data-line="64">            <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">,</span>
+</span><span data-line="65">        <span class="p">)</span>
+</span><span data-line="66">        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
-</span><span data-line="64">
-</span><span data-line="65">    <span class="k">def</span><span class="w"> </span><span class="nf">_callback</span><span class="p">(</span>
-</span><span data-line="66">        <span class="bp">self</span><span class="p">,</span>
-</span><span data-line="67">        <span class="n">outdata</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-</span><span data-line="68">        <span class="n">frames</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span data-line="69">        <span class="n">time</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span data-line="70">        <span class="n">status</span><span class="p">:</span> <span class="n">sd</span><span class="o">.</span><span class="n">CallbackFlags</span><span class="p">,</span>
-</span><span data-line="71">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="72">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span><span class="p">:</span>
-</span><span data-line="73">            <span class="n">outdata</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="74">            <span class="k">return</span>
-</span><span data-line="75">
-</span><span data-line="76">        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span>
-</span><span data-line="77">        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_audio_data</span>
-</span><span data-line="78">        <span class="n">remaining</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">pos</span>
-</span><span data-line="79">
-</span><span data-line="80">        <span class="k">if</span> <span class="n">remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="81">            <span class="n">outdata</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="82">            <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="83">            <span class="k">return</span>
-</span><span data-line="84">
-</span><span data-line="85">        <span class="n">n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">remaining</span><span class="p">)</span>
-</span><span data-line="86">        <span class="n">outdata</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">pos</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span>
-</span><span data-line="87">        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">frames</span><span class="p">:</span>
-</span><span data-line="88">            <span class="n">outdata</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="89">            <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="90">        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">n</span>
-</span><span data-line="91">
+</span><span data-line="67">
+</span><span data-line="68">    <span class="k">def</span><span class="w"> </span><span class="nf">_callback</span><span class="p">(</span>
+</span><span data-line="69">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="70">        <span class="n">outdata</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+</span><span data-line="71">        <span class="n">frames</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span data-line="72">        <span class="n">time</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span data-line="73">        <span class="n">status</span><span class="p">:</span> <span class="n">sd</span><span class="o">.</span><span class="n">CallbackFlags</span><span class="p">,</span>
+</span><span data-line="74">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="75">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span><span class="p">:</span>
+</span><span data-line="76">            <span class="n">outdata</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="77">            <span class="k">return</span>
+</span><span data-line="78">
+</span><span data-line="79">        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span>
+</span><span data-line="80">        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_audio_data</span>
+</span><span data-line="81">        <span class="n">remaining</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">pos</span>
+</span><span data-line="82">
+</span><span data-line="83">        <span class="k">if</span> <span class="n">remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="84">            <span class="n">outdata</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="85">            <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="86">            <span class="k">return</span>
+</span><span data-line="87">
+</span><span data-line="88">        <span class="n">n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">remaining</span><span class="p">)</span>
+</span><span data-line="89">        <span class="n">outdata</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">pos</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span>
+</span><span data-line="90">        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">frames</span><span class="p">:</span>
+</span><span data-line="91">            <span class="n">outdata</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="92">            <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="93">        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">n</span>
+</span><span data-line="94">
 <div class="viewcode-block" id="SoundDevice.load">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.load">[docs]</a>
-</span><span data-line="92">    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="93"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepares audio data for playback.</span>
-</span><span data-line="94">
-</span><span data-line="95"><span class="sd">        Args:</span>
-</span><span data-line="96"><span class="sd">            left (Any): Left channel data (array-like).</span>
-</span><span data-line="97"><span class="sd">            right (Any): Right channel data (array-like).</span>
-</span><span data-line="98">
-</span><span data-line="99"><span class="sd">        Raises:</span>
-</span><span data-line="100"><span class="sd">            ValueError: If inputs are invalid or lengths differ.</span>
-</span><span data-line="101"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="102">        <span class="k">if</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="103">            <span class="n">left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
-</span><span data-line="104">        <span class="k">elif</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="105">            <span class="n">right</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">))</span>
-</span><span data-line="106">        <span class="k">elif</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="107">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sound error: Both vectors left and right are None.&quot;</span><span class="p">)</span>
-</span><span data-line="108">
-</span><span data-line="109">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">):</span>
-</span><span data-line="110">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span data-line="111">                <span class="s2">&quot;Sound error: Left and right vectors must have same length.&quot;</span>
-</span><span data-line="112">            <span class="p">)</span>
-</span><span data-line="113">
-</span><span data-line="114">        <span class="n">new_sound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_sound_vec</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
-</span><span data-line="115">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="116">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_data</span> <span class="o">=</span> <span class="n">new_sound</span>
-</span><span data-line="117">        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="mi">0</span></div>
+</span><span data-line="95">    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="96"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepares audio data for playback.</span>
+</span><span data-line="97">
+</span><span data-line="98"><span class="sd">        Args:</span>
+</span><span data-line="99"><span class="sd">            left (Any): Left channel data (array-like).</span>
+</span><span data-line="100"><span class="sd">            right (Any): Right channel data (array-like).</span>
+</span><span data-line="101">
+</span><span data-line="102"><span class="sd">        Raises:</span>
+</span><span data-line="103"><span class="sd">            ValueError: If inputs are invalid or lengths differ.</span>
+</span><span data-line="104"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="105">        <span class="k">if</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="106">            <span class="n">left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
+</span><span data-line="107">        <span class="k">elif</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="108">            <span class="n">right</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">))</span>
+</span><span data-line="109">        <span class="k">elif</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="110">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sound error: Both vectors left and right are None.&quot;</span><span class="p">)</span>
+</span><span data-line="111">
+</span><span data-line="112">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">):</span>
+</span><span data-line="113">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span data-line="114">                <span class="s2">&quot;Sound error: Left and right vectors must have same length.&quot;</span>
+</span><span data-line="115">            <span class="p">)</span>
+</span><span data-line="116">
+</span><span data-line="117">        <span class="n">new_sound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_sound_vec</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+</span><span data-line="118">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="119">        <span class="bp">self</span><span class="o">.</span><span class="n">_audio_data</span> <span class="o">=</span> <span class="n">new_sound</span>
+</span><span data-line="120">        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="mi">0</span></div>
 
-</span><span data-line="118">
+</span><span data-line="121">
 <div class="viewcode-block" id="SoundDevice.get_sound_from_wav">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.get_sound_from_wav">[docs]</a>
-</span><span data-line="119">    <span class="k">def</span><span class="w"> </span><span class="nf">get_sound_from_wav</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-</span><span data-line="120">        <span class="n">media_directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_DIRECTORY&quot;</span><span class="p">)</span>
-</span><span data-line="121">        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">media_directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-</span><span data-line="122">        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-</span><span data-line="123">            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not exist.&quot;</span><span class="p">)</span>
-</span><span data-line="124">
-</span><span data-line="125">        <span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span data-line="126">        <span class="k">if</span> <span class="n">samplerate</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">:</span>
-</span><span data-line="127">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span data-line="128">                <span class="sa">f</span><span class="s2">&quot;Expected samplerate </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="si">}</span><span class="s2">, but got </span><span class="si">{</span><span class="n">samplerate</span><span class="si">}</span><span class="s2">.&quot;</span>
-</span><span data-line="129">            <span class="p">)</span>
-</span><span data-line="130">
-</span><span data-line="131">        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span>
-</span><span data-line="132">            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-</span><span data-line="133">                <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
-</span><span data-line="134">                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_val</span>
-</span><span data-line="135">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="136">                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="137">
-</span><span data-line="138">        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="139">            <span class="n">left</span> <span class="o">=</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span>
-</span><span data-line="140">        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-</span><span data-line="141">            <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
-</span><span data-line="142">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="143">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported number of channels in WAV file.&quot;</span><span class="p">)</span>
-</span><span data-line="144">
-</span><span data-line="145">        <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span></div>
+</span><span data-line="122">    <span class="k">def</span><span class="w"> </span><span class="nf">get_sound_from_wav</span><span class="p">(</span>
+</span><span data-line="123">        <span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="124">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+</span><span data-line="125">        <span class="n">media_directory</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_DIRECTORY&quot;</span><span class="p">)</span>
+</span><span data-line="126">        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">media_directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+</span><span data-line="127">        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span><span data-line="128">            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not exist.&quot;</span><span class="p">)</span>
+</span><span data-line="129">
+</span><span data-line="130">        <span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span data-line="131">        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+</span><span data-line="132">            <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
+</span><span data-line="133">            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_val</span>
+</span><span data-line="134">        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span>
+</span><span data-line="135">            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="136">
+</span><span data-line="137">        <span class="k">if</span> <span class="n">samplerate</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">:</span>
+</span><span data-line="138">            <span class="n">g</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">samplerate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span>
+</span><span data-line="139">            <span class="n">data</span> <span class="o">=</span> <span class="n">resample_poly</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">//</span> <span class="n">g</span><span class="p">,</span> <span class="n">samplerate</span> <span class="o">//</span> <span class="n">g</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span data-line="140">            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="141">
+</span><span data-line="142">        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="143">            <span class="n">left</span> <span class="o">=</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span>
+</span><span data-line="144">        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+</span><span data-line="145">            <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+</span><span data-line="146">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="147">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported number of channels in WAV file.&quot;</span><span class="p">)</span>
+</span><span data-line="148">
+</span><span data-line="149">        <span class="k">if</span> <span class="n">gain</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+</span><span data-line="150">            <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">gain</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+</span><span data-line="151">                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gain must be between 0 and 1, got </span><span class="si">{</span><span class="n">gain</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+</span><span data-line="152">            <span class="n">left</span> <span class="o">=</span> <span class="n">left</span> <span class="o">*</span> <span class="n">gain</span>
+</span><span data-line="153">            <span class="n">right</span> <span class="o">=</span> <span class="n">right</span> <span class="o">*</span> <span class="n">gain</span>
+</span><span data-line="154">
+</span><span data-line="155">        <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span></div>
 
-</span><span data-line="146">
+</span><span data-line="156">
 <div class="viewcode-block" id="SoundDevice.play">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.play">[docs]</a>
-</span><span data-line="147">    <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="148"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts playback from the beginning of the loaded sound.&quot;&quot;&quot;</span>
-</span><span data-line="149">        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="150">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">True</span></div>
+</span><span data-line="157">    <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="158"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts playback from the beginning of the loaded sound.&quot;&quot;&quot;</span>
+</span><span data-line="159">        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="160">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-</span><span data-line="151">
+</span><span data-line="161">
 <div class="viewcode-block" id="SoundDevice.stop">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.stop">[docs]</a>
-</span><span data-line="152">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="153"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops playback. Takes effect within one callback cycle (~5ms).&quot;&quot;&quot;</span>
-</span><span data-line="154">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span></div>
+</span><span data-line="162">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="163"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops playback. Takes effect within one callback cycle (~5ms).&quot;&quot;&quot;</span>
+</span><span data-line="164">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-</span><span data-line="155">
+</span><span data-line="165">
 <div class="viewcode-block" id="SoundDevice.shutdown">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.shutdown">[docs]</a>
-</span><span data-line="156">    <span class="k">def</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="157"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops and closes the audio stream.&quot;&quot;&quot;</span>
-</span><span data-line="158">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="159">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="160">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="161">                <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</span><span data-line="162">                <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span data-line="163">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="164">                <span class="k">pass</span>
-</span><span data-line="165">            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="kc">None</span></div>
+</span><span data-line="166">    <span class="k">def</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="167"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops and closes the audio stream.&quot;&quot;&quot;</span>
+</span><span data-line="168">        <span class="bp">self</span><span class="o">.</span><span class="n">_playing</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="169">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="170">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="171">                <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span><span data-line="172">                <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="173">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="174">                <span class="k">pass</span>
+</span><span data-line="175">            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-</span><span data-line="166">
-</span><span data-line="167">    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="168">        <span class="bp">self</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-</span><span data-line="169">
+</span><span data-line="176">
+</span><span data-line="177">    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="178">        <span class="bp">self</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</span><span data-line="179">
 <div class="viewcode-block" id="SoundDevice.create_sound_vec">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.SoundDevice.html#village.devices.sound_device.SoundDevice.create_sound_vec">[docs]</a>
-</span><span data-line="170">    <span class="nd">@staticmethod</span>
-</span><span data-line="171">    <span class="k">def</span><span class="w"> </span><span class="nf">create_sound_vec</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-</span><span data-line="172"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Interleaves left and right channels into a stereo array.</span>
-</span><span data-line="173">
-</span><span data-line="174"><span class="sd">        Args:</span>
-</span><span data-line="175"><span class="sd">            left (np.ndarray): Left channel data.</span>
-</span><span data-line="176"><span class="sd">            right (np.ndarray): Right channel data.</span>
-</span><span data-line="177">
-</span><span data-line="178"><span class="sd">        Returns:</span>
-</span><span data-line="179"><span class="sd">            np.ndarray: Interleaved stereo float32 array of shape (N, 2).</span>
-</span><span data-line="180"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="181">        <span class="n">sound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">])</span>
-</span><span data-line="182">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
+</span><span data-line="180">    <span class="nd">@staticmethod</span>
+</span><span data-line="181">    <span class="k">def</span><span class="w"> </span><span class="nf">create_sound_vec</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="182"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Interleaves left and right channels into a stereo array.</span>
+</span><span data-line="183">
+</span><span data-line="184"><span class="sd">        Args:</span>
+</span><span data-line="185"><span class="sd">            left (np.ndarray): Left channel data.</span>
+</span><span data-line="186"><span class="sd">            right (np.ndarray): Right channel data.</span>
+</span><span data-line="187">
+</span><span data-line="188"><span class="sd">        Returns:</span>
+</span><span data-line="189"><span class="sd">            np.ndarray: Interleaved stereo float32 array of shape (N, 2).</span>
+</span><span data-line="190"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="191">        <span class="n">sound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">])</span>
+</span><span data-line="192">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
 </div>
 
-</span><span data-line="183">
-</span><span data-line="184">
+</span><span data-line="193">
+</span><span data-line="194">
 <div class="viewcode-block" id="get_sound_device">
 <a class="viewcode-back" href="../../../api_generated/village.devices.sound_device.get_sound_device.html#village.devices.sound_device.get_sound_device">[docs]</a>
-</span><span data-line="185"><span class="k">def</span><span class="w"> </span><span class="nf">get_sound_device</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SoundDevice</span> <span class="o">|</span> <span class="n">NullSoundDevice</span><span class="p">:</span>
-</span><span data-line="186"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to initialize the SoundDevice.</span>
-</span><span data-line="187">
-</span><span data-line="188"><span class="sd">    Returns:</span>
-</span><span data-line="189"><span class="sd">        SoundDevice | NullSoundDevice: An initialized SoundDevice or</span>
-</span><span data-line="190"><span class="sd">        NullSoundDevice if disabled or initialization fails.</span>
-</span><span data-line="191"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="192">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SOUNDCARD&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
-</span><span data-line="193">        <span class="k">return</span> <span class="n">NullSoundDevice</span><span class="p">()</span>
-</span><span data-line="194">    <span class="k">else</span><span class="p">:</span>
-</span><span data-line="195">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="196">            <span class="n">sound_device</span> <span class="o">=</span> <span class="n">SoundDevice</span><span class="p">()</span>
-</span><span data-line="197">            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sound device successfully initialized&quot;</span><span class="p">)</span>
-</span><span data-line="198">            <span class="k">return</span> <span class="n">sound_device</span>
-</span><span data-line="199">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="200">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="201">                <span class="s2">&quot;Could not initialize sound device&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
-</span><span data-line="202">            <span class="p">)</span>
-</span><span data-line="203">            <span class="k">return</span> <span class="n">NullSoundDevice</span><span class="p">()</span></div>
+</span><span data-line="195"><span class="k">def</span><span class="w"> </span><span class="nf">get_sound_device</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SoundDevice</span> <span class="o">|</span> <span class="n">NullSoundDevice</span><span class="p">:</span>
+</span><span data-line="196"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to initialize the SoundDevice.</span>
+</span><span data-line="197">
+</span><span data-line="198"><span class="sd">    Returns:</span>
+</span><span data-line="199"><span class="sd">        SoundDevice | NullSoundDevice: An initialized SoundDevice or</span>
+</span><span data-line="200"><span class="sd">        NullSoundDevice if disabled or initialization fails.</span>
+</span><span data-line="201"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="202">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_SOUNDCARD&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">OFF</span><span class="p">:</span>
+</span><span data-line="203">        <span class="k">return</span> <span class="n">NullSoundDevice</span><span class="p">()</span>
+</span><span data-line="204">    <span class="k">else</span><span class="p">:</span>
+</span><span data-line="205">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="206">            <span class="n">sound_device</span> <span class="o">=</span> <span class="n">SoundDevice</span><span class="p">()</span>
+</span><span data-line="207">            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sound device successfully initialized&quot;</span><span class="p">)</span>
+</span><span data-line="208">            <span class="k">return</span> <span class="n">sound_device</span>
+</span><span data-line="209">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="210">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="211">                <span class="s2">&quot;Could not initialize sound device&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+</span><span data-line="212">            <span class="p">)</span>
+</span><span data-line="213">            <span class="k">return</span> <span class="n">NullSoundDevice</span><span class="p">()</span></div>
 
-</span><span data-line="204">
-</span><span data-line="205">
-</span><span data-line="206"><span class="n">sound_device</span> <span class="o">=</span> <span class="n">get_sound_device</span><span class="p">()</span>
+</span><span data-line="214">
+</span><span data-line="215">
+</span><span data-line="216"><span class="n">sound_device</span> <span class="o">=</span> <span class="n">get_sound_device</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -776,12 +787,12 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=91587c58"></script>
+      <script src="../../../_static/documentation_options.js?v=735f7822"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../../../_static/shibuya.js?v=50760d75"></script>
-      <script src="../../../_static/lightbox.js?v=712293c8"></script>
-      <script src="../../../_static/chatbot-widget.js?v=8cd12e2f"></script></body>
+      <script src="../../../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../../../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>
