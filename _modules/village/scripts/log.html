@@ -7,7 +7,7 @@
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=70423902" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e06a34f9" />
@@ -665,53 +665,50 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="124">        <span class="n">date</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_string</span><span class="p">()</span>
 </span><span data-line="125">        <span class="n">message</span> <span class="o">=</span> <span class="n">description</span> <span class="k">if</span> <span class="n">subject</span> <span class="o">==</span> <span class="s2">&quot;system&quot;</span> <span class="k">else</span> <span class="n">description</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">subject</span>
 </span><span data-line="126">        <span class="bp">self</span><span class="o">.</span><span class="n">telegram_bot</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-</span><span data-line="127">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-</span><span data-line="128">        <span class="nb">print</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
-</span><span data-line="129">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-</span><span data-line="130">        <span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span><span class="n">exception</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
-</span><span data-line="131">        <span class="n">text</span> <span class="o">=</span> <span class="n">date</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="nb">type</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">subject</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">description</span>
-</span><span data-line="132">        <span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="p">:</span>
-</span><span data-line="133">            <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">add_entry</span><span class="p">([</span><span class="n">date</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">description</span><span class="p">])</span>
-</span><span data-line="134">            <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-</span><span data-line="135">        <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;  |  &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span></div>
+</span><span data-line="127">        <span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span><span class="n">exception</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+</span><span data-line="128">        <span class="n">text</span> <span class="o">=</span> <span class="n">date</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="nb">type</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">subject</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">description</span>
+</span><span data-line="129">        <span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="p">:</span>
+</span><span data-line="130">            <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">add_entry</span><span class="p">([</span><span class="n">date</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">description</span><span class="p">])</span>
+</span><span data-line="131">            <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span><span data-line="132">        <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;  |  &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span></div>
 
-</span><span data-line="136">
+</span><span data-line="133">
 <div class="viewcode-block" id="Log.clean_text">
 <a class="viewcode-back" href="../../../api_generated/village.scripts.log.Log.html#village.scripts.log.Log.clean_text">[docs]</a>
-</span><span data-line="137">    <span class="k">def</span><span class="w"> </span><span class="nf">clean_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="138"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats an exception traceback into a single line string.</span>
-</span><span data-line="139">
-</span><span data-line="140"><span class="sd">        Args:</span>
-</span><span data-line="141"><span class="sd">            exception (str | None): The exception traceback.</span>
-</span><span data-line="142"><span class="sd">            description (str): The initial description.</span>
-</span><span data-line="143">
-</span><span data-line="144"><span class="sd">        Returns:</span>
-</span><span data-line="145"><span class="sd">            str: The cleaned and formatted string.</span>
-</span><span data-line="146"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="147">        <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="148">            <span class="n">lines</span> <span class="o">=</span> <span class="n">exception</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span data-line="149">            <span class="n">processed_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">description</span><span class="p">]</span>
-</span><span data-line="150">
-</span><span data-line="151">            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-</span><span data-line="152">                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\^{2,}&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
-</span><span data-line="153">                    <span class="k">continue</span>
-</span><span data-line="154">                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Traceback&quot;</span><span class="p">):</span>
-</span><span data-line="155">                    <span class="k">continue</span>
-</span><span data-line="156">                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;  File&quot;</span><span class="p">):</span>
-</span><span data-line="157">                    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;  |  &quot;</span> <span class="o">+</span> <span class="n">line</span>
-</span><span data-line="158">                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
-</span><span data-line="159">                    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;  |  &quot;</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">line</span>
-</span><span data-line="160">                <span class="n">processed_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</span><span data-line="134">    <span class="k">def</span><span class="w"> </span><span class="nf">clean_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="135"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Formats an exception traceback into a single line string.</span>
+</span><span data-line="136">
+</span><span data-line="137"><span class="sd">        Args:</span>
+</span><span data-line="138"><span class="sd">            exception (str | None): The exception traceback.</span>
+</span><span data-line="139"><span class="sd">            description (str): The initial description.</span>
+</span><span data-line="140">
+</span><span data-line="141"><span class="sd">        Returns:</span>
+</span><span data-line="142"><span class="sd">            str: The cleaned and formatted string.</span>
+</span><span data-line="143"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="144">        <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="145">            <span class="n">lines</span> <span class="o">=</span> <span class="n">exception</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="146">            <span class="n">processed_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">description</span><span class="p">]</span>
+</span><span data-line="147">
+</span><span data-line="148">            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+</span><span data-line="149">                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\^{2,}&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+</span><span data-line="150">                    <span class="k">continue</span>
+</span><span data-line="151">                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Traceback&quot;</span><span class="p">):</span>
+</span><span data-line="152">                    <span class="k">continue</span>
+</span><span data-line="153">                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;  File&quot;</span><span class="p">):</span>
+</span><span data-line="154">                    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;  |  &quot;</span> <span class="o">+</span> <span class="n">line</span>
+</span><span data-line="155">                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
+</span><span data-line="156">                    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;  |  &quot;</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">line</span>
+</span><span data-line="157">                <span class="n">processed_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</span><span data-line="158">
+</span><span data-line="159">            <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;  |  &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processed_lines</span><span class="p">)</span>
+</span><span data-line="160">            <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 </span><span data-line="161">
-</span><span data-line="162">            <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;  |  &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processed_lines</span><span class="p">)</span>
-</span><span data-line="163">            <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-</span><span data-line="164">
-</span><span data-line="165">        <span class="k">return</span> <span class="n">description</span></div>
+</span><span data-line="162">        <span class="k">return</span> <span class="n">description</span></div>
 </div>
 
-</span><span data-line="166">
-</span><span data-line="167">
-</span><span data-line="168"><span class="n">log</span> <span class="o">=</span> <span class="n">Log</span><span class="p">()</span>
+</span><span data-line="163">
+</span><span data-line="164">
+</span><span data-line="165"><span class="n">log</span> <span class="o">=</span> <span class="n">Log</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -736,7 +733,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=3c1653b2"></script>
+      <script src="../../../_static/documentation_options.js?v=2ef4b441"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
