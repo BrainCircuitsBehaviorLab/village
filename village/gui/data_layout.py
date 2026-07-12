@@ -1048,6 +1048,8 @@ class DfLayout(Layout):
     def update_data(self) -> None:
         """Updates the DataFrame based on the currently selected DataTable."""
         self.back_button.hide()
+        self.search_label.show()
+        self.search_edit.show()
         _W = 160  # available table columns
         match manager.table:
             case DataTable.EVENTS:
@@ -1072,10 +1074,14 @@ class DfLayout(Layout):
                 self.complete_df = manager.old_session_df
                 self.widths = [20, 20, 20, 20, 20, 20]
                 self.back_button.show()
+                self.search_label.hide()
+                self.search_edit.hide()
             case DataTable.OLD_SESSION_RAW:
                 self.complete_df = manager.old_session_raw_df
                 self.widths = [20, 20, 20, 40, _W - 100]
                 self.back_button.show()
+                self.search_label.hide()
+                self.search_edit.hide()
             case str():
                 cal = _get_calibration_by_name(manager.table)
                 if cal is not None:
@@ -1088,6 +1094,8 @@ class DfLayout(Layout):
     def back_button_clicked(self) -> None:
         """Handles the back button click, returning to the SESSIONS_SUMMARY table."""
         self.back_button.hide()
+        self.search_label.show()
+        self.search_edit.show()
         self.change_data_table(DataTable.SESSIONS_SUMMARY.value, "")
 
     def create_table(self) -> None:

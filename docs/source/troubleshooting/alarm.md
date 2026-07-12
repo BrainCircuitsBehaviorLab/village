@@ -1,7 +1,7 @@
 ## Alarm System Overview
 
 ### Interrogate the system
-You can use various commands to retrieve information from the system. Simply type these commands in a private chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
+You can use various commands to retrieve information from the system. Simply type these commands in a private telegram chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
 All commands start with the `/` symbol:
 
 - `/report ‘hours’`: Provides a summary of the operant box activity for the last specified hours (default = 24h).

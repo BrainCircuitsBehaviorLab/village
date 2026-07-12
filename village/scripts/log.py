@@ -124,9 +124,6 @@ class Log:
         date = time_utils.now_string()
         message = description if subject == "system" else description + " " + subject
         self.telegram_bot.alarm(message)
-        print("")
-        print(exception)
-        print("")
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
         if not report:
