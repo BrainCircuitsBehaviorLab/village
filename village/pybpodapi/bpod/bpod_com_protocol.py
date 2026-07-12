@@ -130,9 +130,11 @@ class BpodCOMProtocol(BpodBase):
         """
         logger.debug("Requesting disconnect (%s)", SendMessageHeader.DISCONNECT)
 
-        self._arcom.write_char(SendMessageHeader.DISCONNECT)
-
-        res = self._arcom.read_byte() == b"1"
+        try:
+            self._arcom.write_char(SendMessageHeader.DISCONNECT)
+            res = self._arcom.read_byte() == b"1"
+        except Exception:
+            return False
 
         logger.debug("Disconnect result (%s)", str(res))
         return res

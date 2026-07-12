@@ -8,6 +8,8 @@ import math
 import socket
 import time
 
+import serial
+
 from village.controllers.trial_recorder import TrialRecorder
 from village.pybpodapi.bpod.trial import EventOccurrence, Trial
 from village.pybpodapi.hardware.channels import ChannelType
@@ -172,7 +174,10 @@ class BpodBase(object):
         """
         Close connection with Bpod
         """
-        self._bpodcom_disconnect()
+        try:
+            self._bpodcom_disconnect()
+        except Exception:
+            pass
 
         self.recorder.close()
 
@@ -331,9 +336,14 @@ class BpodBase(object):
                     inline = inline.decode().strip()
                     interrupt_task, kill_task = self.handle_inline(inline, sma)
 
-            if self.data_available():
-                opcode, data = self._bpodcom_read_opcode_message()
-                self.__process_opcode(sma, opcode, data, state_change_indexes)
+            try:
+                if self.data_available():
+                    opcode, data = self._bpodcom_read_opcode_message()
+                    self.__process_opcode(sma, opcode, data, state_change_indexes)
+            except serial.SerialException:
+                self.com_error = True
+                self._skip_all_trials = True
+                raise BpodErrorException("Bpod disconnected during trial")
 
             self.loop_handler()
 
@@ -342,8 +352,13 @@ class BpodBase(object):
                 break
 
         if not interrupt_task:
-            self.__update_timestamps(sma, state_change_indexes)
-            self.__record_trial(sma)
+            try:
+                self.__update_timestamps(sma, state_change_indexes)
+                self.__record_trial(sma)
+            except serial.SerialException:
+                self.com_error = True
+                self._skip_all_trials = True
+                raise BpodErrorException("Bpod disconnected during trial")
 
         logger.info("Publishing Bpod trial")
 

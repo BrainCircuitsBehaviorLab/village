@@ -11,6 +11,8 @@ import pandas as pd
 
 from village.classes.enums import Active, AreaActive
 
+os.environ.setdefault("LIBCAMERA_LOG_LEVELS", "*:ERROR")
+
 try:
     from libcamera import controls
     from picamera2 import MappedArray, Picamera2, Preview
@@ -253,8 +255,7 @@ class Camera:
         self.task_is_running = False
 
         self.cam.start()
-        if self.name == "CORRIDOR":
-            self.watchdog_timer.start()
+        self.watchdog_timer.start()
 
     def set_properties(self) -> None:
         """Updates camera detection properties from settings."""
@@ -372,8 +373,6 @@ class Camera:
         self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
         self.camera_timestamp = time_utils.now_timestamp()
-        if self.name == "BOX":
-            self.watchdog_timer.start()
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_recording(self) -> None:
@@ -382,8 +381,6 @@ class Camera:
             self.is_recording = False
             self.cam.stop_encoder()
             self.save_csv()
-        if self.name == "BOX":
-            self.watchdog_timer.stop()
         self.reset_values()
 
     def reset_values(self) -> None:
