@@ -442,8 +442,8 @@ class Manager:
                 self.state = State.SAVE_MANUAL
             elif self.state in [
                 State.LAUNCH_AUTO,
-                State.RUN_FIRST,
-                State.RUN_OPENED,
+                State.RUN_INITIAL,
+                State.RUN_OPEN,
                 State.RUN_CLOSED,
                 State.OPEN_DOOR2,
                 State.CLOSE_DOOR2,
@@ -614,13 +614,13 @@ class Manager:
         """Checks the state of the box lights and sets them based
         on the current state."""
         task_running = self.state in [
-            State.RUN_FIRST,
+            State.RUN_INITIAL,
             State.CLOSE_DOOR2,
             State.OPEN_DOOR2,
-            State.RUN_OPENED,
+            State.RUN_OPEN,
             State.RUN_CLOSED,
             State.SAVE_INSIDE,
-            State.WAIT_EXIT,
+            State.WAIT_SUBJECT_EXIT,
             State.OPEN_DOOR2_STOP,
             State.RUN_MANUAL,
         ]

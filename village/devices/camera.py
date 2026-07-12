@@ -11,8 +11,6 @@ import pandas as pd
 
 from village.classes.enums import Active, AreaActive
 
-os.environ.setdefault("LIBCAMERA_LOG_LEVELS", "*:ERROR")
-
 try:
     from libcamera import controls
     from picamera2 import MappedArray, Picamera2, Preview

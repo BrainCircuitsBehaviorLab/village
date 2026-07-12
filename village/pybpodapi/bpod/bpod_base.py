@@ -143,6 +143,9 @@ class BpodBase(object):
 
         self._hardware.firmware_version = firmware_version
         self._hardware.machine_type = machine_type
+        print(
+            f"Bpod firmware version: {firmware_version}, machine type: {machine_type}"
+        )
 
         self._bpodcom_hardware_description(self._hardware)
 

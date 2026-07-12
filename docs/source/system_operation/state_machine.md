@@ -19,11 +19,11 @@ A typical session of an animal performing a task follows this sequence:
 2. `DETECTION`: In this state, the system determines whether the subject is allowed to enter the operant box.
 3. `ACCESS`: If the subject is allowed to enter, Door 1 is closed, and Door 2 is opened.
 4. `LAUNCH_AUTO`: The task is automatically launched.
-5. `RUN_FIRST`: The task begins, but Door 2 remains open until the corridor is empty.
+5. `RUN_INITIAL`: The task begins, but Door 2 remains open until the corridor is empty.
 6. `CLOSE_DOOR2`: Once the corridor is empty, Door 2 is closed.
 7. `RUN_CLOSED`: The task is running, and the subject inside the operant box is not allowed to leave until a configurable minimum time for the task has elapsed.
 8. `OPEN_DOOR2`: Once the minimum time has elapsed, Door 2 opens.
-9. `RUN_OPENED`: The subject is allowed to leave the operant box if desired, or it may continue performing the task. At this point, two possible scenarios can occur:
+9. `RUN_OPEN`: The subject is allowed to leave the operant box if desired, or it may continue performing the task. At this point, two possible scenarios can occur:
 
 #### Option A: The Subject Leaves Before the Task’s Maximum Time
 
@@ -39,7 +39,7 @@ If the scale detects that the animal is returning to the home cage, the system t
 If the subject does not leave the operant box before the task’s maximum time is reached, the system transitions to:
 
 9. `SAVE_INSIDE`: The task is closed, and all data is saved while the subject is still inside the operant box.
-10. `WAIT_EXIT`: Until the subject attempts to leave and is detected by the scale.
+10. `WAIT_SUBJECT_EXIT`: Until the subject attempts to leave and is detected by the scale.
 11. `EXIT_SAVE`: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.
 12. `SYNC`: The system synchronizes the new data with a remote server or hard drive.
 

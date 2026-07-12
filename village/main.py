@@ -10,6 +10,7 @@ import sys
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
+os.environ.setdefault("LIBCAMERA_LOG_LEVELS", "*:ERROR")
 
 from PyQt5.QtGui import QSurfaceFormat
 
@@ -239,13 +240,13 @@ def system_run() -> None:
                 manager.cam_box = cam_box
                 if manager.launch_task_auto():
                     manager.detection_change = True
-                    manager.state = State.RUN_FIRST
-                    log.info("Going to RUN_FIRST State")
+                    manager.state = State.RUN_INITIAL
+                    log.info("Going to RUN_INITIAL State")
                 else:
                     manager.state = State.OPEN_DOOR2_STOP
                     log.info("Going to OPEN_DOOR2_STOP State")
 
-            case State.RUN_FIRST:
+            case State.RUN_INITIAL:
                 # Task running, waiting for the corridor to become empty"
                 if id != manager.subject.tag and id != "":
                     name = manager.subjects.get_last_entry_name(column="tag", value=id)
@@ -331,10 +332,10 @@ def system_run() -> None:
                 scale.tare()
                 tare_timer.reset()
                 motor_corridor2.open()
-                manager.state = State.RUN_OPENED
-                log.info("Going to RUN_OPENED State")
+                manager.state = State.RUN_OPEN
+                log.info("Going to RUN_OPEN State")
 
-            case State.RUN_OPENED:
+            case State.RUN_OPEN:
                 # task running, the subject can leave
                 manager.getting_weights = True
                 if cam_corridor.area_2_empty() and cam_corridor.area_3_empty():
@@ -405,10 +406,10 @@ def system_run() -> None:
                 # Stopping the task, saving the data; the subject is still inside
                 manager.disconnect_and_save("Auto")
                 manager.detection_change = True
-                manager.state = State.WAIT_EXIT
-                log.info("Going to WAIT_EXIT State")
+                manager.state = State.WAIT_SUBJECT_EXIT
+                log.info("Going to WAIT_SUBJECT_EXIT State")
 
-            case State.WAIT_EXIT:
+            case State.WAIT_SUBJECT_EXIT:
                 # Task finished, waiting for the subject to leave
                 manager.getting_weights = True
                 if (
@@ -505,8 +506,8 @@ def system_run() -> None:
                     manager.state = State.SYNC
                     log.info("Going to SYNC State")
 
-            case State.EXIT_GUI:
-                # In the GUI window, ready to exit the app
+            case State.QUIT_APP:
+                # Confirming whether to quit the app
                 manager.previous_state_wait = False
 
             case State.SYNC:

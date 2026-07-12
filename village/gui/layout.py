@@ -402,7 +402,7 @@ class Layout(QGridLayout):
             self.stop_button.setStyleSheet(_red)
             self.online_button.setEnabled(True)
             self.online_button.setStyleSheet(_gray)
-        elif state == State.WAIT_EXIT:
+        elif state == State.WAIT_SUBJECT_EXIT:
             self.state_label.setText("Task finished — subject still inside")
             self.stop_button.setText("CHANGE STATE")
             self.stop_button.setToolTip("Open options to change the system state")
@@ -456,7 +456,7 @@ class Layout(QGridLayout):
 
         if manager.state.can_exit():
             old_state = manager.state
-            manager.state = State.EXIT_GUI
+            manager.state = State.QUIT_APP
             self.update_status_label_buttons()
 
             if manager.changing_settings:
@@ -663,8 +663,8 @@ class Layout(QGridLayout):
                 log.info("Going to SYNC State")
                 self.update_gui()
             elif msg.clickedButton() == subject_inside:
-                manager.state = State.WAIT_EXIT
-                log.info("Going to WAIT_EXIT State")
+                manager.state = State.WAIT_SUBJECT_EXIT
+                log.info("Going to WAIT_SUBJECT_EXIT State")
                 self.update_gui()
 
     def close_online_plot_window(self) -> None:

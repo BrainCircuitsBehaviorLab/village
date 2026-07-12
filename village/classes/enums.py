@@ -102,15 +102,15 @@ class State(SuperEnum):
     DETECTION = "Gathering subject data, checking requirements to enter"
     ACCESS = "Closing door1, opening door2"
     LAUNCH_AUTO = "Automatically launching the task"
-    RUN_FIRST = "Task running, waiting for the corridor to become empty"
+    RUN_INITIAL = "Task running, waiting for the corridor to become empty"
     CLOSE_DOOR2 = "Closing door2"
     RUN_CLOSED = "Task running, the subject cannot leave yet"
     OPEN_DOOR2 = "Opening door2"
-    RUN_OPENED = "Task running, the subject can leave"
+    RUN_OPEN = "Task running, the subject can leave"
     EXIT_UNSAVED = "Closing door2, opening door1; data still not saved"
     SAVE_OUTSIDE = "Stopping the task, saving the data; the subject is already outside"
     SAVE_INSIDE = "Stopping the task, saving the data; the subject is still inside"
-    WAIT_EXIT = "Task finished, waiting for the subject to leave"
+    WAIT_SUBJECT_EXIT = "Task finished, waiting for the subject to leave"
     EXIT_SAVED = "Closing door2, opening door1; data already saved"
     OPEN_DOOR2_STOP = "Opening door2, disconnecting RFID"
     MANUAL_MODE = "Settings are being changed or task is being manually prepared"
@@ -118,7 +118,7 @@ class State(SuperEnum):
     RUN_MANUAL = "Task running manually"
     SAVE_MANUAL = "Stopping the task, saving the data; task is running manually"
     SYNC = "Synchronizing data or doing user-defined tasks"
-    EXIT_GUI = "In the GUI window, ready to exit the app"
+    QUIT_APP = "Confirming whether to quit the app"
 
     def __init__(self, description: str) -> None:
         """Initializes the State enum with a description."""
@@ -164,9 +164,9 @@ class State(SuperEnum):
             bool: True if a task is running.
         """
         if self in (
-            State.RUN_FIRST,
+            State.RUN_INITIAL,
             State.RUN_CLOSED,
-            State.RUN_OPENED,
+            State.RUN_OPEN,
             State.RUN_MANUAL,
         ):
             return True
@@ -190,7 +190,7 @@ class State(SuperEnum):
         Returns:
             bool: True if transition to WAIT is allowed.
         """
-        if self == State.WAIT_EXIT:
+        if self == State.WAIT_SUBJECT_EXIT:
             return True
         else:
             return False
