@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e06a34f9" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a78a1efa" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -334,7 +334,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.data_layout.html">data_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui.html">gui</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.gui.Gui.html">Gui</a></li>
@@ -578,11 +577,11 @@ data-aria-dark="Switch to auto color mode">
 <li><p><code class="docutils literal notranslate"><span class="pre">DETECTION</span></code>: In this state, the system determines whether the subject is allowed to enter the operant box.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ACCESS</span></code>: If the subject is allowed to enter, Door 1 is closed, and Door 2 is opened.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">LAUNCH_AUTO</span></code>: The task is automatically launched.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">RUN_FIRST</span></code>: The task begins, but Door 2 remains open until the corridor is empty.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_INITIAL</span></code>: The task begins, but Door 2 remains open until the corridor is empty.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">CLOSE_DOOR2</span></code>: Once the corridor is empty, Door 2 is closed.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">RUN_CLOSED</span></code>: The task is running, and the subject inside the operant box is not allowed to leave until a configurable minimum time for the task has elapsed.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">OPEN_DOOR2</span></code>: Once the minimum time has elapsed, Door 2 opens.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">RUN_OPENED</span></code>: The subject is allowed to leave the operant box if desired, or it may continue performing the task. At this point, two possible scenarios can occur:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN_OPEN</span></code>: The subject is allowed to leave the operant box if desired, or it may continue performing the task. At this point, two possible scenarios can occur:</p></li>
 </ol>
 <section id="option-a-the-subject-leaves-before-the-tasks-maximum-time">
 <h3>Option A: The Subject Leaves Before the Task’s Maximum Time</h3>
@@ -598,7 +597,7 @@ data-aria-dark="Switch to auto color mode">
 <p>If the subject does not leave the operant box before the task’s maximum time is reached, the system transitions to:</p>
 <ol class="arabic simple" start="9">
 <li><p><code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>: The task is closed, and all data is saved while the subject is still inside the operant box.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WAIT_EXIT</span></code>: Until the subject attempts to leave and is detected by the scale.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WAIT_SUBJECT_EXIT</span></code>: Until the subject attempts to leave and is detected by the scale.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">EXIT_SAVE</span></code>: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
 </ol>
@@ -647,7 +646,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3904e0"></script>
+      <script src="../_static/documentation_options.js?v=25fb6abc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

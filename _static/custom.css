@@ -178,3 +178,31 @@ ul.purple-bullets li::marker {
         max-width: none !important;
     }
 }
+
+/* ── Lightbox ──────────────────────────────────────────────── */
+img.zoomable {
+    cursor: zoom-in;
+}
+
+#lb-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+}
+
+#lb-overlay.lb-active {
+    display: flex;
+}
+
+#lb-overlay img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}

@@ -22,6 +22,7 @@ NullCamera
       ~NullCamera.area_3_empty
       ~NullCamera.area_4_empty
       ~NullCamera.areas_corridor_ok
+      ~NullCamera.check_hourly_occupation
       ~NullCamera.pre_process
       ~NullCamera.print_info_about_config
       ~NullCamera.start_camera

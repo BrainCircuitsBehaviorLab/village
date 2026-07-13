@@ -41,15 +41,15 @@ State
       ~State.DETECTION
       ~State.ACCESS
       ~State.LAUNCH_AUTO
-      ~State.RUN_FIRST
+      ~State.RUN_INITIAL
       ~State.CLOSE_DOOR2
       ~State.RUN_CLOSED
       ~State.OPEN_DOOR2
-      ~State.RUN_OPENED
+      ~State.RUN_OPEN
       ~State.EXIT_UNSAVED
       ~State.SAVE_OUTSIDE
       ~State.SAVE_INSIDE
-      ~State.WAIT_EXIT
+      ~State.WAIT_SUBJECT_EXIT
       ~State.EXIT_SAVED
       ~State.OPEN_DOOR2_STOP
       ~State.MANUAL_MODE
@@ -57,6 +57,6 @@ State
       ~State.RUN_MANUAL
       ~State.SAVE_MANUAL
       ~State.SYNC
-      ~State.EXIT_GUI
+      ~State.QUIT_APP
    
    

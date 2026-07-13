@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e06a34f9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=a78a1efa" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -334,7 +334,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.gui.Gui.html">Gui</a></li>
@@ -659,15 +658,15 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="102">    <span class="n">DETECTION</span> <span class="o">=</span> <span class="s2">&quot;Gathering subject data, checking requirements to enter&quot;</span>
 </span><span data-line="103">    <span class="n">ACCESS</span> <span class="o">=</span> <span class="s2">&quot;Closing door1, opening door2&quot;</span>
 </span><span data-line="104">    <span class="n">LAUNCH_AUTO</span> <span class="o">=</span> <span class="s2">&quot;Automatically launching the task&quot;</span>
-</span><span data-line="105">    <span class="n">RUN_FIRST</span> <span class="o">=</span> <span class="s2">&quot;Task running, waiting for the corridor to become empty&quot;</span>
+</span><span data-line="105">    <span class="n">RUN_INITIAL</span> <span class="o">=</span> <span class="s2">&quot;Task running, waiting for the corridor to become empty&quot;</span>
 </span><span data-line="106">    <span class="n">CLOSE_DOOR2</span> <span class="o">=</span> <span class="s2">&quot;Closing door2&quot;</span>
 </span><span data-line="107">    <span class="n">RUN_CLOSED</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject cannot leave yet&quot;</span>
 </span><span data-line="108">    <span class="n">OPEN_DOOR2</span> <span class="o">=</span> <span class="s2">&quot;Opening door2&quot;</span>
-</span><span data-line="109">    <span class="n">RUN_OPENED</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject can leave&quot;</span>
+</span><span data-line="109">    <span class="n">RUN_OPEN</span> <span class="o">=</span> <span class="s2">&quot;Task running, the subject can leave&quot;</span>
 </span><span data-line="110">    <span class="n">EXIT_UNSAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1; data still not saved&quot;</span>
 </span><span data-line="111">    <span class="n">SAVE_OUTSIDE</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; the subject is already outside&quot;</span>
 </span><span data-line="112">    <span class="n">SAVE_INSIDE</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; the subject is still inside&quot;</span>
-</span><span data-line="113">    <span class="n">WAIT_EXIT</span> <span class="o">=</span> <span class="s2">&quot;Task finished, waiting for the subject to leave&quot;</span>
+</span><span data-line="113">    <span class="n">WAIT_SUBJECT_EXIT</span> <span class="o">=</span> <span class="s2">&quot;Task finished, waiting for the subject to leave&quot;</span>
 </span><span data-line="114">    <span class="n">EXIT_SAVED</span> <span class="o">=</span> <span class="s2">&quot;Closing door2, opening door1; data already saved&quot;</span>
 </span><span data-line="115">    <span class="n">OPEN_DOOR2_STOP</span> <span class="o">=</span> <span class="s2">&quot;Opening door2, disconnecting RFID&quot;</span>
 </span><span data-line="116">    <span class="n">MANUAL_MODE</span> <span class="o">=</span> <span class="s2">&quot;Settings are being changed or task is being manually prepared&quot;</span>
@@ -675,7 +674,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="118">    <span class="n">RUN_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Task running manually&quot;</span>
 </span><span data-line="119">    <span class="n">SAVE_MANUAL</span> <span class="o">=</span> <span class="s2">&quot;Stopping the task, saving the data; task is running manually&quot;</span>
 </span><span data-line="120">    <span class="n">SYNC</span> <span class="o">=</span> <span class="s2">&quot;Synchronizing data or doing user-defined tasks&quot;</span>
-</span><span data-line="121">    <span class="n">EXIT_GUI</span> <span class="o">=</span> <span class="s2">&quot;In the GUI window, ready to exit the app&quot;</span>
+</span><span data-line="121">    <span class="n">QUIT_APP</span> <span class="o">=</span> <span class="s2">&quot;Confirming whether to quit the app&quot;</span>
 </span><span data-line="122">
 <div class="viewcode-block" id="State.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.classes.enums.State.html#village.classes.enums.State.__init__">[docs]</a>
@@ -735,9 +734,9 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="164"><span class="sd">            bool: True if a task is running.</span>
 </span><span data-line="165"><span class="sd">        &quot;&quot;&quot;</span>
 </span><span data-line="166">        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span>
-</span><span data-line="167">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
+</span><span data-line="167">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_INITIAL</span><span class="p">,</span>
 </span><span data-line="168">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_CLOSED</span><span class="p">,</span>
-</span><span data-line="169">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
+</span><span data-line="169">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPEN</span><span class="p">,</span>
 </span><span data-line="170">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span>
 </span><span data-line="171">        <span class="p">):</span>
 </span><span data-line="172">            <span class="k">return</span> <span class="kc">True</span>
@@ -767,7 +766,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="190"><span class="sd">        Returns:</span>
 </span><span data-line="191"><span class="sd">            bool: True if transition to WAIT is allowed.</span>
 </span><span data-line="192"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="193">        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT_EXIT</span><span class="p">:</span>
+</span><span data-line="193">        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">WAIT_SUBJECT_EXIT</span><span class="p">:</span>
 </span><span data-line="194">            <span class="k">return</span> <span class="kc">True</span>
 </span><span data-line="195">        <span class="k">else</span><span class="p">:</span>
 </span><span data-line="196">            <span class="k">return</span> <span class="kc">False</span></div>
@@ -869,7 +868,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=9e3904e0"></script>
+      <script src="../../../_static/documentation_options.js?v=25fb6abc"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

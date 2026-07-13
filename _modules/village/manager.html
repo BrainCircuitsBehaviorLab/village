@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e06a34f9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a78a1efa" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -334,7 +334,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api_generated/village.gui.data_layout.html">data_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api_generated/village.gui.gui.html">gui</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../api_generated/village.gui.gui.Gui.html">Gui</a></li>
@@ -992,8 +991,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="442">                <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">State</span><span class="o">.</span><span class="n">SAVE_MANUAL</span>
 </span><span data-line="443">            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">in</span> <span class="p">[</span>
 </span><span data-line="444">                <span class="n">State</span><span class="o">.</span><span class="n">LAUNCH_AUTO</span><span class="p">,</span>
-</span><span data-line="445">                <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
-</span><span data-line="446">                <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
+</span><span data-line="445">                <span class="n">State</span><span class="o">.</span><span class="n">RUN_INITIAL</span><span class="p">,</span>
+</span><span data-line="446">                <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPEN</span><span class="p">,</span>
 </span><span data-line="447">                <span class="n">State</span><span class="o">.</span><span class="n">RUN_CLOSED</span><span class="p">,</span>
 </span><span data-line="448">                <span class="n">State</span><span class="o">.</span><span class="n">OPEN_DOOR2</span><span class="p">,</span>
 </span><span data-line="449">                <span class="n">State</span><span class="o">.</span><span class="n">CLOSE_DOOR2</span><span class="p">,</span>
@@ -1191,13 +1190,13 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="614"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks the state of the box lights and sets them based</span>
 </span><span data-line="615"><span class="sd">        on the current state.&quot;&quot;&quot;</span>
 </span><span data-line="616">        <span class="n">task_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">in</span> <span class="p">[</span>
-</span><span data-line="617">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_FIRST</span><span class="p">,</span>
+</span><span data-line="617">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_INITIAL</span><span class="p">,</span>
 </span><span data-line="618">            <span class="n">State</span><span class="o">.</span><span class="n">CLOSE_DOOR2</span><span class="p">,</span>
 </span><span data-line="619">            <span class="n">State</span><span class="o">.</span><span class="n">OPEN_DOOR2</span><span class="p">,</span>
-</span><span data-line="620">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPENED</span><span class="p">,</span>
+</span><span data-line="620">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_OPEN</span><span class="p">,</span>
 </span><span data-line="621">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_CLOSED</span><span class="p">,</span>
 </span><span data-line="622">            <span class="n">State</span><span class="o">.</span><span class="n">SAVE_INSIDE</span><span class="p">,</span>
-</span><span data-line="623">            <span class="n">State</span><span class="o">.</span><span class="n">WAIT_EXIT</span><span class="p">,</span>
+</span><span data-line="623">            <span class="n">State</span><span class="o">.</span><span class="n">WAIT_SUBJECT_EXIT</span><span class="p">,</span>
 </span><span data-line="624">            <span class="n">State</span><span class="o">.</span><span class="n">OPEN_DOOR2_STOP</span><span class="p">,</span>
 </span><span data-line="625">            <span class="n">State</span><span class="o">.</span><span class="n">RUN_MANUAL</span><span class="p">,</span>
 </span><span data-line="626">        <span class="p">]</span>
@@ -1444,7 +1443,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=9e3904e0"></script>
+      <script src="../../_static/documentation_options.js?v=25fb6abc"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/design-tabs.js?v=f930bc37"></script>

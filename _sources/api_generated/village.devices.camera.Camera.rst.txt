@@ -23,6 +23,7 @@ Camera
       ~Camera.area_4_empty
       ~Camera.areas_box_ok
       ~Camera.areas_corridor_ok
+      ~Camera.check_hourly_occupation
       ~Camera.detect_and_trigger
       ~Camera.detect_black
       ~Camera.detect_black_position_components

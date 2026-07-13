@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e06a34f9" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a78a1efa" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -334,7 +334,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.data_layout.html">data_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.gui.gui.html">gui</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.gui.gui.Gui.html">Gui</a></li>
@@ -587,6 +586,7 @@ All commands start with the <code class="docutils literal notranslate"><span cla
 <ul class="simple">
 <li><p><strong>Temperature Monitoring:</strong> The system checks the current room temperature against safety thresholds.</p></li>
 <li><p><strong>Activity Detection:</strong> The system flags if no animal has been detected by the RFID readers or if no behavioral sessions have been initiated for a specified number of consecutive hours (6 hours by default).</p></li>
+<li><p><strong>Corridor Occupation:</strong> The system checks whether any corridor area has been continuously occupied for more than 90% of the last hour, which may indicate an animal is sleeping in that area or a false detection is occurring.</p></li>
 </ul>
 <div class="tip admonition">
 <p class="admonition-title">Troubleshooting Context</p>
@@ -598,6 +598,7 @@ All commands start with the <code class="docutils literal notranslate"><span cla
 <li><p><code class="docutils literal notranslate"><span class="pre">MAXIMUM_TEMPERATURE</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">NO_DETECTION_HOURS</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">NO_SESSION_HOURS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CORRIDOR_OCCUPATION_ALARM</span></code></p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -750,27 +751,31 @@ When it is not clear what sequence of events produced the alarm, review the vide
 <td><p>The camera automatically restarts after failing to deliver frames for 10 seconds. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.</p></td>
 <td><p>Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts.</p></td>
 </tr>
-<tr class="row-even"><td><p>Low/High temperature</p></td>
+<tr class="row-even"><td><p>Area(s) occupied more than 90% of the last hour</p></td>
+<td><p>One or more corridor areas were continuously occupied for more than 90% of the last hour. This may indicate an animal is sleeping in the corridor, or that a false detection is occurring due to lighting or dirt. This check can be enabled or disabled in the settings using <code class="docutils literal notranslate"><span class="pre">CORRIDOR_OCCUPATION_ALARM</span></code>.</p></td>
+<td><p>Review the corridor video for the last hour to determine whether a real animal is present or whether the detection is a false positive. If an animal is stuck, verify that door 1 and door 2 are operating correctly and that the animal can move freely. If it is a false positive, check corridor illumination, clean the floor, and adjust the detection thresholds.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Low/High temperature</p></td>
 <td><p>Temperature has risen above or fallen below the configured threshold.</p></td>
 <td><p>Verify the room temperature using an independent sensor and take the appropriate corrective measures.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Subjects with low water intake in the last 24h</p></td>
+<tr class="row-even"><td><p>Subjects with low water intake in the last 24h</p></td>
 <td><p>The subject consumed less than the configured water-intake threshold during the last 24 hours.</p></td>
 <td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning correctly.</p></td>
 </tr>
-<tr class="row-even"><td><p>Subjects with no session in the last 24h</p></td>
+<tr class="row-odd"><td><p>Subjects with no session in the last 24h</p></td>
 <td><p>The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be enabled or disabled in the settings.</p></td>
 <td><p>Verify corridor access, door 1 operation, RFID functionality, and camera-based detection.</p></td>
 </tr>
-<tr class="row-odd"><td><p>No data sync in the last 24h</p></td>
+<tr class="row-even"><td><p>No data sync in the last 24h</p></td>
 <td><p>No data has been successfully synchronized with the external server or hard drive during the last 24 hours.</p></td>
 <td><p>Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.</p></td>
 </tr>
-<tr class="row-even"><td><p>No water was drunk</p></td>
+<tr class="row-odd"><td><p>No water was drunk</p></td>
 <td><p>The subject did not drink any water during the task. This check can be enabled or disabled in the settings.</p></td>
 <td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning properly.</p></td>
 </tr>
-<tr class="row-odd"><td><p>No trials were recorded</p></td>
+<tr class="row-even"><td><p>No trials were recorded</p></td>
 <td><p>The subject did not complete any trials. This check can be enabled or disabled in the settings.</p></td>
 <td><p>Confirm that the animal entered the operant box and did not fall asleep. Inspect the task logic and verify that all hardware components are functioning correctly.</p></td>
 </tr>
@@ -818,7 +823,7 @@ When it is not clear what sequence of events produced the alarm, review the vide
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3904e0"></script>
+      <script src="../_static/documentation_options.js?v=25fb6abc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e06a34f9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=a78a1efa" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -334,7 +334,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.gui.Gui.html">Gui</a></li>
@@ -997,7 +996,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="441">        <span class="c1"># ── save / delete ──────────────────────────────────────────────────────</span>
 </span><span data-line="442">        <span class="bp">self</span><span class="o">.</span><span class="n">save_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">create_and_add_button</span><span class="p">(</span>
 </span><span data-line="443">            <span class="s2">&quot;SAVE CALIBRATION&quot;</span><span class="p">,</span>
-</span><span data-line="444">            <span class="mi">38</span><span class="p">,</span>
+</span><span data-line="444">            <span class="mi">39</span><span class="p">,</span>
 </span><span data-line="445">            <span class="mi">152</span><span class="p">,</span>
 </span><span data-line="446">            <span class="mi">20</span><span class="p">,</span>
 </span><span data-line="447">            <span class="mi">2</span><span class="p">,</span>
@@ -1008,7 +1007,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="452">        <span class="bp">self</span><span class="o">.</span><span class="n">save_button</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 </span><span data-line="453">        <span class="bp">self</span><span class="o">.</span><span class="n">delete_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">create_and_add_button</span><span class="p">(</span>
 </span><span data-line="454">            <span class="s2">&quot;DELETE CALIBRATION&quot;</span><span class="p">,</span>
-</span><span data-line="455">            <span class="mi">41</span><span class="p">,</span>
+</span><span data-line="455">            <span class="mi">42</span><span class="p">,</span>
 </span><span data-line="456">            <span class="mi">152</span><span class="p">,</span>
 </span><span data-line="457">            <span class="mi">20</span><span class="p">,</span>
 </span><span data-line="458">            <span class="mi">2</span><span class="p">,</span>
@@ -1030,7 +1029,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="474">
 </span><span data-line="475">        <span class="c1"># ── plot layout ────────────────────────────────────────────────────────</span>
 </span><span data-line="476">        <span class="bp">self</span><span class="o">.</span><span class="n">plot_layout</span> <span class="o">=</span> <span class="n">_CalibrationPlotLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-</span><span data-line="477">        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_layout</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span></div>
+</span><span data-line="477">        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_layout</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span></div>
 
 </span><span data-line="478">
 <div class="viewcode-block" id="SoundCalibration.change_layout">
@@ -1650,7 +1649,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=9e3904e0"></script>
+      <script src="../../../_static/documentation_options.js?v=25fb6abc"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

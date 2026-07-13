@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e06a34f9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=a78a1efa" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -334,7 +334,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api_generated/village.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.calibration_layout.html">calibration_layout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.camera_calibration_layout.html">camera_calibration_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.data_layout.html">data_layout</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.gui.gui.html">gui</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.gui.gui.Gui.html">Gui</a></li>
@@ -882,12 +881,12 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="342">
 </span><span data-line="343">        <span class="bp">self</span><span class="o">.</span><span class="n">page1</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_widget</span><span class="p">)</span>
 </span><span data-line="344">        <span class="bp">self</span><span class="o">.</span><span class="n">page1</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color:white&quot;</span><span class="p">)</span>
-</span><span data-line="345">        <span class="bp">self</span><span class="o">.</span><span class="n">page1Layout</span> <span class="o">=</span> <span class="n">CorridorLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
+</span><span data-line="345">        <span class="bp">self</span><span class="o">.</span><span class="n">page1Layout</span> <span class="o">=</span> <span class="n">CorridorLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
 </span><span data-line="346">        <span class="bp">self</span><span class="o">.</span><span class="n">page1</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page1Layout</span><span class="p">)</span>
 </span><span data-line="347">
 </span><span data-line="348">        <span class="bp">self</span><span class="o">.</span><span class="n">page2</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_widget</span><span class="p">)</span>
 </span><span data-line="349">        <span class="bp">self</span><span class="o">.</span><span class="n">page2</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color:white&quot;</span><span class="p">)</span>
-</span><span data-line="350">        <span class="bp">self</span><span class="o">.</span><span class="n">page2Layout</span> <span class="o">=</span> <span class="n">BoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
+</span><span data-line="350">        <span class="bp">self</span><span class="o">.</span><span class="n">page2Layout</span> <span class="o">=</span> <span class="n">BoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
 </span><span data-line="351">        <span class="bp">self</span><span class="o">.</span><span class="n">page2</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page2Layout</span><span class="p">)</span>
 </span><span data-line="352">
 </span><span data-line="353">        <span class="bp">self</span><span class="o">.</span><span class="n">page3</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_widget</span><span class="p">)</span>
@@ -898,7 +897,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="358">        <span class="bp">self</span><span class="o">.</span><span class="n">scroll_area</span><span class="o">.</span><span class="n">setWidgetResizable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 </span><span data-line="359">        <span class="bp">self</span><span class="o">.</span><span class="n">scroll_area</span><span class="o">.</span><span class="n">setHorizontalScrollBarPolicy</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ScrollBarAlwaysOff</span><span class="p">)</span>
 </span><span data-line="360">        <span class="bp">self</span><span class="o">.</span><span class="n">page3_sub_widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
-</span><span data-line="361">        <span class="bp">self</span><span class="o">.</span><span class="n">page3_sub_layout</span> <span class="o">=</span> <span class="n">FunctionsLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+</span><span data-line="361">        <span class="bp">self</span><span class="o">.</span><span class="n">page3_sub_layout</span> <span class="o">=</span> <span class="n">FunctionsLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
 </span><span data-line="362">        <span class="bp">self</span><span class="o">.</span><span class="n">page3_sub_widget</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page3_sub_layout</span><span class="p">)</span>
 </span><span data-line="363">
 </span><span data-line="364">        <span class="bp">self</span><span class="o">.</span><span class="n">scroll_area</span><span class="o">.</span><span class="n">setWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page3_sub_widget</span><span class="p">)</span>
@@ -908,7 +907,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="368">
 </span><span data-line="369">        <span class="bp">self</span><span class="o">.</span><span class="n">page4</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_widget</span><span class="p">)</span>
 </span><span data-line="370">        <span class="bp">self</span><span class="o">.</span><span class="n">page4</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color:white&quot;</span><span class="p">)</span>
-</span><span data-line="371">        <span class="bp">self</span><span class="o">.</span><span class="n">page4Layout</span> <span class="o">=</span> <span class="n">VirtualMouseLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
+</span><span data-line="371">        <span class="bp">self</span><span class="o">.</span><span class="n">page4Layout</span> <span class="o">=</span> <span class="n">VirtualMouseLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
 </span><span data-line="372">        <span class="bp">self</span><span class="o">.</span><span class="n">page4</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page4Layout</span><span class="p">)</span>
 </span><span data-line="373">
 </span><span data-line="374">        <span class="n">_tab_style</span> <span class="o">=</span> <span class="p">(</span>
@@ -947,7 +946,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="407">            <span class="bp">self</span><span class="o">.</span><span class="n">_actions_tab_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;VIRTUAL_MOUSE&quot;</span><span class="p">)</span>
 </span><span data-line="408">
 </span><span data-line="409">        <span class="bp">self</span><span class="o">.</span><span class="n">actions_tab_widget</span><span class="o">.</span><span class="n">currentChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_actions_tab_changed</span><span class="p">)</span>
-</span><span data-line="410">        <span class="bp">self</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_tab_widget</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+</span><span data-line="410">        <span class="bp">self</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_tab_widget</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
 </span><span data-line="411">
 </span><span data-line="412">        <span class="bp">self</span><span class="o">.</span><span class="n">page5</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_widget</span><span class="p">)</span>
 </span><span data-line="413">        <span class="bp">self</span><span class="o">.</span><span class="n">page5</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color:white&quot;</span><span class="p">)</span>
@@ -2818,7 +2817,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=9e3904e0"></script>
+      <script src="../../../_static/documentation_options.js?v=25fb6abc"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
