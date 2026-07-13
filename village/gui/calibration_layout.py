@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 _MENU_COL = 1
 _MENU_WIDTH = 24
-_C_ROW = 7
+_C_ROW = 6
 _CAL_COL = 27  # content starts at column 27
 
 

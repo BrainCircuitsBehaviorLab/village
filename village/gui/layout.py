@@ -284,7 +284,7 @@ class Layout(QGridLayout):
     def create_common_elements(self) -> None:
         """Creates the navigation menu buttons common to all main layouts."""
         self.status_label = self.create_and_add_label(
-            "", 1, 0, 200, 2, "black", background="powderblue"
+            "", 0, 0, 200, 2, "black", background="powderblue"
         )
 
         _nav_items = [
@@ -318,7 +318,7 @@ class Layout(QGridLayout):
             idx = self.nav_tab_bar.addTab(label)
             self.nav_tab_bar.setTabToolTip(idx, tooltip)
         self.nav_tab_bar.currentChanged.connect(self._on_nav_tab_changed)
-        self.addWidget(self.nav_tab_bar, 4, 0, 2, 200)
+        self.addWidget(self.nav_tab_bar, 3, 0, 2, 200)
 
         self.main_button = NavTabProxy(self.nav_tab_bar, 0)
         self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)
@@ -329,7 +329,7 @@ class Layout(QGridLayout):
         self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
         self.state_label = self.create_and_add_label(
-            "", 3, 110, 42, 3, "black", right_aligment=True
+            "", 2, 110, 42, 3, "black", right_aligment=True
         )
         self.state_label.setStyleSheet(
             self.state_label.styleSheet() + " QLabel { padding-right: 8px; }"
@@ -337,7 +337,7 @@ class Layout(QGridLayout):
 
         self.stop_button = self.create_and_add_button(
             "",
-            3,
+            2,
             152,
             16,
             3,
@@ -348,7 +348,7 @@ class Layout(QGridLayout):
 
         self.online_button = self.create_and_add_button(
             "ONLINE PLOTS",
-            3,
+            2,
             168,
             16,
             3,
@@ -359,7 +359,7 @@ class Layout(QGridLayout):
 
         self.exit_button = self.create_and_add_button(
             "EXIT",
-            3,
+            2,
             184,
             16,
             3,

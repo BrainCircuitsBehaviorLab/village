@@ -295,6 +295,10 @@ class NullCamera:
         """Stops recording."""
         return
 
+    def check_hourly_occupation(self) -> None:
+        """No-op for null camera."""
+        return
+
     def print_info_about_config(self) -> None:
         """Prints camera configuration info."""
         return

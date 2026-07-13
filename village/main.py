@@ -148,6 +148,7 @@ def system_run() -> None:
                 cam_corridor.start_recording()
 
             if manager.hour_change_detector.has_hour_changed():
+                cam_corridor.check_hourly_occupation()
                 manager.hourly_checks()
 
             if manager.cycle_change_detector.has_cycle_changed():

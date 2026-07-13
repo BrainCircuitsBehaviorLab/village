@@ -17,6 +17,7 @@ Every hour, the system runs an automated background diagnostic.
 
 *   **Temperature Monitoring:** The system checks the current room temperature against safety thresholds.
 *   **Activity Detection:** The system flags if no animal has been detected by the RFID readers or if no behavioral sessions have been initiated for a specified number of consecutive hours (6 hours by default).
+*   **Corridor Occupation:** The system checks whether any corridor area has been continuously occupied for more than 90% of the last hour, which may indicate an animal is sleeping in that area or a false detection is occurring.
 
 ```{admonition} Troubleshooting Context
 :class: tip
@@ -28,6 +29,7 @@ You can customize these hourly thresholds in **`SETTINGS` → `TELEGRAM SETTINGS
 *   `MAXIMUM_TEMPERATURE`
 *   `NO_DETECTION_HOURS`
 *   `NO_SESSION_HOURS`
+*   `CORRIDOR_OCCUPATION_ALARM`
 
 ---
 
@@ -174,6 +176,10 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
 * - Camera not responding
   - The camera automatically restarts after failing to deliver frames for 10 seconds. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.
   - Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts.
+
+* - Area(s) occupied more than 90% of the last hour
+  - One or more corridor areas were continuously occupied for more than 90% of the last hour. This may indicate an animal is sleeping in the corridor, or that a false detection is occurring due to lighting or dirt. This check can be enabled or disabled in the settings using `CORRIDOR_OCCUPATION_ALARM`.
+  - Review the corridor video for the last hour to determine whether a real animal is present or whether the detection is a false positive. If an animal is stuck, verify that door 1 and door 2 are operating correctly and that the animal can move freely. If it is a false positive, check corridor illumination, clean the floor, and adjust the detection thresholds.
 
 * - Low/High temperature
   - Temperature has risen above or fallen below the configured threshold.

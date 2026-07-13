@@ -468,7 +468,7 @@ class BpodWaterCalibration(CalibrationBase):
         # save / delete
         self.save_button = self.layout.create_and_add_button(
             "SAVE CALIBRATION",
-            38,
+            39,
             152,
             20,
             2,
@@ -480,7 +480,7 @@ class BpodWaterCalibration(CalibrationBase):
 
         self.delete_button = self.layout.create_and_add_button(
             "DELETE CALIBRATION",
-            41,
+            42,
             152,
             20,
             2,
@@ -501,8 +501,8 @@ class BpodWaterCalibration(CalibrationBase):
         self.layout.addWidget(self.scroll_area, 0, 85, 44, 36)
 
         # plot layout
-        self.plot_layout = _CalibrationPlotLayout(self.window, 38, 51, self)
-        self.layout.addLayout(self.plot_layout, 0, 121, 38, 51)
+        self.plot_layout = _CalibrationPlotLayout(self.window, 36, 51, self)
+        self.layout.addLayout(self.plot_layout, 0, 121, 36, 51)
 
     def change_layout(self, auto: bool = False) -> bool:
         if auto:

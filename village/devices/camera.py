@@ -246,6 +246,8 @@ class Camera:
         self.box_alarm_timer = time_utils.Timer(3600)
 
         self.camera_timestamp = time_utils.now_timestamp()
+        self._hour_occupied: list[int] = [0, 0, 0, 0]
+        self._hour_total: int = 0
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
@@ -531,6 +533,11 @@ class Camera:
                 self.write_csv()
                 if self.name == "BOX" and self.is_recording:
                     self.areas_box_ok()
+                if self.name == "CORRIDOR" and self.counts[0] != -1:
+                    self._hour_total += 1
+                    for i in range(4):
+                        if self.counts[i] > self.zero_or_one_mouse:
+                            self._hour_occupied[i] += 1
 
     def get_gray_frame(self) -> None:
         """Converts the current frame to grayscale."""
@@ -883,6 +890,25 @@ class Camera:
                     log.alarm(
                         "1 subject in prohibited area. Area: " + str(pixels_not_allowed)
                     )
+
+    def check_hourly_occupation(self) -> None:
+        """Checks if any corridor area was occupied more than 90% of the last hour."""
+        if self._hour_total == 0:
+            return
+        if settings.get("CORRIDOR_OCCUPATION_ALARM") == Active.ON:
+            busy = [
+                f"Area{i + 1}"
+                for i in range(4)
+                if self._hour_occupied[i] / self._hour_total > 0.9
+            ]
+            if busy:
+                areas = ", ".join(busy)
+                log.alarm(
+                    f"{areas} occupied more than 90% of the last hour",
+                    subject=manager.subject.name,
+                )
+        self._hour_occupied = [0, 0, 0, 0]
+        self._hour_total = 0
 
     def area_1_empty(self) -> bool:
         """Checks if area 1 is empty."""

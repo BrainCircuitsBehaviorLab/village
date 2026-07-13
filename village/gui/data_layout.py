@@ -683,18 +683,18 @@ class DataLayout(Layout):
             manager.table = DataTable.EVENTS
 
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 6, 0, 44, 200)
+        self.addLayout(self.central_layout, 5, 0, 45, 199)
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = DfLayout(self.window, 44, 200)
+        self.page1Layout = DfLayout(self.window, 45, 199)
         self.page1.setLayout(self.page1Layout)
         self.page2 = QWidget()
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = VideoLayout(self.window, 44, 200)
+        self.page2Layout = VideoLayout(self.window, 45, 199)
         self.page2.setLayout(self.page2Layout)
         self.page3 = QWidget()
         self.page3.setStyleSheet("background-color:white")
-        self.page3Layout = PlotLayout(self.window, 44, 200)
+        self.page3Layout = PlotLayout(self.window, 45, 199)
         self.page3.setLayout(self.page3Layout)
 
         self.central_layout.addWidget(self.page1)

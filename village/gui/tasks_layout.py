@@ -41,7 +41,7 @@ MENU_WIDTH = 22
 
 # ── Right content panel ────────────────────────────────────────────────────────
 C_COL = 25  # content start column
-C_ROW = 7  # content start row
+C_ROW = 6  # content start row
 
 DESC_COLS = 78  # description area width in grid columns
 SETTINGS_COL = C_COL + DESC_COLS + 2  # = 105
@@ -216,7 +216,7 @@ class TasksLayout(Layout):
         self.central_layout.addWidget(self.central_scroll)
 
         self.right_layout = QVBoxLayout()
-        self.addLayout(self.right_layout, C_ROW, SETTINGS_COL, 40, 92)
+        self.addLayout(self.right_layout, C_ROW, SETTINGS_COL, 44, 92)
 
         self.right_tabs = QTabWidget()
         self.right_tabs.setStyleSheet("QTabWidget { border: 0px }")

@@ -342,6 +342,13 @@ specified number of hours.""",
         """Checked hourly. This alarm is triggered if no session is performed in the
 operant box within a specified number of hours.""",
     ),
+    Setting(
+        "CORRIDOR_OCCUPATION_ALARM",
+        "ON",
+        Active,
+        """Checked hourly. This alarm is triggered if any corridor area is occupied
+more than 90% of the time during the last hour.""",
+    ),
 ]
 
 cycle_alarm_settings = [

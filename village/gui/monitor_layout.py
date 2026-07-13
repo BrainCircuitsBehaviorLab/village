@@ -342,12 +342,12 @@ class MonitorLayout(Layout):
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = CorridorLayout(self.window, 23, 36)
+        self.page1Layout = CorridorLayout(self.window, 22, 36)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = BoxLayout(self.window, 23, 36)
+        self.page2Layout = BoxLayout(self.window, 22, 36)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
@@ -358,7 +358,7 @@ class MonitorLayout(Layout):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.page3_sub_widget = QWidget()
-        self.page3_sub_layout = FunctionsLayout(self.window, 21, 28)
+        self.page3_sub_layout = FunctionsLayout(self.window, 22, 28)
         self.page3_sub_widget.setLayout(self.page3_sub_layout)
 
         self.scroll_area.setWidget(self.page3_sub_widget)
@@ -368,7 +368,7 @@ class MonitorLayout(Layout):
 
         self.page4 = QWidget(self.central_widget)
         self.page4.setStyleSheet("background-color:white")
-        self.page4Layout = VirtualMouseLayout(self.window, 23, 36)
+        self.page4Layout = VirtualMouseLayout(self.window, 22, 36)
         self.page4.setLayout(self.page4Layout)
 
         _tab_style = (
@@ -407,7 +407,7 @@ class MonitorLayout(Layout):
             self._actions_tab_map.append("VIRTUAL_MOUSE")
 
         self.actions_tab_widget.currentChanged.connect(self.on_actions_tab_changed)
-        self.addWidget(self.actions_tab_widget, 7, 80, 25, 40)
+        self.addWidget(self.actions_tab_widget, 6, 80, 26, 40)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
