@@ -1,4 +1,6 @@
 import os
+import queue
+import threading
 import traceback
 from math import gcd
 from typing import Any
@@ -10,6 +12,7 @@ from scipy.signal import resample_poly
 
 from village.classes.enums import Active
 from village.classes.null_classes import NullSoundDevice
+from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.settings import settings
 
@@ -18,34 +21,38 @@ def get_sound_devices() -> list[str]:
     """Retrieves a list of available sound device names.
 
     Returns:
-        list[str]: A list of device names, or ["No device"] if none are found.
+        list[str]: A list of device names.
     """
     devices = sd.query_devices()
     devices_str = [d["name"] for d in devices]
-    return devices_str if devices_str else ["No device"]
+    return devices_str
 
 
 class SoundDevice:
-    """Handles audio playback using a callback-based sounddevice OutputStream.
+    """Handles audio playback using sounddevice.
 
-    The stream runs permanently. load() prepares audio data, play() triggers
-    playback from the start, and stop() halts it within one callback cycle
-    (~blocksize/samplerate seconds).
+    Attributes:
+        samplerate (int): Audio sample rate.
+        channels (int): Number of audio channels.
+        latency (str): Latency setting for sounddevice.
+        index (int): Index of the used sound device.
+        error (str): Error message.
+        stream (sd.OutputStream): The active audio stream (internal).
+        sound (np.ndarray): The current sound buffer.
+        command_queue (queue.Queue): Queue for processing audio commands in a thread.
+        thread (threading.Thread): Background thread for audio processing.
+        thread_running (bool): Flag to control the background thread.
     """
 
     def __init__(self) -> None:
+        """Initializes the SoundDevice with settings."""
         self.samplerate = int(settings.get("SAMPLERATE"))
         self.channels = 2
-        _blocksize_map = {44100: 256, 48000: 256, 96000: 512, 192000: 1024}
-        self.blocksize = _blocksize_map.get(self.samplerate, 1024)
+        self.latency = "high"
         devices = get_sound_devices()
         device = settings.get("SOUND_DEVICE")
         self.index = devices.index(device) if device in devices else 0
         self.error = ""
-
-        self._audio_data: np.ndarray = np.zeros((self.blocksize, 2), dtype=np.float32)
-        self._pos: int = 0
-        self._playing: bool = False
 
         device_info = sd.query_devices(self.index, "output")
         print(
@@ -54,46 +61,22 @@ class SoundDevice:
             f"high={device_info['default_high_output_latency']}"
         )
 
-        self.stream = sd.OutputStream(
-            samplerate=self.samplerate,
-            channels=self.channels,
-            dtype="float32",
-            blocksize=self.blocksize,
-            latency="low",
-            device=device,
-            callback=self._callback,
-        )
-        self.stream.start()
+        sd.default.device = device
+        sd.default.samplerate = self.samplerate
+        sd.default.channels = self.channels
+        sd.default.latency = self.latency
 
-    def _callback(
-        self,
-        outdata: np.ndarray,
-        frames: int,
-        time: Any,
-        status: sd.CallbackFlags,
-    ) -> None:
-        if not self._playing:
-            outdata[:] = 0
-            return
+        self.stream = None
+        self.sound: np.ndarray[np.float32] = np.empty(0, dtype=np.float32)
 
-        pos = self._pos
-        data = self._audio_data
-        remaining = len(data) - pos
+        self.command_queue: queue.Queue[tuple] = queue.Queue()
 
-        if remaining <= 0:
-            outdata[:] = 0
-            self._playing = False
-            return
-
-        n = min(frames, remaining)
-        outdata[:n] = data[pos : pos + n]
-        if n < frames:
-            outdata[n:] = 0
-            self._playing = False
-        self._pos = pos + n
+        self.thread = threading.Thread(target=self._audio_worker, daemon=True)
+        self.thread_running = True
+        self.thread.start()
 
     def load(self, left: Any, right: Any) -> None:
-        """Prepares audio data for playback.
+        """Loads sound data into the playback queue.
 
         Args:
             left (Any): Left channel data (array-like).
@@ -115,9 +98,123 @@ class SoundDevice:
             )
 
         new_sound = self.create_sound_vec(left, right)
-        self._playing = False
-        self._audio_data = new_sound
-        self._pos = 0
+
+        self.command_queue.put(("load", new_sound))
+
+    def load_wav(self, file: str) -> None:
+        """Loads a WAV file into the playback queue.
+
+        Args:
+            file (str): Filename of the WAV file in the media directory.
+
+        Raises:
+            FileNotFoundError: If the file does not exist.
+            ValueError: If sample rate mismatches or channel count is unsupported.
+        """
+        media_directory = settings.get("MEDIA_DIRECTORY")
+        path = os.path.join(media_directory, file)
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"File '{path}' does not exist.")
+
+        samplerate, data = wavfile.read(path)
+        if samplerate != self.samplerate:
+            raise ValueError(
+                f"Expected samplerate {self.samplerate}, but got {samplerate}."
+            )
+
+        # Normalize to float32 in range [-1.0, 1.0] if needed
+        if data.dtype != np.float32:
+            if np.issubdtype(data.dtype, np.integer):
+                max_val = np.iinfo(data.dtype).max
+                data = data.astype(np.float32) / max_val
+            else:
+                data = data.astype(np.float32)
+
+        if data.ndim == 1:
+            left = right = data
+        elif data.shape[1] == 2:
+            left, right = data[:, 0], data[:, 1]
+        else:
+            raise ValueError("Unsupported number of channels in WAV file.")
+
+        self.load(left, right)
+
+    def play(self) -> None:
+        """Triggers playback of the loaded sound."""
+        self.command_queue.put(("play", None))
+
+    def stop(self) -> None:
+        """Stops playback."""
+        self.command_queue.put(("stop", None))
+
+    def _audio_worker(self) -> None:
+        """Worker function for the audio thread to handle stream operations."""
+        current_sound = np.empty(0, dtype=np.float32)
+        stream = sd.OutputStream(dtype="float32")
+
+        try:
+            while self.thread_running:
+                try:
+                    command, data = self.command_queue.get(timeout=1.0)
+
+                    if command == "load":
+                        try:
+                            stream.close()
+                        except Exception:
+                            pass
+                        current_sound = data
+                        stream = sd.OutputStream(dtype="float32")
+                        stream.start()
+
+                        period_ms = (
+                            1000 * (stream.blocksize / self.samplerate)
+                            if stream.blocksize
+                            else 0
+                        )
+                        log.info(
+                            f"Samplerate = {self.samplerate}"
+                            f"granted latency={stream.latency:.4f}s, "
+                            f"blocksize={stream.blocksize} ({period_ms:.2f} ms/period)"
+                        )
+
+                    elif command == "play":
+                        if current_sound.size != 0:
+                            stream.write(current_sound)
+
+                    elif command == "stop":
+                        try:
+                            stream.stop()
+                        except Exception:
+                            pass
+
+                    elif command == "shutdown":
+                        break
+
+                except queue.Empty:
+                    continue
+
+        except Exception:
+            try:
+                print("exception")
+                error_queue.put_nowait(("sound", traceback.format_exc()))
+            except queue.Full:
+                print("error queue full, cannot log audio error")
+                pass
+
+        finally:
+            if stream is not None:
+                stream.close()
+
+    def shutdown(self) -> None:
+        """Shuts down the audio thread and stream."""
+        if self.thread_running:
+            self.thread_running = False
+            self.command_queue.put(("shutdown", None))
+            self.thread.join(timeout=2.0)
+
+    def __del__(self) -> None:
+        """Destructor to ensure shutdown."""
+        self.shutdown()
 
     def get_sound_from_wav(
         self, file: str, gain: float
@@ -154,31 +251,8 @@ class SoundDevice:
 
         return left, right
 
-    def play(self) -> None:
-        """Starts playback from the beginning of the loaded sound."""
-        self._pos = 0
-        self._playing = True
-
-    def stop(self) -> None:
-        """Stops playback. Takes effect within one callback cycle (~5ms)."""
-        self._playing = False
-
-    def shutdown(self) -> None:
-        """Stops and closes the audio stream."""
-        self._playing = False
-        if self.stream is not None:
-            try:
-                self.stream.stop()
-                self.stream.close()
-            except Exception:
-                pass
-            self.stream = None
-
-    def __del__(self) -> None:
-        self.shutdown()
-
     @staticmethod
-    def create_sound_vec(left: np.ndarray, right: np.ndarray) -> np.ndarray:
+    def create_sound_vec(left: np.ndarray, right: np.ndarray) -> np.ndarray[np.float32]:
         """Interleaves left and right channels into a stereo array.
 
         Args:
@@ -186,7 +260,7 @@ class SoundDevice:
             right (np.ndarray): Right channel data.
 
         Returns:
-            np.ndarray: Interleaved stereo float32 array of shape (N, 2).
+            np.ndarray[np.float32]: Interleaved stereo data.
         """
         sound = np.array([left, right])
         return np.ascontiguousarray(sound.T, dtype=np.float32)

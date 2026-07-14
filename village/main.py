@@ -10,7 +10,6 @@ import sys
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ.setdefault("LIBCAMERA_LOG_LEVELS", "*:ERROR")
 
 from PyQt5.QtGui import QSurfaceFormat
 
@@ -40,7 +39,20 @@ import threading
 import time
 
 from village.classes.enums import Active, State
-from village.devices.camera import cam_box, cam_corridor
+
+# Suppress libcamera C-level stderr during camera import. libcamera writes
+# INFO/WARN messages directly to file descriptor 2 from C++ static initializers,
+# so os.environ has no effect once the .so is loaded. Redirecting fd 2 to
+# /dev/null for the duration of the import is the only reliable way to silence
+# them. fd 2 is restored immediately after so normal stderr still works.
+_saved_stderr = os.dup(2)
+_devnull = os.open(os.devnull, os.O_WRONLY)
+os.dup2(_devnull, 2)
+os.close(_devnull)
+from village.devices.camera import cam_box, cam_corridor  # noqa: E402, I001
+
+os.dup2(_saved_stderr, 2)
+os.close(_saved_stderr)
 from village.devices.chip import (
     motor_box1,
     motor_box2,

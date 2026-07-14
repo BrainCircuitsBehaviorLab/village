@@ -373,6 +373,10 @@ class Camera:
         self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
         self.camera_timestamp = time_utils.now_timestamp()
+        try:
+            self.cam.stop_encoder()
+        except Exception:
+            pass
         self.cam.start_encoder(self.encoder, self.output, quality=self.encoder_quality)
 
     def stop_recording(self) -> None:
@@ -494,8 +498,15 @@ class Camera:
             + "10 seconds. Restarting the camera.",
             subject=manager.subject.name,
         )
-        self.cam.stop_recording()
-        self.cam.stop()
+        self.is_recording = False
+        try:
+            self.cam.stop_recording()
+        except Exception:
+            pass
+        try:
+            self.cam.stop()
+        except Exception:
+            pass
         time.sleep(1)
         self.cam.start()
         self.watchdog_timer.start()
