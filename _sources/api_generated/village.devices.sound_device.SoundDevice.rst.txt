@@ -20,6 +20,7 @@ SoundDevice
       ~SoundDevice.create_sound_vec
       ~SoundDevice.get_sound_from_wav
       ~SoundDevice.load
+      ~SoundDevice.load_wav
       ~SoundDevice.play
       ~SoundDevice.shutdown
       ~SoundDevice.stop
