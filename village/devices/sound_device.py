@@ -1,6 +1,7 @@
 import ctypes
 import os
 import queue
+import re
 import threading
 import time
 import traceback
@@ -33,18 +34,28 @@ PERIODS = 4
 
 
 def get_sound_devices() -> list[str]:
-    """Retrieves a list of available ALSA playback device strings.
+    """Lists the sound cards, by ID, for the SOUND_DEVICE setting.
 
-    Returns entries like 'hw:2,0'. Use one of these as the SOUND_DEVICE setting.
+    Returns entries like 'DACPro (RPi DAC Pro)'. The ID is what gets stored,
+    NOT the card index: indexes are handed out in the order the kernel registers
+    the cards, so a kernel update or a config.txt change can renumber them and
+    the setting would then point at the wrong card. The ID comes from the driver
+    and does not move.
     """
     devices: list[str] = []
     try:
         for i in alsaaudio.card_indexes():
             try:
-                name = alsaaudio.card_name(i)[0]
+                cid, longname = alsaaudio.card_name(i)
             except Exception:
-                name = ""
-            devices.append(f"hw:{i},0 ({name})" if name else f"hw:{i},0")
+                continue
+            cid = str(cid).strip()
+            longname = (longname or "").strip()
+            # Card names contain spaces ('RPi DAC Pro'), and name and longname
+            # are often identical; do not print it twice.
+            devices.append(
+                f"{cid} ({longname})" if longname and longname != cid else cid
+            )
     except Exception:
         pass
     return devices
@@ -75,7 +86,9 @@ class SoundDevice:
         self.periodsize = self._pick_periodsize(self.samplerate)
         self.error = ""
 
-        self.device = self._resolve_device(settings.get("SOUND_DEVICE"))
+        self.device, self.card_index = self._resolve_device(
+            settings.get("SOUND_DEVICE")
+        )
 
         # S32_LE: the PCM512x is 32-bit. hw: device -> writei, no plug layer.
         # rate is REQUIRED: without it pyalsaaudio defaults to 44100, so a tone
@@ -126,7 +139,7 @@ class SoundDevice:
         # 0 ms disables ramping entirely.
         self.ramp_ms = int(settings.get("SOUND_RAMP_MS"))
         self._ramp_frames = int(self.ramp_ms * self.samplerate / 1000)
-        self._status_path = self._status_path_for(self.device)
+        self._status_path = f"/proc/asound/card{self.card_index}/pcm0p/sub0/status"
 
         # ONE persistent worker, created here and kept alive. RT priority is set
         # once, inside it. play() only sets an Event (a futex wake, tens of us),
@@ -169,16 +182,6 @@ class SoundDevice:
         size = 2 ** round(np.log2(max(ideal, 16)))
         return int(min(max(size, 32), 4096))
 
-    @staticmethod
-    def _status_path_for(device: str) -> str:
-        """Kernel status file for an ALSA device string like 'hw:2,0'."""
-        try:
-            body = device.split(":", 1)[1]
-            card, dev = (body.split(",") + ["0"])[:2]
-            return f"/proc/asound/card{int(card)}/pcm{int(dev)}p/sub0/status"
-        except Exception:
-            return ""
-
     def _pcm_state(self) -> str:
         """Reads the PCM state from the kernel: PREPARED / RUNNING / XRUN / SETUP.
 
@@ -218,31 +221,52 @@ class SoundDevice:
                 return
 
     @staticmethod
-    def _resolve_device(name: Any) -> str:
-        """Maps the SOUND_DEVICE setting to an ALSA device string.
+    def _resolve_device(name: Any) -> tuple[str, int]:
+        """Maps the SOUND_DEVICE setting to an ALSA device string and card index.
 
-        Accepts an ALSA string directly ('hw:2,0'), or best-effort matches a
-        card-name substring against the system cards. Falls back to 'hw:0,0'.
+        Accepts what get_sound_devices() lists ('DACPro (RPi DAC Pro)'), a bare
+        card ID ('DACPro'), or an explicit 'hw:2,0'. The index is resolved from
+        the ID at every start, so it survives cards being renumbered.
+
+        Returns:
+            tuple[str, int]: ('hw:N,D', N).
         """
-        if not name:
-            return "hw:0,0"
-        name = str(name)
-        # Direct ALSA device string (possibly with a trailing "(...)" comment).
-        token = name.split()[0]
-        if token.startswith(("hw:", "plughw:", "default", "sysdefault", "dmix")):
-            return token
-        # Best-effort: match tokens of the setting against card names.
+        text = str(name or "").strip()
+        # Card names contain spaces ('RPi DAC Pro'), so splitting on whitespace
+        # would keep only 'RPi'. Strip the trailing ' (longname)' instead.
+        token = re.sub(r"\s*\([^)]*\)\s*$", "", text).strip()
+
+        # Explicit hw:N,D (kept working, but the index is frozen in the setting).
+        m = re.match(r"^(?:plug)?hw:(\d+)(?:,(\d+))?$", token)
+        if m:
+            card = int(m.group(1))
+            return f"hw:{card},{int(m.group(2) or 0)}", card
+
+        # Card ID, exact then case-insensitive.
         try:
-            words = [w.lower() for w in name.replace(":", " ").split() if len(w) > 2]
+            cards = {}
             for i in alsaaudio.card_indexes():
-                cid, clong = alsaaudio.card_name(i)
-                hay = f"{cid} {clong}".lower()
-                if any(w in hay for w in words):
-                    return f"hw:{i},0"
+                try:
+                    cards[alsaaudio.card_name(i)[0]] = i
+                except Exception:
+                    continue
+            if token in cards:
+                return f"hw:{cards[token]},0", cards[token]
+            for cid, i in cards.items():
+                if cid.lower() == token.lower():
+                    return f"hw:{i},0", i
+            if cards:
+                cid, i = next(iter(cards.items()))
+                log.error(
+                    f"SOUND_DEVICE '{text}' matches no card. Available: "
+                    f"{', '.join(cards)}. Falling back to '{cid}'."
+                )
+                return f"hw:{i},0", i
         except Exception:
             pass
-        log.error(f"Could not resolve SOUND_DEVICE '{name}', defaulting to hw:0,0")
-        return "hw:0,0"
+
+        log.error(f"Could not resolve SOUND_DEVICE '{text}'; falling back to hw:0,0")
+        return "hw:0,0", 0
 
     @staticmethod
     def _set_realtime_priority() -> None:

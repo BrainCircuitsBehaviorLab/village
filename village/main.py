@@ -49,10 +49,14 @@ _saved_stderr = os.dup(2)
 _devnull = os.open(os.devnull, os.O_WRONLY)
 os.dup2(_devnull, 2)
 os.close(_devnull)
-from village.devices.camera import cam_box, cam_corridor  # noqa: E402, I001
-
-os.dup2(_saved_stderr, 2)
-os.close(_saved_stderr)
+try:
+    from village.devices.camera import cam_box, cam_corridor  # noqa: E402, I001
+finally:
+    # Restored in a finally, not just after the import, so a real exception
+    # during the import (e.g. a broken module) still reaches the console
+    # instead of vanishing into /dev/null along with libcamera's noise.
+    os.dup2(_saved_stderr, 2)
+    os.close(_saved_stderr)
 from village.devices.chip import (
     motor_box1,
     motor_box2,
