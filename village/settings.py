@@ -53,9 +53,8 @@ some box components, such as LED stimuli, visible/infrared lighting, and motors.
         "FAVOURITE_TASK",
         "None",
         str,
-        """A favourite (★) task that is preselected when opening the TASKS
-        tab, so that the user can start a session immediately.
-        Set to None to disable preselection.""",
+        """A favourite (★) task that is preselected when opening the TASKS tab, so that
+the user can start a session immediately. Set to None to disable preselection.""",
     ),
 ]
 
@@ -63,6 +62,17 @@ sound_settings = [
     Setting("USE_SOUNDCARD", "OFF", Active, "Use of a soundcard."),
     Setting("SOUND_DEVICE", "default", str, "The sound device."),
     Setting("SAMPLERATE", "96000", Samplerate, "The samplerate of the sound device."),
+    Setting(
+        "SOUND_RAMP_MS",
+        "5",
+        int,
+        """Duration in milliseconds of a raised-cosine smoothing ramp used to eliminate
+harsh, audible clicks caused by abrupt volume changes. This cosine envelope ensures an
+acoustically smooth transition, and is automatically applied to the onset (start) and
+offset (end) of every sound, as well as dynamically when playback is cut short by a
+stop() command. Setting this value to zero completely disables the smoothing
+mechanism.""",
+    ),
 ]
 
 screen_settings = [
