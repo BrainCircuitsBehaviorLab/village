@@ -1,6 +1,0 @@
-default\_result\_path
-=====================
-
-.. currentmodule:: village.calibration.camera_calibration
-
-.. autofunction:: default_result_path

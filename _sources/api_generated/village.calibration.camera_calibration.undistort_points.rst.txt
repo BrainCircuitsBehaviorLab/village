@@ -1,6 +1,0 @@
-undistort\_points
-=================
-
-.. currentmodule:: village.calibration.camera_calibration
-
-.. autofunction:: undistort_points

@@ -1,6 +1,0 @@
-get\_camera
-===========
-
-.. currentmodule:: village.devices.camera
-
-.. autofunction:: get_camera
