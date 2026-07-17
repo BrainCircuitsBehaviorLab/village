@@ -19,10 +19,26 @@ from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.settings import settings
 
-# SCHED_FIFO priority for the audio thread.
-RT_PRIORITY = 50
+# SCHED_FIFO priority for the audio thread. Deliberately low: threaded IRQ
+# handlers run at ~50, so anything above that can starve interrupts (USB, timers,
+# SD card) and freeze the machine if the thread is slow to yield. Audio daemons
+# use 5-20. Higher is not faster -- it only decides who goes first.
+RT_PRIORITY = 20
 
-# Buffer target, in MILLISECONDS.
+# snd_pcm_state() -> name. Built from whatever PCM_STATE_* the module exposes, so
+# it does not depend on us guessing the constant names. Asking libasound beats
+# reading /proc/asound/.../status: no 1 kHz polling of a kernel file, and nothing
+# pokes the driver's proc handler while another thread is writing to the PCM.
+PCM_STATES = {
+    getattr(alsaaudio, _n): _n[len("PCM_STATE_") :]
+    for _n in dir(alsaaudio)
+    if _n.startswith("PCM_STATE_")
+}
+
+# Buffer target, in MILLISECONDS. Frames are meaningless across sample rates:
+# 512x4 is 21 ms at 96 kHz but 46 ms at 44.1 kHz. periodsize is derived from this
+# and the actual rate, so the behaviour is the same whatever SAMPLERATE is set.
+#
 # This single number is BOTH:
 #   - the stop() delay: audio already queued in the ring always plays
 #   - the xrun margin: how long the worker can be starved before the ring dries
@@ -139,18 +155,27 @@ class SoundDevice:
         # 0 ms disables ramping entirely.
         self.ramp_ms = int(settings.get("SOUND_RAMP_MS"))
         self._ramp_frames = int(self.ramp_ms * self.samplerate / 1000)
-        self._status_path = f"/proc/asound/card{self.card_index}/pcm0p/sub0/status"
 
         # ONE persistent worker, created here and kept alive. RT priority is set
         # once, inside it. play() only sets an Event (a futex wake, tens of us),
         # so no thread creation, no dlopen and no syscall in the play path.
         self._shutdown = False
         self._playing = False  # True while the worker is inside write()
+        self._play_deadline = 0.0  # monotonic time by which playback must be done
         self._play_event = threading.Event()
+        if not PCM_STATES:
+            log.error(
+                "pyalsaaudio exposes no PCM_STATE_* constants: the PCM state "
+                "cannot be read, so the device cannot be re-armed and every "
+                "play() will pay the ~11 ms prepare."
+            )
+
         self._warm_up()
 
         self._worker = threading.Thread(target=self._worker_loop, daemon=True)
         self._worker.start()
+        self._watchdog = threading.Thread(target=self._watchdog_loop, daemon=True)
+        self._watchdog.start()
 
     def _warm_up(self) -> None:
         """Plays one silent buffer so the DAC wakes up now, not on the first sound.
@@ -183,18 +208,13 @@ class SoundDevice:
         return int(min(max(size, 32), 4096))
 
     def _pcm_state(self) -> str:
-        """Reads the PCM state from the kernel: PREPARED / RUNNING / XRUN / SETUP.
+        """PCM state from libasound: PREPARED / RUNNING / XRUN / SETUP / ...
 
-        The kernel is the source of truth here; guessing the state from our own
-        bookkeeping is what makes this fragile. Cheap (~50 us) and only ever
-        called from dead time.
+        The kernel is still the source of truth (this is snd_pcm_state), but asked
+        through the API instead of by reading /proc.
         """
-        if not self._status_path:
-            return "?"
         try:
-            with open(self._status_path) as f:
-                line = f.readline().strip()
-            return line.replace("state: ", "") if line else "?"
+            return PCM_STATES.get(self.pcm.state(), "?")
         except Exception:
             return "?"
 
@@ -219,6 +239,14 @@ class SoundDevice:
                 pass
             except Exception:
                 return
+
+        # Never reached PREPARED. Not fatal, but every play() will now pay the
+        # ~11 ms prepare, silently, so say so: SUSPENDED (needs snd_pcm_resume,
+        # after a system suspend) and DISCONNECTED (card gone) end up here.
+        log.error(
+            f"Sound device: could not re-arm the PCM, stuck in "
+            f"'{self._pcm_state()}'; the next play() will be slow."
+        )
 
     @staticmethod
     def _resolve_device(name: Any) -> tuple[str, int]:
@@ -314,7 +342,13 @@ class SoundDevice:
             if not self._playing and self._pcm_state() == "PREPARED":
                 return
             time.sleep(0.001)
-        log.error("Sound device: timed out waiting for the PCM to be ready")
+        log.error(
+            f"Sound device: timed out waiting for the PCM to be ready "
+            f"(state='{self._pcm_state()}', playing={self._playing}). If playing "
+            f"is True the audio thread is stuck inside write(): the DAC most "
+            f"likely did not restart. Dump the threads with: "
+            f"sudo py-spy dump --pid {os.getpid()}"
+        )
 
     def _apply_ramps(self, stereo: np.ndarray) -> np.ndarray:
         """Fades a float (frames, 2) array in at the start and out at the end.
@@ -443,6 +477,34 @@ class SoundDevice:
         # previous tone). A whole buffer of zeros leaves it clean.
         self.pcm.write(self._silence)
 
+    def _watchdog_loop(self) -> None:
+        """Rescues a playback that never comes back.
+
+        pcm.write() blocks with NO timeout: if the DMA stalls, the audio thread
+        stays inside C for ever, _playing stays True and the device is dead until
+        the process restarts. Nothing in that thread can notice -- it is blocked.
+        So watch from outside and drop the PCM: a drop from another thread
+        interrupts a blocking writei (that is exactly how stop() works), the write
+        raises, and the worker re-arms and carries on. The sound is lost, but the
+        device survives, which for a 24/7 system is the whole point.
+        """
+        while not self._shutdown:
+            time.sleep(0.2)
+            deadline = self._play_deadline
+            if self._playing and deadline and time.monotonic() > deadline:
+                self._play_deadline = 0.0
+                log.error(
+                    f"Sound device: playback overran by "
+                    f"{time.monotonic() - deadline:.1f} s "
+                    f"(state='{self._pcm_state()}'): the audio thread is stuck "
+                    f"inside write(). Dropping the PCM to recover; this sound is "
+                    f"lost. PID {os.getpid()} if you want py-spy."
+                )
+                try:
+                    self.pcm.drop()
+                except Exception:
+                    pass
+
     def _worker_loop(self) -> None:
         """Persistent worker: plays on demand and re-arms the PCM in dead time.
 
@@ -461,18 +523,22 @@ class SoundDevice:
             if self._play_event.is_set():
                 self._play_event.clear()
                 sound = self._sound
-                if len(sound):
-                    try:
+                try:
+                    if len(sound):
                         self._write_sound(sound)
-                    except alsaaudio.ALSAAudioError:
-                        pass  # stop() dropped it mid-write
-                    except Exception:
-                        try:
-                            error_queue.put_nowait(("sound", traceback.format_exc()))
-                        except queue.Full:
-                            pass
-                    finally:
-                        self._playing = False
+                except alsaaudio.ALSAAudioError:
+                    pass  # stop()/watchdog dropped it mid-write
+                except Exception:
+                    try:
+                        error_queue.put_nowait(("sound", traceback.format_exc()))
+                    except queue.Full:
+                        pass
+                finally:
+                    # OUTSIDE the len() check: if this is skipped, _playing sticks
+                    # True for ever, and from then on every play() is ignored and
+                    # every load() times out. The device would be dead until restart.
+                    self._playing = False
+                    self._play_deadline = 0.0
             self._rearm()
 
     def play(self) -> None:
@@ -492,6 +558,15 @@ class SoundDevice:
                 log.info("Sound device: play() ignored, a sound is already playing")
                 return
             self._playing = True
+            # How long this sound may legitimately take: its own duration, plus
+            # the ring it has to drain, plus a second of slack. Past that, the
+            # write is not slow, it is stuck.
+            self._play_deadline = (
+                time.monotonic()
+                + len(self._sound) / self.samplerate
+                + self._drain_s
+                + 1.0
+            )
             self._stop_flag = False
             self._play_event.set()
 
@@ -514,15 +589,50 @@ class SoundDevice:
             self._stop_flag = True  # worker fades out; not instant, but clean
 
     def shutdown(self) -> None:
-        """Shuts down the worker and closes the PCM."""
+        """Shuts down the worker and closes the PCM, but never closes it in use.
+
+        Tolerates a half-built object: if __init__ raised (the PCM failed to open,
+        say), __del__ still calls this and the attributes may not exist yet.
+
+        Closing a PCM while another thread sits inside pcm.write() frees, from C,
+        a structure that thread is still using. That can leave the driver's
+        substream dangling -- bad enough that merely reading its /proc status can
+        then take the kernel down. So if the worker will not join, the handle is
+        deliberately leaked: process exit lets the kernel tear it down safely,
+        which is far cheaper than corrupting the driver.
+        """
         self._shutdown = True
+        self._stop_flag = True  # make a chunked write stop feeding
+        pcm = getattr(self, "pcm", None)
+        if pcm is None:
+            return
         try:
-            self.pcm.drop()  # unblock the worker if it is writing
+            pcm.drop()  # unblock the worker if it is writing
         except Exception:
             pass
-        self._play_event.set()  # wake it so it can see _shutdown and exit
-        if self._worker is not None:
-            self._worker.join(timeout=1.0)
+        event = getattr(self, "_play_event", None)
+        if event is not None:
+            event.set()  # wake it so it can see _shutdown and exit
+
+        if getattr(self, "_worker", None) is not None:
+            self._worker.join(timeout=2.0)
+            if self._worker.is_alive():
+                log.error(
+                    "Sound device: the audio thread did not finish; leaving the "
+                    "PCM open on purpose (closing it while in use can crash the "
+                    "driver). It is released when the process exits."
+                )
+                return
+
+        # Join the watchdog too: it only sleeps in a loop (never blocks on the
+        # PCM), so this is quick. Without it, a drop() fired from the watchdog
+        # could race with the close() below -- two threads touching the same
+        # PCM handle at once, which is the exact hazard this method exists to
+        # avoid.
+        watchdog = getattr(self, "_watchdog", None)
+        if watchdog is not None:
+            watchdog.join(timeout=0.5)
+
         try:
             self.pcm.close()
         except Exception:

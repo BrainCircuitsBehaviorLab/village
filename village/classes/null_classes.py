@@ -206,6 +206,10 @@ class NullSoundDevice:
         """
         return
 
+    def shutdown(self) -> None:
+        """No device to shut down."""
+        return
+
 
 class NullCollection:
     df = pd.DataFrame()

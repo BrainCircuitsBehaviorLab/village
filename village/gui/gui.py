@@ -6,6 +6,7 @@ from PyQt5.QtGui import QFont, QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
 from village.devices.camera import cam_box, cam_corridor
+from village.devices.sound_device import sound_device
 from village.gui.gui_window import GuiWindow
 from village.scripts.log import log
 from village.settings import settings
@@ -47,6 +48,7 @@ class Gui:
         log.end("VILLAGE")
         cam_corridor.stop_recording()
         cam_box.stop_recording()
+        sound_device.shutdown()
         self.q_app.quit()
         sys.exit()
 
@@ -62,6 +64,7 @@ class Gui:
             pass
         cam_corridor.stop_recording()
         cam_box.stop_recording()
+        sound_device.shutdown()
         settings.sync()
         self.q_app.quit()
         python = sys.executable
