@@ -1,8 +1,6 @@
 import os
 import time
 
-from village.scripts.log import log
-
 
 def find_pwmchip(target_device="1f00098000.pwm") -> str:
     """Finds the PWM chip path for a given target device.
@@ -76,8 +74,7 @@ class MotorOld:
             time.sleep(0.1)
             self.enable(False)
         else:
-            self.pin = 0
-            log.error("Error Invalid Pin")
+            raise ValueError(f"Invalid pin: {pin}. Must be one of {pins}.")
 
     def enable(self, flag) -> None:
         """Enables or disables the motor PWM.

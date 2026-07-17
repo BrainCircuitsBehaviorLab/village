@@ -22,7 +22,7 @@ from village.classes.enums import (
     SyncType,
 )
 from village.devices.camera import cam_box, cam_corridor
-from village.devices.sound_device import get_sound_devices
+from village.devices.sound_device import get_sound_devices, match_sound_device_setting
 from village.gui.layout import Layout, LineEdit, TimeEdit, ToggleButton
 from village.manager import manager
 from village.scripts import utils
@@ -909,7 +909,8 @@ class SettingsLayout(Layout):
         elif s.key == "SOUND_DEVICE":
             possible_values = get_sound_devices()
             value = self._get(s.key)
-            index = possible_values.index(value) if value in possible_values else 0
+            matched = match_sound_device_setting(value, possible_values)
+            index = possible_values.index(matched) if matched is not None else 0
             self.sound_device_combobox = self.create_and_add_combo_box(
                 s.key,
                 row,

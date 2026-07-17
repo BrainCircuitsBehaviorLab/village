@@ -614,12 +614,14 @@ class Layout(QGridLayout):
         if btn_text == "STOP TASK":
             if manager.state == State.RUN_MANUAL:
                 log.info("Task manually stopped.", subject=manager.subject.name)
+                manager.task.stop_button_pressed = True
                 manager.state = State.SAVE_MANUAL
             else:
                 log.info(
                     "Task manually stopped. Disconnecting RFID Reader.",
                     subject=manager.subject.name,
                 )
+                manager.task.stop_button_pressed = True
                 manager.state = State.OPEN_DOOR2_STOP
                 log.info("Going to OPEN_DOOR2_STOP State")
         elif btn_text == "STOP SYNC":

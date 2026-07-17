@@ -122,9 +122,12 @@ class Settings:
         self.hidden_settings = hidden_settings
         self.saved_settings = QSettings("village", "village")
 
+        # main_settings is excluded on purpose: SYSTEM_NAME, USE_CORRIDOR and
+        # USE_BOX_BOARD describe this specific machine's identity and physical
+        # hardware, not trainable defaults, so a factory reset must not touch
+        # them (same reasoning as directory_settings below).
         self.restorable_settings = (
-            main_settings
-            + sound_settings
+            sound_settings
             + screen_settings
             + touchscreen_settings
             + sync_settings
@@ -143,7 +146,8 @@ class Settings:
         )
 
         self.all_settings = (
-            self.restorable_settings
+            main_settings
+            + self.restorable_settings
             + telegram_settings
             + directory_settings
             + camera_settings

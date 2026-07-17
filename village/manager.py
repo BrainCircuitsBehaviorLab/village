@@ -385,7 +385,7 @@ class Manager:
                 self.task.cam_box.start_recording(
                     self.task.video_path, self.task.video_data_path
                 )
-                self.task.maximum_number_of_trials = 100000000
+                self.task.run_mode = "Auto"
                 self.task.calibrations = self.calibrations
                 self.task.controller_type = self.controller_type
                 self.task.functions = self.functions

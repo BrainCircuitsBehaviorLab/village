@@ -77,6 +77,46 @@ def get_sound_devices() -> list[str]:
     return devices
 
 
+def match_sound_device_setting(name: Any, possible_values: list[str]) -> str | None:
+    """Matches a saved SOUND_DEVICE value to one of possible_values.
+
+    SOUND_DEVICE may have been saved in a format older than what
+    get_sound_devices() returns today: a bare card ID, an explicit 'hw:N,D',
+    or the current 'ID (longname)'. Used by the settings UI so a value saved
+    under an old format still selects the right entry in the dropdown instead
+    of silently falling back to whichever one happens to be first.
+
+    Returns:
+        str | None: The matching entry from possible_values, or None if
+        nothing matches.
+    """
+    text = str(name or "").strip()
+    if not text:
+        return None
+    token = re.sub(r"\s*\([^)]*\)\s*$", "", text).strip()
+
+    m = re.match(r"^(?:plug)?hw:(\d+)(?:,\d+)?$", token)
+    if m:
+        card = int(m.group(1))
+        try:
+            indexes = alsaaudio.card_indexes()
+            if card in indexes:
+                pos = indexes.index(card)
+                if pos < len(possible_values):
+                    return possible_values[pos]
+        except Exception:
+            pass
+        return None
+
+    for entry in possible_values:
+        if re.sub(r"\s*\([^)]*\)\s*$", "", entry).strip() == token:
+            return entry
+    for entry in possible_values:
+        if re.sub(r"\s*\([^)]*\)\s*$", "", entry).strip().lower() == token.lower():
+            return entry
+    return None
+
+
 class SoundDevice:
     """Handles audio playback using ALSA directly (pyalsaaudio).
 

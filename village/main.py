@@ -502,12 +502,7 @@ def system_run() -> None:
 
             case State.RUN_MANUAL:
                 # Task running manually
-                if (
-                    manager.task.current_trial > manager.task.maximum_number_of_trials
-                    or manager.task.chrono.get_seconds()
-                    >= manager.task.settings.maximum_duration
-                    or manager.task.force_stop
-                ):
+                if manager.task.should_stop:
                     manager.state = State.SAVE_MANUAL
 
             case State.SAVE_MANUAL:

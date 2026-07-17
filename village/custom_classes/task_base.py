@@ -234,7 +234,26 @@ class TaskBase:
                 response_time = t_end - t_start
 
     self.force_stop: bool
-        If made true, the task will stop.
+        Set this to True from inside your own task logic (e.g. in after_trial,
+        once some in-task condition is met) to make the task stop.
+
+    self.stop_button_pressed: bool
+        True once something external (e.g. the STOP TASK button) has asked the
+        task to stop. Unlike force_stop, you should not set this yourself --
+        just read it if you want to react to it.
+
+    self.should_stop: bool (read-only)
+        True once ANY stopping condition is met: the trial/time limit (in
+        Manual mode), force_stop, or stop_button_pressed. If your task does not use
+        Bpod and create_trial contains its own waiting loop, check this
+        property on every iteration so the loop actually exits when the task
+        is asked to stop, instead of running forever:
+
+        Example::
+
+            def create_trial(self):
+                while not self.should_stop:
+                    ...  # wait for your own condition
 
     self.chrono: Chrono
         Using self.chrono.get_seconds() you can get the time in seconds since the
@@ -278,6 +297,8 @@ class TaskBase:
         self.session_df: pd.DataFrame = pd.DataFrame()
         self.subject_df: pd.DataFrame = pd.DataFrame()
         self.force_stop: bool = False
+        self.stop_button_pressed: bool = False
+        self.run_mode: str = "Manual"
         self.maximum_number_of_trials: int = 100000000
         self.chrono = time_utils.Chrono()
 
@@ -397,6 +418,30 @@ class TaskBase:
     # ----------------------------------------------------------------------------------
     # Helper or private methods - you don't need to call or override them
     # ----------------------------------------------------------------------------------
+    @property
+    def should_stop(self) -> bool:
+        """True once any stopping condition is met.
+
+        Trial/time limits and force_stop are only checked BETWEEN trials, by
+        run()'s own while loop -- they cannot interrupt a create_trial() that
+        is currently blocked in its own waiting loop. Tasks that do not use
+        Bpod and wait on their own condition inside create_trial should poll
+        this property instead, so they actually exit when asked to.
+
+        The trial limit only applies in Manual mode: Auto mode runs until the
+        subject leaves the corridor, not for a fixed number of trials.
+        """
+        trial_limit_reached = (
+            self.run_mode == "Manual"
+            and self.current_trial > self.maximum_number_of_trials
+        )
+        return (
+            trial_limit_reached
+            or self.chrono.get_seconds() >= self.settings.maximum_duration
+            or self.force_stop
+            or self.stop_button_pressed
+        )
+
     def run_in_thread(self, daemon: bool = True) -> None:
         """Runs the task in a separate background thread.
 
@@ -408,7 +453,7 @@ class TaskBase:
         def test_run():
             self.create_paths()
             self.start()
-            while self.current_trial <= self.maximum_number_of_trials:
+            while not self.should_stop:
                 self.do_trial()
             self.disconnect_and_save("Manual")
 
@@ -420,11 +465,7 @@ class TaskBase:
         """Runs the task in the main thread until completion or forced stop."""
         self.chrono.reset()
         self.start()
-        while (
-            self.current_trial <= self.maximum_number_of_trials
-            and self.chrono.get_seconds() < self.settings.maximum_duration
-            and not self.force_stop
-        ):
+        while not self.should_stop:
             self.do_trial()
 
     def do_trial(self) -> None:
