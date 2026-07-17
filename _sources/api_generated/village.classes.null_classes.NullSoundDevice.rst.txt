@@ -20,6 +20,7 @@ NullSoundDevice
       ~NullSoundDevice.load
       ~NullSoundDevice.load_wav
       ~NullSoundDevice.play
+      ~NullSoundDevice.shutdown
       ~NullSoundDevice.stop
    
    

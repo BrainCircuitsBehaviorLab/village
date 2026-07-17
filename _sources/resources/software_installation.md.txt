@@ -55,10 +55,10 @@ sudo apt install -y python3-opencv
 sudo apt install -y opencv-data
 ```
 
-2. Install sound library.
+2. Install sound libraries.
 
 ```
-sudo apt-get install libportaudio2
+sudo apt install libasound2-dev
 ```
 
 3. Install PyQT5 multimedia
@@ -109,7 +109,6 @@ source ~/.env/bin/activate
 ```
 pip install python-dateutil
 pip install setuptools_scm
-pip install sounddevice
 pip install python-telegram-bot
 pip install scipy
 pip install gpiod
@@ -123,6 +122,7 @@ pip install pi5neo
 pip install pyarrow
 pip install ahrs
 pip install bleak
+pip install pyalsaaudio
 ```
 
 ### Screen Settings
@@ -151,6 +151,37 @@ Explanation of values: (=1 makes the system operate as if a screen is connected 
  `Screen Configuration`.
 
 6. Reboot the system to use X11.
+
+
+### Disabling Auto Mute
+
+Some sound cards automatically mute their output after detecting silence or an idle period, which can cut off playback unexpectedly. Disable this behavior for all sound cards on every boot with a crontab entry.
+
+1. Edit root's crontab:
+
+```
+sudo crontab -e
+```
+
+2. Add the following line. It waits for the sound cards to be ready, disables `Auto Mute` and `Auto Mute Mono` on every card found in `/proc/asound/cards`, then persists the change:
+
+```
+@reboot sleep 10; for c in $(awk '/^ *[0-9]+ \[/ {print $1}' /proc/asound/cards); do /usr/bin/amixer -q -c "$c" sset 'Auto Mute' off 2>/dev/null; /usr/bin/amixer -q -c "$c" sset 'Auto Mute Mono' off 2>/dev/null; done; /usr/sbin/alsactl store
+```
+
+3. Reboot for the change to take effect.
+
+4. Find the index of your sound card:
+
+```
+cat /proc/asound/cards
+```
+
+5. Verify that Auto Mute is disabled for your card, replacing `1` with your card's index:
+
+```
+amixer -c 1 sget 'Auto Mute'
+```
 
 
 ### Changing Preferences

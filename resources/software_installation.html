@@ -371,6 +371,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#installing-needed-libraries">Installing Needed Libraries</a></li>
 <li><a class="reference internal" href="#creating-a-python-environment-and-installing-pip-libraries">Creating a Python Environment and Installing pip Libraries</a></li>
 <li><a class="reference internal" href="#screen-settings">Screen Settings</a></li>
+<li><a class="reference internal" href="#disabling-auto-mute">Disabling Auto Mute</a></li>
 <li><a class="reference internal" href="#changing-preferences">Changing Preferences</a></li>
 <li><a class="reference internal" href="#accessing-uart-pin-for-communication">Accessing UART Pin for Communication</a></li>
 <li><a class="reference internal" href="#udev-rules-for-consistent-usb-device-naming">Udev Rules for Consistent USB Device Naming</a></li>
@@ -515,9 +516,9 @@ data-aria-dark="Switch to auto color mode">
 </span></pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Install sound library.</p></li>
+<li><p>Install sound libraries.</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libportaudio2</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">libasound2</span><span class="o">-</span><span class="n">dev</span>
 </span></pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -567,20 +568,20 @@ Python environment:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">pip</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">dateutil</span>
 </span><span data-line="2"><span class="n">pip</span> <span class="n">install</span> <span class="n">setuptools_scm</span>
-</span><span data-line="3"><span class="n">pip</span> <span class="n">install</span> <span class="n">sounddevice</span>
-</span><span data-line="4"><span class="n">pip</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">telegram</span><span class="o">-</span><span class="n">bot</span>
-</span><span data-line="5"><span class="n">pip</span> <span class="n">install</span> <span class="n">scipy</span>
-</span><span data-line="6"><span class="n">pip</span> <span class="n">install</span> <span class="n">gpiod</span>
-</span><span data-line="7"><span class="n">pip</span> <span class="n">install</span> <span class="n">fire</span>
-</span><span data-line="8"><span class="n">pip</span> <span class="n">install</span> <span class="n">pyserial</span>
-</span><span data-line="9"><span class="n">pip</span> <span class="n">install</span> <span class="n">pandas</span>
-</span><span data-line="10"><span class="n">pip</span> <span class="n">install</span> <span class="n">seaborn</span>
-</span><span data-line="11"><span class="n">pip</span> <span class="n">install</span> <span class="n">calplot</span>
-</span><span data-line="12"><span class="n">pip</span> <span class="n">install</span> <span class="n">PCA9685</span><span class="o">-</span><span class="n">smbus2</span>
-</span><span data-line="13"><span class="n">pip</span> <span class="n">install</span> <span class="n">pi5neo</span>
-</span><span data-line="14"><span class="n">pip</span> <span class="n">install</span> <span class="n">pyarrow</span>
-</span><span data-line="15"><span class="n">pip</span> <span class="n">install</span> <span class="n">ahrs</span>
-</span><span data-line="16"><span class="n">pip</span> <span class="n">install</span> <span class="n">bleak</span>
+</span><span data-line="3"><span class="n">pip</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">telegram</span><span class="o">-</span><span class="n">bot</span>
+</span><span data-line="4"><span class="n">pip</span> <span class="n">install</span> <span class="n">scipy</span>
+</span><span data-line="5"><span class="n">pip</span> <span class="n">install</span> <span class="n">gpiod</span>
+</span><span data-line="6"><span class="n">pip</span> <span class="n">install</span> <span class="n">fire</span>
+</span><span data-line="7"><span class="n">pip</span> <span class="n">install</span> <span class="n">pyserial</span>
+</span><span data-line="8"><span class="n">pip</span> <span class="n">install</span> <span class="n">pandas</span>
+</span><span data-line="9"><span class="n">pip</span> <span class="n">install</span> <span class="n">seaborn</span>
+</span><span data-line="10"><span class="n">pip</span> <span class="n">install</span> <span class="n">calplot</span>
+</span><span data-line="11"><span class="n">pip</span> <span class="n">install</span> <span class="n">PCA9685</span><span class="o">-</span><span class="n">smbus2</span>
+</span><span data-line="12"><span class="n">pip</span> <span class="n">install</span> <span class="n">pi5neo</span>
+</span><span data-line="13"><span class="n">pip</span> <span class="n">install</span> <span class="n">pyarrow</span>
+</span><span data-line="14"><span class="n">pip</span> <span class="n">install</span> <span class="n">ahrs</span>
+</span><span data-line="15"><span class="n">pip</span> <span class="n">install</span> <span class="n">bleak</span>
+</span><span data-line="16"><span class="n">pip</span> <span class="n">install</span> <span class="n">pyalsaaudio</span>
 </span></pre></div>
 </div>
 </section>
@@ -611,6 +612,35 @@ Python environment:</p></li>
 <code class="docutils literal notranslate"><span class="pre">Screen</span> <span class="pre">Configuration</span></code>.</p></li>
 <li><p>Reboot the system to use X11.</p></li>
 </ol>
+</section>
+<section id="disabling-auto-mute">
+<h2>Disabling Auto Mute</h2>
+<p>Some sound cards automatically mute their output after detecting silence or an idle period, which can cut off playback unexpectedly. Disable this behavior for all sound cards on every boot with a crontab entry.</p>
+<ol class="arabic simple">
+<li><p>Edit root’s crontab:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">crontab</span> <span class="o">-</span><span class="n">e</span>
+</span></pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Add the following line. It waits for the sound cards to be ready, disables <code class="docutils literal notranslate"><span class="pre">Auto</span> <span class="pre">Mute</span></code> and <code class="docutils literal notranslate"><span class="pre">Auto</span> <span class="pre">Mute</span> <span class="pre">Mono</span></code> on every card found in <code class="docutils literal notranslate"><span class="pre">/proc/asound/cards</span></code>, then persists the change:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">@reboot sleep 10; for c in $(awk &#39;/^ *[0-9]+ \[/ {print $1}&#39; /proc/asound/cards); do /usr/bin/amixer -q -c &quot;$c&quot; sset &#39;Auto Mute&#39; off 2&gt;/dev/null; /usr/bin/amixer -q -c &quot;$c&quot; sset &#39;Auto Mute Mono&#39; off 2&gt;/dev/null; done; /usr/sbin/alsactl store
+</span></pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Reboot for the change to take effect.</p></li>
+<li><p>Find the index of your sound card:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">asound</span><span class="o">/</span><span class="n">cards</span>
+</span></pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Verify that Auto Mute is disabled for your card, replacing <code class="docutils literal notranslate"><span class="pre">1</span></code> with your card’s index:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">amixer</span> <span class="o">-</span><span class="n">c</span> <span class="mi">1</span> <span class="n">sget</span> <span class="s1">&#39;Auto Mute&#39;</span>
+</span></pre></div>
+</div>
 </section>
 <section id="changing-preferences">
 <h2>Changing Preferences</h2>
@@ -853,7 +883,7 @@ which should include <code class="docutils literal notranslate"><span class="pre
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2623458b"></script>
+      <script src="../_static/documentation_options.js?v=08dfe057"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

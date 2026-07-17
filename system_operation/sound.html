@@ -443,10 +443,10 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="sound-integration">
 <h1>Sound Integration</h1>
-<p>The Training Village uses the <strong>HiFiBerry DAC+ Pro</strong> HAT for audio output. Connect it
+<p>The Training Village uses the <strong>Raspberry DAC Pro</strong> HAT for audio output. Connect it
 directly on top of the Raspberry Pi or on top of the Main HAT if one is installed. Audio
-playback from within tasks is handled by the Python <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> library, which accesses
-the hardware through PortAudio → ALSA.</p>
+playback from within tasks is handled by the Python <code class="docutils literal notranslate"><span class="pre">pyalsaaudio</span></code> library, which talks to
+ALSA directly, without going through PortAudio.</p>
 <section id="configuration">
 <h2>Configuration</h2>
 <ol class="arabic simple">
@@ -457,7 +457,7 @@ to <strong>Stereo Output</strong>.</p></li>
 <li><p>Play any audio to verify the DAC is working correctly.</p></li>
 <li><p>Once confirmed, return to <strong>Device Profiles</strong>, select <strong>RPi DAC Pro</strong> again, and set
 the profile to <strong>Off</strong>. The operating system will no longer use the device, leaving it
-free for <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> to access directly.</p></li>
+free for <code class="docutils literal notranslate"><span class="pre">pyalsaaudio</span></code> to access directly.</p></li>
 </ol>
 <div class="warning admonition">
 <p class="admonition-title">Why the DAC must be released from the system before use</p>
@@ -483,24 +483,34 @@ restarts.</p>
 <code class="docutils literal notranslate"><span class="pre">/village_projects/&lt;project_name&gt;/media</span></code>. This path is configured in
 <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">DIRECTORY</span> <span class="pre">SETTINGS</span></code> as <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>. Place WAV files there and
 reference them by filename only (no path needed).</p>
-<p>The playback cycle always follows the same order:</p>
+<p>Every sound must be loaded before it is played — never call <code class="docutils literal notranslate"><span class="pre">play</span></code> twice in a
+row without a <code class="docutils literal notranslate"><span class="pre">load</span></code> in between. <code class="docutils literal notranslate"><span class="pre">stop</span></code> is optional, only needed to cut a sound
+short before it finishes on its own.</p>
 <ol class="arabic simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">load</span></code></strong> — decodes the audio and stages it in the buffer. This can be a slow operation (hundreds of ms depending on audio length), so it is best called during the inter-trial interval.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">play</span></code></strong> — starts playback of whatever is currently in the buffer. This is much faster — measured latencies are below 10 ms.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">stop</span></code></strong> — interrupts playback mid-sound.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">play</span></code></strong> — starts playback of whatever is currently in the buffer. This is much faster — measured latencies are below 5 ms. Calling <code class="docutils literal notranslate"><span class="pre">play</span></code> again while a sound is still playing is ignored, so it must always be preceded by its own <code class="docutils literal notranslate"><span class="pre">load</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">stop</span></code></strong> <em>(optional)</em> — interrupts playback mid-sound.</p></li>
 </ol>
 <p>After calling <code class="docutils literal notranslate"><span class="pre">stop</span></code>, the buffer is no longer valid and a new <code class="docutils literal notranslate"><span class="pre">load</span></code> is required
 before the next <code class="docutils literal notranslate"><span class="pre">play</span></code>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Fade-in / fade-out ramp</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">SOUND_RAMP_MS</span></code> setting (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>) is set to a value other
+than zero, a raised-cosine ramp of that duration is applied automatically to every sound:
+at its start, at its end, and whenever <code class="docutils literal notranslate"><span class="pre">stop</span></code> cuts playback short. This smooths out the
+abrupt amplitude changes that would otherwise cause audible clicks. Setting it to <code class="docutils literal notranslate"><span class="pre">0</span></code>
+disables the ramp entirely.</p>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Option 1 — play a WAV file from the media directory</span>
-</span><span data-line="4"><span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">sound_device</span><span class="o">.</span><span class="n">get_sound_from_wav</span><span class="p">(</span><span class="s2">&quot;tone.wav&quot;</span><span class="p">)</span>
-</span><span data-line="5"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
-</span><span data-line="6"><span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
-</span><span data-line="7">
-</span><span data-line="8"><span class="c1"># To play the same sound again, load must be called again</span>
-</span><span data-line="9"><span class="n">sound_device</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</span><span data-line="10"><span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">sound_device</span><span class="o">.</span><span class="n">get_sound_from_wav</span><span class="p">(</span><span class="s2">&quot;tone.wav&quot;</span><span class="p">)</span>
+</span><span data-line="4"><span class="n">gain</span> <span class="o">=</span> <span class="mf">0.5</span>   <span class="c1"># volume, from 0.0 (silent) to 1.0 (full scale)</span>
+</span><span data-line="5"><span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">sound_device</span><span class="o">.</span><span class="n">get_sound_from_wav</span><span class="p">(</span><span class="s2">&quot;tone.wav&quot;</span><span class="p">,</span> <span class="n">gain</span><span class="p">)</span>
+</span><span data-line="6"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+</span><span data-line="7"><span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="c1"># To play the same sound again, load must be called again</span>
+</span><span data-line="10"><span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">sound_device</span><span class="o">.</span><span class="n">get_sound_from_wav</span><span class="p">(</span><span class="s2">&quot;tone.wav&quot;</span><span class="p">,</span> <span class="n">gain</span><span class="p">)</span>
 </span><span data-line="11"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
 </span><span data-line="12"><span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 </span><span data-line="13">
@@ -510,15 +520,28 @@ before the next <code class="docutils literal notranslate"><span class="pre">pla
 </span><span data-line="17"><span class="n">samplerate</span> <span class="o">=</span> <span class="mi">192000</span>          <span class="c1"># must match SAMPLERATE setting</span>
 </span><span data-line="18"><span class="n">duration</span>   <span class="o">=</span> <span class="mf">0.5</span>             <span class="c1"># seconds</span>
 </span><span data-line="19"><span class="n">frequency</span>  <span class="o">=</span> <span class="mi">4000</span>            <span class="c1"># Hz</span>
-</span><span data-line="20"><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">*</span> <span class="n">duration</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span data-line="21"><span class="n">tone</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">frequency</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="22">
-</span><span data-line="23"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tone</span><span class="p">,</span> <span class="n">tone</span><span class="p">)</span>   <span class="c1"># identical left and right channels → mono</span>
-</span><span data-line="24"><span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</span><span data-line="20">
+</span><span data-line="21"><span class="c1"># volume calibrated so the tone measures 70 dB from speaker 1</span>
+</span><span data-line="22"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="23">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">&quot;tone&quot;</span>
+</span><span data-line="24"><span class="p">)</span>
+</span><span data-line="25">
+</span><span data-line="26"><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">*</span> <span class="n">duration</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span data-line="27"><span class="n">tone</span> <span class="o">=</span> <span class="p">(</span><span class="n">gain</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">frequency</span> <span class="o">*</span> <span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="28">
+</span><span data-line="29"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tone</span><span class="p">,</span> <span class="n">tone</span><span class="p">)</span>   <span class="c1"># identical left and right channels → mono</span>
+</span><span data-line="30"><span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">get_sound_from_wav</span></code> validates that the WAV sample rate matches <code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code> and
-returns both channels as <code class="docutils literal notranslate"><span class="pre">float32</span></code> arrays in the range <code class="docutils literal notranslate"><span class="pre">[-1.0,</span> <span class="pre">1.0]</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">get_sound_from_wav</span></code> resamples the audio if the WAV’s sample rate does not match
+<code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code>, and returns both channels as <code class="docutils literal notranslate"><span class="pre">float32</span></code> arrays in the range <code class="docutils literal notranslate"><span class="pre">[-1.0,</span> <span class="pre">1.0]</span></code>,
+scaled by <code class="docutils literal notranslate"><span class="pre">gain</span></code>.</p>
+<div class="warning admonition">
+<p class="admonition-title">Prefer a matching sample rate</p>
+<p>Resampling is a fallback, not something to rely on. It costs extra time on every
+<code class="docutils literal notranslate"><span class="pre">get_sound_from_wav</span></code> call and can degrade audio quality. Whenever possible, save your
+WAV files at the same sample rate as the <code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code> setting so no resampling is needed.</p>
+</div>
 </section>
 <section id="method-reference">
 <h2>Method reference</h2>
@@ -531,9 +554,9 @@ returns both channels as <code class="docutils literal notranslate"><span class=
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">get_sound_from_wav(file)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename</p></td>
-<td><p>Reads a WAV from <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>, returns <code class="docutils literal notranslate"><span class="pre">(left,</span> <span class="pre">right)</span></code> arrays.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">get_sound_from_wav(file,</span> <span class="pre">gain)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename, <code class="docutils literal notranslate"><span class="pre">gain</span></code>: volume, <code class="docutils literal notranslate"><span class="pre">0.0</span></code>–<code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
+<td><p>Reads a WAV from <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>, applies <code class="docutils literal notranslate"><span class="pre">gain</span></code>, returns <code class="docutils literal notranslate"><span class="pre">(left,</span> <span class="pre">right)</span></code> arrays.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">load(left,</span> <span class="pre">right)</span></code></p></td>
 <td><p>numpy arrays, equal length</p></td>
@@ -590,7 +613,7 @@ returns both channels as <code class="docutils literal notranslate"><span class=
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2623458b"></script>
+      <script src="../_static/documentation_options.js?v=08dfe057"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
