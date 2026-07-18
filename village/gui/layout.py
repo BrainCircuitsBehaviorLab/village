@@ -286,7 +286,7 @@ class Layout(QGridLayout):
     def create_common_elements(self) -> None:
         """Creates the navigation menu buttons common to all main layouts."""
         status_container = QWidget()
-        status_container.setFixedSize(200 * self.column_width, 2 * self.row_height)
+        status_container.setFixedSize(152 * self.column_width, 3 * self.row_height)
         status_container.setStyleSheet("background-color: powderblue;")
         status_hbox = QHBoxLayout(status_container)
         status_hbox.setContentsMargins(6, 0, 6, 0)
@@ -297,7 +297,7 @@ class Layout(QGridLayout):
             status_hbox.addWidget(sub_label)
             if i < 5:
                 status_hbox.addStretch(1)
-        self.addWidget(status_container, 0, 0, 2, 152)
+        self.addWidget(status_container, 0, 0, 3, 152)
 
         _nav_items = [
             ("MAIN", "Go to the main menu"),
@@ -339,13 +339,6 @@ class Layout(QGridLayout):
         self.data_button = NavTabProxy(self.nav_tab_bar, 4)
         self.calibration_button = NavTabProxy(self.nav_tab_bar, 5)
         self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
-
-        self.state_label = self.create_and_add_label(
-            "", 2, 110, 42, 3, "black", right_aligment=True
-        )
-        self.state_label.setStyleSheet(
-            self.state_label.styleSheet() + " QLabel { padding-right: 8px; }"
-        )
 
         self.stop_button = self.create_and_add_button(
             "",
@@ -400,7 +393,6 @@ class Layout(QGridLayout):
 
         state = manager.state
         if state == State.RUN_MANUAL:
-            self.state_label.setText("Manual task running")
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop the running task")
             self.stop_button.setEnabled(True)
@@ -408,7 +400,6 @@ class Layout(QGridLayout):
             self.online_button.setEnabled(True)
             self.online_button.setStyleSheet(_gray)
         elif state.task_is_running():
-            self.state_label.setText("Auto task running")
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop the running task")
             self.stop_button.setEnabled(True)
@@ -416,7 +407,6 @@ class Layout(QGridLayout):
             self.online_button.setEnabled(True)
             self.online_button.setStyleSheet(_gray)
         elif state == State.WAIT_SUBJECT_EXIT:
-            self.state_label.setText("Task finished — subject still inside")
             self.stop_button.setText("CHANGE STATE")
             self.stop_button.setToolTip("Open options to change the system state")
             self.stop_button.setEnabled(True)
@@ -424,7 +414,6 @@ class Layout(QGridLayout):
             self.online_button.setEnabled(False)
             self.online_button.setStyleSheet(_off)
         elif state.can_stop_syncing():
-            self.state_label.setText("Syncing data")
             self.stop_button.setText("STOP SYNC")
             self.stop_button.setToolTip(
                 "Stop synchronization. It will resume automatically"
@@ -435,7 +424,6 @@ class Layout(QGridLayout):
             self.online_button.setEnabled(False)
             self.online_button.setStyleSheet(_off)
         elif state == State.WAIT:
-            self.state_label.setText("In WAIT state")
             self.stop_button.setText("CHANGE STATE")
             self.stop_button.setToolTip("Open options to change the system state")
             self.stop_button.setEnabled(True)
@@ -443,7 +431,6 @@ class Layout(QGridLayout):
             self.online_button.setEnabled(False)
             self.online_button.setStyleSheet(_off)
         else:
-            self.state_label.setText("")
             self.stop_button.setText("CHANGE STATE")
             self.stop_button.setEnabled(False)
             self.stop_button.setStyleSheet(_off)
@@ -646,11 +633,10 @@ class Layout(QGridLayout):
 
     def _change_state_dialog(self) -> None:
         """Opens a dialog with state-correction options based on the current state."""
-        label = self.state_label.text()
         msg = QMessageBox(self.window)
         msg.setWindowTitle("Change State")
 
-        if label == "Task finished — subject still inside":
+        if manager.state == State.WAIT_SUBJECT_EXIT:
             msg.setText("Select an action:")
             go_wait = msg.addButton(
                 "All subjects are back home, go to WAIT state", QMessageBox.AcceptRole
@@ -663,7 +649,7 @@ class Layout(QGridLayout):
                 log.info("Going to WAIT State")
                 self.update_gui()
 
-        elif label == "In WAIT state":
+        elif manager.state == State.WAIT:
             msg.setText("Select an action:")
             force_sync = msg.addButton("Force data sync", QMessageBox.AcceptRole)
             subject_inside = msg.addButton(

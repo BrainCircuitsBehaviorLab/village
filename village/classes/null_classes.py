@@ -363,6 +363,7 @@ class NullCamera:
 
 
 class NullScreen(QWidget):
+    error: str = ""
     background_color = None
     width_px: int = 0
     height_px: int = 0

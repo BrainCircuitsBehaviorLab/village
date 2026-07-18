@@ -140,8 +140,7 @@ class Manager:
         self.create_collections()
         log.event = self.events
         log.temp = self.temperatures
-        log.info("-")
-        log.info("Starting VILLAGE...")
+        log.start("VILLAGE")
         self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
         self.use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
         self.use_of_box_chip: bool = settings.get("USE_BOX_BOARD") == Active.ON

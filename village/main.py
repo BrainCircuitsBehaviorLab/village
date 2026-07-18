@@ -65,6 +65,7 @@ from village.devices.chip import (
 )
 from village.devices.rfid import rfid
 from village.devices.scale import scale
+from village.devices.screen import screen
 from village.devices.sound_device import sound_device
 from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
@@ -109,6 +110,7 @@ device_errors = [
     ("touch", touch),
     ("sound_device", sound_device),
     ("telegram_bot", telegram_bot),
+    ("screen", screen),
 ]
 failed_devices = []
 for device_name, device in device_errors:
@@ -118,7 +120,6 @@ for device_name, device in device_errors:
 if failed_devices:
     manager.errors += "Error connecting to: " + ", ".join(failed_devices)
 manager.touch = touch
-log.start("VILLAGE")
 
 
 # create a secondary thread

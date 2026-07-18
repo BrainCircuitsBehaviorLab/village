@@ -164,7 +164,7 @@ class TelegramBot:
             asyncio.run(self.botloop_starttask())
         except Exception:
             self.error_running = True
-            log.error("Telegram error", exception=traceback.format_exc())
+            self.error = log.clean_text(traceback.format_exc(), "Telegram error")
 
 
 def get_telegram_bot() -> TelegramBot | NullTelegramBot:
@@ -190,7 +190,7 @@ def get_telegram_bot() -> TelegramBot | NullTelegramBot:
             return telegram_bot
         elif telegram_bot.error_running:
             null_telegram_bot = NullTelegramBot()
-            null_telegram_bot.error = "Could not initialize telegram bot"
+            null_telegram_bot.error = telegram_bot.error
             return null_telegram_bot
         else:
             null_telegram_bot = NullTelegramBot()

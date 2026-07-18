@@ -24,6 +24,7 @@ from PyQt5.QtCore import (
 from PyQt5.QtGui import QColor, QGuiApplication, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QOpenGLWidget
 
+from village.classes.enums import ScreenActive
 from village.classes.null_classes import NullScreen
 from village.devices.sound_device import sound_device
 from village.scripts.error_queue import error_queue
@@ -183,6 +184,7 @@ class Screen(QOpenGLWidget):
 
         self.width_px: int = geometry.width()
         self.height_px: int = geometry.height()
+        self.error: str = ""
 
         self.active: bool = False
         self._draw_fn: Optional[Callable] = None
@@ -415,9 +417,6 @@ class Screen(QOpenGLWidget):
 
 
 def get_screen() -> "Screen | NullScreen":
-    from village.classes.enums import ScreenActive
-    from village.scripts.log import log
-
     try:
         secondary_screen = QGuiApplication.screens()[1]
         geometry = secondary_screen.geometry()
@@ -429,10 +428,11 @@ def get_screen() -> "Screen | NullScreen":
         return NullScreen()
 
     if geometry is None:
-        log.error(
+        null_screen = NullScreen()
+        null_screen.error = (
             "Secondary screen not detected. Behavior window will not be displayed."
         )
-        return NullScreen()
+        return null_screen
 
     return Screen(geometry)
 
