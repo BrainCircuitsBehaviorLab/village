@@ -339,12 +339,12 @@ class MonitorLayout(Layout):
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = CorridorLayout(self.window, 23, 36)
+        self.page1Layout = CorridorLayout(self.window, 22, 36)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = BoxLayout(self.window, 23, 36)
+        self.page2Layout = BoxLayout(self.window, 22, 36)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
@@ -370,6 +370,11 @@ class MonitorLayout(Layout):
 
         _tab_style = (
             "QTabWidget::tab-bar { alignment: center; }"
+            # Native pane border is content-dependent (only shows where a
+            # page's own layout doesn't fill the pane exactly) -- hide it and
+            # draw a real, always-visible line instead, on the widget itself.
+            "QTabWidget::pane { border: none; }"
+            "QTabWidget { border-bottom: 2px solid #999999; }"
             "QTabBar::tab { background: #d0d0d0;"
             " padding: 6px 4px;"
             " border: 1px solid #aaaaaa; border-bottom: none;"
@@ -404,7 +409,7 @@ class MonitorLayout(Layout):
             self._actions_tab_map.append("VIRTUAL_MOUSE")
 
         self.actions_tab_widget.currentChanged.connect(self.on_actions_tab_changed)
-        self.addWidget(self.actions_tab_widget, 5, 80, 27, 40)
+        self.addWidget(self.actions_tab_widget, 7, 80, 24, 40)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")

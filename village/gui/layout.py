@@ -287,11 +287,16 @@ class Layout(QGridLayout):
 
     def create_common_elements(self) -> None:
         """Creates the navigation menu buttons common to all main layouts."""
+        top_background = QWidget()
+        top_background.setFixedSize(200 * self.column_width, 5 * self.row_height)
+        top_background.setStyleSheet("background-color: #e0e0e0;")
+        self.addWidget(top_background, 0, 0, 5, 200)
+
         status_container = QWidget()
-        status_container.setFixedSize(152 * self.column_width, 2 * self.row_height)
+        status_container.setFixedSize(155 * self.column_width, 3 * self.row_height)
         status_container.setStyleSheet("background-color: powderblue;")
         status_hbox = QHBoxLayout(status_container)
-        status_hbox.setContentsMargins(6, 0, 6, 0)
+        status_hbox.setContentsMargins(10, 0, 10, 0)
         self.status_sub_labels: list[Label] = []
         for i in range(6):
             sub_label = Label("", "black", False, True, "", "")
@@ -301,7 +306,7 @@ class Layout(QGridLayout):
             status_hbox.addWidget(sub_label)
             if i < 5:
                 status_hbox.addStretch(1)
-        self.addWidget(status_container, 0, 0, 2, 152)
+        self.addWidget(status_container, 0, 0, 3, 152)
 
         _nav_items = [
             ("MAIN", "Go to the main menu"),
@@ -319,7 +324,7 @@ class Layout(QGridLayout):
         self.nav_tab_bar.setExpanding(False)
         self.nav_tab_bar.setStyleSheet(
             "QTabBar::tab { background: lightgray;"
-            " padding: 6px 30px;"
+            " padding: 6px 25px;"
             " border: 1px solid #aaaaaa; border-bottom: none;"
             " border-radius: 4px 4px 0 0; margin-right: 2px; }"
             "QTabBar::tab:selected { background: steelblue; color: white;"
@@ -340,12 +345,16 @@ class Layout(QGridLayout):
         # on both sides to center the bar itself within the full row width.
         nav_container = QWidget()
         nav_container.setFixedSize(200 * self.column_width, 2 * self.row_height)
+        # A QTabBar on its own has no "pane" to draw a border under, unlike a
+        # QTabWidget -- draw one by hand so the nav row gets the same visual
+        # separator as the tab groups below.
+        nav_container.setStyleSheet("border-bottom: 2px solid #999999;")
         nav_hbox = QHBoxLayout(nav_container)
         nav_hbox.setContentsMargins(0, 0, 0, 0)
         nav_hbox.addStretch(1)
         nav_hbox.addWidget(self.nav_tab_bar)
         nav_hbox.addStretch(1)
-        self.addWidget(nav_container, 2, 0, 2, 200)
+        self.addWidget(nav_container, 3, 0, 2, 200)
 
         self.main_button = NavTabProxy(self.nav_tab_bar, 0)
         self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)
@@ -358,9 +367,9 @@ class Layout(QGridLayout):
         self.stop_button = self.create_and_add_button(
             "",
             0,
-            152,
-            16,
-            2,
+            155,
+            15,
+            3,
             self.stop_button_clicked,
             "",
             "lightgray",
@@ -369,9 +378,9 @@ class Layout(QGridLayout):
         self.online_button = self.create_and_add_button(
             "ONLINE PLOTS",
             0,
-            168,
-            16,
-            2,
+            170,
+            15,
+            3,
             self.online_button_clicked,
             "Show live plots while a task is running",
             "lightgray",
@@ -380,9 +389,9 @@ class Layout(QGridLayout):
         self.exit_button = self.create_and_add_button(
             "EXIT",
             0,
-            184,
-            16,
-            2,
+            185,
+            15,
+            3,
             self.exit_button_clicked,
             "Exit the application",
             "lightcoral",

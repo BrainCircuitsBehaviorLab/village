@@ -271,11 +271,11 @@ class Manager:
             project_text = ""
 
         self.status_parts = [
+            "PROJECT: " + project_text,
             "SUBJECT: " + subject_name,
             "TASK: " + task_name,
             "RFID: " + rfid_reader_name,
             "CYCLE: " + cycle_text,
-            "PROJECT: " + project_text,
             "STATE: " + state_name + "\n" + "(" + state_description + ")",
         ]
 
