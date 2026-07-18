@@ -203,12 +203,6 @@ def import_all(manager) -> None:
                 "Couldn't import " + module_name, exception=traceback.format_exc()
             )
             continue
-    if training_found == 0:
-        log.error("Training protocol not found")
-    elif training_found == 1 and training_correct:
-        log.info("Training protocol successfully imported")
-    elif training_found > 1:
-        log.error("Multiple training protocols found")
 
     items = [
         ("Session plot", session_plot_found, session_plot_correct),
@@ -232,11 +226,6 @@ def import_all(manager) -> None:
         elif correct:
             customs.append(name)
 
-    if defaults:
-        log.info("Using default: " + ", ".join(defaults))
-    if customs:
-        log.info("Using custom: " + ", ".join(customs))
-
     manager.tasks = dict(sorted(tasks.items()))
     number_of_tasks = len(tasks)
     if number_of_tasks == 0:
@@ -245,3 +234,15 @@ def import_all(manager) -> None:
         log.info("1 task successfully imported")
     else:
         log.info(str(number_of_tasks) + " tasks successfully imported")
+
+    if training_found == 0:
+        log.error("Training protocol not found")
+    elif training_found == 1 and training_correct:
+        log.info("Training protocol successfully imported")
+    elif training_found > 1:
+        log.error("Multiple training protocols found")
+
+    if defaults:
+        log.info("Using default: " + ", ".join(defaults))
+    if customs:
+        log.info("Using custom: " + ", ".join(customs))

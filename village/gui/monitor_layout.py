@@ -339,12 +339,12 @@ class MonitorLayout(Layout):
 
         self.page1 = QWidget(self.central_widget)
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = CorridorLayout(self.window, 22, 36)
+        self.page1Layout = CorridorLayout(self.window, 23, 36)
         self.page1.setLayout(self.page1Layout)
 
         self.page2 = QWidget(self.central_widget)
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = BoxLayout(self.window, 22, 36)
+        self.page2Layout = BoxLayout(self.window, 23, 36)
         self.page2.setLayout(self.page2Layout)
 
         self.page3 = QWidget(self.central_widget)
