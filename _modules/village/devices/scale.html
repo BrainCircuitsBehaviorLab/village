@@ -604,19 +604,21 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="181">        <span class="n">scale</span> <span class="o">=</span> <span class="n">Scale</span><span class="p">(</span>
 </span><span data-line="182">            <span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">,</span> <span class="n">min_threshold</span><span class="o">=</span><span class="n">min_threshold</span><span class="p">,</span> <span class="n">max_threshold</span><span class="o">=</span><span class="n">max_threshold</span>
 </span><span data-line="183">        <span class="p">)</span>
-</span><span data-line="184">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Scale successfully initialized&quot;</span><span class="p">)</span>
-</span><span data-line="185">        <span class="k">return</span> <span class="n">scale</span>
-</span><span data-line="186">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="187">        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not initialize scale&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
-</span><span data-line="188">        <span class="k">return</span> <span class="n">NullScale</span><span class="p">()</span></div>
+</span><span data-line="184">        <span class="k">return</span> <span class="n">scale</span>
+</span><span data-line="185">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="186">        <span class="n">null_scale</span> <span class="o">=</span> <span class="n">NullScale</span><span class="p">()</span>
+</span><span data-line="187">        <span class="n">null_scale</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span>
+</span><span data-line="188">            <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="s2">&quot;Could not initialize scale&quot;</span>
+</span><span data-line="189">        <span class="p">)</span>
+</span><span data-line="190">        <span class="k">return</span> <span class="n">null_scale</span></div>
 
-</span><span data-line="189">
-</span><span data-line="190">
-</span><span data-line="191"><span class="n">scale</span> <span class="o">=</span> <span class="n">get_scale</span><span class="p">(</span>
-</span><span data-line="192">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SCALE_ADDRESS&quot;</span><span class="p">),</span>
-</span><span data-line="193">    <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MIN_WEIGHT_THRESHOLD&quot;</span><span class="p">)),</span>
-</span><span data-line="194">    <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MAX_WEIGHT_THRESHOLD&quot;</span><span class="p">)),</span>
-</span><span data-line="195"><span class="p">)</span>
+</span><span data-line="191">
+</span><span data-line="192">
+</span><span data-line="193"><span class="n">scale</span> <span class="o">=</span> <span class="n">get_scale</span><span class="p">(</span>
+</span><span data-line="194">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SCALE_ADDRESS&quot;</span><span class="p">),</span>
+</span><span data-line="195">    <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MIN_WEIGHT_THRESHOLD&quot;</span><span class="p">)),</span>
+</span><span data-line="196">    <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MAX_WEIGHT_THRESHOLD&quot;</span><span class="p">)),</span>
+</span><span data-line="197"><span class="p">)</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -641,7 +643,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=fc6fa299"></script>
+      <script src="../../../_static/documentation_options.js?v=e649ee2a"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
