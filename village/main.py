@@ -58,6 +58,8 @@ finally:
     os.dup2(_saved_stderr, 2)
     os.close(_saved_stderr)
 from village.devices.chip import (
+    chip_box,
+    chip_corridor,
     motor_box1,
     motor_box2,
     motor_corridor1,
@@ -101,6 +103,8 @@ manager.send_heartbeat()
 device_errors = [
     ("cam_corridor", cam_corridor),
     ("cam_box", cam_box),
+    ("chip_corridor", chip_corridor),
+    ("chip_box", chip_box),
     ("motor_corridor1", motor_corridor1),
     ("motor_corridor2", motor_corridor2),
     ("motor_box1", motor_box1),
@@ -112,6 +116,16 @@ device_errors = [
     ("telegram_bot", telegram_bot),
     ("screen", screen),
 ]
+# scale and temp_sensor share the same I2C bus/board as chip_corridor: if the
+# corridor chip failed to connect, the board itself is likely disconnected, so
+# their errors are just noise on top of the same root cause. Only worth
+# reporting them on their own if chip_corridor connected fine.
+if chip_corridor.error != "":
+    device_errors = [
+        (name, device)
+        for name, device in device_errors
+        if name not in ("scale", "temp_sensor")
+    ]
 failed_devices = []
 for device_name, device in device_errors:
     if device.error != "":

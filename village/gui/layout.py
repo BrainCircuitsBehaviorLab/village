@@ -286,18 +286,20 @@ class Layout(QGridLayout):
     def create_common_elements(self) -> None:
         """Creates the navigation menu buttons common to all main layouts."""
         status_container = QWidget()
-        status_container.setFixedSize(152 * self.column_width, 3 * self.row_height)
+        status_container.setFixedSize(152 * self.column_width, 2 * self.row_height)
         status_container.setStyleSheet("background-color: powderblue;")
         status_hbox = QHBoxLayout(status_container)
         status_hbox.setContentsMargins(6, 0, 6, 0)
         self.status_sub_labels: list[Label] = []
         for i in range(6):
             sub_label = Label("", "black", False, True, "", "")
+            if i == 5:  # state name + description, on two lines: center both
+                sub_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
             self.status_sub_labels.append(sub_label)
             status_hbox.addWidget(sub_label)
             if i < 5:
                 status_hbox.addStretch(1)
-        self.addWidget(status_container, 0, 0, 3, 152)
+        self.addWidget(status_container, 0, 0, 2, 152)
 
         _nav_items = [
             ("MAIN", "Go to the main menu"),
@@ -330,7 +332,7 @@ class Layout(QGridLayout):
             idx = self.nav_tab_bar.addTab(label)
             self.nav_tab_bar.setTabToolTip(idx, tooltip)
         self.nav_tab_bar.currentChanged.connect(self._on_nav_tab_changed)
-        self.addWidget(self.nav_tab_bar, 3, 0, 2, 200)
+        self.addWidget(self.nav_tab_bar, 2, 0, 2, 200)
 
         self.main_button = NavTabProxy(self.nav_tab_bar, 0)
         self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)
@@ -345,7 +347,7 @@ class Layout(QGridLayout):
             0,
             152,
             16,
-            3,
+            2,
             self.stop_button_clicked,
             "",
             "lightgray",
@@ -356,7 +358,7 @@ class Layout(QGridLayout):
             0,
             168,
             16,
-            3,
+            2,
             self.online_button_clicked,
             "Show live plots while a task is running",
             "lightgray",
@@ -367,7 +369,7 @@ class Layout(QGridLayout):
             0,
             184,
             16,
-            3,
+            2,
             self.exit_button_clicked,
             "Exit the application",
             "lightcoral",

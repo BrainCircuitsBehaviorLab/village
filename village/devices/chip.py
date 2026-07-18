@@ -10,36 +10,41 @@ from village.settings import settings
 
 use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
 use_of_box_chip: bool = settings.get("USE_BOX_BOARD") == Active.ON
-old_version_rfid: bool = settings.get("OLD_VERSION") == OldVersion.V01
 old_version_motor: bool = settings.get("OLD_VERSION") != OldVersion.OFF
 
 # Init (50 Hz for servos)
+# chip_corridor/chip_box only ever carry the PCA9685 connection error (Motor
+# objects on this path never fail on their own, they are thin wrappers around
+# a channel number and the shared chip), so motor error attributes stay "" in
+# this mode -- get_motor_old() is the only path that sets a per-motor error.
+chip_corridor = NullChip()
 if use_of_corridor and not old_version_motor:
     try:
         pwm_corridor = PCA9685.PCA9685(
             interface=1, address=int(settings.get("CHIP_CORRIDOR_ADDRESS"), 16)
         )
         pwm_corridor.set_pwm_freq(50)
-        error_corridor = ""
     except Exception:
-        error_corridor = "Error connecting to the corridor chip "
+        chip_corridor.error = log.clean_text(
+            traceback.format_exc(), "Could not initialize corridor chip"
+        )
         pwm_corridor = NullChip()
 else:
-    error_corridor = ""
     pwm_corridor = NullChip()
 
+chip_box = NullChip()
 if use_of_box_chip and not old_version_motor:
     try:
         pwm_box = PCA9685.PCA9685(
             interface=1, address=int(settings.get("CHIP_BOX_ADDRESS"), 16)
         )
         pwm_box.set_pwm_freq(50)
-        error_box = ""
     except Exception:
-        error_box = "Error connecting to the box chip "
+        chip_box.error = log.clean_text(
+            traceback.format_exc(), "Could not initialize box chip"
+        )
         pwm_box = NullChip()
 else:
-    error_box = ""
     pwm_box = NullChip()
 
 
@@ -190,5 +195,3 @@ else:
         settings.get("MOTOR3_VALUES"),
         pwm_corridor,
     )
-    motor_corridor1.error = error_corridor
-    motor_box1.error = error_box

@@ -27,6 +27,8 @@ jobs:
     name: ubuntu py3.11
     runs-on: ubuntu-latest
     steps:
+      - name: Install system dependencies for pyalsaaudio
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev
       - uses: neuroinformatics-unit/actions/test@v2
         with:
           python-version: "3.11"

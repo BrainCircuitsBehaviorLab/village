@@ -278,7 +278,7 @@ class Manager:
             "RFID: " + rfid_reader_name,
             "CYCLE: " + cycle_text,
             "PROJECT: " + project_text,
-            state_name + "\n" + "(" + state_description + ")",
+            "STATE: " + state_name + "\n" + "(" + state_description + ")",
         ]
 
     def multiple_detections(self, multiple: bool) -> bool:

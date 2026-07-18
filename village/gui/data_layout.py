@@ -2013,14 +2013,14 @@ class SubjectsLayout(Layout):
         self.subjects_button.setDisabled(True)
 
         self.central_layout = QStackedLayout()
-        self.addLayout(self.central_layout, 6, 2, 44, 196)
+        self.addLayout(self.central_layout, 5, 2, 45, 196)
         self.page1 = QWidget()
         self.page1.setStyleSheet("background-color:white")
-        self.page1Layout = DfLayout(self.window, 44, 196, subjects_only=True)
+        self.page1Layout = DfLayout(self.window, 45, 196, subjects_only=True)
         self.page1.setLayout(self.page1Layout)
         self.page2 = QWidget()
         self.page2.setStyleSheet("background-color:white")
-        self.page2Layout = PlotLayout(self.window, 44, 196)
+        self.page2Layout = PlotLayout(self.window, 45, 196)
         self.page2.setLayout(self.page2Layout)
 
         self.central_layout.addWidget(self.page1)

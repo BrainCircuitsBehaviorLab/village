@@ -329,9 +329,6 @@ class MonitorLayout(Layout):
 
     def draw(self) -> None:
         """Draws the monitor layout elements."""
-        # rectangle = QWidget()
-        # rectangle.setStyleSheet("background-color: lightgray;")
-        # self.addWidget(rectangle, 6, 0, 30, 200)
 
         self.buttons: list[QPushButton] = []
 
@@ -407,7 +404,7 @@ class MonitorLayout(Layout):
             self._actions_tab_map.append("VIRTUAL_MOUSE")
 
         self.actions_tab_widget.currentChanged.connect(self.on_actions_tab_changed)
-        self.addWidget(self.actions_tab_widget, 6, 80, 26, 40)
+        self.addWidget(self.actions_tab_widget, 5, 80, 27, 40)
 
         self.page5 = QWidget(self.bottom_widget)
         self.page5.setStyleSheet("background-color:white")
@@ -453,8 +450,8 @@ class MonitorLayout(Layout):
         self.qpicamera2_corridor.setFixedSize(640, 480)
         self.qpicamera2_box.setFixedSize(640, 480)
 
-        self.addWidget(self.qpicamera2_corridor, 6, 0, 28, 80)
-        self.addWidget(self.qpicamera2_box, 6, 120, 28, 80)
+        self.addWidget(self.qpicamera2_corridor, 5, 0, 28, 80)
+        self.addWidget(self.qpicamera2_box, 5, 120, 28, 80)
         self.addWidget(self.tab_widget, 33, 0, 18, 200)
         self.tab_widget.raise_()
 
