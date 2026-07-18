@@ -35,6 +35,7 @@ class BpodController:
         )
         self.connected = False
         self.recorder = TrialRecorder()
+        self.error: str = ""
 
     def _make_bpod(self) -> Bpod:
         return Bpod(
@@ -52,18 +53,17 @@ class BpodController:
         try:
             self.bpod_hardware = self._make_bpod()
             self.error = ""
-            log.info("Bpod successfully initialized")
             self.bpod_hardware.close()
         except Exception:
             time.sleep(0.1)
             try:
                 self.bpod_hardware = self._make_bpod()
                 self.error = ""
-                log.info("Bpod successfully initialized")
                 self.bpod_hardware.close()
             except Exception:
-                self.error = "Error connecting to Bpod "
-                log.error("Could not initialize bpod", exception=traceback.format_exc())
+                self.error = log.clean_text(
+                    traceback.format_exc(), "Could not initialize bpod"
+                )
 
     def connect(self, handler_function: Callable) -> None:
         """Connects to the Bpod and initializes session."""

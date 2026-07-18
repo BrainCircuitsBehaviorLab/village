@@ -39,6 +39,8 @@ import threading
 import time
 
 from village.classes.enums import Active, State
+from village.controllers.arduino_controller import arduino
+from village.controllers.bpod_controller import bpod
 
 # Suppress libcamera C-level stderr during camera import. libcamera writes
 # INFO/WARN messages directly to file descriptor 2 from C++ static initializers,
@@ -115,6 +117,8 @@ device_errors = [
     ("sound_device", sound_device),
     ("telegram_bot", telegram_bot),
     ("screen", screen),
+    ("bpod", bpod),
+    ("arduino", arduino),
 ]
 # scale and temp_sensor share the same I2C bus/board as chip_corridor: if the
 # corridor chip failed to connect, the board itself is likely disconnected, so

@@ -276,9 +276,11 @@ class Layout(QGridLayout):
 
         for i in range(self.num_of_columns):
             self.setColumnMinimumWidth(i, self.column_width)
+            self.setColumnStretch(i, 0)
 
         for i in range(self.num_of_rows):
             self.setRowMinimumHeight(i, self.row_height)
+            self.setRowStretch(i, 0)
 
         if not stacked:
             self.create_common_elements()
@@ -332,7 +334,18 @@ class Layout(QGridLayout):
             idx = self.nav_tab_bar.addTab(label)
             self.nav_tab_bar.setTabToolTip(idx, tooltip)
         self.nav_tab_bar.currentChanged.connect(self._on_nav_tab_changed)
-        self.addWidget(self.nav_tab_bar, 2, 0, 2, 200)
+
+        # QTabBar has no built-in way to center its tabs (setExpanding(False)
+        # just left-aligns them), so wrap it in a container and use stretches
+        # on both sides to center the bar itself within the full row width.
+        nav_container = QWidget()
+        nav_container.setFixedSize(200 * self.column_width, 2 * self.row_height)
+        nav_hbox = QHBoxLayout(nav_container)
+        nav_hbox.setContentsMargins(0, 0, 0, 0)
+        nav_hbox.addStretch(1)
+        nav_hbox.addWidget(self.nav_tab_bar)
+        nav_hbox.addStretch(1)
+        self.addWidget(nav_container, 2, 0, 2, 200)
 
         self.main_button = NavTabProxy(self.nav_tab_bar, 0)
         self.monitor_button = NavTabProxy(self.nav_tab_bar, 1)

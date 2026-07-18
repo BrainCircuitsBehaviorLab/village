@@ -149,11 +149,9 @@ class Manager:
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod = bpod
             self.bpod.check_connection()
-            self.errors = self.bpod.error
         elif self.controller_type == ControllerEnum.ARDUINO:
             self.arduino = arduino
             self.arduino.check_connection()
-            self.errors = self.arduino.error
         self.detections = time_utils.TimestampTracker(
             hours=int(settings.get("NO_DETECTION_HOURS") or 6)
         )

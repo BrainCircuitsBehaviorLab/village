@@ -7,6 +7,7 @@ class ArduinoController:
 
         self.connected = False
         self.recorder = TrialRecorder()
+        self.error: str = ""
 
     def check_connection(self) -> None:
         self.error = ""
