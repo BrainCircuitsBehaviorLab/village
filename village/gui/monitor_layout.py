@@ -371,10 +371,12 @@ class MonitorLayout(Layout):
         _tab_style = (
             "QTabWidget::tab-bar { alignment: center; }"
             # Native pane border is content-dependent (only shows where a
-            # page's own layout doesn't fill the pane exactly) -- hide it and
-            # draw a real, always-visible line instead, on the widget itself.
+            # page's own layout doesn't fill the pane exactly) -- hide it, a
+            # manually drawn widget below takes its place instead. A
+            # border-bottom on QTabWidget itself doesn't work here: the pane
+            # (filled white by each page) expands into that pixel and paints
+            # over it.
             "QTabWidget::pane { border: none; }"
-            "QTabWidget { border-bottom: 2px solid #999999; }"
             "QTabBar::tab { background: #d0d0d0;"
             " padding: 6px 4px;"
             " border: 1px solid #aaaaaa; border-bottom: none;"
