@@ -5,9 +5,7 @@ import pandas as pd
 from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QWidget
 
-from village.classes.enums import Active, ScreenActive
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
-from village.settings import settings
 
 
 class NullBpod:
@@ -81,7 +79,7 @@ class NullSoftCodeToBpod:
 
 
 class NullTelegramBot:
-    error: str = "Error connecting to the telegram_bot "
+    error: str = ""
 
     def alarm(self, message: str) -> None:
         """Sends an alarm message.
@@ -93,7 +91,7 @@ class NullTelegramBot:
 
 
 class NullScale:
-    error: str = "Error connecting to the scale "
+    error: str = ""
 
     def tare(self) -> None:
         """Tares the scale."""
@@ -130,7 +128,7 @@ class NullScale:
 
 
 class NullTempSensor:
-    error: str = "Error connecting to the temp_sensor "
+    error: str = ""
 
     def start(self) -> None:
         """Starts the sensor."""
@@ -146,7 +144,7 @@ class NullTempSensor:
 
 
 class NullChip:
-    error: str = "Error connecting to the chip "
+    error: str = ""
 
     def set_pwm(self, channel: int, on: int, off: int) -> None:
         """Sets the cycle.
@@ -160,7 +158,7 @@ class NullChip:
 
 
 class NullMotor:
-    error: str = "Error connecting to the motor "
+    error: str = ""
     open_angle: int = 0
     close_angle: int = 0
 
@@ -175,11 +173,7 @@ class NullMotor:
 
 class NullSoundDevice:
     samplerate: int = 44100
-    error: str = (
-        ""
-        if settings.get("USE_SOUNDCARD") == Active.OFF
-        else "Error connecting to the sound_device "
-    )
+    error: str = ""
 
     def load(self, load: Any, right: Any) -> None:
         """Loads sound data.
@@ -257,7 +251,7 @@ class NullCamera:
     change: bool = False
     annotation: str = ""
     path_picture: str = ""
-    error: str = "Error connecting to the camera "
+    error: str = ""
     trial: int = -1
     is_recording: bool = False
     timing: int = 0
@@ -423,11 +417,7 @@ class NullScreen(QWidget):
 
 
 class NullTouch:
-    error: str = (
-        ""
-        if settings.get("USE_SCREEN") != ScreenActive.TOUCHSCREEN
-        else "Error connecting to the touchscreen "
-    )
+    error: str = ""
 
     def stop(self) -> None:
         return

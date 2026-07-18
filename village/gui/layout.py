@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
     QComboBox,
     QDialog,
     QGridLayout,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
     QMessageBox,
@@ -19,6 +20,7 @@ from PyQt5.QtWidgets import (
     QTabBar,
     QTimeEdit,
     QVBoxLayout,
+    QWidget,
 )
 
 from village.classes.enums import DataTable, State
@@ -283,9 +285,19 @@ class Layout(QGridLayout):
 
     def create_common_elements(self) -> None:
         """Creates the navigation menu buttons common to all main layouts."""
-        self.status_label = self.create_and_add_label(
-            "", 0, 0, 200, 2, "black", background="powderblue"
-        )
+        status_container = QWidget()
+        status_container.setFixedSize(200 * self.column_width, 2 * self.row_height)
+        status_container.setStyleSheet("background-color: powderblue;")
+        status_hbox = QHBoxLayout(status_container)
+        status_hbox.setContentsMargins(6, 0, 6, 0)
+        self.status_sub_labels: list[Label] = []
+        for i in range(6):
+            sub_label = Label("", "black", False, True, "", "")
+            self.status_sub_labels.append(sub_label)
+            status_hbox.addWidget(sub_label)
+            if i < 5:
+                status_hbox.addStretch(1)
+        self.addWidget(status_container, 0, 0, 2, 152)
 
         _nav_items = [
             ("MAIN", "Go to the main menu"),
@@ -337,7 +349,7 @@ class Layout(QGridLayout):
 
         self.stop_button = self.create_and_add_button(
             "",
-            2,
+            0,
             152,
             16,
             3,
@@ -348,7 +360,7 @@ class Layout(QGridLayout):
 
         self.online_button = self.create_and_add_button(
             "ONLINE PLOTS",
-            2,
+            0,
             168,
             16,
             3,
@@ -359,7 +371,7 @@ class Layout(QGridLayout):
 
         self.exit_button = self.create_and_add_button(
             "EXIT",
-            2,
+            0,
             184,
             16,
             3,
@@ -383,7 +395,8 @@ class Layout(QGridLayout):
             " color: #999999}" + _tt
         )
         manager.update_text()
-        self.status_label.setText(manager.text)
+        for sub_label, part in zip(self.status_sub_labels, manager.status_parts):
+            sub_label.setText(part)
 
         state = manager.state
         if state == State.RUN_MANUAL:

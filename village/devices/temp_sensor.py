@@ -77,11 +77,13 @@ def get_temp_sensor(address: str) -> TempSensor | NullTempSensor:
         return null_temp_sensor
     try:
         temp_sensor = TempSensor(address=address)
-        log.info("Temp sensor successfully initialized")
         return temp_sensor
     except Exception:
-        log.error("Could not initialize temp sensor", exception=traceback.format_exc())
-        return NullTempSensor()
+        null_temp_sensor = NullTempSensor()
+        null_temp_sensor.error = log.clean_text(
+            traceback.format_exc(), "Could not initialize temp sensor"
+        )
+        return null_temp_sensor
 
 
 temp_sensor = get_temp_sensor(address=settings.get("TEMP_SENSOR_ADDRESS"))

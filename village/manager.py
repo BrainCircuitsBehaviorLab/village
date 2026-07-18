@@ -76,7 +76,8 @@ class Manager:
         visible_box_cycle (Cycle): Visible light cycle of the box.
         ir_box_cycle (Cycle): Infrared light cycle of the box.
         cycle_text (str): Text representation of the current cycle.
-        text (str): Current system text.
+        status_parts (list[str]): The 6 pieces of the status bar text (subject,
+            task, RFID, cycle, project, state), each shown in its own label.
         day (bool): Indicates if it's day.
         changing_settings (bool): Indicates if settings are being changed.
         tasks (dict[str, type]): Dictionary of tasks.
@@ -115,7 +116,7 @@ class Manager:
         self.ir_box_cycle: Cycle = settings.get("IR_BOX")
         self.info: Info = settings.get("INFO")
         self.actions: Actions = settings.get("ACTIONS")
-        self.text: str = ""
+        self.status_parts: list[str] = []
         self.weight: float = np.nan
         self.changing_settings: bool = False
         self.tasks: dict[str, type] = dict()
@@ -139,6 +140,8 @@ class Manager:
         self.create_collections()
         log.event = self.events
         log.temp = self.temperatures
+        log.info("-")
+        log.info("Starting VILLAGE...")
         self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
         self.use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
         self.use_of_box_chip: bool = settings.get("USE_BOX_BOARD") == Active.ON
@@ -270,27 +273,14 @@ class Manager:
         except Exception:
             project_text = ""
 
-        self.text = (
-            "   SYSTEM STATE: "
-            + state_name
-            + " ("
-            + state_description
-            + ")               "
-            + "SUBJECT: "
-            + subject_name
-            + "               "
-            + "TASK: "
-            + task_name
-            + "               "
-            + "RFID: "
-            + rfid_reader_name
-            + "               "
-            + "CYCLE: "
-            + cycle_text
-            + "               "
-            + "PROJECT: "
-            + project_text
-        )
+        self.status_parts = [
+            "SUBJECT: " + subject_name,
+            "TASK: " + task_name,
+            "RFID: " + rfid_reader_name,
+            "CYCLE: " + cycle_text,
+            "PROJECT: " + project_text,
+            state_name + "\n" + "(" + state_description + ")",
+        ]
 
     def multiple_detections(self, multiple: bool) -> bool:
         """Checks if multiple RFID tags were detected.

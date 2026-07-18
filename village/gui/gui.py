@@ -46,6 +46,7 @@ class Gui:
         Stops recordings, logs the end of the session, and quits the Qt application.
         """
         log.end("VILLAGE")
+        log.info("-")
         cam_corridor.stop_recording()
         cam_box.stop_recording()
         sound_device.shutdown()
@@ -62,6 +63,7 @@ class Gui:
             log.end("VILLAGE")
         except Exception:
             pass
+        log.info("-")
         cam_corridor.stop_recording()
         cam_box.stop_recording()
         sound_device.shutdown()

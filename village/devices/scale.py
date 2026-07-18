@@ -181,11 +181,13 @@ def get_scale(
         scale = Scale(
             address=address, min_threshold=min_threshold, max_threshold=max_threshold
         )
-        log.info("Scale successfully initialized")
         return scale
     except Exception:
-        log.error("Could not initialize scale", exception=traceback.format_exc())
-        return NullScale()
+        null_scale = NullScale()
+        null_scale.error = log.clean_text(
+            traceback.format_exc(), "Could not initialize scale"
+        )
+        return null_scale
 
 
 scale = get_scale(

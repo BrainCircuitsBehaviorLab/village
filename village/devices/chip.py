@@ -131,11 +131,13 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
         return null_motor
     try:
         motor = MotorOld(pin=channel, angles=angles)
-        log.info("Motor successfully initialized")
         return motor
     except Exception:
-        log.error("Could not initialize motor", exception=traceback.format_exc())
-        return NullMotor()
+        null_motor = NullMotor()
+        null_motor.error = log.clean_text(
+            traceback.format_exc(), "Could not initialize motor"
+        )
+        return null_motor
 
 
 motor_corridor1: Motor | MotorOld | NullMotor

@@ -102,11 +102,13 @@ def get_touch() -> Touch | NullTouch:
         return NullTouch()
     try:
         ts = Touch()
-        log.info("Touchscreen successfully initialized")
         return ts
     except Exception:
-        log.error("Could not initialize touchscreen", exception=traceback.format_exc())
-        return NullTouch()
+        null_touch = NullTouch()
+        null_touch.error = log.clean_text(
+            traceback.format_exc(), "Could not initialize touchscreen"
+        )
+        return null_touch
 
 
 touch = get_touch()

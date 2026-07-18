@@ -187,16 +187,21 @@ def get_telegram_bot() -> TelegramBot | NullTelegramBot:
         ):
             time.sleep(0.1)
         if telegram_bot.connected:
-            log.info("Telegram bot successfully initialized")
             return telegram_bot
         elif telegram_bot.error_running:
-            return NullTelegramBot()
+            null_telegram_bot = NullTelegramBot()
+            null_telegram_bot.error = "Could not initialize telegram bot"
+            return null_telegram_bot
         else:
-            log.error("Could not initialize telegram bot, time expired")
-            return NullTelegramBot()
+            null_telegram_bot = NullTelegramBot()
+            null_telegram_bot.error = "Could not initialize telegram bot, time expired"
+            return null_telegram_bot
     except Exception:
-        log.error("Could not initialize telegram bot", exception=traceback.format_exc())
-        return NullTelegramBot()
+        null_telegram_bot = NullTelegramBot()
+        null_telegram_bot.error = log.clean_text(
+            traceback.format_exc(), "Could not initialize telegram bot"
+        )
+        return null_telegram_bot
 
 
 telegram_bot = get_telegram_bot()

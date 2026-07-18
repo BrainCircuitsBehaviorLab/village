@@ -160,12 +160,12 @@ class SoundDevice:
             device=self.device,
         )
         info = self.pcm.info()
-        log.info(
-            f"Sound device '{self.device}': rate={info['rate']} "
-            f"period_size={info['period_size']} "
-            f"buffer_size={info['buffer_size']} "
-            f"({1000 * info['buffer_size'] / info['rate']:.2f} ms buffered)"
-        )
+        # log.info(
+        #     f"Sound device '{self.device}': rate={info['rate']} "
+        #     f"period_size={info['period_size']} "
+        #     f"buffer_size={info['buffer_size']} "
+        #     f"({1000 * info['buffer_size'] / info['rate']:.2f} ms buffered)"
+        # )
         if info["rate"] != self.samplerate:
             log.error(
                 f"Sound device granted rate {info['rate']} Hz but "
@@ -751,13 +751,13 @@ def get_sound_device() -> SoundDevice | NullSoundDevice:
     else:
         try:
             sound_device = SoundDevice()
-            log.info("Sound device successfully initialized")
             return sound_device
         except Exception:
-            log.error(
-                "Could not initialize sound device", exception=traceback.format_exc()
+            null_sound_device = NullSoundDevice()
+            null_sound_device.error = log.clean_text(
+                traceback.format_exc(), "Could not initialize sound device"
             )
-            return NullSoundDevice()
+            return null_sound_device
 
 
 sound_device = get_sound_device()

@@ -97,21 +97,26 @@ log.telegram_bot = telegram_bot
 log.cam = cam_corridor
 import_all(manager)
 manager.send_heartbeat()
-manager.errors += (
-    cam_corridor.error
-    + cam_box.error
-    + motor_corridor1.error
-    + motor_corridor2.error
-    + motor_box1.error
-    + motor_box2.error
-    + scale.error
-    + temp_sensor.error
-    + touch.error
-    + sound_device.error
-    + telegram_bot.error
-)
-if manager.errors != "":
-    log.error(manager.errors)
+device_errors = [
+    ("cam_corridor", cam_corridor),
+    ("cam_box", cam_box),
+    ("motor_corridor1", motor_corridor1),
+    ("motor_corridor2", motor_corridor2),
+    ("motor_box1", motor_box1),
+    ("motor_box2", motor_box2),
+    ("scale", scale),
+    ("temp_sensor", temp_sensor),
+    ("touch", touch),
+    ("sound_device", sound_device),
+    ("telegram_bot", telegram_bot),
+]
+failed_devices = []
+for device_name, device in device_errors:
+    if device.error != "":
+        log.error(device_name + ": " + device.error)
+        failed_devices.append(device_name)
+if failed_devices:
+    manager.errors += "Error connecting to: " + ", ".join(failed_devices)
 manager.touch = touch
 log.start("VILLAGE")
 

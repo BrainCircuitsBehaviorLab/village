@@ -960,14 +960,17 @@ def get_camera(index: int, framerate: int, name: str) -> Camera | NullCamera:
     try:
         available = Picamera2.global_camera_info()
         if index >= len(available):
-            log.info("Cam " + name + " not found at index " + str(index))
-            return NullCamera()
+            null_camera = NullCamera()
+            null_camera.error = "Cam " + name + " not found at index " + str(index)
+            return null_camera
         cam = Camera(index, framerate, name)
-        log.info("Cam " + name + " successfully initialized")
         return cam
     except Exception:
-        log.error("Could not initialize cam " + name, exception=traceback.format_exc())
-        return NullCamera()
+        null_camera = NullCamera()
+        null_camera.error = log.clean_text(
+            traceback.format_exc(), "Could not initialize cam " + name
+        )
+        return null_camera
 
 
 cam_corridor = get_camera(
