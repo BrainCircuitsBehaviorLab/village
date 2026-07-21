@@ -39,6 +39,7 @@ class Log:
         """
         type = "INFO"
         date = time_utils.now_string()
+        description = self.clean_text(None, description)
         text = date + "  " + type + "  " + subject + "  " + description
         self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
@@ -63,7 +64,7 @@ class Log:
         """
         type = "START"
         date = time_utils.now_string()
-        description = task + " started"
+        description = self.clean_text(None, task + " started")
         text = date + "  " + type + " " + subject + "  " + description
         self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
@@ -78,7 +79,7 @@ class Log:
         """
         type = "END"
         date = time_utils.now_string()
-        description = task + " ended"
+        description = self.clean_text(None, task + " ended")
         text = date + "  " + type + " " + subject + "  " + description
         self.event.add_entry([date, type, subject, description])
         self.cam.write_text(text)
@@ -157,9 +158,15 @@ class Log:
                 processed_lines.append(line)
 
             description = "  |  ".join(processed_lines)
-            description = description.replace(";", "")
 
-        return description
+        # These three all corrupt events.csv if left in: ";" is the column
+        # separator, a raw newline splits one row into two, and an unbalanced
+        # '"' makes pandas' CSV parser swallow subsequent lines as part of a
+        # (never-closed) quoted field.
+        description = description.replace("\r\n", " ").replace("\n", " ")
+        description = description.replace("\r", " ")
+        description = description.replace('"', "'")
+        return description.replace(";", "")
 
 
 log = Log()

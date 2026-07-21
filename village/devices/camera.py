@@ -1,4 +1,5 @@
 import os
+import queue
 import threading
 import time
 import traceback
@@ -26,6 +27,7 @@ from PyQt5.QtWidgets import QWidget
 
 from village.classes.null_classes import NullCamera
 from village.manager import manager
+from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import Color, settings
@@ -205,6 +207,7 @@ class Camera:
             settings.get("SYSTEM_DIRECTORY"), name + ".jpg"
         )
         self.output = FfmpegOutput(self.path_video)
+        self.output.error_callback = self._on_ffmpeg_error
         self.filename = ""
         self.cam.pre_callback = self.pre_process
 
@@ -251,6 +254,10 @@ class Camera:
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
+        # Restart attempts stay on the watchdog's own cadence (every 20s
+        # while frozen) -- only the alarm itself is capped at once an hour,
+        # same as the other device alarms in main.py's background_checks().
+        self.restart_alarm_timer = time_utils.Timer(3600)
 
         self.task_is_running = False
 
@@ -371,6 +378,7 @@ class Camera:
                 self.name + "_" + time_start + ".csv",
             )
         self.output = FfmpegOutput(self.path_video)
+        self.output.error_callback = self._on_ffmpeg_error
         self.is_recording = True
         self.camera_timestamp = time_utils.now_timestamp()
         try:
@@ -386,6 +394,24 @@ class Camera:
             self.cam.stop_encoder()
             self.save_csv()
         self.reset_values()
+
+    def _on_ffmpeg_error(self, exc: Exception) -> None:
+        """Called by FfmpegOutput when writing a frame to ffmpeg fails.
+
+        This is how a dead/crashed ffmpeg subprocess (e.g. from a bad camera
+        cable feeding it invalid data) is surfaced -- otherwise it fails
+        silently, with only ffmpeg's own unmanaged stderr printed to the
+        console. Routed through error_queue tagged "cam" (its own alarm
+        timer, separate from screen.py's "video" stimulus-playback errors),
+        so main.py's background_checks() turns it into a log.alarm().
+        """
+        try:
+            text = "".join(
+                traceback.format_exception(type(exc), exc, exc.__traceback__)
+            )
+            error_queue.put_nowait(("cam", "Cam " + self.name + ": " + text))
+        except queue.Full:
+            pass
 
     def reset_values(self) -> None:
         """Resets all tracking and recording variables to defaults."""
@@ -491,13 +517,14 @@ class Camera:
     def restart_camera(self) -> None:
         """Restarts the camera subprocess and watchdog."""
         self.watchdog_timer.stop()
-        log.alarm(
-            "Camera "
-            + self.name
-            + " not responding. No frames received for more than "
-            + "10 seconds. Restarting the camera.",
-            subject=manager.subject.name,
-        )
+        if self.restart_alarm_timer.has_elapsed():
+            log.alarm(
+                "Camera "
+                + self.name
+                + " not responding. No frames received for more than "
+                + "10 seconds. Restarting the camera.",
+                subject=manager.subject.name,
+            )
         self.is_recording = False
         try:
             self.cam.stop_recording()

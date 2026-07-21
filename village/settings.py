@@ -357,7 +357,10 @@ operant box within a specified number of hours.""",
         "ON",
         Active,
         """Checked hourly. This alarm is triggered if any corridor area is occupied
-more than 90% of the time during the last hour.""",
+more than 90% of the time during the last hour, which may indicate an animal sleeping
+in that area, debris in the corridor, or a false detection from a badly tuned
+threshold. Whatever the cause, an area that is always occupied stops the animals from
+entering and leaving the operant box normally.""",
     ),
 ]
 

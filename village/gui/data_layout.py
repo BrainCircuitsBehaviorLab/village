@@ -224,7 +224,10 @@ class TableView(QTableView):
                 value = value.replace("  |  ", "\n  ")
                 lines.append(f"{header}: {value}")
             self.show_text_dialog("\n".join(lines))
-            self.clearSelection()
+            try:
+                self.clearSelection()
+            except RuntimeError:
+                return
 
     def save_changes_in_df(self, update: bool = True) -> None:
         try:

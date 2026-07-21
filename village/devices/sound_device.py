@@ -160,17 +160,15 @@ class SoundDevice:
             device=self.device,
         )
         info = self.pcm.info()
-        # log.info(
-        #     f"Sound device '{self.device}': rate={info['rate']} "
-        #     f"period_size={info['period_size']} "
-        #     f"buffer_size={info['buffer_size']} "
-        #     f"({1000 * info['buffer_size'] / info['rate']:.2f} ms buffered)"
-        # )
         if info["rate"] != self.samplerate:
-            log.error(
+            msg = (
                 f"Sound device granted rate {info['rate']} Hz but "
-                f"{self.samplerate} Hz was requested; pitch/duration will be wrong."
+                f"{self.samplerate} Hz was requested. pitch/duration will be wrong."
             )
+            try:
+                error_queue.put_nowait(("sound", msg))
+            except queue.Full:
+                pass
 
         self._sound: np.ndarray = np.empty((0, 2), dtype=np.int32)
         self._stop_flag = False  # asks the worker to fade out
@@ -204,11 +202,15 @@ class SoundDevice:
         self._play_deadline = 0.0  # monotonic time by which playback must be done
         self._play_event = threading.Event()
         if not PCM_STATES:
-            log.error(
+            msg = (
                 "pyalsaaudio exposes no PCM_STATE_* constants: the PCM state "
                 "cannot be read, so the device cannot be re-armed and every "
                 "play() will pay the ~11 ms prepare."
             )
+            try:
+                error_queue.put_nowait(("sound", msg))
+            except queue.Full:
+                pass
 
         self._warm_up()
 
@@ -283,10 +285,15 @@ class SoundDevice:
         # Never reached PREPARED. Not fatal, but every play() will now pay the
         # ~11 ms prepare, silently, so say so: SUSPENDED (needs snd_pcm_resume,
         # after a system suspend) and DISCONNECTED (card gone) end up here.
-        log.error(
+        msg = (
             f"Sound device: could not re-arm the PCM, stuck in "
-            f"'{self._pcm_state()}'; the next play() will be slow."
+            f"'{self._pcm_state()}'. The next play() will be slow."
         )
+        log.error(msg)
+        try:
+            error_queue.put_nowait(("sound", msg))
+        except queue.Full:
+            pass
 
     @staticmethod
     def _resolve_device(name: Any) -> tuple[str, int]:
@@ -333,7 +340,7 @@ class SoundDevice:
         except Exception:
             pass
 
-        log.error(f"Could not resolve SOUND_DEVICE '{text}'; falling back to hw:0,0")
+        log.error(f"Could not resolve SOUND_DEVICE '{text}'. Falling back to hw:0,0")
         return "hw:0,0", 0
 
     @staticmethod
@@ -382,13 +389,18 @@ class SoundDevice:
             if not self._playing and self._pcm_state() == "PREPARED":
                 return
             time.sleep(0.001)
-        log.error(
+        msg = (
             f"Sound device: timed out waiting for the PCM to be ready "
             f"(state='{self._pcm_state()}', playing={self._playing}). If playing "
             f"is True the audio thread is stuck inside write(): the DAC most "
             f"likely did not restart. Dump the threads with: "
             f"sudo py-spy dump --pid {os.getpid()}"
         )
+        log.error(msg)
+        try:
+            error_queue.put_nowait(("sound", msg))
+        except queue.Full:
+            pass
 
     def _apply_ramps(self, stereo: np.ndarray) -> np.ndarray:
         """Fades a float (frames, 2) array in at the start and out at the end.
@@ -533,13 +545,18 @@ class SoundDevice:
             deadline = self._play_deadline
             if self._playing and deadline and time.monotonic() > deadline:
                 self._play_deadline = 0.0
-                log.error(
+                msg = (
                     f"Sound device: playback overran by "
                     f"{time.monotonic() - deadline:.1f} s "
                     f"(state='{self._pcm_state()}'): the audio thread is stuck "
-                    f"inside write(). Dropping the PCM to recover; this sound is "
+                    f"inside write(). Dropping the PCM to recover. This sound is "
                     f"lost. PID {os.getpid()} if you want py-spy."
                 )
+                log.error(msg)
+                try:
+                    error_queue.put_nowait(("sound", msg))
+                except queue.Full:
+                    pass
                 try:
                     self.pcm.drop()
                 except Exception:
@@ -658,7 +675,7 @@ class SoundDevice:
             self._worker.join(timeout=2.0)
             if self._worker.is_alive():
                 log.error(
-                    "Sound device: the audio thread did not finish; leaving the "
+                    "Sound device: the audio thread did not finish. Leaving the "
                     "PCM open on purpose (closing it while in use can crash the "
                     "driver). It is released when the process exits."
                 )

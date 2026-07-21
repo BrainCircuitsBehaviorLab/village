@@ -640,29 +640,31 @@ class Manager:
     def cycle_checks(self) -> None:
         """Performs daily cycle checks and logs alarms for missing detections,
         sessions, or syncs."""
-        self.check_corridor_lights()
         text, non_det_subs, non_ses_subs, low_water_subs, sync = self.create_report(24)
-        log.alarm(text, report=True)
-        if (
-            len(non_det_subs) > 0
-            and settings.get("NO_DETECTION_SUBJECT_24H") == Active.ON
-        ):
-            log.alarm(
-                "Subjects not detected in the last 24 hours: " + ", ".join(non_det_subs)
-            )
-        if (
-            len(non_ses_subs) > 0
-            and settings.get("NO_SESSION_SUBJECT_24H") == Active.ON
-        ):
-            log.alarm(
-                "Subjects with no sessions in the last 24 hours: "
-                + ", ".join(non_ses_subs)
-            )
-        if len(low_water_subs) > 0:
-            log.alarm(
-                "Subjects with low water intake in the last 24 hours: "
-                + ", ".join(low_water_subs)
-            )
+        if self.use_of_corridor:
+            self.check_corridor_lights()
+            log.alarm(text, report=True)
+            if (
+                len(non_det_subs) > 0
+                and settings.get("NO_DETECTION_SUBJECT_24H") == Active.ON
+            ):
+                log.alarm(
+                    "Subjects not detected in the last 24 hours: "
+                    + ", ".join(non_det_subs)
+                )
+            if (
+                len(non_ses_subs) > 0
+                and settings.get("NO_SESSION_SUBJECT_24H") == Active.ON
+            ):
+                log.alarm(
+                    "Subjects with no sessions in the last 24 hours: "
+                    + ", ".join(non_ses_subs)
+                )
+            if len(low_water_subs) > 0:
+                log.alarm(
+                    "Subjects with low water intake in the last 24 hours: "
+                    + ", ".join(low_water_subs)
+                )
         if not sync and settings.get("SYNC_TYPE") != SyncType.OFF:
             log.alarm("No data sync in the last 24 hours.")
         self.change_cycle_flag = True
@@ -792,19 +794,20 @@ class Manager:
     def hourly_checks(self) -> None:
         """Performs hourly system health checks including temperature, disk space,
         and recent activity."""
-        temp, _, temp_string = temp_sensor.get_temperature()
-        if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
-            log.alarm("High temperature: " + temp_string)
-        elif temp < float(settings.get("MINIMUM_TEMPERATURE")):
-            log.alarm("Low temperature: " + temp_string)
+        if self.use_of_corridor:
+            temp, _, temp_string = temp_sensor.get_temperature()
+            if temp > float(settings.get("MAXIMUM_TEMPERATURE")):
+                log.alarm("High temperature: " + temp_string)
+            elif temp < float(settings.get("MINIMUM_TEMPERATURE")):
+                log.alarm("Low temperature: " + temp_string)
 
-        if self.detections.trigger_empty():
-            value = str(self.detections.hours)
-            log.alarm("No detections in the last " + value + " hours")
+            if self.detections.trigger_empty():
+                value = str(self.detections.hours)
+                log.alarm("No detections in the last " + value + " hours")
 
-        if self.sessions.trigger_empty():
-            value = str(self.sessions.hours)
-            log.alarm("No sessions in the last " + value + " hours")
+            if self.sessions.trigger_empty():
+                value = str(self.sessions.hours)
+                log.alarm("No sessions in the last " + value + " hours")
 
         if utils.has_low_disk_space():
             log.alarm("Low disk space (less than 10GB)")

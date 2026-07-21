@@ -17,7 +17,7 @@ Every hour, the system runs an automated background diagnostic.
 
 *   **Temperature Monitoring:** The system checks the current room temperature against safety thresholds.
 *   **Activity Detection:** The system flags if no animal has been detected by the RFID readers or if no behavioral sessions have been initiated for a specified number of consecutive hours (6 hours by default).
-*   **Corridor Occupation:** The system checks whether any corridor area has been continuously occupied for more than 90% of the last hour, which may indicate an animal is sleeping in that area or a false detection is occurring.
+*   **Corridor Occupation:** The system checks whether any corridor area has been occupied for more than 90% of the last hour, which may indicate an animal sleeping in that area, debris in the corridor, or a false detection from a badly tuned threshold. Whatever the cause, an area that is always occupied stops the animals from entering and leaving the operant box normally.
 
 ```{admonition} Troubleshooting Context
 :class: tip
