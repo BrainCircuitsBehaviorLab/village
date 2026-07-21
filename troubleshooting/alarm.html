@@ -468,7 +468,7 @@ All commands start with the <code class="docutils literal notranslate"><span cla
 <ul class="simple">
 <li><p><strong>Temperature Monitoring:</strong> The system checks the current room temperature against safety thresholds.</p></li>
 <li><p><strong>Activity Detection:</strong> The system flags if no animal has been detected by the RFID readers or if no behavioral sessions have been initiated for a specified number of consecutive hours (6 hours by default).</p></li>
-<li><p><strong>Corridor Occupation:</strong> The system checks whether any corridor area has been continuously occupied for more than 90% of the last hour, which may indicate an animal is sleeping in that area or a false detection is occurring.</p></li>
+<li><p><strong>Corridor Occupation:</strong> The system checks whether any corridor area has been occupied for more than 90% of the last hour, which may indicate an animal sleeping in that area, debris in the corridor, or a false detection from a badly tuned threshold. Whatever the cause, an area that is always occupied stops the animals from entering and leaving the operant box normally.</p></li>
 </ul>
 <div class="tip admonition">
 <p class="admonition-title">Troubleshooting Context</p>
@@ -705,7 +705,7 @@ When it is not clear what sequence of events produced the alarm, review the vide
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8d19a7d4"></script>
+      <script src="../_static/documentation_options.js?v=4de6ef4c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
