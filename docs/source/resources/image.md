@@ -16,7 +16,17 @@ Here you can download a disk image containing the operating system (Raspberry Pi
 4. Click Choose OS → scroll down → Use custom image → select the downloaded file
 5. Click Choose Storage → select your SD card
 6. Click Write and wait for it to finish (Raspberry Pi Imager will verify the image automatically)
-7. Insert the SD card into your Raspberry Pi and power it on. On the first boot the system will automatically expand the partition to fill the SD card — this takes about a minute.
+7. Insert the SD card into your Raspberry Pi and power it on.
+
+This is a custom image, cloned from an already-configured Raspberry Pi, so the
+automatic first-boot partition expansion may not run again on your SD card. The
+following steps expand the partition by hand, so the full capacity of your card
+is available instead of being limited to the size of the card the image was
+originally created on.
+
+8. Open a terminal and run `sudo raspi-config`
+9. Go to `Advanced Options` → `Expand Filesystem`
+10. Reboot when prompted
 
 
 [IMAGER]: https://www.raspberrypi.com/software/

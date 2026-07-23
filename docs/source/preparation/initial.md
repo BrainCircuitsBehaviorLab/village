@@ -3,7 +3,7 @@
 ### Preliminary Steps
 If you purchased a Training Village from us, the system arrives fully pre-assembled. However, should you ever need to assemble or adjust any components yourself, the process is straightforward and only requires an Allen key and a screwdriver. The setup can be easily managed by following these [instructions][INSTRUCTIONS].
 
-We provide the Raspberry Pi along with an SD card that contains both the operating system (Raspberry Pi OS) and all required software pre-installed.
+We provide the Raspberry Pi along with an SD card that already contains the operating system (Raspberry Pi OS) and all required software pre-installed. If you ever need to write this image onto a new SD card yourself, you can find the disk image and step-by-step instructions [here][IMAGE].
 
 ```{admonition} Build-It-Yourself
 :class: tip
