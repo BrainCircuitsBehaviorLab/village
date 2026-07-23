@@ -459,7 +459,17 @@ data-aria-dark="Switch to auto color mode">
 <li><p>Click Choose OS → scroll down → Use custom image → select the downloaded file</p></li>
 <li><p>Click Choose Storage → select your SD card</p></li>
 <li><p>Click Write and wait for it to finish (Raspberry Pi Imager will verify the image automatically)</p></li>
-<li><p>Insert the SD card into your Raspberry Pi and power it on. On the first boot the system will automatically expand the partition to fill the SD card — this takes about a minute.</p></li>
+<li><p>Insert the SD card into your Raspberry Pi and power it on.</p></li>
+</ol>
+<p>This is a custom image, cloned from an already-configured Raspberry Pi, so the
+automatic first-boot partition expansion may not run again on your SD card. The
+following steps expand the partition by hand, so the full capacity of your card
+is available instead of being limited to the size of the card the image was
+originally created on.</p>
+<ol class="arabic simple" start="8">
+<li><p>Open a terminal and run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">raspi-config</span></code></p></li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">Advanced</span> <span class="pre">Options</span></code> → <code class="docutils literal notranslate"><span class="pre">Expand</span> <span class="pre">Filesystem</span></code></p></li>
+<li><p>Reboot when prompted</p></li>
 </ol>
 </section>
 </section>
@@ -501,7 +511,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4de6ef4c"></script>
+      <script src="../_static/documentation_options.js?v=07ad990c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
