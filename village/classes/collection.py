@@ -1,3 +1,4 @@
+import csv
 import os
 import sys
 import traceback
@@ -89,9 +90,8 @@ class Collection:
         new_row = pd.DataFrame([entry_str], columns=self.columns)
         new_row = self.convert_df_to_types(new_row)
         self.df = pd.concat([self.df, new_row], ignore_index=True)
-        columns_str: str = ";".join(entry_str) + "\n"
-        with open(self.path, "a", encoding="utf-8") as file:
-            file.write(columns_str)
+        with open(self.path, "a", encoding="utf-8", newline="") as file:
+            csv.writer(file, delimiter=";", lineterminator="\n").writerow(entry_str)
         self.check_split_csv()
 
     @staticmethod
@@ -137,7 +137,7 @@ class Collection:
         if len(self.df) > max_size:
             first_rows: pd.DataFrame = self.df.head(file_size)
             date_str: str = time_utils.now_string_for_filename()
-            new_filename: str = self.name + "_" + date_str + ".csv"
+            new_filename: str = self.path.stem + "_" + date_str + ".csv"
             directory = Path(settings.get("SYSTEM_DIRECTORY"), "old_events")
             new_path = Path(directory, new_filename)
             directory.mkdir(parents=True, exist_ok=True)
