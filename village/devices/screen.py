@@ -107,7 +107,9 @@ class VideoWorker(QObject):
 
         except Exception:
             try:
-                error_queue.put_nowait(("video", traceback.format_exc()))
+                error_queue.put_nowait(
+                    ("video", "Error in video worker", traceback.format_exc())
+                )
             except queue.Full:
                 pass
         finally:

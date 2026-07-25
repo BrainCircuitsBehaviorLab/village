@@ -166,7 +166,7 @@ class SoundDevice:
                 f"{self.samplerate} Hz was requested. pitch/duration will be wrong."
             )
             try:
-                error_queue.put_nowait(("sound", msg))
+                error_queue.put_nowait(("sound", msg, ""))
             except queue.Full:
                 pass
 
@@ -199,6 +199,8 @@ class SoundDevice:
         # so no thread creation, no dlopen and no syscall in the play path.
         self._shutdown = False
         self._playing = False  # True while the worker is inside write()
+        self._stopping = False  # True while a stop() is still completing
+        self._loaded = False  # True once a sound has been built and staged
         self._play_deadline = 0.0  # monotonic time by which playback must be done
         self._play_event = threading.Event()
         if not PCM_STATES:
@@ -208,7 +210,7 @@ class SoundDevice:
                 "play() will pay the ~11 ms prepare."
             )
             try:
-                error_queue.put_nowait(("sound", msg))
+                error_queue.put_nowait(("sound", msg, ""))
             except queue.Full:
                 pass
 
@@ -289,9 +291,8 @@ class SoundDevice:
             f"Sound device: could not re-arm the PCM, stuck in "
             f"'{self._pcm_state()}'. The next play() will be slow."
         )
-        log.error(msg)
         try:
-            error_queue.put_nowait(("sound", msg))
+            error_queue.put_nowait(("sound", msg, ""))
         except queue.Full:
             pass
 
@@ -396,9 +397,8 @@ class SoundDevice:
             f"likely did not restart. Dump the threads with: "
             f"sudo py-spy dump --pid {os.getpid()}"
         )
-        log.error(msg)
         try:
-            error_queue.put_nowait(("sound", msg))
+            error_queue.put_nowait(("sound", msg, ""))
         except queue.Full:
             pass
 
@@ -452,6 +452,7 @@ class SoundDevice:
         self._wait_ready()  # fade and re-arm done: the next play() is instant
         with self._lock:
             self._sound = vec
+            self._loaded = True  # play() is now allowed; stays armed for replays
 
     def load_wav(self, file: str) -> None:
         """Loads a WAV file, ready to be played.
@@ -552,9 +553,8 @@ class SoundDevice:
                     f"inside write(). Dropping the PCM to recover. This sound is "
                     f"lost. PID {os.getpid()} if you want py-spy."
                 )
-                log.error(msg)
                 try:
-                    error_queue.put_nowait(("sound", msg))
+                    error_queue.put_nowait(("sound", msg, ""))
                 except queue.Full:
                     pass
                 try:
@@ -587,7 +587,9 @@ class SoundDevice:
                     pass  # stop()/watchdog dropped it mid-write
                 except Exception:
                     try:
-                        error_queue.put_nowait(("sound", traceback.format_exc()))
+                        error_queue.put_nowait(
+                            ("sound", "Sound device error", traceback.format_exc())
+                        )
                     except queue.Full:
                         pass
                 finally:
@@ -595,26 +597,41 @@ class SoundDevice:
                     # True for ever, and from then on every play() is ignored and
                     # every load() times out. The device would be dead until restart.
                     self._playing = False
+                    self._stopping = False  # the stop (if any) is now complete
                     self._play_deadline = 0.0
             self._rearm()
 
     def play(self) -> None:
-        """Triggers playback: just wakes the worker. No drop() here.
+        """Plays the currently loaded sound.
 
-        The PCM is already PREPARED (re-armed in dead time), so the worker's
-        write starts the hardware immediately. Dropping here would put the PCM
-        back in SETUP and make the write pay the ~11.5 ms prepare again.
+        The same loaded sound may be replayed as many times as wanted; load()
+        is only needed to change the sound. Calling play() before anything has
+        ever been loaded is an error (reported to the alarm queue).
+
+        Fast path (nothing is being stopped): just wakes the worker; the PCM is
+        already PREPARED, so the write starts the hardware immediately. The one
+        non-instant case is play() landing while a stop() is still draining --
+        then it waits for that stop to finish, then plays.
         """
+        if not self._loaded:
+            try:
+                error_queue.put_nowait(("sound", "play() called before any load()", ""))
+            except queue.Full:
+                pass
+            return
+        if self._playing and not self._stopping:
+            # Genuinely playing (no stop requested): ignore.
+            log.info("Sound device: play() ignored, a sound is already playing")
+            return
+        if self._stopping:
+            # A stop() is still draining/fading. Wait for it to finish and the
+            # PCM to re-arm, then play. This is the only non-instant play path.
+            self._wait_ready()
         with self._lock:
             if not len(self._sound):
                 return
-            if self._playing:
-                # Already playing: ignore. Deterministic on purpose -- _playing is
-                # set HERE, by the caller, not by the worker, so the outcome never
-                # depends on whether the worker happened to wake up first.
-                log.info("Sound device: play() ignored, a sound is already playing")
-                return
             self._playing = True
+            self._stop_flag = False
             # How long this sound may legitimately take: its own duration, plus
             # the ring it has to drain, plus a second of slack. Past that, the
             # write is not slow, it is stuck.
@@ -624,19 +641,22 @@ class SoundDevice:
                 + self._drain_s
                 + 1.0
             )
-            self._stop_flag = False
             self._play_event.set()
 
     def stop(self) -> None:
-        """Stops playback immediately. A no-op if nothing is playing.
+        """Asks the worker to stop playback. Non-blocking. A no-op if idle.
+
+        Sets _stopping so a play() (or load()) that lands before the stop has
+        finished knows to wait for it instead of racing. The worker clears
+        _stopping (and _playing) once the stop actually completes.
 
         Idempotent on purpose: dropping an idle PCM would move it out of
         PREPARED into SETUP, and the next play() would pay the ~11.5 ms prepare
-        again. So a second stop(), or a stop() with no sound running, does
-        nothing and leaves the PCM armed.
+        again. So a stop() with no sound running does nothing.
         """
         if not self._playing:
             return
+        self._stopping = True
         if self._ramp_frames <= 0:
             try:
                 self.pcm.drop()  # instant (18 us) but abrupt: a step -> click

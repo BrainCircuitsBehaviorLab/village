@@ -168,33 +168,23 @@ def system_run() -> None:
             time.sleep(1)
 
             try:
+                alarm_timers = {
+                    "sound": sound_alarm_timer,
+                    "video": video_alarm_timer,
+                    "cam": cam_alarm_timer,
+                    "touchscreen": touchscreen_alarm_timer,
+                }
                 while True:
-                    device, error = error_queue.get_nowait()
-                    if device == "sound" and sound_alarm_timer.has_elapsed():
+                    # Producers put a human-readable summary in `description`
+                    # (goes to Telegram + events) and the Python traceback, if
+                    # any, in `tb` (events only -- kept out of the notification
+                    # so a long traceback never floods Telegram).
+                    device, description, tb = error_queue.get_nowait()
+                    timer = alarm_timers.get(device)
+                    if timer is not None and timer.has_elapsed():
                         log.alarm(
-                            "Error in sound device",
-                            exception=error,
-                            subject=manager.subject.name,
-                        )
-                    elif device == "video" and video_alarm_timer.has_elapsed():
-                        log.alarm(
-                            "Error in video worker",
-                            exception=error,
-                            subject=manager.subject.name,
-                        )
-                    elif device == "cam" and cam_alarm_timer.has_elapsed():
-                        log.alarm(
-                            "Error in camera",
-                            exception=error,
-                            subject=manager.subject.name,
-                        )
-                    elif (
-                        device == "touchscreen"
-                        and touchscreen_alarm_timer.has_elapsed()
-                    ):
-                        log.alarm(
-                            "Error in touchscreen",
-                            exception=error,
+                            description,
+                            exception=(tb or None),
                             subject=manager.subject.name,
                         )
             except queue.Empty:

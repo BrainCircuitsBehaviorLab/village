@@ -389,10 +389,10 @@ class Camera:
                 error_queue.put_nowait(
                     (
                         "cam",
-                        "Cam "
+                        "Camera "
                         + self.name
-                        + ": start_encoder failed\n"
-                        + traceback.format_exc(),
+                        + ": start_encoder failed, recording off.",
+                        traceback.format_exc(),
                     )
                 )
             except queue.Full:
@@ -525,7 +525,7 @@ class Camera:
         self.watchdog_timer.stop()
         try:
             error_queue.put_nowait(
-                ("cam", "Camera " + self.name + ": " + reason + ". Restarting.")
+                ("cam", "Camera " + self.name + ": " + reason + ". Restarting.", "")
             )
         except queue.Full:
             pass

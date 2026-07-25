@@ -82,7 +82,9 @@ class Touch:
                             manager.touch_trigger.trigger(px, py, ts)
         except Exception:
             try:
-                error_queue.put_nowait(("touchscreen", traceback.format_exc()))
+                error_queue.put_nowait(
+                    ("touchscreen", "Touchscreen error", traceback.format_exc())
+                )
             except Exception:
                 pass
 
