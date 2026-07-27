@@ -1,7 +1,6 @@
 import json
 import traceback
 from pathlib import Path
-from threading import Thread
 from typing import TYPE_CHECKING, Any, Callable, Tuple
 
 import pandas as pd
@@ -13,7 +12,6 @@ from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
 from village.controllers.trial_recorder import TrialRecorder
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
-from village.devices.sound_device import sound_device
 from village.pybpodapi.hardware.events import EventName
 from village.pybpodapi.hardware.output_channels import OutputChannel
 from village.scripts.log import log
@@ -292,7 +290,6 @@ class TaskBase:
         self.training: TrainingProtocolBase = TrainingProtocolBase()
         self.trial_data: dict = {}
 
-        self.process = Thread()
         self.raw_df: pd.DataFrame = pd.DataFrame()
         self.session_df: pd.DataFrame = pd.DataFrame()
         self.subject_df: pd.DataFrame = pd.DataFrame()
@@ -442,25 +439,6 @@ class TaskBase:
             or self.stop_button_pressed
         )
 
-    def run_in_thread(self, daemon: bool = True) -> None:
-        """Runs the task in a separate background thread.
-
-        Args:
-            daemon (bool, optional): Whether to run as a daemon thread.
-                Defaults to True.
-        """
-
-        def test_run():
-            self.create_paths()
-            self.start()
-            while not self.should_stop:
-                self.do_trial()
-            self.disconnect_and_save("Manual")
-
-        self.process = Thread(target=test_run, daemon=daemon)
-        self.process.start()
-        return
-
     def run(self) -> None:
         """Runs the task in the main thread until completion or forced stop."""
         self.chrono.reset()
@@ -519,7 +497,6 @@ class TaskBase:
                 subject=self.subject,
                 exception=traceback.format_exc(),
             )
-        sound_device.stop()
         self.recorder.close()
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod.stop()

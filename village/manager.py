@@ -45,6 +45,7 @@ from village.devices.chip import (
     visible_light_corridor,
 )
 from village.devices.screen import screen
+from village.devices.sound_device import sound_device
 from village.devices.temp_sensor import temp_sensor
 from village.scripts import utils
 from village.scripts.log import log
@@ -417,6 +418,8 @@ class Manager:
                 self.task.arduino = self.arduino
                 self.task.arduino.connect()
                 self.task.recorder = self.arduino.recorder
+            sound_device.recorder = self.task.recorder
+            screen.recorder = self.task.recorder
             self.task.run()
         except Exception:
             if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:
@@ -490,6 +493,10 @@ class Manager:
         """
         screen.load_draw_function(None)
         screen.stop_drawing()
+        sound_device.stop()  # cut any sound still playing at session end
+        # Stop routing device events into a recorder whose task is ending.
+        sound_device.recorder = None
+        screen.recorder = None
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
             run_mode
         )

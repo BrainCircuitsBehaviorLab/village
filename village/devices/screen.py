@@ -5,7 +5,7 @@ import queue
 import subprocess
 import time
 import traceback
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 import cv2
 import gpiod
@@ -30,6 +30,9 @@ from village.devices.sound_device import sound_device
 from village.scripts.error_queue import error_queue
 from village.scripts.time_utils import time_utils
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.controllers.trial_recorder import TrialRecorder
 
 
 class VideoWorker(QObject):
@@ -212,6 +215,14 @@ class Screen(QOpenGLWidget):
         self.y = 0
         self.blend = False
         self.image: Optional[QPixmap] = None
+        # When new visual content is requested, this holds its label until the
+        # first paintGL that actually draws it -- at which point that frame's
+        # timestamp is recorded as the on-screen onset, then this is cleared.
+        self._pending_onset_label: Optional[str] = None
+        # Injected by manager.run_task() to the running task's recorder, so
+        # paintGL can log the on-screen onset without importing manager (which
+        # would be a circular import). None until a task is running.
+        self.recorder: TrialRecorder | None = None
 
         app = QApplication.instance()
         if app is not None:
@@ -254,12 +265,15 @@ class Screen(QOpenGLWidget):
         """
         self.stop_drawing()
         self._draw_fn = draw_fn
+        self._pending_onset_label = "screen_draw"
 
     def start_drawing(self) -> None:
         """Starts the rendering loop. Call this when you want the stimulus to appear."""
         if self.active:
             return
         self.active = True
+        # Fallback label if nothing was loaded since the last show.
+        self._pending_onset_label = self._pending_onset_label or "screen_start"
         self._start_timing = time_utils.get_time_monotonic()
         if not self._swap_connected:
             self.frameSwapped.connect(self.update, Qt.ConnectionType.UniqueConnection)
@@ -295,6 +309,7 @@ class Screen(QOpenGLWidget):
         media_directory = settings.get("MEDIA_DIRECTORY")
         image_path = os.path.join(media_directory, file)
         self.image = QPixmap(image_path)
+        self._pending_onset_label = "screen_image_" + file
 
     def _extract_audio(
         self, video_path: str
@@ -345,6 +360,7 @@ class Screen(QOpenGLWidget):
         self._video_thread.started.connect(self._video_worker.run)
         self._video_thread.finished.connect(self._on_video_thread_finished)
         self._video_thread.start()
+        self._pending_onset_label = "screen_video_" + file
 
     def stop_video(self) -> None:
         """Stops the video playback and waits for the thread to finish."""
@@ -400,6 +416,19 @@ class Screen(QOpenGLWidget):
         now = time_utils.get_time_monotonic()
         self.elapsed_time = now - self._start_timing
         self.frame += 1
+
+        # First frame that actually draws newly-requested content: record its
+        # on-screen onset (aligned with the GPIO sync pulse just set above), then
+        # clear so it is recorded once per new content.
+        rec = self.recorder
+        if self._pending_onset_label is not None and rec is not None:
+            try:
+                rec.register_event_if_active(
+                    self._pending_onset_label, time_utils.now_timestamp()
+                )
+            except Exception:
+                pass
+        self._pending_onset_label = None
 
         try:
             self._draw_fn()

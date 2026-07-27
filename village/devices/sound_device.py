@@ -6,7 +6,7 @@ import threading
 import time
 import traceback
 from math import gcd
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import alsaaudio
 import numpy as np
@@ -17,7 +17,11 @@ from village.classes.enums import Active
 from village.classes.null_classes import NullSoundDevice
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
+from village.scripts.time_utils import time_utils
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.controllers.trial_recorder import TrialRecorder
 
 # SCHED_FIFO priority for the audio thread. Deliberately low: threaded IRQ
 # handlers run at ~50, so anything above that can starve interrupts (USB, timers,
@@ -203,6 +207,10 @@ class SoundDevice:
         self._loaded = False  # True once a sound has been built and staged
         self._play_deadline = 0.0  # monotonic time by which playback must be done
         self._play_event = threading.Event()
+        # Injected by manager.run_task() to the running task's recorder, so the
+        # worker can log the play onset without importing manager (which would
+        # be a circular import). None until a task is running.
+        self.recorder: "TrialRecorder | None" = None
         if not PCM_STATES:
             msg = (
                 "pyalsaaudio exposes no PCM_STATE_* constants: the PCM state "
@@ -580,8 +588,14 @@ class SoundDevice:
             if self._play_event.is_set():
                 self._play_event.clear()
                 sound = self._sound
+                play_ts: float | None = None
                 try:
                     if len(sound):
+                        # Captured right before the write, so it reflects the real
+                        # onset AFTER any scheduling delay (the CPU-busy latency
+                        # lives between play() and here). Recorded below, AFTER the
+                        # write, so the CSV flush never delays the audio itself.
+                        play_ts = time_utils.now_timestamp()
                         self._write_sound(sound)
                 except alsaaudio.ALSAAudioError:
                     pass  # stop()/watchdog dropped it mid-write
@@ -599,6 +613,12 @@ class SoundDevice:
                     self._playing = False
                     self._stopping = False  # the stop (if any) is now complete
                     self._play_deadline = 0.0
+                rec = self.recorder
+                if play_ts is not None and rec is not None:
+                    try:
+                        rec.register_event_if_active("sound", play_ts)
+                    except Exception:
+                        pass
             self._rearm()
 
     def play(self) -> None:

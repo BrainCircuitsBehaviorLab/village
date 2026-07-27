@@ -1,5 +1,6 @@
 import csv
 import os
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,14 @@ class TrialRecorder:
     CSV_COLUMNS = ["TRIAL", "START", "END", "MSG", "VALUE"]
 
     def __init__(self) -> None:
+        # Reentrant: device threads (sound worker, touch reader, GL paint) record
+        # events concurrently with the task thread. Every public method takes this
+        # lock, so the accumulators and the CSV writer are never touched by two
+        # threads at once. Reentrant because some public methods call others.
+        self._lock = threading.RLock()
+        # Events are only recorded between start_trial() and get_trial_data();
+        # outside that window register_event_if_active() drops them.
+        self._trial_active: bool = False
         self._csv_path = str(Path(settings.get("SESSIONS_DIRECTORY"), "session.csv"))
         self._csv_file = None
         self._csv_writer = None
@@ -60,20 +69,22 @@ class TrialRecorder:
         The offset is computed as:
                 offset = raspberry_timestamp - controller_timestamp
         """
-        self._trial_number += 1
+        with self._lock:
+            self._trial_number += 1
 
-        self._time_offset = raspberry_timestamp - controller_timestamp
+            self._time_offset = raspberry_timestamp - controller_timestamp
 
-        self._trial_start = round(raspberry_timestamp, 4)
-        self._current_state = None
-        self._current_state_start = None
-        self._states_start = {}
-        self._states_end = {}
-        self._events = {}
-        self._ordered_events = []
-        self._values = {}
-        timestamp_str = f"{raspberry_timestamp:.4f}"
-        self._write_csv_row(timestamp_str, "", "TRIAL_START", "")
+            self._trial_start = round(raspberry_timestamp, 4)
+            self._current_state = None
+            self._current_state_start = None
+            self._states_start = {}
+            self._states_end = {}
+            self._events = {}
+            self._ordered_events = []
+            self._values = {}
+            self._trial_active = True
+            timestamp_str = f"{raspberry_timestamp:.4f}"
+            self._write_csv_row(timestamp_str, "", "TRIAL_START", "")
 
     def enter_state(self, state_name: str, controller_timestamp: float) -> None:
         """Record entering a new state. Closes the previous state.
@@ -82,12 +93,13 @@ class TrialRecorder:
             state_name: Name of the state being entered.
             controller_timestamp: Controller clock timestamp.
         """
-        abs_ts = self._to_absolute(controller_timestamp)
-        self._close_current_state(abs_ts)
-        self._current_state = state_name
-        self._current_state_start = abs_ts
-        timestamp_str = f"{abs_ts:.4f}"
-        self._write_csv_row(timestamp_str, "", f"_Transition_to_{state_name}", "")
+        with self._lock:
+            abs_ts = self._to_absolute(controller_timestamp)
+            self._close_current_state(abs_ts)
+            self._current_state = state_name
+            self._current_state_start = abs_ts
+            timestamp_str = f"{abs_ts:.4f}"
+            self._write_csv_row(timestamp_str, "", f"_Transition_to_{state_name}", "")
 
     def add_controller_event(
         self, event_name: str, controller_timestamp: float
@@ -99,7 +111,8 @@ class TrialRecorder:
             controller_timestamp: Controller clock timestamp, converted to
                 absolute raspberry time.
         """
-        self._add_event(event_name, self._to_absolute(controller_timestamp))
+        with self._lock:
+            self._add_event(event_name, self._to_absolute(controller_timestamp))
 
     def add_raspberry_event(self, event_name: str, raspberry_timestamp: float) -> None:
         """Record an event using an already-absolute raspberry timestamp.
@@ -109,7 +122,21 @@ class TrialRecorder:
             raspberry_timestamp: Raspberry time, used as-is regardless of
                 whether a controller is being used.
         """
-        self._add_event(event_name, round(raspberry_timestamp, 4))
+        with self._lock:
+            self._add_event(event_name, round(raspberry_timestamp, 4))
+
+    def register_event_if_active(
+        self, event_name: str, raspberry_timestamp: float
+    ) -> None:
+        """Record a raspberry-timestamped event, but only during an open trial.
+
+        Safe to call from any thread. Used by device subsystems (sound worker,
+        touch reader, screen paint) that fire asynchronously -- events arriving
+        outside a trial are dropped instead of leaking into a closed one.
+        """
+        with self._lock:
+            if self._trial_active:
+                self._add_event(event_name, round(raspberry_timestamp, 4))
 
     def _add_event(self, event_name: str, abs_ts: float) -> None:
         if event_name not in self._events:
@@ -126,8 +153,9 @@ class TrialRecorder:
             name: Name of the value.
             value: The value to record.
         """
-        self._values[name] = value
-        self._write_csv_row("", "", name, str(value))
+        with self._lock:
+            self._values[name] = value
+            self._write_csv_row("", "", name, str(value))
 
     def end_trial(self, controller_timestamp: float) -> None:
         """Mark the end of the current trial. Closes the last open state.
@@ -135,28 +163,29 @@ class TrialRecorder:
         Args:
             controller_timestamp: Controller clock timestamp.
         """
-        abs_ts = self._to_absolute(controller_timestamp)
-        self._close_current_state(abs_ts)
-        self._trial_end = abs_ts
-        timestamp_str = f"{abs_ts:.4f}"
-        self._write_csv_row(timestamp_str, "", "TRIAL_END", "")
+        with self._lock:
+            abs_ts = self._to_absolute(controller_timestamp)
+            self._close_current_state(abs_ts)
+            self._trial_end = abs_ts
+            timestamp_str = f"{abs_ts:.4f}"
+            self._write_csv_row(timestamp_str, "", "TRIAL_END", "")
 
-        self._write_csv_row(
-            f"{self._trial_start:.4f}",
-            timestamp_str,
-            "TRIAL",
-            "",
-        )
+            self._write_csv_row(
+                f"{self._trial_start:.4f}",
+                timestamp_str,
+                "TRIAL",
+                "",
+            )
 
-        for state, start_times in self._states_start.items():
-            end_times = self._states_end.get(state.replace("START", "END"), [])
-            for start, end in zip(start_times, end_times):
-                self._write_csv_row(
-                    f"{start:.4f}",
-                    f"{end:.4f}",
-                    state.replace("_START", ""),
-                    "",
-                )
+            for state, start_times in self._states_start.items():
+                end_times = self._states_end.get(state.replace("START", "END"), [])
+                for start, end in zip(start_times, end_times):
+                    self._write_csv_row(
+                        f"{start:.4f}",
+                        f"{end:.4f}",
+                        state.replace("_START", ""),
+                        "",
+                    )
 
     def get_trial_data(
         self, date: str, trial: int, subject: str, name: str, system_name: str
@@ -169,46 +198,51 @@ class TrialRecorder:
         Returns:
             dict: Processed trial data.
         """
-        trial_data: dict[str, Any] = {
-            "date": date,
-            "trial": trial,
-            "subject": subject,
-            "task": name,
-            "system_name": system_name,
-        }
-        trial_data["TRIAL_START"] = self._trial_start
-        trial_data["TRIAL_END"] = self._trial_end
+        with self._lock:
+            # No more async events belong to this trial once we snapshot it.
+            self._trial_active = False
+            trial_data: dict[str, Any] = {
+                "date": date,
+                "trial": trial,
+                "subject": subject,
+                "task": name,
+                "system_name": system_name,
+            }
+            trial_data["TRIAL_START"] = self._trial_start
+            trial_data["TRIAL_END"] = self._trial_end
 
-        # States
-        interleaved = {}
-        for state, start_times in self._states_start.items():
-            interleaved[state] = start_times
-            end_key = state.replace("START", "END")
-            if end_key in self._states_end:
-                interleaved[end_key] = self._states_end[end_key]
+            # States
+            interleaved = {}
+            for state, start_times in self._states_start.items():
+                interleaved[state] = start_times
+                end_key = state.replace("START", "END")
+                if end_key in self._states_end:
+                    interleaved[end_key] = self._states_end[end_key]
 
-        trial_data.update(interleaved)
+            trial_data.update(interleaved)
 
-        # Events
-        trial_data.update(self._events)
+            # Events
+            trial_data.update(self._events)
 
-        trial_data["ordered_list_of_events"] = self._ordered_events
+            trial_data["ordered_list_of_events"] = self._ordered_events
 
-        self._write_csv_row("", "", "date", date)
-        self._write_csv_row("", "", "trial", str(trial))
-        self._write_csv_row("", "", "subject", subject)
-        self._write_csv_row("", "", "task", name)
-        self._write_csv_row("", "", "system_name", system_name)
+            self._write_csv_row("", "", "date", date)
+            self._write_csv_row("", "", "trial", str(trial))
+            self._write_csv_row("", "", "subject", subject)
+            self._write_csv_row("", "", "task", name)
+            self._write_csv_row("", "", "system_name", system_name)
 
-        return trial_data
+            return trial_data
 
     def close(self) -> None:
         """Close the CSV file if open."""
-        if self._csv_file:
-            self._csv_file.flush()
-            self._csv_file.close()
-            self._csv_file = None
-            self._csv_writer = None
+        with self._lock:
+            self._trial_active = False
+            if self._csv_file:
+                self._csv_file.flush()
+                self._csv_file.close()
+                self._csv_file = None
+                self._csv_writer = None
 
     def _close_current_state(self, timestamp: float) -> None:
         """Close the currently open state with the given end timestamp."""

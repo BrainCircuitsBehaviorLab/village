@@ -174,6 +174,7 @@ class NullMotor:
 class NullSoundDevice:
     samplerate: int = 44100
     error: str = ""
+    recorder: Any = None
 
     def load(self, load: Any, right: Any) -> None:
         """Loads sound data.
@@ -364,6 +365,7 @@ class NullCamera:
 
 class NullScreen(QWidget):
     error: str = ""
+    recorder: Any = None
     background_color = None
     width_px: int = 0
     height_px: int = 0
