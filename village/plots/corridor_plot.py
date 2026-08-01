@@ -2,9 +2,13 @@ from datetime import datetime, timedelta
 from typing import Union
 
 import pandas as pd
+from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
+from matplotlib.lines import Line2D
+from matplotlib.patches import Patch, Rectangle
 
+from village.scripts import utils
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -16,11 +20,14 @@ def corridor_plot(
     height: float,
     ndays: int = 3,
     from_date: Union[str, None, datetime] = None,
+    active_states: Union[dict[str, str], None] = None,
 ) -> Figure:
     """Generates a corridor activity plot for multiple subjects.
 
     Visualizes subject activity (detections and session times) over a specified
-    number of days, with day/night shading.
+    number of days, with a day/night white/gray background. Hours in which a
+    subject is inactive (OFF, or outside its schedule) are overlaid with red
+    diagonal hatching; sessions and detections are drawn on top of everything.
 
     Args:
         df (pd.DataFrame): DataFrame containing activity data.
@@ -30,6 +37,10 @@ def corridor_plot(
         ndays (int, optional): Number of days to plot. Defaults to 3.
         from_date (Union[str, None, datetime], optional): Start date for the plot.
             If None, uses the current time. Defaults to None.
+        active_states (Union[dict[str, str], None], optional): Maps subject name
+            to its active value ("ON"/"OFF"/schedule string), used to draw the
+            red inactive-hours hatching. Missing subjects default to "ON".
+            Defaults to None.
 
     Returns:
         Figure: The generated matplotlib figure.
@@ -77,7 +88,7 @@ def corridor_plot(
     starts_second = [start_second + timedelta(days=i) for i in range(ndays)]
 
     for i in range(ndays):
-        ax.axvspan(starts_first[i], starts_second[i], color=color_first)
+        ax.axvspan(starts_first[i], starts_second[i], color=color_first, zorder=0)
 
     min_time = start_first
     max_time = start_first + timedelta(days=ndays + 1)
@@ -92,8 +103,54 @@ def corridor_plot(
         ax.axvline(tick, color="lightgray", linewidth=1)
 
     y_positions = {subject: i for i, subject in enumerate(subjects)}
+
+    # per-subject overlay: red diagonal hatching over the hours the subject is
+    # inactive (OFF -> whole row, schedule -> its inactive hours, ON -> none).
+    # sits above the day/night background; sessions/detections sit above this.
+    hour_edges = pd.date_range(
+        start=pd.Timestamp(start_first).floor("h"),
+        end=pd.Timestamp(end) + pd.Timedelta(hours=1),
+        freq="h",
+    )
+    edge_nums = mdates.date2num(hour_edges)
+    for subject in subjects:
+        active_value = active_states.get(subject, "ON") if active_states else "ON"
+        if not isinstance(active_value, str):
+            active_value = "ON"
+        y0 = y_positions[subject] - 0.5
+        # merge consecutive inactive hours into runs, then hatch each run
+        inactive_ranges = []
+        run_start = None
+        for i in range(len(hour_edges) - 1):
+            inactive = not utils.is_active_at(active_value, hour_edges[i])
+            if inactive and run_start is None:
+                run_start = i
+            elif not inactive and run_start is not None:
+                inactive_ranges.append((run_start, i))
+                run_start = None
+        if run_start is not None:
+            inactive_ranges.append((run_start, len(hour_edges) - 1))
+        for a, b in inactive_ranges:
+            ax.add_patch(
+                Rectangle(
+                    (edge_nums[a], y0),
+                    edge_nums[b] - edge_nums[a],
+                    1.0,
+                    facecolor="none",
+                    edgecolor="red",
+                    hatch="//",
+                    linewidth=0,
+                    zorder=1,
+                )
+            )
+
+    # orange: corridor/box not clear (co-occupancy, large detection, box not
+    # empty, multiple tags). purple: subject rejected by rules (not active /
+    # minimum time between sessions not elapsed).
     detections_x = []
     detections_y = []
+    rejections_x = []
+    rejections_y = []
 
     for subject in subjects:
         subject_data = df[df["subject"] == subject]
@@ -101,9 +158,10 @@ def corridor_plot(
         y_pos = y_positions[subject]
 
         for i, (_, row) in enumerate(subject_data.iterrows()):
-            if row["description"].startswith(
-                ("Subject not", "Detection in", "Large", "Multiple")
-            ):
+            if row["description"].startswith("Subject not"):
+                rejections_x.append(row["date"])
+                rejections_y.append(y_pos)
+            elif row["description"].startswith(("Detection in", "Large", "Multiple")):
                 detections_x.append(row["date"])
                 detections_y.append(y_pos)
             elif row["type"] == "START":
@@ -135,7 +193,8 @@ def corridor_plot(
                 )
                 active_start = row["date"]
 
-    ax.scatter(detections_x, detections_y, color="orange", s=3)
+    ax.scatter(detections_x, detections_y, color="orange", s=3, zorder=3)
+    ax.scatter(rejections_x, rejections_y, color="purple", s=3, zorder=3)
 
     ax.set_xlim(start_first, end)
     ax.set_ylim(-0.5, len(subjects) - 0.5)
@@ -157,6 +216,43 @@ def corridor_plot(
 
     ax.tick_params(axis="x", labelsize=6)
     ax.tick_params(axis="y", labelsize=6)
+
+    # small frameless legend in the (usually empty) top-right future space, so
+    # it does not cover data and does not shrink the axes
+    legend_handles = [
+        Line2D(
+            [0],
+            [0],
+            marker="o",
+            linestyle="none",
+            markerfacecolor="orange",
+            markeredgecolor="orange",
+            markersize=4,
+            label="corridor busy",
+        ),
+        Line2D(
+            [0],
+            [0],
+            marker="o",
+            linestyle="none",
+            markerfacecolor="purple",
+            markeredgecolor="purple",
+            markersize=4,
+            label="not allowed",
+        ),
+        Line2D([0], [0], color="blue", linewidth=4, label="session"),
+        Patch(facecolor="none", edgecolor="red", hatch="////", label="inactive"),
+    ]
+    ax.legend(
+        handles=legend_handles,
+        loc="upper right",
+        fontsize=5,
+        frameon=False,
+        handlelength=1.0,
+        handletextpad=0.4,
+        labelspacing=0.3,
+        borderaxespad=0.3,
+    )
 
     fig.subplots_adjust(left=0.03, right=0.97, top=0.97, bottom=0.1)
 

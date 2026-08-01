@@ -122,8 +122,12 @@ class TelegramBot:
         """
         try:
             path = os.path.join(settings.get("SYSTEM_DIRECTORY"), "PLOT.jpg")
-            subjects = manager.subjects.df["name"].tolist()
-            fig = corridor_plot(manager.events.df.copy(), subjects, 4, 2)
+            subjects_df = manager.subjects.df
+            subjects = subjects_df["name"].tolist()
+            active_states = dict(zip(subjects_df["name"], subjects_df["active"]))
+            fig = corridor_plot(
+                manager.events.df.copy(), subjects, 4, 2, active_states=active_states
+            )
             fig.savefig(path, format="jpg", dpi=300)
             plt.close(fig)
             await asyncio.sleep(1)

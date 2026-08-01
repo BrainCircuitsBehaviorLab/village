@@ -279,6 +279,17 @@ def active_last_24_hours(value: str) -> bool:
     return True
 
 
+def is_active_at(value: str, dt: datetime) -> bool:
+    """Return True if `value` (ON/OFF/schedule) is scheduled active at `dt`."""
+    if value == "ON":
+        return True
+    if value == "OFF":
+        return False
+    schedule = _parse_schedule(value)
+    day_name = _DAYS[dt.weekday()]
+    return day_name in schedule and dt.hour in schedule[day_name]
+
+
 def delete_all_elements_from_layout(layout: QLayout) -> None:
     """Recursively removes all widgets and sub-layouts from a QLayout.
 

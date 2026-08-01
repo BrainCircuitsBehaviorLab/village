@@ -1902,11 +1902,14 @@ class CorridorPlotLayout(Layout):
         """Updates the plot with the latest data."""
         pixmap = QPixmap()
         try:
+            subjects_df = manager.subjects.df
+            active_states = dict(zip(subjects_df["name"], subjects_df["active"]))
             figure = corridor_plot(
                 manager.events.df.copy(),
                 self.subjects,
                 self.plot_width,
                 self.plot_height,
+                active_states=active_states,
             )
             pixmap = create_pixmap(figure)
         except Exception:
