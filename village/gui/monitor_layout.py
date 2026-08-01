@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import traceback
 from functools import partial
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 from PyQt5.QtCore import Qt, QTimer
@@ -44,11 +44,10 @@ from village.devices.chip import (
     motor_box1,
     motor_box2,
     motor_box3,
-    motor_box4,
-    motor_box5,
     motor_corridor1,
     motor_corridor2,
     motor_corridor3,
+    parse_motor_values,
     visible_light_box,
     visible_light_corridor,
 )
@@ -66,6 +65,47 @@ if TYPE_CHECKING:
     from village.classes.null_classes import NullMotor
     from village.devices.motor_old import MotorOld
     from village.gui.gui_window import GuiWindow
+
+
+def build_motor_fields(keys: list[str]) -> list[tuple[str, int]]:
+    """Build (label, current_value) pairs for a motor-calibration dialog.
+
+    For each MOTOR*_VALUES key it yields four fields: open angle, close angle,
+    open speed and close speed (ms of pause per step).
+    """
+    fields: list[tuple[str, int]] = []
+    for i, key in enumerate(keys, start=1):
+        open_a, close_a, speed_o, speed_c = parse_motor_values(settings.get(key))
+        fields.append((f"Motor{i} open angle:", open_a))
+        fields.append((f"Motor{i} close angle:", close_a))
+        fields.append((f"Motor{i} open speed (ms/step):", speed_o))
+        fields.append((f"Motor{i} close speed (ms/step):", speed_c))
+    return fields
+
+
+def apply_motor_fields(
+    keys: list[str],
+    motors: list[Any],
+    fields: list[tuple[str, int]],
+    edits: list[QLineEdit],
+) -> None:
+    """Save the dialog edits back to the MOTOR*_VALUES settings and the motors.
+
+    Bad input for a field falls back to the current value (the placeholder).
+    """
+    vals: list[int] = []
+    for (_, current), edit in zip(fields, edits):
+        try:
+            vals.append(int(edit.text()))
+        except ValueError:
+            vals.append(int(current))
+    for i, key in enumerate(keys):
+        open_a, close_a, speed_o, speed_c = vals[i * 4 : i * 4 + 4]
+        settings.set(key, (open_a, close_a, speed_o, speed_c))
+        motors[i].open_angle = open_a
+        motors[i].close_angle = close_a
+        motors[i].speed_open = speed_o
+        motors[i].speed_close = speed_c
 
 
 class LabelButtons:
@@ -109,7 +149,7 @@ class LabelButtons:
             "subject_limit": 1,
             "lens_position": -1,
             "sharpness": -1,
-            "contrast": -1,
+            "exposure_night": -1,
         }
         self.mapping_dict_max = {
             "left": width_res,
@@ -121,7 +161,7 @@ class LabelButtons:
             "subject_limit": 1000000,
             "lens_position": 10,
             "sharpness": 16,
-            "contrast": 16,
+            "exposure_night": 4,
         }
         self.mapping_dict_increase = {
             "left": "\u2192",
@@ -133,7 +173,7 @@ class LabelButtons:
             "subject_limit": "\u2191",
             "lens_position": "\u2191",
             "sharpness": "\u2191",
-            "contrast": "\u2191",
+            "exposure_night": "\u2191",
         }
         self.mapping_dict_decrease = {
             "left": "\u2190",
@@ -145,7 +185,7 @@ class LabelButtons:
             "subject_limit": "\u2193",
             "lens_position": "\u2193",
             "sharpness": "\u2193",
-            "contrast": "\u2193",
+            "exposure_night": "\u2193",
         }
 
         self.index: int = self.mapping_dict_index[direction]
@@ -222,9 +262,6 @@ class LabelButtons:
                 "subject_limit",
             ]:
                 self.label_value += 1
-            elif self.direction in ["contrast_day", "contrast_night", "contrast"]:
-                self.label_value += 1
-                self.label_value = round(self.label_value, 1)
             else:
                 self.label_value += 0.1
                 self.label_value = round(self.label_value, 1)
@@ -253,15 +290,6 @@ class LabelButtons:
                 "subject_limit",
             ]:
                 self.label_value -= 1
-            elif (
-                self.direction in ["contrast_day", "contrast_night", "contrast"]
-                and self.label_value <= 1
-            ):
-                return
-
-            elif self.direction in ["contrast_day", "contrast_night", "contrast"]:
-                self.label_value -= 1
-                self.label_value = round(self.label_value, 1)
             else:
                 self.label_value -= 0.1
                 self.label_value = round(self.label_value, 1)
@@ -287,10 +315,10 @@ class LabelButtons:
         if self.name in [
             "LENS_POSITION_BOX",
             "SHARPNESS_BOX",
-            "CONTRAST_BOX",
+            "EXPOSURE_VALUE_NIGHT_BOX",
             "LENS_POSITION_CORRIDOR",
             "SHARPNESS_CORRIDOR",
-            "CONTRAST_CORRIDOR",
+            "EXPOSURE_VALUE_NIGHT_CORRIDOR",
         ]:
             settings.set(self.name, self.label_value)
         else:
@@ -690,57 +718,27 @@ class CorridorLayout(Layout):
         manager.taring_scale = True
 
     def change_angles_clicked(self) -> None:
-        """Opens a dialog to change motor angles."""
-        motor1_open_val = settings.get("MOTOR1_VALUES")[0]
-        motor1_close_val = settings.get("MOTOR1_VALUES")[1]
-        motor2_open_val = settings.get("MOTOR2_VALUES")[0]
-        motor2_close_val = settings.get("MOTOR2_VALUES")[1]
-        motor3_open_val = settings.get("MOTOR3_VALUES")[0]
-        motor3_close_val = settings.get("MOTOR3_VALUES")[1]
+        """Opens a dialog to change corridor motor angles and speeds."""
+        keys = ["MOTOR1_VALUES", "MOTOR2_VALUES", "MOTOR3_VALUES"]
+        motors = [motor_corridor1, motor_corridor2, motor_corridor3]
+        fields = build_motor_fields(keys)
+
         self.reply = QDialog()
-        self.reply.setWindowTitle("Motor angles")
+        self.reply.setWindowTitle("Motor angles and speeds")
         x = self.column_width * 84
         y = self.row_height * 19
         width = self.column_width * 32
-        height = self.row_height * 18
+        height = self.row_height * 30
         self.reply.setGeometry(x, y, width, height)
         layout = QVBoxLayout()
 
-        label = QLabel("Motor1 open angle:")
-        layout.addWidget(label)
-        self.lineEdit1 = QLineEdit()
-        self.lineEdit1.setPlaceholderText(str(motor1_open_val))
-        layout.addWidget(self.lineEdit1)
-
-        label = QLabel("Motor1 close angle:")
-        layout.addWidget(label)
-        self.lineEdit2 = QLineEdit()
-        self.lineEdit2.setPlaceholderText(str(motor1_close_val))
-        layout.addWidget(self.lineEdit2)
-
-        label = QLabel("Motor2 open angle:")
-        layout.addWidget(label)
-        self.lineEdit3 = QLineEdit()
-        self.lineEdit3.setPlaceholderText(str(motor2_open_val))
-        layout.addWidget(self.lineEdit3)
-
-        label = QLabel("Motor2 close angle:")
-        layout.addWidget(label)
-        self.lineEdit4 = QLineEdit()
-        self.lineEdit4.setPlaceholderText(str(motor2_close_val))
-        layout.addWidget(self.lineEdit4)
-
-        label = QLabel("Motor3 open angle:")
-        layout.addWidget(label)
-        self.lineEdit5 = QLineEdit()
-        self.lineEdit5.setPlaceholderText(str(motor3_open_val))
-        layout.addWidget(self.lineEdit5)
-
-        label = QLabel("Motor3 close angle:")
-        layout.addWidget(label)
-        self.lineEdit6 = QLineEdit()
-        self.lineEdit6.setPlaceholderText(str(motor3_close_val))
-        layout.addWidget(self.lineEdit6)
+        edits = []
+        for label_text, current in fields:
+            layout.addWidget(QLabel(label_text))
+            edit = QLineEdit()
+            edit.setPlaceholderText(str(current))
+            layout.addWidget(edit)
+            edits.append(edit)
 
         btns_layout = QHBoxLayout()
         self.btn_ok = QPushButton("CHANGE")
@@ -754,39 +752,7 @@ class CorridorLayout(Layout):
         self.btn_cancel.clicked.connect(self.reply.reject)
 
         if self.reply.exec_():
-            try:
-                val1 = int(self.lineEdit1.text())
-            except ValueError:
-                val1 = int(motor1_open_val)
-            try:
-                val2 = int(self.lineEdit2.text())
-            except ValueError:
-                val2 = int(motor1_close_val)
-            try:
-                val3 = int(self.lineEdit3.text())
-            except ValueError:
-                val3 = int(motor2_open_val)
-            try:
-                val4 = int(self.lineEdit4.text())
-            except ValueError:
-                val4 = int(motor2_close_val)
-            try:
-                val5 = int(self.lineEdit5.text())
-            except ValueError:
-                val5 = int(motor3_open_val)
-            try:
-                val6 = int(self.lineEdit6.text())
-            except ValueError:
-                val6 = int(motor3_close_val)
-            settings.set("MOTOR1_VALUES", (val1, val2))
-            settings.set("MOTOR2_VALUES", (val3, val4))
-            settings.set("MOTOR3_VALUES", (val5, val6))
-            motor_corridor1.open_angle = val1
-            motor_corridor1.close_angle = val2
-            motor_corridor2.open_angle = val3
-            motor_corridor2.close_angle = val4
-            motor_corridor3.open_angle = val5
-            motor_corridor3.close_angle = val6
+            apply_motor_fields(keys, motors, fields, edits)
 
     def calibrate_scale_clicked(self) -> None:
         """Opens the scale calibration wizard."""
@@ -985,43 +951,27 @@ class BoxLayout(Layout):
                 manager.check_box_lights()
 
     def change_angles_clicked(self) -> None:
-        """Opens a dialog to change motor angles."""
-        motor1_open_val = settings.get("MOTOR1_VALUES")[0]
-        motor1_close_val = settings.get("MOTOR1_VALUES")[1]
-        motor2_open_val = settings.get("MOTOR2_VALUES")[0]
-        motor2_close_val = settings.get("MOTOR2_VALUES")[1]
-        motor3_open_val = settings.get("MOTOR3_VALUES")[0]
-        motor3_close_val = settings.get("MOTOR3_VALUES")[1]
-        motor4_open_val = settings.get("MOTOR4_VALUES")[0]
-        motor4_close_val = settings.get("MOTOR4_VALUES")[1]
-        motor5_open_val = settings.get("MOTOR5_VALUES")[0]
-        motor5_close_val = settings.get("MOTOR5_VALUES")[1]
+        """Opens a dialog to change box motor angles and speeds."""
+        keys = ["MOTOR1_BOX_VALUES", "MOTOR2_BOX_VALUES", "MOTOR3_BOX_VALUES"]
+        motors = [motor_box1, motor_box2, motor_box3]
+        fields = build_motor_fields(keys)
+
         self.reply = QDialog()
-        self.reply.setWindowTitle("Motor angles")
+        self.reply.setWindowTitle("Motor angles and speeds")
         x = self.column_width * 84
         y = self.row_height * 19
         width = self.column_width * 32
-        height = self.row_height * 28
+        height = self.row_height * 30
         self.reply.setGeometry(x, y, width, height)
         layout = QVBoxLayout()
 
-        for label_text, placeholder, attr in [
-            ("Motor1 open angle:", motor1_open_val, "lineEdit1"),
-            ("Motor1 close angle:", motor1_close_val, "lineEdit2"),
-            ("Motor2 open angle:", motor2_open_val, "lineEdit3"),
-            ("Motor2 close angle:", motor2_close_val, "lineEdit4"),
-            ("Motor3 open angle:", motor3_open_val, "lineEdit5"),
-            ("Motor3 close angle:", motor3_close_val, "lineEdit6"),
-            ("Motor4 open angle:", motor4_open_val, "lineEdit7"),
-            ("Motor4 close angle:", motor4_close_val, "lineEdit8"),
-            ("Motor5 open angle:", motor5_open_val, "lineEdit9"),
-            ("Motor5 close angle:", motor5_close_val, "lineEdit10"),
-        ]:
+        edits = []
+        for label_text, current in fields:
             layout.addWidget(QLabel(label_text))
             edit = QLineEdit()
-            edit.setPlaceholderText(str(placeholder))
+            edit.setPlaceholderText(str(current))
             layout.addWidget(edit)
-            setattr(self, attr, edit)
+            edits.append(edit)
 
         btns_layout = QHBoxLayout()
         self.btn_ok = QPushButton("CHANGE")
@@ -1035,56 +985,7 @@ class BoxLayout(Layout):
         self.btn_cancel.clicked.connect(self.reply.reject)
 
         if self.reply.exec_():
-            defaults = [
-                motor1_open_val,
-                motor1_close_val,
-                motor2_open_val,
-                motor2_close_val,
-                motor3_open_val,
-                motor3_close_val,
-                motor4_open_val,
-                motor4_close_val,
-                motor5_open_val,
-                motor5_close_val,
-            ]
-            attrs = [
-                "lineEdit1",
-                "lineEdit2",
-                "lineEdit3",
-                "lineEdit4",
-                "lineEdit5",
-                "lineEdit6",
-                "lineEdit7",
-                "lineEdit8",
-                "lineEdit9",
-                "lineEdit10",
-            ]
-            vals = []
-            for attr, default in zip(attrs, defaults):
-                try:
-                    vals.append(int(getattr(self, attr).text()))
-                except ValueError:
-                    vals.append(int(default))
-
-            for key, o, c in [
-                ("MOTOR1_VALUES", vals[0], vals[1]),
-                ("MOTOR2_VALUES", vals[2], vals[3]),
-                ("MOTOR3_VALUES", vals[4], vals[5]),
-                ("MOTOR4_VALUES", vals[6], vals[7]),
-                ("MOTOR5_VALUES", vals[8], vals[9]),
-            ]:
-                settings.set(key, (o, c))
-
-            motor_box1.open_angle = vals[0]
-            motor_box1.close_angle = vals[1]
-            motor_box2.open_angle = vals[2]
-            motor_box2.close_angle = vals[3]
-            motor_box3.open_angle = vals[4]
-            motor_box3.close_angle = vals[5]
-            motor_box4.open_angle = vals[6]
-            motor_box4.close_angle = vals[7]
-            motor_box5.open_angle = vals[8]
-            motor_box5.close_angle = vals[9]
+            apply_motor_fields(keys, motors, fields, edits)
 
     def disable_all(self) -> None:
         """Disables all port buttons."""
@@ -1736,7 +1637,13 @@ class DetectionLayout(Layout):
             self.lbs.append(lb)
             row += 2
             lb = LabelButtons(
-                "CONTRAST_CORRIDOR", "contrast", row, column, width, color, self
+                "EXPOSURE_VALUE_NIGHT_CORRIDOR",
+                "exposure_night",
+                row,
+                column,
+                width,
+                color,
+                self,
             )
             self.lbs.append(lb)
             row += 2
@@ -1775,8 +1682,8 @@ class DetectionLayout(Layout):
         row += 2
 
         lb = LabelButtons(
-            "CONTRAST_BOX",
-            "contrast",
+            "EXPOSURE_VALUE_NIGHT_BOX",
+            "exposure_night",
             row,
             column,
             width,

@@ -306,8 +306,6 @@ additional functions, such as raising or lowering a water bottle in the home cag
     Setting("MOTOR1_BOX_INDEX", 4, int, "The index of the motor 1 of the box."),
     Setting("MOTOR2_BOX_INDEX", 5, int, "The index of the motor 2 of the box."),
     Setting("MOTOR3_BOX_INDEX", 6, int, "The index of the motor 3 of the box."),
-    Setting("MOTOR4_BOX_INDEX", 7, int, "The index of the motor 4 of the box."),
-    Setting("MOTOR5_BOX_INDEX", 8, int, "The index of the motor 5 of the box."),
     Setting(
         "VISIBLE_LIGHT_BOX_INDEX",
         6,
@@ -771,49 +769,63 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
         "The sharpness of the box camera.",
     ),
     Setting(
-        "CONTRAST_CORRIDOR",
-        1.0,
+        "EXPOSURE_VALUE_NIGHT_CORRIDOR",
+        0.0,
         float,
-        "The contrast of the corridor camera.",
+        "Night exposure boost for the corridor camera (EV stops, 0 = none, "
+        "higher = brighter). Applied automatically at night; day is always 0.",
     ),
     Setting(
-        "CONTRAST_BOX",
-        1.0,
+        "EXPOSURE_VALUE_NIGHT_BOX",
+        0.0,
         float,
-        "The contrast of the box camera.",
+        "Night exposure boost for the box camera (EV stops, 0 = none, "
+        "higher = brighter). Applied automatically at night; day is always 0.",
     ),
 ]
 
 motor_settings = [
     Setting(
         "MOTOR1_VALUES",
-        [50, 80],
+        [50, 80, 30, 30],
         list[int],
-        "Opening and closing angles for door 1 (values between 0 and 180 degrees).",
+        "Corridor door 1: [open, close, speed_open, speed_close]. Angles 0-180; "
+        "speed = ms pause per 5-degree step (higher = slower).",
     ),
     Setting(
         "MOTOR2_VALUES",
-        [50, 80],
+        [50, 80, 30, 30],
         list[int],
-        "Opening and closing angles for door 2 (values between 0 and 180 degrees).",
+        "Corridor door 2: [open, close, speed_open, speed_close]. Angles 0-180; "
+        "speed = ms pause per 5-degree step (higher = slower).",
     ),
     Setting(
         "MOTOR3_VALUES",
-        [50, 80],
+        [50, 80, 30, 30],
         list[int],
-        "Opening and closing angles for door 3 (values between 0 and 180 degrees).",
+        "Corridor door 3: [open, close, speed_open, speed_close]. Angles 0-180; "
+        "speed = ms pause per 5-degree step (higher = slower).",
     ),
     Setting(
-        "MOTOR4_VALUES",
-        [50, 80],
+        "MOTOR1_BOX_VALUES",
+        [50, 80, 30, 30],
         list[int],
-        "Opening and closing angles for door 4 (values between 0 and 180 degrees).",
+        "Box motor 1: [open, close, speed_open, speed_close]. Angles 0-180; "
+        "speed = ms pause per 5-degree step (higher = slower).",
     ),
     Setting(
-        "MOTOR5_VALUES",
-        [50, 80],
+        "MOTOR2_BOX_VALUES",
+        [50, 80, 30, 30],
         list[int],
-        "Opening and closing angles for door 5 (values between 0 and 180 degrees).",
+        "Box motor 2: [open, close, speed_open, speed_close]. Angles 0-180; "
+        "speed = ms pause per 5-degree step (higher = slower).",
+    ),
+    Setting(
+        "MOTOR3_BOX_VALUES",
+        [50, 80, 30, 30],
+        list[int],
+        "Box motor 3: [open, close, speed_open, speed_close]. Angles 0-180; "
+        "speed = ms pause per 5-degree step (higher = slower).",
     ),
 ]
 

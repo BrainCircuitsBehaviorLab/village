@@ -211,6 +211,7 @@ class Camera:
         self.cam.pre_callback = self.pre_process
 
         self.change = True
+        self._applied_cycle: str = ""  # last cycle ("DAY"/"NIGHT") applied to exposure
         self.task_is_running: bool = False
         self.annotation = ""
         self.trial = 0
@@ -327,11 +328,25 @@ class Camera:
         # lens position, sharpness and contrast settings
         lensposition = settings.get("LENS_POSITION_" + self.name)
         sharpness = settings.get("SHARPNESS_" + self.name)
-        contrast = settings.get("CONTRAST_" + self.name)
 
         self.cam.set_controls({"LensPosition": lensposition})
         self.cam.set_controls({"Sharpness": sharpness})
-        self.cam.set_controls({"Contrast": contrast})
+        self.apply_exposure()
+
+    def apply_exposure(self) -> None:
+        """Applies the ExposureValue bias for the current day/night cycle.
+
+        Day is always 0 (neutral); at night the EXPOSURE_VALUE_NIGHT_* setting
+        is applied to brighten under the weaker IR light. Auto-exposure stays
+        on -- this only shifts its target brightness.
+        """
+        cycle = manager.cycle_change_detector.cycle_text
+        self._applied_cycle = cycle
+        if cycle == "NIGHT":
+            ev = float(settings.get("EXPOSURE_VALUE_NIGHT_" + self.name))
+        else:
+            ev = 0.0
+        self.cam.set_controls({"ExposureValue": ev})
 
     def start_camera(self) -> None:
         """Starts the camera capture."""
@@ -558,6 +573,9 @@ class Camera:
         if self.change:
             self.set_properties()
             self.change = False
+        elif manager.cycle_change_detector.cycle_text != self._applied_cycle:
+            # day<->night flipped: re-bias exposure without a full settings reload
+            self.apply_exposure()
         self.frame_number += 1
 
         with MappedArray(request, "main") as m:

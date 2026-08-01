@@ -1,3 +1,4 @@
+import time
 import traceback
 
 from PCA9685_smbus2 import PCA9685  # type: ignore
@@ -48,23 +49,81 @@ else:
     pwm_box = NullChip()
 
 
+# Servo motion ramp (normal PCA9685 Motor only -- MotorOld is untouched).
+# move() steps the angle in MOTOR_STEP_DEGREES-degree increments, pausing `speed`
+# milliseconds after each step, so the door travels slowly and smoothly instead
+# of snapping to the target. Travel time is approx:
+#   (abs(target - start) / MOTOR_STEP_DEGREES) * speed_ms
+# Per-motor speeds live in the MOTOR*_VALUES settings (speed_open, speed_close);
+# higher = slower, 0 = as fast as possible. DEFAULT_MOTOR_SPEED is used for
+# legacy settings that only store [open, close] with no speeds.
+MOTOR_STEP_DEGREES = 5  # degrees moved per step
+DEFAULT_MOTOR_SPEED = 30  # ms paused per step when the setting has no speed
+
+
+def parse_motor_values(values: list[int]) -> tuple[int, int, int, int]:
+    """Unpack a MOTOR*_VALUES setting into (open, close, speed_open, speed_close).
+
+    Legacy settings only store [open, close]; missing speeds fall back to
+    DEFAULT_MOTOR_SPEED so old calibrations keep working.
+    """
+    open_angle = int(values[0])
+    close_angle = int(values[1])
+    speed_open = int(values[2]) if len(values) > 2 else DEFAULT_MOTOR_SPEED
+    speed_close = int(values[3]) if len(values) > 3 else DEFAULT_MOTOR_SPEED
+    return open_angle, close_angle, speed_open, speed_close
+
+
 class Motor:
-    def __init__(self, channel: int, angles: list[int], pwm) -> None:
+    def __init__(self, channel: int, values: list[int], pwm) -> None:
         self.pwm = pwm
         self.channel = channel
-        self.open_angle = angles[0]
-        self.close_angle = angles[1]
+        open_angle, close_angle, speed_open, speed_close = parse_motor_values(values)
+        self.open_angle = open_angle
+        self.close_angle = close_angle
+        self.speed_open = speed_open  # ms paused per step while opening
+        self.speed_close = speed_close  # ms paused per step while closing
         self.error = ""
+        # Last commanded angle; ramps start here. The real position is unknown
+        # at boot, so the first move() goes straight to the target and syncs.
+        self.current_angle = close_angle
+        self._initialized = False
 
     def servo_pulse(self, ms: float) -> int:
         # 20 ms period → 4096 ticks
         return int(ms * 4096 / 20)
 
-    def move(self, angle: int) -> None:
+    def _write_angle(self, angle: int) -> None:
         # map 0–180° → 1ms–2ms
         pulse_ms = 1 + angle / 180.0
         ticks = self.servo_pulse(pulse_ms)
         self.pwm.set_pwm(self.channel, 0, ticks)
+
+    def move(self, angle: int, speed: int) -> None:
+        """Ramps the servo to `angle` in steps, pausing `speed` ms after each.
+
+        The first move after boot goes straight to the target (the real
+        position is unknown, so ramping from an assumed start could jerk) and
+        just syncs current_angle; every later move ramps smoothly.
+        """
+        if not self._initialized:
+            self._write_angle(angle)
+            self.current_angle = angle
+            self._initialized = True
+            return
+        start = self.current_angle
+        if angle == start:
+            self._write_angle(angle)
+            return
+        step = MOTOR_STEP_DEGREES if angle > start else -MOTOR_STEP_DEGREES
+        a = start
+        while a != angle:
+            a += step
+            if (step > 0 and a > angle) or (step < 0 and a < angle):
+                a = angle  # last step: land exactly on the target
+            self._write_angle(a)
+            time.sleep(speed / 1000)
+        self.current_angle = angle
 
     def disable(self) -> None:
         """Stops PWM signal to release holding torque."""
@@ -72,13 +131,11 @@ class Motor:
 
     def open(self) -> None:
         """Moves the motor to the open position."""
-        self.move(self.open_angle)
-        # threading.Timer(1.0, self.disable).start()
+        self.move(self.open_angle, self.speed_open)
 
     def close(self) -> None:
         """Moves the motor to the close position."""
-        self.move(self.close_angle)
-        # threading.Timer(1.0, self.disable).start()
+        self.move(self.close_angle, self.speed_close)
 
 
 class LED:
@@ -104,18 +161,19 @@ class LED:
         self.set(0.0)
 
 
-def get_motor(channel: int, angles: list[int], pwm) -> Motor:
+def get_motor(channel: int, values: list[int], pwm) -> Motor:
     """Factory function to create and initialize a Motor instance.
 
     Args:
         channel (int): The PWM channel number.
-        angles (list[int]): A list containing [open_angle, close_angle].
+        values (list[int]): [open, close, speed_open, speed_close]. Legacy
+            settings with only [open, close] are also accepted.
 
     Returns:
         Motor: An initialized Motor instance.
     """
 
-    motor = Motor(channel=channel, angles=angles, pwm=pwm)
+    motor = Motor(channel=channel, values=values, pwm=pwm)
     return motor
 
 
@@ -150,19 +208,13 @@ motor_corridor2: Motor | MotorOld | NullMotor
 motor_corridor3: Motor | MotorOld | NullMotor
 
 motor_box1 = get_motor(
-    settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_VALUES"), pwm_box
+    settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_BOX_VALUES"), pwm_box
 )
 motor_box2 = get_motor(
-    settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_VALUES"), pwm_box
+    settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_BOX_VALUES"), pwm_box
 )
 motor_box3 = get_motor(
-    settings.get("MOTOR3_BOX_INDEX"), settings.get("MOTOR3_VALUES"), pwm_box
-)
-motor_box4 = get_motor(
-    settings.get("MOTOR4_BOX_INDEX"), settings.get("MOTOR4_VALUES"), pwm_box
-)
-motor_box5 = get_motor(
-    settings.get("MOTOR5_BOX_INDEX"), settings.get("MOTOR5_VALUES"), pwm_box
+    settings.get("MOTOR3_BOX_INDEX"), settings.get("MOTOR3_BOX_VALUES"), pwm_box
 )
 visible_light_corridor = LED(
     settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"), True, pwm_corridor
