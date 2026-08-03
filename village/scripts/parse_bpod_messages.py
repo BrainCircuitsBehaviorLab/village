@@ -51,7 +51,7 @@ def parse_input_to_tuple_override(msg: str) -> tuple[str, int, int]:
 
 
 def parse_output_to_tuple_override(
-    message: str | tuple[str, int]
+    message: str | tuple[str, int],
 ) -> tuple[str, Any, int]:
     """Parses a Bpod output message into a structured tuple.
 
