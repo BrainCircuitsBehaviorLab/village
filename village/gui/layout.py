@@ -364,7 +364,6 @@ class Layout(QGridLayout):
         self.calibration_button = NavTabProxy(self.nav_tab_bar, 5)
         self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
-
         self.alarm_button = self.create_and_add_button(
             "ALARM",
             3,

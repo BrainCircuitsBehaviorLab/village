@@ -7,8 +7,9 @@ _AREAS = range(4)
 _MAX_SAMPLES = 2000
 
 
-def area_count(gray: np.ndarray, rect: list[int],
-               threshold: int, black: bool) -> tuple[int, np.ndarray]:
+def area_count(
+    gray: np.ndarray, rect: list[int], threshold: int, black: bool
+) -> tuple[int, np.ndarray]:
     """Replicates per-area pixel count (camera.py detect_black/white)."""
     x1, y1, x2, y2 = rect
     roi = gray[y1:y2, x1:x2]
@@ -17,20 +18,21 @@ def area_count(gray: np.ndarray, rect: list[int],
     return cv2.countNonZero(mask), mask
 
 
-def select_from_grays(grays: list[np.ndarray], rects: list[list[int]],
-                      thresholds: list[int], empty: int, black: bool
-                      ) -> dict[int, tuple[int | None, bool]]:
+def select_from_grays(
+    grays: list[np.ndarray],
+    rects: list[list[int]],
+    thresholds: list[int],
+    empty: int,
+    black: bool,
+) -> dict[int, tuple[int | None, bool]]:
     """For each area, pick the gray-frame index where only that area is
     occupied. Returns {area: (frame_index_or_None, isolated)}. isolated is
     True when a frame with the mouse alone in that area was found;
     False: returns best-effort fallback (max occupancy difference)"""
-    best_iso: dict[int, tuple[int, int | None]] = {i: (-1, None)
-                                                   for i in _AREAS}
-    best_fb: dict[int, tuple[int, int | None]] = {
-        i: (-(1 << 30), None) for i in _AREAS}
+    best_iso: dict[int, tuple[int, int | None]] = {i: (-1, None) for i in _AREAS}
+    best_fb: dict[int, tuple[int, int | None]] = {i: (-(1 << 30), None) for i in _AREAS}
     for fi, gray in enumerate(grays):
-        counts = [area_count(gray, rects[i], thresholds[i], black)[0]
-                  for i in _AREAS]
+        counts = [area_count(gray, rects[i], thresholds[i], black)[0] for i in _AREAS]
         for i in _AREAS:
             others = [counts[j] for j in _AREAS if j != i]
             if counts[i] > empty and all(c <= empty for c in others):
@@ -48,8 +50,9 @@ def select_from_grays(grays: list[np.ndarray], rects: list[list[int]],
     return out
 
 
-def scan_video(path: str, rects: list[list[int]], thresholds: list[int],
-               empty: int, black: bool) -> dict[int, np.ndarray | None]:
+def scan_video(
+    path: str, rects: list[list[int]], thresholds: list[int], empty: int, black: bool
+) -> dict[int, np.ndarray | None]:
     """Scans a video, keeping only the best BGR frame per area.
     same as select_from_grays but retains one frame per area instead of all."""
     cap = cv2.VideoCapture(path)
@@ -58,8 +61,7 @@ def scan_video(path: str, rects: list[list[int]], thresholds: list[int],
     total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     step = max(1, total // _MAX_SAMPLES) if total > 0 else 1
 
-    best_iso: dict[int, tuple[int, np.ndarray | None]] = {i: (-1, None)
-                                                          for i in _AREAS}
+    best_iso: dict[int, tuple[int, np.ndarray | None]] = {i: (-1, None) for i in _AREAS}
     best_fb: dict[int, tuple[int, np.ndarray | None]] = {
         i: (-(1 << 30), None) for i in _AREAS
     }
@@ -72,8 +74,9 @@ def scan_video(path: str, rects: list[list[int]], thresholds: list[int],
             if not ok:
                 break
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            counts = [area_count(gray, rects[i], thresholds[i], black)[0]
-                      for i in _AREAS]
+            counts = [
+                area_count(gray, rects[i], thresholds[i], black)[0] for i in _AREAS
+            ]
             for i in _AREAS:
                 others = [counts[j] for j in _AREAS if j != i]
                 if counts[i] > empty and all(c <= empty for c in others):
@@ -84,6 +87,7 @@ def scan_video(path: str, rects: list[list[int]], thresholds: list[int],
                     best_fb[i] = (diff, frame.copy())
         idx += 1
     cap.release()
-    return {i: (best_iso[i][1] if best_iso[i][1] is not None
-                else best_fb[i][1])
-            for i in _AREAS}
+    return {
+        i: (best_iso[i][1] if best_iso[i][1] is not None else best_fb[i][1])
+        for i in _AREAS
+    }

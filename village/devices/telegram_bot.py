@@ -8,7 +8,12 @@ from urllib import parse, request
 
 import matplotlib.pyplot as plt
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
+from telegram.ext import (
+    ApplicationBuilder,
+    CallbackQueryHandler,
+    CommandHandler,
+    ContextTypes,
+)
 
 from village.classes.null_classes import NullTelegramBot
 from village.devices.camera import cam_box, cam_corridor
@@ -57,7 +62,6 @@ class TelegramBot:
         text = "Hi! Use /report <hours> to get a report of the last hours."
         await update.message.reply_text(text)
 
-
     def alarm(self, message: str, repeat: bool = False) -> None:
         """Sends an alarm message to the configured chat.
 
@@ -71,8 +75,9 @@ class TelegramBot:
         """
         if repeat:
             first_line = message.split("\n")[0]
-            self.pending = {k: v for k, v in self.pending.items()
-                            if v.split("\n")[0] != first_line}
+            self.pending = {
+                k: v for k, v in self.pending.items() if v.split("\n")[0] != first_line
+            }
             self.alarm_id += 1
             self.pending[self.alarm_id] = message
             self.send(message, self.alarm_id)
@@ -94,10 +99,17 @@ class TelegramBot:
             values = {"chat_id": self.chat, "text": message}
             if ack_id is not None:
                 values["reply_markup"] = json.dumps(
-                    {"inline_keyboard": [[
-                        {"text": "✅ Acknowledge",
-                         "callback_data": "ack:%d" % ack_id}
-                         ]]})
+                    {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "✅ Acknowledge",
+                                    "callback_data": "ack:%d" % ack_id,
+                                }
+                            ]
+                        ]
+                    }
+                )
             data = parse.urlencode(values)
             request.urlopen(url, data.encode("utf-8"), timeout=10)
         except Exception:
@@ -114,12 +126,11 @@ class TelegramBot:
         try:
             await query.answer()
             self.pending.pop(int(query.data.split(":")[1]), None)
-            await query.edit_message_text(query.message.text +
-                                          "\n\n✅ Acknowledged by " +
-                                          query.from_user.name)
+            await query.edit_message_text(
+                query.message.text + "\n\n✅ Acknowledged by " + query.from_user.name
+            )
         except Exception:
-            log.error("Telegram error acknowledging",
-                      exception=traceback.format_exc())
+            log.error("Telegram error acknowledging", exception=traceback.format_exc())
 
     async def repeat_alarms(self) -> None:
         """Resends unacknowledged alarms until they are acknowledged."""
@@ -128,7 +139,6 @@ class TelegramBot:
             await asyncio.sleep(60 * minutes)
             for ack_id, message in list(self.pending.items()):
                 self.send(message, ack_id)
-
 
     async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Generates and sends a report for the specified number of hours.
@@ -210,7 +220,6 @@ class TelegramBot:
         self.application.add_handler(CommandHandler("plot", self.plot))
         self.application.add_handler(CommandHandler("cam", self.cam))
         self.application.add_handler(CallbackQueryHandler(self.ack))
-
 
         try:
             await self.application.initialize()

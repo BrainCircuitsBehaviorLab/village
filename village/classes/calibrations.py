@@ -18,8 +18,8 @@ class Calibrations:
         self.camera_calibration: CalibrationBase | NullCalibrationBase = (
             NullCalibrationBase()
         )
-        self.corridor_threshold_calibration: (
-            CalibrationBase | NullCalibrationBase
-        ) = NullCalibrationBase()
+        self.corridor_threshold_calibration: CalibrationBase | NullCalibrationBase = (
+            NullCalibrationBase()
+        )
         self.sound_calibration_functions: list[Callable] = []
         self.sound_calibration_error: bool = False

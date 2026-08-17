@@ -183,7 +183,6 @@ def import_all(manager) -> None:
                     BpodWaterCalibration,
                     OptoGridCalibration,
                     CorridorThresholdCalibration,
-
                 ):
                     if not hasattr(manager.calibrations, cls.name):
                         instance = cls()
