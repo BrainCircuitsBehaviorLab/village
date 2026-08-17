@@ -581,16 +581,20 @@ class Manager:
             ]
         )
 
+    def corridor_visible_on(self) -> bool:
+        """Whether the corridor visible light is (or, in AUTO, will be) on."""
+        if self.visible_corridor_cycle == Cycle.ON:
+            return True
+        if self.visible_corridor_cycle == Cycle.OFF:
+            return False
+        return self.cycle_change_detector.cycle_text == "DAY"
+
     def check_corridor_lights(self) -> None:
         """Checks the state of the corridor lights and sets them based
         on the current cycle."""
         cycle = self.cycle_change_detector.cycle_text
 
-        if self.visible_corridor_cycle == Cycle.ON:
-            visible_light_corridor.on()
-        elif self.visible_corridor_cycle == Cycle.OFF:
-            visible_light_corridor.off()
-        elif cycle == "DAY":
+        if self.corridor_visible_on():
             visible_light_corridor.on()
         else:
             visible_light_corridor.off()
@@ -650,14 +654,14 @@ class Manager:
         text, non_det_subs, non_ses_subs, low_water_subs, sync = self.create_report(24)
         if self.use_of_corridor:
             self.check_corridor_lights()
-            log.alarm(text, report=True)
+            log.alarm(text, report=True, repeat=True)
             if (
                 len(non_det_subs) > 0
                 and settings.get("NO_DETECTION_SUBJECT_24H") == Active.ON
             ):
                 log.alarm(
                     "Subjects not detected in the last 24 hours: "
-                    + ", ".join(non_det_subs)
+                        + ", ".join(non_det_subs), repeat=True
                 )
             if (
                 len(non_ses_subs) > 0
@@ -665,12 +669,12 @@ class Manager:
             ):
                 log.alarm(
                     "Subjects with no sessions in the last 24 hours: "
-                    + ", ".join(non_ses_subs)
+                    + ", ".join(non_ses_subs), repeat=True
                 )
             if len(low_water_subs) > 0:
                 log.alarm(
                     "Subjects with low water intake in the last 24 hours: "
-                    + ", ".join(low_water_subs)
+                    + ", ".join(low_water_subs), repeat=True
                 )
         if not sync and settings.get("SYNC_TYPE") != SyncType.OFF:
             log.alarm("No data sync in the last 24 hours.")

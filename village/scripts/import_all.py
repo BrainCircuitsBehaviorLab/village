@@ -9,6 +9,9 @@ from typing import Any
 
 from village.calibration.bpod_water_calibration import BpodWaterCalibration
 from village.calibration.camera_calibration import CameraCalibration
+from village.calibration.corridor_threshold_calibration import (
+    CorridorThresholdCalibration,
+)
 from village.calibration.optogrid_calibration import OptoGridCalibration
 from village.calibration.sound_calibration import SoundCalibration
 from village.custom_classes.after_session_base import AfterSessionBase
@@ -62,6 +65,7 @@ def import_all(manager) -> None:
         BpodWaterCalibration,
         SoundCalibration,
         CameraCalibration,
+        CorridorThresholdCalibration,
         OptoGridCalibration,
     ):
         instance = cal_cls()
@@ -177,6 +181,9 @@ def import_all(manager) -> None:
                     CameraCalibration,
                     SoundCalibration,
                     BpodWaterCalibration,
+                    OptoGridCalibration,
+                    CorridorThresholdCalibration,
+
                 ):
                     if not hasattr(manager.calibrations, cls.name):
                         instance = cls()

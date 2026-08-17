@@ -120,6 +120,12 @@ telegram_settings = [
         "The Telegram chat ID where alarm messages will be sent.",
     ),
     Setting(
+        "TELEGRAM_REPEAT_MINUTES",
+        60,
+        int,
+        "Minutes between reminders for an alarm until it is acknowledged.",
+    ),
+    Setting(
         "HEALTHCHECKS_URL",
         "",
         str,

@@ -364,6 +364,18 @@ class Layout(QGridLayout):
         self.calibration_button = NavTabProxy(self.nav_tab_bar, 5)
         self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
+
+        self.alarm_button = self.create_and_add_button(
+            "ALARM",
+            3,
+            155,
+            15,
+            2,
+            self.alarm_button_clicked,
+            "Acknowledge active alarms, stopping the telegram reminders",
+            "lightgray",
+        )
+
         self.stop_button = self.create_and_add_button(
             "",
             0,
@@ -415,6 +427,14 @@ class Layout(QGridLayout):
         for sub_label, part in zip(self.status_sub_labels, manager.status_parts):
             sub_label.setText(part)
 
+        alarms = len(log.telegram_bot.pending)
+        button_text = "ALARM (" + str(alarms) + ")" if alarms else "ALARM"
+        self.alarm_button.setText(button_text)
+        self.alarm_button.setEnabled(alarms > 0)
+        c = "red" if alarms else "lightgray"
+        sty = f"QPushButton {{background-color: {c}; font-weight: bold}}{_tt}"
+        self.alarm_button.setStyleSheet(sty)
+
         state = manager.state
         if state == State.RUN_MANUAL:
             self.stop_button.setText("STOP TASK")
@@ -462,6 +482,11 @@ class Layout(QGridLayout):
             self.online_button.setStyleSheet(_off)
 
         self.online_button.setText("ONLINE PLOTS")
+
+    def alarm_button_clicked(self) -> None:
+        """Acknowledges all active alarms, stopping the telegram reminders."""
+        log.telegram_bot.pending.clear()
+        self.update_status_label_buttons()
 
     def exit_button_clicked(self) -> None:
         """Handles exit button click, confirming exit and saving data if needed."""

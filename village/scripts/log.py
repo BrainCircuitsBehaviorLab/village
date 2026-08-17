@@ -112,6 +112,7 @@ class Log:
         subject: str = "system",
         exception: str | None = None,
         report: bool = False,
+        repeat: bool = False,
     ) -> None:
         """Logs an alarm and sends a Telegram notification.
 
@@ -120,11 +121,13 @@ class Log:
             subject (str): The subject involved.
             exception (str | None): Optional exception traceback string.
             report (bool): If True, skips logging to event log (used for reports).
+            repeat (bool): If True, the alarm is resent in telegram until
+            it is acknowledged.
         """
         type = "ALARM"
         date = time_utils.now_string()
         message = description if subject == "system" else description + " " + subject
-        self.telegram_bot.alarm(message)
+        self.telegram_bot.alarm(message, repeat=repeat)
         description = self.clean_text(exception, description)
         text = date + "  " + type + "  " + subject + "  " + description
         if not report:

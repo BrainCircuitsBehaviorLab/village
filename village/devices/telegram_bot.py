@@ -1,4 +1,5 @@
 import asyncio
+import json
 import os
 import threading
 import time
@@ -7,7 +8,7 @@ from urllib import parse, request
 
 import matplotlib.pyplot as plt
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
 
 from village.classes.null_classes import NullTelegramBot
 from village.devices.camera import cam_box, cam_corridor
@@ -40,6 +41,8 @@ class TelegramBot:
         self.connected = False
         self.error_running = False
         self.error = ""
+        self.pending: dict[int, str] = {}
+        self.alarm_id = 0
 
         self.thread = threading.Thread(target=self.botloop, daemon=True)
         self.thread.start()
@@ -54,18 +57,78 @@ class TelegramBot:
         text = "Hi! Use /report <hours> to get a report of the last hours."
         await update.message.reply_text(text)
 
-    def alarm(self, message: str) -> None:
+
+    def alarm(self, message: str, repeat: bool = False) -> None:
         """Sends an alarm message to the configured chat.
+
+        Repeatable alarms are kept in self.pending and resent every
+        TELEGRAM_REPEAT_MINUTES until acknowledged, either with the button in
+        telegram or with the ALARM button in the GUI.
 
         Args:
             message (str): The message content.
+            repeat (bool): True to resend the alarm until it is acknowledged.
+        """
+        if repeat:
+            first_line = message.split("\n")[0]
+            self.pending = {k: v for k, v in self.pending.items()
+                            if v.split("\n")[0] != first_line}
+            self.alarm_id += 1
+            self.pending[self.alarm_id] = message
+            self.send(message, self.alarm_id)
+        else:
+            self.send(message, None)
+
+    def send(self, message: str, ack_id: int | None) -> None:
+        """Sends a message, optionally with an acknowledge button.
+
+        Uses plain http because it is called from threads outside the bot
+        asyncio loop.
+
+        Args:
+            message (str): The message content.
+            ack_id (int | None): Id of the alarm to acknowledge, if any.
         """
         try:
             url = "https://api.telegram.org/bot%s/sendMessage" % self.token
-            data = parse.urlencode({"chat_id": self.chat, "text": message})
-            request.urlopen(url, data.encode("utf-8"))
+            values = {"chat_id": self.chat, "text": message}
+            if ack_id is not None:
+                values["reply_markup"] = json.dumps(
+                    {"inline_keyboard": [[
+                        {"text": "✅ Acknowledge",
+                         "callback_data": "ack:%d" % ack_id}
+                         ]]})
+            data = parse.urlencode(values)
+            request.urlopen(url, data.encode("utf-8"), timeout=10)
         except Exception:
             log.error("Telegram error sending alarm", exception=traceback.format_exc())
+
+    async def ack(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Acknowledges an alarm from the button in Telegram.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object.
+        """
+        query = update.callback_query
+        try:
+            await query.answer()
+            self.pending.pop(int(query.data.split(":")[1]), None)
+            await query.edit_message_text(query.message.text +
+                                          "\n\n✅ Acknowledged by " +
+                                          query.from_user.name)
+        except Exception:
+            log.error("Telegram error acknowledging",
+                      exception=traceback.format_exc())
+
+    async def repeat_alarms(self) -> None:
+        """Resends unacknowledged alarms until they are acknowledged."""
+        while True:
+            minutes = settings.get("TELEGRAM_REPEAT_MINUTES") or 30
+            await asyncio.sleep(60 * minutes)
+            for ack_id, message in list(self.pending.items()):
+                self.send(message, ack_id)
+
 
     async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Generates and sends a report for the specified number of hours.
@@ -146,6 +209,8 @@ class TelegramBot:
         self.application.add_handler(CommandHandler("report", self.report))
         self.application.add_handler(CommandHandler("plot", self.plot))
         self.application.add_handler(CommandHandler("cam", self.cam))
+        self.application.add_handler(CallbackQueryHandler(self.ack))
+
 
         try:
             await self.application.initialize()
@@ -154,8 +219,7 @@ class TelegramBot:
         except TypeError:
             pass
         self.connected = True
-        while True:
-            await asyncio.sleep(1)
+        await self.repeat_alarms()
 
     async def botloop_starttask(self) -> None:
         """Starts the main bot task."""
