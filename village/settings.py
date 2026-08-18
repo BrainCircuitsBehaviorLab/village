@@ -8,6 +8,7 @@ from village.classes.settings_class import (
     Color,
     ControllerEnum,
     Cycle,
+    CycleDay,
     Info,
     OldVersion,
     PixelType,
@@ -775,6 +776,14 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
         "The sharpness of the box camera.",
     ),
     Setting(
+        "THRESHOLDS_CORRIDOR",
+        "AUTO",
+        CycleDay,
+        "Which day/night values the corridor camera uses for its detection "
+        "thresholds and exposure. AUTO = follow the actual day/night; DAY = "
+        "always use the day values; NIGHT = always use the night values.",
+    ),
+    Setting(
         "EXPOSURE_DAY_CORRIDOR",
         0,
         int,
@@ -808,42 +817,42 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
 motor_settings = [
     Setting(
         "MOTOR1_VALUES",
-        [50, 80, 500, 500],
+        [50, 80, 0, 300],
         list[int],
         "Corridor door 1: [open, close, time_open, time_close]. Angles 0-180; "
         "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR2_VALUES",
-        [50, 80, 500, 500],
+        [50, 80, 0, 300],
         list[int],
         "Corridor door 2: [open, close, time_open, time_close]. Angles 0-180; "
         "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR3_VALUES",
-        [50, 80, 500, 500],
+        [50, 80, 0, 300],
         list[int],
         "Corridor door 3: [open, close, time_open, time_close]. Angles 0-180; "
         "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR1_BOX_VALUES",
-        [50, 80, 500, 500],
+        [50, 80, 0, 300],
         list[int],
         "Box motor 1: [open, close, time_open, time_close]. Angles 0-180; "
         "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR2_BOX_VALUES",
-        [50, 80, 500, 500],
+        [50, 80, 0, 300],
         list[int],
         "Box motor 2: [open, close, time_open, time_close]. Angles 0-180; "
         "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR3_BOX_VALUES",
-        [50, 80, 500, 500],
+        [50, 80, 0, 300],
         list[int],
         "Box motor 3: [open, close, time_open, time_close]. Angles 0-180; "
         "time_open/time_close = total ms to open/close (0 = instant).",

@@ -202,6 +202,12 @@ class Cycle(SuperEnum):
     OFF = "OFF"
 
 
+class CycleDay(SuperEnum):
+    AUTO = "AUTO"
+    DAY = "DAY"
+    NIGHT = "NIGHT"
+
+
 class Actions(SuperEnum):
     CORRIDOR = "CORRIDOR"
     BOX = "BOX"

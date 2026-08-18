@@ -220,6 +220,8 @@ def corridor_plot(
     # legend outside the axes, to the right, so it never covers data; the axes
     # are shrunk horizontally (right margin) to make room for it
     legend_handles = [
+        Patch(facecolor="white", edgecolor="gray", label="day"),
+        Patch(facecolor="gray", edgecolor="gray", label="night"),
         Line2D(
             [0],
             [0],
@@ -241,12 +243,12 @@ def corridor_plot(
             label="not allowed",
         ),
         Line2D([0], [0], color="blue", linewidth=6, label="session"),
-        Patch(facecolor="none", edgecolor="red", hatch="////", label="inactive"),
+        Patch(facecolor="none", hatch="////", label="inactive"),
     ]
     ax.legend(
         handles=legend_handles,
         loc="center left",
-        bbox_to_anchor=(1.01, 0.5),
+        bbox_to_anchor=(1.0, 0.5),
         fontsize=8,
         frameon=False,
         handlelength=1.5,
@@ -254,6 +256,6 @@ def corridor_plot(
         labelspacing=0.8,
     )
 
-    fig.subplots_adjust(left=0.03, right=0.82, top=0.97, bottom=0.1)
+    fig.subplots_adjust(left=0.03, right=0.93, top=0.97, bottom=0.1)
 
     return fig

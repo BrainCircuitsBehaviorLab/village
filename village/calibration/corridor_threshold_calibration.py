@@ -120,8 +120,8 @@ class CorridorThresholdCalibration(CalibrationBase):
             "right",
             "top",
             "bottom",
-            "threshold",
-            "threshold_night",
+            "thr_day",
+            "thr_night",
         ):
             lb = LabelButtons(name, direction, r, col, 8, "black", self.layout)
             self._lbs.append(lb)

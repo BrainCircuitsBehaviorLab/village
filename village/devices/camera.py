@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 import pandas as pd
 
-from village.classes.enums import Active, AreaActive
+from village.classes.enums import Active, AreaActive, CycleDay
 
 try:
     from libcamera import controls
@@ -115,6 +115,21 @@ def decode_exposure_setting(value: int) -> tuple[int, float, str]:
     if level == 1:
         return 2, 0.0, "long EV0"
     return 2, 1.0, "long EV+1"
+
+
+def corridor_night(auto_night: bool) -> bool:
+    """Resolve the corridor day/night selection from THRESHOLDS_CORRIDOR.
+
+    Used for both the detection thresholds and the exposure. DAY/NIGHT force the
+    choice; AUTO falls back to `auto_night` (the real day/night state the caller
+    passes in).
+    """
+    mode = settings.get("THRESHOLDS_CORRIDOR")
+    if mode == CycleDay.DAY:
+        return False
+    if mode == CycleDay.NIGHT:
+        return True
+    return auto_night
 
 
 # the camera class
@@ -293,7 +308,9 @@ class Camera:
         # black mouse), index 5 = night (IR only, greyish mouse). Keyed to the
         # actual visible-light state so it follows AUTO and manual overrides.
         # Reloaded on cycle change / light toggle / edit via self.change.
-        night = self.name == "CORRIDOR" and not manager.corridor_visible_on()
+        night = self.name == "CORRIDOR" and corridor_night(
+            not manager.corridor_visible_on()
+        )
 
         for i in range(1, self.number_of_areas + 1):
             area = settings.get("AREA" + str(i) + "_" + self.name)
@@ -369,10 +386,8 @@ class Camera:
         cycle = manager.cycle_change_detector.cycle_text
         self._applied_cycle = cycle
         if self.name == "CORRIDOR":
-            if cycle == "NIGHT":
-                key = "EXPOSURE_NIGHT_CORRIDOR"
-            else:
-                key = "EXPOSURE_DAY_CORRIDOR"
+            night = corridor_night(cycle == "NIGHT")
+            key = "EXPOSURE_NIGHT_CORRIDOR" if night else "EXPOSURE_DAY_CORRIDOR"
         else:
             key = "EXPOSURE_BOX"
         value = settings.get(key)

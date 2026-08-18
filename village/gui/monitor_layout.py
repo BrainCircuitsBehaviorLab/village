@@ -31,8 +31,10 @@ from PyQt5.QtWidgets import (
 from village.classes.enums import (
     Actions,
     Active,
+    AreaActive,
     ControllerEnum,
     Cycle,
+    CycleDay,
     Info,
     ScreenActive,
 )
@@ -119,10 +121,10 @@ def show_motor_angles_dialog(
 
     dialog = QDialog()
     dialog.setWindowTitle("Motor angles and times")
-    x = parent.column_width * 84
-    y = parent.row_height * 19
+    x = parent.column_width * 74
+    y = parent.row_height * 21
     width = parent.column_width * 55
-    height = parent.row_height * 16
+    height = parent.row_height * 10
     dialog.setGeometry(x, y, width, height)
 
     main_layout = QVBoxLayout()
@@ -307,6 +309,13 @@ class LabelButtons:
         color = "lightgray" if dimmed else self.base_color
         self.label2.set_color(color)
         self.label3.set_color(color)
+
+    def set_visible(self, visible: bool) -> None:
+        """Shows or hides all the control's widgets (labels and buttons)."""
+        self.label2.setVisible(visible)
+        self.label3.setVisible(visible)
+        self.btn_increase.setVisible(visible)
+        self.btn_decrease.setVisible(visible)
 
     def increase_value(self) -> None:
         """Increases the value of the setting safely."""
@@ -638,7 +647,7 @@ class CorridorLayout(Layout):
         self.draw_motor_buttons("MOTOR3", 16, 2, motor_corridor3)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID reader: ", 1, 2, 12, 2, "black"
+            "RFID: ", 1, 2, 9, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
@@ -647,7 +656,7 @@ class CorridorLayout(Layout):
             key,
             3,
             2,
-            10,
+            7,
             2,
             possible_values,
             index,
@@ -655,8 +664,26 @@ class CorridorLayout(Layout):
             "Activation of the RFID reader: ON, OFF",
         )
 
+        self.thresholds_label: Label = self.create_and_add_label(
+            "Thresholds: ", 1, 11, 9, 2, "black"
+        )
+        key = "THRESHOLDS_CORRIDOR"
+        possible_values = CycleDay.values()
+        index = CycleDay.get_index_from_value(settings.get("THRESHOLDS_CORRIDOR"))
+        self.thresholds_button = self.create_and_add_toggle_button(
+            key,
+            3,
+            11,
+            7,
+            2,
+            possible_values,
+            index,
+            self.toggle_thresholds_button,
+            "Corridor thresholds & exposure: AUTO (day/night), DAY, NIGHT",
+        )
+
         self.visible_label: Label = self.create_and_add_label(
-            "Visible light: ", 1, 15, 12, 2, "black"
+            "Visible light: ", 1, 20, 9, 2, "black"
         )
         key = "VISIBLE_CORRIDOR"
         possible_values = Cycle.values()
@@ -664,8 +691,8 @@ class CorridorLayout(Layout):
         self.visible_button = self.create_and_add_toggle_button(
             key,
             3,
-            15,
-            10,
+            20,
+            7,
             2,
             possible_values,
             index,
@@ -674,7 +701,7 @@ class CorridorLayout(Layout):
         )
 
         self.ir_label: Label = self.create_and_add_label(
-            "IR light: ", 1, 28, 12, 2, "black"
+            "IR light: ", 1, 29, 11, 2, "black"
         )
         key = "IR_CORRIDOR"
         possible_values = Cycle.values()
@@ -682,8 +709,8 @@ class CorridorLayout(Layout):
         self.ir_button = self.create_and_add_toggle_button(
             key,
             3,
-            28,
-            10,
+            29,
+            7,
             2,
             possible_values,
             index,
@@ -770,6 +797,11 @@ class CorridorLayout(Layout):
         manager.rfid_reader = Active[value]
         settings.set(key, value)
         self.window.layout.update_status_label_buttons()
+
+    def toggle_thresholds_button(self, value: str, key: str) -> None:
+        """Sets the corridor day/night mode for thresholds and exposure."""
+        settings.set(key, value)
+        cam_corridor.change = True
 
     def toggle_visible_button(self, value: str, key: str) -> None:
         manager.visible_corridor_cycle = Cycle[value]
@@ -1477,10 +1509,10 @@ class DetectionLayout(Layout):
                 "View the detection in the corridor",
             )
 
-        self.draw_area_buttons_box("AREA1_BOX", 2, 123, self.color_area1_str)
-        self.draw_area_buttons_box("AREA2_BOX", 2, 143, self.color_area2_str)
-        self.draw_area_buttons_box("AREA3_BOX", 2, 163, self.color_area3_str)
-        self.draw_area_buttons_box("AREA4_BOX", 2, 183, self.color_area4_str)
+        self.draw_area_buttons_box("AREA1_BOX", 4, 123, self.color_area1_str)
+        self.draw_area_buttons_box("AREA2_BOX", 4, 143, self.color_area2_str)
+        self.draw_area_buttons_box("AREA3_BOX", 4, 163, self.color_area3_str)
+        self.draw_area_buttons_box("AREA4_BOX", 4, 183, self.color_area4_str)
         self.draw_camera_options()
         self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 122)
 
@@ -1489,7 +1521,7 @@ class DetectionLayout(Layout):
         index = settings.get_index(key)
         self.area1_box_button = self.create_and_add_toggle_button(
             key,
-            14,
+            2,
             123,
             17,
             2,
@@ -1504,7 +1536,7 @@ class DetectionLayout(Layout):
         index = settings.get_index(key)
         self.area2_box_button = self.create_and_add_toggle_button(
             key,
-            14,
+            2,
             143,
             17,
             2,
@@ -1519,7 +1551,7 @@ class DetectionLayout(Layout):
         index = settings.get_index(key)
         self.area3_box_button = self.create_and_add_toggle_button(
             key,
-            14,
+            2,
             163,
             17,
             2,
@@ -1534,7 +1566,7 @@ class DetectionLayout(Layout):
         index = settings.get_index(key)
         self.area4_box_button = self.create_and_add_toggle_button(
             key,
-            14,
+            2,
             183,
             17,
             2,
@@ -1567,13 +1599,20 @@ class DetectionLayout(Layout):
         return
 
     def update_gui(self) -> None:
-        """Dims the corridor day/night controls not active for the current cycle.
+        """Dims the controls that are inactive.
 
-        During the day the night controls (thr_night, exposure_night) are
-        greyed out; during the night the day controls (thr_day, exposure_day)
-        are greyed out. Box controls are never dimmed. Only re-applied when the
-        cycle actually changes.
+        Box areas whose USAGE is OFF have all their controls (labels and
+        buttons) hidden. For the corridor, the day/night controls not active for
+        the current cycle are greyed (night controls during the day, day
+        controls at night).
         """
+        # box areas: hide every control of an area whose USAGE is OFF
+        for lb in self.lbs:
+            if lb.name.startswith("AREA") and lb.name.endswith("_BOX"):
+                usage_key = lb.name.replace("AREA", "USAGE")
+                lb.set_visible(settings.get(usage_key) != AreaActive.OFF)
+
+        # corridor day/night: only re-apply when the cycle changes
         cycle = manager.cycle_change_detector.cycle_text
         if cycle == self._dim_cycle:
             return
