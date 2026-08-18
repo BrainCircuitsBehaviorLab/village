@@ -50,39 +50,38 @@ else:
 
 
 # Servo motion ramp (normal PCA9685 Motor only -- MotorOld is untouched).
-# move() steps the angle in MOTOR_STEP_DEGREES-degree increments, pausing `speed`
-# milliseconds after each step, so the door travels slowly and smoothly instead
-# of snapping to the target. Travel time is approx:
-#   (abs(target - start) / MOTOR_STEP_DEGREES) * speed_ms
-# Per-motor speeds live in the MOTOR*_VALUES settings (speed_open, speed_close);
-# higher = slower, 0 = as fast as possible. DEFAULT_MOTOR_SPEED is used for
-# legacy settings that only store [open, close] with no speeds.
+# move() steps the angle in MOTOR_STEP_DEGREES-degree increments so the door
+# travels smoothly instead of snapping. The MOTOR*_VALUES settings give the
+# TOTAL time (ms) to open and to close; move() splits that time evenly across
+# the steps of the travel (steps = ceil(distance / MOTOR_STEP_DEGREES)), so a
+# 27 deg move is 6 steps and each waits total_ms / 6. 0 ms = as fast as
+# possible. DEFAULT_MOTOR_TIME is used for legacy settings with no times.
 MOTOR_STEP_DEGREES = 5  # degrees moved per step
-DEFAULT_MOTOR_SPEED = 30  # ms paused per step when the setting has no speed
 
 
 def parse_motor_values(values: list[int]) -> tuple[int, int, int, int]:
-    """Unpack a MOTOR*_VALUES setting into (open, close, speed_open, speed_close).
+    """Unpack a MOTOR*_VALUES setting into (open, close, time_open, time_close).
 
-    Legacy settings only store [open, close]; missing speeds fall back to
-    DEFAULT_MOTOR_SPEED so old calibrations keep working.
+    time_open/time_close are the TOTAL milliseconds to open/close. Legacy
+    settings only store [open, close]; missing times fall back to
+    DEFAULT_MOTOR_TIME so old calibrations keep working.
     """
     open_angle = int(values[0])
     close_angle = int(values[1])
-    speed_open = int(values[2]) if len(values) > 2 else DEFAULT_MOTOR_SPEED
-    speed_close = int(values[3]) if len(values) > 3 else DEFAULT_MOTOR_SPEED
-    return open_angle, close_angle, speed_open, speed_close
+    time_open = int(values[2]) if len(values) > 2 else 0
+    time_close = int(values[3]) if len(values) > 3 else 0
+    return open_angle, close_angle, time_open, time_close
 
 
 class Motor:
     def __init__(self, channel: int, values: list[int], pwm) -> None:
         self.pwm = pwm
         self.channel = channel
-        open_angle, close_angle, speed_open, speed_close = parse_motor_values(values)
+        open_angle, close_angle, time_open, time_close = parse_motor_values(values)
         self.open_angle = open_angle
         self.close_angle = close_angle
-        self.speed_open = speed_open  # ms paused per step while opening
-        self.speed_close = speed_close  # ms paused per step while closing
+        self.time_open = time_open  # total ms to travel to the open position
+        self.time_close = time_close  # total ms to travel to the close position
         self.error = ""
         # Last commanded angle; ramps start here. The real position is unknown
         # at boot, so the first move() goes straight to the target and syncs.
@@ -99,13 +98,15 @@ class Motor:
         ticks = self.servo_pulse(pulse_ms)
         self.pwm.set_pwm(self.channel, 0, ticks)
 
-    def move(self, angle: int, speed: int) -> None:
-        """Ramps the servo to `angle` in steps, pausing `speed` ms after each.
+    def move(self, angle: int, total_ms: int = 0) -> None:
+        """Ramps the servo to `angle`, spreading `total_ms` over the steps.
 
-        The first move after boot goes straight to the target (the real
-        position is unknown, so ramping from an assumed start could jerk) and
-        just syncs current_angle; every later move ramps smoothly.
+        The travel is split into MOTOR_STEP_DEGREES-degree steps; each step waits
+        total_ms / number_of_steps, so the whole move takes about total_ms. The
+        first move after boot goes straight to the target (the real position is
+        unknown) and just syncs current_angle; every later move ramps smoothly.
         """
+        total_ms = max(0, total_ms)  # negative time -> instant, never a bad sleep
         if not self._initialized:
             self._write_angle(angle)
             self.current_angle = angle
@@ -115,6 +116,9 @@ class Motor:
         if angle == start:
             self._write_angle(angle)
             return
+        span = abs(angle - start)
+        num_steps = (span + MOTOR_STEP_DEGREES - 1) // MOTOR_STEP_DEGREES  # ceil
+        delay = (total_ms / num_steps) / 1000.0  # seconds paused per step
         step = MOTOR_STEP_DEGREES if angle > start else -MOTOR_STEP_DEGREES
         a = start
         while a != angle:
@@ -122,7 +126,7 @@ class Motor:
             if (step > 0 and a > angle) or (step < 0 and a < angle):
                 a = angle  # last step: land exactly on the target
             self._write_angle(a)
-            time.sleep(speed / 1000)
+            time.sleep(delay)
         self.current_angle = angle
 
     def disable(self) -> None:
@@ -131,11 +135,11 @@ class Motor:
 
     def open(self) -> None:
         """Moves the motor to the open position."""
-        self.move(self.open_angle, self.speed_open)
+        self.move(self.open_angle, self.time_open)
 
     def close(self) -> None:
         """Moves the motor to the close position."""
-        self.move(self.close_angle, self.speed_close)
+        self.move(self.close_angle, self.time_close)
 
 
 class LED:
@@ -166,8 +170,8 @@ def get_motor(channel: int, values: list[int], pwm) -> Motor:
 
     Args:
         channel (int): The PWM channel number.
-        values (list[int]): [open, close, speed_open, speed_close]. Legacy
-            settings with only [open, close] are also accepted.
+        values (list[int]): [open, close, time_open, time_close] (times are the
+            total ms to open/close). Legacy [open, close] is also accepted.
 
     Returns:
         Motor: An initialized Motor instance.

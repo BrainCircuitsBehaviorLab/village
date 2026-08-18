@@ -217,8 +217,8 @@ def corridor_plot(
     ax.tick_params(axis="x", labelsize=6)
     ax.tick_params(axis="y", labelsize=6)
 
-    # small frameless legend in the (usually empty) top-right future space, so
-    # it does not cover data and does not shrink the axes
+    # legend outside the axes, to the right, so it never covers data; the axes
+    # are shrunk horizontally (right margin) to make room for it
     legend_handles = [
         Line2D(
             [0],
@@ -227,7 +227,7 @@ def corridor_plot(
             linestyle="none",
             markerfacecolor="orange",
             markeredgecolor="orange",
-            markersize=4,
+            markersize=6,
             label="corridor busy",
         ),
         Line2D(
@@ -237,23 +237,23 @@ def corridor_plot(
             linestyle="none",
             markerfacecolor="purple",
             markeredgecolor="purple",
-            markersize=4,
+            markersize=6,
             label="not allowed",
         ),
-        Line2D([0], [0], color="blue", linewidth=4, label="session"),
+        Line2D([0], [0], color="blue", linewidth=6, label="session"),
         Patch(facecolor="none", edgecolor="red", hatch="////", label="inactive"),
     ]
     ax.legend(
         handles=legend_handles,
-        loc="upper right",
-        fontsize=5,
+        loc="center left",
+        bbox_to_anchor=(1.01, 0.5),
+        fontsize=8,
         frameon=False,
-        handlelength=1.0,
-        handletextpad=0.4,
-        labelspacing=0.3,
-        borderaxespad=0.3,
+        handlelength=1.5,
+        handletextpad=0.6,
+        labelspacing=0.8,
     )
 
-    fig.subplots_adjust(left=0.03, right=0.97, top=0.97, bottom=0.1)
+    fig.subplots_adjust(left=0.03, right=0.82, top=0.97, bottom=0.1)
 
     return fig

@@ -808,45 +808,45 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
 motor_settings = [
     Setting(
         "MOTOR1_VALUES",
-        [50, 80, 30, 30],
+        [50, 80, 500, 500],
         list[int],
-        "Corridor door 1: [open, close, speed_open, speed_close]. Angles 0-180; "
-        "speed = ms pause per 5-degree step (higher = slower).",
+        "Corridor door 1: [open, close, time_open, time_close]. Angles 0-180; "
+        "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR2_VALUES",
-        [50, 80, 30, 30],
+        [50, 80, 500, 500],
         list[int],
-        "Corridor door 2: [open, close, speed_open, speed_close]. Angles 0-180; "
-        "speed = ms pause per 5-degree step (higher = slower).",
+        "Corridor door 2: [open, close, time_open, time_close]. Angles 0-180; "
+        "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR3_VALUES",
-        [50, 80, 30, 30],
+        [50, 80, 500, 500],
         list[int],
-        "Corridor door 3: [open, close, speed_open, speed_close]. Angles 0-180; "
-        "speed = ms pause per 5-degree step (higher = slower).",
+        "Corridor door 3: [open, close, time_open, time_close]. Angles 0-180; "
+        "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR1_BOX_VALUES",
-        [50, 80, 30, 30],
+        [50, 80, 500, 500],
         list[int],
-        "Box motor 1: [open, close, speed_open, speed_close]. Angles 0-180; "
-        "speed = ms pause per 5-degree step (higher = slower).",
+        "Box motor 1: [open, close, time_open, time_close]. Angles 0-180; "
+        "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR2_BOX_VALUES",
-        [50, 80, 30, 30],
+        [50, 80, 500, 500],
         list[int],
-        "Box motor 2: [open, close, speed_open, speed_close]. Angles 0-180; "
-        "speed = ms pause per 5-degree step (higher = slower).",
+        "Box motor 2: [open, close, time_open, time_close]. Angles 0-180; "
+        "time_open/time_close = total ms to open/close (0 = instant).",
     ),
     Setting(
         "MOTOR3_BOX_VALUES",
-        [50, 80, 30, 30],
+        [50, 80, 500, 500],
         list[int],
-        "Box motor 3: [open, close, speed_open, speed_close]. Angles 0-180; "
-        "speed = ms pause per 5-degree step (higher = slower).",
+        "Box motor 3: [open, close, time_open, time_close]. Angles 0-180; "
+        "time_open/time_close = total ms to open/close (0 = instant).",
     ),
 ]
 

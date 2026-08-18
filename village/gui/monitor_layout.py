@@ -10,6 +10,7 @@ from PyQt5.QtGui import QColor, QFont, QFontMetrics, QPixmap
 from PyQt5.QtWidgets import (
     QCheckBox,
     QDialog,
+    QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -71,15 +72,15 @@ def build_motor_fields(keys: list[str]) -> list[tuple[str, int]]:
     """Build (label, current_value) pairs for a motor-calibration dialog.
 
     For each MOTOR*_VALUES key it yields four fields: open angle, close angle,
-    open speed and close speed (ms of pause per step).
+    open time and close time (total ms to open/close).
     """
     fields: list[tuple[str, int]] = []
     for i, key in enumerate(keys, start=1):
-        open_a, close_a, speed_o, speed_c = parse_motor_values(settings.get(key))
+        open_a, close_a, time_o, time_c = parse_motor_values(settings.get(key))
         fields.append((f"Motor{i} open angle:", open_a))
         fields.append((f"Motor{i} close angle:", close_a))
-        fields.append((f"Motor{i} open speed (ms/step):", speed_o))
-        fields.append((f"Motor{i} close speed (ms/step):", speed_c))
+        fields.append((f"Motor{i} open time (ms):", time_o))
+        fields.append((f"Motor{i} close time (ms):", time_c))
     return fields
 
 
@@ -100,12 +101,57 @@ def apply_motor_fields(
         except ValueError:
             vals.append(int(current))
     for i, key in enumerate(keys):
-        open_a, close_a, speed_o, speed_c = vals[i * 4 : i * 4 + 4]
-        settings.set(key, (open_a, close_a, speed_o, speed_c))
+        open_a, close_a, time_o, time_c = vals[i * 4 : i * 4 + 4]
+        settings.set(key, (open_a, close_a, time_o, time_c))
         motors[i].open_angle = open_a
         motors[i].close_angle = close_a
-        motors[i].speed_open = speed_o
-        motors[i].speed_close = speed_c
+        motors[i].time_open = time_o
+        motors[i].time_close = time_c
+
+
+def show_motor_angles_dialog(
+    parent: Layout, keys: list[str], motors: list[Any]
+) -> None:
+    """Opens a grid dialog to edit motor values: one row per motor, four columns
+    (open angle, close angle, open time, close time)."""
+    fields = build_motor_fields(keys)
+    headers = ["open angle", "close angle", "open time (ms)", "close time (ms)"]
+
+    dialog = QDialog()
+    dialog.setWindowTitle("Motor angles and times")
+    x = parent.column_width * 84
+    y = parent.row_height * 19
+    width = parent.column_width * 55
+    height = parent.row_height * 16
+    dialog.setGeometry(x, y, width, height)
+
+    main_layout = QVBoxLayout()
+    grid = QGridLayout()
+    for col, header in enumerate(headers):
+        grid.addWidget(QLabel(header), 0, col + 1)
+    edits: list[QLineEdit] = []
+    for i in range(len(keys)):
+        grid.addWidget(QLabel(f"Motor {i + 1}"), i + 1, 0)
+        for j in range(4):
+            edit = QLineEdit()
+            edit.setPlaceholderText(str(fields[i * 4 + j][1]))
+            grid.addWidget(edit, i + 1, j + 1)
+            edits.append(edit)
+    main_layout.addLayout(grid)
+
+    btns_layout = QHBoxLayout()
+    btn_ok = QPushButton("CHANGE")
+    btn_cancel = QPushButton("CANCEL")
+    btns_layout.addWidget(btn_ok)
+    btns_layout.addWidget(btn_cancel)
+    main_layout.addLayout(btns_layout)
+    dialog.setLayout(main_layout)
+
+    btn_ok.clicked.connect(dialog.accept)
+    btn_cancel.clicked.connect(dialog.reject)
+
+    if dialog.exec_():
+        apply_motor_fields(keys, motors, fields, edits)
 
 
 class LabelButtons:
@@ -146,7 +192,8 @@ class LabelButtons:
             "right": 2,
             "bottom": 3,
             "threshold": 4,
-            "threshold_night": 5,
+            "thr_day": 4,
+            "thr_night": 5,
             "empty_limit": 0,
             "subject_limit": 1,
             "lens_position": -1,
@@ -161,7 +208,8 @@ class LabelButtons:
             "right": width_res,
             "bottom": height_res,
             "threshold": 255,
-            "threshold_night": 255,
+            "thr_day": 255,
+            "thr_night": 255,
             "empty_limit": 1000000,
             "subject_limit": 1000000,
             "lens_position": 10,
@@ -176,7 +224,8 @@ class LabelButtons:
             "right": "\u2192",
             "bottom": "\u2193",
             "threshold": "\u2191",
-            "threshold_night": "\u2191",
+            "thr_day": "\u2191",
+            "thr_night": "\u2191",
             "empty_limit": "\u2191",
             "subject_limit": "\u2191",
             "lens_position": "\u2191",
@@ -191,7 +240,8 @@ class LabelButtons:
             "right": "\u2190",
             "bottom": "\u2191",
             "threshold": "\u2193",
-            "threshold_night": "\u2193",
+            "thr_day": "\u2193",
+            "thr_night": "\u2193",
             "empty_limit": "\u2193",
             "subject_limit": "\u2193",
             "lens_position": "\u2193",
@@ -277,7 +327,8 @@ class LabelButtons:
                 "right",
                 "bottom",
                 "threshold",
-                "threshold_night",
+                "thr_day",
+                "thr_night",
                 "empty_limit",
                 "subject_limit",
                 "exposure_day",
@@ -309,7 +360,8 @@ class LabelButtons:
                 "right",
                 "bottom",
                 "threshold",
-                "threshold_night",
+                "thr_day",
+                "thr_night",
                 "empty_limit",
                 "subject_limit",
                 "exposure_day",
@@ -747,41 +799,12 @@ class CorridorLayout(Layout):
         manager.taring_scale = True
 
     def change_angles_clicked(self) -> None:
-        """Opens a dialog to change corridor motor angles and speeds."""
-        keys = ["MOTOR1_VALUES", "MOTOR2_VALUES", "MOTOR3_VALUES"]
-        motors = [motor_corridor1, motor_corridor2, motor_corridor3]
-        fields = build_motor_fields(keys)
-
-        self.reply = QDialog()
-        self.reply.setWindowTitle("Motor angles and speeds")
-        x = self.column_width * 84
-        y = self.row_height * 19
-        width = self.column_width * 32
-        height = self.row_height * 30
-        self.reply.setGeometry(x, y, width, height)
-        layout = QVBoxLayout()
-
-        edits = []
-        for label_text, current in fields:
-            layout.addWidget(QLabel(label_text))
-            edit = QLineEdit()
-            edit.setPlaceholderText(str(current))
-            layout.addWidget(edit)
-            edits.append(edit)
-
-        btns_layout = QHBoxLayout()
-        self.btn_ok = QPushButton("CHANGE")
-        self.btn_cancel = QPushButton("CANCEL")
-        btns_layout.addWidget(self.btn_ok)
-        btns_layout.addWidget(self.btn_cancel)
-        layout.addLayout(btns_layout)
-        self.reply.setLayout(layout)
-
-        self.btn_ok.clicked.connect(self.reply.accept)
-        self.btn_cancel.clicked.connect(self.reply.reject)
-
-        if self.reply.exec_():
-            apply_motor_fields(keys, motors, fields, edits)
+        """Opens a dialog to change corridor motor angles and times."""
+        show_motor_angles_dialog(
+            self,
+            ["MOTOR1_VALUES", "MOTOR2_VALUES", "MOTOR3_VALUES"],
+            [motor_corridor1, motor_corridor2, motor_corridor3],
+        )
 
     def calibrate_scale_clicked(self) -> None:
         """Opens the scale calibration wizard."""
@@ -980,41 +1003,12 @@ class BoxLayout(Layout):
                 manager.check_box_lights()
 
     def change_angles_clicked(self) -> None:
-        """Opens a dialog to change box motor angles and speeds."""
-        keys = ["MOTOR1_BOX_VALUES", "MOTOR2_BOX_VALUES", "MOTOR3_BOX_VALUES"]
-        motors = [motor_box1, motor_box2, motor_box3]
-        fields = build_motor_fields(keys)
-
-        self.reply = QDialog()
-        self.reply.setWindowTitle("Motor angles and speeds")
-        x = self.column_width * 84
-        y = self.row_height * 19
-        width = self.column_width * 32
-        height = self.row_height * 30
-        self.reply.setGeometry(x, y, width, height)
-        layout = QVBoxLayout()
-
-        edits = []
-        for label_text, current in fields:
-            layout.addWidget(QLabel(label_text))
-            edit = QLineEdit()
-            edit.setPlaceholderText(str(current))
-            layout.addWidget(edit)
-            edits.append(edit)
-
-        btns_layout = QHBoxLayout()
-        self.btn_ok = QPushButton("CHANGE")
-        self.btn_cancel = QPushButton("CANCEL")
-        btns_layout.addWidget(self.btn_ok)
-        btns_layout.addWidget(self.btn_cancel)
-        layout.addLayout(btns_layout)
-        self.reply.setLayout(layout)
-
-        self.btn_ok.clicked.connect(self.reply.accept)
-        self.btn_cancel.clicked.connect(self.reply.reject)
-
-        if self.reply.exec_():
-            apply_motor_fields(keys, motors, fields, edits)
+        """Opens a dialog to change box motor angles and times."""
+        show_motor_angles_dialog(
+            self,
+            ["MOTOR1_BOX_VALUES", "MOTOR2_BOX_VALUES", "MOTOR3_BOX_VALUES"],
+            [motor_box1, motor_box2, motor_box3],
+        )
 
     def disable_all(self) -> None:
         """Disables all port buttons."""
@@ -1488,7 +1482,7 @@ class DetectionLayout(Layout):
         self.draw_area_buttons_box("AREA3_BOX", 2, 163, self.color_area3_str)
         self.draw_area_buttons_box("AREA4_BOX", 2, 183, self.color_area4_str)
         self.draw_camera_options()
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 121)
+        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 122)
 
         key = "USAGE1_BOX"
         possible_values = settings.get_values(key)
@@ -1575,8 +1569,8 @@ class DetectionLayout(Layout):
     def update_gui(self) -> None:
         """Dims the corridor day/night controls not active for the current cycle.
 
-        During the day the night controls (threshold_night, exposure_night) are
-        greyed out; during the night the day controls (threshold, exposure_day)
+        During the day the night controls (thr_night, exposure_night) are
+        greyed out; during the night the day controls (thr_day, exposure_day)
         are greyed out. Box controls are never dimmed. Only re-applied when the
         cycle actually changes.
         """
@@ -1587,11 +1581,11 @@ class DetectionLayout(Layout):
         is_day = cycle == "DAY"
         for lb in self.lbs:
             direction = lb.direction
-            if direction in ("threshold_night", "exposure_night"):
+            if direction in ("thr_night", "exposure_night"):
                 lb.set_dimmed(is_day)  # night controls: dim during the day
             elif direction == "exposure_day":
                 lb.set_dimmed(not is_day)  # day control: dim during the night
-            elif direction == "threshold" and "CORRIDOR" in lb.name:
+            elif direction == "thr_day" and "CORRIDOR" in lb.name:
                 lb.set_dimmed(not is_day)  # corridor day threshold: dim at night
 
     def draw_mice_buttons(self, name: str, row: int, column: int) -> None:
@@ -1626,8 +1620,8 @@ class DetectionLayout(Layout):
             "right",
             "top",
             "bottom",
-            "threshold",
-            "threshold_night",
+            "thr_day",
+            "thr_night",
         ):
             lb = LabelButtons(name, direction, row, column, 8, color, self)
             self.lbs.append(lb)
@@ -1673,7 +1667,7 @@ class DetectionLayout(Layout):
         """Draws camera adjustment options."""
         row = 2
         column = 81
-        width = 10
+        width = 12
         color = "black"
 
         if manager.use_of_corridor:
@@ -1722,7 +1716,7 @@ class DetectionLayout(Layout):
             row += 2
 
         row = 2
-        column = 102
+        column = 103
         width = 10
 
         self.label_box: Label = self.create_and_add_label(
