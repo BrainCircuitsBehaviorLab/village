@@ -84,6 +84,10 @@ class Label(QLabel):
         if right_aligment:
             self.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
+    def set_color(self, color: str) -> None:
+        """Updates the text color of the label (kept bold)."""
+        self.setStyleSheet("QLabel {color: " + color + "; font-weight: bold}")
+
 
 class LabelImage(QLabel):
     """QLabel for displaying an image from the resources directory."""

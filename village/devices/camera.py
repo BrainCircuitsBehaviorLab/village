@@ -98,6 +98,25 @@ class LowFreqQPicamera2(QPicamera2):
         painter.restore()
 
 
+# --- Exposure level encoding ------------------------------------------------
+# The EXPOSURE_* settings are a single 0-2 brightness level (higher = brighter),
+# each packing an AeExposureMode + an ExposureValue bias:
+#     0 -> Normal, EV 0   (dimmest in low light: Normal caps exposure early)
+#     1 -> Long,   EV 0   (longer exposure -> brighter/cleaner under IR)
+#     2 -> Long,   EV +1  (brighter target, uses digital gain -> brightest/noisier)
+# AeExposureMode int values: 0 = Normal, 2 = Long.
+
+
+def decode_exposure_setting(value: int) -> tuple[int, float, str]:
+    """Decode a 0-2 exposure level into (AeExposureMode, ExposureValue, name)."""
+    level = int(round(value))
+    if level <= 0:
+        return 0, 0.0, "normal EV0"
+    if level == 1:
+        return 2, 0.0, "long EV0"
+    return 2, 1.0, "long EV+1"
+
+
 # the camera class
 class Camera:
     """Controls a Picamera2 device, handles recording, and performs real-time detection.
@@ -270,9 +289,16 @@ class Camera:
         self.thresholds: list[int] = []
         self.number_of_areas = 4
 
+        # Corridor areas carry two thresholds: index 4 = day (visible light,
+        # black mouse), index 5 = night (IR only, greyish mouse). Keyed to the
+        # actual visible-light state so it follows AUTO and manual overrides.
+        # Reloaded on cycle change / light toggle / edit via self.change.
+        night = self.name == "CORRIDOR" and not manager.corridor_visible_on()
+
         for i in range(1, self.number_of_areas + 1):
-            self.areas.append(settings.get("AREA" + str(i) + "_" + self.name)[0:4])
-            self.thresholds.append(settings.get("AREA" + str(i) + "_" + self.name)[4])
+            area = settings.get("AREA" + str(i) + "_" + self.name)
+            self.areas.append(area[0:4])
+            self.thresholds.append(area[5] if (night and len(area) > 5) else area[4])
 
         # areas active and allowed settings
         self.areas_active: list[bool] = []
@@ -334,19 +360,25 @@ class Camera:
         self.apply_exposure()
 
     def apply_exposure(self) -> None:
-        """Applies the ExposureValue bias for the current day/night cycle.
+        """Applies the exposure level (0-2) for this camera and cycle.
 
-        Day is always 0 (neutral); at night the EXPOSURE_VALUE_NIGHT_* setting
-        is applied to brighten under the weaker IR light. Auto-exposure stays
-        on -- this only shifts its target brightness.
+        The corridor camera uses EXPOSURE_DAY_CORRIDOR by day and
+        EXPOSURE_NIGHT_CORRIDOR at night; the box camera always uses
+        EXPOSURE_BOX. Editing the value in the MONITOR tab applies it live.
         """
         cycle = manager.cycle_change_detector.cycle_text
         self._applied_cycle = cycle
-        if cycle == "NIGHT":
-            ev = float(settings.get("EXPOSURE_VALUE_NIGHT_" + self.name))
+        if self.name == "CORRIDOR":
+            if cycle == "NIGHT":
+                key = "EXPOSURE_NIGHT_CORRIDOR"
+            else:
+                key = "EXPOSURE_DAY_CORRIDOR"
         else:
-            ev = 0.0
-        self.cam.set_controls({"ExposureValue": ev})
+            key = "EXPOSURE_BOX"
+        value = settings.get(key)
+        ae_mode, ev, mode_name = decode_exposure_setting(value)
+        self.cam.set_controls({"ExposureValue": ev, "AeExposureMode": ae_mode})
+        log.info(f"CAMERA {self.name} exposure: {key}={value} -> {mode_name}")
 
     def start_camera(self) -> None:
         """Starts the camera capture."""

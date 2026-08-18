@@ -634,35 +634,35 @@ a different version, please update it by following the instructions at sanworks.
 camera_settings = [
     Setting(
         "AREA1_CORRIDOR",
-        [100, 300, 200, 350, 100],
+        [100, 300, 200, 350, 100, 100],
         list[int],
         """The first area of the corridor, located between the homecage and the first
 door. Values include left, top, right, and bottom coordinates, along with the
-detection threshold.""",
+day and night detection thresholds.""",
     ),
     Setting(
         "AREA2_CORRIDOR",
-        [200, 300, 300, 350, 100],
+        [200, 300, 300, 350, 100, 100],
         list[int],
         """The second area of the corridor, located between the first door and the
 area3. Values include left, top, right, and bottom coordinates, along with the
-detection threshold.""",
+day and night detection thresholds.""",
     ),
     Setting(
         "AREA3_CORRIDOR",
-        [300, 300, 400, 350, 100],
+        [300, 300, 400, 350, 100, 100],
         list[int],
         """The third area of the corridor, located between the area2 and the second
 door. Values include left, top, right, and bottom coordinates, along with the
-detection threshold.""",
+day and night detection thresholds.""",
     ),
     Setting(
         "AREA4_CORRIDOR",
-        [400, 300, 500, 350, 100],
+        [400, 300, 500, 350, 100, 100],
         list[int],
         """The fourth area of the corridor, located between the second door and the
 operant box. Values include left, top, right, and bottom coordinates, along with the
-detection threshold.""",
+day and night detection thresholds.""",
     ),
     Setting(
         "AREA1_BOX",
@@ -775,18 +775,33 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
         "The sharpness of the box camera.",
     ),
     Setting(
-        "EXPOSURE_VALUE_NIGHT_CORRIDOR",
-        0.0,
-        float,
-        "Night exposure boost for the corridor camera (EV stops, 0 = none, "
-        "higher = brighter). Applied automatically at night; day is always 0.",
+        "EXPOSURE_DAY_CORRIDOR",
+        0,
+        int,
+        "Corridor camera exposure during the day, 0-2 (higher = brighter). "
+        "0 = Normal auto-exposure. 1 = Long mode: lets the camera use longer "
+        "exposure times, so it is brighter and cleaner when there is little "
+        "light. 2 = Long plus a brighter target (digital gain -> brightest but "
+        "noisier).",
     ),
     Setting(
-        "EXPOSURE_VALUE_NIGHT_BOX",
-        0.0,
-        float,
-        "Night exposure boost for the box camera (EV stops, 0 = none, "
-        "higher = brighter). Applied automatically at night; day is always 0.",
+        "EXPOSURE_NIGHT_CORRIDOR",
+        2,
+        int,
+        "Corridor camera exposure at night / IR, 0-2 (higher = brighter). "
+        "0 = Normal auto-exposure. 1 = Long mode: lets the camera use longer "
+        "exposure times, so it is brighter and cleaner when there is little "
+        "light. 2 = Long plus a brighter target (digital gain -> brightest but "
+        "noisier).",
+    ),
+    Setting(
+        "EXPOSURE_BOX",
+        0,
+        int,
+        "Box camera exposure, 0-2 (higher = brighter). 0 = Normal auto-exposure. "
+        "1 = Long mode: lets the camera use longer exposure times, so it is "
+        "brighter and cleaner when there is little light. 2 = Long plus a "
+        "brighter target (digital gain -> brightest but noisier).",
     ),
 ]
 

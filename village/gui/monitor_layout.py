@@ -138,6 +138,7 @@ class LabelButtons:
         """
         self.name = name
         self.direction = direction
+        self.base_color = color
 
         self.mapping_dict_index = {
             "left": 0,
@@ -145,11 +146,14 @@ class LabelButtons:
             "right": 2,
             "bottom": 3,
             "threshold": 4,
+            "threshold_night": 5,
             "empty_limit": 0,
             "subject_limit": 1,
             "lens_position": -1,
             "sharpness": -1,
+            "exposure_day": -1,
             "exposure_night": -1,
+            "exposure": -1,
         }
         self.mapping_dict_max = {
             "left": width_res,
@@ -157,11 +161,14 @@ class LabelButtons:
             "right": width_res,
             "bottom": height_res,
             "threshold": 255,
+            "threshold_night": 255,
             "empty_limit": 1000000,
             "subject_limit": 1000000,
             "lens_position": 10,
             "sharpness": 16,
-            "exposure_night": 4,
+            "exposure_day": 2,
+            "exposure_night": 2,
+            "exposure": 2,
         }
         self.mapping_dict_increase = {
             "left": "\u2192",
@@ -169,11 +176,14 @@ class LabelButtons:
             "right": "\u2192",
             "bottom": "\u2193",
             "threshold": "\u2191",
+            "threshold_night": "\u2191",
             "empty_limit": "\u2191",
             "subject_limit": "\u2191",
             "lens_position": "\u2191",
             "sharpness": "\u2191",
+            "exposure_day": "\u2191",
             "exposure_night": "\u2191",
+            "exposure": "\u2191",
         }
         self.mapping_dict_decrease = {
             "left": "\u2190",
@@ -181,11 +191,14 @@ class LabelButtons:
             "right": "\u2190",
             "bottom": "\u2191",
             "threshold": "\u2193",
+            "threshold_night": "\u2193",
             "empty_limit": "\u2193",
             "subject_limit": "\u2193",
             "lens_position": "\u2193",
             "sharpness": "\u2193",
+            "exposure_day": "\u2193",
             "exposure_night": "\u2193",
+            "exposure": "\u2193",
         }
 
         self.index: int = self.mapping_dict_index[direction]
@@ -239,6 +252,12 @@ class LabelButtons:
         self.timer_decrease1.timeout.connect(self.timer_decrease2.start)
         self.timer_decrease2.timeout.connect(self.decrease_value)
 
+    def set_dimmed(self, dimmed: bool) -> None:
+        """Dims the control's labels (light gray) or restores their color."""
+        color = "lightgray" if dimmed else self.base_color
+        self.label2.set_color(color)
+        self.label3.set_color(color)
+
     def increase_value(self) -> None:
         """Increases the value of the setting safely."""
         if self.label_value < self.max:
@@ -258,8 +277,12 @@ class LabelButtons:
                 "right",
                 "bottom",
                 "threshold",
+                "threshold_night",
                 "empty_limit",
                 "subject_limit",
+                "exposure_day",
+                "exposure_night",
+                "exposure",
             ]:
                 self.label_value += 1
             else:
@@ -286,8 +309,12 @@ class LabelButtons:
                 "right",
                 "bottom",
                 "threshold",
+                "threshold_night",
                 "empty_limit",
                 "subject_limit",
+                "exposure_day",
+                "exposure_night",
+                "exposure",
             ]:
                 self.label_value -= 1
             else:
@@ -315,10 +342,11 @@ class LabelButtons:
         if self.name in [
             "LENS_POSITION_BOX",
             "SHARPNESS_BOX",
-            "EXPOSURE_VALUE_NIGHT_BOX",
+            "EXPOSURE_BOX",
             "LENS_POSITION_CORRIDOR",
             "SHARPNESS_CORRIDOR",
-            "EXPOSURE_VALUE_NIGHT_CORRIDOR",
+            "EXPOSURE_DAY_CORRIDOR",
+            "EXPOSURE_NIGHT_CORRIDOR",
         ]:
             settings.set(self.name, self.label_value)
         else:
@@ -694,6 +722,7 @@ class CorridorLayout(Layout):
     def toggle_visible_button(self, value: str, key: str) -> None:
         manager.visible_corridor_cycle = Cycle[value]
         settings.set(key, value)
+        cam_corridor.change = True
         match value:
             case "OFF":
                 visible_light_corridor.off()
@@ -1410,8 +1439,18 @@ class DetectionLayout(Layout):
     def draw(self) -> None:
         """Draws the corridor configuration options."""
         self.lbs: list[LabelButtons] = []
+        self._dim_cycle = ""  # forces update_gui to re-apply the day/night dimming
 
         if manager.use_of_corridor:
+            # Ensure corridor areas carry a night threshold (index 5); older
+            # saved settings only have 5 elements. Defaults to the day value.
+            for i in range(1, 5):
+                key = "AREA" + str(i) + "_CORRIDOR"
+                v = list(settings.get(key))
+                if len(v) == 5:
+                    v.append(v[4])
+                    settings.set(key, v)
+
             self.draw_area_buttons_corridor(
                 "AREA1_CORRIDOR", 2, 2, self.color_area1_str
             )
@@ -1533,6 +1572,28 @@ class DetectionLayout(Layout):
         """Closes the layout (no-op)."""
         return
 
+    def update_gui(self) -> None:
+        """Dims the corridor day/night controls not active for the current cycle.
+
+        During the day the night controls (threshold_night, exposure_night) are
+        greyed out; during the night the day controls (threshold, exposure_day)
+        are greyed out. Box controls are never dimmed. Only re-applied when the
+        cycle actually changes.
+        """
+        cycle = manager.cycle_change_detector.cycle_text
+        if cycle == self._dim_cycle:
+            return
+        self._dim_cycle = cycle
+        is_day = cycle == "DAY"
+        for lb in self.lbs:
+            direction = lb.direction
+            if direction in ("threshold_night", "exposure_night"):
+                lb.set_dimmed(is_day)  # night controls: dim during the day
+            elif direction == "exposure_day":
+                lb.set_dimmed(not is_day)  # day control: dim during the night
+            elif direction == "threshold" and "CORRIDOR" in lb.name:
+                lb.set_dimmed(not is_day)  # corridor day threshold: dim at night
+
     def draw_mice_buttons(self, name: str, row: int, column: int) -> None:
         """Draws detection limit buttons.
 
@@ -1566,6 +1627,7 @@ class DetectionLayout(Layout):
             "top",
             "bottom",
             "threshold",
+            "threshold_night",
         ):
             lb = LabelButtons(name, direction, row, column, 8, color, self)
             self.lbs.append(lb)
@@ -1637,7 +1699,18 @@ class DetectionLayout(Layout):
             self.lbs.append(lb)
             row += 2
             lb = LabelButtons(
-                "EXPOSURE_VALUE_NIGHT_CORRIDOR",
+                "EXPOSURE_DAY_CORRIDOR",
+                "exposure_day",
+                row,
+                column,
+                width,
+                color,
+                self,
+            )
+            self.lbs.append(lb)
+            row += 2
+            lb = LabelButtons(
+                "EXPOSURE_NIGHT_CORRIDOR",
                 "exposure_night",
                 row,
                 column,
@@ -1682,8 +1755,8 @@ class DetectionLayout(Layout):
         row += 2
 
         lb = LabelButtons(
-            "EXPOSURE_VALUE_NIGHT_BOX",
-            "exposure_night",
+            "EXPOSURE_BOX",
+            "exposure",
             row,
             column,
             width,
