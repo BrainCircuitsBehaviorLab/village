@@ -393,7 +393,6 @@ class Camera:
         value = settings.get(key)
         ae_mode, ev, mode_name = decode_exposure_setting(value)
         self.cam.set_controls({"ExposureValue": ev, "AeExposureMode": ae_mode})
-        log.info(f"CAMERA {self.name} exposure: {key}={value} -> {mode_name}")
 
     def start_camera(self) -> None:
         """Starts the camera capture."""

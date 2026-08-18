@@ -665,7 +665,7 @@ class CorridorLayout(Layout):
         )
 
         self.thresholds_label: Label = self.create_and_add_label(
-            "Thresholds: ", 1, 11, 9, 2, "black"
+            "Thresholds: ", 1, 9, 9, 2, "black"
         )
         key = "THRESHOLDS_CORRIDOR"
         possible_values = CycleDay.values()
@@ -683,7 +683,7 @@ class CorridorLayout(Layout):
         )
 
         self.visible_label: Label = self.create_and_add_label(
-            "Visible light: ", 1, 20, 9, 2, "black"
+            "Visible light: ", 1, 21, 9, 2, "black"
         )
         key = "VISIBLE_CORRIDOR"
         possible_values = Cycle.values()
@@ -691,7 +691,7 @@ class CorridorLayout(Layout):
         self.visible_button = self.create_and_add_toggle_button(
             key,
             3,
-            20,
+            22,
             7,
             2,
             possible_values,
@@ -701,7 +701,7 @@ class CorridorLayout(Layout):
         )
 
         self.ir_label: Label = self.create_and_add_label(
-            "IR light: ", 1, 29, 11, 2, "black"
+            "IR light: ", 1, 31, 11, 2, "black"
         )
         key = "IR_CORRIDOR"
         possible_values = Cycle.values()
@@ -709,7 +709,7 @@ class CorridorLayout(Layout):
         self.ir_button = self.create_and_add_toggle_button(
             key,
             3,
-            29,
+            31,
             7,
             2,
             possible_values,
@@ -1465,7 +1465,8 @@ class DetectionLayout(Layout):
     def draw(self) -> None:
         """Draws the corridor configuration options."""
         self.lbs: list[LabelButtons] = []
-        self._dim_cycle = ""  # forces update_gui to re-apply the day/night dimming
+        # (cycle, thresholds mode) last applied; "" cycle forces the first apply
+        self._dim_cycle: tuple[str, CycleDay] = ("", CycleDay.AUTO)
 
         if manager.use_of_corridor:
             # Ensure corridor areas carry a night threshold (index 5); older
@@ -1509,10 +1510,10 @@ class DetectionLayout(Layout):
                 "View the detection in the corridor",
             )
 
-        self.draw_area_buttons_box("AREA1_BOX", 4, 123, self.color_area1_str)
-        self.draw_area_buttons_box("AREA2_BOX", 4, 143, self.color_area2_str)
-        self.draw_area_buttons_box("AREA3_BOX", 4, 163, self.color_area3_str)
-        self.draw_area_buttons_box("AREA4_BOX", 4, 183, self.color_area4_str)
+        self.draw_area_buttons_box("AREA1_BOX", 2, 123, self.color_area1_str)
+        self.draw_area_buttons_box("AREA2_BOX", 2, 143, self.color_area2_str)
+        self.draw_area_buttons_box("AREA3_BOX", 2, 163, self.color_area3_str)
+        self.draw_area_buttons_box("AREA4_BOX", 2, 183, self.color_area4_str)
         self.draw_camera_options()
         self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 122)
 
@@ -1521,7 +1522,7 @@ class DetectionLayout(Layout):
         index = settings.get_index(key)
         self.area1_box_button = self.create_and_add_toggle_button(
             key,
-            2,
+            4,
             123,
             17,
             2,
@@ -1536,7 +1537,7 @@ class DetectionLayout(Layout):
         index = settings.get_index(key)
         self.area2_box_button = self.create_and_add_toggle_button(
             key,
-            2,
+            4,
             143,
             17,
             2,
@@ -1551,7 +1552,7 @@ class DetectionLayout(Layout):
         index = settings.get_index(key)
         self.area3_box_button = self.create_and_add_toggle_button(
             key,
-            2,
+            4,
             163,
             17,
             2,
@@ -1566,7 +1567,7 @@ class DetectionLayout(Layout):
         index = settings.get_index(key)
         self.area4_box_button = self.create_and_add_toggle_button(
             key,
-            2,
+            4,
             183,
             17,
             2,
@@ -1602,9 +1603,9 @@ class DetectionLayout(Layout):
         """Dims the controls that are inactive.
 
         Box areas whose USAGE is OFF have all their controls (labels and
-        buttons) hidden. For the corridor, the day/night controls not active for
-        the current cycle are greyed (night controls during the day, day
-        controls at night).
+        buttons) hidden. For the corridor, the day/night controls that are not
+        the effective ones are greyed. The effective day/night follows
+        THRESHOLDS_CORRIDOR: DAY/NIGHT force it, AUTO follows the cycle.
         """
         # box areas: hide every control of an area whose USAGE is OFF
         for lb in self.lbs:
@@ -1612,18 +1613,26 @@ class DetectionLayout(Layout):
                 usage_key = lb.name.replace("AREA", "USAGE")
                 lb.set_visible(settings.get(usage_key) != AreaActive.OFF)
 
-        # corridor day/night: only re-apply when the cycle changes
+        # corridor day/night: re-apply when the cycle OR the thresholds mode
+        # changes (toggling THRESHOLDS_CORRIDOR must update the colours too)
         cycle = manager.cycle_change_detector.cycle_text
-        if cycle == self._dim_cycle:
+        mode = settings.get("THRESHOLDS_CORRIDOR")
+        state = (cycle, mode)
+        if state == self._dim_cycle:
             return
-        self._dim_cycle = cycle
-        is_day = cycle == "DAY"
+        self._dim_cycle = state
+        if mode == CycleDay.DAY:
+            is_day = True
+        elif mode == CycleDay.NIGHT:
+            is_day = False
+        else:
+            is_day = cycle == "DAY"
         for lb in self.lbs:
             direction = lb.direction
             if direction in ("thr_night", "exposure_night"):
-                lb.set_dimmed(is_day)  # night controls: dim during the day
+                lb.set_dimmed(is_day)  # night controls: dim when effectively day
             elif direction == "exposure_day":
-                lb.set_dimmed(not is_day)  # day control: dim during the night
+                lb.set_dimmed(not is_day)  # day control: dim when effectively night
             elif direction == "thr_day" and "CORRIDOR" in lb.name:
                 lb.set_dimmed(not is_day)  # corridor day threshold: dim at night
 
@@ -1680,7 +1689,7 @@ class DetectionLayout(Layout):
         width_res = settings.get("CAM_BOX_RESOLUTION")[0]
         height_res = settings.get("CAM_BOX_RESOLUTION")[1]
         self.label2: Label = self.create_and_add_label(name, row, column, 16, 2, color)
-        row += 2
+        row += 4
         for direction in (
             "left",
             "right",
