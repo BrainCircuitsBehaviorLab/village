@@ -59,9 +59,6 @@ class VideoWorker(QObject):
         self._latest_img: Optional[QImage] = None
         self._latest_idx: int = -1
 
-        self._served_img: Optional[QImage] = None
-        self._served_idx: int = -1
-
         self._fps: float = 0.0
         self._frame_dt: float = 0.0
         self._play_start: float = 0.0
@@ -87,9 +84,25 @@ class VideoWorker(QObject):
             self._fps = fps
             self._frame_dt = 1.0 / fps if fps > 0 else 0.0
 
+            # Do not decode ahead of playback: wait until start_drawing() calls
+            # play(). Otherwise the whole file is consumed before it is shown.
+            while self._running and not self._started:
+                time.sleep(0.001)
+
             produced_idx = -1
 
             while self._running:
+                # Drop frames we are already late for: grab() advances the
+                # decoder without the costly colour convert + QImage copy, so
+                # playback tracks the wall clock instead of running in slow
+                # motion when the Pi cannot decode every frame in time.
+                if self._frame_dt > 0:
+                    want = int((time.monotonic() - self._play_start) / self._frame_dt)
+                    while produced_idx < want - 1 and self._running:
+                        if not self.cap.grab():
+                            break
+                        produced_idx += 1
+
                 ok, bgr = self.cap.read()
                 if not ok:
                     break
@@ -107,6 +120,16 @@ class VideoWorker(QObject):
                 finally:
                     self.mtx.unlock()
 
+                # If we are ahead of the wall clock, wait until this frame's
+                # time. Absolute target (not cumulative sleeps) so it never
+                # drifts. When behind, the grab() loop above catches up instead.
+                if self._frame_dt > 0:
+                    ahead = (
+                        self._play_start + produced_idx * self._frame_dt
+                    ) - time.monotonic()
+                    if ahead > 0:
+                        time.sleep(ahead)
+
         except Exception:
             try:
                 error_queue.put_nowait(
@@ -122,38 +145,21 @@ class VideoWorker(QObject):
             self.finished.emit()
 
     def get_latest_qimage(self) -> Optional[QImage]:
-        """Returns the most appropriate video frame for the current time.
+        """Returns the current video frame.
 
-        Calculates the target frame based on elapsed time since start.
+        The decode loop paces itself to real time, so the latest decoded frame
+        is the one to show now. paintGL samples this at the vsync rate.
 
         Returns:
             Optional[QImage]: The current video frame.
         """
-        if not self._started or self._frame_dt <= 0:
+        if not self._started:
             return None
-
-        now = time.monotonic()
-        target_idx = int((now - self._play_start) / self._frame_dt)
-
-        if self._served_idx == target_idx and self._served_img is not None:
-            return self._served_img
-
         self.mtx.lock()
         try:
-            latest_img = self._latest_img
-            latest_idx = self._latest_idx
+            return self._latest_img
         finally:
             self.mtx.unlock()
-
-        if latest_img is None or latest_idx < 0:
-            return self._served_img
-
-        if latest_idx >= target_idx:
-            self._served_idx = target_idx
-            self._served_img = latest_img
-            return self._served_img
-
-        return self._served_img
 
     def play(self) -> None:
         """Sets the playback start time so get_latest_qimage starts serving frames."""
@@ -327,23 +333,38 @@ class Screen(QOpenGLWidget):
         except Exception:
             return None, None
 
-    def load_video(self, file: str) -> None:
+    def load_video(self, file: str, volume_gain: float = 0.1) -> None:
         """Loads a video from the media directory and prepares the playback thread.
 
         Args:
             file (str): Filename of the video.
+            volume_gain (float): Factor applied to the video's audio before
+                playback, clamped to [0, 1]. The extracted audio plays at its
+                native (often loud) level, so it is scaled down by this factor.
+                A value of 0 skips audio entirely (no extraction, no playback).
+                Defaults to 0.1.
         """
         self.stop_video()
+        volume_gain = min(1.0, max(0.0, volume_gain))
         media_directory = settings.get("MEDIA_DIRECTORY")
         video_path = os.path.join(media_directory, file)
-        self._audio_left, self._audio_right = self._extract_audio(video_path)
-        if self._audio_left is not None:
-            sound_device.load(self._audio_left, self._audio_right)
+        if volume_gain > 0:
+            left, right = self._extract_audio(video_path)
+            if left is not None and right is not None:
+                left = left * volume_gain
+                right = right * volume_gain
+                self._audio_left, self._audio_right = left, right
+                sound_device.load(left, right)
         self._video_thread = QThread()
         self._video_worker = VideoWorker(video_path)
         self._video_worker.moveToThread(self._video_thread)
         self._video_thread.started.connect(self._video_worker.run)
-        self._video_thread.finished.connect(self._on_video_thread_finished)
+        # On end-of-file run() returns and emits finished; quit the thread's
+        # event loop so it stops cleanly. Cleanup is done synchronously in
+        # stop_video() before the next load -- do NOT connect thread.finished to
+        # cleanup, or a queued call could delete the next worker/thread after a
+        # restart (the object accessed later would be a deleted C++ instance).
+        self._video_worker.finished.connect(self._video_thread.quit)
         self._video_thread.start()
         self._pending_onset_label = "screen_video_" + file
 

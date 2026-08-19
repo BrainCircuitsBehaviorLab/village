@@ -8,6 +8,11 @@
 import os
 import sys
 
+# Run from this file's directory so relative paths (notably lgpio's ".lgd-nfy"
+# notification file) land in a writable location. Launched from "/" the GPIO
+# backend fails to initialize. Must happen before any gpiozero/lgpio import.
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
 

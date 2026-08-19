@@ -196,14 +196,6 @@ class NullSoundDevice:
         """Stops sound playback."""
         return
 
-    def load_wav(self, file: str) -> None:
-        """Loads a WAV file.
-
-        Args:
-            file (str): Path or name of the WAV file.
-        """
-        return
-
     def shutdown(self) -> None:
         """No device to shut down."""
         return
@@ -405,11 +397,13 @@ class NullScreen(QWidget):
         """
         return
 
-    def load_video(self, file: str) -> None:
+    def load_video(self, file: str, volume_gain: float = 0.1) -> None:
         """Loads a video.
 
         Args:
             file (str): The file path.
+            volume_gain (float): Factor applied to the video's audio. Defaults
+                to 0.1.
         """
         return
 

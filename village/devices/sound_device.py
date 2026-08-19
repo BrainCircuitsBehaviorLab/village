@@ -462,45 +462,6 @@ class SoundDevice:
             self._sound = vec
             self._loaded = True  # play() is now allowed; stays armed for replays
 
-    def load_wav(self, file: str) -> None:
-        """Loads a WAV file, ready to be played.
-
-        Args:
-            file (str): Filename of the WAV file in the media directory.
-
-        Raises:
-            FileNotFoundError: If the file does not exist.
-            ValueError: If sample rate mismatches or channel count is unsupported.
-        """
-        self.stop()
-        media_directory = settings.get("MEDIA_DIRECTORY")
-        path = os.path.join(media_directory, file)
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"File '{path}' does not exist.")
-
-        samplerate, data = wavfile.read(path)
-        if samplerate != self.samplerate:
-            raise ValueError(
-                f"Expected samplerate {self.samplerate}, but got {samplerate}."
-            )
-
-        # Normalize to float32 in range [-1.0, 1.0] if needed
-        if data.dtype != np.float32:
-            if np.issubdtype(data.dtype, np.integer):
-                max_val = np.iinfo(data.dtype).max
-                data = data.astype(np.float32) / max_val
-            else:
-                data = data.astype(np.float32)
-
-        if data.ndim == 1:
-            left = right = data
-        elif data.shape[1] == 2:
-            left, right = data[:, 0], data[:, 1]
-        else:
-            raise ValueError("Unsupported number of channels in WAV file.")
-
-        self.load(left, right)
-
     def _write_sound(self, sound: np.ndarray) -> None:
         """Writes the sound, then a silent tail; fades out if stop() asks.
 
@@ -779,7 +740,7 @@ class SoundDevice:
         """Interleaves, ramps and converts float [-1, 1] channels into int32 stereo.
 
         The SOUND_RAMP_MS raised-cosine fade is applied here, so every sound
-        that goes through load()/load_wav() gets it automatically.
+        that goes through load() gets it automatically.
 
         Args:
             left (np.ndarray): Left channel data (float in [-1, 1]).
