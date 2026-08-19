@@ -40,6 +40,10 @@ class AfterSessionBase:
 
         Checks the SYNC_TYPE setting and initiates either a local or remote rsync.
         """
+        # Start each sync with a clean cancel flag. Otherwise, once STOP SYNC has
+        # been pressed (which sets the event and it is never cleared elsewhere),
+        # every later rsync would be terminated at once with return code -15.
+        self.cancel_event.clear()
         if self.sync_type == SyncType.HD:
             rsync_to_hard_drive(
                 source=self.data_directory,

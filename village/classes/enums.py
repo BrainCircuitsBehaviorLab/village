@@ -208,6 +208,11 @@ class CycleDay(SuperEnum):
     NIGHT = "NIGHT"
 
 
+class GpioDirection(SuperEnum):
+    IN = "IN"
+    OUT = "OUT"
+
+
 class Actions(SuperEnum):
     CORRIDOR = "CORRIDOR"
     BOX = "BOX"

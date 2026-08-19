@@ -108,7 +108,7 @@ autodoc_mock_imports = [
     "jinja2",
     "seaborn",
     "PyQt6",
-    "gpiod",
+    "",
     "picamera2",
     "libcamera",
     "PCA9685_smbus2",

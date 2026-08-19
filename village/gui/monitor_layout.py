@@ -168,6 +168,7 @@ class LabelButtons:
         width: int,
         color: str,
         layout: Layout,
+        width2: int = 4,
         width_res: int = 640,
         height_res: int = 480,
     ) -> None:
@@ -268,12 +269,12 @@ class LabelButtons:
         )
         column += width
         self.label3 = layout.create_and_add_label(
-            str(self.label_value), row, column, 4, 2, color, right_aligment=True
+            str(self.label_value), row, column, width2, 2, color, right_aligment=True
         )
 
         regular_buttons = ["left", "right", "top", "bottom"]
 
-        val = 5 if self.direction in regular_buttons else 7
+        val = width2 + 1 if self.direction in regular_buttons else width2 + 3
         column += val
         self.btn_decrease = layout.create_and_add_button(
             self.decrease, row, column, 2, 2, self.start_decreasing, ""
@@ -647,7 +648,7 @@ class CorridorLayout(Layout):
         self.draw_motor_buttons("MOTOR3", 16, 2, motor_corridor3)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID: ", 1, 2, 9, 2, "black"
+            "RFID: ", 1, 3, 9, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
@@ -665,7 +666,7 @@ class CorridorLayout(Layout):
         )
 
         self.thresholds_label: Label = self.create_and_add_label(
-            "Thresholds: ", 1, 9, 9, 2, "black"
+            "Camera: ", 1, 11, 9, 2, "black"
         )
         key = "THRESHOLDS_CORRIDOR"
         possible_values = CycleDay.values()
@@ -683,7 +684,7 @@ class CorridorLayout(Layout):
         )
 
         self.visible_label: Label = self.create_and_add_label(
-            "Visible light: ", 1, 21, 9, 2, "black"
+            "Visible light: ", 1, 20, 11, 2, "black"
         )
         key = "VISIBLE_CORRIDOR"
         possible_values = Cycle.values()
@@ -701,7 +702,7 @@ class CorridorLayout(Layout):
         )
 
         self.ir_label: Label = self.create_and_add_label(
-            "IR light: ", 1, 31, 11, 2, "black"
+            "IR light: ", 1, 32, 11, 2, "black"
         )
         key = "IR_CORRIDOR"
         possible_values = Cycle.values()
@@ -709,7 +710,7 @@ class CorridorLayout(Layout):
         self.ir_button = self.create_and_add_toggle_button(
             key,
             3,
-            31,
+            32,
             7,
             2,
             possible_values,
@@ -1017,9 +1018,9 @@ class BoxLayout(Layout):
         settings.set(key, value)
         match value:
             case "OFF":
-                visible_light_box.on()
-            case "ON":
                 visible_light_box.off()
+            case "ON":
+                visible_light_box.on()
             case "AUTO":
                 manager.check_box_lights()
 
@@ -1028,9 +1029,9 @@ class BoxLayout(Layout):
         settings.set(key, value)
         match value:
             case "OFF":
-                ir_light_box.on()
-            case "ON":
                 ir_light_box.off()
+            case "ON":
+                ir_light_box.on()
             case "AUTO":
                 manager.check_box_lights()
 
@@ -1515,7 +1516,7 @@ class DetectionLayout(Layout):
         self.draw_area_buttons_box("AREA3_BOX", 2, 163, self.color_area3_str)
         self.draw_area_buttons_box("AREA4_BOX", 2, 183, self.color_area4_str)
         self.draw_camera_options()
-        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 122)
+        self.draw_mice_buttons("DETECTION_OF_MOUSE_BOX", 0, 123)
 
         key = "USAGE1_BOX"
         possible_values = settings.get_values(key)
@@ -1715,7 +1716,7 @@ class DetectionLayout(Layout):
         """Draws camera adjustment options."""
         row = 2
         column = 81
-        width = 12
+        width = 10
         color = "black"
 
         if manager.use_of_corridor:
@@ -1736,7 +1737,13 @@ class DetectionLayout(Layout):
             self.lbs.append(lb)
             row += 2
             lb = LabelButtons(
-                "SHARPNESS_CORRIDOR", "sharpness", row, column, width, color, self
+                "SHARPNESS_CORRIDOR",
+                "sharpness",
+                row,
+                column,
+                width,
+                color,
+                self,
             )
             self.lbs.append(lb)
             row += 2
@@ -1745,9 +1752,10 @@ class DetectionLayout(Layout):
                 "exposure_day",
                 row,
                 column,
-                width,
+                width + 2,
                 color,
                 self,
+                width2=2,
             )
             self.lbs.append(lb)
             row += 2
@@ -1756,15 +1764,16 @@ class DetectionLayout(Layout):
                 "exposure_night",
                 row,
                 column,
-                width,
+                width + 2,
                 color,
                 self,
+                width2=2,
             )
             self.lbs.append(lb)
             row += 2
 
         row = 2
-        column = 103
+        column = 102
         width = 10
 
         self.label_box: Label = self.create_and_add_label(

@@ -21,6 +21,7 @@ from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
+from village.custom_classes.gpio_base import GpioBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
@@ -48,7 +49,9 @@ def import_all(manager) -> None:
     touch_trigger_found = 0
     auto_no_mouse_found = 0
     direct_functions_found = 0
+    gpio_found = 0
     direct_functions_correct = False
+    gpio_correct = False
     training_correct = False
     session_plot_correct = False
     subject_plot_correct = False
@@ -171,6 +174,12 @@ def import_all(manager) -> None:
                         tt = cls()
                         manager.touch_trigger = tt
                         touch_trigger_correct = True
+                elif issubclass(cls, GpioBase) and cls != GpioBase:
+                    gpio_found += 1
+                    if gpio_found == 1:
+                        gp = cls()
+                        manager.gpio = gp
+                        gpio_correct = True
                 elif issubclass(cls, AutoNoMouseBase) and cls != AutoNoMouseBase:
                     auto_no_mouse_found += 1
                     instance = cls()
@@ -221,6 +230,7 @@ def import_all(manager) -> None:
         ("Touch Trigger", touch_trigger_found, touch_trigger_correct),
         ("Auto No Mouse", auto_no_mouse_found, auto_no_mouse_correct),
         ("Direct Functions", direct_functions_found, direct_functions_correct),
+        ("Gpio", gpio_found, gpio_correct),
     ]
 
     defaults, customs = [], []

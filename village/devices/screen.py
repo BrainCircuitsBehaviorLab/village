@@ -8,9 +8,7 @@ import traceback
 from typing import TYPE_CHECKING, Callable, Optional
 
 import cv2
-import gpiod
 import numpy as np
-from gpiod.line import Direction, Value
 from PyQt5.QtCore import (
     QMetaObject,
     QMutex,
@@ -25,7 +23,7 @@ from PyQt5.QtGui import QColor, QGuiApplication, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QOpenGLWidget
 
 from village.classes.enums import ScreenActive
-from village.classes.null_classes import NullScreen
+from village.classes.null_classes import NullGpio, NullScreen
 from village.devices.sound_device import sound_device
 from village.scripts.error_queue import error_queue
 from village.scripts.time_utils import time_utils
@@ -33,6 +31,7 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.controllers.trial_recorder import TrialRecorder
+    from village.custom_classes.gpio_base import GpioBase
 
 
 class VideoWorker(QObject):
@@ -197,9 +196,9 @@ class Screen(QOpenGLWidget):
         self._start_timing: float = 0.0
         self._swap_connected: bool = False
 
-        self._gpio_request = None
-        self._gpio_line_offset = 26
-        self._init_gpio()
+        # injected by manager.run_task(); NullGpio (no-op) until then. Drives the
+        # sync pin only if GPIO27_DIRECTION is OUT (see GpioBase).
+        self.gpio: GpioBase | NullGpio = NullGpio()
 
         self._video_thread: Optional[QThread] = None
         self._video_worker: Optional[VideoWorker] = None
@@ -229,20 +228,6 @@ class Screen(QOpenGLWidget):
             app.aboutToQuit.connect(self.stop_video)
 
         self.show()
-
-    def _init_gpio(self) -> None:
-        """Initializes the GPIO line for timestamp synchronization."""
-        try:
-            cfg = {
-                self._gpio_line_offset: gpiod.LineSettings(
-                    direction=Direction.OUTPUT, output_value=Value.INACTIVE
-                )
-            }
-            self._gpio_request = gpiod.request_lines(
-                "/dev/gpiochip0", consumer="village_stim", config=cfg
-            )
-        except Exception:
-            self._gpio_request = None
 
     def initializeGL(self) -> None:
         pass
@@ -407,11 +392,7 @@ class Screen(QOpenGLWidget):
             self.elapsed_time = 0.0
             return
 
-        if self._gpio_request is not None:
-            try:
-                self._gpio_request.set_value(self._gpio_line_offset, Value.ACTIVE)
-            except Exception:
-                pass
+        self.gpio.set_on()
 
         now = time_utils.get_time_monotonic()
         self.elapsed_time = now - self._start_timing
@@ -435,11 +416,7 @@ class Screen(QOpenGLWidget):
         except Exception:
             pass
 
-        if self._gpio_request is not None:
-            try:
-                self._gpio_request.set_value(self._gpio_line_offset, Value.INACTIVE)
-            except Exception:
-                pass
+        self.gpio.set_off()
 
     def clear_function(self) -> None:
         """Clears the window by filling it with the background color."""

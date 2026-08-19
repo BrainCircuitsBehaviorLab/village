@@ -10,6 +10,7 @@ from village.classes.enums import (
     ControllerEnum,
     Cycle,
     CycleDay,
+    GpioDirection,
     Info,
     OldVersion,
     PixelType,
@@ -249,6 +250,8 @@ class Settings:
                 return Cycle(str_value)
             elif type == CycleDay:
                 return CycleDay(str_value)
+            elif type == GpioDirection:
+                return GpioDirection(str_value)
             elif type == ScreenActive:
                 return ScreenActive(str_value)
             elif type == AreaActive:

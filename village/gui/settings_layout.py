@@ -694,6 +694,7 @@ class SettingsLayout(Layout):
             "NUMBER_OF_LEDS",
             "SPI_SPEED_KHZ",
             "PIXEL_TYPE",
+            "GPIO27_DIRECTION",
         ]
 
         # Keys in the current section's tracking lists (will be processed with

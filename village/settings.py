@@ -9,6 +9,7 @@ from village.classes.settings_class import (
     ControllerEnum,
     Cycle,
     CycleDay,
+    GpioDirection,
     Info,
     OldVersion,
     PixelType,
@@ -297,7 +298,7 @@ additional functions, such as raising or lowering a water bottle in the home cag
     ),
     Setting(
         "VISIBLE_LIGHT_CORRIDOR_INDEX",
-        6,
+        8,
         int,
         "The index of the visible light of the corridor.",
     ),
@@ -315,13 +316,13 @@ additional functions, such as raising or lowering a water bottle in the home cag
     Setting("MOTOR3_BOX_INDEX", 6, int, "The index of the motor 3 of the box."),
     Setting(
         "VISIBLE_LIGHT_BOX_INDEX",
-        6,
+        11,
         int,
         "The index of the visible light of the box.",
     ),
     Setting(
         "IR_LIGHT_BOX_INDEX",
-        0,
+        9,
         int,
         "The index of the infrared light of the box.",
     ),
@@ -535,6 +536,15 @@ threshold are discarded as they likely reflect movement artifacts
 ]
 
 extra_settings = [
+    Setting(
+        "GPIO27_DIRECTION",
+        "IN",
+        GpioDirection,
+        """Direction of GPIO pin 27. IN: it reads an external signal and fires
+the GpioBase triggers (trigger_on / trigger_off). OUT: it sends a signal --
+gpio.set_on() / gpio.set_off() drive the pin (also used for the screen sync).
+Only one direction at a time; changing it requires a restart.""",
+    ),
     Setting(
         "UPDATE_TIME_TABLE",
         1,

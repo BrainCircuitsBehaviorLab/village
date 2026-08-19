@@ -429,6 +429,22 @@ class NullTouch:
         return
 
 
+class NullGpio:
+    error: str = ""
+
+    def start(self) -> None:
+        return
+
+    def stop(self) -> None:
+        return
+
+    def set_on(self) -> None:
+        return
+
+    def set_off(self) -> None:
+        return
+
+
 class NullLEDStrip:
     """Base class for LED strip"""
 

@@ -32,6 +32,7 @@ from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
+from village.custom_classes.gpio_base import GpioBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
@@ -103,6 +104,7 @@ class Manager:
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
         self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
+        self.gpio: GpioBase = GpioBase()
         self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
             "": AutoNoMouseBase()
         }
@@ -317,6 +319,9 @@ class Manager:
             self.direct_functions.task = self.task
             self.camera_trigger.task = self.task
             self.touch_trigger.task = self.task
+            self.gpio.task = self.task
+            self.task.gpio = self.gpio
+            self.gpio.start()
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -341,6 +346,9 @@ class Manager:
         self.direct_functions.task = self.task
         self.camera_trigger.task = self.task
         self.touch_trigger.task = self.task
+        self.gpio.task = self.task
+        self.task.gpio = self.gpio
+        self.gpio.start()
         log.start(task=self.task.name, subject="None")
         self.run_task_in_thread()
 
@@ -380,6 +388,9 @@ class Manager:
                 self.direct_functions.task = self.task
                 self.camera_trigger.task = self.task
                 self.touch_trigger.task = self.task
+                self.gpio.task = self.task
+                self.task.gpio = self.gpio
+                self.gpio.start()
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -420,6 +431,7 @@ class Manager:
                 self.task.recorder = self.arduino.recorder
             sound_device.recorder = self.task.recorder
             screen.recorder = self.task.recorder
+            screen.gpio = self.gpio
             self.task.run()
         except Exception:
             if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:
@@ -494,6 +506,7 @@ class Manager:
         screen.load_draw_function(None)
         screen.stop_drawing()
         sound_device.stop()  # cut any sound still playing at session end
+        self.gpio.stop()  # stop the GPIO reader thread at session end
         # Stop routing device events into a recorder whose task is ending.
         sound_device.recorder = None
         screen.recorder = None

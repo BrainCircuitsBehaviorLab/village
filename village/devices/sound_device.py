@@ -554,13 +554,14 @@ class SoundDevice:
             deadline = self._play_deadline
             if self._playing and deadline and time.monotonic() > deadline:
                 self._play_deadline = 0.0
-                msg = (
-                    f"Sound device: playback overran by "
-                    f"{time.monotonic() - deadline:.1f} s "
-                    f"(state='{self._pcm_state()}'): the audio thread is stuck "
-                    f"inside write(). Dropping the PCM to recover. This sound is "
-                    f"lost. PID {os.getpid()} if you want py-spy."
-                )
+                # msg = (
+                #     f"Sound device: playback overran by "
+                #     f"{time.monotonic() - deadline:.1f} s "
+                #     f"(state='{self._pcm_state()}'): the audio thread is stuck "
+                #     f"inside write(). Dropping the PCM to recover. This sound is "
+                #     f"lost. PID {os.getpid()} if you want py-spy."
+                # )
+                msg = "A sound was lost"
                 try:
                     error_queue.put_nowait(("sound", msg, ""))
                 except queue.Full:

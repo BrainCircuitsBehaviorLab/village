@@ -563,12 +563,12 @@ class Camera:
         reason = ""
         try:
             if time_utils.now_timestamp() - self.camera_timestamp > 10:
-                reason = "no frames received for more than 10 seconds"
+                reason = "no frames in 10s"
             elif self.is_recording:
                 ff = getattr(self.output, "ffmpeg", None)
                 broken = getattr(self.output, "output_broken", False)
                 if broken or (ff is not None and ff.poll() is not None):
-                    reason = "the ffmpeg video recorder stopped (output broken/exited)"
+                    reason = "ffmpeg died"
         except Exception:
             return
         if reason:
