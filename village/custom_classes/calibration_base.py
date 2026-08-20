@@ -106,7 +106,7 @@ class CalibrationBase(Collection):
     def draw(self) -> None:
         """Draws the calibration UI. Override in subclasses."""
 
-    def change_layout(self, auto: bool = False) -> bool:
+    def change_layout(self) -> bool:
         """Called before switching away from this calibration.
 
         Return False to prevent the switch (e.g. unsaved changes).

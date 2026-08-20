@@ -554,24 +554,17 @@ class Layout(QGridLayout):
                 text,
             )
 
-    def change_layout(self, auto: bool = False) -> bool:
+    def change_layout(self) -> bool:
         """Checks if layout change is allowed (placeholder base method).
-
-        Args:
-            auto (bool, optional): Whether the change is automatic. Defaults to False.
 
         Returns:
             bool: Always True in the base class.
         """
         return True
 
-    def main_button_clicked(self, auto: bool = False) -> None:
-        """Handles main menu button click.
-
-        Args:
-            auto (bool, optional): Whether the click is automatic. Defaults to False.
-        """
-        if self.change_layout(auto=auto):
+    def main_button_clicked(self) -> None:
+        """Handles main menu button click."""
+        if self.change_layout():
             if manager.state == State.MANUAL_MODE:
                 manager.state = State.WAIT
                 manager.reset_subject_task_training()

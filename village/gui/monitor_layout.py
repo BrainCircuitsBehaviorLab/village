@@ -612,11 +612,8 @@ class MonitorLayout(Layout):
                     manager.detection_change = False
                     self.page6Layout.update_gui()
 
-    def change_layout(self, auto: bool = False) -> bool:
+    def change_layout(self) -> bool:
         """Handles layout changes, stopping camera previews.
-
-        Args:
-            auto (bool): If True, automatically changes. Defaults to False.
 
         Returns:
             bool: Always True.

@@ -476,10 +476,8 @@ class SoundCalibration(CalibrationBase):
         self.plot_layout = _CalibrationPlotLayout(self.window, 36, 51, self)
         self.layout.addLayout(self.plot_layout, 0, 121, 36, 51)
 
-    def change_layout(self, auto: bool = False) -> bool:
-        if auto:
-            return False
-        elif manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
+    def change_layout(self) -> bool:
+        if manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
             QMessageBox.information(
                 self.window, "WARNING", "Wait until the task finishes."
             )

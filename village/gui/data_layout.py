@@ -235,7 +235,11 @@ class TableView(QTableView):
         except RuntimeError:
             return
         if update:
-            model.complete_df.loc[model.df.index] = model.df
+            # Only write rows still present in complete_df. If it ever went out
+            # of sync, df could hold indices no longer there, which used to raise
+            # "[...] not in index" on closing a very old session.
+            idx = model.df.index.intersection(model.complete_df.index)
+            model.complete_df.loc[idx] = model.df.loc[idx]
         if manager.table == DataTable.SUBJECTS:
             manager.subjects.df = model.complete_df
             manager.subjects.save_from_df(manager.training)
@@ -859,7 +863,7 @@ class DataLayout(Layout):
         elif self.central_layout.currentIndex() == 2:
             self.page3Layout.update_gui()
 
-    def change_layout(self, auto: bool = False) -> bool:
+    def change_layout(self) -> bool:
         """Checks if the layout can be changed based on current data validity.
 
         Args:
@@ -1242,6 +1246,11 @@ class DfLayout(Layout):
         """Updates the GUI elements, including refreshing the table data."""
         self.update_data()
         if self.searching == self.previous_searching:
+            # add_rows only refreshes model.df; keep model.complete_df pointing at
+            # the current data object too. Otherwise it can go stale (e.g. a new
+            # session replaces sessions_summary.df) and save_changes_in_df would
+            # write df rows into a complete_df missing those indices (KeyError).
+            self.model.complete_df = self.complete_df
             self.model.add_rows(self.df)
         else:
             self.previous_searching = self.searching
@@ -2103,7 +2112,7 @@ class SubjectsLayout(Layout):
         elif self.central_layout.currentIndex() == 1:
             self.page2Layout.update_gui()
 
-    def change_layout(self, auto: bool = False) -> bool:
+    def change_layout(self) -> bool:
         if self.page1Layout.df["name"].duplicated().any():
             text = "There are repeated names in the subjects table."
             QMessageBox.information(self.window, "WARNING", text)

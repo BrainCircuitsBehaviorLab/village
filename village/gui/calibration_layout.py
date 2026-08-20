@@ -90,9 +90,9 @@ class CalibrationLayout(Layout):
 
     # ── Layout interface ───────────────────────────────────────────────────────
 
-    def change_layout(self, auto: bool = False) -> bool:
+    def change_layout(self) -> bool:
         if self._calibrations:
-            return self._calibrations[self._current_idx].change_layout(auto)
+            return self._calibrations[self._current_idx].change_layout()
         return True
 
     def update_gui(self) -> None:

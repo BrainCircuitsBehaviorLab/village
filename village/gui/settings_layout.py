@@ -613,10 +613,8 @@ class SettingsLayout(Layout):
 
     # ── Layout change guard ────────────────────────────────────────────────────
 
-    def change_layout(self, auto: bool = False) -> bool:
-        if auto:
-            return True
-        elif self.save_button.isEnabled():
+    def change_layout(self) -> bool:
+        if self.save_button.isEnabled():
             reply = QMessageBox.question(
                 self.window,
                 "Save changes",

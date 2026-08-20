@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from PyQt5.QtCore import QEvent, QObjectCleanupHandler, QTimer
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QApplication, QWidget
 
 from village.gui.calibration_layout import CalibrationLayout
 from village.gui.data_layout import DataLayout, SubjectsLayout
@@ -134,7 +134,19 @@ class GuiWindow(QWidget):
     def check_update_chrono(self) -> None:
         """Checks if the inactivity timeout has been reached.
 
-        If so, automatically returns to the Main Menu.
+        Only the Monitor view returns to Main automatically after inactivity;
+        every other view stays where it is. Also skipped while a modal dialog or
+        popup is open, so tearing down the layout under it cannot orphan it or
+        crash on close. The chrono keeps counting, so the return happens on a
+        later tick once any dialog is closed.
         """
-        if self.update_chrono.get_seconds() > self.screensave_time:
-            self.layout.main_button_clicked(auto=True)
+        if self.update_chrono.get_seconds() <= self.screensave_time:
+            return
+        if not isinstance(self.layout, MonitorLayout):
+            return
+        if (
+            QApplication.activeModalWidget() is not None
+            or QApplication.activePopupWidget() is not None
+        ):
+            return
+        self.layout.main_button_clicked()
