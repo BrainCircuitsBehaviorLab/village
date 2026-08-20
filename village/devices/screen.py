@@ -202,8 +202,8 @@ class Screen(QOpenGLWidget):
         self._start_timing: float = 0.0
         self._swap_connected: bool = False
 
-        # injected by manager.run_task(); NullGpio (no-op) until then. Drives the
-        # sync pin only if GPIO27_DIRECTION is OUT (see GpioBase).
+        # injected by manager.run_task(); NullGpio (no-op) until then. set_on/
+        # set_off drive the GPIO_OUT pin for the sync pulse (see GpioBase).
         self.gpio: GpioBase | NullGpio = NullGpio()
 
         self._video_thread: Optional[QThread] = None

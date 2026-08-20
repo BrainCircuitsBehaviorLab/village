@@ -9,7 +9,6 @@ from village.classes.settings_class import (
     ControllerEnum,
     Cycle,
     CycleDay,
-    GpioDirection,
     Info,
     OldVersion,
     PixelType,
@@ -326,6 +325,21 @@ additional functions, such as raising or lowering a water bottle in the home cag
         int,
         "The index of the infrared light of the box.",
     ),
+    Setting(
+        "GPIO_IN",
+        27,
+        int,
+        """BCM number of the GPIO pin used as input by GpioBase: it reads an
+external signal and fires the triggers (trigger_on / trigger_off).""",
+    ),
+    Setting(
+        "GPIO_OUT",
+        26,
+        int,
+        """BCM number of the GPIO pin used as output by GpioBase: gpio.set_on() /
+gpio.set_off() drive it. It can be used at the same time as GPIO_IN, since they are
+different pins.""",
+    ),
 ]
 
 
@@ -536,15 +550,6 @@ threshold are discarded as they likely reflect movement artifacts
 ]
 
 extra_settings = [
-    Setting(
-        "GPIO27_DIRECTION",
-        "IN",
-        GpioDirection,
-        """Direction of GPIO pin 27. IN: it reads an external signal and fires
-the GpioBase triggers (trigger_on / trigger_off). OUT: it sends a signal --
-gpio.set_on() / gpio.set_off() drive the pin (also used for the screen sync).
-Only one direction at a time; changing it requires a restart.""",
-    ),
     Setting(
         "UPDATE_TIME_TABLE",
         1,

@@ -5,56 +5,55 @@ from typing import Any
 
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
-from village.classes.enums import GpioDirection
 from village.custom_classes.task_base import TaskBase
 from village.scripts.log import log
 from village.settings import settings
 
 
 class GpioBase:
-    """Base class for using GPIO pin 27, either as an input or as an output.
+    """Base class for using two GPIO pins: one input and one output.
 
-    The direction is set by the GPIO27_DIRECTION setting (advanced settings):
+    Both work at the same time, since they are different pins (set by the
+    GPIO_IN and GPIO_OUT settings, in DEVICE ADDRESSES):
 
-    - IN (default): a background thread watches the pin and calls trigger_on
-      when it goes from OFF (low) to ON (high), and trigger_off when it goes
-      from ON to OFF. Override those two methods to react. set_on/set_off do
-      nothing in this mode.
+    - Input (GPIO_IN, default 27): while a task is running the pin is watched
+      and trigger_on is called when it goes from OFF (low) to ON (high), and
+      trigger_off when it goes from ON to OFF. Override those two methods to
+      react. The watching runs only while a task is active (the manager starts
+      it when the task starts and stops it when it ends).
 
-    - OUT: the pin is driven as an output. set_on() puts it HIGH and set_off()
-      puts it LOW; call them from anywhere (a task, a trigger, direct
-      functions, the screen sync...). start/stop do nothing in this mode, and
-      the triggers never fire.
+    - Output (GPIO_OUT, default 26): set_on() drives the pin HIGH and set_off()
+      drives it LOW. Call them from anywhere (a task, a trigger, direct
+      functions, the screen sync...); they work regardless of the input.
 
     You have access to self.task, so any variable or function of the running
-    task can be used. The input watching runs only while a task is active (the
-    manager starts it when the task starts and stops it when it ends).
+    task can be used.
     """
 
     def __init__(self) -> None:
         """Initializes the GpioBase instance (does not open the GPIO yet)."""
         self.name = "Gpio"
         self.task = TaskBase()
-        self.pin = 27  # BCM number of the GPIO pin
-        self.direction: GpioDirection = settings.get("GPIO27_DIRECTION")
+        self.pin_in = int(settings.get("GPIO_IN"))  # BCM number, input
+        self.pin_out = int(settings.get("GPIO_OUT"))  # BCM number, output
         self.error = ""
         self._input: Any = None
         self._output: Any = None
 
     def start(self) -> None:
-        """Starts watching the pin for level changes. Only in IN mode."""
-        if self.direction != GpioDirection.IN or self._input is not None:
+        """Starts watching the input pin for level changes."""
+        if self._input is not None:
             return
         try:
-            self._input = DigitalInputDevice(self.pin)
+            self._input = DigitalInputDevice(self.pin_in)
             self._input.when_activated = self.trigger_on  # OFF -> ON
             self._input.when_deactivated = self.trigger_off  # ON -> OFF
         except Exception:
-            msg = "Could not open GPIO pin " + str(self.pin) + " as input"
+            msg = "Could not open GPIO pin " + str(self.pin_in) + " as input"
             self.error = log.clean_text(traceback.format_exc(), msg)
 
     def stop(self) -> None:
-        """Stops watching the pin and releases it. Only affects IN mode."""
+        """Stops watching the input pin and releases it."""
         if self._input is not None:
             try:
                 self._input.close()
@@ -63,21 +62,19 @@ class GpioBase:
             self._input = None
 
     def set_on(self) -> None:
-        """Drives the pin HIGH. Does nothing unless the pin is set to OUT."""
+        """Drives the output pin HIGH."""
         self._write(True)
 
     def set_off(self) -> None:
-        """Drives the pin LOW. Does nothing unless the pin is set to OUT."""
+        """Drives the output pin LOW."""
         self._write(False)
 
     def _write(self, high: bool) -> None:
-        if self.direction != GpioDirection.OUT:
-            return
         if self._output is None:
             try:
-                self._output = DigitalOutputDevice(self.pin)
+                self._output = DigitalOutputDevice(self.pin_out)
             except Exception:
-                msg = "Could not open GPIO pin " + str(self.pin) + " as output"
+                msg = "Could not open GPIO pin " + str(self.pin_out) + " as output"
                 self.error = log.clean_text(traceback.format_exc(), msg)
                 return
         if high:
@@ -86,9 +83,9 @@ class GpioBase:
             self._output.off()
 
     def trigger_on(self) -> None:
-        """Called when the GPIO goes from OFF to ON (IN mode). Override me."""
+        """Called when the input pin goes from OFF to ON. Override me."""
         pass
 
     def trigger_off(self) -> None:
-        """Called when the GPIO goes from ON to OFF (IN mode). Override me."""
+        """Called when the input pin goes from ON to OFF. Override me."""
         pass

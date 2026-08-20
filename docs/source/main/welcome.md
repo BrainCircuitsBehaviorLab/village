@@ -38,7 +38,7 @@
 <img src="_static/raspberry_hat.png" style="width: 100%;" alt="Raspberry Pi HAT">
 </td>
 <td style="border: none; vertical-align: middle;">
-<p>The system is managed by a <a href="https://www.raspberrypi.com">Raspberry Pi</a>, selected for its reliability, low power consumption, and efficiency. This core unit is equipped with a custom Plug-and-Play HAT (Hardware Attached on Top), which seamlessly connects all sensors and actuators within the corridor.</p>
+<p>The system is managed by a <a href="https://www.raspberrypi.com">Raspberry Pi</a>, selected for its reliability, low power consumption, and efficiency. This core unit is equipped with a custom Plug-and-Play HAT (Hardware Attached on Top), which connects a set of custom PCBs distributing power and signals to the sensors and actuators throughout the system.</p>
 </td>
 </tr>
 </table>

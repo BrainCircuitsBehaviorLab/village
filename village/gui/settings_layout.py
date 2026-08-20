@@ -104,6 +104,31 @@ no_box_board = [
     "CHIP_BOX_ADDRESS",
 ]
 
+# Address groups that must not have repeated values within the group. A value may
+# repeat across groups (a corridor board address may equal a box board one, as
+# they are on different boards / GPIO is unrelated). I2C addresses (str) and PWM
+# indices (int) never collide with each other, so keeping them in one list per
+# board validates each namespace correctly.
+_CORRIDOR_ADDR_KEYS = [
+    "CHIP_CORRIDOR_ADDRESS",
+    "SCALE_ADDRESS",
+    "TEMP_SENSOR_ADDRESS",
+    "MOTOR1_CORRIDOR_INDEX",
+    "MOTOR2_CORRIDOR_INDEX",
+    "MOTOR3_CORRIDOR_INDEX",
+    "VISIBLE_LIGHT_CORRIDOR_INDEX",
+    "IR_LIGHT_CORRIDOR_INDEX",
+]
+_BOX_ADDR_KEYS = [
+    "CHIP_BOX_ADDRESS",
+    "MOTOR1_BOX_INDEX",
+    "MOTOR2_BOX_INDEX",
+    "MOTOR3_BOX_INDEX",
+    "VISIBLE_LIGHT_BOX_INDEX",
+    "IR_LIGHT_BOX_INDEX",
+]
+_GPIO_KEYS = ["GPIO_IN", "GPIO_OUT"]
+
 # Keys whose toggle value affects what is shown within their section
 _CONDITIONAL_KEYS: dict[str, str] = {
     "USE_SOUNDCARD": "SOUND SETTINGS",
@@ -163,6 +188,39 @@ class SettingsLayout(Layout):
             with suppress(Exception):
                 return [possible.index(str(v)) for v in vals]
         return settings.get_indices(key)
+
+    def _duplicate_address_error(self) -> str:
+        """Returns an error message if an address group has repeated values.
+
+        Corridor board addresses must be unique among themselves, box board
+        addresses among themselves, and GPIO_IN must differ from GPIO_OUT. A
+        value may repeat across groups. Returns "" if everything is fine.
+        """
+        groups = [
+            ("Corridor board", _CORRIDOR_ADDR_KEYS, manager.use_of_corridor),
+            ("Box board", _BOX_ADDR_KEYS, manager.use_of_box_chip),
+            ("GPIO", _GPIO_KEYS, True),
+        ]
+        for label, keys, enabled in groups:
+            if not enabled:
+                continue
+            seen: dict[Any, str] = {}
+            for key in keys:
+                raw = self._get(key)
+                try:
+                    if settings.get_type(key) is int:
+                        value: Any = int(str(raw).strip())
+                    else:
+                        value = str(raw).strip().lower()
+                except Exception:
+                    value = str(raw).strip().lower()
+                if value in seen:
+                    return (
+                        f"{label}: {key} and {seen[value]} have the same value "
+                        f"({raw}). Values must be unique within the group."
+                    )
+                seen[value] = key
+        return ""
 
     @property
     def _active_sections(self) -> list[str]:
@@ -526,6 +584,12 @@ class SettingsLayout(Layout):
                         )
                         sub.setProperty("type", name)
                         row += 2
+                    elif s.key == "GPIO_IN":
+                        sub = self.create_and_add_label(
+                            "GPIO", row, C_COL, C_LABEL_W, 2, "black"
+                        )
+                        sub.setProperty("type", name)
+                        row += 2
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
@@ -629,6 +693,14 @@ class SettingsLayout(Layout):
         # Flush current section's widgets into _pending so save() sees everything
         self._flush_to_pending()
 
+        # Block saving repeated addresses within a board (or GPIO in == out).
+        # Not enforced on exit, so the user is never trapped by a bad value.
+        if not exiting:
+            dup = self._duplicate_address_error()
+            if dup:
+                QMessageBox.warning(self.window, "Repeated addresses", dup)
+                return
+
         sync_directory = self.create_sync_directory()
         self.save_button.setDisabled(True)
         manager.changing_settings = False
@@ -694,7 +766,8 @@ class SettingsLayout(Layout):
             "NUMBER_OF_LEDS",
             "SPI_SPEED_KHZ",
             "PIXEL_TYPE",
-            "GPIO27_DIRECTION",
+            "GPIO_IN",
+            "GPIO_OUT",
         ]
 
         # Keys in the current section's tracking lists (will be processed with
