@@ -648,7 +648,7 @@ class CorridorLayout(Layout):
         self.draw_motor_buttons("MOTOR3", 16, 2, motor_corridor3)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID: ", 1, 3, 9, 2, "black"
+            "RFID\nReader: ", 1, 3, 9, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
@@ -666,7 +666,7 @@ class CorridorLayout(Layout):
         )
 
         self.thresholds_label: Label = self.create_and_add_label(
-            "Camera: ", 1, 11, 9, 2, "black"
+            "Camera\nSettings: ", 1, 11, 9, 2, "black"
         )
         key = "THRESHOLDS_CORRIDOR"
         possible_values = CycleDay.values()
@@ -684,7 +684,7 @@ class CorridorLayout(Layout):
         )
 
         self.visible_label: Label = self.create_and_add_label(
-            "Visible light: ", 1, 20, 11, 2, "black"
+            "Visible\nLight: ", 1, 20, 11, 2, "black"
         )
         key = "VISIBLE_CORRIDOR"
         possible_values = Cycle.values()
@@ -702,7 +702,7 @@ class CorridorLayout(Layout):
         )
 
         self.ir_label: Label = self.create_and_add_label(
-            "IR light: ", 1, 32, 11, 2, "black"
+            "IR\nLight: ", 1, 32, 11, 2, "black"
         )
         key = "IR_CORRIDOR"
         possible_values = Cycle.values()
@@ -921,7 +921,7 @@ class BoxLayout(Layout):
             self.draw_motor_buttons("MOTOR3", box_row + 15, box_col, motor_box3)
 
             self.visible_label: Label = self.create_and_add_label(
-                "Visible light: ", box_row, 9, 12, 2, "black"
+                "Visible\nLight: ", box_row, 9, 12, 2, "black"
             )
             key = "VISIBLE_BOX"
             possible_values = Cycle.values()
@@ -939,7 +939,7 @@ class BoxLayout(Layout):
             )
 
             self.ir_label: Label = self.create_and_add_label(
-                "IR light: ", box_row, 22, 12, 2, "black"
+                "IR\nLight: ", box_row, 22, 12, 2, "black"
             )
             key = "IR_BOX"
             possible_values = Cycle.values()
