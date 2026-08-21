@@ -1,4 +1,3 @@
-import os
 import traceback
 from collections.abc import Callable
 from pathlib import Path
@@ -128,7 +127,7 @@ class Manager:
         self.status_parts: list[str] = []
         self.weight: float = np.nan
         self.changing_settings: bool = False
-        self.tasks: dict[str, type] = dict()
+        self.tasks: dict[str, type] = {}
         self.errors: str = ""
         self.max_time_counter: int = 1
         self.functions: list[Callable] = [lambda: None for _ in range(99)]
@@ -276,7 +275,7 @@ class Manager:
         cycle_text = self.cycle_change_detector.cycle_text
         try:
             project_text = settings.get("PROJECT_DIRECTORY")
-            project_text = os.path.basename(project_text.rstrip("/"))
+            project_text = Path(project_text).name
         except Exception:
             project_text = ""
 

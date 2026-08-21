@@ -1,5 +1,4 @@
 import csv
-import os
 import sys
 import traceback
 from pathlib import Path
@@ -59,14 +58,14 @@ class Collection:
         self.name: str = name
         self.columns: list[str] = columns
         self.types: list[type] = types
-        self.dict = {col: t for col, t in zip(self.columns, self.types, strict=False)}
+        self.dict = dict(zip(self.columns, self.types, strict=False))
         filename = name if name.endswith(".csv") else name + ".csv"
         self.path: Path = Path(settings.get("SYSTEM_DIRECTORY")) / filename
         self.df = pd.DataFrame()
 
         if name != "":
-            if not os.path.exists(self.path):
-                with open(self.path, "w", encoding="utf-8") as file:
+            if not self.path.exists():
+                with self.path.open("w", encoding="utf-8") as file:
                     columns_str: str = ";".join(self.columns) + "\n"
                     file.write(columns_str)
             try:
@@ -90,7 +89,7 @@ class Collection:
         new_row = pd.DataFrame([entry_str], columns=self.columns)
         new_row = self.convert_df_to_types(new_row)
         self.df = pd.concat([self.df, new_row], ignore_index=True)
-        with open(self.path, "a", encoding="utf-8", newline="") as file:
+        with self.path.open("a", encoding="utf-8", newline="") as file:
             csv.writer(file, delimiter=";", lineterminator="\n").writerow(entry_str)
         self.check_split_csv()
 
@@ -126,8 +125,10 @@ class Collection:
         Returns:
             pd.DataFrame: The converted DataFrame.
         """
-        for col, type in zip(df.columns, self.types, strict=False):
-            df[col] = df[col].apply(lambda x: self.convert_with_default(x, type))
+        for col, item_type in zip(df.columns, self.types, strict=False):
+            df[col] = df[col].apply(
+                lambda x, item_type=item_type: self.convert_with_default(x, item_type)
+            )
         return df
 
     def check_split_csv(self) -> None:
@@ -207,15 +208,15 @@ class Collection:
         self.df.loc[self.df.index[-1], column] = value
         self.save_from_df()
 
-    def save_from_df(
-        self, training: TrainingProtocolBase = TrainingProtocolBase()
-    ) -> None:
+    def save_from_df(self, training: TrainingProtocolBase | None = None) -> None:
         """Saves values from the current DataFrame to the CSV file,
         processing formatting.
 
         Args:
             training (TrainingProtocolBase): Protocol for formatting specific fields.
         """
+        if training is None:
+            training = TrainingProtocolBase()
         new_df = self.df_from_df(self.df, training)
         new_df.to_csv(self.path, index=False, sep=";")
         self.df = new_df

@@ -42,7 +42,7 @@ def _make_diagnostic_plots(diag: dict, width_in: float, height_in: float) -> plt
 
     dpi = int(settings.get("MATPLOTLIB_DPI"))
     fig, axes = plt.subplots(2, 2, figsize=(width_in, height_in), dpi=dpi)
-    cb_args = dict(fraction=0.03, pad=0.03)
+    cb_args = {"fraction": 0.03, "pad": 0.03}
 
     tilt_x = diag.get("tilt_x_deg", 0.0)
     tilt_y = diag.get("tilt_y_deg", 0.0)

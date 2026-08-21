@@ -1,10 +1,10 @@
 import asyncio
 import datetime
 import json
-import os
 import threading
 import time
 import traceback
+from pathlib import Path
 from urllib import parse, request
 
 import matplotlib.pyplot as plt
@@ -272,14 +272,14 @@ class TelegramBot:
             cam_corridor.take_picture()
             cam_box.take_picture()
             await asyncio.sleep(1)
-            with open(cam_corridor.path_picture, "rb") as picture_corridor:
+            with Path(cam_corridor.path_picture).open("rb") as picture_corridor:
                 await update.message.reply_photo(photo=picture_corridor)
-            with open(cam_box.path_picture, "rb") as picture_box:
+            with Path(cam_box.path_picture).open("rb") as picture_box:
                 await update.message.reply_photo(photo=picture_box)
-            if os.path.exists(cam_corridor.path_picture):
-                os.remove(cam_corridor.path_picture)
-            if os.path.exists(cam_box.path_picture):
-                os.remove(cam_box.path_picture)
+            if Path(cam_corridor.path_picture).exists():
+                Path(cam_corridor.path_picture).unlink()
+            if Path(cam_box.path_picture).exists():
+                Path(cam_box.path_picture).unlink()
         except Exception:
             log.error("Telegram error sending photos", exception=traceback.format_exc())
 
@@ -291,16 +291,16 @@ class TelegramBot:
             context (ContextTypes.DEFAULT_TYPE): The context object.
         """
         try:
-            path = os.path.join(settings.get("SYSTEM_DIRECTORY"), "PLOT.jpg")
+            path = Path(settings.get("SYSTEM_DIRECTORY")) / "PLOT.jpg"
             subjects = manager.subjects.df["name"].tolist()
             fig = corridor_plot(manager.events.df.copy(), subjects, 4, 2)
             fig.savefig(path, format="jpg", dpi=300)
             plt.close(fig)
             await asyncio.sleep(1)
-            with open(path, "rb") as picture:
+            with path.open("rb") as picture:
                 await update.message.reply_photo(photo=picture)
-            if os.path.exists(path):
-                os.remove(path)
+            if path.exists():
+                path.unlink()
         except Exception:
             log.error("Telegram error sending plot", exception=traceback.format_exc())
 

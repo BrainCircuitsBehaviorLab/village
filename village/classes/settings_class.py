@@ -212,7 +212,7 @@ class Settings:
         setting = next((s for s in self.all_settings if s.key == key), None)
         if setting is None:
             return None
-        type = setting.value_type
+        value_type = setting.value_type
 
         val = self.saved_settings.value(key)
         if val is None:
@@ -227,51 +227,51 @@ class Settings:
 
         str_value = str(val)
         try:
-            if type == str:
+            if value_type is str:
                 return str_value
-            elif type == int:
+            elif value_type is int:
                 return int(str_value)
-            elif type == float:
+            elif value_type is float:
                 return float(str_value)
-            elif type == Active:
+            elif value_type == Active:
                 return Active(str_value)
-            elif type == Color:
+            elif value_type == Color:
                 return Color(str_value)
-            elif type == ControllerEnum:
+            elif value_type == ControllerEnum:
                 return ControllerEnum(str_value)
-            elif type == SyncType:
+            elif value_type == SyncType:
                 return SyncType(str_value)
-            elif type == Actions:
+            elif value_type == Actions:
                 return Actions(str_value)
-            elif type == Info:
+            elif value_type == Info:
                 return Info(str_value)
-            elif type == Cycle:
+            elif value_type == Cycle:
                 return Cycle(str_value)
-            elif type == CycleDay:
+            elif value_type == CycleDay:
                 return CycleDay(str_value)
-            elif type == ScreenActive:
+            elif value_type == ScreenActive:
                 return ScreenActive(str_value)
-            elif type == AreaActive:
+            elif value_type == AreaActive:
                 return AreaActive(str_value)
-            elif type == OldVersion:
+            elif value_type == OldVersion:
                 return OldVersion(str_value)
-            elif type == PixelType:
+            elif value_type == PixelType:
                 return PixelType(str_value)
-            elif type == Samplerate:
+            elif value_type == Samplerate:
                 return int(str_value)
-            elif type == list[str]:
+            elif value_type == list[str]:
                 return self.saved_settings.value(key)
-            elif type == list[int]:
+            elif value_type == list[int]:
                 try:
                     return list(map(int, self.saved_settings.value(key)))
                 except ValueError:
                     return [0] * len(self.saved_settings.value(key))
-            elif type == list[float]:
+            elif value_type == list[float]:
                 try:
                     return list(map(float, self.saved_settings.value(key)))
                 except ValueError:
                     return [0.0] * len(self.saved_settings.value(key))
-            elif type == list[Active]:
+            elif value_type == list[Active]:
                 return [Active(v) for v in self.saved_settings.value(key)]
             else:
                 return self.saved_settings.value(key)

@@ -1,5 +1,4 @@
 import csv
-import os
 import threading
 from pathlib import Path
 from typing import Any
@@ -42,8 +41,8 @@ class TrialRecorder:
         self._ordered_events: list[str] = []
         self._values: dict[str, Any] = {}
 
-        os.makedirs(os.path.dirname(self._csv_path), exist_ok=True)
-        self._csv_file = open(self._csv_path, "w", newline="")
+        Path(self._csv_path).parent.mkdir(parents=True, exist_ok=True)
+        self._csv_file = Path(self._csv_path).open("w", newline="")  # noqa: SIM115
         self._csv_writer = csv.writer(
             self._csv_file, delimiter=";", lineterminator="\n"
         )

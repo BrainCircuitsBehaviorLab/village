@@ -37,11 +37,11 @@ class Log:
             description (str): The message content.
             subject (str): The subject related to the info.
         """
-        type = "INFO"
+        entry_type = "INFO"
         date = time_utils.now_string()
         description = self.clean_text(None, description)
-        text = date + "  " + type + "  " + subject + "  " + description
-        self.event.add_entry([date, type, subject, description])
+        text = date + "  " + entry_type + "  " + subject + "  " + description
+        self.event.add_entry([date, entry_type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -62,11 +62,11 @@ class Log:
             task (str): The task name.
             subject (str): The subject involved.
         """
-        type = "START"
+        entry_type = "START"
         date = time_utils.now_string()
         description = self.clean_text(None, task + " started")
-        text = date + "  " + type + " " + subject + "  " + description
-        self.event.add_entry([date, type, subject, description])
+        text = date + "  " + entry_type + " " + subject + "  " + description
+        self.event.add_entry([date, entry_type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -77,11 +77,11 @@ class Log:
             task (str): The task name.
             subject (str): The subject involved.
         """
-        type = "END"
+        entry_type = "END"
         date = time_utils.now_string()
         description = self.clean_text(None, task + " ended")
-        text = date + "  " + type + " " + subject + "  " + description
-        self.event.add_entry([date, type, subject, description])
+        text = date + "  " + entry_type + " " + subject + "  " + description
+        self.event.add_entry([date, entry_type, subject, description])
         self.cam.write_text(text)
         print(text)
 
@@ -98,11 +98,11 @@ class Log:
             subject (str): The subject involved.
             exception (str | None): Optional exception traceback string.
         """
-        type = "ERROR"
+        entry_type = "ERROR"
         date = time_utils.now_string()
         description = self.clean_text(exception, description)
-        text = date + "  " + type + "  " + subject + "  " + description
-        self.event.add_entry([date, type, subject, description])
+        text = date + "  " + entry_type + "  " + subject + "  " + description
+        self.event.add_entry([date, entry_type, subject, description])
         self.cam.write_text(text)
         print(text.replace("  |  ", "\n"))
 
@@ -124,14 +124,14 @@ class Log:
             repeat (bool): If True, the alarm is resent in telegram until
             it is acknowledged.
         """
-        type = "ALARM"
+        entry_type = "ALARM"
         date = time_utils.now_string()
         message = description if subject == "system" else description + " " + subject
         self.telegram_bot.alarm(message, repeat=repeat)
         description = self.clean_text(exception, description)
-        text = date + "  " + type + "  " + subject + "  " + description
+        text = date + "  " + entry_type + "  " + subject + "  " + description
         if not report:
-            self.event.add_entry([date, type, subject, description])
+            self.event.add_entry([date, entry_type, subject, description])
             self.cam.write_text(text)
         print(text.replace("  |  ", "\n"))
 

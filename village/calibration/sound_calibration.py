@@ -169,7 +169,7 @@ class SoundCalibration(CalibrationBase):
             if val is None:
                 raise ValueError
             return val
-        except Exception:
+        except Exception as e:
             raise ValueError(
                 f"\n\n\t--> SOUND CALIBRATION PROBLEM !!!!!!\n\n"
                 f"Cannot provide a valid gain for {dB} dB, "
@@ -177,7 +177,7 @@ class SoundCalibration(CalibrationBase):
                 f"1. Make sure you have calibrated the sound you are using.\n"
                 f"2. Make sure the dB is within calibration range.\n"
                 f"3. Check sound_calibration.csv in 'data'.\n"
-            )
+            ) from e
 
     def draw(self) -> None:
         manager.state = State.MANUAL_MODE
@@ -758,10 +758,13 @@ class SoundCalibration(CalibrationBase):
                 speaker_counts.append(speaker)
             return False
 
-        if len(self.calibration_points) == 0:
-            if self.allow_test and self.gain_line_edit.isEnabled():
-                self.allow_test = False
-                self.test_denied = False
+        if (
+            len(self.calibration_points) == 0
+            and self.allow_test
+            and self.gain_line_edit.isEnabled()
+        ):
+            self.allow_test = False
+            self.test_denied = False
         if some_speaker_has_two_values():
             self.save_button.setEnabled(True)
         else:

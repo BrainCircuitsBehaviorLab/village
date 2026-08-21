@@ -1,11 +1,11 @@
-import os
+from pathlib import Path
 
 import fire
 import pandas as pd
 
 
 def main(
-    subject: str, sessions_directory: str, deleted_sessions: list[str] = []
+    subject: str, sessions_directory: str, deleted_sessions: list[str] | None = None
 ) -> None:
     """Consolidates individual session CSVs for a subject into a single global CSV.
 
@@ -14,12 +14,15 @@ def main(
         sessions_directory (str): The directory containing session data.
         deleted_sessions (list[str]): List of session filenames to exclude.
     """
-    subject_directory = os.path.join(sessions_directory, subject)
+    if deleted_sessions is None:
+        deleted_sessions = []
+    subject_directory = Path(sessions_directory, subject)
     final_name = subject + ".csv"
-    final_path = os.path.join(sessions_directory, subject, final_name)
+    final_path = subject_directory / final_name
 
     sessions = []
-    for file in os.listdir(subject_directory):
+    for entry in subject_directory.iterdir():
+        file = entry.name
         if file in deleted_sessions:
             continue
         if file.endswith("_RAW.csv"):
@@ -38,7 +41,7 @@ def main(
         Returns:
             str: The extracted timestamp string.
         """
-        base_name = str(os.path.basename(filename))
+        base_name = Path(filename).name
         datetime = base_name.split("_")[2] + base_name.split("_")[3].split(".")[0]
         return datetime
 
@@ -55,14 +58,12 @@ def main(
         session for session, _ in sorted(sessions_datetimes, key=lambda x: x[1])
     ]
 
-    sorted_sessions = [
-        os.path.join(subject_directory, session) for session in sorted_sessions
-    ]
+    sorted_session_paths = [subject_directory / session for session in sorted_sessions]
 
     dfs: list[pd.DataFrame] = []
 
-    for i, session in enumerate(sorted_sessions):
-        df = pd.read_csv(session, sep=";")
+    for i, session_path in enumerate(sorted_session_paths):
+        df = pd.read_csv(session_path, sep=";")
         df.insert(loc=0, column="session", value=i + 1)
         dfs.append(df)
 

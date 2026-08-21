@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import json
-import os
 import traceback
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
 import cv2
@@ -202,7 +202,7 @@ class TableView(QTableView):
 
                     json_path = paths[2]
                     try:
-                        with open(json_path, "w") as file:
+                        with Path(json_path).open("w") as file:
                             json.dump(current_value, file)
                     except Exception:
                         log.error(
@@ -488,7 +488,7 @@ class Table(QAbstractTableModel):
         self.layout_parent = layout_parent
         self.table_view: TableView | None = None
 
-    def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
+    def rowCount(self, parent: QModelIndex | None = None) -> int:
         """Returns the number of rows in the table.
 
         Args:
@@ -499,7 +499,7 @@ class Table(QAbstractTableModel):
         """
         return self.df.shape[0]
 
-    def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
+    def columnCount(self, parent: QModelIndex | None = None) -> int:
         """Returns the number of columns in the table.
 
         Args:
@@ -721,7 +721,7 @@ class DataLayout(Layout):
 
     def change_to_video(self, path: str, seconds: int) -> None:
         self.central_layout.setCurrentWidget(self.page2)
-        if os.path.exists(path):
+        if Path(path).exists():
             self.page2Layout.start_video(path, seconds)
         else:
             t = "The file could not be found. It might be too old and already deleted."
@@ -1619,7 +1619,7 @@ class DfLayout(Layout):
         """
         subject = row["name"]
         sessions_directory = settings.get("SESSIONS_DIRECTORY")
-        path = os.path.join(sessions_directory, subject, subject + ".csv")
+        path = str(Path(sessions_directory, subject, subject + ".csv"))
         return path
 
     def get_filename_from_sessions_summary_row(self, row: pd.Series) -> str:
@@ -1657,15 +1657,13 @@ class DfLayout(Layout):
         filename = subject + "_" + task + "_" + date_str
         sessions_directory = settings.get("SESSIONS_DIRECTORY")
         video_directory = settings.get("VIDEOS_DIRECTORY")
-        session_path = os.path.join(sessions_directory, subject, filename + ".csv")
-        session_raw_path = os.path.join(
-            sessions_directory, subject, filename + "_RAW.csv"
+        session_path = str(Path(sessions_directory, subject, filename + ".csv"))
+        session_raw_path = str(Path(sessions_directory, subject, filename + "_RAW.csv"))
+        session_settings_path = str(
+            Path(sessions_directory, subject, filename + ".json")
         )
-        session_settings_path = os.path.join(
-            sessions_directory, subject, filename + ".json"
-        )
-        video_path = os.path.join(video_directory, subject, filename + ".mp4")
-        video_data_path = os.path.join(video_directory, subject, filename + ".csv")
+        video_path = str(Path(video_directory, subject, filename + ".mp4"))
+        video_data_path = str(Path(video_directory, subject, filename + ".csv"))
 
         paths = [
             session_path,

@@ -1359,10 +1359,13 @@ class VirtualMouseLayout(Layout):
             self.auto_no_mouse_button.setText("▶  AutoNoMouse")
             self.auto_no_mouse_button.setStyleSheet("background-color: lightblue;")
         injector = manager.auto_no_mouse
-        if hasattr(self, "inject_button"):
-            if not injector.injecting and self.inject_button.text() == "■  Stop Inject":
-                self.inject_button.setText("Inject Trials")
-                self.inject_button.setStyleSheet("background-color: lightgreen;")
+        if (
+            hasattr(self, "inject_button")
+            and not injector.injecting
+            and self.inject_button.text() == "■  Stop Inject"
+        ):
+            self.inject_button.setText("Inject Trials")
+            self.inject_button.setStyleSheet("background-color: lightgreen;")
 
     def _on_param_changed(self) -> None:
         if self._anm is not None and self._anm.running:

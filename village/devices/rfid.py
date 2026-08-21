@@ -76,7 +76,7 @@ class Rfid:
 
     def update_multiple(self) -> None:
         """Updates the `multiple` flag if more than one unique ID is in history."""
-        unique_ids = set(id for id, _ in self.id_history)
+        unique_ids = {tag_id for tag_id, _ in self.id_history}
         self.multiple = len(unique_ids) > 1
 
     def stop(self) -> None:

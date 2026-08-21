@@ -1,5 +1,7 @@
 import os
+import subprocess
 import time
+from pathlib import Path
 
 
 def find_pwmchip(target_device="1f00098000.pwm") -> str:
@@ -15,13 +17,13 @@ def find_pwmchip(target_device="1f00098000.pwm") -> str:
     Raises:
         RuntimeError: If no valid PWM chip is found.
     """
-    for chip in os.listdir("/sys/class/pwm"):
-        if chip.startswith("pwmchip"):
-            devlink = os.path.join("/sys/class/pwm", chip, "device")
+    for chip_path in Path("/sys/class/pwm").iterdir():
+        if chip_path.name.startswith("pwmchip"):
+            devlink = chip_path / "device"
             try:
-                target = os.path.basename(os.readlink(devlink))
+                target = devlink.readlink().name
                 if target == target_device:
-                    return os.path.join("/sys/class/pwm", chip)
+                    return str(chip_path)
             except Exception:
                 continue
     raise RuntimeError("No valid PWM chip found! Update target_device if needed.")
@@ -64,13 +66,17 @@ class MotorOld:
             self.pin = pin
             self.pinIdx = pins.index(pin)
             # let's set pin ctrl
-            os.system(f"/usr/bin/pinctrl set {self.pin} {afunc[self.pinIdx]}")
+            subprocess.run(
+                ["/usr/bin/pinctrl", "set", str(self.pin), afunc[self.pinIdx]]
+            )
             # let export pin
-            if not os.path.exists(f"{self.chip}/pwm{self.pwmx[self.pinIdx]}"):
-                os.system(f"echo {self.pwmx[self.pinIdx]} > {self.chip}/export")
+            if not Path(f"{self.chip}/pwm{self.pwmx[self.pinIdx]}").exists():
+                Path(self.chip, "export").write_text(f"{self.pwmx[self.pinIdx]}\n")
             # CLOCK AT 1gHZ  let put period to 20ms
             time.sleep(0.2)
-            os.system(f"echo 20000000 > {self.chip}/pwm{self.pwmx[self.pinIdx]}/period")
+            Path(self.chip, f"pwm{self.pwmx[self.pinIdx]}", "period").write_text(
+                "20000000\n"
+            )
             time.sleep(0.1)
             self.enable(False)
         else:
@@ -83,8 +89,8 @@ class MotorOld:
             flag (bool): True to enable, False to disable.
         """
         self.flag = flag
-        os.system(
-            f"echo {int(self.flag)} > {self.chip}/pwm{self.pwmx[self.pinIdx]}/enable"
+        Path(self.chip, f"pwm{self.pwmx[self.pinIdx]}", "enable").write_text(
+            f"{int(self.flag)}\n"
         )
 
     def __del__(self) -> None:
@@ -92,9 +98,9 @@ class MotorOld:
         try:
             if self.pin is not None and os is not None:
                 # ok take PWM out
-                os.system(f"echo {self.pwmx[self.pinIdx]} > {self.chip}/unexport")
+                Path(self.chip, "unexport").write_text(f"{self.pwmx[self.pinIdx]}\n")
                 # disable PWM Pin
-                os.system(f"/usr/bin/pinctrl set {self.pin} no")
+                subprocess.run(["/usr/bin/pinctrl", "set", str(self.pin), "no"])
         except AttributeError:
             pass  # interpreter shutdown
         except Exception:
@@ -108,8 +114,8 @@ class MotorOld:
         """
         if not self.flag:
             self.enable(True)
-        os.system(
-            f"echo {on_time_ns} > {self.chip}/pwm{self.pwmx[self.pinIdx]}/duty_cycle"
+        Path(self.chip, f"pwm{self.pwmx[self.pinIdx]}", "duty_cycle").write_text(
+            f"{on_time_ns}\n"
         )
 
     def transform(self, value: int) -> int:

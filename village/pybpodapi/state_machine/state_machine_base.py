@@ -98,7 +98,7 @@ class StateMachineBase:
         self,
         state_name,
         state_timer=0,
-        state_change_conditions={},
+        state_change_conditions=None,
         output_actions=(),
     ):
         """
@@ -131,6 +131,8 @@ class StateMachineBase:
                 output_actions=[('PWM1', 255)])
 
         """
+        if state_change_conditions is None:
+            state_change_conditions = {}
 
         if state_name not in self.manifest:
             self.state_names.append(state_name)
@@ -150,14 +152,14 @@ class StateMachineBase:
             try:
                 event_code = self.hardware.channels.event_names.index(event_name)
                 logger.debug("Event code: %s", event_code)
-            except:  # noqa: E722
+            except Exception as e:
                 raise SMAError(
                     "Error creating state: "
                     + state_name
                     + ". "
                     + event_name
                     + " is an invalid event name."
-                )
+                ) from e
 
             if event_state_transition in self.manifest:
                 destination_state_number = self.manifest.index(event_state_transition)
@@ -226,14 +228,14 @@ class StateMachineBase:
                     output_code = self.hardware.channels.output_channel_names.index(
                         action_name
                     )
-                except:  # noqa: E722
+                except Exception as e:
                     raise SMAError(
                         "Error creating state: "
                         + state_name
                         + ". "
                         + action_name
                         + " is an invalid output name."
-                    )
+                    ) from e
 
                 output_value = action_value
 
@@ -298,8 +300,10 @@ class StateMachineBase:
                 timer_channel_idx = self.hardware.channels.output_channel_names.index(
                     channel
                 )  # type: int
-            except:  # noqa: E722
-                raise SMAError(f"Error: {channel} is an invalid output channel name.")
+            except Exception as e:
+                raise SMAError(
+                    f"Error: {channel} is an invalid output channel name."
+                ) from e
 
         index = timer_id - 1
 
@@ -314,7 +318,7 @@ class StateMachineBase:
         self.global_timers.send_events[index] = send_events
 
         if len(self.global_timers.onset_matrix) < index:
-            for i in range(len(self.global_timers.onset_matrix), index + 1):
+            for _i in range(len(self.global_timers.onset_matrix), index + 1):
                 self.global_timers.onset_matrix.append(0)
 
         if oneset_triggers is not None:

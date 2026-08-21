@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import traceback
 from collections.abc import Callable
 from pathlib import Path
@@ -98,7 +97,7 @@ class LabelImage(QLabel):
         """Initializes a LabelImage."""
         super().__init__()
         self.setAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        image_path = os.path.join(settings.get("APP_DIRECTORY"), "resources", file)
+        image_path = str(Path(settings.get("APP_DIRECTORY"), "resources", file))
         pixmap = QPixmap(image_path)
         self.setPixmap(pixmap)
 
@@ -774,17 +773,16 @@ class Layout(QGridLayout):
         """Ignores the close event to prevent closing the layout directly."""
         event.ignore()
 
-    def delete_optional_widgets(self, type: str) -> None:
+    def delete_optional_widgets(self, widget_type: str) -> None:
         """Deletes widgets of a specific type from the layout.
 
         Args:
-            type (str): The type property value to match.
+            widget_type (str): The type property value to match.
         """
         for i in reversed(range(self.count())):
             widget = self.itemAt(i).widget()
-            if widget is not None:
-                if widget.property("type") == type:
-                    widget.hide()
+            if widget is not None and widget.property("type") == widget_type:
+                widget.hide()
 
     def create_and_add_label(
         self,

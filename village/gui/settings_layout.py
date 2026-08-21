@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import os
 import re
 from contextlib import suppress
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from PyQt5.QtGui import QFont
@@ -155,7 +155,7 @@ class SettingsLayout(Layout):
         self._current_section: str = MENU_SECTIONS[0]
         # Uncommitted UI values buffered across section switches
         self._pending: dict[str, Any] = {}
-        self.draw(all=True, modify="")
+        self.draw(draw_all=True, modify="")
 
     # ── Pending-aware value accessors ──────────────────────────────────────────
 
@@ -234,9 +234,7 @@ class SettingsLayout(Layout):
     def _should_show(self, key: str) -> bool:
         if not manager.use_of_corridor and key in no_corridor:
             return False
-        if not manager.use_of_box_chip and key in no_box_board:
-            return False
-        return True
+        return not (not manager.use_of_box_chip and key in no_box_board)
 
     # ── Tracking lists ─────────────────────────────────────────────────────────
 
@@ -309,9 +307,9 @@ class SettingsLayout(Layout):
 
     # ── Top-level draw ─────────────────────────────────────────────────────────
 
-    def draw(self, all: bool, modify: str) -> None:
+    def draw(self, draw_all: bool, modify: str) -> None:
         self.settings_button.setDisabled(True)
-        if all:
+        if draw_all:
             self._init_tracking_lists()
             self._pending.clear()
             self._draw_static_chrome()
@@ -928,7 +926,7 @@ class SettingsLayout(Layout):
     # ── Widget factory for a single setting ───────────────────────────────────
 
     def create_label_and_value(
-        self, row: int, column: int, s: Setting, type: Any, width: int = 0
+        self, row: int, column: int, s: Setting, widget_type: Any, width: int = 0
     ) -> None:
         label = self.create_and_add_label(
             s.key,
@@ -940,7 +938,7 @@ class SettingsLayout(Layout):
             bold=False,
             description=s.description,
         )
-        label.setProperty("type", type)
+        label.setProperty("type", widget_type)
 
         if s.key in (
             "DAYTIME",
@@ -957,10 +955,10 @@ class SettingsLayout(Layout):
 
         elif s.key == "PROJECT_DIRECTORY":
             value = self._get(s.key)
-            path = os.path.dirname(value)
-            if not os.path.exists(path):
+            path = str(Path(value).parent)
+            if not Path(path).exists():
                 utils.create_directories_from_path(path)
-            possible_values = [os.path.join(path, name) for name in os.listdir(path)]
+            possible_values = [str(p) for p in Path(path).iterdir()]
             possible_values += ["NEW"]
             index = possible_values.index(value) if value in possible_values else 0
             self.project_directory_combobox = self.create_and_add_combo_box(
@@ -1021,7 +1019,7 @@ class SettingsLayout(Layout):
             value = str(self._get(s.key))
             if s.key == "DATA_DIRECTORY":
                 line_edit = self.create_and_add_line_edit(
-                    os.path.join(project_dir, "data"),
+                    str(Path(project_dir, "data")),
                     row,
                     column + width,
                     size2,
@@ -1030,7 +1028,7 @@ class SettingsLayout(Layout):
                 )
             elif s.key == "VIDEOS_DIRECTORY":
                 line_edit = self.create_and_add_line_edit(
-                    os.path.join(project_dir, "data", "videos"),
+                    str(Path(project_dir, "data", "videos")),
                     row,
                     column + width,
                     size2,
@@ -1048,7 +1046,7 @@ class SettingsLayout(Layout):
                 )
             elif s.key == "CODE_DIRECTORY":
                 line_edit = self.create_and_add_line_edit(
-                    os.path.join(project_dir, "code"),
+                    str(Path(project_dir, "code")),
                     row,
                     column + width,
                     size2,
@@ -1057,7 +1055,7 @@ class SettingsLayout(Layout):
                 )
             elif s.key == "MEDIA_DIRECTORY":
                 line_edit = self.create_and_add_line_edit(
-                    os.path.join(project_dir, "media"),
+                    str(Path(project_dir, "media")),
                     row,
                     column + width,
                     size2,
@@ -1165,7 +1163,7 @@ class SettingsLayout(Layout):
         elif s.value_type == list[Active]:
             values_list: list[Active] = self._get(s.key)
             toggle_buttons = []
-            for i, v in enumerate(values_list):
+            for i in range(len(values_list)):
                 possible_values = settings.get_values(s.key)
                 index = self._get_indices(s.key)[i]
                 toggle_button = self.create_and_add_toggle_button(
@@ -1241,9 +1239,9 @@ class SettingsLayout(Layout):
     # ── Helpers ────────────────────────────────────────────────────────────────
 
     def create_sync_directory(self) -> str:
-        directory = os.path.basename(
+        directory = Path(
             self._pending.get("PROJECT_DIRECTORY", settings.get("PROJECT_DIRECTORY"))
-        )
+        ).name
         sync_dest = self._pending.get(
             "SYNC_DESTINATION", settings.get("SYNC_DESTINATION")
         )
@@ -1252,7 +1250,7 @@ class SettingsLayout(Layout):
             if s.key == "SYNC_DESTINATION":
                 sync_dest = self.line_edits[i].text()
                 break
-        return os.path.join(sync_dest, directory + "_data")
+        return str(Path(sync_dest, directory + "_data"))
 
     def change_sound_device(self, value: str, key: str) -> None:
         self.settings_changed(value, key)
@@ -1290,8 +1288,8 @@ class SettingsLayout(Layout):
             )
             if ok and text:
                 old_project = self._get("PROJECT_DIRECTORY")
-                project_dir = os.path.dirname(old_project)
-                path = os.path.join(project_dir, text)
+                project_dir = str(Path(old_project).parent)
+                path = str(Path(project_dir, text))
                 self.save(changing_project=True)
                 if self.create_project_directory(path):
                     utils.change_directory_settings(path)

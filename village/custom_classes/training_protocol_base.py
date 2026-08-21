@@ -111,7 +111,7 @@ class TrainingProtocolBase:
 
         return properties
 
-    def get_dict(self, exclude: list[str] = []) -> dict[str, Any]:
+    def get_dict(self, exclude: list[str] | None = None) -> dict[str, Any]:
         """Returns the current settings as a dictionary.
 
         Args:
@@ -120,6 +120,8 @@ class TrainingProtocolBase:
         Returns:
             dict[str, Any]: Dictionary of settings.
         """
+        if exclude is None:
+            exclude = []
         properties = {}
         for name in self.get_settings_names():
             if hasattr(self.settings, name) and name not in exclude:
@@ -140,7 +142,7 @@ class TrainingProtocolBase:
                 properties[name] = value
         return properties
 
-    def get_jsonstring(self, exclude: list[str] = []) -> str:
+    def get_jsonstring(self, exclude: list[str] | None = None) -> str:
         """Returns the current settings as a JSON string.
 
         Args:
@@ -227,13 +229,9 @@ class TrainingProtocolBase:
                 try:
                     if isinstance(default_dict[key], bool):
                         value = value.lower() in ["true", "1", "yes"]
-                    elif isinstance(default_dict[key], int) or isinstance(
-                        default_dict[key], float
-                    ):
+                    elif isinstance(default_dict[key], int | float):
                         value = float(value)
-                    elif isinstance(default_dict[key], list) or isinstance(
-                        default_dict[key], dict
-                    ):
+                    elif isinstance(default_dict[key], list | dict):
                         value = eval(value)
                 except Exception:
                     wrong_keys.append(key)
@@ -246,6 +244,6 @@ class TrainingProtocolBase:
         Returns:
             str: JSON string of settings.
         """
-        dict = self.get_dict()
-        _, new_dict = self.correct_types_in_dict(dict)
+        my_dict = self.get_dict()
+        _, new_dict = self.correct_types_in_dict(my_dict)
         return json.dumps(new_dict)

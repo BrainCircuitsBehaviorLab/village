@@ -30,10 +30,10 @@ Requires: bleak, numpy, pyarrow, pandas, ahrs
 from __future__ import annotations
 
 import asyncio
-import os
 import struct
 import threading
 from dataclasses import asdict, dataclass
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -514,7 +514,7 @@ class OptoGrid:
             if name == "sequence_length":
                 continue
             uuid = OPTO_CHAR_MAP[name]
-            if isinstance(value, (list, tuple)):
+            if isinstance(value, list | tuple):
                 buf = bytearray()
                 for v in value:
                     buf.extend(_encode(uuid, v))
@@ -528,10 +528,8 @@ class OptoGrid:
     def _load_mag_calibration(self, device_name: str) -> bool:
         """Load hard/soft-iron magnetometer calibration if the file exists."""
         try:
-            path = os.path.join(
-                self.sessions_directory, f"{device_name} Calibration.csv"
-            )
-            if not os.path.exists(path):
+            path = Path(self.sessions_directory) / f"{device_name} Calibration.csv"
+            if not path.exists():
                 print(f"No magnetometer calibration file ({path}); using raw mag")
                 return False
             cal = pd.read_csv(path)
@@ -649,7 +647,7 @@ class OptoGrid:
         # subscribe to IMU notifications
         await self._client.start_notify(IMU_DATA_UUID, self._on_imu_data)
 
-        fname = os.path.join(self.sessions_directory, f"{self.filename}_IMU.parquet")
+        fname = str(Path(self.sessions_directory) / f"{self.filename}_IMU.parquet")
 
         # build schema from the configured columns
         self._imu_columns = self.imu_config.columns()
@@ -919,7 +917,7 @@ def export_csv(parquet_path: str, csv_path: str | None = None) -> str:
     """Convert a Parquet IMU log to CSV. If csv_path is omitted, uses the same
     name with a .csv extension. Returns the CSV path."""
     if csv_path is None:
-        csv_path = os.path.splitext(parquet_path)[0] + ".csv"
+        csv_path = str(Path(parquet_path).with_suffix(".csv"))
     df = pd.read_parquet(parquet_path)
     df.to_csv(csv_path, index=False)
     return csv_path

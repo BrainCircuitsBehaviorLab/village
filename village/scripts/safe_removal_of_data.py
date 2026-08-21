@@ -2,6 +2,7 @@ import logging
 import os
 import subprocess
 from datetime import datetime
+from pathlib import Path
 
 import fire
 
@@ -31,19 +32,17 @@ def check_files_for_backup_remote(
         list[str]: List of full paths of files that can be safe to remove locally.
     """
     files_to_remove = []
-    # Create a single SSH connection to the remote server
-    import os
 
     if port is None:
         ssh_command = (
             f"ssh {remote_user}@{remote_host} "
-            f"'for file in {' '.join([os.path.join(backup_dir, f) for f in files])}; do"
+            f"'for file in {' '.join([str(Path(backup_dir, f)) for f in files])}; do"
             f" if [ -e $file ]; then echo $file; fi; done'"
         )
     else:
         ssh_command = (
             f"ssh -p {port} {remote_user}@{remote_host} "
-            f"'for file in {' '.join([os.path.join(backup_dir, f) for f in files])}; do"
+            f"'for file in {' '.join([str(Path(backup_dir, f)) for f in files])}; do"
             f" if [ -e $file ]; then echo $file; fi; done'"
         )
 
@@ -51,8 +50,7 @@ def check_files_for_backup_remote(
         result = subprocess.run(
             ssh_command,
             shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             timeout=120,
         )
     except Exception:
@@ -61,9 +59,9 @@ def check_files_for_backup_remote(
     backed_up_files = result.stdout.decode().strip().split("\n")
 
     for file in files:
-        backup_path = os.path.join(backup_dir, file)
+        backup_path = str(Path(backup_dir, file))
         if backup_path in backed_up_files:
-            files_to_remove.append(os.path.join(directory, file))
+            files_to_remove.append(str(Path(directory, file)))
 
     return files_to_remove
 
@@ -84,9 +82,9 @@ def check_files_for_backup_local(
     files_to_remove = []
     for file in files:
         try:
-            backup_path = os.path.join(backup_dir, file)
-            if os.path.exists(backup_path):
-                files_to_remove.append(os.path.join(directory, file))
+            backup_path = Path(backup_dir, file)
+            if backup_path.exists():
+                files_to_remove.append(str(Path(directory, file)))
         except Exception:
             pass
     return files_to_remove
@@ -136,9 +134,9 @@ def remove_old_data(
     files_to_remove = []
     cutoff = time_utils.hours_ago(days * 24)
 
-    for root, dirs, files in os.walk(directory):
+    for root, _dirs, files in os.walk(directory):
         for file in files:
-            file_path = os.path.join(root, file)
+            file_path = str(Path(root, file))
             relative_file_path = os.path.relpath(file_path, directory)
             file_timestamp = parse_timestamp_from_filename(file)
 
@@ -192,7 +190,7 @@ def remove_file(file_path: str, removed_count: int) -> int:
     Returns:
         int: Updated count of removed files.
     """
-    os.remove(file_path)
+    Path(file_path).unlink()
     logging.info(f"Removed {file_path}")
     return removed_count + 1
 

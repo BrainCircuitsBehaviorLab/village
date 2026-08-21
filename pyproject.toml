@@ -102,9 +102,9 @@ ignore = [
 [tool.ruff]
 line-length = 88
 exclude = ["__init__.py","build",".eggs"]
-lint.select = ["I", "E", "F"]
+lint.select = ["I", "E", "F", "UP", "SIM", "PTH", "B", "C4", "A"]
 fix = true
-lint.ignore = ["E402"]
+lint.ignore = ["E402", "SIM105"]
 
 [tool.tox]
 legacy_tox_ini = """

@@ -354,16 +354,16 @@ class TasksLayout(Layout):
             tab_layout = ExtraLayout(self.window, 30, 79)
             self.create_tab_with_scroll_area(tab_name, tab_layout)
             row = 0
-            for property in properties_list:
-                if property in properties:
+            for prop_name in properties_list:
+                if prop_name in properties:
                     self.create_label_and_value(
-                        tab_layout, row, 2, property, str(properties[property])
+                        tab_layout, row, 2, prop_name, str(properties[prop_name])
                     )
                     row += 2
-                    properties.pop(property)
+                    properties.pop(prop_name)
                 else:
                     log.error(
-                        f"Tab setting {property} not found in settings, check spelling"
+                        f"Tab setting {prop_name} not found in settings, check spelling"
                     )
 
         row = 4
@@ -384,7 +384,7 @@ class TasksLayout(Layout):
                 str(manager.training.get_dict()["maximum_duration"]),
             )
             row += 4
-        for i, (k, v) in enumerate(properties.items()):
+        for k, v in properties.items():
             self.create_label_and_value(self.right_layout_general, row, 2, k, str(v))
             row += 2
 
@@ -549,7 +549,7 @@ class TasksLayout(Layout):
             ]
             wrong_values.append("maximum_duration")
 
-        for i, (k, v) in enumerate(properties.items()):
+        for k in properties:
             widget = self.line_edits[k]
             if isinstance(widget, QLineEdit):
                 new_dict[k] = widget.text()

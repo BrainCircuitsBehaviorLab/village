@@ -6,6 +6,7 @@ import threading
 import time
 import traceback
 from math import gcd
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import alsaaudio
@@ -210,7 +211,7 @@ class SoundDevice:
         # Injected by manager.run_task() to the running task's recorder, so the
         # worker can log the play onset without importing manager (which would
         # be a circular import). None until a task is running.
-        self.recorder: "TrialRecorder | None" = None
+        self.recorder: TrialRecorder | None = None
         if not PCM_STATES:
             msg = (
                 "pyalsaaudio exposes no PCM_STATE_* constants: the PCM state "
@@ -705,8 +706,8 @@ class SoundDevice:
         self, file: str, gain: float
     ) -> tuple[np.ndarray, np.ndarray]:
         media_directory = settings.get("MEDIA_DIRECTORY")
-        path = os.path.join(media_directory, file)
-        if not os.path.exists(path):
+        path = Path(media_directory) / file
+        if not path.exists():
             raise FileNotFoundError(f"File '{path}' does not exist.")
 
         samplerate, data = wavfile.read(path)

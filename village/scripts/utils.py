@@ -1,6 +1,5 @@
 import getpass
 import logging
-import os
 import re
 import shutil
 import subprocess
@@ -39,9 +38,9 @@ def change_directory_settings(new_path: str) -> None:
     settings.set("CODE_DIRECTORY", str(Path(new_path, "code")))
     settings.set("MEDIA_DIRECTORY", str(Path(new_path, "media")))
 
-    directory = os.path.basename(new_path)
+    directory = Path(new_path).name
     sync_destination = settings.get("SYNC_DESTINATION")
-    new_value = os.path.join(sync_destination, directory + "_data")
+    new_value = str(Path(sync_destination, directory + "_data"))
     settings.set("SYNC_DIRECTORY", new_value)
 
 
@@ -57,7 +56,7 @@ def change_system_directory_settings() -> None:
 
     if old_system_directory != new_system_directory:
         try:
-            os.rename(old_system_directory, new_system_directory)
+            Path(old_system_directory).rename(new_system_directory)
         except Exception:
             logging.warning(
                 "Could not rename system directory from %s to %s",
@@ -144,8 +143,7 @@ def download_github_repositories(repositories: list[str]) -> None:
         try:
             result = subprocess.run(
                 ["git", "clone", repository, str(directory)],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                capture_output=True,
                 text=True,
             )
             if result.returncode == 0:
@@ -504,14 +502,14 @@ def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
             the created FileHandler instance.
     """
     data_dir = settings.get("SYSTEM_DIRECTORY")
-    logs_dir = os.path.join(data_dir, logs_subdirectory)
+    logs_dir = Path(data_dir, logs_subdirectory)
 
     # Create logs directory if it doesn't exist
-    os.makedirs(logs_dir, exist_ok=True)
+    logs_dir.mkdir(parents=True, exist_ok=True)
 
     # Setup logging with timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = os.path.join(logs_dir, f"{timestamp}.log")
+    log_filename = str(logs_dir / f"{timestamp}.log")
 
     # Reset root logger to prevent duplicate logs
     for handler in logging.root.handlers[:]:

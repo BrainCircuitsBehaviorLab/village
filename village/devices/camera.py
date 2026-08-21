@@ -1,8 +1,8 @@
-import os
 import queue
 import threading
 import time
 import traceback
+from pathlib import Path
 from pprint import pprint
 from typing import Any
 
@@ -191,10 +191,7 @@ class Camera:
 
         frame_duration = int(1000000 / framerate)
 
-        if name == "BOX":
-            resolution = settings.get("CAM_BOX_RESOLUTION")
-        else:
-            resolution = [640, 480]
+        resolution = settings.get("CAM_BOX_RESOLUTION") if name == "BOX" else [640, 480]
 
         self.width = resolution[0]
         self.height = resolution[1]
@@ -223,10 +220,10 @@ class Camera:
         )
         self.cam.align_configuration(self.config)
         self.cam.configure(self.config)
-        self.path_video = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".mp4")
-        self.path_csv = os.path.join(settings.get("VIDEOS_DIRECTORY"), name + ".csv")
-        self.path_picture = os.path.join(
-            settings.get("SYSTEM_DIRECTORY"), name + ".jpg"
+        self.path_video = str(Path(settings.get("VIDEOS_DIRECTORY")) / (name + ".mp4"))
+        self.path_csv = str(Path(settings.get("VIDEOS_DIRECTORY")) / (name + ".csv"))
+        self.path_picture = str(
+            Path(settings.get("SYSTEM_DIRECTORY")) / (name + ".jpg")
         )
         self.output = FfmpegOutput(self.path_video)
         self.filename = ""
@@ -392,20 +389,20 @@ class Camera:
             path_csv (str): Custom CSV path. Defaults to automatic naming
                 based on settings.
         """
-        self.filename = os.path.splitext(os.path.basename(path_video))[0]
+        self.filename = Path(path_video).stem
         time_start = time_utils.now_string_for_filename()
         self.camera_timestamp_start = 0.0
         if path_video != "":
             self.path_video = path_video
             self.path_csv = path_csv
         else:
-            self.path_video = os.path.join(
-                settings.get("VIDEOS_DIRECTORY"),
-                self.name + "_" + time_start + ".mp4",
+            self.path_video = str(
+                Path(settings.get("VIDEOS_DIRECTORY"))
+                / (self.name + "_" + time_start + ".mp4")
             )
-            self.path_csv = os.path.join(
-                settings.get("VIDEOS_DIRECTORY"),
-                self.name + "_" + time_start + ".csv",
+            self.path_csv = str(
+                Path(settings.get("VIDEOS_DIRECTORY"))
+                / (self.name + "_" + time_start + ".csv")
             )
         self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
@@ -465,7 +462,7 @@ class Camera:
 
     def save_csv(self) -> None:
         """Saves the recorded data frames to a CSV file."""
-        if self.path_csv == os.path.join(settings.get("VIDEOS_DIRECTORY"), "BOX.csv"):
+        if self.path_csv == str(Path(settings.get("VIDEOS_DIRECTORY")) / "BOX.csv"):
             return
 
         if self.tracking:

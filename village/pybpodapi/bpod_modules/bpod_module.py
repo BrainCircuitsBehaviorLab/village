@@ -24,8 +24,9 @@ class BpodModule:
         self.bpod_modules = None
 
     def __str__(self):
-        return "{0} (connected: {1})(firmware: {2})".format(
-            self.name, self.connected, self.firmware_version
+        return (
+            f"{self.name} (connected: {self.connected})"
+            f"(firmware: {self.firmware_version})"
         )
 
     def load_message(self, msg, msg_id=None):

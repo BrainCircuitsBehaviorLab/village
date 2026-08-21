@@ -157,7 +157,7 @@ class BpodCOMProtocolModules(BpodCOMProtocol):
 
         if isinstance(message, str):
             message = [ord(c) for c in message]
-        elif not isinstance(message, (list, np.ndarray)):
+        elif not isinstance(message, list | np.ndarray):
             message = [message]
         else:
             message = message

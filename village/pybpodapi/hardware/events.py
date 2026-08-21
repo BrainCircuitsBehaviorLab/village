@@ -11,19 +11,15 @@ class EventName:
 
     @staticmethod
     def is_state_timer(event_name):
-        return True if event_name.startswith("Tup") else False
+        return event_name.startswith("Tup")
 
     @staticmethod
     def is_condition(event_name):
-        return True if event_name.startswith("Condition") else False
+        return event_name.startswith("Condition")
 
     @staticmethod
     def is_global_counter_end(event_name):
-        return (
-            True
-            if event_name.startswith("GlobalCounter") and event_name.endswith("End")
-            else False
-        )
+        return event_name.startswith("GlobalCounter") and event_name.endswith("End")
 
     @staticmethod
     def is_global_timer_trigger(event_name):
@@ -35,19 +31,11 @@ class EventName:
 
     @staticmethod
     def is_global_timer_start(event_name):
-        return (
-            True
-            if event_name.startswith("GlobalTimer") and event_name.endswith("Start")
-            else False
-        )
+        return event_name.startswith("GlobalTimer") and event_name.endswith("Start")
 
     @staticmethod
     def is_global_timer_end(event_name):
-        return (
-            True
-            if event_name.startswith("GlobalTimer") and event_name.endswith("End")
-            else False
-        )
+        return event_name.startswith("GlobalTimer") and event_name.endswith("End")
 
     #: Tup
     Tup = "Tup"

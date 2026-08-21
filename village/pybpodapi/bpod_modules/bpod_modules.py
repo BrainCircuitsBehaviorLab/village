@@ -93,8 +93,4 @@ class BpodModules:
 
     @property
     def relay_is_active(self):
-        for m in self.modules:
-            if m.relay_active:
-                return True
-
-        return False
+        return any(m.relay_active for m in self.modules)

@@ -143,8 +143,8 @@ import tempfile  # noqa: E402
 import village.settings as _village_settings  # noqa: E402
 from village.classes.settings_class import SuperEnum  # noqa: E402
 
-_safe_project_root = os.path.join(tempfile.gettempdir(), "village_docs_build")
-os.makedirs(_safe_project_root, exist_ok=True)
+_safe_project_root = str(pathlib.Path(tempfile.gettempdir(), "village_docs_build"))
+pathlib.Path(_safe_project_root).mkdir(exist_ok=True)
 for _setting in _village_settings.settings.all_settings:
     if isinstance(_setting.value, str) and _setting.value.startswith(
         _village_settings.default_project_directory

@@ -107,7 +107,7 @@ class CameraCalibration(CalibrationBase):
             "spacing_mm",
         )
         data = {k: self.result[k] for k in keys if k in self.result}
-        with open(out_path, "w") as f:
+        with out_path.open("w") as f:
             json.dump(data, f, indent=2)
 
     def _run(self) -> None:

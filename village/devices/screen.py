@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import os
 import queue
 import subprocess
 import time
 import traceback
 from collections.abc import Callable
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import cv2
@@ -299,7 +299,7 @@ class Screen(QOpenGLWidget):
             file (str): Filename of the image.
         """
         media_directory = settings.get("MEDIA_DIRECTORY")
-        image_path = os.path.join(media_directory, file)
+        image_path = str(Path(media_directory) / file)
         self.image = QPixmap(image_path)
         self._pending_onset_label = "screen_image_" + file
 
@@ -348,7 +348,7 @@ class Screen(QOpenGLWidget):
         self.stop_video()
         volume_gain = min(1.0, max(0.0, volume_gain))
         media_directory = settings.get("MEDIA_DIRECTORY")
-        video_path = os.path.join(media_directory, file)
+        video_path = str(Path(media_directory) / file)
         if volume_gain > 0:
             left, right = self._extract_audio(video_path)
             if left is not None and right is not None:

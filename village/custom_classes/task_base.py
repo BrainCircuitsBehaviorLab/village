@@ -572,7 +572,7 @@ class TaskBase:
         dictionary["observations"] = self.settings.observations
         json_string = json.dumps(dictionary)
 
-        with open(self.session_settings_path, "w") as f:
+        with Path(self.session_settings_path).open("w") as f:
             f.write(json_string)
 
         return json_string

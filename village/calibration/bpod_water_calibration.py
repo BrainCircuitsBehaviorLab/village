@@ -154,14 +154,14 @@ class BpodWaterCalibration(CalibrationBase):
             if val is None:
                 raise ValueError
             return val
-        except Exception:
+        except Exception as e:
             raise ValueError(
                 f"\n\n\t--> WATER CALIBRATION PROBLEM !!!!!!\n\n"
                 f"Cannot provide a valid time for {volume} µl on port {port}.\n"
                 f"1. Make sure you have calibrated the valves/pumps you are using.\n"
                 f"2. Make sure the volume is within calibration range.\n"
                 f"3. Check bpod_water_calibration.csv in 'data'.\n"
-            )
+            ) from e
 
     def draw(self) -> None:
         manager.state = State.MANUAL_MODE
@@ -767,10 +767,13 @@ class BpodWaterCalibration(CalibrationBase):
                 port_counts.append(port)
             return False
 
-        if len(self.calibration_points) == 0:
-            if self.allow_test and self.water_expected_line_edits2[0].isEnabled():
-                self.allow_test = False
-                self.test_denied = False
+        if (
+            len(self.calibration_points) == 0
+            and self.allow_test
+            and self.water_expected_line_edits2[0].isEnabled()
+        ):
+            self.allow_test = False
+            self.test_denied = False
         if some_port_has_two_values():
             self.save_button.setEnabled(True)
         else:

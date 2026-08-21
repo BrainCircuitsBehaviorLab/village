@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import traceback
+from pathlib import Path
 from typing import Any
 
 from village.calibration.bpod_water_calibration import BpodWaterCalibration
@@ -39,7 +40,7 @@ def import_all(manager) -> None:
     sys.path.append(directory)
 
     python_files: list[str] = []
-    tasks: dict[str, type] = dict()
+    tasks: dict[str, type] = {}
     training_found = 0
     session_plot_found = 0
     subject_plot_found = 0
@@ -66,25 +67,26 @@ def import_all(manager) -> None:
     auto_no_mouse_correct = False
     sound_path = ""
 
-    for cal_cls in (
+    calibration_classes: tuple[type[CalibrationBase], ...] = (
         BpodWaterCalibration,
         SoundCalibration,
         CameraCalibration,
         CorridorThresholdCalibration,
         OptoGridCalibration,
-    ):
+    )
+    for cal_cls in calibration_classes:
         instance = cal_cls()
-        setattr(cal_cls, "_instance", instance)
+        cal_cls._instance = instance
         setattr(manager.calibrations, instance.name, instance)
 
     for root, _, files in os.walk(directory):
         for file in files:
             if file == "sound_functions.py":
-                sound_path = os.path.join(root, file)
+                sound_path = str(Path(root, file))
             if file.endswith(".py"):
-                python_files.append(os.path.join(root, file))
+                python_files.append(str(Path(root, file)))
 
-    if os.path.exists(sound_path):
+    if Path(sound_path).exists():
         module_name = "custom_module2"
         spec = importlib.util.spec_from_file_location(module_name, sound_path)
         if spec and spec.loader:
@@ -92,8 +94,8 @@ def import_all(manager) -> None:
             try:
                 spec.loader.exec_module(module)
                 if hasattr(module, "sound_calibration_functions"):
-                    manager.calibrations.sound_calibration_functions = getattr(
-                        module, "sound_calibration_functions"
+                    manager.calibrations.sound_calibration_functions = (
+                        module.sound_calibration_functions
                     )
             except Exception:
                 log.error(
@@ -103,7 +105,7 @@ def import_all(manager) -> None:
 
     for python_file in python_files:
         relative_path = os.path.relpath(python_file, directory)
-        module_name = os.path.splitext(relative_path.replace(os.path.sep, "."))[0]
+        module_name = Path(relative_path.replace(os.path.sep, ".")).stem
         try:
             module = importlib.import_module(module_name)
             clsmembers: list[tuple[str, Any]] = inspect.getmembers(

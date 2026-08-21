@@ -7,11 +7,12 @@
 
 import os
 import sys
+from pathlib import Path
 
 # Run from this file's directory so relative paths (notably lgpio's ".lgd-nfy"
 # notification file) land in a writable location. Launched from "/" the GPIO
 # backend fails to initialize. Must happen before any gpiozero/lgpio import.
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(Path(__file__).resolve().parent)
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
@@ -149,7 +150,7 @@ manager.touch = touch
 # create a secondary thread
 def system_run() -> None:
     """Runs the main system control loop in a secondary thread."""
-    id = ""
+    tag_id = ""
     multiple = False
     checking_subject_requirements = True
     trial = 0
@@ -239,14 +240,14 @@ def system_run() -> None:
             weight = 0.0
 
         if manager.state != State.DETECTION:
-            id, multiple = rfid.get_id()
+            tag_id, multiple = rfid.get_id()
 
         match manager.state:
             case State.WAIT:
                 # All subjects are at home, waiting for RFID detection
                 if not manager.previous_state_wait:
                     gc.enable()  # we will disable garbage collection in some states
-                    id, multiple = rfid.get_id()
+                    tag_id, multiple = rfid.get_id()
                     manager.reset_subject_task_training()
 
                 if manager.change_cycle_flag:
@@ -255,8 +256,8 @@ def system_run() -> None:
                     manager.state = State.SYNC
                     continue
 
-                if id != "":
-                    log.info("Tag detected: " + id)
+                if tag_id != "":
+                    log.info("Tag detected: " + tag_id)
                     manager.detection_change = True
                     checking_subject_requirements = True
                     manager.state = State.DETECTION
@@ -266,8 +267,8 @@ def system_run() -> None:
                 if checking_subject_requirements:
                     manager.detections.add_timestamp()
                     if (
-                        manager.get_subject_from_tag(id)
-                        and manager.subject.create_from_subject_series(id)
+                        manager.get_subject_from_tag(tag_id)
+                        and manager.subject.create_from_subject_series(tag_id)
                         and manager.subject.minimum_time_ok()
                         and cam_corridor.areas_corridor_ok()
                         and not manager.multiple_detections(multiple)
@@ -304,8 +305,10 @@ def system_run() -> None:
 
             case State.RUN_INITIAL:
                 # Task running, waiting for the corridor to become empty"
-                if id != manager.subject.tag and id != "":
-                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
+                if tag_id != manager.subject.tag and tag_id != "":
+                    name = manager.subjects.get_last_entry_name(
+                        column="tag", value=tag_id
+                    )
                     if name:
                         log.alarm(
                             "Wrong RFID detection. Subject: "
@@ -345,8 +348,10 @@ def system_run() -> None:
 
             case State.RUN_CLOSED:
                 # Task running, the subject cannot leave yet
-                if id != manager.subject.tag and id != "":
-                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
+                if tag_id != manager.subject.tag and tag_id != "":
+                    name = manager.subjects.get_last_entry_name(
+                        column="tag", value=tag_id
+                    )
                     if name:
                         log.alarm(
                             "Wrong RFID detection. Subject: "
@@ -360,8 +365,8 @@ def system_run() -> None:
                         manager.state = State.OPEN_DOOR2_STOP
                         log.info("Going to OPEN_DOOR2_STOP State")
                 elif (
-                    id == manager.subject.tag
-                    and id != ""
+                    tag_id == manager.subject.tag
+                    and tag_id != ""
                     and not manager.old_version_rfid
                 ):
                     log.alarm(
@@ -394,12 +399,17 @@ def system_run() -> None:
             case State.RUN_OPEN:
                 # task running, the subject can leave
                 manager.getting_weights = True
-                if cam_corridor.area_2_empty() and cam_corridor.area_3_empty():
-                    if tare_timer.has_elapsed():
-                        scale.tare()
+                if (
+                    cam_corridor.area_2_empty()
+                    and cam_corridor.area_3_empty()
+                    and tare_timer.has_elapsed()
+                ):
+                    scale.tare()
 
-                if id != manager.subject.tag and id != "":
-                    name = manager.subjects.get_last_entry_name(column="tag", value=id)
+                if tag_id != manager.subject.tag and tag_id != "":
+                    name = manager.subjects.get_last_entry_name(
+                        column="tag", value=tag_id
+                    )
                     if name:
                         log.alarm(
                             "Wrong RFID detection. Subject: "

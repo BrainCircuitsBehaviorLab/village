@@ -120,11 +120,11 @@ class BpodBase:
 
         try:
             val = self._bpodcom_handshake()
-        except Exception:
+        except Exception as e:
             raise BpodErrorException(
                 """Error: Bpod failed to confirm connectivity.
                 Please reset Bpod and try again."""
-            )
+            ) from e
 
         if not val:
             raise BpodErrorException(
@@ -340,10 +340,10 @@ class BpodBase:
                 if self.data_available():
                     opcode, data = self._bpodcom_read_opcode_message()
                     self.__process_opcode(sma, opcode, data, state_change_indexes)
-            except serial.SerialException:
+            except serial.SerialException as e:
                 self.com_error = True
                 self._skip_all_trials = True
-                raise BpodErrorException("Bpod disconnected during trial")
+                raise BpodErrorException("Bpod disconnected during trial") from e
 
             self.loop_handler()
 
@@ -355,10 +355,10 @@ class BpodBase:
             try:
                 self.__update_timestamps(sma, state_change_indexes)
                 self.__record_trial(sma)
-            except serial.SerialException:
+            except serial.SerialException as e:
                 self.com_error = True
                 self._skip_all_trials = True
-                raise BpodErrorException("Bpod disconnected during trial")
+                raise BpodErrorException("Bpod disconnected during trial") from e
 
         logger.info("Publishing Bpod trial")
 
@@ -534,23 +534,25 @@ class BpodBase:
                         this_state_timer_transition = sma.state_timer_matrix[
                             sma.current_state
                         ]
-                        if event_id == sma.hardware.channels.events_positions.Tup:
-                            if this_state_timer_transition != sma.current_state:
-                                if (
-                                    sma.use_255_back_signal
-                                    and this_state_timer_transition == 255
-                                ):
-                                    sma.current_state = current_trial.states[-2]
-                                else:
-                                    sma.current_state = this_state_timer_transition
+                        if (
+                            event_id == sma.hardware.channels.events_positions.Tup
+                            and this_state_timer_transition != sma.current_state
+                        ):
+                            if (
+                                sma.use_255_back_signal
+                                and this_state_timer_transition == 255
+                            ):
+                                sma.current_state = current_trial.states[-2]
+                            else:
+                                sma.current_state = this_state_timer_transition
 
-                                if not math.isnan(sma.current_state):
-                                    logger.debug("adding states state timer matrix")
-                                    current_trial.states.append(sma.current_state)
-                                    state_change_indexes.append(
-                                        len(current_trial.events_occurrences) - 1
-                                    )
-                                transition_event_found = True
+                            if not math.isnan(sma.current_state):
+                                logger.debug("adding states state timer matrix")
+                                current_trial.states.append(sma.current_state)
+                                state_change_indexes.append(
+                                    len(current_trial.events_occurrences) - 1
+                                )
+                            transition_event_found = True
 
                     # global timers start matrix
                     if not transition_event_found:

@@ -163,7 +163,7 @@ class ArCOM:
 
     def read_char_array(self, array_len=1):
         message_array = []
-        for pos in range(0, array_len):
+        for _ in range(array_len):
             message_bytes = self.read_char()
             message_array.append(message_bytes)
 
@@ -171,7 +171,7 @@ class ArCOM:
 
     def read_uint8_array(self, array_len=1):
         message_array = []
-        for pos in range(0, array_len):
+        for _ in range(array_len):
             message_bytes = self.read_uint8()
             message_array.append(message_bytes)
 
@@ -179,7 +179,7 @@ class ArCOM:
 
     def read_uint16_array(self, array_len=1):
         message_array = []
-        for pos in range(0, array_len):
+        for _ in range(array_len):
             message_bytes = self.read_uint16()
             message_array.append(message_bytes)
 
@@ -187,7 +187,7 @@ class ArCOM:
 
     def read_uint32_array(self, array_len=1):
         message_array = []
-        for pos in range(0, array_len):
+        for _ in range(array_len):
             message_bytes = self.read_uint32()
             message_array.append(message_bytes)
 
@@ -195,7 +195,7 @@ class ArCOM:
 
     def read_float32_array(self, array_len=1):
         message_array = []
-        for pos in range(0, array_len):
+        for _ in range(array_len):
             message_bytes = self.read_float32()
             message_array.append(message_bytes)
 

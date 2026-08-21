@@ -38,7 +38,7 @@ class BpodCOMProtocol(BpodBase):
         bnc_ports,
         behavior_ports,
     ):
-        super(BpodCOMProtocol, self).__init__(
+        super().__init__(
             serial_port,
             baudrate,
             sync_channel,
@@ -59,12 +59,12 @@ class BpodCOMProtocol(BpodBase):
             self.open()
 
     def open(self):
-        super(BpodCOMProtocol, self).open()
+        super().open()
         self.bpod_com_ready = True
 
     def close(self):
         if self.bpod_com_ready:
-            super(BpodCOMProtocol, self).close()
+            super().close()
             self._arcom.close()
             self.bpod_com_ready = False
 
@@ -84,12 +84,11 @@ class BpodCOMProtocol(BpodBase):
             )
             try:
                 self._bpodcom_override_input_state(channel_number, value)
-            except:  # noqa: E722
+            except Exception as e:
                 raise BpodErrorException(
-                    "Error manual_override: {name} is not a valid channel name.".format(
-                        name=channel_name
-                    )
-                )
+                    f"Error manual_override: {channel_name} "
+                    "is not a valid channel name."
+                ) from e
 
         elif channel_type == ChannelType.OUTPUT:
             if channel_name == "Serial":
@@ -102,12 +101,11 @@ class BpodCOMProtocol(BpodBase):
                         output_channel_name
                     )
                     self._bpodcom_override_digital_hardware_state(channel_number, value)
-                except:  # noqa: E722
+                except Exception as e:
                     raise BpodErrorException(
-                        "Error manual_override: {name} not valid channel name.".format(
-                            name=output_channel_name
-                        )
-                    )
+                        f"Error manual_override: {output_channel_name} "
+                        "not valid channel name."
+                    ) from e
         else:
             raise BpodErrorException(
                 "Error using manualOverride: first argument must be Input or Output."
@@ -155,7 +153,7 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Response command is: %s", response)
 
-        return True if response == ReceiveMessageHeader.HANDSHAKE_OK else False
+        return response == ReceiveMessageHeader.HANDSHAKE_OK
 
     def _bpodcom_firmware_version(self):
         """
@@ -300,7 +298,7 @@ class BpodCOMProtocol(BpodBase):
         for j, i in enumerate(hardware.bnc_inputports_indexes):
             hardware.inputs_enabled[i] = self.bnc_ports[j] == Active.ON
 
-        for j, i in enumerate(hardware.wired_inputports_indexes):
+        for i in hardware.wired_inputports_indexes:
             hardware.inputs_enabled[i] = False
 
         for j, i in enumerate(hardware.behavior_inputports_indexes):
@@ -323,7 +321,7 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Response: %s", response)
 
-        return True if response == ReceiveMessageHeader.ENABLE_PORTS_OK else False
+        return response == ReceiveMessageHeader.ENABLE_PORTS_OK
 
     def _bpodcom_set_sync_channel_and_mode(self, sync_channel, sync_mode):
         """
@@ -350,7 +348,7 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Response: %s", response)
 
-        return True if response == ReceiveMessageHeader.SYNC_CHANNEL_MODE_OK else False
+        return response == ReceiveMessageHeader.SYNC_CHANNEL_MODE_OK
 
     def _bpodcom_echo_softcode(self, softcode):
         """
@@ -476,11 +474,7 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Read state machine installation status: %s", response)
 
-        return (
-            True
-            if response == ReceiveMessageHeader.STATE_MACHINE_INSTALLATION_STATUS
-            else False
-        )
+        return response == ReceiveMessageHeader.STATE_MACHINE_INSTALLATION_STATUS
 
     def data_available(self):
         """
@@ -562,9 +556,8 @@ class BpodCOMProtocol(BpodBase):
 
         if not (1 <= message_id <= 255):
             raise BpodErrorException(
-                "Error: Bpod can store 255 serial msgs. You used message_id {0}".format(
-                    message_id
-                )
+                "Error: Bpod can store 255 serial msgs. "
+                f"You used message_id {message_id}"
             )
 
         message_container = [
@@ -590,9 +583,7 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Confirmation: %s", response)
 
-        return (
-            True if response == ReceiveMessageHeader.LOAD_SERIAL_MESSAGE_OK else False
-        )
+        return response == ReceiveMessageHeader.LOAD_SERIAL_MESSAGE_OK
 
     def _bpodcom_reset_serial_messages(self):
         """
@@ -611,7 +602,7 @@ class BpodCOMProtocol(BpodBase):
 
         logger.debug("Confirmation: %s", response)
 
-        return True if response == ReceiveMessageHeader.RESET_SERIAL_MESSAGES else False
+        return response == ReceiveMessageHeader.RESET_SERIAL_MESSAGES
 
     def _bpodcom_override_digital_hardware_state(self, channel_number, value):
         """

@@ -4,6 +4,7 @@ import signal
 import subprocess
 import threading
 import time
+from pathlib import Path
 
 import fire
 
@@ -29,12 +30,13 @@ def run_rsync_local(source, destination, maximum_sync_time, cancel_event=None) -
     if cancel_event is None:
         cancel_event = threading.Event()
 
-    # Ensure source path ends with /
-    source = os.path.join(source, "")
+    # Ensure source path ends with / (rsync treats a trailing slash specially:
+    # it copies the directory's contents rather than the directory itself)
+    source = source.rstrip("/") + "/"
 
     # Ensure destination directory exists
     try:
-        os.makedirs(os.path.dirname(destination), exist_ok=True)
+        Path(destination).parent.mkdir(parents=True, exist_ok=True)
     except Exception as e:
         logging.error(f"Failed to create destination directory: {e}")
         return False

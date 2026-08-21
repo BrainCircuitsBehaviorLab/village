@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import datetime
-import os
 import time
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 
@@ -329,7 +329,8 @@ class TimeUtils:
         path = ""
         time_seconds = 0
 
-        for filename in os.listdir(directory):
+        for entry in Path(directory).iterdir():
+            filename = entry.name
             if filename.startswith(prefix) and filename.endswith(".mp4"):
                 try:
                     date_str = filename[len(prefix) + 1 : -4]
@@ -343,7 +344,7 @@ class TimeUtils:
                     continue
 
         if closest_file and closest_time:
-            path = os.path.join(directory, closest_file)
+            path = str(Path(directory, closest_file))
             delta = date - closest_time
             time_seconds = int(delta.total_seconds() - 10)
 
@@ -365,7 +366,7 @@ class TimeUtils:
         return f"{hours:02}:{minutes:02}:{seconds:02}.{millis:03}"
 
     def get_sorted_videos(self, directory: str) -> list[str]:
-        files = [f for f in os.listdir(directory) if f.endswith(".mp4")]
+        files = [f.name for f in Path(directory).iterdir() if f.name.endswith(".mp4")]
         files_with_dates = []
         for f in files:
             try:
@@ -377,25 +378,25 @@ class TimeUtils:
         return [f for f, _ in files_with_dates]
 
     def next_video_path(self, video_path: str) -> str | None:
-        directory = os.path.dirname(video_path)
-        filename = os.path.basename(video_path)
+        directory = str(Path(video_path).parent)
+        filename = Path(video_path).name
         sorted_videos = self.get_sorted_videos(directory)
         if filename not in sorted_videos:
             return None
         idx = sorted_videos.index(filename)
         if idx + 1 < len(sorted_videos):
-            return os.path.join(directory, sorted_videos[idx + 1])
+            return str(Path(directory, sorted_videos[idx + 1]))
         return None
 
     def previous_video_path(self, video_path: str) -> str | None:
-        directory = os.path.dirname(video_path)
-        filename = os.path.basename(video_path)
+        directory = str(Path(video_path).parent)
+        filename = Path(video_path).name
         sorted_videos = self.get_sorted_videos(directory)
         if filename not in sorted_videos:
             return None
         idx = sorted_videos.index(filename)
         if idx - 1 >= 0:
-            return os.path.join(directory, sorted_videos[idx - 1])
+            return str(Path(directory, sorted_videos[idx - 1]))
         return None
 
     class Chrono:

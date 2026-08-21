@@ -62,31 +62,18 @@ class Hardware:
     def __str__(self):
         return (
             "Hardware Configuration\n"
-            "Max states: {max_states}\n"
-            "Cycle period: {cycle_period}\n"
-            "Cycle frequency: {cycle_frequency}\n"
-            "Number of events per serial channel: {max_serial_events}\n"
-            "Number of global timers: {n_global_timers}\n"
-            "Number of global counters: {n_global_counters}\n"
-            "Number of conditions: {n_conditions}\n"
-            "Inputs ({n_inputs}): {inputs}\n"
-            "Outputs ({n_outputs}): {outputs}\n"
-            "Enabled inputs ({n_inputs_enabled}): {inputs_enabled}\n"
-            "".format(
-                max_states=self.max_states,
-                cycle_period=self.cycle_period,
-                cycle_frequency=self.cycle_frequency,
-                max_serial_events=self.max_serial_events,
-                n_global_timers=self.n_global_timers,
-                n_global_counters=self.n_global_counters,
-                n_conditions=self.n_conditions,
-                inputs=self.inputs,
-                n_inputs=len(self.inputs),
-                outputs=self.outputs,
-                n_outputs=len(self.outputs),
-                inputs_enabled=self.inputs_enabled,
-                n_inputs_enabled=len([idx for idx in self.inputs_enabled if idx == 1]),
-            )
+            f"Max states: {self.max_states}\n"
+            f"Cycle period: {self.cycle_period}\n"
+            f"Cycle frequency: {self.cycle_frequency}\n"
+            f"Number of events per serial channel: {self.max_serial_events}\n"
+            f"Number of global timers: {self.n_global_timers}\n"
+            f"Number of global counters: {self.n_global_counters}\n"
+            f"Number of conditions: {self.n_conditions}\n"
+            f"Inputs ({len(self.inputs)}): {self.inputs}\n"
+            f"Outputs ({len(self.outputs)}): {self.outputs}\n"
+            f"Enabled inputs "
+            f"({len([idx for idx in self.inputs_enabled if idx == 1])}): "
+            f"{self.inputs_enabled}\n"
         )
 
     @property

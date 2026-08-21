@@ -83,7 +83,7 @@ class BpodController:
         self,
         state_name: Any,
         state_timer: float = 0,
-        state_change_conditions: Any = {},
+        state_change_conditions: Any = None,
         output_actions: Any = (),
     ) -> None:
         """Adds a state to the state machine.
@@ -95,6 +95,8 @@ class BpodController:
                 state transitions.
             output_actions (Any): Actions to perform when entering the state.
         """
+        if state_change_conditions is None:
+            state_change_conditions = {}
         self.sma.add_state(
             state_name=state_name,
             state_timer=state_timer,

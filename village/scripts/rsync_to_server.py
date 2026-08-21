@@ -5,6 +5,7 @@ import signal
 import subprocess
 import threading
 import time
+from pathlib import Path
 
 import fire
 
@@ -40,9 +41,10 @@ def run_rsync(
     if cancel_event is None:
         cancel_event = threading.Event()
 
-    # Ensure source path ends with / to copy contents
-    source = os.path.join(source, "")
-    destination_dir = os.path.dirname(destination)
+    # Ensure source path ends with / to copy contents (rsync treats a trailing
+    # slash specially: it copies the directory's contents, not the directory itself)
+    source = source.rstrip("/") + "/"
+    destination_dir = str(Path(destination).parent)
 
     try:
         if port is None:

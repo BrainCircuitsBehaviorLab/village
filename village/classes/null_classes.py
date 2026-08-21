@@ -40,9 +40,11 @@ class NullStateMachine:
         self,
         state_name: Any,
         state_timer: float = 0,
-        state_change_conditions: Any = {},
+        state_change_conditions: Any = None,
         output_actions: Any = (),
     ) -> None:
+        if state_change_conditions is None:
+            state_change_conditions = {}
         raise RuntimeError("Trying to add a state but Bpod is not connected.")
 
     def set_global_timer(
@@ -213,9 +215,7 @@ class NullSoundDevice:
 class NullCollection:
     df = pd.DataFrame()
 
-    def save_from_df(
-        self, training: TrainingProtocolBase = TrainingProtocolBase()
-    ) -> None:
+    def save_from_df(self, training: TrainingProtocolBase | None = None) -> None:
         return
 
     def add_entry(self, entry: list) -> None:

@@ -29,15 +29,20 @@ def select_from_grays(
     occupied. Returns {area: (frame_index_or_None, isolated)}. isolated is
     True when a frame with the mouse alone in that area was found;
     False: returns best-effort fallback (max occupancy difference)"""
-    best_iso: dict[int, tuple[int, int | None]] = {i: (-1, None) for i in _AREAS}
-    best_fb: dict[int, tuple[int, int | None]] = {i: (-(1 << 30), None) for i in _AREAS}
+    best_iso: dict[int, tuple[int, int | None]] = dict.fromkeys(_AREAS, (-1, None))
+    best_fb: dict[int, tuple[int, int | None]] = dict.fromkeys(
+        _AREAS, (-(1 << 30), None)
+    )
     for fi, gray in enumerate(grays):
         counts = [area_count(gray, rects[i], thresholds[i], black)[0] for i in _AREAS]
         for i in _AREAS:
             others = [counts[j] for j in _AREAS if j != i]
-            if counts[i] > empty and all(c <= empty for c in others):
-                if counts[i] > best_iso[i][0]:
-                    best_iso[i] = (counts[i], fi)
+            if (
+                counts[i] > empty
+                and all(c <= empty for c in others)
+                and counts[i] > best_iso[i][0]
+            ):
+                best_iso[i] = (counts[i], fi)
             diff = counts[i] - sum(others)
             if diff > best_fb[i][0]:
                 best_fb[i] = (diff, fi)
@@ -57,14 +62,16 @@ def scan_video(
     same as select_from_grays but retains one frame per area instead of all."""
     cap = cv2.VideoCapture(path)
     if not cap.isOpened():
-        return {i: None for i in _AREAS}
+        return dict.fromkeys(_AREAS)
     total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     step = max(1, total // _MAX_SAMPLES) if total > 0 else 1
 
-    best_iso: dict[int, tuple[int, np.ndarray | None]] = {i: (-1, None) for i in _AREAS}
-    best_fb: dict[int, tuple[int, np.ndarray | None]] = {
-        i: (-(1 << 30), None) for i in _AREAS
-    }
+    best_iso: dict[int, tuple[int, np.ndarray | None]] = dict.fromkeys(
+        _AREAS, (-1, None)
+    )
+    best_fb: dict[int, tuple[int, np.ndarray | None]] = dict.fromkeys(
+        _AREAS, (-(1 << 30), None)
+    )
     idx = 0
     while True:
         if not cap.grab():
@@ -79,9 +86,12 @@ def scan_video(
             ]
             for i in _AREAS:
                 others = [counts[j] for j in _AREAS if j != i]
-                if counts[i] > empty and all(c <= empty for c in others):
-                    if counts[i] > best_iso[i][0]:
-                        best_iso[i] = (counts[i], frame.copy())
+                if (
+                    counts[i] > empty
+                    and all(c <= empty for c in others)
+                    and counts[i] > best_iso[i][0]
+                ):
+                    best_iso[i] = (counts[i], frame.copy())
                 diff = counts[i] - sum(others)
                 if diff > best_fb[i][0]:
                     best_fb[i] = (diff, frame.copy())

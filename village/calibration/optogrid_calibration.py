@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import asyncio
-import os
 import threading
 from functools import partial
+from pathlib import Path
 
 from PyQt5.QtCore import QRect, Qt
 from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
@@ -26,8 +26,7 @@ try:
 except Exception:
     _BLEAK_AVAILABLE = False
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
-_BRAIN_MAP_PATH = os.path.join(_HERE, "brainmap.png")
+_BRAIN_MAP_PATH = Path(__file__).resolve().parent / "brainmap.png"
 
 _PARAM_LABELS: dict[str, tuple[str, str]] = {
     "sequence_length": ("Sequence Length", "count"),
@@ -59,8 +58,8 @@ class _BrainMapWidget(QWidget):
         self.selection: int = 0
         self._on_changed = on_changed
         self._bg: QPixmap | None = None
-        if os.path.exists(_BRAIN_MAP_PATH):
-            px = QPixmap(_BRAIN_MAP_PATH)
+        if _BRAIN_MAP_PATH.exists():
+            px = QPixmap(str(_BRAIN_MAP_PATH))
             if not px.isNull():
                 self._bg = px
         self.setMinimumSize(220, 180)

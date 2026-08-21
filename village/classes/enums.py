@@ -130,10 +130,7 @@ class State(SuperEnum):
         Returns:
             bool: True if exit is allowed.
         """
-        if self in (State.WAIT, State.MANUAL_MODE):
-            return True
-        else:
-            return False
+        return self in (State.WAIT, State.MANUAL_MODE)
 
     def can_edit_data(self) -> bool:
         """Checks if data editing is allowed in this state.
@@ -141,10 +138,7 @@ class State(SuperEnum):
         Returns:
             bool: True if editing is allowed.
         """
-        if self in (State.WAIT, State.MANUAL_MODE):
-            return True
-        else:
-            return False
+        return self in (State.WAIT, State.MANUAL_MODE)
 
     def can_calibrate_scale(self) -> bool:
         """Checks if scale calibration is allowed in this state.
@@ -152,10 +146,7 @@ class State(SuperEnum):
         Returns:
             bool: True if calibration is allowed.
         """
-        if self in (State.WAIT, State.MANUAL_MODE):
-            return True
-        else:
-            return False
+        return self in (State.WAIT, State.MANUAL_MODE)
 
     def task_is_running(self) -> bool:
         """Checks if a task is currently running.
@@ -163,15 +154,12 @@ class State(SuperEnum):
         Returns:
             bool: True if a task is running.
         """
-        if self in (
+        return self in (
             State.RUN_INITIAL,
             State.RUN_CLOSED,
             State.RUN_OPEN,
             State.RUN_MANUAL,
-        ):
-            return True
-        else:
-            return False
+        )
 
     def can_stop_syncing(self) -> bool:
         """Checks if syncing process can be stopped.
@@ -179,10 +167,7 @@ class State(SuperEnum):
         Returns:
             bool: True if syncing can be stopped.
         """
-        if self == State.SYNC:
-            return True
-        else:
-            return False
+        return self == State.SYNC
 
     def can_go_to_wait(self) -> bool:
         """Checks if the state can transition to WAIT.
@@ -190,10 +175,7 @@ class State(SuperEnum):
         Returns:
             bool: True if transition to WAIT is allowed.
         """
-        if self == State.WAIT_SUBJECT_EXIT:
-            return True
-        else:
-            return False
+        return self == State.WAIT_SUBJECT_EXIT
 
 
 class Cycle(SuperEnum):
